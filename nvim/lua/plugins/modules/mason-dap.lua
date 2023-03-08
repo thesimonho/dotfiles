@@ -15,13 +15,13 @@ function M.config()
 	require("mason").setup()
 	require("mason-nvim-dap").setup({
 		ensure_installed = {
-            "codelldb",
+			"codelldb",
 			"python",
 		},
-        automatic_setup = true,
+		automatic_setup = true,
 	})
 
-	-- path to mason-installed debugpy and python
+	-- setup mason-installed debugpy and python
 	local path_debugpy = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/Scripts/python.exe"
 
 	-- local path_python = vim.env.HOME .. "/miniconda3/python.exe"
@@ -29,31 +29,43 @@ function M.config()
 	path_python = require("utils").split(path_python, "\n")[2] -- get result of the command
 	path_python = path_python:gsub("^/(%a+)/", "%1:/")
 
-	local dap = require("dap")
-
-	require("mason-nvim-dap").setup_handlers({
-		-- function(source_name)
-		-- 	-- all sources with no handler get passed here
-		-- 	-- Keep original functionality of `automatic_setup = true`
-		-- 	require("mason-nvim-dap.automatic_setup")(source_name)
-		-- end,
-		-- python = function(source_name)
-		-- 	dap.adapters.python = {
-		-- 		type = "executable",
-		-- 		command = path_python,
-		-- 		args = {
-		-- 			"-m",
-		-- 			"debugpy.adapter",
-		-- 		},
-		-- 	}
-		-- end,
-	})
-
-	-- setup mason-installed debugpy and python
 	require("dap-python").setup(path_debugpy)
 	require("dap-python").resolve_python = function()
 		return path_python
 	end
+
+	-- set up rust and codelldb
+	local dap = require("dap")
+	local codelldb_root = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/"
+	local codelldb_path = codelldb_root .. "adapter/codelldb.exe"
+	local liblldb_path = codelldb_root .. "lldb/lib/liblldb.lib"
+
+	dap.adapters.codelldb = {
+		type = "server",
+		port = "${port}",
+		executable = {
+			command = codelldb_path,
+			args = { "--port", "${port}" },
+			-- On windows you may have to uncomment this:
+			-- detached = false,
+		},
+	}
+	dap.configurations.rust = {
+		{
+			name = "Debug",
+			type = "codelldb",
+			request = "launch",
+			program = function()
+				vim.notify("Compiling a debug build for debugging. This might take some time...")
+				vim.fn.jobstart("cargo build")
+
+				return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+			end,
+			cwd = "${workspaceFolder}",
+			stopOnEntry = false,
+			showDisassembly = "never",
+		},
+	}
 
 	-- set debugger signs
 	vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DapBreakpoint", linehl = "", numhl = "" })

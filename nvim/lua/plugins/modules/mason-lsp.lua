@@ -1,3 +1,5 @@
+-- https://www.reddit.com/r/rust/comments/zhokwt/share_your_neovim_setup_rusttools_nvimdap/
+
 -- Integrate Mason with nvim lsp and null-ls
 local M = {
 	"williamboman/mason-lspconfig.nvim",
@@ -8,12 +10,33 @@ local M = {
 		"williamboman/mason.nvim",
 		"jay-babu/mason-null-ls.nvim",
 		"hrsh7th/cmp-nvim-lsp",
+		"simrat39/rust-tools.nvim",
 		{ "jose-elias-alvarez/null-ls.nvim", dependencies = "nvim-lua/plenary.nvim" },
 	},
 	event = "VeryLazy",
 }
 
 function M.config()
+	local ensure_installed = {
+		-- lsp
+		"docker-compose-language-service",
+		"lua-language-server",
+		"vim-language-server",
+		"ruff-lsp",
+		"rust-analyzer",
+		"typescript-language-server",
+
+		-- linters
+		"markdownlint",
+		"eslint_d",
+
+		-- formatters
+		"black",
+		"rustfmt",
+		"stylua",
+		"prettierd",
+	}
+
 	-- setup mason for tool installation
 	require("mason").setup()
 
@@ -74,51 +97,43 @@ function M.config()
 		MapLSP(bufnr)
 	end
 
-	-- define the function used to set up the installed servers
+	-- setup lsp servers
 	require("mason-lspconfig").setup()
 	require("mason-lspconfig").setup_handlers({
 		function(server_name)
-			local opts = {
+			require("lspconfig")[server_name].setup({
+				on_attach = on_attach,
 				capabilities = capabilities,
 				settings = servers[server_name],
-				on_attach = on_attach,
-			}
-
-			require("lspconfig")[server_name].setup(opts)
+			})
+		end,
+		["rust_analyzer"] = function() -- dont autosetup rust_analyzer; use rust-tools instead
+			require("rust-tools").setup({
+				tools = {
+					inlay_hints = { auto = false },
+					executor = require("rust-tools/executors").toggleterm,
+					hover_actions = { border = "solid" },
+				},
+				server = {
+					on_attach = on_attach,
+					standalone = true,
+					capabilities = capabilities,
+					checkOnSave = {
+						allFeatures = true,
+						overrideCommand = {},
+					},
+				},
+			})
 		end,
 	})
 
-	-- setup lsp diagnostic signs
-	vim.fn.sign_define("DiagnosticSignError", { texthl = "DiagnosticSignError", text = "", numhl = "" })
-	vim.fn.sign_define("DiagnosticSignWarn", { texthl = "DiagnosticSignWarn", text = "", numhl = "" })
-	vim.fn.sign_define("DiagnosticSignHint", { texthl = "DiagnosticSignHint", text = "", numhl = "" })
-	vim.fn.sign_define("DiagnosticSignInfo", { texthl = "DiagnosticSignInfo", text = "", numhl = "" })
-
-	-- defined mason tools to be installed and set up
+	-- setup null-ls
 	require("mason-null-ls").setup({
-		ensure_installed = {
-			-- lsp
-			"docker-compose-language-service",
-			"lua-language-server",
-			"vim-language-server",
-			"ruff-lsp",
-			"rust-analyzer",
-			"typescript-language-server",
-
-			-- linters
-			"markdownlint",
-			"eslint_d",
-
-			-- formatters
-			"black",
-			"stylua",
-			"prettierd",
-		},
+		ensure_installed = ensure_installed, -- lsp, linter, formatter
 		automatic_installation = false,
 		automatic_setup = true,
 	})
-
-	-- setup null-ls
+	require("mason-null-ls").setup_handlers()
 	require("null-ls").setup({
 		on_attach = function(client, bufnr)
 			-- Custom command to use null-ls as the formatter.
@@ -141,8 +156,11 @@ function M.config()
 		},
 	})
 
-	-- setup handlers for mason tools
-	require("mason-null-ls").setup_handlers()
+	-- setup lsp diagnostic signs
+	vim.fn.sign_define("DiagnosticSignError", { texthl = "DiagnosticSignError", text = "", numhl = "" })
+	vim.fn.sign_define("DiagnosticSignWarn", { texthl = "DiagnosticSignWarn", text = "", numhl = "" })
+	vim.fn.sign_define("DiagnosticSignHint", { texthl = "DiagnosticSignHint", text = "", numhl = "" })
+	vim.fn.sign_define("DiagnosticSignInfo", { texthl = "DiagnosticSignInfo", text = "", numhl = "" })
 end
 
 return M
