@@ -2,7 +2,7 @@ local M = {
 	"ahmedkhalf/project.nvim",
 	cond = vim.g.vscode == nil,
 	enabled = true,
-    event = "VimEnter",
+	event = "VimEnter",
 }
 
 function M.config()

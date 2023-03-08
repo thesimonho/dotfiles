@@ -99,9 +99,9 @@ function M.config()
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
 
-				-- JupyniumCodeCellSeparator = { bg = colors.palette.waveBlue2 },
-				-- JupyniumMarkdownCellSeparator = { bg = colors.palette.waveBlue2 },
-				-- JupyniumMarkdownCellContent = { bg = colors.palette.sumiInk4 },
+				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
+				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
+				JupyniumMarkdownCellContent = { bg = colors.palette.sumiInk4 },
 				-- JupyniumMagicCommand = { link = "Keyword" },
 
 				ScrollbarCursor = { fg = colors.palette.oldWhite },

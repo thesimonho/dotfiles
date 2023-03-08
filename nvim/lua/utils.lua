@@ -144,11 +144,23 @@ end
 
 -- string split on separator
 M.split = function(s, sep)
-    local fields = {}
-    local pattern = string.format("([^%s]+)", sep)
-    string.gsub(s, pattern, function(c) fields[#fields + 1] = c end)
+	local fields = {}
+	local pattern = string.format("([^%s]+)", sep)
+	string.gsub(s, pattern, function(c)
+		fields[#fields + 1] = c
+	end)
 
-    return fields
+	return fields
+end
+
+-- check if string is in table
+M.is_string_in_table = function(str, tbl)
+	for _, value in pairs(tbl) do
+		if value == str then
+			return true
+		end
+	end
+	return false
 end
 
 return M
