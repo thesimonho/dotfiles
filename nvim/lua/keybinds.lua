@@ -236,7 +236,7 @@ if not vscode then
 end
 
 -- ╔═════════════════════════════════════════════════╗
--- ║ Snippets                                        ║
+-- ║ Yanky                                        ║
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
 	map({ "n", "x" }, "<leader>y", "<cmd>Telescope yank_history<cr>", { desc = "Yanks " })
