@@ -4,9 +4,11 @@ local vscode = vim.g.vscode
 -- ╔═════════════════════════════════════════════════╗
 -- ║ General                                         ║
 -- ╚═════════════════════════════════════════════════╝
+map("n", "<leader>qq", "<cmd>qa<cr>") -- Quit all windows
 map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear highlights" }) -- Clear highlights on ESC
 map("n", "cd", ":cd %:p:h<cr>:pwd<cr>", { desc = "Change working directory" }) -- Change directory to current file's directory
-map("n", "<leader>qq", "<cmd>qa<cr>") -- Quit all windows
+map("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; C-H = C-BS
+map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Undo (rest are in telescope module)             ║
@@ -199,9 +201,7 @@ map(
 	[[ <cmd>lua require('refactoring').refactor('Inline Variable')<cr>]],
 	{ desc = "Inline a variable", expr = false }
 )
-map("n", "<leader>rr", function()
-	return ":IncRename " .. vim.fn.expand("<cword>")
-end, { desc = "Rename", expr = true })
+map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
 map(
 	"n",
 	"<leader>rpf",
@@ -232,7 +232,7 @@ if not vscode then
 		end
 	end, { desc = "Previous snippet placeholder" })
 
-	map("i", "<c-h>", "<cmd>lua require('luasnip.extras.select_choice')()<cr>", { desc = "Select choice" })
+	map("i", "<c-u>", "<cmd>lua require('luasnip.extras.select_choice')()<cr>", { desc = "Select choice" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
@@ -373,3 +373,4 @@ if not vscode then
 		{ desc = "Inside jupyter cell" }
 	)
 end
+

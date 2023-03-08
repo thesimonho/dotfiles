@@ -16,13 +16,17 @@ function M.config()
 		show_help = false,
 		window = {
 			border = "none",
-			margin = { 2, 50, 2, 50 },
+			margin = { 2, 30, 2, 30 },
 			winblend = 5,
 		},
 		icons = {
 			group = "…",
 		},
 	})
+
+	wk.register({
+		v = { name = "Incremental selection" },
+	}, { prefix = "<leader>" })
 
 	wk.register({
 		w = { name = "Window" },

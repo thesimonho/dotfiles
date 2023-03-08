@@ -110,18 +110,18 @@ function M.config()
 		["rust_analyzer"] = function() -- dont autosetup rust_analyzer; use rust-tools instead
 			require("rust-tools").setup({
 				tools = {
-					inlay_hints = { auto = false },
-					executor = require("rust-tools/executors").toggleterm,
+					inlay_hints = { auto = true },
 					hover_actions = { border = "solid" },
+					-- executor = require("rust-tools/executors").toggleterm,
 				},
 				server = {
 					on_attach = on_attach,
 					standalone = true,
 					capabilities = capabilities,
-					checkOnSave = {
-						allFeatures = true,
-						overrideCommand = {},
-					},
+					-- checkOnSave = {
+					-- 	allFeatures = true,
+					-- 	overrideCommand = {},
+					-- },
 				},
 			})
 		end,
