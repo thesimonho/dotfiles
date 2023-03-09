@@ -19,13 +19,18 @@ function M.config()
 	require("lualine").setup({
 		options = {
 			theme = custom,
-			globalstatus = true,
+			globalstatus = false,
 		},
 		sections = {
 			lualine_a = { { "mode", padding = 2 } },
 			lualine_b = {
 				{ "branch", color = utils.get_mode_colour },
-				"diff",
+				{
+					"diff",
+					on_click = function()
+						require("gitsigns").diffthis()
+					end,
+				},
 				{
 					"diagnostics",
 					on_click = function()
@@ -36,7 +41,7 @@ function M.config()
 			lualine_c = {
 				{
 					"aerial",
-					depth = 2,
+					depth = 1,
 					on_click = function()
 						vim.cmd("AerialToggle")
 					end,
@@ -54,8 +59,8 @@ function M.config()
 			lualine_z = {
 				{
 					"location",
-					fmt = function(str, ctx)
-						loc = utils.split(str, ":")
+					fmt = function(str, _)
+						local loc = utils.split(str, ":")
 						return string.format("L:%d C:%d", loc[1], loc[2])
 					end,
 				},
@@ -72,6 +77,14 @@ function M.config()
 			lualine_x = { { "filetype", color = { fg = "grey" }, colored = false } },
 			lualine_y = {},
 			lualine_z = {},
+		},
+		extensions = {
+			"man",
+			"aerial",
+			"neo-tree",
+			"nvim-dap-ui",
+			"toggleterm",
+			"overseer",
 		},
 	})
 end

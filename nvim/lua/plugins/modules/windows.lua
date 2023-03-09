@@ -11,9 +11,12 @@ function M.config()
 	vim.o.winminwidth = 20
 	vim.o.equalalways = false
 	require("windows").setup({
+		autowidth = {
+			enable = false,
+		},
 		ignore = {
-			buftype = { "aerial", "quickfix" },
-			filetype = { "neo-tree", "OverseerList" },
+			buftype = { "quickfix" },
+			filetype = { "aerial", "neo-tree", "OverseerList" },
 		},
 		animation = {
 			enable = true,

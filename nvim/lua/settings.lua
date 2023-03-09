@@ -2,7 +2,6 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.signcolumn = "yes"
-vim.opt.laststatus = 3
 
 vim.opt.fillchars = "eob: "
 vim.opt.tabstop = 4
