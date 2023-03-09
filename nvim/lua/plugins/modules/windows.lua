@@ -12,7 +12,7 @@ function M.config()
 	vim.o.equalalways = false
 	require("windows").setup({
 		autowidth = {
-			enable = false,
+			enable = true,
 		},
 		ignore = {
 			buftype = { "quickfix" },
