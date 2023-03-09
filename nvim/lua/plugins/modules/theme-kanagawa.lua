@@ -1,6 +1,7 @@
 -- ╭─────────────────────────────────────────────────╮
 -- │ Remember to run :KanagawaCompile after editing! │
 -- ╰─────────────────────────────────────────────────╯
+-- https://github.com/rebelot/kanagawa.nvim
 
 local M = {
 	"rebelot/kanagawa.nvim",

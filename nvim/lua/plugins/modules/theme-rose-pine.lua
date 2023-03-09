@@ -1,3 +1,5 @@
+-- https://github.com/rose-pine/neovim
+
 local M = {
 	"rose-pine/neovim",
 	name = "rose-pine",

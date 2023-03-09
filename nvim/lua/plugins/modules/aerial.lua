@@ -12,7 +12,7 @@ function M.config()
 			vim.keymap.set("n", "]a", "<cmd>AerialNext<CR>", { buffer = bufnr })
 		end,
 		layout = {
-            default_direction = "right",
+			default_direction = "right",
 			preserve_equality = false,
 		},
 		close_automatic_events = { "unsupported" },
