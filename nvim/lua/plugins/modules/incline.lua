@@ -16,11 +16,11 @@ function M.config()
 			groups = {
 				InclineNormal = {
 					default = true,
-					group = "hl_incline",
+					group = "HLInclineNormal",
 				},
 				InclineNormalNC = {
 					default = true,
-					group = "NormalFloat",
+					group = "HLInclineNormalNC",
 				},
 			},
 		},

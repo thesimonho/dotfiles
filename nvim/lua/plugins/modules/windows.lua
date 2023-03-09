@@ -12,8 +12,8 @@ function M.config()
 	vim.o.equalalways = false
 	require("windows").setup({
 		ignore = {
-			buftype = { "quickfix" },
-			filetype = {},
+			buftype = { "aerial", "quickfix" },
+			filetype = { "neo-tree", "OverseerList" },
 		},
 		animation = {
 			enable = true,

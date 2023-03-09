@@ -4,10 +4,9 @@ vim.api.nvim_set_hl(0, "Todo", { link = "Comment" })
 -- link neotree colours to nvim-tree for automatic theme support
 -- https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Visual-Customizations#colour-scheme
 vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { link = "NvimTreeFolderIcon" })
-vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { link = "NvimTreeFolderName" })
+vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { link = "NvimTreeOpenedFolderName" })
 vim.api.nvim_set_hl(0, "NeoTreeSymbolicLinkTarget", { link = "NvimTreeSymlink" })
 vim.api.nvim_set_hl(0, "NeoTreeRootName", { link = "NvimTreeRootFolder" })
-vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { link = "NvimTreeOpenedFolderName" })
 vim.api.nvim_set_hl(0, "NeoTreeFileNameOpened", { link = "NvimTreeOpenedFile" })
 
 -- standard colours for debug sign icons
@@ -21,11 +20,11 @@ local function set_theme_colours(theme)
 	if theme == "kanagawa" then
 		local colors = require("kanagawa.colors").setup()
 		local theme_colors = colors.palette
-		C.normal = theme_colors.autumnRed
-		C.insert = theme_colors.autumnYellow
-		C.visual = theme_colors.dragonBlue
-		C.command = theme_colors.autumnRed
-		C.replace = theme_colors.autumnYellow
+		C.normal = theme_colors.roninYellow
+		C.insert = theme_colors.autumnRed
+		C.visual = theme_colors.autumnGreen
+		C.command = theme_colors.roninYellow
+		C.replace = theme_colors.autumnRed
 		C.text = theme_colors.fujiGray
 		C.comment = theme_colors.fujiGray
 		C.overlay = theme_colors.crystalBlue

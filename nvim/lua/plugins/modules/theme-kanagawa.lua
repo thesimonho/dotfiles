@@ -76,9 +76,6 @@ function M.config()
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 
-				-- Directory = { fg = colors.palette.carpYellow },
-				-- SignColumn = { guibg = NONE },
-
 				BufferCurrent = { bg = colors.palette.sumiInk4 },
 				BufferCurrentTarget = { fg = colors.palette.autumnRed, bg = colors.palette.sumiInk4 },
 				BufferCurrentSign = { bg = colors.palette.sumiInk4 },
@@ -88,7 +85,8 @@ function M.config()
 				BufferInactiveSign = { bg = colors.palette.sumiInk4 },
 				BufferInactiveMod = { fg = colors.palette.roninYellow, bg = colors.palette.sumiInk4 },
 
-				hl_incline = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
+				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
+				HLInclineNormalNC = { bg = colors.palette.sumiInk4, fg = colors.palette.fujiWhite },
 
 				-- Headline1 = { bg = "pine" },
 				-- Headline2 = { bg = "#345663" },
@@ -97,12 +95,16 @@ function M.config()
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
+
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
+				NeoTreeModified = { link = "NeoTreeGitModified" },
+				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
+				NvimTreeOpenedFolderName = { fg = colors.palette.waveAqua1 },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
 				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
 				JupyniumMarkdownCellContent = { bg = colors.palette.sumiInk4 },
-				-- JupyniumMagicCommand = { link = "Keyword" },
+				JupyniumMagicCommand = { link = "Keyword" },
 
 				ScrollbarCursor = { fg = colors.palette.oldWhite },
 				WhichKey = { fg = colors.palette.peachRed },
