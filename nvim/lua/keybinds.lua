@@ -294,9 +294,11 @@ end
 -- ║ Git                                             ║
 -- ╚═════════════════════════════════════════════════╝
 if vscode then
-	map("n", "<leader>G", '<cmd>call VSCodeNotify("workbench.view.scm")<cr>')
+	map("n", "<leader>Gg", '<cmd>call VSCodeNotify("workbench.view.scm")<cr>')
 else
-	map("n", "<leader>G", "<cmd>lua	require('utils').toggle_lazygit()<cr>", { desc = "Git" })
+	map("n", "<leader>Gg", "<cmd>lua require('utils').toggle_lazygit()<cr>", { desc = "Git" })
+	map("n", "<leader>Gd", "<cmd>lua require('gitsigns').diffthis()<cr>", { desc = "Diff" })
+	map("n", "<leader>Gh", "<cmd>lua require('gitsigns').preview_hunk()<cr>", { desc = "Hover hunk" })
 end
 
 -- ╔═════════════════════════════════════════════════╗

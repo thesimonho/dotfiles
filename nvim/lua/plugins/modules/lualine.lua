@@ -9,6 +9,7 @@ local M = {
 function M.config()
 	local colours = require("colours")
 	local custom = require("lualine.themes.base16")
+	local utils = require("utils")
 	custom.normal.a.bg = colours.normal
 	custom.insert.a.bg = colours.insert
 	custom.visual.a.bg = colours.visual
@@ -23,7 +24,7 @@ function M.config()
 		sections = {
 			lualine_a = { { "mode", padding = 2 } },
 			lualine_b = {
-				{ "branch", color = require("utils").get_mode_colour },
+				{ "branch", color = utils.get_mode_colour },
 				"diff",
 				{
 					"diagnostics",
@@ -41,9 +42,28 @@ function M.config()
 					end,
 				},
 			},
-			lualine_x = { { "overseer", on_click = function() vim.cmd("OverseerToggle") end } },
+			lualine_x = {
+				{
+					"overseer",
+					on_click = function()
+						vim.cmd("OverseerToggle")
+					end,
+				},
+			},
 			lualine_y = { "fileformat", "filetype" },
-			lualine_z = { "location", { "progress", padding = 2 } },
+			lualine_z = {
+				{
+					"location",
+					fmt = function(str, ctx)
+						loc = utils.split(str, ":")
+						return string.format("L:%d C:%d", loc[1], loc[2])
+					end,
+				},
+				{
+					"progress",
+					padding = 2,
+				},
+			},
 		},
 		inactive_sections = {
 			lualine_a = {},

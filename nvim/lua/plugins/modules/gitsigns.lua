@@ -2,7 +2,7 @@ local M = {
 	"lewis6991/gitsigns.nvim",
 	cond = vim.g.vscode == nil,
 	enabled = true,
-	event = "VeryLazy",
+	event = { "BufReadPost, BufNewFile" },
 }
 
 function M.config()

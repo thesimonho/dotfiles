@@ -153,6 +153,7 @@ function M.config()
 		end,
 		sources = {
 			-- Anything not supported by mason.
+			require("null-ls").builtins.code_actions.gitsigns,
 		},
 	})
 
