@@ -79,6 +79,7 @@ function M.config()
 			{ name = "nvim_lsp", priority = 500, keyword_length = 1, max_item_count = 5 },
 			{ name = "buffer", keyword_length = 3, max_item_count = 5 },
 			{ name = "path", max_item_count = 5 },
+			{ name = "crates" },
 		}),
 	})
 end

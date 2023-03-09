@@ -144,6 +144,20 @@ map({ "n", "x", "o" }, "<leader>s", "<Plug>(leap-from-window)", { desc = "Leap w
 -- ║ Go to                                           ║
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
+	local function show_documentation()
+		local filetype = vim.bo.filetype
+		if vim.tbl_contains({ "vim", "help" }, filetype) then
+			vim.cmd("h " .. vim.fn.expand("<cword>"))
+		elseif vim.tbl_contains({ "man" }, filetype) then
+			vim.cmd("Man " .. vim.fn.expand("<cword>"))
+		elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
+			require("crates").show_versions_popup()
+		else
+			vim.lsp.buf.hover()
+		end
+	end
+	map("n", "<leader>gh", show_documentation, { desc = "Hover" })
+
 	function MapLSP(bufnr)
 		map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration", buffer = bufnr })
 		map("n", "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition", buffer = bufnr })
@@ -161,7 +175,6 @@ if not vscode then
 		)
 		map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation", buffer = bufnr })
 		map("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature", buffer = bufnr })
-		map("n", "<leader>gh", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hover", buffer = bufnr })
 		map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 		map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Show Error", buffer = bufnr })
 		map("n", "<leader>gE", "<cmd>TroubleToggle<cr>", { desc = "Error List", buffer = bufnr })
