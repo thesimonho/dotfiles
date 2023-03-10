@@ -5,4 +5,8 @@ local M = {
 	cmd = "StartupTime",
 }
 
+function M.config()
+    vim.g.startuptime_tries = 10
+end
+
 return M

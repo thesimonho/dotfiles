@@ -44,7 +44,6 @@ function M.config()
 		-- telescope
 		datapath = vim.fn.stdpath("data"),
 	})
-	require("telescope").load_extension("projects")
 end
 
 return M

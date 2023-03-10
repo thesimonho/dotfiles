@@ -8,6 +8,7 @@ local M = {
 			"nvim-tree/nvim-web-devicons",
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 			"debugloop/telescope-undo.nvim",
+			"benfowler/telescope-luasnip.nvim",
 		},
 	},
 	cmd = "Telescope",
@@ -49,6 +50,9 @@ function M.config()
 		},
 	})
 	require("telescope").load_extension("undo")
+	require("telescope").load_extension("luasnip")
+	require("telescope").load_extension("projects")
+	require("telescope").load_extension("noice")
 end
 
 return M

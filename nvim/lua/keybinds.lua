@@ -332,6 +332,7 @@ end
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Jupynium                                        ║
 -- ╚═════════════════════════════════════════════════╝
+-- TODO: create buffer local maps for these either in config or with autocommands
 if not vscode then
 	local cell_code_open = { "# %%", '%%"""' }
 	local cell_md_open = { '"""%%', "# %%%" }

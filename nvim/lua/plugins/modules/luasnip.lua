@@ -3,7 +3,10 @@ local M = {
 	cond = vim.g.vscode == nil,
 	version = "1.*",
 	enabled = true,
-	dependencies = { "hrsh7th/nvim-cmp", "saadparwaiz1/cmp_luasnip", "benfowler/telescope-luasnip.nvim" },
+	dependencies = {
+		"hrsh7th/nvim-cmp",
+		"saadparwaiz1/cmp_luasnip",
+	},
 	event = { "InsertEnter" },
 }
 
@@ -16,7 +19,6 @@ function M.config()
 		enable_autosnippets = true,
 	})
 	require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/luasnippets" })
-	require("telescope").load_extension("luasnip")
 end
 
 return M

@@ -36,7 +36,6 @@ function M.config()
 			lsp_doc_border = true, -- add a border to hover docs and signature help
 		},
 	})
-	require("telescope").load_extension("noice")
 end
 
 return M
