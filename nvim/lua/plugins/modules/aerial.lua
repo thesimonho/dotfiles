@@ -2,6 +2,7 @@ local M = {
 	"stevearc/aerial.nvim",
 	cond = vim.g.vscode == nil,
 	enabled = true,
+	cmd = { "AerialToggle", "AerialOpen", "AerialOpenAll" },
 }
 
 function M.config()
@@ -12,9 +13,9 @@ function M.config()
 		end,
 		backends = { "lsp", "treesitter", "markdown", "man" },
 		layout = {
-			max_width = 40,
-			width = nil,
-			min_width = 20,
+			-- max_width = { 40, 0.2 },
+			-- width = nil,
+			-- min_width = 10,
 			default_direction = "right",
 			preserve_equality = false,
 		},

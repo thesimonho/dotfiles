@@ -1,7 +1,7 @@
 local M = {
 	"nvim-zh/colorful-winsep.nvim",
 	cond = vim.g.vscode == nil,
-	enabled = true,
+	enabled = false,
 	event = { "VeryLazy" },
 }
 
