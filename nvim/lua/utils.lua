@@ -163,4 +163,25 @@ M.is_string_in_table = function(str, tbl)
 	return false
 end
 
+-- get all keys from a table
+M.get_table_keys = function(tab)
+	local keyset = {}
+	for k, v in pairs(tab) do
+		keyset[#keyset + 1] = k
+	end
+	return keyset
+end
+
+-- UI select menu
+M.UI_select = function(item_map)
+	local options = M.get_table_keys(item_map)
+	return vim.ui.select(options, { prompt = "Select option" }, function(item, idx)
+		for option, cmd in pairs(item_map) do
+			if option == item then
+				load(cmd)()
+			end
+		end
+	end)
+end
+
 return M

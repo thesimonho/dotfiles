@@ -48,6 +48,13 @@ if not vscode then
 	map("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
 	map("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
 	map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
+	map("n", "<leader>zo", function()
+		require("utils").UI_select({
+			ChatGPT = "vim.cmd('ChatGPT')",
+			ChatGPTActAs = "vim.cmd('ChatGPTActAs')",
+			ChatGPTEditWithInstructions = "vim.cmd('ChatGPTEditWithInstructions')",
+		})
+	end, { desc = "ChatGPT" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
