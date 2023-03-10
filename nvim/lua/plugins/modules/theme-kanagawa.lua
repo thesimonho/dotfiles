@@ -15,7 +15,7 @@ function M.config()
 	local palette = wave.palette
 
 	require("kanagawa").setup({
-		compile = false,
+		compile = true,
 		dimInactive = true, -- dim inactive window `:h hl-NormalNC`
 		commentStyle = { italic = false },
 		functionStyle = { italic = false, bold = true },
@@ -96,9 +96,8 @@ function M.config()
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
-				NeoTreeModified = { link = "NeoTreeGitModified" },
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
-				NvimTreeOpenedFolderName = { fg = colors.palette.waveAqua1 },
+				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
 				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
