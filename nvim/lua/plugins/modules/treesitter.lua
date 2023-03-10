@@ -23,7 +23,7 @@ function M.config()
 			enable = true,
 			extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
 			colors = {
-				"#ffffff",
+				"#cfcfcf",
 				"#a89984",
 				"#b16286",
 				"#689d6a",

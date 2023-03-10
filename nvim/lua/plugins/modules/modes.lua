@@ -2,7 +2,7 @@ local M = {
 	"mvllow/modes.nvim",
 	cond = vim.g.vscode == nil,
 	enabled = true,
-	event = { "BufReadPost", "BufNewFile" },
+	event = { "BufReadPre", "BufNewFile" },
 }
 
 function M.config()
