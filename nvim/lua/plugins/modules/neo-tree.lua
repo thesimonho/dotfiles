@@ -16,6 +16,7 @@ function M.config()
 		close_if_last_window = true,
 		popup_border_style = "rounded",
 		enable_git_status = true,
+		enable_modified_markers = true,
 		enable_diagnostics = false,
 		sort_case_insensitive = true,
 		default_component_configs = {
@@ -25,7 +26,7 @@ function M.config()
 		},
 		window = {
 			position = "left",
-			width = 30,
+			width = 35,
 			popup = {
 				position = { col = "2", row = "3" },
 				size = function(state)
