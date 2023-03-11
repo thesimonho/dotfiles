@@ -28,7 +28,6 @@ vim.opt.smartcase = true
 vim.opt.termguicolors = true
 vim.opt.pumblend = 10 -- Make builtin completion menus slightly transparent
 vim.opt.pumheight = 10 -- Make popup menu smaller
-vim.opt.winblend = 10 -- Make floating windows slightly transparent
 
 vim.opt.splitbelow = true
 vim.opt.splitright = true

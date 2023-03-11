@@ -16,8 +16,9 @@ map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
 -- ╚═════════════════════════════════════════════════╝
-map({ "n", "x" }, "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Move down" }) -- Move down
-map({ "n", "x" }, "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Move down" }) -- Move up
+map({ "n", "x" }, "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Down" }) -- Move down across wraps
+map({ "n", "x" }, "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Up" }) -- Move up across wraps
+
 map("i", "<M-h>", "<Left>", { noremap = false, desc = "Left" })
 map("i", "<M-j>", "<Down>", { noremap = false, desc = "Down" })
 map("i", "<M-k>", "<Up>", { noremap = false, desc = "Up" })
@@ -26,6 +27,24 @@ map("t", "<M-h>", "<Left>", { desc = "Left" })
 map("t", "<M-j>", "<Down>", { desc = "Down" })
 map("t", "<M-k>", "<Up>", { desc = "Up" })
 map("t", "<M-l>", "<Right>", { desc = "Right" })
+
+map("n", "<M-h>", "<Plug>GoNSMLeft", { desc = "Move selection left" })
+map("n", "<M-j>", "<Plug>GoNSMDown", { desc = "Move selection down" })
+map("n", "<M-k>", "<Plug>GoNSMUp", { desc = "Move selection up" })
+map("n", "<M-l>", "<Plug>GoNSMRight", { desc = "Move selection right" })
+map("x", "<M-h>", "<Plug>GoVSMLeft", { desc = "Move selection left" })
+map("x", "<M-j>", "<Plug>GoVSMDown", { desc = "Move selection down" })
+map("x", "<M-k>", "<Plug>GoVSMUp", { desc = "Move selection up" })
+map("x", "<M-l>", "<Plug>GoVSMRight", { desc = "Move selection right" })
+
+map("n", "<M-Left>", "<Plug>GoNSDLeft", { desc = "Duplicate selection left" })
+map("n", "<M-Down>", "<Plug>GoNSDDown", { desc = "Duplicate selection down" })
+map("n", "<M-Up>", "<Plug>GoNSDUp", { desc = "Duplicate selection up" })
+map("n", "<M-Right>", "<Plug>GoNSDRight", { desc = "Duplicate selection right" })
+map("x", "<M-Left>", "<Plug>GoVSDLeft", { desc = "Duplicate selection left" })
+map("x", "<M-Down>", "<Plug>GoVSDDown", { desc = "Duplicate selection down" })
+map("x", "<M-Up>", "<Plug>GoVSDUp", { desc = "Duplicate selection up" })
+map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Undo (rest are in telescope module)             ║
