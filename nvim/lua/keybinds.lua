@@ -222,12 +222,15 @@ if not vscode then
 		)
 		map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation", buffer = bufnr })
 		map("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature", buffer = bufnr })
-		map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 		map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Show Error", buffer = bufnr })
 		map("n", "<leader>gE", "<cmd>TroubleToggle<cr>", { desc = "Error List", buffer = bufnr })
 
 		map("n", "[e", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Previous error", buffer = bufnr })
 		map("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next error", buffer = bufnr })
+
+        -- Binds that dont belong under "g" but should only be set when LSP is attached
+        map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
+        map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 	end
 end
 
@@ -240,7 +243,6 @@ else
 	map("n", "<Leader>cd", ":lua require('neogen').generate()<CR>", { desc = "Generate docs" })
 	map("n", "<leader>cf", "<cmd>NullFormat<cr>", { desc = "Format" })
 	map("n", "<leader>co", "<cmd>AerialToggle!<cr>", { desc = "Aerial Outline" })
-	map("n", "<leader>ct", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
@@ -264,7 +266,6 @@ map(
 	[[ <cmd>lua require('refactoring').refactor('Inline Variable')<cr>]],
 	{ desc = "Inline a variable", expr = false }
 )
-map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
 map(
 	"n",
 	"<leader>rpf",
@@ -317,9 +318,9 @@ end
 -- ║ Terminal                                        ║
 -- ╚═════════════════════════════════════════════════╝
 if vscode then
-	map("n", "<leader>t", '<cmd>call VSCodeNotify("workbench.action.terminal.toggleTerminal")<cr>')
+	map("n", "<leader>`", '<cmd>call VSCodeNotify("workbench.action.terminal.toggleTerminal")<cr>')
 else
-	map("n", "<leader>t", "<cmd>ToggleTerm<cr>", { desc = "Terminal" })
+	map("n", "<leader>`", "<cmd>ToggleTerm<cr>", { desc = "Terminal" })
 	map("t", "<esc>", "<C-\\><C-n>") -- Escape to normal mode in terminal
 end
 
@@ -356,6 +357,7 @@ end
 -- ║ Todo                                            ║
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
+	map("n", "<leader>t", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 	map("n", "]t", function()
 		require("todo-comments").jump_next()
 	end, { desc = "Next todo comment" })

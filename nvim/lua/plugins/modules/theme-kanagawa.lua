@@ -16,12 +16,10 @@ function M.config()
 
 	require("kanagawa").setup({
 		compile = true,
+		undercurl = true,
 		dimInactive = true, -- dim inactive window `:h hl-NormalNC`
-		commentStyle = { italic = false },
-		functionStyle = { italic = false, bold = true },
 		keywordStyle = { italic = false, bold = true },
-		statementStyle = { italic = false, bold = true },
-		typeStyle = { italic = false },
+		terminalColors = true,
 		colors = {
 			palette = {},
 			theme = {

@@ -25,7 +25,7 @@ function M.config()
 	})
 
 	wk.register({
-		v = { name = "Incremental selection" },
+		v = { name = "Incremental select" },
 	}, { prefix = "<leader>" })
 
 	wk.register({
@@ -46,6 +46,10 @@ function M.config()
 
 	wk.register({
 		g = { name = "Go to" },
+	}, { prefix = "<leader>" })
+
+	wk.register({
+		G = { name = "Git" },
 	}, { prefix = "<leader>" })
 
 	wk.register({
