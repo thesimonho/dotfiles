@@ -6,12 +6,26 @@ local vscode = vim.g.vscode
 -- ║ General                                         ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>qq", "<cmd>qa<cr>") -- Quit all windows
+map("n", "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
+map({ "i", "x" }, "<C-S>", "<Esc><Cmd>silent! update | redraw<CR>", { desc = "Save and go to Normal mode" })
 map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear highlights" }) -- Clear highlights on ESC
 map("n", "cd", ":cd %:p:h<cr>:pwd<cr>", { desc = "Change working directory" }) -- Change directory to current file's directory
 map("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; C-H = C-BS
 map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
-map("n", "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Move down" }) -- Move down
-map("n", "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Move down" }) -- Move up
+
+-- ╔═════════════════════════════════════════════════╗
+-- ║ Movement                                        ║
+-- ╚═════════════════════════════════════════════════╝
+map({ "n", "x" }, "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Move down" }) -- Move down
+map({ "n", "x" }, "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Move down" }) -- Move up
+map("i", "<M-h>", "<Left>", { noremap = false, desc = "Left" })
+map("i", "<M-j>", "<Down>", { noremap = false, desc = "Down" })
+map("i", "<M-k>", "<Up>", { noremap = false, desc = "Up" })
+map("i", "<M-l>", "<Right>", { noremap = false, desc = "Right" })
+map("t", "<M-h>", "<Left>", { desc = "Left" })
+map("t", "<M-j>", "<Down>", { desc = "Down" })
+map("t", "<M-k>", "<Up>", { desc = "Up" })
+map("t", "<M-l>", "<Right>", { desc = "Right" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Undo (rest are in telescope module)             ║
