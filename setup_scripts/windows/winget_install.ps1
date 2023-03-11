@@ -24,6 +24,7 @@ winget install -e --id Parsec.Parsec
 winget install -e --id Microsoft.PowerToys
 winget install -e --id Nvidia.GeForceExperience
 winget install -e --id RProject.R
+winget install wez.wezterm
 winget install -e --id Valve.Steam
 winget install -e --id Microsoft.VisualStudioCode
 winget install -e --id VideoLAN.VLC

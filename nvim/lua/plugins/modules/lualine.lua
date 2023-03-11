@@ -20,9 +20,11 @@ function M.config()
 		options = {
 			theme = custom,
 			globalstatus = false,
+			section_separators = { left = "", right = "" },
+			component_separators = { left = "", right = "" },
 		},
 		sections = {
-			lualine_a = { { "mode", padding = 2 } },
+			lualine_a = { { "mode", padding = 1 } },
 			lualine_b = {
 				{ "branch", color = utils.get_mode_colour },
 				{
@@ -64,10 +66,7 @@ function M.config()
 						return string.format("L:%d C:%d", loc[1], loc[2])
 					end,
 				},
-				{
-					"progress",
-					padding = 2,
-				},
+				"progress",
 			},
 		},
 		inactive_sections = {
