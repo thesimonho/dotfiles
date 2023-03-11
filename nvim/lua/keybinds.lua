@@ -158,6 +158,16 @@ else
 end
 
 -- ╔═════════════════════════════════════════════════╗
+-- ║ Folds                                           ║
+-- ╚═════════════════════════════════════════════════╝
+if not vscode then
+	map("n", "zR", require("ufo").openAllFolds)
+	map("n", "zM", require("ufo").closeAllFolds)
+	map("n", "zr", require("ufo").openFoldsExceptKinds)
+	map("n", "zm", require("ufo").closeFoldsWith)
+end
+
+-- ╔═════════════════════════════════════════════════╗
 -- ║ Find                                            ║
 -- ╚═════════════════════════════════════════════════╝
 if vscode then
@@ -191,19 +201,22 @@ map({ "n", "x", "o" }, "<leader>s", "<Plug>(leap-from-window)", { desc = "Leap w
 -- ║ Go to                                           ║
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
-	local function show_documentation()
-		local filetype = vim.bo.filetype
-		if vim.tbl_contains({ "vim", "help" }, filetype) then
-			vim.cmd("h " .. vim.fn.expand("<cword>"))
-		elseif vim.tbl_contains({ "man" }, filetype) then
-			vim.cmd("Man " .. vim.fn.expand("<cword>"))
-		elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
-			require("crates").show_versions_popup()
-		else
-			vim.lsp.buf.hover()
+	local function show_hover()
+		local winid = require("ufo").peekFoldedLinesUnderCursor()
+		if not winid then
+			local filetype = vim.bo.filetype
+			if vim.tbl_contains({ "vim", "help" }, filetype) then
+				vim.cmd("h " .. vim.fn.expand("<cword>"))
+			elseif vim.tbl_contains({ "man" }, filetype) then
+				vim.cmd("Man " .. vim.fn.expand("<cword>"))
+			elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
+				require("crates").show_versions_popup()
+			else
+				vim.lsp.buf.hover()
+			end
 		end
 	end
-	map("n", "<leader>gh", show_documentation, { desc = "Hover" })
+	map("n", "<leader>gh", show_hover, { desc = "Hover" })
 
 	function MapLSP(bufnr)
 		map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration", buffer = bufnr })
@@ -228,9 +241,9 @@ if not vscode then
 		map("n", "[e", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Previous error", buffer = bufnr })
 		map("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next error", buffer = bufnr })
 
-        -- Binds that dont belong under "g" but should only be set when LSP is attached
-        map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
-        map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
+		-- Binds that dont belong under "g" but should only be set when LSP is attached
+		map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
+		map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 	end
 end
 
@@ -303,7 +316,7 @@ if not vscode then
 end
 
 -- ╔═════════════════════════════════════════════════╗
--- ║ Yanky                                        ║
+-- ║ Yanky                                           ║
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
 	map({ "n", "x" }, "<leader>y", "<cmd>Telescope yank_history<cr>", { desc = "Yanks " })
