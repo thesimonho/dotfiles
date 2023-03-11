@@ -81,7 +81,7 @@ function M.config()
 				BufferInactiveSign = { bg = colors.palette.sumiInk4 },
 				BufferInactiveMod = { fg = colors.palette.roninYellow, bg = colors.palette.sumiInk4 },
 
-                IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
+				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
 				HLInclineNormalNC = { bg = colors.palette.sumiInk4, fg = colors.palette.fujiWhite },
 
@@ -103,7 +103,7 @@ function M.config()
 				JupyniumMagicCommand = { link = "Keyword" },
 
 				ScrollbarCursor = { fg = colors.palette.oldWhite },
-                WhichKey = { fg = colors.palette.peachRed },
+				WhichKey = { fg = colors.palette.peachRed },
 				YankyYanked = { bg = colors.palette.winterYellow },
 				YankyPut = { bg = colors.palette.winterRed },
 			}

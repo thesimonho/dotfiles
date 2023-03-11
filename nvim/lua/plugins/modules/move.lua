@@ -2,7 +2,7 @@ local M = {
 	"booperlv/nvim-gomove",
 	cond = vim.g.vscode == nil,
 	enabled = true,
-	event = "VeryLazy",
+	event = { "BufReadPost", "BufNewFile" },
 }
 
 function M.config()
