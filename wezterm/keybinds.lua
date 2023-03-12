@@ -13,10 +13,14 @@ M.key_tables = {
 	manage_pane = {
 		{ key = "w", action = act.PaneSelect },
 		{ key = "q", action = act.CloseCurrentPane({ confirm = true }) },
-		{ key = "h", action = act.SplitPane({ direction = "Left" }) },
-		{ key = "l", action = act.SplitPane({ direction = "Right" }) },
-		{ key = "k", action = act.SplitPane({ direction = "Up" }) },
-		{ key = "j", action = act.SplitPane({ direction = "Down" }) },
+        { key = "h", action = act.ActivatePaneDirection("Left") },
+		{ key = "l", action = act.ActivatePaneDirection("Right") },
+		{ key = "k", action = act.ActivatePaneDirection("Up") },
+		{ key = "j", action = act.ActivatePaneDirection("Down") },
+		{ key = "H", action = act.SplitPane({ direction = "Left" }) },
+		{ key = "L", action = act.SplitPane({ direction = "Right" }) },
+		{ key = "K", action = act.SplitPane({ direction = "Up" }) },
+		{ key = "J", action = act.SplitPane({ direction = "Down" }) },
 	},
 	resize_pane = {
 		{ key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 1 }) },

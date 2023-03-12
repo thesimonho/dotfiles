@@ -18,7 +18,11 @@ function M.config()
 		compile = true,
 		undercurl = true,
 		dimInactive = true, -- dim inactive window `:h hl-NormalNC`
-		keywordStyle = { italic = false, bold = true },
+		commentStyle = { italic = true }, -- comments
+		functionStyle = { italic = false }, -- names of functions
+		keywordStyle = { italic = false, bold = false }, -- language keywords (e.g. function, local, etc.)
+		statementStyle = { italic = false, bold = false },
+		typeStyle = { italic = false }, -- type hints/declarations
 		terminalColors = true,
 		colors = {
 			palette = {},
