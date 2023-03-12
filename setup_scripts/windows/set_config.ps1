@@ -8,6 +8,7 @@ Write-Host "Symlinking nvim config..."
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\nvim -Target $env:USERPROFILE\dotfiles\nvim
 
 Write-Host "Symlinking wezterm config..."
+New-Item -ItemType Directory -Path $env:USERPROFILE\.config
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\wezterm
 
 ######################################################

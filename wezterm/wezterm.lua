@@ -1,8 +1,8 @@
 local wezterm = require("wezterm")
-local act = wezterm.action
+local keybinds = require("keybinds")
 
 return {
-	color_scheme_dirs = { os.getenv("HOME") .. "/.config/wezterm/colors" },
+	color_scheme_dirs = { "~/.config/wezterm/colors" },
 	color_scheme = "kanagawa",
 	font_size = 11,
 	font = wezterm.font_with_fallback({
@@ -30,20 +30,8 @@ return {
 	use_fancy_tab_bar = true,
 	disable_default_key_bindings = true,
 	leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 },
-	keys = {
-		{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
-		{ key = "n", mods = "LEADER", action = act.SpawnWindow },
-		{ key = "q", mods = "LEADER", action = act.CloseCurrentPane({ confirm = true }) },
-		{ key = "w", mods = "LEADER", action = act.PaneSelect },
-		{ key = "h", mods = "LEADER", action = act.SplitPane({ direction = "Left" }) },
-		{ key = "j", mods = "LEADER", action = act.SplitPane({ direction = "Down" }) },
-		{ key = "k", mods = "LEADER", action = act.SplitPane({ direction = "Up" }) },
-		{ key = "l", mods = "LEADER", action = act.SplitPane({ direction = "Right" }) },
-		{ key = "LeftArrow", mods = "LEADER", action = act.AdjustPaneSize({ "Left", 10 }) },
-		{ key = "DownArrow", mods = "LEADER", action = act.AdjustPaneSize({ "Down", 10 }) },
-		{ key = "UpArrow", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 10 }) },
-		{ key = "RightArrow", mods = "LEADER", action = act.AdjustPaneSize({ "Right", 10 }) },
-	},
+	keys = keybinds.basic_binds,
+	key_tables = keybinds.key_tables,
 	launch_menu = {
 		{
 			label = "PowerShell",
@@ -54,5 +42,4 @@ return {
 			args = { "cmd.exe" },
 		},
 	},
-	-- force_reverse_video_cursor = true,
 }
