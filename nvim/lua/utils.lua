@@ -132,7 +132,7 @@ end
 M.preserve_cursor = function(command)
 	local arguments = string.format("keepjumps keeppatterns execute %q", command)
 	-- local original_cursor = vim.fn.winsaveview()
-	local line, col = table.unpack(vim.api.nvim_win_get_cursor(0))
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
 	vim.api.nvim_command(arguments)
 	local lastline = vim.fn.line("$")
 	-- vim.fn.winrestview(original_cursor)
