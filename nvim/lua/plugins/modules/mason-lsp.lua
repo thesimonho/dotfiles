@@ -1,5 +1,3 @@
--- https://www.reddit.com/r/rust/comments/zhokwt/share_your_neovim_setup_rusttools_nvimdap/
-
 -- Integrate Mason with nvim lsp and null-ls
 local M = {
 	"williamboman/mason-lspconfig.nvim",
@@ -21,20 +19,24 @@ function M.config()
 		-- lsp
 		"docker-compose-language-service",
 		"lua-language-server",
-		"vim-language-server",
+		"marksman",
+		"powershell-editor-services",
 		"ruff-lsp",
 		"rust-analyzer",
+		"taplo",
 		"typescript-language-server",
+		"vim-language-server",
+		"yaml-language-server",
 
 		-- linters
-		"markdownlint",
 		"eslint_d",
+		"markdownlint",
 
 		-- formatters
 		"black",
+		"prettierd",
 		"rustfmt",
 		"stylua",
-		"prettierd",
 	}
 
 	-- setup mason for tool installation
@@ -118,10 +120,10 @@ function M.config()
 					on_attach = on_attach,
 					standalone = true,
 					capabilities = capabilities,
-					-- checkOnSave = {
-					-- 	allFeatures = true,
-					-- 	overrideCommand = {},
-					-- },
+					checkOnSave = {
+						allFeatures = true,
+						overrideCommand = {},
+					},
 				},
 			})
 		end,

@@ -22,6 +22,7 @@ winget install -e --id OBSProject.OBSStudio
 winget install JanDeDobbeleer.OhMyPosh -s winget
 winget install -e --id Parsec.Parsec
 winget install -e --id Microsoft.PowerToys
+winget install -e --id Microsoft.PowerShell
 winget install -e --id Nvidia.GeForceExperience
 winget install -e --id RProject.R
 winget install wez.wezterm

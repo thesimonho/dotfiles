@@ -47,7 +47,7 @@ return {
 	launch_menu = {
 		{
 			label = "PowerShell",
-			args = { "powershell.exe" },
+			args = { "pwsh.exe" },
 		},
 		{
 			label = "cmd",

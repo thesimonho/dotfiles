@@ -89,11 +89,6 @@ function M.config()
 				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
 				HLInclineNormalNC = { bg = colors.palette.sumiInk4, fg = colors.palette.fujiWhite },
 
-				-- Headline1 = { bg = "pine" },
-				-- Headline2 = { bg = "#345663" },
-				-- Dash = { bg = "love" },
-				-- Quote = { bg = "love" },
-
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 

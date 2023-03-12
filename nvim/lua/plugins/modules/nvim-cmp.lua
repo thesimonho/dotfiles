@@ -15,7 +15,7 @@ local has_words_before = function()
 	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
 		return false
 	end
-	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	local line, col = table.unpack(vim.api.nvim_win_get_cursor(0))
 	return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
@@ -75,9 +75,9 @@ function M.config()
 				max_item_count = 5,
 				option = { show_autosnippets = false },
 			},
-			{ name = "jupynium", priority = 600, max_item_count = 5 }, -- consider higher priority than LSP
-			{ name = "nvim_lsp", priority = 500, keyword_length = 1, max_item_count = 5 },
-			{ name = "buffer", keyword_length = 3, max_item_count = 5 },
+			{ name = "jupynium", priority = 600, max_item_count = 10 }, -- consider higher priority than LSP
+			{ name = "nvim_lsp", priority = 500, keyword_length = 1, max_item_count = 10 },
+			{ name = "buffer", keyword_length = 3, max_item_count = 10 },
 			{ name = "path", max_item_count = 5 },
 			{ name = "crates" },
 		}),
