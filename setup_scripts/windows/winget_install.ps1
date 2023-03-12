@@ -29,29 +29,3 @@ winget install -e --id Valve.Steam
 winget install -e --id Microsoft.VisualStudioCode
 winget install -e --id VideoLAN.VLC
 winget install -e --id DigitalScholar.Zotero
-
-######################################################
-# Get system tools
-######################################################
-& $PSScriptRoot\get_tools.ps1
-
-
-######################################################
-# Configure Git globals
-######################################################
-Write-Host "Configuring Git globals"
-
-$userName = Read-Host 'Enter your name for git configuration'
-$userEmail = Read-Host 'Enter your email for git configuration'
-
-git config --global user.email $userEmail
-git config --global user.name $userName
-
-######################################################
-# Clone dotfiles repo and symlink them
-######################################################
-Write-Host "Cloning dotfiles repo"
-
-git clone https://github.com/sho-87/dotfiles.git $env:USERPROFILE\dotfiles
-
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\nvim -Target $env:USERPROFILE\dotfiles\nvim
