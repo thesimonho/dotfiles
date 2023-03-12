@@ -22,6 +22,7 @@ return {
 		bottom = 0,
 	},
 	window_background_opacity = 0.99,
+    window_decorations = "RESIZE",
 	use_resize_increments = true,
 	inactive_pane_hsb = {
 		saturation = 0.9,
