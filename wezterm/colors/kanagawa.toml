@@ -30,7 +30,7 @@ cursor_border = '#c8c093'
 selection_bg = '#2d4f67'
 selection_fg = '#c8c093'
 scrollbar_thumb = '#16161d'
-split = '#16161d'
+split = '#c8c093'
 
 [colors.indexed]
 16 = '#ffa066'
