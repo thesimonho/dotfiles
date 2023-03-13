@@ -93,6 +93,10 @@ function M.config()
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
+
+				NoiceMini = { bg = colors.theme.ui.bg },
+				NoiceFormatProgressTodo = { bg = colors.theme.ui.bg },
+
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 

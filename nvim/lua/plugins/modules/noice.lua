@@ -19,14 +19,24 @@ function M.config()
 				["cmp.entry.get_documentation"] = true,
 			},
 			hover = {
-				enabled = false, -- handled by lsp-zero
+				enabled = true,
 			},
 			signature = {
-				enabled = false, -- handled by lsp-zero
+				enabled = true,
 			},
 		},
 		notify = {
 			enabled = true,
+		},
+		routes = {
+			{
+				filter = {
+					event = "msg_show",
+					kind = "",
+					find = "written",
+				},
+				opts = { skip = true },
+			},
 		},
 		presets = {
 			bottom_search = false, -- use a classic bottom cmdline for search
