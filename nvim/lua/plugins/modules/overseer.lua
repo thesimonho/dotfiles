@@ -10,9 +10,9 @@ function M.config()
 		strategy = {
 			"toggleterm",
 			-- load your default shell before starting the task
-			use_shell = false,
+			use_shell = true,
 			-- overwrite the default toggleterm "direction" parameter
-			direction = "vertical",
+			direction = "float",
 			-- overwrite the default toggleterm "highlights" parameter
 			highlights = nil,
 			-- overwrite the default toggleterm "auto_scroll" parameter
