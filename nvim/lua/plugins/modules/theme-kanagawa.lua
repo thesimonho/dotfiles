@@ -96,6 +96,7 @@ function M.config()
 
 				NoiceMini = { bg = colors.theme.ui.bg },
 				NoiceFormatProgressTodo = { bg = colors.theme.ui.bg },
+				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
