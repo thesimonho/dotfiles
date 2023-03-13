@@ -161,10 +161,10 @@ end
 -- ║ Folds                                           ║
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
-	map("n", "zR", require("ufo").openAllFolds)
-	map("n", "zM", require("ufo").closeAllFolds)
-	map("n", "zr", require("ufo").openFoldsExceptKinds)
-	map("n", "zm", require("ufo").closeFoldsWith)
+	map("n", "zR", "<cmd>lua require('ufo').openAllFolds()<cr>", { desc = "Open all folds" })
+	map("n", "zM", "<cmd>lua require('ufo').closeAllFolds)<cr>", { desc = "Close all folds" })
+	map("n", "zr", "<cmd>lua require('ufo').openFoldsExceptKinds()<cr>", { desc = "Open folds except kinds" })
+	map("n", "zm", "<cmd>lua require('ufo').closeFoldsWithKinds()<cr>", { desc = "Close folds with kinds" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
@@ -202,21 +202,18 @@ map({ "n", "x", "o" }, "<leader>s", "<Plug>(leap-from-window)", { desc = "Leap w
 -- ╚═════════════════════════════════════════════════╝
 if not vscode then
 	local function show_hover()
-		local winid = require("ufo").peekFoldedLinesUnderCursor()
-		if not winid then
-			local filetype = vim.bo.filetype
-			if vim.tbl_contains({ "vim", "help" }, filetype) then
-				vim.cmd("h " .. vim.fn.expand("<cword>"))
-			elseif vim.tbl_contains({ "man" }, filetype) then
-				vim.cmd("Man " .. vim.fn.expand("<cword>"))
-			elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
-				require("crates").show_versions_popup()
-			else
-				vim.lsp.buf.hover()
-			end
+		local filetype = vim.bo.filetype
+		if vim.tbl_contains({ "vim", "help" }, filetype) then
+			vim.cmd("h " .. vim.fn.expand("<cword>"))
+		elseif vim.tbl_contains({ "man" }, filetype) then
+			vim.cmd("Man " .. vim.fn.expand("<cword>"))
+		elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
+			require("crates").show_versions_popup()
+		else
+			vim.lsp.buf.hover()
 		end
 	end
-	map("n", "<leader>gh", show_hover, { desc = "Hover" })
+	map("n", "<leader>gh", show_hover, { desc = "Hover" }) -- must be mapped outside function otherwise filetypes without LSP won't get the bind
 
 	function MapLSP(bufnr)
 		map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration", buffer = bufnr })
