@@ -19,7 +19,7 @@ return {
 	}),
 	harfbuzz_features = { "cv01", "cv02", "cv29", "ss03", "ss05", "ss07", "ss08" },
 	default_cursor_style = "SteadyBar",
-	force_reverse_video_cursor = true,
+	-- force_reverse_video_cursor = true,
 	underline_position = -2,
 	front_end = "WebGpu",
 	webgpu_power_preference = "HighPerformance",
