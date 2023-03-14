@@ -63,42 +63,42 @@ function M.config()
 
 	-- on_attach function to be added to each server
 	local on_attach = function(_, bufnr)
-		-- create buffer local autocommands to show and hide virtual diagnostic text
-		local vt = {
-			spacing = 10,
-			severity = { min = vim.diagnostic.severity.WARN },
-			format = function(diagnostic)
-				local severity_letter = string.sub(vim.diagnostic.severity[diagnostic.severity], 1, 1)
-				local msg = diagnostic.message
-				local msg_threshold = 100
-
-				local num_windows = #vim.api.nvim_tabpage_list_wins(0) / 2
-				if num_windows > 1 then
-					msg_threshold = msg_threshold / num_windows
-				end
-
-				if string.len(msg) > msg_threshold then
-					msg = string.sub(msg, 1, msg_threshold) .. "..."
-				end
-
-				return string.format("%s: %s", severity_letter, msg)
-			end,
-		}
-		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-			buffer = bufnr,
-			callback = function()
-				vim.diagnostic.config({ virtual_text = vt })
-			end,
-		})
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-			buffer = bufnr,
-			callback = function()
-				vim.diagnostic.config({ virtual_text = false })
-			end,
-		})
-
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
+
+		-- create buffer local autocommands to show and hide virtual diagnostic text
+		-- local vt = {
+		-- 	spacing = 10,
+		-- 	severity = { min = vim.diagnostic.severity.WARN },
+		-- 	format = function(diagnostic)
+		-- 		local severity_letter = string.sub(vim.diagnostic.severity[diagnostic.severity], 1, 1)
+		-- 		local msg = diagnostic.message
+		-- 		local msg_threshold = 100
+		--
+		-- 		local num_windows = #vim.api.nvim_tabpage_list_wins(0) / 2
+		-- 		if num_windows > 1 then
+		-- 			msg_threshold = msg_threshold / num_windows
+		-- 		end
+		--
+		-- 		if string.len(msg) > msg_threshold then
+		-- 			msg = string.sub(msg, 1, msg_threshold) .. "..."
+		-- 		end
+		--
+		-- 		return string.format("%s: %s", severity_letter, msg)
+		-- 	end,
+		-- }
+		-- vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+		-- 	buffer = bufnr,
+		-- 	callback = function()
+		-- 		vim.diagnostic.config({ virtual_text = vt })
+		-- 	end,
+		-- })
+		-- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+		-- 	buffer = bufnr,
+		-- 	callback = function()
+		-- 		vim.diagnostic.config({ virtual_text = false })
+		-- 	end,
+		-- })
 	end
 
 	-- setup lsp servers
