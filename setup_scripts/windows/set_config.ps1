@@ -15,7 +15,7 @@ New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $
 #-----------------------------------------------------
 # Set default shell
 #-----------------------------------------------------
-[Environment]::SetEnvironmentVariable("ComSpec", "C:\Program Files\PowerShell\7\pwsh.exe", "Machine")
+[Environment]::SetEnvironmentVariable("ComSpec", "C:\WINDOWS\system32\cmd.exe", "Machine")
 
 #-----------------------------------------------------
 # Configure Git globals
