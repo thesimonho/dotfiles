@@ -17,13 +17,8 @@ function M.config()
 		-- Hide inactive buffers and file extensions. Other options are `alternate`, `current`, and `visible`.
 		hide = { extensions = false, inactive = false },
 
-		-- Disable highlighting alternate buffers
 		highlight_alternate = false,
-
-		-- Disable highlighting file icons in inactive buffers
 		highlight_inactive_file_icons = true,
-
-		-- Enable highlighting visible buffers
 		highlight_visible = false,
 
 		icons = true,

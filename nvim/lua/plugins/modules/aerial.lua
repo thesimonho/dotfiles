@@ -8,8 +8,8 @@ local M = {
 function M.config()
 	require("aerial").setup({
 		on_attach = function(bufnr)
-			vim.keymap.set("n", "[a", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-			vim.keymap.set("n", "]a", "<cmd>AerialNext<CR>", { buffer = bufnr })
+			vim.keymap.set("n", "[a", "<cmd>AerialPrev<CR>", { desc = "Previous aerial", buffer = bufnr })
+			vim.keymap.set("n", "]a", "<cmd>AerialNext<CR>", { desc = "Next aerial", buffer = bufnr })
 		end,
 		backends = { "lsp", "treesitter", "markdown", "man" },
 		layout = {

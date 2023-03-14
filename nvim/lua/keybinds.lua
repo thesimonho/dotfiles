@@ -146,15 +146,15 @@ if vscode then
 	map("n", "<leader>bq", '<cmd>call VSCodeNotify("workbench.action.closeActiveEditor")<cr>')
 	map("n", "<leader>bp", '<cmd>call VSCodeNotify("workbench.action.pinEditor")<cr>')
 else
-	map("n", "<leader>bb", "<cmd>BufferPick<cr>", { desc = "Pick" })
+	map("n", "<leader>bb", "<cmd>BufferOrderByDirectory<cr><cmd>BufferPick<cr>", { desc = "Pick" })
 	map("n", "<leader>bq", "<cmd>BufferClose<cr>", { desc = "Close" })
 	map("n", "<leader>bQ", "<cmd>BufferCloseAllButCurrentOrPinned<cr>", { desc = "Close all" })
 	map("n", "<leader>bp", "<cmd>BufferPin<cr>", { desc = "Pin" })
 	map("n", "<leader>bf", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find" })
-	map("n", "<leader>bl", "<cmd>BufferNext<cr>", { desc = "Next" })
-	map("n", "<leader>bh", "<cmd>BufferPrevious<cr>", { desc = "Prev" })
-	map("n", "<leader>bL", "<cmd>BufferMoveNext<cr>", { desc = "Move Next" })
-	map("n", "<leader>bH", "<cmd>BufferMovePrevious<cr>", { desc = "Move Prev" })
+	map("n", "]b", "<cmd>BufferNext<cr>", { desc = "Next buffer" })
+	map("n", "[b", "<cmd>BufferPrevious<cr>", { desc = "Previous buffer" })
+	map("n", "<leader>bl", "<cmd>BufferMoveNext<cr>", { desc = "Move Next" })
+	map("n", "<leader>bh", "<cmd>BufferMovePrevious<cr>", { desc = "Move Prev" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
