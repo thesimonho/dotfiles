@@ -384,9 +384,20 @@ end
 -- ╚═════════════════════════════════════════════════╝
 -- TODO: create buffer local maps for these either in config or with autocommands
 if not vscode then
-	local cell_code_open = { "# %%", '%%"""' }
-	local cell_md_open = { '"""%%', "# %%%" }
-	local cell_md_close = { '%%"""' }
+	local tag_code = "# %%"
+	local tag_md = "# %% [md]"
+
+	local function go_to_end_of_cell()
+		local line_num_pre = vim.fn.line(".")
+		require("jupynium.textobj").goto_next_cell_separator()
+		local line_num_post = vim.fn.line(".")
+
+		if line_num_pre == line_num_post then -- final cell
+			vim.cmd(":$")
+		else
+			vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 1, 0 })
+		end
+	end
 
 	local function insert_above(tag)
 		vim.api.nvim_command("lua require('jupynium.textobj').goto_current_cell_separator()")
@@ -399,59 +410,39 @@ if not vscode then
 	end
 
 	local function insert_below(tag)
-		vim.api.nvim_command("lua require('jupynium.textobj').goto_current_cell_separator()")
-		cur_line_num = vim.fn.line(".")
-		cur_line = vim.api.nvim_buf_get_lines(0, cur_line_num - 1, cur_line_num, false)[1]
-
-		-- find the closing tag of current cell
-		if utils.is_string_in_table(cur_line, cell_md_open) then
-			line_num_pre = vim.fn.line(".")
-			vim.api.nvim_call_function("search", { cell_md_close[1], "W" })
-			line_num_post = vim.fn.line(".")
-
-			if line_num_pre == line_num_post then -- end of file / last cell
-				vim.cmd(":$")
-			end
-		elseif utils.is_string_in_table(cur_line, cell_code_open) then
-			line_num_pre = vim.fn.line(".")
-			require("jupynium.textobj").goto_next_cell_separator()
-			line_num_post = vim.fn.line(".")
-
-			if line_num_pre == line_num_post then
-				vim.cmd(":$")
-			else
-				vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 1, 0 })
-			end
-		end
+		go_to_end_of_cell()
 
 		vim.cmd("call append(line('.'), '')")
 		vim.cmd("call append(line('.'), '')")
 		vim.cmd("call append(line('.'), '')")
-		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") + 1, vim.fn.line(".") + 1, false, { tag })
-		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 3, 0 })
+		vim.api.nvim_buf_set_lines(0, vim.fn.line("."), vim.fn.line(".") + 1, false, { tag })
+		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 2, 0 })
 		vim.cmd("startinsert")
 	end
 
-	local function insert_closing_tag(tag)
-		vim.cmd("call append(line('.')-1, '')")
-		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false, { tag })
-		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 1, 0 })
+	local function insert_md_quotes()
+		vim.cmd("call append(line('.'), '')")
+		vim.cmd("call append(line('.'), '')")
+		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false, { '"""' })
+		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") + 1, vim.fn.line(".") + 2, false, { '"""' })
+		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 1, 0 })
+		vim.cmd("startinsert")
 	end
 
 	map({ "n", "x" }, "<leader>jac", function()
-		insert_above(cell_code_open[1])
+		insert_above(tag_code)
 	end, { desc = "Insert code cell above" })
 	map({ "n", "x" }, "<leader>jam", function()
-		insert_above(cell_md_open[1])
-		insert_closing_tag(cell_md_close[1])
+		insert_above(tag_md)
+		insert_md_quotes()
 	end, { desc = "Insert markdown cell above" })
 
 	map({ "n", "x" }, "<leader>jbc", function()
-		insert_below(cell_code_open[1])
+		insert_below(tag_code)
 	end, { desc = "Insert code cell below" })
 	map({ "n", "x" }, "<leader>jbm", function()
-		insert_below(cell_md_open[1])
-		insert_closing_tag(cell_md_close[1])
+		insert_below(tag_md)
+		insert_md_quotes()
 	end, { desc = "Insert markdown cell below" })
 
 	map({ "n", "x" }, "<leader>jS", "<cmd>JupyniumStartAndAttachToServer<cr>", { desc = "Start Jupynium server" })
