@@ -141,8 +141,8 @@ end
 -- ║ Buffers                                         ║
 -- ╚═════════════════════════════════════════════════╝
 if vscode then
-	map("n", "<leader>bh", '<cmd>call VSCodeNotify("workbench.action.previousEditor")<cr>')
-	map("n", "<leader>bl", '<cmd>call VSCodeNotify("workbench.action.nextEditor")<cr>')
+	map("n", "[b", '<cmd>call VSCodeNotify("workbench.action.previousEditor")<cr>')
+	map("n", "]b", '<cmd>call VSCodeNotify("workbench.action.nextEditor")<cr>')
 	map("n", "<leader>bq", '<cmd>call VSCodeNotify("workbench.action.closeActiveEditor")<cr>')
 	map("n", "<leader>bp", '<cmd>call VSCodeNotify("workbench.action.pinEditor")<cr>')
 else
@@ -155,6 +155,15 @@ else
 	map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous buffer" })
 	map("n", "<leader>bl", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Next" })
 	map("n", "<leader>bh", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Prev" })
+	map("n", "<leader>b1", "<cmd>lua require('bufferline').go_to_buffer(1, true)<cr>", { desc = "Buffer 1" })
+	map("n", "<leader>b2", "<cmd>lua require('bufferline').go_to_buffer(2, true)<cr>", { desc = "Buffer 2" })
+	map("n", "<leader>b3", "<cmd>lua require('bufferline').go_to_buffer(3, true)<cr>", { desc = "Buffer 3" })
+	map("n", "<leader>b4", "<cmd>lua require('bufferline').go_to_buffer(4, true)<cr>", { desc = "Buffer 4" })
+	map("n", "<leader>b5", "<cmd>lua require('bufferline').go_to_buffer(5, true)<cr>", { desc = "Buffer 5" })
+	map("n", "<leader>b6", "<cmd>lua require('bufferline').go_to_buffer(6, true)<cr>", { desc = "Buffer 6" })
+	map("n", "<leader>b7", "<cmd>lua require('bufferline').go_to_buffer(7, true)<cr>", { desc = "Buffer 7" })
+	map("n", "<leader>b8", "<cmd>lua require('bufferline').go_to_buffer(8, true)<cr>", { desc = "Buffer 8" })
+	map("n", "<leader>b9", "<cmd>lua require('bufferline').go_to_buffer(9, true)<cr>", { desc = "Buffer 9" })
 end
 
 -- ╔═════════════════════════════════════════════════╗

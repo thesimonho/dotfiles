@@ -19,7 +19,8 @@ function M.config()
 			middle_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
 			right_mouse_command = "vertical sbuffer %d", -- can be a string | function, see "Mouse actions"
 			indicator = {
-				style = "underline",
+				icon = "▎", -- this should be omitted if indicator style is not 'icon'
+				style = "icon",
 			},
 			buffer_close_icon = "",
 			modified_icon = "●",
@@ -48,11 +49,13 @@ function M.config()
 					toggle_hidden_on_enter = true, -- when you re-enter a hidden group this options re-opens that group so the buffer is visible
 				},
 				items = {
+					require("bufferline.groups").builtin.pinned:with({ icon = "" }),
 					{
 						name = "Docs",
 						highlight = { undercurl = true, sp = "green" },
 						auto_close = false, -- whether or not close this group if it doesn't contain the current buffer
 						priority = 1,
+						icon = "",
 						matcher = function(buf)
 							return buf.filename:match("%.md") or buf.filename:match("%.txt")
 						end,
