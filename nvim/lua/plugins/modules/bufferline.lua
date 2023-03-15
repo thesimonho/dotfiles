@@ -11,9 +11,7 @@ function M.config()
 	require("bufferline").setup({
 		options = {
 			mode = "buffers", -- set to "tabs" to only show tabpages instead
-			numbers = function(opts)
-				return string.format("%s", opts.raise(opts.ordinal))
-			end,
+			numbers = "none",
 			close_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
 			left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
 			middle_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"

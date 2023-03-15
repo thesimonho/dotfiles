@@ -148,7 +148,16 @@ if vscode then
 else
 	map("n", "<leader>bb", "<cmd>BufferLinePick<cr>", { desc = "Pick" })
 	map("n", "<leader>bq", "<cmd>bdelete<cr>", { desc = "Close" })
-	map("n", "<leader>bQ", "<cmd>bdelete!<cr>", { desc = "Close all" })
+	map("n", "<leader>bQ", function()
+		local cur_buf = vim.fn.bufnr()
+		for _, e in ipairs(require("bufferline").get_elements().elements) do
+			vim.schedule(function()
+				if e.id ~= cur_buf then
+					vim.cmd("bd " .. e.id)
+				end
+			end)
+		end
+	end, { desc = "Close others" })
 	map("n", "<leader>bp", "<cmd>BufferLineTogglePin<cr>", { desc = "Pin" })
 	map("n", "<leader>bf", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find" })
 	map("n", "]b", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
