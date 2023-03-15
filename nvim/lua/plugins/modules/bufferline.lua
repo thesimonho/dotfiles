@@ -4,7 +4,7 @@ local M = {
 	enabled = true,
 	version = "v3.5.0",
 	dependencies = "nvim-tree/nvim-web-devicons",
-	event = { "VimEnter" },
+	event = "VimEnter",
 }
 
 function M.config()
@@ -50,8 +50,8 @@ function M.config()
 					require("bufferline.groups").builtin.pinned:with({ icon = "" }),
 					{
 						name = "Docs",
-						highlight = { undercurl = true, sp = "green" },
-						auto_close = false, -- whether or not close this group if it doesn't contain the current buffer
+						highlight = { underline = true, sp = "green" },
+						auto_close = false,
 						priority = 1,
 						icon = "",
 						matcher = function(buf)
@@ -59,13 +59,23 @@ function M.config()
 						end,
 					},
 					{
-						name = "Tests", -- Mandatory
-						highlight = { underline = true, sp = "blue" }, -- Optional
-						auto_close = false, -- whether or not close this group if it doesn't contain the current buffer
-						priority = 2, -- determines where it will appear relative to other groups (Optional)
-						icon = "", -- Optional
-						matcher = function(buf) -- Mandatory
+						name = "Tests",
+						highlight = { underline = true, sp = "blue" },
+						auto_close = false,
+						priority = 2,
+						icon = "",
+						matcher = function(buf)
 							return buf.filename:match("%_test") or buf.filename:match("%_spec")
+						end,
+					},
+					{
+						name = "Config",
+						highlight = { underline = true, sp = "red" },
+						auto_close = false,
+						priority = 3,
+						icon = "⚙️",
+						matcher = function(buf)
+							return buf.filename:match("%.toml") or buf.filename:match("%.yaml")
 						end,
 					},
 				},

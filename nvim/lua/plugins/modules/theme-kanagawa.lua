@@ -76,15 +76,6 @@ function M.config()
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
 
-				-- BufferCurrent = { bg = colors.palette.sumiInk4 },
-				-- BufferCurrentTarget = { fg = colors.palette.autumnRed, bg = colors.palette.sumiInk4 },
-				-- BufferCurrentSign = { bg = colors.palette.sumiInk4 },
-				-- BufferCurrentMod = { fg = colors.palette.roninYellow, bg = colors.palette.sumiInk4 },
-				-- BufferInactive = { bg = colors.palette.sumiInk4 },
-				-- BufferInactiveTarget = { fg = colors.palette.autumnRed, bg = colors.palette.sumiInk4 },
-				-- BufferInactiveSign = { bg = colors.palette.sumiInk4 },
-				-- BufferInactiveMod = { fg = colors.palette.roninYellow, bg = colors.palette.sumiInk4 },
-
 				BufferLineBufferSelected = { fg = colors.palette.fujiWhite, italic = false, bold = false },
 				BufferLineNumbersSelected = { fg = colors.palette.fujiWhite, italic = false, bold = false },
 				BufferLineDuplicateSelected = { fg = colors.palette.fujiWhite, italic = true, bold = false },
