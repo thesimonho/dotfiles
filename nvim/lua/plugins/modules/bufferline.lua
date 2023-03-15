@@ -50,7 +50,7 @@ function M.config()
 					require("bufferline.groups").builtin.pinned:with({ icon = "" }),
 					{
 						name = "Docs",
-						highlight = { underline = true, sp = "green" },
+						highlight = { italic = false, sp = "green" },
 						auto_close = false,
 						priority = 1,
 						icon = "",
@@ -60,7 +60,7 @@ function M.config()
 					},
 					{
 						name = "Tests",
-						highlight = { underline = true, sp = "blue" },
+						highlight = { italic = false, sp = "blue" },
 						auto_close = false,
 						priority = 2,
 						icon = "",
@@ -70,7 +70,7 @@ function M.config()
 					},
 					{
 						name = "Config",
-						highlight = { underline = true, sp = "red" },
+						highlight = { italic = false, sp = "red" },
 						auto_close = false,
 						priority = 3,
 						icon = "⚙️",
