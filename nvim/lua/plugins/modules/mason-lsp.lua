@@ -116,7 +116,7 @@ function M.config()
 				tools = {
 					inlay_hints = { auto = true },
 					hover_actions = { border = "solid" },
-					-- executor = require("rust-tools/executors").toggleterm,
+					executor = require("rust-tools/executors").toggleterm,
 				},
 				server = {
 					on_attach = on_attach,
@@ -124,7 +124,14 @@ function M.config()
 					capabilities = capabilities,
 					checkOnSave = {
 						allFeatures = true,
-						overrideCommand = {},
+						overrideCommand = {
+							"cargo",
+							"clippy",
+							"--workspace",
+							"--message-format=json",
+							"--all-targets",
+							"--all-features",
+						},
 					},
 				},
 			})
