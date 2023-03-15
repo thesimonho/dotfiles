@@ -1,6 +1,5 @@
 local M = {
 	"nvim-treesitter/nvim-treesitter",
-    tag = "v0.8.5.2",
 	enabled = true,
 	build = function()
 		require("nvim-treesitter.install").update({ with_sync = true })
