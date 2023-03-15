@@ -6,7 +6,7 @@ local M = {
 }
 
 function M.config()
-	vim.opt.timeoutlen = 300
+	vim.opt.timeoutlen = 100
 
 	local wk = require("which-key")
 	wk.setup({

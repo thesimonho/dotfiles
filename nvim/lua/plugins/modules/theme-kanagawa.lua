@@ -15,7 +15,7 @@ function M.config()
 	local palette = wave.palette
 
 	require("kanagawa").setup({
-		compile = true,
+		compile = false,
 		undercurl = true,
 		dimInactive = true, -- dim inactive window `:h hl-NormalNC`
 		commentStyle = { italic = true }, -- comments
