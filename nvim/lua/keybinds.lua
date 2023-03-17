@@ -1,5 +1,8 @@
 local utils = require("utils")
 local map = utils.map
+local Hydra = require("hydra")
+local cmd = require("hydra.keymap-util").cmd
+local pcmd = require("hydra.keymap-util").pcmd
 local vscode = vim.g.vscode
 
 -- ╔═════════════════════════════════════════════════╗
@@ -81,20 +84,6 @@ if not vscode then
 	map("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
 	map("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
 	map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
-	map("n", "<leader>zo", function()
-		require("utils").UI_select({
-			ChatGPT = "vim.cmd('ChatGPT')",
-			ChatGPTActAs = "vim.cmd('ChatGPTActAs')",
-			ChatGPTEditWithInstructions = "vim.cmd('ChatGPTEditWithInstructions')",
-		})
-	end, { desc = "ChatGPT" })
-end
-
--- ╔═════════════════════════════════════════════════╗
--- ║ Mind                                            ║
--- ╚═════════════════════════════════════════════════╝
-if not vscode then
-	map("n", "<leader>m", "<cmd>MindOpenSmartProject<cr>", { desc = "Mind" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
@@ -118,23 +107,48 @@ if vscode then
 	map("n", "<leader>wr", '<cmd>call VSCodeNotify("workbench.action.increaseViewSize")<cr>')
 	map("n", "<leader>wR", '<cmd>call VSCodeNotify("workbench.action.decreaseViewSize")<cr>')
 else
-	map("n", "<leader>wq", "<C-W>q", { desc = "Close split" })
-	map("n", "<leader>ww", "<cmd>WindowsMaximizeHorizontally<cr>", { desc = "Maximize window" })
+	local window_hint = [[
+ ^^^^^^^^^^^^     Move       ^^    Size    ^^    _w_: maximize
+ ^^^^^^^^^^^^-------------   ^^------------^^    _q_: close
+ ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^     _<up>_   ^
+ _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<left>_  _<right>_
+ ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^    _<down>_   ^  
+ focus^^^^^^  window^^^^^^
+]]
 
-	map("n", "<leader>wh", "<cmd>lua require('utils').move_create_split('h')<cr>", { desc = "Focus left" })
-	map("n", "<leader>wj", "<cmd>lua require('utils').move_create_split('j')<cr>", { desc = "Focus down" })
-	map("n", "<leader>wk", "<cmd>lua require('utils').move_create_split('k')<cr>", { desc = "Focus up" })
-	map("n", "<leader>wl", "<cmd>lua require('utils').move_create_split('l')<cr>", { desc = "Focus right" })
+	Hydra({
+		name = "Windows",
+		hint = window_hint,
+		config = {
+			invoke_on_body = true,
+			hint = {
+				position = "bottom",
+				border = "rounded",
+			},
+		},
+		mode = "n",
+		body = "<leader>w",
+		heads = {
+			{ "h", cmd("lua require('utils').move_create_split('h')"), { exit = true, desc = "Focus/split left" } },
+			{ "j", cmd("lua require('utils').move_create_split('j')"), { exit = true, desc = "Focus/split down" } },
+			{ "k", cmd("lua require('utils').move_create_split('k')"), { exit = true, desc = "Focus/split up" } },
+			{ "l", cmd("lua require('utils').move_create_split('l')"), { exit = true, desc = "Focus/split right" } },
 
-	map("n", "<leader>wH", "<C-W>H", { desc = "Move left" })
-	map("n", "<leader>wJ", "<C-W>J", { desc = "Move down" })
-	map("n", "<leader>wK", "<C-W>K", { desc = "Move up" })
-	map("n", "<leader>wL", "<C-W>L", { desc = "Move right" })
+			{ "H", "<C-W>H", { exit = false, desc = "Move left" } },
+			{ "J", "<C-W>J", { exit = false, desc = "Move down" } },
+			{ "K", "<C-W>K", { exit = false, desc = "Move up" } },
+			{ "L", "<C-W>L", { exit = false, desc = "Move right" } },
 
-	map("n", "<leader>w<up>", ":resize +15<cr>") -- FIXME: fix the direction on these
-	map("n", "<leader>w<down>", ":resize -15<cr>")
-	map("n", "<leader>w<left>", ":vertical resize -15<cr>")
-	map("n", "<leader>w<right>", ":vertical resize +15<cr>")
+			{ "<up>", cmd("resize +15"), { exit = false, desc = "Resize up" } }, -- FIXME: fix the direction on these
+			{ "<down>", cmd("resize -15"), { exit = false, desc = "Resize down" } },
+			{ "<left>", cmd("vertical resize -15"), { exit = false, desc = "Resize left" } },
+			{ "<right>", cmd("vertical resize +15"), { exit = false, desc = "Resize right" } },
+
+			{ "w", cmd("WindowsMaximizeHorizontally"), { exit = true, desc = "maximize" } },
+			{ "q", pcmd("close", "E444"), { desc = "close window" } },
+			{ "<Esc>", nil, { exit = true, desc = false } },
+		},
+	})
 end
 
 -- ╔═════════════════════════════════════════════════╗
