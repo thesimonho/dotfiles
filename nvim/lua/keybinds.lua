@@ -160,33 +160,58 @@ if vscode then
 	map("n", "<leader>bq", '<cmd>call VSCodeNotify("workbench.action.closeActiveEditor")<cr>')
 	map("n", "<leader>bp", '<cmd>call VSCodeNotify("workbench.action.pinEditor")<cr>')
 else
-	map("n", "<leader>bb", "<cmd>BufferLinePick<cr>", { desc = "Pick" })
-	map("n", "<leader>bq", "<cmd>bdelete<cr>", { desc = "Close" })
-	map("n", "<leader>bQ", function()
-		local cur_buf = vim.fn.bufnr()
-		for _, e in ipairs(require("bufferline").get_elements().elements) do
-			vim.schedule(function()
-				if e.id ~= cur_buf then
-					vim.cmd("bd " .. e.id)
-				end
-			end)
-		end
-	end, { desc = "Close others" })
-	map("n", "<leader>bp", "<cmd>BufferLineTogglePin<cr>", { desc = "Pin" })
-	map("n", "<leader>bf", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find" })
-	map("n", "]b", "<cmd>BufferLineCycleNext<cr>", { desc = "Next buffer" })
-	map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "Previous buffer" })
-	map("n", "<leader>bl", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Next" })
-	map("n", "<leader>bh", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Prev" })
-	map("n", "<leader>b1", "<cmd>lua require('bufferline').go_to_buffer(1, true)<cr>", { desc = "Buffer 1" })
-	map("n", "<leader>b2", "<cmd>lua require('bufferline').go_to_buffer(2, true)<cr>", { desc = "Buffer 2" })
-	map("n", "<leader>b3", "<cmd>lua require('bufferline').go_to_buffer(3, true)<cr>", { desc = "Buffer 3" })
-	map("n", "<leader>b4", "<cmd>lua require('bufferline').go_to_buffer(4, true)<cr>", { desc = "Buffer 4" })
-	map("n", "<leader>b5", "<cmd>lua require('bufferline').go_to_buffer(5, true)<cr>", { desc = "Buffer 5" })
-	map("n", "<leader>b6", "<cmd>lua require('bufferline').go_to_buffer(6, true)<cr>", { desc = "Buffer 6" })
-	map("n", "<leader>b7", "<cmd>lua require('bufferline').go_to_buffer(7, true)<cr>", { desc = "Buffer 7" })
-	map("n", "<leader>b8", "<cmd>lua require('bufferline').go_to_buffer(8, true)<cr>", { desc = "Buffer 8" })
-	map("n", "<leader>b9", "<cmd>lua require('bufferline').go_to_buffer(9, true)<cr>", { desc = "Buffer 9" })
+	local hint = [[
+    _b_: Pick      _[_: Previous       _q_: Close
+    _f_: Find      _]_: Next           _Q_: Close others
+    _p_: Pin       _H_: Move left
+    ^             _L_: Move right
+    ]]
+	Hydra({
+		name = "Buffers",
+		hint = hint,
+		config = {
+			invoke_on_body = true,
+			hint = {
+				position = "bottom",
+				border = "rounded",
+			},
+		},
+		mode = "n",
+		body = "<leader>b",
+		heads = {
+			{ "b", cmd("BufferLinePick"), { exit = true, desc = "Pick" } },
+			{ "q", cmd("bdelete"), { exit = false, desc = "Close" } },
+			{
+				"Q",
+				function()
+					local cur_buf = vim.fn.bufnr()
+					for _, e in ipairs(require("bufferline").get_elements().elements) do
+						vim.schedule(function()
+							if e.id ~= cur_buf then
+								vim.cmd("bd " .. e.id)
+							end
+						end)
+					end
+				end,
+				{ exit = true, desc = "Close others" },
+			},
+			{ "p", cmd("BufferLineTogglePin"), { exit = true, desc = "Pin" } },
+			{ "f", cmd("lua require('telescope.builtin').buffers()"), { exit = true, desc = "Find" } },
+			{ "[", cmd("BufferLineCyclePrev"), { exit = false, desc = "Prev" } },
+			{ "]", cmd("BufferLineCycleNext"), { exit = false, desc = "Next" } },
+			{ "H", cmd("BufferLineMovePrev"), { exit = false, desc = "Move Prev" } },
+			{ "L", cmd("BufferLineMoveNext"), { exit = false, desc = "Move Next" } },
+			{ "1", cmd("BufferLineGoToBuffer 1"), { exit = true, desc = "Buf 1" } },
+			{ "2", cmd("BufferLineGoToBuffer 2"), { exit = true, desc = "Buf 2" } },
+			{ "3", cmd("BufferLineGoToBuffer 3"), { exit = true, desc = "Buf 3" } },
+			{ "4", cmd("BufferLineGoToBuffer 4"), { exit = true, desc = "Buf 4" } },
+			{ "5", cmd("BufferLineGoToBuffer 5"), { exit = true, desc = "Buf 5" } },
+			{ "6", cmd("BufferLineGoToBuffer 6"), { exit = true, desc = "Buf 6" } },
+			{ "7", cmd("BufferLineGoToBuffer 7"), { exit = true, desc = "Buf 7" } },
+			{ "8", cmd("BufferLineGoToBuffer 8"), { exit = true, desc = "Buf 8" } },
+			{ "<Esc>", nil, { exit = true, desc = false } },
+		},
+	})
 end
 
 -- ╔═════════════════════════════════════════════════╗
