@@ -19,6 +19,8 @@ map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
 -- ╚═════════════════════════════════════════════════╝
+map({ "n", "x" }, "w", "<Plug>(smartword-w)")
+map({ "n", "x" }, "b", "<Plug>(smartword-b)")
 map({ "n", "x" }, "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Down" }) -- Move down across wraps
 map({ "n", "x" }, "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Up" }) -- Move up across wraps
 
