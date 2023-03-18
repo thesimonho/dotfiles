@@ -32,6 +32,8 @@ function M.config()
 				accept_word = false,
 				accept_line = false,
 				dismiss = "<C-e>",
+				next = "<M-]>",
+				prev = "<M-[>",
 			},
 		},
 	})
