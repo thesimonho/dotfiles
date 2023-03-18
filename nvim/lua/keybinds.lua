@@ -316,6 +316,40 @@ else
 end
 
 -- ╔═════════════════════════════════════════════════╗
+-- ║ Text Case                                       ║
+-- ╚═════════════════════════════════════════════════╝
+local hint = [[
+ _u_: UPPERCASE    _d_: dash-case   _p_: PascalCase
+ _l_: lowercase    _._: dot.case    _P_: path/case
+ _s_: snake case   _c_: camelCase   _t_: Title Case
+ ]]
+Hydra({
+	name = "Text Case",
+	hint = hint,
+	config = {
+		color = "red",
+		invoke_on_body = true,
+		hint = {
+			position = "bottom",
+			border = "rounded",
+		},
+	},
+	mode = { "n", "x" },
+	body = "~",
+	heads = {
+		{ "u", cmd("lua require('textcase').current_word('to_upper_case')"), { exit = false, desc = "UPPERCASE" } },
+		{ "l", cmd("lua require('textcase').current_word('to_lower_case')"), { exit = false, desc = "lowercase" } },
+		{ "s", cmd("lua require('textcase').current_word('to_snake_case')"), { exit = false, desc = "snake_case" } },
+		{ "d", cmd("lua require('textcase').current_word('to_dash_case')"), { exit = false, desc = "dash-case" } },
+		{ ".", cmd("lua require('textcase').current_word('to_dot_case')"), { exit = false, desc = "dot.case" } },
+		{ "c", cmd("lua require('textcase').current_word('to_camel_case')"), { exit = false, desc = "camelCase" } },
+		{ "p", cmd("lua require('textcase').current_word('to_pascal_case')"), { exit = false, desc = "PascalCase" } },
+		{ "P", cmd("lua require('textcase').current_word('to_path_case')"), { exit = false, desc = "path/case" } },
+		{ "t", cmd("lua require('textcase').current_word('to_title_case')"), { exit = false, desc = "Title Case" } },
+	},
+})
+
+-- ╔═════════════════════════════════════════════════╗
 -- ║ Refactoring                                     ║
 -- ╚═════════════════════════════════════════════════╝
 map(
