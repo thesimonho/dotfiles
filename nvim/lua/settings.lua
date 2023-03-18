@@ -44,6 +44,9 @@ vim.opt.verbose = 0
 vim.opt.report = 99999
 vim.opt.shortmess:append("astWAIcF")
 
+-- Yank to system clipboard
+vim.api.nvim_set_option("clipboard", "unnamed")
+
 -- Diagnostics
 vim.diagnostic.config({
 	signs = true,
@@ -56,9 +59,6 @@ vim.diagnostic.config({
 		source = "always",
 	},
 })
-
--- Yank to system clipboard
-vim.api.nvim_set_option("clipboard", "unnamed")
 
 -- GUI
 vim.opt.guifont = { "FiraCode_NF", "Source_Code_Pro", "Noto_Sans", "Sans_Serif", ":h11" }
