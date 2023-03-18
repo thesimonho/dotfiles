@@ -3,7 +3,7 @@
 local M = {
 	"RRethy/vim-illuminate",
 	cond = vim.g.vscode == nil,
-	enabled = true,
+	enabled = false,
 	event = { "BufReadPost", "BufNewFile" },
 }
 

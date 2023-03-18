@@ -2,7 +2,7 @@
 local M = {
 	"zbirenbaum/neodim",
 	cond = vim.g.vscode == nil,
-	enabled = true,
+	enabled = false,
 	event = "LspAttach",
 }
 
