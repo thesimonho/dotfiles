@@ -7,8 +7,6 @@ local M = {
 			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
 			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-			"debugloop/telescope-undo.nvim",
-			"benfowler/telescope-luasnip.nvim",
 		},
 	},
 	cmd = "Telescope",
@@ -29,18 +27,6 @@ function M.config()
 			},
 		},
 		extensions = {
-			undo = {
-				use_delta = false,
-				side_by_side = true,
-				entry_format = "state #$ID, $STAT, $TIME",
-				mappings = {
-					n = {
-						["<leader>ua"] = require("telescope-undo.actions").yank_additions,
-						["<leader>ud"] = require("telescope-undo.actions").yank_deletions,
-						["<leader>ur"] = require("telescope-undo.actions").restore,
-					},
-				},
-			},
 			fzf = {
 				fuzzy = true, -- false will only do exact matching
 				override_generic_sorter = true, -- override the generic sorter
@@ -49,8 +35,6 @@ function M.config()
 			},
 		},
 	})
-	require("telescope").load_extension("undo")
-	require("telescope").load_extension("luasnip")
 	require("telescope").load_extension("projects")
 	require("telescope").load_extension("noice")
 end

@@ -52,13 +52,6 @@ map("x", "<M-Up>", "<Plug>GoVSDUp", { desc = "Duplicate selection up" })
 map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" })
 
 -- ╔═════════════════════════════════════════════════╗
--- ║ Undo (rest are in telescope module)             ║
--- ╚═════════════════════════════════════════════════╝
-if not vscode then
-	map("n", "<leader>u", "<cmd>Telescope undo<cr>", { desc = "Undo tree" })
-end
-
--- ╔═════════════════════════════════════════════════╗
 -- ║ Help                                            ║
 -- ╚═════════════════════════════════════════════════╝
 if vscode then
@@ -72,8 +65,6 @@ else
 	map("n", "<leader>?g", "<cmd>lua require('telescope.builtin').highlights()<cr>", { desc = "Highlight groups" })
 	map("n", "<leader>?v", "<cmd>lua require('telescope.builtin').vim_options()<cr>", { desc = "Vim options" })
 	map("n", "<leader>?n", "<cmd>NoiceHistory<cr>", { desc = "Notifications" })
-	map("n", "<leader>?s", "<cmd>Telescope luasnip<CR>", { desc = "Snippets" })
-	map("n", "<leader>?S", "<cmd>lua require('luasnip.loaders').edit_snippet_files()<cr>", { desc = "Edit snippets" })
 end
 
 -- ╔═════════════════════════════════════════════════╗
@@ -85,6 +76,7 @@ if not vscode then
 	map("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
 	map("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
 	map("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
+	map("n", "<leader>zS", "<cmd>lua require('luasnip.loaders').edit_snippet_files()<cr>", { desc = "Edit snippets" })
 	map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
 end
 
