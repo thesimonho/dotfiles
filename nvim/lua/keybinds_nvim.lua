@@ -272,11 +272,54 @@ map("t", "<esc>", "<C-\\><C-n>") -- Escape to normal mode in terminal
 -- ╔═════════════════════════════════════════════════╗
 -- ║ DAP / Debug                                     ║
 -- ╚═════════════════════════════════════════════════╝
--- TODO: use hydra binds for dap
-map("n", "<f5>", "<cmd>lua require('dap').continue()<cr>", { desc = "Continue" })
-map("n", "<f6>", "<cmd>lua require('dap').step_over()<cr>", { desc = "Step over" })
-map("n", "<f7>", "<cmd>lua require('dap').step_into()<cr>", { desc = "Step into" })
-map("n", "<f8>", "<cmd>lua require('dap').toggle_breakpoint()<cr>", { desc = "Toggle breakpoint" })
+local hint = [[
+ _<f5>_: Continue      _b_: Breakpoint      _h_: Hover         _f_: Frames
+ _<f6>_: Step over     _r_: REPL            _p_: Preview       _s_: Scopes
+ _<f7>_: Step into     _l_: Run last
+ _<f8>_: Step out
+]]
+Hydra({
+	name = "Debug",
+	hint = hint,
+	config = {
+		color = "red",
+		invoke_on_body = true,
+		hint = {
+			position = "bottom",
+			border = "rounded",
+		},
+	},
+	mode = { "n", "x" },
+	body = "<leader>d",
+	heads = {
+		{ "<f5>", cmd("lua require('dap').continue()"), { exit = false, desc = "Continue" } },
+		{ "<f6>", cmd("lua require('dap').step_over()"), { exit = false, desc = "Step over" } },
+		{ "<f7>", cmd("lua require('dap').step_into()"), { exit = false, desc = "Step into" } },
+		{ "<f8>", cmd("lua require('dap').step_out()"), { exit = false, desc = "Step out" } },
+		{ "b", cmd("lua require('dap').toggle_breakpoint()"), { exit = false, desc = "Toggle breakpoint" } },
+		{ "r", cmd("lua require('dap').repl.open()"), { exit = true, desc = "REPL" } },
+		{ "l", cmd("lua require('dap').run_last()"), { exit = true, desc = "Run last" } },
+		{ "h", cmd("lua require('dap.ui.widgets').hover()"), { exit = true, desc = "Hover" } },
+		{ "p", cmd("lua require('dap.ui.widgets').preview()"), { exit = true, desc = "Preview" } },
+		{
+			"f",
+			function()
+				local widgets = require("dap.ui.widgets")
+				widgets.centered_float(widgets.frames)
+			end,
+			{ exit = true, desc = "Frames" },
+		},
+		{
+			"s",
+			function()
+				local widgets = require("dap.ui.widgets")
+				widgets.centered_float(widgets.scopes)
+			end,
+			{ exit = true, desc = "Scopes" },
+		},
+		{ "<Esc>", nil, { exit = true, nowait = true, desc = false } },
+	},
+})
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Git                                             ║
@@ -366,8 +409,8 @@ Hydra({
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Overseer                                        ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<c-f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
-map("n", "<s-f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
+map("n", "<f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
+map("n", "<c-f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Todo                                            ║
