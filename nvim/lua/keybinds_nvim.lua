@@ -124,6 +124,35 @@ Hydra({
 })
 
 -- ╔═════════════════════════════════════════════════╗
+-- ║ Tabs                                            ║
+-- ╚═════════════════════════════════════════════════╝
+local hint = [[
+    _t_: New       _[_: Previous
+    _q_: Close     _]_: Next
+    ]]
+Hydra({
+	name = "Tabs",
+	hint = hint,
+	config = {
+		invoke_on_body = true,
+		hint = {
+			position = "top-right",
+			offset = 2,
+			border = "rounded",
+		},
+	},
+	mode = "n",
+	body = "<leader>t",
+	heads = {
+		{ "t", cmd("tabnew"), { exit = true, desc = "New" } },
+		{ "q", cmd("tabclose"), { exit = true, desc = "Close" } },
+		{ "[", cmd("tabprev"), { exit = true, desc = "Prev" } },
+		{ "]", cmd("tabnext"), { exit = true, desc = "Next" } },
+		{ "<Esc>", nil, { exit = true, desc = false } },
+	},
+})
+
+-- ╔═════════════════════════════════════════════════╗
 -- ║ Folds                                           ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "zR", "<cmd>lua require('ufo').openAllFolds()<cr>", { desc = "Open all folds" })
@@ -139,6 +168,7 @@ map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_git_roo
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
 map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.projects.projects({})<cr>", { desc = "Project" })
+map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 map(
 	"n",
 	"<leader>fn",
@@ -415,7 +445,6 @@ map("n", "<c-f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Todo                                            ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>t", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 map("n", "]t", function()
 	require("todo-comments").jump_next()
 end, { desc = "Next todo comment" })

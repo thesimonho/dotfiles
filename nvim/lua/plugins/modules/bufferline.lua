@@ -3,7 +3,7 @@ local M = {
 	cond = vim.g.vscode == nil,
 	enabled = true,
 	version = "v3.5.0",
-	dependencies = "nvim-tree/nvim-web-devicons",
+	dependencies = { "nvim-tree/nvim-web-devicons", "tiagovla/scope.nvim" },
 	event = "VimEnter",
 }
 
@@ -50,7 +50,7 @@ function M.config()
 					require("bufferline.groups").builtin.pinned:with({ icon = "" }),
 					{
 						name = "Docs",
-						highlight = { italic = false, sp = "green" },
+						highlight = { bold = false, italic = false, sp = "green" },
 						auto_close = false,
 						priority = 1,
 						icon = "",
@@ -60,7 +60,7 @@ function M.config()
 					},
 					{
 						name = "Tests",
-						highlight = { italic = false, sp = "blue" },
+						highlight = { bold = false, italic = false, sp = "blue" },
 						auto_close = false,
 						priority = 2,
 						icon = "",
@@ -70,7 +70,7 @@ function M.config()
 					},
 					{
 						name = "Config",
-						highlight = { italic = false, sp = "red" },
+						highlight = { bold = false, italic = false, sp = "red" },
 						auto_close = false,
 						priority = 3,
 						icon = "⚙️",
@@ -82,6 +82,7 @@ function M.config()
 			},
 		},
 	})
+	require("scope").setup()
 end
 
 return M

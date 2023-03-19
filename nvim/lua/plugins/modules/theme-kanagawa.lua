@@ -87,10 +87,13 @@ function M.config()
 				BufferLinePickVisible = { fg = colors.palette.autumnRed, italic = false, bold = false },
 
 				BufferLinePick = { fg = colors.palette.autumnRed, italic = false, bold = false },
+				BufferLineTab = { fg = colors.palette.fujiGray, italic = false, bold = false },
+				BufferLineTabSelected = { fg = colors.palette.roninYellow, italic = false, bold = true },
+				BufferLineTabClose = { fg = colors.palette.autumnRed },
 
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
-				HLInclineNormalNC = { bg = colors.palette.sumiInk4, fg = colors.palette.fujiWhite },
+				HLInclineNormalNC = { bg = colors.palette.fujiGray, fg = colors.palette.sumiInk0 },
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
