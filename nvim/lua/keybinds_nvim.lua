@@ -26,6 +26,7 @@ map("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
 map("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
 map("n", "<leader>zS", "<cmd>lua require('luasnip.loaders').edit_snippet_files()<cr>", { desc = "Edit snippets" })
 map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
+map("n", "<leader>zp", "<cmd>TSPlaygroundToggle<CR>", { desc = "TS Playground" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Window / Splits                                 ║
