@@ -474,62 +474,76 @@ local function insert_md_quotes()
 	vim.cmd("startinsert")
 end
 
-map({ "n", "x" }, "<leader>jac", function()
-	insert_above(tag_code)
-end, { desc = "Insert code cell above" })
-map({ "n", "x" }, "<leader>jam", function()
-	insert_above(tag_md)
-	insert_md_quotes()
-end, { desc = "Insert markdown cell above" })
-
-map({ "n", "x" }, "<leader>jbc", function()
-	insert_below(tag_code)
-end, { desc = "Insert code cell below" })
-map({ "n", "x" }, "<leader>jbm", function()
-	insert_below(tag_md)
-	insert_md_quotes()
-end, { desc = "Insert markdown cell below" })
-
-map({ "n", "x" }, "<leader>jS", "<cmd>JupyniumStartAndAttachToServer<cr>", { desc = "Start Jupynium server" })
-map({ "n", "x" }, "<leader>js", "<cmd>JupyniumStartSync<cr>", { desc = "Sync Jupynium" })
-map({ "n", "x" }, "<leader>jkh", "<cmd>JupyniumKernelHover<cr>", { desc = "Hover" })
-map({ "n", "x" }, "<leader>jkr", "<cmd>JupyniumKernelRestart<cr>", { desc = "Restart kernel" })
-map({ "n", "x" }, "<leader>jks", "<cmd>JupyniumKernelSelect<cr>", { desc = "Select kernel" })
-map({ "n", "x" }, "<leader>jki", "<cmd>JupyniumKernelInterrupt<cr>", { desc = "Interrupt kernel" })
-map(
-	{ "n", "x", "o" },
-	"<leader>jj",
-	"<cmd>lua require'jupynium.textobj'.goto_current_cell_separator()<cr>",
-	{ desc = "Go to current cell" }
-)
-map({ "n", "x" }, "<leader>je", "<cmd>JupyniumExecuteSelectedCells<cr>", { desc = "Execute cell" })
--- TODO: jump back to prev cursor location
-map({ "n", "x" }, "<leader>jE", "ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>", { desc = "Execute all cells" })
-map({ "n", "x" }, "<leader>joc", "<cmd>JupyniumClearSelectedCellsOutputs<cr>", { desc = "Clear output" })
-map({ "n", "x" }, "<leader>jot", "<cmd>JupyniumToggleSelectedCellsOutputsScroll<cr>", { desc = "Toggle output" })
-
--- text objects
-map(
-	{ "n", "x", "o" },
-	"[j",
-	"<cmd>lua require'jupynium.textobj'.goto_previous_cell_separator()<cr>",
-	{ desc = "Previous jupyter cell" }
-)
-map(
-	{ "n", "x", "o" },
-	"]j",
-	"<cmd>lua require'jupynium.textobj'.goto_next_cell_separator()<cr>",
-	{ desc = "Next jupyter cell" }
-)
-map(
-	{ "x", "o" },
-	"aj",
-	"<cmd>lua require'jupynium.textobj'.select_cell(true, false)<cr>",
-	{ desc = "Around jupyter cell" }
-)
-map(
-	{ "x", "o" },
-	"ij",
-	"<cmd>lua require'jupynium.textobj'.select_cell(false, false)<cr>",
-	{ desc = "Inside jupyter cell" }
-)
+local hint = [[
+ _S_: Start server           _kh_: Kernel hover          _ac_: Code above         _[_: Prev cell
+ _s_: Sync server            _kr_: Kernel restart        _am_: Markdown above     _]_: Next cell 
+ _e_: Execute cell           _ks_: Kernel select         _bc_: Code below         _ij_: Inside cell 
+ _E_: Execute all cells      _ki_: Kernel interrupt      _bm_: Markdown below     _aj_: Around cell 
+]]
+Hydra({
+	name = "Jupyter",
+	hint = hint,
+	config = {
+		color = "red",
+		invoke_on_body = true,
+		hint = {
+			position = "bottom-right",
+			border = "rounded",
+		},
+	},
+	mode = { "n", "x" },
+	body = "<leader>j",
+	heads = {
+		{ "S", cmd("JupyniumStartAndAttachToServer"), { exit = true, desc = "Start Jupynium server" } },
+		{ "s", cmd("JupyniumStartSync"), { exit = true, desc = "Start sync" } },
+		{ "kh", cmd("JupyniumKernelHover"), { exit = true, desc = "Hover" } },
+		{ "kr", cmd("JupyniumKernelRestart"), { exit = true, desc = "Restart kernel" } },
+		{ "ks", cmd("JupyniumKernelSelect"), { exit = true, desc = "Select kernel" } },
+		{ "ki", cmd("JupyniumKernelInterrupt"), { exit = true, desc = "Interrupt kernel" } },
+		{
+			"ac",
+			function()
+				insert_above(tag_code)
+			end,
+			{ exit = false, desc = "Insert code above" },
+		},
+		{
+			"am",
+			function()
+				insert_above(tag_md)
+				insert_md_quotes()
+			end,
+			{ exit = false, desc = "Insert markdown above" },
+		},
+		{
+			"bc",
+			function()
+				insert_below(tag_code)
+			end,
+			{ exit = false, desc = "Insert code below" },
+		},
+		{
+			"bm",
+			function()
+				insert_below(tag_md)
+				insert_md_quotes()
+			end,
+			{ exit = false, desc = "Insert markdown below" },
+		},
+		{ "j", cmd("lua require'jupynium.textobj'.goto_current_cell_separator()"), { desc = "Go to current cell" } },
+		{ "e", cmd("JupyniumExecuteSelectedCells"), { exit = false, desc = "Execute cell" } },
+		-- TODO: jump back to prev cursor location
+		{ "E", "ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>", { exit = false, desc = "Execute all cells" } },
+		{ "oc", cmd("JupyniumClearSelectedCellsOutputs"), { exit = false, desc = "Clear output" } },
+		{ "ot", cmd("JupyniumToggleSelectedCellsOutputsScroll"), { exit = false, desc = "Toggle output" } },
+		{
+			"[",
+			cmd("lua require'jupynium.textobj'.goto_previous_cell_separator()"),
+			{ exit = false, desc = "Previous cell" },
+		},
+		{ "]", cmd("lua require'jupynium.textobj'.goto_next_cell_separator()"), { exit = false, desc = "Next cell" } },
+		{ "aj", cmd("lua require'jupynium.textobj'.select_cell(true, false)"), { exit = true, desc = "Around cell" } },
+		{ "ij", cmd("lua require'jupynium.textobj'.select_cell(false, false)"), { exit = true, desc = "Inside cell" } },
+		{ "<Esc>", nil, { exit = true, nowait = true, desc = false } },
+	},
+})

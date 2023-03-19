@@ -43,10 +43,6 @@ function M.config()
 	wk.register({
 		r = { name = "Refactor", p = { name = "Print" } },
 	}, { prefix = "<leader>" })
-
-	wk.register({
-		j = { name = "Jupyter" },
-	}, { prefix = "<leader>" })
 end
 
 return M

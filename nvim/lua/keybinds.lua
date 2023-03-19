@@ -52,7 +52,6 @@ map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" }
 -- ╚═════════════════════════════════════════════════╝
 map({ "n", "x", "o" }, "s", "<Plug>(leap-forward-to)", { desc = "Leap forward" })
 map({ "n", "x", "o" }, "S", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
-map({ "n", "x", "o" }, "<leader>s", "<Plug>(leap-from-window)", { desc = "Leap window" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Refactoring                                     ║
