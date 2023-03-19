@@ -32,9 +32,8 @@ function M.config()
 			-- "quickfix",
 			-- "terminal",
 			-- "prompt",
-			buftypes = { "nofile", "prompt" },
-			floating_wins = true,
-			unlisted_buffers = false,
+			buftypes = { "", "nofile", "prompt" },
+			unlisted_buffers = true,
 			-- 'autocmd',
 			-- 'command',
 			-- 'loclist',
@@ -43,6 +42,7 @@ function M.config()
 			-- 'quickfix',
 			-- 'unknown',
 			wintypes = "special",
+			floating_wins = true,
 		},
 		render = function(props)
 			local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
@@ -55,7 +55,7 @@ function M.config()
 		end,
 		window = {
 			margin = {
-				horizontal = 2,
+				horizontal = 4,
 				vertical = 0,
 			},
 			options = {
