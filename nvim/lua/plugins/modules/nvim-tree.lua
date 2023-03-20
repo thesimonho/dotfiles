@@ -16,12 +16,12 @@ function M.config()
 		hijack_cursor = true,
 		sync_root_with_cwd = true,
 		respect_buf_cwd = true,
-		reload_on_bufenter = true,
+		reload_on_bufenter = false,
 		select_prompts = true,
 		view = {
 			centralize_selection = false,
 			cursorline = true,
-            signcolumn = "no",
+			signcolumn = "no",
 			width = function()
 				return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
 			end,
@@ -137,7 +137,7 @@ function M.config()
 				window_picker = {
 					enable = true,
 					picker = "default",
-					chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+					chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 					exclude = {
 						filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame" },
 						buftype = { "nofile", "terminal", "help" },
