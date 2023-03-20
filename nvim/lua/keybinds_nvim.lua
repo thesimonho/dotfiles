@@ -322,7 +322,7 @@ Hydra({
 	mode = { "n", "x" },
 	body = "<leader>d",
 	heads = {
-		{ "<f5>", cmd("lua require('dap').continue()"), { exit = false, desc = "Continue" } },
+		{ "<f5>", cmd("lua require('dap').continue()"), { exit = true, desc = "Continue" } },
 		{ "<f6>", cmd("lua require('dap').step_over()"), { exit = false, desc = "Step over" } },
 		{ "<f7>", cmd("lua require('dap').step_into()"), { exit = false, desc = "Step into" } },
 		{ "<f8>", cmd("lua require('dap').step_out()"), { exit = false, desc = "Step out" } },
