@@ -8,7 +8,7 @@ local M = {
 
 function M.config()
 	local HEIGHT_RATIO = 0.8
-	local WIDTH_RATIO = 0.2
+	local WIDTH_RATIO = 0.15
 
 	require("nvim-tree").setup({
 		auto_reload_on_write = true,
@@ -21,6 +21,7 @@ function M.config()
 		view = {
 			centralize_selection = false,
 			cursorline = true,
+            signcolumn = "no",
 			width = function()
 				return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
 			end,

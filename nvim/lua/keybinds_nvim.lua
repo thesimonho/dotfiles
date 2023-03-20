@@ -3,6 +3,7 @@ local map = utils.map
 local Hydra = require("hydra")
 local cmd = require("hydra.keymap-util").cmd
 local pcmd = require("hydra.keymap-util").pcmd
+local api = require("nvim-tree.api")
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Help                                            ║
@@ -170,6 +171,51 @@ map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>"
 map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.projects.projects({})<cr>", { desc = "Project" })
 map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 map("n", "<leader>fn", "<cmd>NvimTreeToggle<cr>", { desc = "Tree" })
+
+-- ╔═════════════════════════════════════════════════╗
+-- ║ Nvim-tree                                       ║
+-- ╚═════════════════════════════════════════════════╝
+local hint = [[
+_/_: Filter         _y_: Yank path    _n_: New
+_h_: Show hidden    _c_: Copy         _r_: Rename
+_t_: Open tab       _x_: Cut          _d_: Delete
+_v_: Open split     _p_: Paste        _?_: Help
+]]
+
+nvim_tree_hydra = nil
+function spawn_nvim_tree_hydra()
+	nvim_tree_hydra = Hydra({
+		name = "NvimTree",
+		hint = hint,
+		config = {
+			color = "pink",
+			invoke_on_body = true,
+			buffer = 0, -- only for active buffer
+			hint = {
+				position = "bottom",
+				border = "rounded",
+			},
+		},
+		mode = "n",
+		body = "H",
+		heads = {
+			{ "/", api.live_filter.start, { exit = false, silent = true } },
+			{ "h", api.tree.toggle_hidden_filter, { exit = false, silent = true } },
+			{ "t", api.node.open.tab, { exit = false, silent = true } },
+			{ "v", api.node.open.vertical, { exit = false, silent = true } },
+			{ "y", api.fs.copy.absolute_path, { exit = false, silent = true } },
+			{ "c", api.fs.copy.node, { exit = false, silent = true } },
+			{ "x", api.fs.cut, { exit = false, silent = true } },
+			{ "p", api.fs.paste, { exit = false, silent = true } },
+			{ "n", api.fs.create, { exit = false, silent = true } },
+			{ "r", api.fs.rename, { exit = false, silent = true } },
+			{ "d", api.fs.remove, { exit = false, silent = true } },
+			{ "?", api.tree.toggle_help, { exit = false, silent = true } },
+			{ "<Esc>", nil, { exit = true, nowait = true, desc = false } },
+		},
+	})
+	nvim_tree_hydra:activate()
+end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Go to                                           ║

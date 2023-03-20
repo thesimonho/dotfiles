@@ -102,6 +102,7 @@ function M.config()
 				NoiceFormatProgressTodo = { bg = colors.theme.ui.bg },
 				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
+				NvimTreeNormalNC = { link = "NormalNC" },
 				NvimTreeIndentMarker = { link = "IndentBlanklineChar" },
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
