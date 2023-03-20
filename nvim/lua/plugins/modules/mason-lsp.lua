@@ -21,7 +21,7 @@ function M.config()
 		"lua-language-server",
 		"marksman",
 		"powershell-editor-services",
-		"pyright",
+		"ruff-lsp",
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -31,7 +31,6 @@ function M.config()
 		-- linters
 		"eslint_d",
 		"markdownlint",
-		"ruff",
 
 		-- formatters
 		"black",
