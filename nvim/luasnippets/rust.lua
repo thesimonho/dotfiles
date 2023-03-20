@@ -65,4 +65,45 @@ return {
 			}
 		)
 	),
+	s(
+		{
+			trig = "(%s?=%s?)vec",
+			dscr = "Create vector",
+			snippetType = "autosnippet",
+			regTrig = true,
+			wordTrig = false,
+		},
+		fmta(
+			[=[
+            <>vec![<>];
+        ]=],
+			{
+				f(function(_, snip)
+					return snip.captures[1]
+				end),
+				i(0),
+			}
+		)
+	),
+	s(
+		{
+			trig = "(%s?=%s?)hm",
+			dscr = "Create hashmap",
+			snippetType = "autosnippet",
+			regTrig = true,
+			wordTrig = false,
+		},
+		fmta(
+			[[
+            <>HashMap::new();
+            <>
+        ]],
+			{
+				f(function(_, snip)
+					return snip.captures[1]
+				end),
+				i(0),
+			}
+		)
+	),
 }

@@ -32,7 +32,7 @@ function M.config()
 			-- "quickfix",
 			-- "terminal",
 			-- "prompt",
-			buftypes = { "", "nofile", "prompt" },
+			buftypes = { "nofile", "prompt" },
 			unlisted_buffers = true,
 			-- 'autocmd',
 			-- 'command',
@@ -43,6 +43,7 @@ function M.config()
 			-- 'unknown',
 			wintypes = "special",
 			floating_wins = true,
+			filetypes = { "" },
 		},
 		render = function(props)
 			local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
