@@ -19,7 +19,7 @@ function M.config()
 		reload_on_bufenter = true,
 		select_prompts = true,
 		view = {
-			centralize_selection = true,
+			centralize_selection = false,
 			cursorline = true,
 			width = function()
 				return math.floor(vim.opt.columns:get() * WIDTH_RATIO)
@@ -28,7 +28,7 @@ function M.config()
 			side = "left",
 			preserve_window_proportions = true,
 			float = {
-				enable = true,
+				enable = false,
 				quit_on_focus_loss = true,
 				open_win_config = function()
 					local screen_w = vim.opt.columns:get()
@@ -98,8 +98,8 @@ function M.config()
 					},
 				},
 			},
-			special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
-			symlink_destination = true,
+			special_files = {},
+			symlink_destination = false,
 		},
 		update_focused_file = {
 			enable = true,
@@ -115,7 +115,7 @@ function M.config()
 		},
 		git = {
 			enable = true,
-			ignore = true,
+			ignore = false,
 			show_on_dirs = true,
 			show_on_open_dirs = true,
 		},
@@ -148,7 +148,7 @@ function M.config()
 			},
 		},
 		live_filter = {
-			prefix = "[FILTER]: ",
+			prefix = "[Filter]: ",
 			always_show_folders = false,
 		},
 		tab = {
