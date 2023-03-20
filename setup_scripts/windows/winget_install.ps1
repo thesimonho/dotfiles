@@ -28,6 +28,7 @@ winget install -e --id Nvidia.GeForceExperience
 winget install -e --id RProject.R
 winget install -e --id Valve.Steam
 winget install -e --id wez.wezterm
+winget install wingetui
 winget install -e --id Microsoft.VisualStudioCode
 winget install -e --id VideoLAN.VLC
 winget install -e --id DigitalScholar.Zotero
