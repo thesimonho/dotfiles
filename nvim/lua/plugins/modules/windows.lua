@@ -16,7 +16,7 @@ function M.config()
 		},
 		ignore = {
 			buftype = { "quickfix" },
-			filetype = { "aerial", "neo-tree", "OverseerList" },
+			filetype = { "aerial", "neo-tree", "NvimTree", "OverseerList" },
 		},
 		animation = {
 			enable = true,

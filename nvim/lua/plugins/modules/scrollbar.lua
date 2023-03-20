@@ -29,6 +29,7 @@ function M.config()
 			"TelescopePrompt",
 			"noice",
 			"neo-tree",
+			"NvimTree",
 			"aerial",
 			"OverseerList",
 		},

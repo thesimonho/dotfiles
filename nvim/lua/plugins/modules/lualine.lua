@@ -82,6 +82,7 @@ function M.config()
 			"aerial",
 			"neo-tree",
 			"nvim-dap-ui",
+            "nvim-tree",
 			"toggleterm",
 			"overseer",
 		},

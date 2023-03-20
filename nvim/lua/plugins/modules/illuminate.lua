@@ -14,6 +14,7 @@ function M.config()
 		min_count_to_highlight = 2,
 		filetypes_denylist = {
 			"neo-tree",
+            "NvimTree",
 			"aerial",
 		},
 	})

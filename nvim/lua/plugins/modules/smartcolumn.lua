@@ -8,7 +8,7 @@ local M = {
 function M.config()
 	require("smartcolumn").setup({
 		colorcolumn = "120",
-		disabled_filetypes = { "help", "text", "lazy", "mason", "neo-tree", "aerial" },
+		disabled_filetypes = { "help", "text", "lazy", "mason", "neo-tree", "NvimTree", "aerial" },
 		custom_colorcolumn = { python = "79", rust = "100", javascript = "80" },
 		scope = "file",
 	})

@@ -98,12 +98,12 @@ function M.config()
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 
-				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
-
 				NoiceMini = { bg = colors.theme.ui.bg },
 				NoiceFormatProgressTodo = { bg = colors.theme.ui.bg },
 				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
+				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
+				NvimTreeIndentMarker = { link = "IndentBlanklineChar" },
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 
