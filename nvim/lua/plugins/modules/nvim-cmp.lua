@@ -7,6 +7,7 @@ local M = {
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-nvim-lua",
+		"hrsh7th/cmp-nvim-lsp-signature-help",
 	},
 	event = { "InsertEnter" },
 }
@@ -78,6 +79,7 @@ function M.config()
 			},
 			{ name = "jupynium", priority = 600, max_item_count = 10 }, -- consider higher priority than LSP
 			{ name = "nvim_lsp", priority = 500, keyword_length = 1, max_item_count = 10 },
+			{ name = "nvim_lsp_signature_help" },
 			{ name = "buffer", keyword_length = 3, max_item_count = 10 },
 			{ name = "path", max_item_count = 5 },
 			{ name = "crates" },
