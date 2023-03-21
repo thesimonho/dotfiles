@@ -565,7 +565,14 @@ Hydra({
 	body = "<leader>j",
 	heads = {
 		{ "S", cmd("JupyniumStartAndAttachToServer"), { exit = true, desc = "Start Jupynium server" } },
-		{ "s", cmd("JupyniumStartSync"), { exit = true, desc = "Start sync" } },
+		{
+			"s",
+			function()
+				filename_wo_ext = vim.fn.expand("%:r:r")
+				vim.cmd([[JupyniumStartSync ]] .. filename_wo_ext)
+			end,
+			{ exit = true, desc = "Sync server" },
+		},
 		{ "kh", cmd("JupyniumKernelHover"), { exit = true, desc = "Hover" } },
 		{ "kr", cmd("JupyniumKernelRestart"), { exit = true, desc = "Restart kernel" } },
 		{ "ks", cmd("JupyniumKernelSelect"), { exit = true, desc = "Select kernel" } },
