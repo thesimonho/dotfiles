@@ -8,7 +8,8 @@ local M = {
 
 function M.config()
 	require("trouble").setup({
-		mode = "document_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+		-- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+		mode = "document_diagnostics",
 		action_keys = { -- key mappings for actions in the trouble list
 			close = "q", -- close the list
 			cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor

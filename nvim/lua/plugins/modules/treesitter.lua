@@ -79,7 +79,7 @@ function M.config()
 		},
 		rainbow = {
 			enable = true,
-			extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+			extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table
 			colors = {
 				"#c2c2c2",
 				"#a89984",

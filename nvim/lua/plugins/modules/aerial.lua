@@ -17,7 +17,7 @@ function M.config()
 			-- width = nil,
 			-- min_width = 10,
 			default_direction = "right",
-			preserve_equality = false,
+			preserve_equality = true,
 		},
 		lazy_load = true,
 		close_automatic_events = { "unsupported" },
