@@ -106,6 +106,8 @@ function M.config()
 				NvimTreeIndentMarker = { link = "IndentBlanklineChar" },
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
+				NvimTreeWinSeparator = { link = "WinSeparator" },
+				WinSeparator = { bg = nil, fg = colors.palette.waveAqua1 },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
 				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
