@@ -21,7 +21,7 @@ function M.config()
 		"lua-language-server",
 		"marksman",
 		"powershell-editor-services",
-		"ruff-lsp",
+		"pyright",
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -31,6 +31,7 @@ function M.config()
 		-- linters
 		"eslint_d",
 		"markdownlint",
+		"ruff-lsp",
 
 		-- formatters
 		"black",
@@ -55,6 +56,9 @@ function M.config()
 	local servers = {
 		lua_ls = {
 			Lua = {
+				completion = {
+					callSnippet = "Replace",
+				},
 				workspace = { checkThirdParty = false },
 				telemetry = { enable = false },
 				diagnostics = {
