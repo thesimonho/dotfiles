@@ -11,6 +11,7 @@ map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear highlights" }) -- Clear
 map("n", "cd", ":cd %:p:h<cr>:pwd<cr>", { desc = "Change working directory" }) -- cd to current file's directory
 map("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; C-H = C-BS
 map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
+map("n", "<Tab>", "<C-^>", { desc = "Alternate file" }) -- Switch to previous file
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║

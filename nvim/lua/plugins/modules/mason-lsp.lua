@@ -65,10 +65,10 @@ function M.config()
 	}
 
 	-- on_attach function to be added to each server
-	local on_attach = function(_, bufnr)
+	local on_attach = function(client, bufnr)
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
-		-- vim.diagnostic.config({ virtual_text = false })
+		vim.api.nvim_notify("LSP attached: " .. client.name, vim.log.levels.INFO, {})
 
 		-- create buffer local autocommands to show and hide virtual diagnostic text
 		local vt = {

@@ -19,6 +19,7 @@ function M.config()
 			"aerial",
 			"Trouble",
 			"OverseerList",
+			"lspinfo",
 		},
 		scope = "file",
 	})
