@@ -19,6 +19,9 @@ function M.config()
 			layout_strategy = "horizontal",
 			layout_config = { width = 0.8 },
 			prompt_prefix = " 🔍 ",
+			file_ignore_patterns = {
+				"node_modules",
+			},
 			mappings = {
 				i = {
 					["<C-j>"] = actions.move_selection_next,
