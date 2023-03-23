@@ -19,7 +19,6 @@ local has_words_before = function()
 	return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
--- FIXME: no autocomplete? caused by neodev setup?
 function M.config()
 	local cmp = require("cmp")
 	local lspkind = require("lspkind")
@@ -69,17 +68,11 @@ function M.config()
 			end),
 		},
 		sources = cmp.config.sources({
-			{
-				name = "luasnip",
-				priority = 700,
-				keyword_length = 2,
-				max_item_count = 5,
-				option = { show_autosnippets = false },
-			},
-			{ name = "jupynium", priority = 600, max_item_count = 5 }, -- consider higher priority than LSP
-			{ name = "nvim_lsp", priority = 500, keyword_length = 1, max_item_count = 5 },
-			{ name = "buffer", keyword_length = 3, max_item_count = 5 },
-			{ name = "path", max_item_count = 5 },
+			{ name = "luasnip", priority = 700, keyword_length = 2, option = { show_autosnippets = true } },
+			{ name = "jupynium", priority = 600 }, -- consider higher priority than LSP
+			{ name = "nvim_lsp", priority = 500, keyword_length = 1 },
+			{ name = "buffer", keyword_length = 3 },
+			{ name = "path" },
 			{ name = "crates" },
 		}),
 	})
