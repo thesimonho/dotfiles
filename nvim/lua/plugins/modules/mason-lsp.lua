@@ -21,7 +21,7 @@ function M.config()
 		"lua-language-server",
 		"marksman",
 		"powershell-editor-services",
-		"pyright",
+		"python-lsp-server",
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -52,7 +52,7 @@ function M.config()
 		lineFoldingOnly = true,
 	}
 
-	-- settings for lsp servers
+	-- settings for specific lsp servers
 	local runtime_path = vim.split(package.path, ";")
 	table.insert(runtime_path, "lua/?.lua")
 	table.insert(runtime_path, "lua/?/init.lua")
@@ -76,6 +76,17 @@ function M.config()
 						vim.fn.expand("$VIMRUNTIME/lua"),
 						vim.fn.stdpath("config") .. "/lua",
 					},
+				},
+			},
+		},
+		pylsp = {
+			pylsp = {
+				plugins = {
+					jedi_completion = { enabled = true, fuzzy = true },
+					pydocstyle = { enabled = true, convention = "google" },
+					pyflakes = { enabled = false },
+					autopep8 = { enabled = false },
+					yapf = { enabled = false },
 				},
 			},
 		},
