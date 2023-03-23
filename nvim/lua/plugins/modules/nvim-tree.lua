@@ -132,10 +132,10 @@ function M.config()
 				restrict_above_cwd = false,
 			},
 			open_file = {
-				quit_on_open = false,
+				quit_on_open = true,
 				resize_window = true,
 				window_picker = {
-					enable = true,
+					enable = false,
 					picker = "default",
 					chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 					exclude = {
@@ -162,11 +162,6 @@ function M.config()
 			threshold = vim.log.levels.INFO,
 		},
 	})
-
-	local api = require("nvim-tree.api")
-	api.events.subscribe(api.events.Event.FileCreated, function(file)
-		vim.cmd("edit " .. file.fname)
-	end)
 end
 
 return M

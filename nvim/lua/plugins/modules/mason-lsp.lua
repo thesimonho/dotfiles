@@ -84,6 +84,7 @@ function M.config()
 				plugins = {
 					jedi_completion = { enabled = true, fuzzy = true },
 					pydocstyle = { enabled = true, convention = "google" },
+					pycodestyle = { enabled = false },
 					pyflakes = { enabled = false },
 					autopep8 = { enabled = false },
 					yapf = { enabled = false },

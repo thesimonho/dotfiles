@@ -608,9 +608,9 @@ Hydra({
 			{ exit = false, desc = "Insert markdown below" },
 		},
 		{ "j", cmd("lua require'jupynium.textobj'.goto_current_cell_separator()"), { desc = "Go to current cell" } },
-		{ "e", cmd("JupyniumExecuteSelectedCells"), { exit = false, desc = "Execute cell" } },
+		{ "e", cmd("JupyniumExecuteSelectedCells"), { exit = true, desc = "Execute cell" } },
 		-- TODO: jump back to prev cursor location
-		{ "E", "ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>", { exit = false, desc = "Execute all cells" } },
+		{ "E", "ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>", { exit = true, desc = "Execute all cells" } },
 		{ "oc", cmd("JupyniumClearSelectedCellsOutputs"), { exit = false, desc = "Clear output" } },
 		{ "ot", cmd("JupyniumToggleSelectedCellsOutputsScroll"), { exit = false, desc = "Toggle output" } },
 		{
