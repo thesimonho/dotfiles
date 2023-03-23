@@ -31,7 +31,7 @@ function M.config()
 		-- linters
 		"eslint_d",
 		"markdownlint",
-		"ruff-lsp",
+		"ruff",
 
 		-- formatters
 		"black",
@@ -59,11 +59,9 @@ function M.config()
 	local servers = {
 		lua_ls = {
 			Lua = {
-				-- Disable telemetry
 				telemetry = { enable = false },
 				runtime = {
 					-- Tell the language server which version of Lua you're using
-					-- (most likely LuaJIT in the case of Neovim)
 					version = "LuaJIT",
 					path = runtime_path,
 				},
@@ -85,9 +83,10 @@ function M.config()
 
 	-- on_attach function to be added to each server
 	local on_attach = function(client, bufnr)
+		-- vim.api.nvim_notify("LSP attached: " .. client.name, vim.log.levels.INFO, {})
+
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
-		vim.api.nvim_notify("LSP attached: " .. client.name, vim.log.levels.INFO, {})
 
 		-- create buffer local autocommands to show and hide virtual diagnostic text
 		local vt = {
