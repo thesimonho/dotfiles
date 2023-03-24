@@ -48,7 +48,7 @@ function M.config()
 				search_by = "title",
 				on_project_selected = function(prompt_bufnr)
 					project_actions.find_project_files(prompt_bufnr, false)
-					-- project_actions.change_working_directory(prompt_bufnr)
+					-- project_actions.change_working_directory(prompt_bufnr, false)
 				end,
 			},
 		},

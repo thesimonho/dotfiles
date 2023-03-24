@@ -33,8 +33,8 @@ map("n", "<leader>zp", "<cmd>TSPlaygroundToggle<CR>", { desc = "TS Playground" }
 -- ║ Window / Splits                                 ║
 -- ╚═════════════════════════════════════════════════╝
 local hint = [[
- ^^^^^^^^^^^^     Move       ^^    Size    ^^    _w_: maximize
- ^^^^^^^^^^^^-------------   ^^------------^^    _q_: close
+ ^^^^^^^^^^^^     Move       ^^    Size    ^^    _q_: close
+ ^^^^^^^^^^^^-------------   ^^------------^^
  ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^     _<up>_   ^
  _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<left>_  _<right>_
  ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^    _<down>_   ^  
@@ -69,7 +69,6 @@ Hydra({
 		{ "<left>", cmd("vertical resize -15"), { exit = false, desc = "Resize left" } },
 		{ "<right>", cmd("vertical resize +15"), { exit = false, desc = "Resize right" } },
 
-		{ "w", cmd("WindowsMaximizeHorizontally"), { exit = true, desc = "maximize" } },
 		{ "q", pcmd("close", "E444"), { exit = true, desc = "close window" } },
 		{ "<Esc>", nil, { exit = true, desc = false } },
 	},
