@@ -41,7 +41,7 @@ function M.config()
 					icon = "🔍",
 					desc = " Projects ",
 					group = "@parameter",
-					action = "Telescope projects",
+					action = "lua require'telescope'.extensions.project.project{}",
 					key = "p",
 				},
 			},

@@ -168,7 +168,7 @@ map("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>",
 map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_git_root()<cr>", { desc = "Grep" })
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
-map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.projects.projects({})<cr>", { desc = "Project" })
+map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.project.project{}<cr>", { desc = "Project" })
 map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 map("n", "<leader>fn", "<cmd>NvimTreeToggle<cr>", { desc = "Tree" })
 
