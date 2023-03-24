@@ -496,130 +496,166 @@ end, { desc = "Previous todo comment" })
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Jupynium                                        ║
 -- ╚═════════════════════════════════════════════════╝
--- TODO: create buffer local maps for these either in config or with autocommands
-local tag_code = "# %%"
-local tag_md = "# %% [md]"
+vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+	pattern = { "*.ju.*" },
+	callback = function(event)
+		MapJupynium(event.buf)
+	end,
+})
 
-local function go_to_end_of_cell()
-	-- TODO: could simplify this by using the inside cell textobject
-	local line_num_pre = vim.fn.line(".")
-	require("jupynium.textobj").goto_next_cell_separator()
-	local line_num_post = vim.fn.line(".")
+function MapJupynium(bufnr)
+	local tag_code = "# %%"
+	local tag_md = "# %% [md]"
 
-	if line_num_pre == line_num_post then -- final cell
-		vim.cmd(":$")
-	else
-		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 1, 0 })
+	local function go_to_end_of_cell()
+		-- TODO: could simplify this by using the inside cell textobject
+		local line_num_pre = vim.fn.line(".")
+		require("jupynium.textobj").goto_next_cell_separator()
+		local line_num_post = vim.fn.line(".")
+
+		if line_num_pre == line_num_post then -- final cell
+			vim.cmd(":$")
+		else
+			vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 1, 0 })
+		end
 	end
-end
 
-local function insert_above(tag)
-	vim.api.nvim_command("lua require('jupynium.textobj').goto_current_cell_separator()")
-	vim.cmd("call append(line('.')-1, '')")
-	vim.cmd("call append(line('.')-1, '')")
-	vim.cmd("call append(line('.')-1, '')")
-	vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 4, vim.fn.line(".") - 3, false, { tag })
-	vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 2, 0 })
-	vim.cmd("startinsert")
-end
+	local function insert_above(tag)
+		vim.api.nvim_command("lua require('jupynium.textobj').goto_current_cell_separator()")
+		vim.cmd("call append(line('.')-1, '')")
+		vim.cmd("call append(line('.')-1, '')")
+		vim.cmd("call append(line('.')-1, '')")
+		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 4, vim.fn.line(".") - 3, false, { tag })
+		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 2, 0 })
+		vim.cmd("startinsert")
+	end
 
-local function insert_below(tag)
-	go_to_end_of_cell()
+	local function insert_below(tag)
+		go_to_end_of_cell()
 
-	vim.cmd("call append(line('.'), '')")
-	vim.cmd("call append(line('.'), '')")
-	vim.cmd("call append(line('.'), '')")
-	vim.api.nvim_buf_set_lines(0, vim.fn.line("."), vim.fn.line(".") + 1, false, { tag })
-	vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 2, 0 })
-	vim.cmd("startinsert")
-end
+		vim.cmd("call append(line('.'), '')")
+		vim.cmd("call append(line('.'), '')")
+		vim.cmd("call append(line('.'), '')")
+		vim.api.nvim_buf_set_lines(0, vim.fn.line("."), vim.fn.line(".") + 1, false, { tag })
+		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 2, 0 })
+		vim.cmd("startinsert")
+	end
 
-local function insert_md_quotes()
-	vim.cmd("call append(line('.'), '')")
-	vim.cmd("call append(line('.'), '')")
-	vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false, { '"""' })
-	vim.api.nvim_buf_set_lines(0, vim.fn.line(".") + 1, vim.fn.line(".") + 2, false, { '"""' })
-	vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 1, 0 })
-	vim.cmd("startinsert")
-end
+	local function insert_md_quotes()
+		vim.cmd("call append(line('.'), '')")
+		vim.cmd("call append(line('.'), '')")
+		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false, { '"""' })
+		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") + 1, vim.fn.line(".") + 2, false, { '"""' })
+		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 1, 0 })
+		vim.cmd("startinsert")
+	end
 
-local hint = [[
+	local hint = [[
  _S_: Start server           _kh_: Kernel hover          _ac_: Code above         _[_: Prev cell
  _s_: Sync server            _kr_: Kernel restart        _am_: Markdown above     _]_: Next cell 
  _e_: Execute cell           _ks_: Kernel select         _bc_: Code below         _ij_: Inside cell 
  _E_: Execute all cells      _ki_: Kernel interrupt      _bm_: Markdown below     _aj_: Around cell 
 ]]
-Hydra({
-	name = "Jupyter",
-	hint = hint,
-	config = {
-		color = "red",
-		invoke_on_body = true,
-		hint = {
-			position = "bottom-right",
-			border = "rounded",
+	Hydra({
+		name = "Jupyter",
+		hint = hint,
+		config = {
+			color = "red",
+			invoke_on_body = true,
+			hint = {
+				position = "bottom-right",
+				border = "rounded",
+			},
 		},
-	},
-	mode = { "n", "x" },
-	body = "<leader>j",
-	heads = {
-		{ "S", cmd("JupyniumStartAndAttachToServer"), { exit = true, desc = "Start Jupynium server" } },
-		{
-			"s",
-			function()
-				filename_wo_ext = vim.fn.expand("%:r:r")
-				vim.cmd([[JupyniumStartSync ]] .. filename_wo_ext)
-			end,
-			{ exit = true, desc = "Sync server" },
+		mode = { "n", "x" },
+		body = "<leader>j",
+		heads = {
+			{
+				"S",
+				cmd("JupyniumStartAndAttachToServer"),
+				{ exit = true, buffer = bufnr, desc = "Start Jupynium server" },
+			},
+			{
+				"s",
+				function()
+					filename_wo_ext = vim.fn.expand("%:r:r")
+					vim.cmd([[JupyniumStartSync ]] .. filename_wo_ext)
+				end,
+				{ exit = true, buffer = bufnr, desc = "Sync server" },
+			},
+			{ "kh", cmd("JupyniumKernelHover"), { exit = true, buffer = bufnr, desc = "Hover" } },
+			{ "kr", cmd("JupyniumKernelRestart"), { exit = true, buffer = bufnr, desc = "Restart kernel" } },
+			{ "ks", cmd("JupyniumKernelSelect"), { exit = true, buffer = bufnr, desc = "Select kernel" } },
+			{ "ki", cmd("JupyniumKernelInterrupt"), { exit = true, buffer = bufnr, desc = "Interrupt kernel" } },
+			{
+				"ac",
+				function()
+					insert_above(tag_code)
+				end,
+				{ exit = false, buffer = bufnr, desc = "Insert code above" },
+			},
+			{
+				"am",
+				function()
+					insert_above(tag_md)
+					insert_md_quotes()
+				end,
+				{ exit = false, buffer = bufnr, desc = "Insert markdown above" },
+			},
+			{
+				"bc",
+				function()
+					insert_below(tag_code)
+				end,
+				{ exit = false, buffer = bufnr, desc = "Insert code below" },
+			},
+			{
+				"bm",
+				function()
+					insert_below(tag_md)
+					insert_md_quotes()
+				end,
+				{ exit = false, buffer = bufnr, desc = "Insert markdown below" },
+			},
+			{
+				"j",
+				cmd("lua require'jupynium.textobj'.goto_current_cell_separator()"),
+				{ buffer = bufnr, desc = "Go to current cell" },
+			},
+			{ "e", cmd("JupyniumExecuteSelectedCells"), { exit = true, buffer = bufnr, desc = "Execute cell" } },
+			-- TODO: jump back to prev cursor location
+			{
+				"E",
+				"ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>",
+				{ exit = true, buffer = bufnr, desc = "Execute all cells" },
+			},
+			{ "oc", cmd("JupyniumClearSelectedCellsOutputs"), { exit = false, buffer = bufnr, desc = "Clear output" } },
+			{
+				"ot",
+				cmd("JupyniumToggleSelectedCellsOutputsScroll"),
+				{ exit = false, buffer = bufnr, desc = "Toggle output" },
+			},
+			{
+				"[",
+				cmd("lua require'jupynium.textobj'.goto_previous_cell_separator()"),
+				{ exit = false, buffer = bufnr, desc = "Previous cell" },
+			},
+			{
+				"]",
+				cmd("lua require'jupynium.textobj'.goto_next_cell_separator()"),
+				{ exit = false, buffer = bufnr, desc = "Next cell" },
+			},
+			{
+				"aj",
+				cmd("lua require'jupynium.textobj'.select_cell(true, false)"),
+				{ exit = true, buffer = bufnr, desc = "Around cell" },
+			},
+			{
+				"ij",
+				cmd("lua require'jupynium.textobj'.select_cell(false, false)"),
+				{ exit = true, buffer = bufnr, desc = "Inside cell" },
+			},
+			{ "<Esc>", nil, { exit = true, buffer = bufnr, nowait = true, desc = false } },
 		},
-		{ "kh", cmd("JupyniumKernelHover"), { exit = true, desc = "Hover" } },
-		{ "kr", cmd("JupyniumKernelRestart"), { exit = true, desc = "Restart kernel" } },
-		{ "ks", cmd("JupyniumKernelSelect"), { exit = true, desc = "Select kernel" } },
-		{ "ki", cmd("JupyniumKernelInterrupt"), { exit = true, desc = "Interrupt kernel" } },
-		{
-			"ac",
-			function()
-				insert_above(tag_code)
-			end,
-			{ exit = false, desc = "Insert code above" },
-		},
-		{
-			"am",
-			function()
-				insert_above(tag_md)
-				insert_md_quotes()
-			end,
-			{ exit = false, desc = "Insert markdown above" },
-		},
-		{
-			"bc",
-			function()
-				insert_below(tag_code)
-			end,
-			{ exit = false, desc = "Insert code below" },
-		},
-		{
-			"bm",
-			function()
-				insert_below(tag_md)
-				insert_md_quotes()
-			end,
-			{ exit = false, desc = "Insert markdown below" },
-		},
-		{ "j", cmd("lua require'jupynium.textobj'.goto_current_cell_separator()"), { desc = "Go to current cell" } },
-		{ "e", cmd("JupyniumExecuteSelectedCells"), { exit = true, desc = "Execute cell" } },
-		-- TODO: jump back to prev cursor location
-		{ "E", "ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>", { exit = true, desc = "Execute all cells" } },
-		{ "oc", cmd("JupyniumClearSelectedCellsOutputs"), { exit = false, desc = "Clear output" } },
-		{ "ot", cmd("JupyniumToggleSelectedCellsOutputsScroll"), { exit = false, desc = "Toggle output" } },
-		{
-			"[",
-			cmd("lua require'jupynium.textobj'.goto_previous_cell_separator()"),
-			{ exit = false, desc = "Previous cell" },
-		},
-		{ "]", cmd("lua require'jupynium.textobj'.goto_next_cell_separator()"), { exit = false, desc = "Next cell" } },
-		{ "aj", cmd("lua require'jupynium.textobj'.select_cell(true, false)"), { exit = true, desc = "Around cell" } },
-		{ "ij", cmd("lua require'jupynium.textobj'.select_cell(false, false)"), { exit = true, desc = "Inside cell" } },
-		{ "<Esc>", nil, { exit = true, nowait = true, desc = false } },
-	},
-})
+	})
+end
