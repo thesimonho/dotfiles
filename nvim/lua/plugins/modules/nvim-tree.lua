@@ -56,7 +56,6 @@ function M.config()
 			highlight_opened_files = "name",
 			highlight_modified = "name",
 			root_folder_label = ":~:s?$?",
-			indent_width = 2,
 			indent_markers = {
 				enable = true,
 				inline_arrows = true,
@@ -74,20 +73,6 @@ function M.config()
 					modified = true,
 				},
 				glyphs = {
-					default = "",
-					symlink = "",
-					bookmark = "",
-					modified = "●",
-					folder = {
-						arrow_closed = "",
-						arrow_open = "",
-						default = "",
-						open = "",
-						empty = "",
-						empty_open = "",
-						symlink = "",
-						symlink_open = "",
-					},
 					git = {
 						unstaged = "",
 						staged = "",
@@ -136,12 +121,6 @@ function M.config()
 				resize_window = true,
 				window_picker = {
 					enable = false,
-					picker = "default",
-					chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-					exclude = {
-						filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame" },
-						buftype = { "nofile", "terminal", "help" },
-					},
 				},
 			},
 			remove_file = {

@@ -122,6 +122,7 @@ Hydra({
 		{ "<Esc>", nil, { exit = true, desc = false } },
 	},
 })
+map("n", "<c-b>", "<cmd>BufferLinePick<cr>")
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tabs                                            ║

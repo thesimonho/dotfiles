@@ -1,7 +1,7 @@
 local M = {
 	"folke/neodev.nvim",
 	cond = vim.g.vscode == nil,
-	enabled = true,
+	enabled = false,
 	priority = 900,
 }
 
