@@ -77,19 +77,6 @@ function M.config()
 				show_help = "?",
 			},
 		},
-		rainbow = {
-			enable = true,
-			extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table
-			colors = {
-				"#c2c2c2",
-				"#a89984",
-				"#b16286",
-				"#689d6a",
-				"#457188",
-				"#d79921",
-				"#d65d0e",
-			},
-		},
 		incremental_selection = {
 			enable = true,
 			keymaps = {
