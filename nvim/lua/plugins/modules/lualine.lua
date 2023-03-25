@@ -26,11 +26,17 @@ function M.config()
 		sections = {
 			lualine_a = { { "mode", padding = 1 } },
 			lualine_b = {
-				{ "branch", color = utils.get_mode_colour },
+				{
+					"branch",
+					color = utils.get_mode_colour,
+					on_click = function()
+						require("telescope.builtin").git_branches()
+					end,
+				},
 				{
 					"diff",
 					on_click = function()
-						require("gitsigns").diffthis()
+						require("telescope.builtin").git_status()
 					end,
 				},
 				{
@@ -82,7 +88,7 @@ function M.config()
 			"aerial",
 			"neo-tree",
 			"nvim-dap-ui",
-            "nvim-tree",
+			"nvim-tree",
 			"toggleterm",
 			"overseer",
 		},
