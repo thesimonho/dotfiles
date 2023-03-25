@@ -34,7 +34,7 @@ function M.config()
 					icon = "🔍",
 					desc = " Files ",
 					group = "@parameter",
-					action = "Telescope find_files",
+					action = "lua require'telescope.builtin'.find_files{}",
 					key = "f",
 				},
 				{
