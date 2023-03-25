@@ -3,7 +3,7 @@ local M = {
 	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = { "nvim-tree/nvim-web-devicons" },
-	cmd = { "NvimTreeToggle" },
+	cmd = { "NvimTreeToggle", "NvimTreeOpen" },
 }
 
 function M.config()
@@ -107,7 +107,7 @@ function M.config()
 			update_root = false,
 		},
 		filters = {
-			dotfiles = true,
+			dotfiles = false,
 			git_clean = false,
 			no_buffer = false,
 		},
