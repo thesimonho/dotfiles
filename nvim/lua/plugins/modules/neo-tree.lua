@@ -23,6 +23,19 @@ function M.config()
 			indent = {
 				with_expanders = true,
 			},
+			symbols = {
+				-- Change type
+				added = "✚",
+				deleted = "✖",
+				modified = "",
+				renamed = "",
+				-- Status type
+				untracked = "",
+				ignored = "",
+				unstaged = "",
+				staged = "",
+				conflict = "",
+			},
 		},
 		window = {
 			position = "left",

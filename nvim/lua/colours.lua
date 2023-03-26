@@ -1,6 +1,14 @@
 -- set default Todo HL to same as Comment (plugins can use their own HL group for Todo:)
 vim.api.nvim_set_hl(0, "Todo", { link = "Comment" })
 
+-- link neotree colours to nvim-tree for automatic theme support
+-- https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Visual-Customizations#colour-scheme
+vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { link = "NvimTreeFolderIcon" })
+vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { link = "NvimTreeOpenedFolderName" })
+vim.api.nvim_set_hl(0, "NeoTreeSymbolicLinkTarget", { link = "NvimTreeSymlink" })
+vim.api.nvim_set_hl(0, "NeoTreeRootName", { link = "NvimTreeRootFolder" })
+vim.api.nvim_set_hl(0, "NeoTreeFileNameOpened", { link = "NvimTreeOpenedFile" })
+
 -- standard colours for debug sign icons
 vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#993939" })
 vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#61afef" })
