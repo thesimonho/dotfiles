@@ -43,6 +43,7 @@ vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 vim.opt.verbose = 0
 vim.opt.report = 99999
 vim.opt.shortmess:append("astWAIcF")
+vim.opt.sessionoptions="curdir,folds,tabpages,winsize,winpos,localoptions,options"
 
 -- Yank to system clipboard
 vim.api.nvim_set_option("clipboard", "unnamed")

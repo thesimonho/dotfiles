@@ -165,7 +165,7 @@ map("n", "zm", "<cmd>lua require('ufo').closeFoldsWithKinds()<cr>", { desc = "Cl
 -- ║ Find                                            ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Files" })
-map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_git_root()<cr>", { desc = "Grep" })
+map("n", "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<cr>", { desc = "Grep" })
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
 map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.project.project{}<cr>", { desc = "Project" })

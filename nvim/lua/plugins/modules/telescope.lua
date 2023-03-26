@@ -20,7 +20,7 @@ function M.config()
 		defaults = {
 			layout_strategy = "horizontal",
 			layout_config = { width = 0.8 },
-            wrap_results = true,
+            wrap_results = false,
             scroll_strategy = "limit",
 			prompt_prefix = " 🔍 ",
             dynamic_preview_title = true,

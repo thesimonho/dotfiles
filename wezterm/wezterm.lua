@@ -17,7 +17,7 @@ return {
 		"Source_Code_Pro",
 		"JetBrains Mono",
 	}),
-	harfbuzz_features = { "cv01", "cv02", "cv29", "ss03", "ss05", "ss07", "ss08" },
+	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08" },
 	default_cursor_style = "SteadyBar",
 	-- force_reverse_video_cursor = true,
 	underline_position = -2,
