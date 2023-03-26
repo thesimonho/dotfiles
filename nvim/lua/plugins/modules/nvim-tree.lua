@@ -1,7 +1,7 @@
 local M = {
 	"nvim-tree/nvim-tree.lua",
 	cond = vim.g.vscode == nil,
-	enabled = true,
+	enabled = false,
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	cmd = { "NvimTreeToggle", "NvimTreeOpen" },
 }

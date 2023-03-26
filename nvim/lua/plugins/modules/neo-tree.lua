@@ -8,7 +8,7 @@ local M = {
 		"nvim-tree/nvim-web-devicons",
 		"MunifTanjim/nui.nvim",
 	},
-	cmd = { "Neotree" },
+	event = "VeryLazy",
 }
 
 function M.config()
@@ -66,7 +66,7 @@ function M.config()
 		filesystem = {
 			bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root
 			cwd_target = {
-				sidebar = "tab",
+				sidebar = "global", -- match this to however cd is set elsewhere (tab, window, global)
 			},
 			filtered_items = {
 				visible = false, -- when true, they will just be displayed differently than normal items
