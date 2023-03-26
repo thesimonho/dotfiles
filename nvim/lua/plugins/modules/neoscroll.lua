@@ -2,7 +2,7 @@ local M = {
 	"karb94/neoscroll.nvim",
 	cond = vim.g.vscode == nil,
 	enabled = true,
-	event = { "BufReadPost", "BufNewFile" },
+	event = "VeryLazy",
 }
 
 function M.config()

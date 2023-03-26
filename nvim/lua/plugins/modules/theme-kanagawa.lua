@@ -107,8 +107,9 @@ function M.config()
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 				NvimTreeWinSeparator = { link = "WinSeparator" },
-                NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
+				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
+				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
 				WinSeparator = { bg = nil, fg = colors.palette.waveAqua1 },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
