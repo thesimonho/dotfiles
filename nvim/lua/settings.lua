@@ -3,6 +3,7 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.signcolumn = "yes"
 vim.opt.fillchars = "eob: "
+Borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" }
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
@@ -43,7 +44,7 @@ vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 vim.opt.verbose = 0
 vim.opt.report = 99999
 vim.opt.shortmess:append("astWAIcF")
-vim.opt.sessionoptions="buffers,curdir,folds,tabpages,winsize,winpos,localoptions,globals,options"
+vim.opt.sessionoptions = "buffers,curdir,folds,tabpages,winsize,winpos,localoptions,globals,options"
 
 -- Yank to system clipboard
 vim.api.nvim_set_option("clipboard", "unnamed")

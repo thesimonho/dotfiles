@@ -76,17 +76,23 @@ function M.config()
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
 
+				BufferLineFill = { bg = colors.palette.sumiInk4 },
+
 				BufferLineBufferSelected = { fg = colors.palette.fujiWhite, italic = false, bold = false },
+				BufferLineIndicatorSelected = { fg = colors.palette.fujiWhite },
 				BufferLineNumbersSelected = { fg = colors.palette.fujiWhite, italic = false, bold = false },
 				BufferLineDuplicateSelected = { fg = colors.palette.fujiWhite, italic = true, bold = false },
 				BufferLinePickSelected = { fg = colors.palette.autumnRed, italic = false, bold = false },
+				BufferLineCloseButtonSelected = { fg = colors.palette.autumnRed },
 
 				BufferLineBufferVisible = { fg = colors.palette.waveAqua1, italic = false, bold = false },
 				BufferLineNumbersVisible = { fg = colors.palette.waveAqua1, italic = false, bold = false },
 				BufferLineDuplicateVisible = { fg = colors.palette.waveAqua1, italic = true, bold = false },
 				BufferLinePickVisible = { fg = colors.palette.autumnRed, italic = false, bold = false },
+				BufferLineCloseButtonVisible = { fg = colors.palette.autumnRed },
 
 				BufferLinePick = { fg = colors.palette.autumnRed, italic = false, bold = false },
+				BufferLineCloseButton= { fg = colors.palette.autumnRed },
 				BufferLineTab = { fg = colors.palette.fujiGray, italic = false, bold = false },
 				BufferLineTabSelected = { fg = colors.palette.roninYellow, italic = false, bold = true },
 				BufferLineTabClose = { fg = colors.palette.autumnRed },
