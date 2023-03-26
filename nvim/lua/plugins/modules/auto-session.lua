@@ -1,7 +1,7 @@
 local M = {
 	"rmagatti/auto-session",
 	cond = vim.g.vscode == nil,
-	enabled = false,
+	enabled = true,
 	event = "VeryLazy",
 }
 
@@ -16,7 +16,7 @@ function M.config()
 		auto_restore_enabled = true,
 		auto_session_suppress_dirs = nil,
 		auto_session_use_git_branch = false,
-		bypass_session_save_file_types = { "NvimTree", "aerial", "OverseerList" },
+		bypass_session_save_file_types = { "NvimTree", "neo-tree", "aerial", "OverseerList" },
 		cwd_change_handling = {
 			restore_upcoming_session = true, -- boolean: restore session for upcoming cwd on cwd change
 			pre_cwd_changed_hook = nil, -- This is called after auto_session code runs for the `DirChangedPre` autocmd
