@@ -48,7 +48,7 @@ Hydra({
 		invoke_on_body = true,
 		hint = {
 			position = "middle",
-			border = "rounded",
+			border = "single",
 		},
 	},
 	mode = "n",
@@ -91,7 +91,7 @@ Hydra({
 		hint = {
 			position = "top",
 			offset = 2,
-			border = "rounded",
+			border = "single",
 		},
 	},
 	mode = "n",
@@ -139,7 +139,7 @@ Hydra({
 		hint = {
 			position = "top-right",
 			offset = 2,
-			border = "rounded",
+			border = "single",
 		},
 	},
 	mode = "n",
@@ -199,7 +199,7 @@ map(
 -- 			buffer = 0, -- only for active buffer
 -- 			hint = {
 -- 				position = "bottom",
--- 				border = "rounded",
+-- 				border = "single",
 -- 			},
 -- 		},
 -- 		mode = "n",
@@ -283,7 +283,7 @@ Hydra({
 		invoke_on_body = true,
 		hint = {
 			position = "bottom",
-			border = "rounded",
+			border = "single",
 		},
 	},
 	mode = { "n", "x" },
@@ -363,7 +363,7 @@ Hydra({
 		invoke_on_body = true,
 		hint = {
 			position = "bottom",
-			border = "rounded",
+			border = "single",
 		},
 	},
 	mode = { "n", "x" },
@@ -417,7 +417,7 @@ Hydra({
 		invoke_on_body = true,
 		hint = {
 			position = "bottom",
-			border = "rounded",
+			border = "single",
 		},
 		on_enter = function()
 			vim.cmd("mkview")
@@ -571,7 +571,7 @@ function MapJupynium(bufnr)
 			invoke_on_body = true,
 			hint = {
 				position = "bottom-right",
-				border = "rounded",
+				border = "single",
 			},
 		},
 		mode = { "n", "x" },

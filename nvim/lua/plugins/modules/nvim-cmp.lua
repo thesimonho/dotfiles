@@ -34,8 +34,12 @@ function M.config()
 			end,
 		},
 		window = {
-			completion = cmp.config.window.bordered(),
-			documentation = cmp.config.window.bordered(),
+			completion = cmp.config.window.bordered({
+				border = "single", -- or {"", "", "", ...}
+			}),
+			documentation = cmp.config.window.bordered({
+				border = "single",
+			}),
 		},
 		formatting = {
 			format = lspkind.cmp_format({

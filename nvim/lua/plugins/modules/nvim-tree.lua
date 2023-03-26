@@ -40,7 +40,7 @@ function M.config()
 					local window_h_int = math.floor(window_h)
 					local center_y = ((vim.opt.lines:get() - window_h) / 2) - vim.opt.cmdheight:get()
 					return {
-						border = "rounded",
+						border = "single",
 						relative = "editor",
 						row = center_y,
 						col = 2,

@@ -20,11 +20,11 @@ function M.config()
 	require("telescope").setup({
 		defaults = {
 			sorting_strategy = "ascending",
-            scroll_strategy = "limit",
+			scroll_strategy = "limit",
 			layout_strategy = "horizontal",
-			layout_config = { width = 0.8 },
+			layout_config = { width = 0.8, prompt_position = "top" },
+			borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 			wrap_results = false,
-			prompt_prefix = " 🔍 ",
 			dynamic_preview_title = true,
 			file_ignore_patterns = {
 				"node_modules",
