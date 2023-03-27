@@ -3,7 +3,7 @@ local M = {
 	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = { "nvim-tree/nvim-web-devicons" },
-	event = "VeryLazy",
+	event = { "BufReadPost", "BufNewFile" },
 }
 
 function M.config()
@@ -90,7 +90,6 @@ function M.config()
 			"aerial",
 			"neo-tree",
 			"nvim-dap-ui",
-			"nvim-tree",
 			"toggleterm",
 			"overseer",
 		},

@@ -17,19 +17,3 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 		end
 	end,
 })
-
--- show nvimtree hydra on focus
--- local nvimtree_group = vim.api.nvim_create_augroup("NvimTreeHydra", { clear = true })
--- vim.api.nvim_create_autocmd({ "BufEnter" }, {
--- 	pattern = "*",
--- 	callback = function(opts)
--- 		if vim.bo[opts.buf].filetype == "NvimTree" then
--- 			spawn_nvim_tree_hydra()
--- 		else
--- 			if nvim_tree_hydra then
--- 				nvim_tree_hydra:exit()
--- 			end
--- 		end
--- 	end,
--- 	group = nvimtree_group,
--- })
