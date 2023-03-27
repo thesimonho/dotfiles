@@ -3,7 +3,6 @@ vim.opt.relativenumber = true
 vim.opt.cursorline = true
 vim.opt.signcolumn = "yes"
 vim.opt.fillchars = "eob: "
-Borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" }
 
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4

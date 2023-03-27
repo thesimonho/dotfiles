@@ -23,7 +23,7 @@ function M.config()
 			scroll_strategy = "limit",
 			layout_strategy = "horizontal",
 			layout_config = { width = 0.8, prompt_position = "top" },
-			borderchars = Borderchars,
+			borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
 			wrap_results = false,
 			dynamic_preview_title = true,
 			file_ignore_patterns = {

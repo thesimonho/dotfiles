@@ -83,19 +83,31 @@ function M.config()
 				BufferLineNumbersSelected = { fg = colors.palette.fujiWhite, italic = false, bold = false },
 				BufferLineDuplicateSelected = { fg = colors.palette.fujiWhite, italic = true, bold = false },
 				BufferLinePickSelected = { fg = colors.palette.autumnRed, italic = false, bold = false },
-				BufferLineCloseButtonSelected = { fg = colors.palette.autumnRed },
+				BufferLineCloseButtonSelected = {
+					fg = colors.palette.autumnRed,
+					bg = colors.palette.sumiInk3,
+					bold = true,
+				},
 
 				BufferLineBufferVisible = { fg = colors.palette.waveAqua1, italic = false, bold = false },
 				BufferLineNumbersVisible = { fg = colors.palette.waveAqua1, italic = false, bold = false },
 				BufferLineDuplicateVisible = { fg = colors.palette.waveAqua1, italic = true, bold = false },
 				BufferLinePickVisible = { fg = colors.palette.autumnRed, italic = false, bold = false },
-				BufferLineCloseButtonVisible = { fg = colors.palette.autumnRed },
+				BufferLineCloseButtonVisible = {
+					fg = colors.palette.autumnRed,
+					bg = colors.palette.sumiInk2,
+					bold = true,
+				},
 
-				BufferLinePick = { fg = colors.palette.autumnRed, italic = false, bold = false },
-				BufferLineCloseButton= { fg = colors.palette.autumnRed },
+				BufferLinePick = {
+					fg = colors.palette.autumnRed,
+					bg = colors.palette.sumiInk1,
+					italic = false,
+					bold = false,
+				},
 				BufferLineTab = { fg = colors.palette.fujiGray, italic = false, bold = false },
 				BufferLineTabSelected = { fg = colors.palette.roninYellow, italic = false, bold = true },
-				BufferLineTabClose = { fg = colors.palette.autumnRed },
+				BufferLineTabClose = { fg = colors.palette.autumnRed, bold = true },
 
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },

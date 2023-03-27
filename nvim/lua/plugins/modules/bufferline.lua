@@ -28,7 +28,7 @@ function M.config()
 			max_name_length = 18,
 			max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
 			truncate_names = true, -- whether or not tab names should be truncated
-			tab_size = 18,
+			tab_size = 22,
 			diagnostics = false,
 			color_icons = true, -- whether or not to add the filetype icon highlights
 			show_buffer_icons = true, -- disable filetype icons for buffers
