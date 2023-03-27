@@ -16,17 +16,41 @@ function M.config()
 	custom.command.a.bg = colours.command
 	custom.replace.a.bg = colours.replace
 
+	local empty = require("lualine.component"):extend()
+	function empty:draw(default_highlight)
+		self.status = ""
+		self.applied_separator = ""
+		self:apply_highlights(default_highlight)
+		self:apply_section_separators()
+		return self.status
+	end
+
+	local function process_sections(sections)
+		for name, section in pairs(sections) do
+			local left = name:sub(9, 10) < "x"
+			for pos = 1, name ~= "lualine_z" and #section or #section - 1 do
+				table.insert(section, pos * 2, { empty, color = { bg = require("colours").status } })
+			end
+			for id, comp in ipairs(section) do
+				if type(comp) ~= "table" then
+					comp = { comp }
+					section[id] = comp
+				end
+				comp.separator = left and { right = "" } or { left = "" }
+			end
+		end
+		return sections
+	end
+
 	require("lualine").setup({
 		options = {
 			theme = custom,
 			globalstatus = true,
-			-- section_separators = { left = "", right = "" },
-			-- component_separators = { left = "", right = "" },
-			section_separators = { left = "", right = "" },
-			component_separators = { left = "", right = "" },
+			section_separators = { left = "", right = "" },
+			component_separators = "",
 		},
-		sections = {
-			lualine_a = { { "mode", padding = 1 } },
+		sections = process_sections({
+			lualine_a = { { "mode", padding = 2 } },
 			lualine_b = {
 				{
 					"branch",
@@ -37,6 +61,7 @@ function M.config()
 				},
 				{
 					"diff",
+					symbols = { added = "+", modified = "⇆ ", removed = "-" },
 					on_click = function()
 						require("telescope.builtin").git_status()
 					end,
@@ -65,7 +90,27 @@ function M.config()
 					end,
 				},
 			},
-			lualine_y = { "fileformat", "filetype" },
+			lualine_y = {
+				"filetype",
+				{
+					function()
+						local msg = "No active Lsp"
+						local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
+						local clients = vim.lsp.get_active_clients()
+						if next(clients) == nil then
+							return msg
+						end
+						for _, client in ipairs(clients) do
+							local filetypes = client.config.filetypes
+							if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+								return client.name
+							end
+						end
+						return msg
+					end,
+					icon = "  LSP:",
+				},
+			},
 			lualine_z = {
 				{
 					"location",
@@ -74,9 +119,9 @@ function M.config()
 						return string.format("L:%d C:%d", loc[1], loc[2])
 					end,
 				},
-				"progress",
+				{ "progress", padding = 2 },
 			},
-		},
+		}),
 		inactive_sections = {
 			lualine_a = {},
 			lualine_b = {},
@@ -86,10 +131,11 @@ function M.config()
 			lualine_z = {},
 		},
 		extensions = {
-			"man",
 			"aerial",
+			"man",
 			"neo-tree",
 			"nvim-dap-ui",
+			"quickfix",
 			"toggleterm",
 			"overseer",
 		},

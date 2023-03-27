@@ -53,7 +53,7 @@ vim.api.nvim_set_option("clipboard", "unnamed")
 vim.diagnostic.config({
 	signs = true,
 	update_in_insert = false,
-	underline = true,
+	underline = false,
 	severity_sort = true,
 	float = {
 		focusable = true,

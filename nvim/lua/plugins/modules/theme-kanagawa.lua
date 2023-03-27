@@ -113,8 +113,8 @@ function M.config()
 				BufferLineTabSelected = { fg = colors.palette.roninYellow, italic = false, bold = true },
 				BufferLineTabClose = { fg = colors.palette.autumnRed, bold = true },
 
-				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0, bold = true },
-				HLInclineNormalNC = { bg = colors.palette.dragonBlue, fg = colors.palette.sumiInk0, bold = false },
+				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
+				HLInclineNormalNC = { bg = colors.palette.dragonBlue, fg = colors.palette.sumiInk0 },
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },

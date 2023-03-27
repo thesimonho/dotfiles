@@ -29,6 +29,7 @@ local function set_theme_colours(theme)
 		C.comment = theme_colors.fujiGray
 		C.overlay = theme_colors.crystalBlue
 		C.sep = theme_colors.fujiGray
+		C.status = "#282A2E"
 	elseif theme == "rose-pine" then
 		local theme_colors = require("rose-pine.palette")
 		C.normal = "#af88dd"
@@ -40,6 +41,7 @@ local function set_theme_colours(theme)
 		C.comment = theme_colors.muted
 		C.overlay = theme_colors.overlay
 		C.sep = theme_colors.subtle
+		C.status = "#282A2E"
 	end
 end
 
