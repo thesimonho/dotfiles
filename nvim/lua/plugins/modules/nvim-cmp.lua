@@ -33,14 +33,14 @@ function M.config()
 				require("luasnip").lsp_expand(args.body)
 			end,
 		},
-		window = {
-			completion = cmp.config.window.bordered({
-				border = "single", -- or {"", "", "", ...}
-			}),
-			documentation = cmp.config.window.bordered({
-				border = "single",
-			}),
-		},
+		-- window = {
+			-- completion = cmp.config.window.bordered({
+			-- 	border = "single", -- or {"", "", "", ...}
+			-- }),
+			-- documentation = cmp.config.window.bordered({
+			-- 	border = "single",
+			-- }),
+		-- },
 		formatting = {
 			format = lspkind.cmp_format({
 				mode = "symbol_text",

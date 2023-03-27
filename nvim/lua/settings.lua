@@ -28,7 +28,7 @@ vim.opt.infercase = true
 vim.opt.smartcase = true
 
 vim.opt.termguicolors = true
-vim.opt.pumblend = 10 -- Make builtin completion menus slightly transparent
+vim.opt.pumblend = 2 -- Make builtin completion menus slightly transparent
 vim.opt.pumheight = 10 -- Make popup menu smaller
 vim.opt.winblend = 0
 
@@ -53,11 +53,11 @@ vim.api.nvim_set_option("clipboard", "unnamed")
 vim.diagnostic.config({
 	signs = true,
 	update_in_insert = false,
-	underline = false,
+	underline = true,
 	severity_sort = true,
 	float = {
 		focusable = true,
-		border = "single",
+		border = "none",
 		source = "always",
 	},
 })

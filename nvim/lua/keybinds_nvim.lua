@@ -170,10 +170,9 @@ map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", {
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
 map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.project.project{}<cr>", { desc = "Project" })
 map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
--- map("n", "<leader>fn", "<cmd>NvimTreeToggle<cr>", { desc = "Tree" })
 map(
 	"n",
-	"<leader>fm",
+	"<leader>fn",
 	"<cmd>Neotree position=left reveal=true reveal_force_cwd=false toggle=true<cr>",
 	{ desc = "Tree" }
 )

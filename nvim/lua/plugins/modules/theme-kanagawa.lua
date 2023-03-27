@@ -51,15 +51,15 @@ function M.config()
 						bg_visual = wave_theme.ui.bg_visual,
 
 						pmenu = {
-							fg = wave_theme.ui.pmenu.fg,
-							bg = wave_theme.ui.pmenu.bg,
-							bg_sel = wave_theme.ui.pmenu.bg_sel,
-							bg_sbar = wave_theme.ui.pmenu.bg_sbar,
-							bg_thumb = wave_theme.ui.pmenu.bg_thumb,
+							fg = wave_theme.ui.shade0,
+							bg = wave_theme.ui.bg_p1,
+							bg_sel = wave_theme.diff.text,
+							bg_sbar = wave_theme.ui.bg_m1,
+							bg_thumb = wave_theme.ui.bg_p2,
 						},
 						float = {
 							fg = wave_theme.ui.float.fg,
-							bg = wave_theme.ui.float.bg,
+							bg = wave_theme.ui.bg_p2,
 							fg_border = wave_theme.ui.float.fg_border,
 							bg_border = wave_theme.ui.bg,
 						},
@@ -70,13 +70,17 @@ function M.config()
 			},
 		},
 		overrides = function(colors) -- add/modify highlights
+			HoverBG = colors.theme.ui.bg_p1
+
 			return {
 				DiagnosticVirtualTextError = { fg = colors.palette.samuraiRed },
 				DiagnosticVirtualTextWarn = { fg = colors.palette.roninYellow },
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
+				LazyNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
+				MasonNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
 
-				BufferLineFill = { bg = colors.palette.sumiInk4 },
+				BufferLineFill = { bg = HoverBG },
 
 				BufferLineBufferSelected = { fg = colors.palette.fujiWhite, italic = false, bold = false },
 				BufferLineIndicatorSelected = { fg = colors.palette.fujiWhite },
@@ -109,7 +113,6 @@ function M.config()
 				BufferLineTabSelected = { fg = colors.palette.roninYellow, italic = false, bold = true },
 				BufferLineTabClose = { fg = colors.palette.autumnRed, bold = true },
 
-				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0, bold = true },
 				HLInclineNormalNC = { bg = colors.palette.dragonBlue, fg = colors.palette.sumiInk0, bold = false },
 
@@ -120,6 +123,7 @@ function M.config()
 				NoiceFormatProgressTodo = { bg = colors.theme.ui.bg },
 				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
+				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				NvimTreeNormalNC = { link = "NormalNC" },
 				NvimTreeIndentMarker = { link = "IndentBlanklineChar" },
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
@@ -136,7 +140,20 @@ function M.config()
 				JupyniumMagicCommand = { link = "Keyword" },
 
 				ScrollbarCursor = { fg = colors.palette.oldWhite },
+
+				TelescopeTitle = { fg = colors.palette.oldWhite, bold = true },
+				TelescopeSelection = { bg = colors.palette.winterYellow },
+				TelescopePromptNormal = { bg = colors.theme.ui.bg_p2 },
+				TelescopePromptBorder = { fg = colors.theme.ui.bg_p2, bg = colors.theme.ui.bg_p2 },
+				TelescopeResultsNormal = { fg = colors.palette.fujiWhite, bg = HoverBG },
+				TelescopeResultsBorder = { fg = HoverBG, bg = HoverBG },
+				TelescopePreviewNormal = { bg = colors.theme.ui.bg },
+				TelescopePreviewBorder = { bg = colors.theme.ui.bg, fg = colors.theme.ui.bg },
+
 				WhichKey = { fg = colors.palette.peachRed },
+				WhichKeyFloat = { bg = HoverBG },
+				WhichKeyBorder = { bg = HoverBG },
+
 				YankyYanked = { bg = colors.palette.winterYellow },
 				YankyPut = { bg = colors.palette.winterRed },
 			}

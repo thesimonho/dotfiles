@@ -33,7 +33,7 @@ function M.config()
 		},
 		show_help = false,
 		window = {
-			border = "single",
+			-- border = "single",
 			margin = { 2, 30, 2, 30 },
 			winblend = 5,
 		},
