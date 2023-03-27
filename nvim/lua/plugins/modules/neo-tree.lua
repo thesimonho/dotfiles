@@ -14,14 +14,19 @@ local M = {
 function M.config()
 	require("neo-tree").setup({
 		close_if_last_window = true,
-		popup_border_style = "none",
+		popup_border_style = "single",
 		enable_git_status = true,
 		enable_modified_markers = true,
 		enable_diagnostics = false,
 		sort_case_insensitive = true,
 		default_component_configs = {
 			indent = {
+				with_markers = false,
 				with_expanders = true,
+			},
+			modified = {
+				symbol = "[+] ",
+				highlight = "NeoTreeModified",
 			},
 			symbols = {
 				-- Change type

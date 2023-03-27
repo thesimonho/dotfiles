@@ -125,14 +125,11 @@ function M.config()
 
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				NvimTreeNormalNC = { link = "NormalNC" },
-				NvimTreeIndentMarker = { link = "IndentBlanklineChar" },
 				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
-				NvimTreeWinSeparator = { link = "WinSeparator" },
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
-				WinSeparator = { bg = nil, fg = colors.palette.dragonBlue },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
 				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
@@ -154,6 +151,7 @@ function M.config()
 				WhichKeyFloat = { bg = HoverBG },
 				WhichKeyBorder = { bg = HoverBG },
 
+				WinSeparator = { fg = colors.palette.dragonBlue },
 				YankyYanked = { bg = colors.palette.winterYellow },
 				YankyPut = { bg = colors.palette.winterRed },
 			}
