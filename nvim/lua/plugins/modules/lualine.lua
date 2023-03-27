@@ -19,7 +19,7 @@ function M.config()
 	require("lualine").setup({
 		options = {
 			theme = custom,
-			globalstatus = false,
+			globalstatus = true,
 			-- section_separators = { left = "", right = "" },
 			-- component_separators = { left = "", right = "" },
 			section_separators = { left = "", right = "" },

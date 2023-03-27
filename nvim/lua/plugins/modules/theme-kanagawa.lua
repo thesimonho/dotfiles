@@ -89,9 +89,9 @@ function M.config()
 					bold = true,
 				},
 
-				BufferLineBufferVisible = { fg = colors.palette.waveAqua1, italic = false, bold = false },
-				BufferLineNumbersVisible = { fg = colors.palette.waveAqua1, italic = false, bold = false },
-				BufferLineDuplicateVisible = { fg = colors.palette.waveAqua1, italic = true, bold = false },
+				BufferLineBufferVisible = { fg = colors.palette.dragonBlue, italic = false, bold = false },
+				BufferLineNumbersVisible = { fg = colors.palette.dragonBlue, italic = false, bold = false },
+				BufferLineDuplicateVisible = { fg = colors.palette.dragonBlue, italic = true, bold = false },
 				BufferLinePickVisible = { fg = colors.palette.autumnRed, italic = false, bold = false },
 				BufferLineCloseButtonVisible = {
 					fg = colors.palette.autumnRed,
@@ -110,8 +110,8 @@ function M.config()
 				BufferLineTabClose = { fg = colors.palette.autumnRed, bold = true },
 
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
-				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
-				HLInclineNormalNC = { bg = colors.palette.fujiGray, fg = colors.palette.sumiInk0 },
+				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0, bold = true },
+				HLInclineNormalNC = { bg = colors.palette.dragonBlue, fg = colors.palette.sumiInk0, bold = false },
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
@@ -128,7 +128,7 @@ function M.config()
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
-				WinSeparator = { bg = nil, fg = colors.palette.waveAqua1 },
+				WinSeparator = { bg = nil, fg = colors.palette.dragonBlue },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
 				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
