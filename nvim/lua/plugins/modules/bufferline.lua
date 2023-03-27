@@ -53,7 +53,6 @@ function M.config()
 						highlight = { bold = false, italic = false, sp = "green" },
 						auto_close = false,
 						priority = 1,
-						icon = "",
 						matcher = function(buf)
 							return buf.filename:match("%.md") or buf.filename:match("%.txt")
 						end,
@@ -63,7 +62,6 @@ function M.config()
 						highlight = { bold = false, italic = false, sp = "blue" },
 						auto_close = false,
 						priority = 2,
-						icon = "",
 						matcher = function(buf)
 							return buf.filename:match("%_test") or buf.filename:match("%_spec")
 						end,
@@ -73,7 +71,6 @@ function M.config()
 						highlight = { bold = false, italic = false, sp = "red" },
 						auto_close = false,
 						priority = 3,
-						icon = "⚙️",
 						matcher = function(buf)
 							return buf.filename:match("%.toml") or buf.filename:match("%.yaml")
 						end,

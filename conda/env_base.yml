@@ -1,12 +1,12 @@
 # Basic env for miniconda
 # conda env update --name base --file env_base.yml
 
-name: base
 channels:
   - defaults
   - conda-forge
 dependencies:
   - black
+  - chardet
   - Flask
   - ipython
   - ipykernel
@@ -29,3 +29,4 @@ dependencies:
   - tqdm
   - pip:
     - opencv-contrib-python
+name: base
