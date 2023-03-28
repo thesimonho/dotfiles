@@ -6,7 +6,6 @@ local M = {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",
 		"nvim-telescope/telescope-project.nvim",
-		"nvim-telescope/telescope-file-browser.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 	},
 	cmd = "Telescope",
@@ -15,7 +14,6 @@ local M = {
 function M.config()
 	local actions = require("telescope.actions")
 	local project_actions = require("telescope._extensions.project.actions")
-	local fb_actions = require("telescope._extensions.file_browser.actions")
 
 	require("telescope").setup({
 		defaults = {
@@ -52,40 +50,14 @@ function M.config()
 				order_by = "recent",
 				search_by = "title",
 				on_project_selected = function(prompt_bufnr)
-					project_actions.change_working_directory(prompt_bufnr)
-					-- project_actions.find_project_files(prompt_bufnr, false)
+					-- project_actions.change_working_directory(prompt_bufnr)
+					project_actions.find_project_files(prompt_bufnr, false)
+                    vim.cmd("%bw!")
 				end,
-			},
-			file_browser = {
-				cwd_to_path = false,
-				grouped = true,
-				files = true,
-				add_dirs = true,
-				depth = 1,
-				auto_depth = false,
-				select_buffer = false,
-				hidden = false,
-				hide_parent_dir = false,
-				collapse_dirs = false,
-				prompt_path = false,
-				quiet = false,
-				display_stat = { date = true, size = true, mode = true },
-				hijack_netrw = false,
-				use_fd = true,
-				git_status = true,
-				mappings = {
-					["i"] = {
-						["<Tab>"] = fb_actions.toggle_browser,
-					},
-					["n"] = {
-						["<Tab>"] = fb_actions.toggle_browser,
-					},
-				},
 			},
 		},
 	})
 	require("telescope").load_extension("noice")
-	require("telescope").load_extension("file_browser")
 end
 
 return M
