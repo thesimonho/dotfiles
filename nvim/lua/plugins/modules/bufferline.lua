@@ -46,22 +46,16 @@ function M.config()
 			sort_by = "directory",
 			offsets = {
 				{
-					filetype = "neo-tree",
-					text = "File Explorer",
-					text_align = "center",
-					separator = true,
-				},
-				{
 					filetype = "aerial",
 					text = "Outline",
 					text_align = "center",
-					separator = true,
+					separator = false,
 				},
 				{
 					filetype = "OverseerList",
 					text = "Tasks",
 					text_align = "center",
-					separator = true,
+					separator = false,
 				},
 			},
 			groups = {

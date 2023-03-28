@@ -48,6 +48,10 @@ function M.config()
 			globalstatus = true,
 			section_separators = { left = "", right = "" },
 			component_separators = "",
+			disabled_filetypes = {
+				statusline = {},
+				winbar = { "neo-tree", "aerial", "OverseerList" },
+			},
 		},
 		sections = process_sections({
 			lualine_a = { { "mode", padding = 2 } },
@@ -75,21 +79,13 @@ function M.config()
 			},
 			lualine_c = {
 				{
-					"aerial",
-					depth = 1,
-					on_click = function()
-						vim.cmd("AerialToggle")
-					end,
-				},
-			},
-			lualine_x = {
-				{
 					"overseer",
 					on_click = function()
 						vim.cmd("OverseerToggle")
 					end,
 				},
 			},
+			lualine_x = {},
 			lualine_y = {
 				"filetype",
 				{
@@ -130,6 +126,29 @@ function M.config()
 			lualine_b = {},
 			lualine_c = {},
 			lualine_x = { { "filetype", color = { fg = "grey" }, colored = false } },
+			lualine_y = {},
+			lualine_z = {},
+		},
+		winbar = {
+			lualine_a = {},
+			lualine_b = {},
+			lualine_c = {
+				{ "filetype", colored = true, icon_only = true },
+				{ "filename", padding = { left = 0, right = 4 } },
+				{ "aerial", depth = 3 },
+			},
+			lualine_x = {},
+			lualine_y = {},
+			lualine_z = {},
+		},
+		inactive_winbar = {
+			lualine_a = {},
+			lualine_b = {},
+			lualine_c = {
+				{ "filetype", colored = false, icon_only = true },
+				{ "filename", padding = { left = 0, right = 4 } },
+			},
+			lualine_x = {},
 			lualine_y = {},
 			lualine_z = {},
 		},
