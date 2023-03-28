@@ -94,7 +94,7 @@ function M.config()
 				"filetype",
 				{
 					function()
-						local msg = "No active Lsp"
+						local msg = "No active LSP"
 						local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
 						local clients = vim.lsp.get_active_clients()
 						if next(clients) == nil then
@@ -109,6 +109,9 @@ function M.config()
 						return msg
 					end,
 					icon = "  LSP:",
+					on_click = function()
+						vim.cmd("LspInfo")
+					end,
 				},
 			},
 			lualine_z = {
