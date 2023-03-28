@@ -95,12 +95,9 @@ function M.config()
 
 	-- on_attach function to be added to each server
 	local on_attach = function(client, bufnr)
-		-- vim.api.nvim_notify("LSP attached: " .. client.name, vim.log.levels.INFO, {})
-
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
 
-		-- create buffer local autocommands to show and hide virtual diagnostic text
 		local vt = {
 			spacing = 10,
 			severity = { min = vim.diagnostic.severity.WARN },
@@ -121,18 +118,21 @@ function M.config()
 				return string.format("%s: %s", severity_letter, msg)
 			end,
 		}
-		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-			buffer = bufnr,
-			callback = function()
-				vim.diagnostic.config({ virtual_text = vt })
-			end,
-		})
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-			buffer = bufnr,
-			callback = function()
-				vim.diagnostic.config({ virtual_text = false })
-			end,
-		})
+		vim.diagnostic.config({ virtual_text = vt })
+
+		-- create buffer local autocommands to show and hide virtual diagnostic text
+		-- vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+		-- 	buffer = bufnr,
+		-- 	callback = function()
+		-- 		vim.diagnostic.config({ virtual_text = vt })
+		-- 	end,
+		-- })
+		-- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+		-- 	buffer = bufnr,
+		-- 	callback = function()
+		-- 		vim.diagnostic.config({ virtual_text = false })
+		-- 	end,
+		-- })
 	end
 
 	-- setup lsp servers
