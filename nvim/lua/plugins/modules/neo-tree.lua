@@ -57,6 +57,7 @@ function M.config()
 				end,
 			},
 			mappings = {
+				["<space>"] = "none",
 				["a"] = {
 					"add",
 					config = {
