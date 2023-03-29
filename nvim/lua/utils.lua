@@ -173,11 +173,32 @@ M.UI_select = function(item_map)
 	end)
 end
 
--- Make directory
-M.mkdir_if_not_exist = function(path)
-	if !vim.fn.isdirectory(path) then
-		vim.fn.mkdir(path, "p")
+-- find file's root directory based on a list of patterns
+Root_cache = {}
+M.find_root = function(buf_id, patterns)
+	local path = vim.api.nvim_buf_get_name(buf_id)
+	if path == "" then
+		return
 	end
+	path = vim.fs.dirname(path)
+
+	-- Try using cache
+	local res = Root_cache[path]
+	if res ~= nil then
+		return res
+	end
+
+	-- Find root
+	local root_file = vim.fs.find(patterns, { path = path, upward = true })[1]
+	if root_file == nil then
+		return
+	end
+
+	-- Use absolute path and cache result
+	res = vim.fn.fnamemodify(vim.fs.dirname(root_file), ":p")
+	Root_cache[path] = res
+
+	return res
 end
 
 return M
