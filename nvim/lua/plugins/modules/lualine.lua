@@ -114,7 +114,7 @@ function M.config()
 				{
 					"location",
 					fmt = function(str, _)
-						local loc = utils.split(str, ":")
+						local loc = vim.split(str, ":")
 						return string.format("L:%d C:%d", loc[1], loc[2])
 					end,
 				},

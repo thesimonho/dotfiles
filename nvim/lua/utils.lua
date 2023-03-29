@@ -142,17 +142,6 @@ M.preserve_cursor = function(command)
 	vim.api.nvim_win_set_cursor({ 0 }, { line, col })
 end
 
--- string split on separator
-M.split = function(s, sep)
-	local fields = {}
-	local pattern = string.format("([^%s]+)", sep)
-	_ = string.gsub(s, pattern, function(c)
-		fields[#fields + 1] = c
-	end)
-
-	return fields
-end
-
 -- check if string is in table
 M.is_string_in_table = function(str, tbl)
 	for _, value in pairs(tbl) do
@@ -182,6 +171,13 @@ M.UI_select = function(item_map)
 			end
 		end
 	end)
+end
+
+-- Make directory
+M.mkdir_if_not_exist = function(path)
+	if !vim.fn.isdirectory(path) then
+		vim.fn.mkdir(path, "p")
+	end
 end
 
 return M

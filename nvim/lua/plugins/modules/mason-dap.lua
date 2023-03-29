@@ -26,7 +26,7 @@ function M.config()
 
 	-- local path_python = vim.env.HOME .. "/miniconda3/python.exe"
 	local path_python = vim.api.nvim_exec("!which python.exe", true)
-	path_python = require("utils").split(path_python, "\n")[2] -- get result of the command
+	path_python = vim.split(path_python, "\n")[2] -- get result of the command
 	path_python = path_python:gsub("^/(%a+)/", "%1:/")
 
 	require("dap-python").setup(path_debugpy)
