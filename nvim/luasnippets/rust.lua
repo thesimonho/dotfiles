@@ -18,6 +18,7 @@ local fmta = require("luasnip.extras.fmt").fmta
 local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
+local utils = require("utils")
 
 return {
 	s(
@@ -78,9 +79,7 @@ return {
             <>vec![<>];
         ]=],
 			{
-				f(function(_, snip)
-					return snip.captures[1]
-				end),
+				utils.get_capture_group(1),
 				i(0),
 			}
 		)
@@ -99,9 +98,7 @@ return {
             <>
         ]],
 			{
-				f(function(_, snip)
-					return snip.captures[1]
-				end),
+				utils.get_capture_group(1),
 				i(0),
 			}
 		)
