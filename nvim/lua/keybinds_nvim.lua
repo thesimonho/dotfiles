@@ -145,7 +145,14 @@ Hydra({
 	mode = "n",
 	body = "<leader>t",
 	heads = {
-		{ "t", cmd("tabnew"), { exit = true, desc = "New" } },
+		{
+			"t",
+			function()
+				vim.cmd("tabnew")
+				require("telescope").extensions.project.project({})
+			end,
+			{ exit = true, desc = "New" },
+		},
 		{ "q", cmd("tabclose"), { exit = true, desc = "Close" } },
 		{ "[", cmd("tabprev"), { exit = true, desc = "Prev" } },
 		{ "]", cmd("tabnext"), { exit = true, desc = "Next" } },

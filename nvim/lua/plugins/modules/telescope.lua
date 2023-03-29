@@ -22,6 +22,7 @@ function M.config()
 			layout_strategy = "horizontal",
 			layout_config = { width = 0.8, prompt_position = "top" },
 			borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+			path_display = { shorten = { len = 1, exclude = { 1, -1 } } },
 			wrap_results = false,
 			dynamic_preview_title = true,
 			file_ignore_patterns = {
@@ -51,11 +52,9 @@ function M.config()
 				order_by = "recent",
 				search_by = "title",
 				on_project_selected = function(prompt_bufnr)
-					-- FIX: this wipes out buffers, which closes tabs. currently
-					-- way to open new project in a new tab as the old will always close
 					project_actions.find_project_files(prompt_bufnr, false)
 					-- project_actions.change_working_directory(prompt_bufnr)
-					vim.cmd("%bw!")
+					-- vim.cmd("%bw!")
 				end,
 			},
 		},
