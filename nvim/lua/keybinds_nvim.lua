@@ -488,7 +488,6 @@ function MapJupynium(bufnr)
 		vim.cmd("call append(line('.')-1, '')")
 		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 4, vim.fn.line(".") - 3, false, { tag })
 		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 2, 0 })
-		vim.cmd("startinsert")
 	end
 
 	local function insert_below(tag)
@@ -499,7 +498,6 @@ function MapJupynium(bufnr)
 		vim.cmd("call append(line('.'), '')")
 		vim.api.nvim_buf_set_lines(0, vim.fn.line("."), vim.fn.line(".") + 1, false, { tag })
 		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 2, 0 })
-		vim.cmd("startinsert")
 	end
 
 	local function insert_md_quotes()
@@ -508,7 +506,6 @@ function MapJupynium(bufnr)
 		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false, { '"""' })
 		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") + 1, vim.fn.line(".") + 2, false, { '"""' })
 		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 1, 0 })
-		vim.cmd("startinsert")
 	end
 
 	local hint = [[
@@ -553,7 +550,7 @@ function MapJupynium(bufnr)
 				function()
 					insert_above(tag_code)
 				end,
-				{ exit = false, buffer = bufnr, desc = "Insert code above" },
+				{ exit = true, buffer = bufnr, desc = "Insert code above" },
 			},
 			{
 				"am",
@@ -561,14 +558,14 @@ function MapJupynium(bufnr)
 					insert_above(tag_md)
 					insert_md_quotes()
 				end,
-				{ exit = false, buffer = bufnr, desc = "Insert markdown above" },
+				{ exit = true, buffer = bufnr, desc = "Insert markdown above" },
 			},
 			{
 				"bc",
 				function()
 					insert_below(tag_code)
 				end,
-				{ exit = false, buffer = bufnr, desc = "Insert code below" },
+				{ exit = true, buffer = bufnr, desc = "Insert code below" },
 			},
 			{
 				"bm",
@@ -576,7 +573,7 @@ function MapJupynium(bufnr)
 					insert_below(tag_md)
 					insert_md_quotes()
 				end,
-				{ exit = false, buffer = bufnr, desc = "Insert markdown below" },
+				{ exit = true, buffer = bufnr, desc = "Insert markdown below" },
 			},
 			{
 				"j",
@@ -594,7 +591,7 @@ function MapJupynium(bufnr)
 			{
 				"ot",
 				cmd("JupyniumToggleSelectedCellsOutputsScroll"),
-				{ exit = false, buffer = bufnr, desc = "Toggle output" },
+				{ exit = true, buffer = bufnr, desc = "Toggle output" },
 			},
 			{
 				"[",
