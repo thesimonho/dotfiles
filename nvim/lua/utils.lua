@@ -126,22 +126,6 @@ M.get_capture_group = function(group)
 	end)
 end
 
--- preserve cursor location when running a command
--- eg `preserve_cursor("sil keepj normal! gg=G")`
--- https://stackoverflow.com/questions/70691265/restore-cursor-position-after-r
-M.preserve_cursor = function(command)
-	local arguments = string.format("keepjumps keeppatterns execute %q", command)
-	-- local original_cursor = vim.fn.winsaveview()
-	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-	vim.api.nvim_command(arguments)
-	local lastline = vim.fn.line("$")
-	-- vim.fn.winrestview(original_cursor)
-	if line > lastline then
-		line = lastline
-	end
-	vim.api.nvim_win_set_cursor({ 0 }, { line, col })
-end
-
 -- check if string is in table
 M.is_string_in_table = function(str, tbl)
 	for _, value in pairs(tbl) do
