@@ -8,7 +8,7 @@ local M = {
 
 function M.config()
 	require("neodim").setup({
-		alpha = 0.4,
+		alpha = 0.3,
 		blend_color = require("colours").overlay,
 		update_in_insert = {
 			enable = true,

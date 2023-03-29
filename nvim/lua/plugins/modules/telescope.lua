@@ -43,6 +43,7 @@ function M.config()
 			},
 			project = {
 				base_dirs = {
+					"~",
 					"F:\\",
 				},
 				hidden_files = false,
@@ -52,7 +53,7 @@ function M.config()
 				on_project_selected = function(prompt_bufnr)
 					-- project_actions.change_working_directory(prompt_bufnr)
 					project_actions.find_project_files(prompt_bufnr, false)
-                    vim.cmd("%bw!")
+					vim.cmd("%bw!")
 				end,
 			},
 		},
