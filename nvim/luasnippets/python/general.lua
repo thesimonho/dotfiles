@@ -77,7 +77,7 @@ return {
 		)
 	),
 	s(
-		{ trig = "try", dscr = "Try/Except", snippetType = "autosnippet", regTrig = false },
+		{ trig = "try", dscr = "Try/Except", snippetType = "snippet", regTrig = false },
 		fmta(
 			[[
             try:
@@ -89,7 +89,7 @@ return {
 		)
 	),
 	s(
-		{ trig = "def", dscr = "Define function or method", snippetType = "autosnippet", regTrig = false },
+		{ trig = "def", dscr = "Define function or method", snippetType = "snippet", regTrig = false },
 		fmt(
 			[[
             def {}({}{}){}:
