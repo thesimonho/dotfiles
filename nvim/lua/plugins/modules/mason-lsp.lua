@@ -22,6 +22,7 @@ function M.config()
 		"marksman",
 		"powershell-editor-services",
 		"python-lsp-server",
+		"pyright", -- static type checking only
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
