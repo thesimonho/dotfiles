@@ -134,8 +134,22 @@ function M.config()
 			lualine_b = {},
 			lualine_c = {
 				{ "filetype", colored = true, icon_only = true },
-				{ "filename", padding = { left = 0, right = 4 } },
-				{ "aerial", depth = 3 },
+				{
+					"filename",
+					color = { fg = require("colours").textLight },
+					symbols = {
+						modified = "", -- Text to show when the file is modified.
+						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
+					},
+					padding = { left = 0, right = 4 },
+				},
+				{
+					"aerial",
+					depth = 3,
+					on_click = function()
+						vim.cmd("AerialToggle")
+					end,
+				},
 			},
 			lualine_x = {},
 			lualine_y = {},
@@ -146,7 +160,14 @@ function M.config()
 			lualine_b = {},
 			lualine_c = {
 				{ "filetype", colored = false, icon_only = true },
-				{ "filename", padding = { left = 0, right = 4 } },
+				{
+					"filename",
+					symbols = {
+						modified = "", -- Text to show when the file is modified.
+						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
+					},
+					padding = { left = 0, right = 4 },
+				},
 			},
 			lualine_x = {},
 			lualine_y = {},

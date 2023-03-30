@@ -224,7 +224,7 @@ end
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<Leader>cd", "<cmd>lua require('neogen').generate()<CR>", { desc = "Generate docs" })
 map("n", "<leader>cf", "<cmd>NullFormat<cr>", { desc = "Format" })
-map("n", "<leader>co", "<cmd>AerialToggle!<cr>", { desc = "Aerial Outline" })
+map("n", "<leader>co", "<cmd>AerialToggle<cr>", { desc = "Aerial Outline" })
 map("n", "<leader>cs", "<cmd>TSJSplit<cr>", { desc = "Split line" })
 map("n", "<leader>cj", "<cmd>TSJJoin<cr>", { desc = "Join line" })
 
