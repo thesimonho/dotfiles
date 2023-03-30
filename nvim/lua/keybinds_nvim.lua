@@ -304,7 +304,13 @@ map("n", "]y", "<Plug>(YankyCycleForward)", { desc = "Next yank" })
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Terminal                                        ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>`", "<cmd>ToggleTerm<cr>", { desc = "Terminal" })
+map("n", "<leader>`", function()
+	utils.UI_select({
+		["Vertical (→)"] = "vim.cmd('ToggleTerm direction=vertical')",
+		["Horizontal (↓)"] = "vim.cmd('ToggleTerm direction=horizontal')",
+		["Float (⤢)"] = "vim.cmd('ToggleTerm direction=float')",
+	})
+end, { desc = "Terminal" })
 map("t", "<esc>", "<C-\\><C-n>") -- Escape to normal mode in terminal
 
 -- ╔═════════════════════════════════════════════════╗
