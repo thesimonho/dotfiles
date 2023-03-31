@@ -16,6 +16,9 @@ map("n", "<Tab>", "<C-^>", { desc = "Alternate file" }) -- Switch to previous fi
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
 -- ╚═════════════════════════════════════════════════╝
+map({ "n", "x" }, "gg", "mjgg", { desc = "Mark and go to top" }) -- Mark and go to top
+map({ "n", "x" }, "G", "mjG", { desc = "Mark and go to bottom" }) -- Mark and go to bottom
+
 map({ "n", "x" }, "w", "<Plug>(smartword-w)")
 map({ "n", "x" }, "b", "<Plug>(smartword-b)")
 map({ "n", "x" }, "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Down" }) -- Move down across wraps

@@ -98,7 +98,7 @@ Hydra({
 	body = "<leader>b",
 	heads = {
 		{ "b", cmd("BufferLinePick"), { exit = true, desc = "Pick" } },
-		{ "q", cmd("bdelete"), { exit = true, desc = "Close" } },
+		{ "q", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { exit = true, desc = "Close" } },
 		{
 			"Q",
 			function()
