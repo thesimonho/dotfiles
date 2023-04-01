@@ -20,24 +20,4 @@ local conds = require("luasnip.extras.conditions")
 local conds_expand = require("luasnip.extras.conditions.expand")
 
 return {
-	s(
-		{ trig = "TODO:", dscr = "Add a reminder comment", snippetType = "autosnippet", regTrig = false },
-		fmta(
-			[[
-            <>: <>
-        ]],
-			{
-				c(1, {
-					t("TODO"),
-					t("FIX"),
-					t("NOTE"),
-					t("WARN"),
-					t("HACK"),
-					t("PERF"),
-					t("TEST"),
-				}),
-				i(0),
-			}
-		)
-	),
 }
