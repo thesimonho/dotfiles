@@ -79,7 +79,7 @@ function M.config()
 						auto_close = false,
 						priority = 2,
 						matcher = function(buf)
-							return buf.filename:match("%_test") or buf.filename:match("%_spec")
+							return buf.filename:match("%.test") or buf.filename:match("%.spec")
 						end,
 					},
 					{
