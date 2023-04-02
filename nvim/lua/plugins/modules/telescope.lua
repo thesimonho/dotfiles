@@ -22,7 +22,7 @@ function M.config()
 			layout_strategy = "horizontal",
 			layout_config = { width = 0.8, prompt_position = "top" },
 			borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
-			path_display = { shorten = { len = 1, exclude = { 1, -1 } } },
+			path_display = { shorten = { len = 2, exclude = { -1, -2, -3 } } },
 			wrap_results = false,
 			dynamic_preview_title = true,
 			file_ignore_patterns = {
