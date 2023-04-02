@@ -208,9 +208,9 @@ map("n", "<leader>gh", show_hover, { desc = "Hover" }) -- mapped outside otherwi
 
 function MapLSP(bufnr)
 	map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration", buffer = bufnr })
-	map("n", "<leader>gd", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Definition", buffer = bufnr })
-	map("n", "<leader>gt", "<cmd>lua vim.lsp.buf.type_definition()<cr>", { desc = "Type Definition", buffer = bufnr })
-	map("n", "<leader>gr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "Find all references", buffer = bufnr })
+	map("n", "<leader>gd", "<cmd>TroubleToggle lsp_definitions<cr>", { desc = "Definition", buffer = bufnr })
+	map("n", "<leader>gt", "<cmd>TroubleToggle lsp_type_definitions<cr>", { desc = "Type Definition", buffer = bufnr })
+	map("n", "<leader>gr", "<cmd>TroubleToggle lsp_references<cr>", { desc = "Find all references", buffer = bufnr })
 	map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation", buffer = bufnr })
 	map("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature", buffer = bufnr })
 	map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Show Error", buffer = bufnr })
@@ -482,7 +482,7 @@ end, { desc = "REPL" })
 map("n", "<leader>je", "<Plug>SlimeCellsSendAndGoToNext", { desc = "Send to REPL" })
 map("n", "<leader>j[", "<Plug>SlimeCellsPrev", { desc = "Previous cell" })
 map("n", "<leader>j]", "<Plug>SlimeCellsNext", { desc = "Next cell" })
-map("n", "<leader>jb", 'o```{python}<cr>```<esc>O', { desc = "Insert code block" })
+map("n", "<leader>jb", "o```{python}<cr>```<esc>O", { desc = "Insert code block" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Jupynium                                        ║
