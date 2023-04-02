@@ -20,6 +20,7 @@ function M.config()
 			"Trouble",
 			"OverseerList",
 			"lspinfo",
+            "qf"
 		},
 		scope = "file",
 	})

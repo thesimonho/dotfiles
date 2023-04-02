@@ -1,7 +1,7 @@
 local M = {
 	"roobert/search-replace.nvim",
 	cond = vim.g.vscode == nil,
-	enabled = true,
+	enabled = false,
 	cmd = {
 		"SearchReplaceSingleBufferCWord",
 		"SearchReplaceSingleBufferVisualSelection",

@@ -32,6 +32,10 @@ function M.config()
 				i = {
 					["<C-j>"] = actions.move_selection_next,
 					["<C-k>"] = actions.move_selection_previous,
+					["<C-q>"] = function(bufnr)
+						actions.smart_send_to_qflist(bufnr)
+						vim.cmd("TroubleToggle quickfix")
+					end,
 				},
 			},
 		},
