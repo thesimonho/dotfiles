@@ -63,21 +63,20 @@ M.get_mode_colour = function()
 end
 
 -- open toggleterm with lazygit
-local Terminal = require("toggleterm.terminal").Terminal
-local lazygit = Terminal:new({
-	cmd = "lazygit",
-	hidden = true,
-	on_open = function(term)
-		vim.cmd("startinsert!")
-	end,
-	close_on_exit = true,
-	direction = "float",
-	float_opts = {
-		border = "single",
-	},
-})
-
 M.toggle_lazygit = function()
+	local Terminal = require("toggleterm.terminal").Terminal
+	local lazygit = Terminal:new({
+		cmd = "lazygit",
+		hidden = true,
+		on_open = function(term)
+			vim.cmd("startinsert!")
+		end,
+		close_on_exit = true,
+		direction = "float",
+		float_opts = {
+			border = "single",
+		},
+	})
 	lazygit:toggle()
 end
 
@@ -104,13 +103,12 @@ M.live_grep_from_project_root = function()
 	require("telescope.builtin").live_grep(opts)
 end
 
-local ls = require("luasnip")
-local sn = ls.snippet_node
-local i = ls.insert_node
-local f = ls.function_node
-
 -- luasnip: insert visual selection into dynamic node
 M.get_visual = function(parent)
+	local ls = require("luasnip")
+	local sn = ls.snippet_node
+	local i = ls.insert_node
+
 	print("Creating snippet from visual selection...")
 	if #parent.snippet.env.SELECT_RAW > 0 then
 		return sn(nil, i(1, parent.snippet.env.SELECT_RAW))
@@ -121,6 +119,9 @@ end
 
 -- luasnip: return the regex capture group for regex-based triggers
 M.get_capture_group = function(group)
+	local ls = require("luasnip")
+	local f = ls.function_node
+
 	return f(function(_, snip)
 		return snip.captures[group]
 	end)

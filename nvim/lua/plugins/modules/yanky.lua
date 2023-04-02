@@ -1,5 +1,6 @@
 local M = {
 	"gbprod/yanky.nvim",
+	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = { "BufReadPost", "BufNewFile" },
 }
