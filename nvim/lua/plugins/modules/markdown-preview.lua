@@ -75,7 +75,7 @@ function M.config()
 
 	--set default theme (dark or light)
 	--By default the theme is define according to the preferences of the system
-	vim.g.mkdp_theme = "dark"
+	vim.g.mkdp_theme = "light"
 end
 
 return M

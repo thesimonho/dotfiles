@@ -26,6 +26,7 @@ winget install -e --id JanDeDobbeleer.OhMyPosh -s winget
 winget install -e --id Parsec.Parsec
 winget install -e --id Microsoft.PowerShell
 winget install -e --id Microsoft.PowerToys
+winget install -e --id Posit.Quarto -s winget --accept-source-agreements --force
 winget install -e --id RProject.R
 winget install -e --id RStudio.RStudio.OpenSource -s winget --accept-source-agreements --force
 winget install -e --id Rustlang.Rustup -s winget --accept-source-agreements --force

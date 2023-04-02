@@ -51,6 +51,10 @@ function M.config()
 	}, { prefix = "<leader>" })
 
 	wk.register({
+		p = { name = "Preview" },
+	}, { prefix = "<leader>" })
+
+	wk.register({
 		c = { name = "Code" },
 	}, { prefix = "<leader>" })
 

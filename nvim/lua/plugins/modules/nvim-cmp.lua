@@ -75,6 +75,7 @@ function M.config()
 		},
 		sources = cmp.config.sources({
 			{ name = "luasnip", priority = 700, keyword_length = 2, option = { show_autosnippets = true } },
+			{ name = "otter" },
 			{ name = "jupynium", priority = 600 }, -- consider higher priority than LSP
 			{ name = "nvim_lsp", priority = 500, keyword_length = 1 },
 			{ name = "buffer", keyword_length = 3 },

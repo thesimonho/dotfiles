@@ -27,7 +27,12 @@ map("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
 map("n", "<leader>zS", "<cmd>lua require('luasnip.loaders').edit_snippet_files()<cr>", { desc = "Edit snippets" })
 map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
 map("n", "<leader>zt", "<cmd>TSPlaygroundToggle<CR>", { desc = "TS Playground" })
-map("n", "<leader>zp", "<cmd>MarkdownPreview<cr>", { desc = "Preview markdown" })
+
+-- ╔═════════════════════════════════════════════════╗
+-- ║ Preview                                         ║
+-- ╚═════════════════════════════════════════════════╝
+map("n", "<leader>pm", "<cmd>MarkdownPreview<cr>", { desc = "Markdown" })
+map("n", "<leader>pq", "<cmd>!start quarto preview %:p<cr>", { desc = "Quarto" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Window / Splits                                 ║
@@ -468,6 +473,18 @@ map("n", "[t", function()
 end, { desc = "Previous todo comment" })
 
 -- ╔═════════════════════════════════════════════════╗
+-- ║ Quarto                                          ║
+-- ╚═════════════════════════════════════════════════╝
+map("n", "<leader>jr", function()
+	vim.cmd("vsplit")
+	require("utils").StartREPL("ipython")
+end, { desc = "REPL" })
+map("n", "<leader>je", "<Plug>SlimeCellsSendAndGoToNext", { desc = "Send to REPL" })
+map("n", "<leader>j[", "<Plug>SlimeCellsPrev", { desc = "Previous cell" })
+map("n", "<leader>j]", "<Plug>SlimeCellsNext", { desc = "Next cell" })
+map("n", "<leader>jb", 'o```{python}<cr>```<esc>O', { desc = "Insert code block" })
+
+-- ╔═════════════════════════════════════════════════╗
 -- ║ Jupynium                                        ║
 -- ╚═════════════════════════════════════════════════╝
 vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
@@ -539,7 +556,7 @@ function MapJupynium(bufnr)
 			},
 		},
 		mode = { "n", "x" },
-		body = "<leader>j",
+		body = "<leader>J",
 		heads = {
 			{
 				"S",
