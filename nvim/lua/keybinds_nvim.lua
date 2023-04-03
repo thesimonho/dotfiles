@@ -271,6 +271,7 @@ map("n", "<leader>`", function()
 	})
 end, { desc = "Terminal" })
 map("t", "<esc>", "<C-\\><C-n>") -- Escape to normal mode in terminal
+map("t", "kj", "<C-\\><C-n>")
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ DAP / Debug                                     ║

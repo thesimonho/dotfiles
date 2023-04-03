@@ -13,7 +13,6 @@ local M = {
 
 function M.config()
 	require("quarto").setup({
-		debug = false,
 		closePreviewOnExit = true,
 		lspFeatures = {
 			enabled = true,

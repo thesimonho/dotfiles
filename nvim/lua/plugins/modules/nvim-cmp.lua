@@ -7,6 +7,7 @@ local M = {
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-nvim-lua",
+		"hrsh7th/cmp-emoji",
 	},
 	event = { "InsertEnter" },
 }
@@ -81,6 +82,7 @@ function M.config()
 			{ name = "buffer", keyword_length = 3 },
 			{ name = "path" },
 			{ name = "crates" },
+			{ name = "emoji" },
 		}),
 	})
 end
