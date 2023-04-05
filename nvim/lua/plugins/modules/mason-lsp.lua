@@ -180,7 +180,9 @@ function M.config()
 		automatic_setup = true,
 	})
 	require("mason-null-ls").setup_handlers()
-	require("null-ls").setup({
+
+	local null_ls = require("null-ls")
+	null_ls.setup({
 		on_attach = function(client, bufnr)
 			-- Custom command to use null-ls as the formatter.
 			local format_cmd = function(input)
@@ -199,6 +201,8 @@ function M.config()
 		end,
 		sources = {
 			-- Anything not supported by mason.
+			null_ls.builtins.completion.spell,
+			null_ls.builtins.code_actions.refactoring,
 		},
 	})
 
