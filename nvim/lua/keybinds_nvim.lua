@@ -434,9 +434,24 @@ map("n", "<leader>jr", function()
 	vim.cmd("vsplit")
 	require("utils").StartREPL("ipython")
 end, { desc = "REPL" })
-map("n", "<leader>je", "<Plug>SlimeCellsSendAndGoToNext", { desc = "Send to REPL" })
-map("n", "<leader>j[", "<Plug>SlimeCellsPrev", { desc = "Previous cell" })
-map("n", "<leader>j]", "<Plug>SlimeCellsNext", { desc = "Next cell" })
+
+map("n", "<leader>jl", function()
+	vim.cmd("SlimeSendCurrentLine")
+	vim.api.nvim_command('SlimeSend0 "\n"')
+end, { desc = "Send line" })
+
+map("n", "<leader>jc", function()
+	vim.cmd([[execute "normal \<Plug>SlimeCellsSendAndGoToNext"]])
+	vim.api.nvim_command('SlimeSend0 "\n"')
+end, { desc = "Send cell" })
+
+map("v", "<leader>jv", function()
+	vim.cmd("SlimeSend")
+	vim.api.nvim_command('SlimeSend0 "\n"')
+end, { desc = "Send visual selection" })
+
+map("n", "<leader>[j", "<Plug>SlimeCellsPrev", { desc = "Previous cell" })
+map("n", "<leader>]j", "<Plug>SlimeCellsNext", { desc = "Next cell" })
 map("n", "<leader>jb", "o```{python}<cr>```<esc>O", { desc = "Insert code block" })
 
 -- ╔═════════════════════════════════════════════════╗
