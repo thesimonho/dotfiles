@@ -20,6 +20,18 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 	desc = "Open help pages in a vertical split",
 })
 
+-- insert mode when switching to terminal
+vim.api.nvim_create_autocmd("BufEnter", {
+	pattern = "*",
+	callback = function()
+		if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
+			vim.api.nvim_command("startinsert")
+		else
+			vim.api.nvim_command("stopinsert")
+		end
+	end,
+})
+
 -- auto root
 vim.opt.autochdir = false
 

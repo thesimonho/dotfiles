@@ -188,6 +188,7 @@ end
 
 -- start REPL
 M.StartREPL = function(repl)
+	vim.cmd("vsplit")
 	vim.cmd("terminal " .. repl)
 	vim.opt_local.number = false
 	local term_id = vim.b.terminal_job_id

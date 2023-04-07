@@ -55,7 +55,7 @@ function M.config()
 	}, { prefix = "<leader>" })
 
 	wk.register({
-		c = { name = "Code" },
+		c = { name = "Code", r = "Refactor" },
 	}, { prefix = "<leader>" })
 
 	wk.register({
@@ -63,7 +63,7 @@ function M.config()
 	}, { prefix = "<leader>" })
 
 	wk.register({
-		r = { name = "Refactor", p = { name = "Print" } },
+		r = { name = "REPL" },
 	}, { prefix = "<leader>" })
 end
 

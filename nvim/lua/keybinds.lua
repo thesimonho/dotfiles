@@ -62,35 +62,35 @@ map({ "n", "x", "o" }, "S", "<Plug>(leap-backward-to)", { desc = "Leap backward"
 -- ╚═════════════════════════════════════════════════╝
 map(
 	"v",
-	"<leader>rf",
+	"<leader>crf",
 	[[ <Esc><cmd>lua require('refactoring').refactor('Extract Function')<cr>]],
 	{ desc = "Extract to a function", expr = false }
 )
 map(
 	"v",
-	"<leader>rv",
+	"<leader>crv",
 	[[ <Esc><cmd>lua require('refactoring').refactor('Extract Variable')<cr>]],
 	{ desc = "Extract to a variable", expr = false }
 )
 map(
 	"n",
-	"<leader>ri",
+	"<leader>cri",
 	[[ <cmd>lua require('refactoring').refactor('Inline Variable')<cr>]],
 	{ desc = "Inline a variable", expr = false }
 )
 map(
 	"n",
-	"<leader>rpf",
+	"<leader>crpf",
 	"<cmd>lua require('refactoring').debug.printf({below = false})<cr>",
 	{ desc = "Add print statement (function)" }
 )
 map(
 	"n",
-	"<leader>rpv",
+	"<leader>crpv",
 	"<cmd>lua require('refactoring').debug.print_var({ normal = true })<cr>",
 	{ desc = "Add print statement (variable)" }
 )
-map("n", "<leader>rpc", "<cmd>lua require('refactoring').debug.cleanup({})<cr>", { desc = "Cleanup print statements" })
+map("n", "<leader>crpc", "<cmd>lua require('refactoring').debug.cleanup({})<cr>", { desc = "Cleanup print statements" })
 
-map("n", "<leader>R", "<CMD>SearchReplaceSingleBufferCWord<CR>", { desc = "Search and replace" })
-map("v", "<leader>R", "<CMD>SearchReplaceSingleBufferVisualSelection<CR>", { desc = "Search and replace" })
+-- map("n", "<leader>R", "<CMD>SearchReplaceSingleBufferCWord<CR>", { desc = "Search and replace" })
+-- map("v", "<leader>R", "<CMD>SearchReplaceSingleBufferVisualSelection<CR>", { desc = "Search and replace" })

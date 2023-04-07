@@ -220,7 +220,7 @@ function MapLSP(bufnr)
 	map("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next error", buffer = bufnr })
 
 	-- Binds that dont belong under "g" but should only be set when LSP is attached
-	map("n", "<leader>rr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
+	map("n", "<leader>crr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
 	map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 end
 
@@ -428,31 +428,32 @@ map("n", "[t", function()
 end, { desc = "Previous todo comment" })
 
 -- ╔═════════════════════════════════════════════════╗
--- ║ Quarto                                          ║
+-- ║ REPL                                            ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>jr", function()
-	vim.cmd("vsplit")
-	require("utils").StartREPL("ipython")
-end, { desc = "REPL" })
+map("n", "<leader>ro", function()
+	utils.UI_select({
+		["IPython"] = "require('utils').StartREPL('ipython')",
+	})
+end, { desc = "Open REPL" })
 
-map("n", "<leader>jl", function()
+map("n", "<leader>rl", function()
 	vim.cmd("SlimeSendCurrentLine")
 	vim.api.nvim_command('SlimeSend0 "\n"')
 end, { desc = "Send line" })
 
-map("n", "<leader>jc", function()
+map("n", "<leader>rc", function()
 	vim.cmd([[execute "normal \<Plug>SlimeCellsSendAndGoToNext"]])
 	vim.api.nvim_command('SlimeSend0 "\n"')
 end, { desc = "Send cell" })
 
-map("v", "<leader>jv", function()
+map("v", "<leader>rv", function()
 	vim.cmd("SlimeSend")
 	vim.api.nvim_command('SlimeSend0 "\n"')
 end, { desc = "Send visual selection" })
 
-map("n", "<leader>[j", "<Plug>SlimeCellsPrev", { desc = "Previous cell" })
-map("n", "<leader>]j", "<Plug>SlimeCellsNext", { desc = "Next cell" })
-map("n", "<leader>jb", "o```{python}<cr>```<esc>O", { desc = "Insert code block" })
+map("n", "[r", "<Plug>SlimeCellsPrev", { desc = "Previous REPL cell" })
+map("n", "]r", "<Plug>SlimeCellsNext", { desc = "Next REPL cell" })
+map("n", "<leader>rb", "o```{python}<cr>```<esc>O", { desc = "Insert code block" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Jupynium                                        ║
