@@ -181,7 +181,6 @@ map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_root()<
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
 map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.project.project{}<cr>", { desc = "Project" })
-map("n", "<leader>ft", "<cmd>TodoTelescope<cr>", { desc = "Todo list" })
 map(
 	"n",
 	"<leader>fn",
@@ -232,6 +231,8 @@ map("n", "<leader>cf", "<cmd>NullFormat<cr>", { desc = "Format" })
 map("n", "<leader>co", "<cmd>AerialToggle<cr>", { desc = "Aerial Outline" })
 map("n", "<leader>cs", "<cmd>TSJSplit<cr>", { desc = "Split line" })
 map("n", "<leader>cj", "<cmd>TSJJoin<cr>", { desc = "Join line" })
+map("n", "<leader>ct", "<cmd>TodoTelescope<cr>", { desc = "TODO" })
+map("n", "<leader>cq", "<cmd>TroubleToggle quickfix<cr>", { desc = "Quickfix" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Snippets                                        ║
@@ -265,9 +266,9 @@ map("n", "]y", "<Plug>(YankyCycleForward)", { desc = "Next yank" })
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>`", function()
 	utils.UI_select({
-		["Vertical (→)"] = "vim.cmd('ToggleTerm direction=vertical')",
-		["Horizontal (↓)"] = "vim.cmd('ToggleTerm direction=horizontal')",
-		["Float (⤢)"] = "vim.cmd('ToggleTerm direction=float')",
+		["(→) Vertical"] = "vim.cmd('ToggleTerm direction=vertical')",
+		["(↓) Horizontal"] = "vim.cmd('ToggleTerm direction=horizontal')",
+		["(⤢) Float"] = "vim.cmd('ToggleTerm direction=float')",
 	})
 end, { desc = "Terminal" })
 map("t", "<esc>", "<C-\\><C-n>") -- Escape to normal mode in terminal
@@ -527,7 +528,7 @@ function MapJupynium(bufnr)
 			},
 		},
 		mode = { "n", "x" },
-		body = "<leader>J",
+		body = "<leader>j",
 		heads = {
 			{
 				"S",
