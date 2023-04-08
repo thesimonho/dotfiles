@@ -109,6 +109,7 @@ map("n", "<leader>?a", "<cmd>lua require('telescope.builtin').autocommands()<cr>
 map("n", "<leader>?g", "<cmd>lua require('telescope.builtin').highlights()<cr>", { desc = "Highlight groups" })
 map("n", "<leader>?v", "<cmd>lua require('telescope.builtin').vim_options()<cr>", { desc = "Vim options" })
 map("n", "<leader>?n", "<cmd>NoiceHistory<cr>", { desc = "Notifications" })
+map("n", "<leader>?m", "<cmd>messages<cr>", { desc = "Messages" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tools                                           ║
