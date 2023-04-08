@@ -9,6 +9,7 @@ function M.config()
 		colorcolumn = "120",
 		custom_colorcolumn = { python = "88", rust = "100", javascript = "80", markdown = "80" },
 		disabled_filetypes = {
+            "alpha",
 			"help",
 			"text",
 			"lazy",

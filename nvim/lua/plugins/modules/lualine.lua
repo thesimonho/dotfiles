@@ -48,8 +48,8 @@ function M.config()
 			section_separators = { left = "", right = "" },
 			component_separators = "",
 			disabled_filetypes = {
-				statusline = {},
-				winbar = { "neo-tree", "aerial", "OverseerList" },
+				statusline = { "alpha" },
+				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
 			},
 		},
 		sections = process_sections({
