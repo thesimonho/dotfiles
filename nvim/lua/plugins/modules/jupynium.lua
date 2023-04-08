@@ -1,6 +1,5 @@
 local M = {
 	"kiyoon/jupynium.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	build = "conda run --no-capture-output -n base pip install .",
 	cmd = { "JupyniumStartAndAttachToServer", "JupyniumAttachToServer" },

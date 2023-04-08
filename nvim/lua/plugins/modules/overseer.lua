@@ -1,6 +1,5 @@
 local M = {
 	"stevearc/overseer.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	cmd = { "OverseerRun", "OverseerToggle" },
 }

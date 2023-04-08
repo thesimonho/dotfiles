@@ -1,6 +1,5 @@
 local M = {
 	"mvllow/modes.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = { "BufReadPre", "BufNewFile" },
 }

@@ -1,7 +1,6 @@
 -- Integrate Mason with nvim lsp and null-ls
 local M = {
 	"williamboman/mason-lspconfig.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = {
 		"neovim/nvim-lspconfig",

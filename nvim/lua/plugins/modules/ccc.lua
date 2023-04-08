@@ -1,6 +1,5 @@
 local M = {
 	"uga-rosa/ccc.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	cmd = "CccPick",
 	event = { "BufReadPre", "BufNewFile" },

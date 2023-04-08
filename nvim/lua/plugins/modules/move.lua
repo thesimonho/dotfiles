@@ -1,6 +1,5 @@
 local M = {
 	"booperlv/nvim-gomove",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = { "BufReadPost", "BufNewFile" },
 }

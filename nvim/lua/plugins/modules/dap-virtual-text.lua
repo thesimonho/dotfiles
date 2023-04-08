@@ -1,6 +1,5 @@
 local M = {
 	"theHamsta/nvim-dap-virtual-text",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = { "mfussenegger/nvim-dap", "nvim-treesitter/nvim-treesitter" },
 	event = { "BufReadPost", "BufNewFile" },

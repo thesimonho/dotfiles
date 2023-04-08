@@ -1,6 +1,5 @@
 local M = {
 	"b0o/incline.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = false,
 	event = { "BufReadPre", "BufNewFile" },
 }

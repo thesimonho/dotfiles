@@ -1,6 +1,5 @@
 local M = {
 	"nvim-lualine/lualine.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	event = { "BufReadPost", "BufNewFile" },

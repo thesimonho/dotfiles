@@ -2,7 +2,6 @@
 
 local M = {
 	"kevinhwang91/nvim-ufo",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = "kevinhwang91/promise-async",
 	event = { "BufReadPost", "BufNewFile" },

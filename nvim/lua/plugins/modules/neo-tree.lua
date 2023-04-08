@@ -1,6 +1,5 @@
 local M = {
 	"nvim-neo-tree/neo-tree.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	branch = "v2.x",
 	dependencies = {

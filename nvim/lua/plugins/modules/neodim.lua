@@ -1,7 +1,6 @@
 -- dim unused variables
 local M = {
 	"zbirenbaum/neodim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = "LspAttach",
 }

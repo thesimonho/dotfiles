@@ -1,6 +1,5 @@
 local M = {
 	"m4xshen/smartcolumn.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = { "BufReadPre", "BufNewFile" },
 }

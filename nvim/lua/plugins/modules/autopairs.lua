@@ -1,6 +1,5 @@
 local M = {
 	"windwp/nvim-autopairs",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = { "InsertEnter" },
 }

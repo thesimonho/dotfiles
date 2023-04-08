@@ -1,6 +1,5 @@
 local M = {
 	"zbirenbaum/copilot.lua",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	cmd = "Copilot",
 	event = "InsertEnter",

@@ -1,6 +1,5 @@
 local M = {
 	"jpalardy/vim-slime",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = "klafyvel/vim-slime-cells",
 	event = { "BufReadPost", "BufNewFile" },

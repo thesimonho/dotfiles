@@ -1,6 +1,5 @@
 local M = {
 	"akinsho/bufferline.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	version = "v3.5.0",
 	dependencies = { "nvim-tree/nvim-web-devicons", "tiagovla/scope.nvim" },

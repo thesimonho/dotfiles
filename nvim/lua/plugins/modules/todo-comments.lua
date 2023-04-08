@@ -1,6 +1,5 @@
 local M = {
 	"folke/todo-comments.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = "nvim-lua/plenary.nvim",
 	event = "VeryLazy",

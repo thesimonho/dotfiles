@@ -1,6 +1,5 @@
 local M = {
 	"folke/which-key.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	event = "VeryLazy",
 }

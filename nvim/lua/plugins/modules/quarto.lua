@@ -1,6 +1,5 @@
 local M = {
 	"quarto-dev/quarto-nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = {
 		"jmbuhr/otter.nvim",

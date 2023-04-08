@@ -1,6 +1,5 @@
 local M = {
 	"akinsho/toggleterm.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	cmd = { "ToggleTerm", "ToggleTermToggleAll", "TermExec" },
 }

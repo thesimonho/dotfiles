@@ -1,7 +1,6 @@
 -- Integrate Mason with nvim-dap
 local M = {
 	"jay-babu/mason-nvim-dap.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = {
 		"williamboman/mason.nvim",

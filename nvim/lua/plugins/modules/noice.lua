@@ -1,6 +1,5 @@
 local M = {
 	"folke/noice.nvim",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = {
 		"MunifTanjim/nui.nvim",

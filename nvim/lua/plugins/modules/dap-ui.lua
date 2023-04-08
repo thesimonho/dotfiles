@@ -1,6 +1,5 @@
 local M = {
 	"rcarriga/nvim-dap-ui",
-	cond = vim.g.vscode == nil,
 	enabled = true,
 	dependencies = { "mfussenegger/nvim-dap", "ChristianChiarulli/neovim-codicons" },
 	event = { "BufReadPost", "BufNewFile" },
