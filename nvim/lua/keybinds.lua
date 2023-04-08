@@ -8,8 +8,7 @@ local pcmd = require("hydra.keymap-util").pcmd
 -- ║ General                                         ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>qq", "<cmd>qa<cr>") -- Quit all windows
-map("n", "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
-map({ "i", "x" }, "<C-S>", "<Esc><Cmd>silent! update | redraw<CR>", { desc = "Save and go to Normal mode" })
+map({ "n", "i", "x" }, "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
 map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear highlights" }) -- Clear highlights on ESC
 map("n", "cd", ":cd %:p:h<cr>:pwd<cr>", { desc = "Change working directory" }) -- cd to current file's directory
 map("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; C-H = C-BS
