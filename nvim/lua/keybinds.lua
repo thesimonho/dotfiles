@@ -31,20 +31,15 @@ map("n", "<leader>?m", "<cmd>messages<cr>", { desc = "Messages" })
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tools                                           ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>z", "{}", { desc = "Tools" })
-map("n", "<leader>zc", "<cmd>CccPick<cr>", { desc = "Colour picker" })
 map("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
 map("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
+map("n", "<leader>zc", "<cmd>CccPick<cr>", { desc = "Colour picker" })
 map("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
 map("n", "<leader>zS", "<cmd>lua require('luasnip.loaders').edit_snippet_files()<cr>", { desc = "Edit snippets" })
 map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
 map("n", "<leader>zt", "<cmd>TSPlaygroundToggle<CR>", { desc = "TS Playground" })
-
--- ╔═════════════════════════════════════════════════╗
--- ║ Preview                                         ║
--- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>pm", "<cmd>MarkdownPreview<cr>", { desc = "Markdown" })
-map("n", "<leader>pq", "<cmd>!start quarto preview %:p<cr>", { desc = "Quarto" })
+map("n", "<leader>zpm", "<cmd>MarkdownPreview<cr>", { desc = "Markdown" })
+map("n", "<leader>zpq", "<cmd>!start quarto preview %:p<cr>", { desc = "Quarto" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Window / Splits                                 ║
