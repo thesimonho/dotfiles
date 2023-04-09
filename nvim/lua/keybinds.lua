@@ -346,7 +346,7 @@ map("i", "<c-u>", "<cmd>lua require('luasnip.extras.select_choice')()<cr>", { de
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Yanky                                           ║
 -- ╚═════════════════════════════════════════════════╝
-map({ "n", "x" }, "<leader>y", "<cmd>Telescope yank_history<cr>", { desc = "Yanks" })
+map({ "n", "x" }, "<leader>y", "<cmd>YankyRingHistory<cr>", { desc = "Yanks" })
 map({ "n", "x" }, "y", "<Plug>(YankyYank)")
 map({ "n", "x" }, "P", "<Plug>(YankyPutBefore)")
 map({ "n", "x" }, "p", "<Plug>(YankyPutAfter)")
