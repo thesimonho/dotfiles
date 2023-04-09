@@ -62,22 +62,21 @@ function M.config()
 
 	-- footer
 	local writer = {
-		[["if you have to wait for it to roar out of you,]],
+		[[💬 if you have to wait for it to roar out of you,]],
 		[[then wait patiently.]],
 		[[if it never does roar out of you,]],
-		[[do something else."]],
+		[[do something else.]],
 	}
-	local function get_footer(quotes, width, align)
+	local function get_footer(quotes, width)
 		math.randomseed(os.time())
 		local quote_text = quotes[math.random(#quotes)]
 
 		local max_width = width or 35
-		local end_col = vim.fn.winwidth(0) / 2 + max_width / 2
 
 		local tbl = {}
 		for _, text in ipairs(quote_text) do
-			local padded_text = require("utils").pad_string(text, end_col, align)
-			table.insert(tbl, { type = "text", val = padded_text, opts = { hl = "Comment" } })
+			local padded_text = require("utils").pad_string(text, max_width, "right")
+			table.insert(tbl, { type = "text", val = padded_text, opts = { hl = "Comment", position = "center" } })
 		end
 
 		return {
@@ -196,33 +195,20 @@ function M.config()
 
 	-- Layout
 	theme.config.layout = {
-		{ type = "padding", val = 4 },
+		{ type = "padding", val = 3 },
 		get_header({ cool, panda }),
 		{ type = "padding", val = 1 },
 		get_info(),
 		{ type = "padding", val = 2 },
 		links,
 		{ type = "padding", val = 2 },
-		get_projects(3),
+		get_projects(5),
 		{ type = "padding", val = 2 },
 		get_mru(5),
 		{ type = "padding", val = 3 },
-		get_footer({ writer }, 40, "right"),
+		get_footer({ writer }, 50),
 	}
 	require("alpha").setup(theme.config)
-
-	-- autocommands to turn off bars
-	local alpha_group = vim.api.nvim_create_augroup("alpha", { clear = true })
-	vim.api.nvim_create_autocmd("User", {
-		group = alpha_group,
-		pattern = "AlphaReady",
-		command = "set laststatus=0 | set showtabline=0",
-	})
-	vim.api.nvim_create_autocmd("User", {
-		group = alpha_group,
-		pattern = "AlphaClosed",
-		command = "set laststatus=3 | set showtabline=2",
-	})
 end
 
 return M

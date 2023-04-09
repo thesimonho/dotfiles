@@ -38,6 +38,7 @@ vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
 vim.opt.mousemoveevent = false -- screws with toggleterm input
 
+vim.opt.autochdir = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 
