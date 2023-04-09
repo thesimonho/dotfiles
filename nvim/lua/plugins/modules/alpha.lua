@@ -60,6 +60,33 @@ function M.config()
 		}
 	end
 
+	-- footer
+	local writer = {
+		[["if you have to wait for it to roar out of you,]],
+		[[then wait patiently.]],
+		[[if it never does roar out of you,]],
+		[[do something else."]],
+	}
+	local function get_footer(quotes, width, align)
+		math.randomseed(os.time())
+		local quote_text = quotes[math.random(#quotes)]
+
+		local max_width = width or 35
+		local end_col = vim.fn.winwidth(0) / 2 + max_width / 2
+
+		local tbl = {}
+		for _, text in ipairs(quote_text) do
+			local padded_text = require("utils").pad_string(text, end_col, align)
+			table.insert(tbl, { type = "text", val = padded_text, opts = { hl = "Comment" } })
+		end
+
+		return {
+			type = "group",
+			val = tbl,
+			opts = {},
+		}
+	end
+
 	-- Info section
 	local function get_info()
 		local lazy_stats = require("lazy").stats()
@@ -111,7 +138,7 @@ function M.config()
 		local alphabet = "abcdefghijknopqrstuvwxyz"
 
 		local tbl = {
-			{ type = "text", val = "Projects", opts = { hl = "SpecialComment", position = "center" } },
+			{ type = "text", val = "Recent Projects", opts = { hl = "SpecialComment", position = "center" } },
 		}
 
 		local project_list = require("telescope._extensions.project.utils").get_projects("recent")
@@ -176,10 +203,11 @@ function M.config()
 		{ type = "padding", val = 2 },
 		links,
 		{ type = "padding", val = 2 },
-		get_projects(5),
+		get_projects(3),
 		{ type = "padding", val = 2 },
-		get_mru(9),
-		{ type = "padding", val = 2 },
+		get_mru(5),
+		{ type = "padding", val = 3 },
+		get_footer({ writer }, 40, "right"),
 	}
 	require("alpha").setup(theme.config)
 
