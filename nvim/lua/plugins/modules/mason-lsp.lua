@@ -176,9 +176,8 @@ function M.config()
 	require("mason-null-ls").setup({
 		ensure_installed = ensure_installed, -- lsp, linter, formatter
 		automatic_installation = false,
-		automatic_setup = true,
+		handlers = {},
 	})
-	require("mason-null-ls").setup_handlers()
 
 	local null_ls = require("null-ls")
 	null_ls.setup({
