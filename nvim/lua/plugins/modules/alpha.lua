@@ -11,17 +11,37 @@ function M.config()
 	local theme = require("alpha.themes.theta")
 
 	-- Header
+	local function apply_gradient_hl(text)
+		local gradient = require("utils").create_gradient("#DCA561", "#658594", #text)
+
+		local lines = {}
+		for i, line in ipairs(text) do
+			local tbl = {
+				type = "text",
+				val = line,
+				opts = {
+					hl = "HeaderGradient" .. i,
+					shrink_margin = false,
+					position = "center",
+				},
+			}
+			table.insert(lines, tbl)
+
+			-- create hl group
+			vim.api.nvim_set_hl(0, "HeaderGradient" .. i, { fg = gradient[i] })
+		end
+
+		return {
+			type = "group",
+			val = lines,
+			opts = { position = "center" },
+		}
+	end
+
 	local function get_header(headers)
 		math.randomseed(os.time())
 		local header_text = headers[math.random(#headers)]
-		return {
-			type = "text",
-			val = header_text,
-			opts = {
-				position = "center",
-				hl = "Boolean",
-			},
-		}
+		return apply_gradient_hl(header_text)
 	end
 
 	-- Footer
