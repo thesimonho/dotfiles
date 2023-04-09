@@ -90,9 +90,9 @@ Hydra({
 -- ║ Buffers                                         ║
 -- ╚═════════════════════════════════════════════════╝
 local hint = [[
-    _b_: Pick      _[_: Previous       _q_: Close
-    _f_: Find      _]_: Next           _Q_: Close others
-    _p_: Pin       _H_: Move left
+    _b_: Pick      _[_: Previous       _c_: Pick close
+    _f_: Find      _]_: Next           _q_: Close current
+    _p_: Pin       _H_: Move left      _Q_: Close others
     ^             _L_: Move right
     ]]
 Hydra({
@@ -110,7 +110,8 @@ Hydra({
 	body = "<leader>b",
 	heads = {
 		{ "b", cmd("BufferLinePick"), { exit = true, desc = "Pick" } },
-		{ "q", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { exit = true, desc = "Close" } },
+		{ "c", cmd("BufferLinePickClose"), { exit = true, desc = "Pick close" } },
+		{ "q", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { exit = true, desc = "Close current" } },
 		{
 			"Q",
 			function()
