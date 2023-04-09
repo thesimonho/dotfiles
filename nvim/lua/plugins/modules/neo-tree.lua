@@ -57,6 +57,7 @@ function M.config()
 			},
 			mappings = {
 				["<space>"] = "none",
+				["<tab>"] = "none",
 				["<cr>"] = function(state)
 					local node = state.tree:get_node()
 					if require("neo-tree.utils").is_expandable(node) then
@@ -102,6 +103,24 @@ function M.config()
 		git_status = {
 			window = {
 				position = "float",
+			},
+		},
+		event_handlers = {
+			{
+				event = "neo_tree_window_after_open",
+				handler = function(args)
+					if args.position == "left" or args.position == "right" then
+						vim.cmd("wincmd =")
+					end
+				end,
+			},
+			{
+				event = "neo_tree_window_after_close",
+				handler = function(args)
+					if args.position == "left" or args.position == "right" then
+						vim.cmd("wincmd =")
+					end
+				end,
 			},
 		},
 	})
