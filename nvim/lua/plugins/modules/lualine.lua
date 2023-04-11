@@ -24,6 +24,9 @@ function M.config()
 		return self.status
 	end
 
+	-- TODO: nvchad style separator icons: https://github.com/NvChad/ui/tree/v2.0/lua/nvchad_ui/statusline
+	-- this is maybe a custom lualine theme?
+
 	local function process_sections(sections)
 		for name, section in pairs(sections) do
 			local left = name:sub(9, 10) < "x"

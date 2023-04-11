@@ -93,6 +93,8 @@ function M.config()
 				},
 			},
 		},
+        -- TODO: tabs fg/bg colour: https://github.com/NvChad/ui/tree/v2.0/lua/nvchad_ui/tabufline
+        -- NOTE: buffers remove bg and only change fg colour?
 		highlights = {
 			-- fill = {
 			-- 	fg = palette.autumnRed,

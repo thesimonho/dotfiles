@@ -10,6 +10,7 @@ local M = {
 	event = "VeryLazy",
 }
 
+-- TODO: use more distinct open folder icon
 function M.config()
 	require("neo-tree").setup({
 		close_if_last_window = true,
