@@ -19,7 +19,6 @@ local has_words_before = function()
 	return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
--- TODO: completion type fg colour
 function M.config()
 	local cmp = require("cmp")
 	local lspkind = require("lspkind")

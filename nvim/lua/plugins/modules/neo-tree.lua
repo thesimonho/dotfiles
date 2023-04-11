@@ -10,7 +10,6 @@ local M = {
 	event = "VeryLazy",
 }
 
--- TODO: use more distinct open folder icon
 function M.config()
 	require("neo-tree").setup({
 		close_if_last_window = true,
@@ -27,6 +26,12 @@ function M.config()
 			modified = {
 				symbol = "[+] ",
 				highlight = "NeoTreeModified",
+			},
+			icon = {
+				folder_closed = "",
+				folder_open = "",
+				folder_empty = "",
+				folder_empty_open = "",
 			},
 			symbols = {
 				-- Change type
