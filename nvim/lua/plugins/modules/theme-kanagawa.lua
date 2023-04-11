@@ -79,9 +79,6 @@ function M.config()
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
 
-				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
-				HLInclineNormalNC = { bg = colors.palette.dragonBlue, fg = colors.palette.sumiInk0 },
-
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 

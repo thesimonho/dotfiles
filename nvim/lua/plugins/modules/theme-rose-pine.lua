@@ -34,8 +34,6 @@ function M.config()
 			BufferInactiveSign = { bg = "overlay" },
 			BufferInactiveMod = { bg = "overlay" },
 
-			hl_incline = { bg = "white", fg = "black" },
-
 			Headline1 = { bg = "pine" },
 			Headline2 = { bg = "#345663" },
 			Dash = { bg = "love" },
