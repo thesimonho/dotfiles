@@ -33,7 +33,6 @@ function M.config()
 			max_line_len = 400, -- ignore lines longer than this
 			exclude = {}, -- list of file types to exclude highlighting
 		},
-		-- list of named colors where we try to extract the guifg from the
 		-- list of highlight groups or use the hex color if hl not found as a fallback
 		colors = {
 			error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
