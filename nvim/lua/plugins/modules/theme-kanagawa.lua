@@ -93,6 +93,7 @@ function M.config()
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
 				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
+				NeoTreeWinSeparator = { fg = colors.theme.ui.bg_dim, bg = colors.theme.ui.bg_dim },
 
 				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
 				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
