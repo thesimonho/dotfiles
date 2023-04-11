@@ -78,6 +78,10 @@ function M.config()
 				DiagnosticVirtualTextWarn = { fg = colors.palette.roninYellow },
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
+				Search = { bg = colors.palette.dragonBlue, fg = colors.theme.ui.bg },
+				HLSearchLens = { bg = colors.theme.ui.bg, fg = colors.palette.springViolet1 },
+				HLSearchLensNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
+				HLSearchNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },

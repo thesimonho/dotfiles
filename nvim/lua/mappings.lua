@@ -10,7 +10,6 @@ local pcmd = require("hydra.keymap-util").pcmd
 map("n", "<leader>qq", "<cmd>qa<cr>") -- Quit all windows
 map({ "n", "i", "x" }, "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
 map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear highlights" }) -- Clear highlights on ESC
-map("n", "cd", ":cd %:p:h<cr>:pwd<cr>", { desc = "Change working directory" }) -- cd to current file's directory
 map("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; C-H = C-BS
 map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
 map("n", "<Tab>", "<C-^>", { desc = "Alternate file" }) -- Switch to previous file
@@ -213,6 +212,16 @@ map("x", "<M-Left>", "<Plug>GoVSDLeft", { desc = "Duplicate selection left" })
 map("x", "<M-Down>", "<Plug>GoVSDDown", { desc = "Duplicate selection down" })
 map("x", "<M-Up>", "<Plug>GoVSDUp", { desc = "Duplicate selection up" })
 map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" })
+
+-- ╔═════════════════════════════════════════════════╗
+-- ║ Search                                          ║
+-- ╚═════════════════════════════════════════════════╝
+map("n", "n", [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]])
+map("n", "N", [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]])
+map("n", "*", [[*<Cmd>lua require('hlslens').start()<CR>]])
+map("n", "#", [[#<Cmd>lua require('hlslens').start()<CR>]])
+map("n", "g*", [[g*<Cmd>lua require('hlslens').start()<CR>]])
+map("n", "g#", [[g#<Cmd>lua require('hlslens').start()<CR>]])
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Leap                                            ║
