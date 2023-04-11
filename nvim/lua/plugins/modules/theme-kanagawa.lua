@@ -72,12 +72,12 @@ function M.config()
 			HoverBG = colors.theme.ui.bg_p1
 
 			return {
+				LazyNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
+				MasonNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
 				DiagnosticVirtualTextError = { fg = colors.palette.samuraiRed },
 				DiagnosticVirtualTextWarn = { fg = colors.palette.roninYellow },
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
-				LazyNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
-				MasonNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
 
 				HLInclineNormal = { bg = colors.palette.fujiWhite, fg = colors.palette.sumiInk0 },
 				HLInclineNormalNC = { bg = colors.palette.dragonBlue, fg = colors.palette.sumiInk0 },
@@ -104,12 +104,13 @@ function M.config()
 
 				ScrollbarCursor = { fg = colors.palette.oldWhite },
 
-				TelescopeTitle = { fg = colors.palette.oldWhite, bold = true },
+				TelescopeTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonBlue, bold = true },
 				TelescopeSelection = { bg = colors.palette.winterYellow },
 				TelescopePromptNormal = { bg = colors.theme.ui.bg_p2 },
 				TelescopePromptBorder = { fg = colors.theme.ui.bg_p2, bg = colors.theme.ui.bg_p2 },
 				TelescopeResultsNormal = { fg = colors.palette.fujiWhite, bg = HoverBG },
 				TelescopeResultsBorder = { fg = HoverBG, bg = HoverBG },
+				TeleScopePreviewTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.waveAqua1, bold = true },
 				TelescopePreviewNormal = { bg = colors.theme.ui.bg },
 				TelescopePreviewBorder = { bg = colors.theme.ui.bg, fg = colors.theme.ui.bg },
 
