@@ -90,7 +90,7 @@ function M.config()
 			lualine_y = {
 				{
 					function()
-						return ""
+						return ""
 					end,
 					color = require("colours").status_icon,
 					separator = { left = "", right = "" },
