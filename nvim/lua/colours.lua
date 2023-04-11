@@ -25,11 +25,12 @@ local function set_theme_colours(theme)
 		C.visual = theme_colors.autumnGreen
 		C.command = theme_colors.roninYellow
 		C.replace = theme_colors.autumnRed
-		C.text = theme_colors.fujiGray
 		C.comment = theme_colors.fujiGray
 		C.overlay = theme_colors.crystalBlue
 		C.sep = theme_colors.fujiGray
 		C.status = "#282A2E"
+        C.status_icon = { fg = theme_colors.sumiInk0, bg = theme_colors.dragonBlue }
+        C.text = theme_colors.fujiGray
         C.textDark = theme_colors.sumiInk0
         C.textLight = theme_colors.fujiWhite
         C.bufPick = theme_colors.autumnRed

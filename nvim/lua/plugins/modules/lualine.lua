@@ -15,52 +15,34 @@ function M.config()
 	custom.command.a.bg = colours.command
 	custom.replace.a.bg = colours.replace
 
-	local empty = require("lualine.component"):extend()
-	function empty:draw(default_highlight)
-		self.status = ""
-		self.applied_separator = ""
-		self:apply_highlights(default_highlight)
-		self:apply_section_separators()
-		return self.status
-	end
-
-	-- TODO: nvchad style separator icons: https://github.com/NvChad/ui/tree/v2.0/lua/nvchad_ui/statusline
-	-- this is maybe a custom lualine theme?
-
-	local function process_sections(sections)
-		for name, section in pairs(sections) do
-			local left = name:sub(9, 10) < "x"
-			for pos = 1, name ~= "lualine_z" and #section or #section - 1 do
-				table.insert(section, pos * 2, { empty, color = { bg = require("colours").status } })
-			end
-			for id, comp in ipairs(section) do
-				if type(comp) ~= "table" then
-					comp = { comp }
-					section[id] = comp
-				end
-				comp.separator = left and { right = "" } or { left = "" }
-			end
-		end
-		return sections
-	end
-
 	require("lualine").setup({
 		options = {
 			theme = custom,
 			globalstatus = true,
-			section_separators = { left = "", right = "" },
+			section_separators = "",
 			component_separators = "",
 			disabled_filetypes = {
 				statusline = { "alpha" },
 				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
 			},
 		},
-		sections = process_sections({
-			lualine_a = { { "mode", padding = 2 } },
+		sections = {
+			lualine_a = {
+				{ "mode", padding = 2 },
+			},
 			lualine_b = {
 				{
+					function()
+						return " "
+					end,
+					color = require("colours").status_icon,
+					separator = { right = "" },
+				},
+				{
 					"branch",
-					color = utils.get_mode_colour,
+					icon = "",
+					padding = { left = 0, right = 1 },
+					color = { fg = require("colours").textLight, bg = require("colours").status },
 					on_click = function()
 						require("telescope.builtin").git_branches()
 					end,
@@ -68,12 +50,29 @@ function M.config()
 				{
 					"diff",
 					symbols = { added = "+", modified = "⇆ ", removed = "-" },
+					color = { bg = require("colours").status },
+					padding = { left = 1, right = 2 },
 					on_click = function()
 						require("telescope.builtin").git_status()
 					end,
 				},
 				{
+					function()
+						return "⚐"
+					end,
+					color = require("colours").status_icon,
+					separator = { left = "", right = "" },
+					cond = function()
+						if #vim.diagnostic.get(0, { severity = { min = vim.diagnostic.severity.HINT } }) > 0 then
+							return true
+						else
+							return false
+						end
+					end,
+				},
+				{
 					"diagnostics",
+					color = { bg = require("colours").status },
 					on_click = function()
 						vim.cmd("TroubleToggle")
 					end,
@@ -89,7 +88,19 @@ function M.config()
 			},
 			lualine_x = {},
 			lualine_y = {
-				"filetype",
+				{
+					function()
+						return ""
+					end,
+					color = require("colours").status_icon,
+					separator = { left = "", right = "" },
+				},
+				{
+					"filetype",
+					colored = false,
+					color = { fg = require("colours").textLight, bg = require("colours").status },
+					icon = { align = "left" },
+				},
 				{
 					function()
 						local msg = "No active LSP"
@@ -106,7 +117,9 @@ function M.config()
 						end
 						return msg
 					end,
-					icon = "  LSP:",
+					color = { fg = require("colours").textLight, bg = require("colours").status },
+					padding = { left = 1, right = 2 },
+					icon = "LSP:",
 					on_click = function()
 						vim.cmd("LspInfo")
 					end,
@@ -114,15 +127,26 @@ function M.config()
 			},
 			lualine_z = {
 				{
+					function()
+						return ""
+					end,
+					color = require("colours").status_icon,
+					separator = { left = "", right = "" },
+				},
+				{
 					"location",
+					color = { fg = require("colours").textLight, bg = require("colours").status },
 					fmt = function(str, _)
 						local loc = vim.split(str, ":")
 						return string.format("L:%d C:%d", loc[1], loc[2])
 					end,
 				},
-				{ "progress", padding = 2 },
+				{
+					"progress",
+					padding = 2,
+				},
 			},
-		}),
+		},
 		inactive_sections = {
 			lualine_a = {},
 			lualine_b = {},
@@ -140,7 +164,7 @@ function M.config()
 					"filename",
 					color = { fg = require("colours").textLight },
 					symbols = {
-						modified = "", -- Text to show when the file is modified.
+						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
 					},
 					padding = { left = 0, right = 4 },
