@@ -9,6 +9,10 @@ function M.config()
 	local headers = require("headers")
 	local quotes = require("quotes")
 	local theme = require("alpha.themes.theta")
+	local path_ok, plenary_path = pcall(require, "plenary.path")
+	if not path_ok then
+		return
+	end
 
 	-- Header
 	local function apply_gradient_hl(text)
@@ -125,7 +129,18 @@ function M.config()
 			end
 
 			local icon = "📁 "
-			local path_escape = project.path:gsub("\\", "\\\\")
+
+			-- create shortened path for display
+			local target_width = 35
+			local path_normalize = plenary_path.new(project.path):normalize()
+			local display_path = vim.fn.fnamemodify(path_normalize, ":~")
+
+			if #display_path > target_width then
+				display_path = plenary_path.new(display_path):shorten(1, { -2, -1 })
+				if #display_path > target_width then
+					display_path = plenary_path.new(display_path):shorten(1, { -1 })
+				end
+			end
 
 			-- get semantic letter for project
 			local letter
@@ -149,15 +164,17 @@ function M.config()
 			-- create button element
 			local file_button_el = dashboard.button(
 				letter,
-				icon .. project.title,
-				"<cmd>lua require('telescope.builtin').find_files( { cwd = '" .. path_escape .. "' }) <cr>"
+				icon .. display_path,
+				"<cmd>lua require('telescope.builtin').find_files( { cwd = '"
+					.. path_normalize:gsub("\\", "/")
+					.. "' }) <cr>"
 			)
 
 			-- create hl group for the start of the path
 			local fb_hl = {}
 			local path_parents = project.title:match("[/\\].*$")
 			if path_parents ~= nil then
-				table.insert(fb_hl, { "Comment", 0, #icon + #project.title - #project_shortname })
+				table.insert(fb_hl, { "Comment", 0, #icon + #display_path - #project_shortname })
 			end
 			file_button_el.opts.hl = fb_hl
 
