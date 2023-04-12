@@ -162,7 +162,7 @@ function M.config()
 				{ "filetype", colored = true, icon_only = true },
 				{
 					"filename",
-					color = { fg = require("colours").textLight },
+					color = { fg = require("colours").bufSelected },
 					symbols = {
 						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
@@ -185,11 +185,17 @@ function M.config()
 			lualine_a = {},
 			lualine_b = {},
 			lualine_c = {
-				{ "filetype", colored = false, icon_only = true },
+				{
+					"filetype",
+					colored = false,
+					icon_only = true,
+					color = { fg = require("colours").bufVisible },
+				},
 				{
 					"filename",
+					color = { fg = require("colours").bufVisible },
 					symbols = {
-						modified = "", -- Text to show when the file is modified.
+						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
 					},
 					padding = { left = 0, right = 4 },
