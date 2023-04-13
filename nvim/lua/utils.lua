@@ -63,7 +63,6 @@ M.get_mode_colour = function()
 end
 
 -- open toggleterm with lazygit
--- FIXME: enable esc key
 M.toggle_lazygit = function()
 	local Terminal = require("toggleterm.terminal").Terminal
 	local lazygit = Terminal:new({

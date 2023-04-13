@@ -373,7 +373,7 @@ map("n", "<leader>`", function()
 		["(⤢) Float"] = "vim.cmd('ToggleTerm direction=float')",
 	})
 end, { desc = "Terminal" })
-map("t", "<esc>", "<C-\\><C-n>") -- Escape to normal mode in terminal
+map("t", "<c-q>", "<C-\\><C-n>") -- Back to normal mode in terminal
 map("t", "kj", "<C-\\><C-n>")
 
 -- ╔═════════════════════════════════════════════════╗
