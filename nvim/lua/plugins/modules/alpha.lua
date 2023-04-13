@@ -132,6 +132,7 @@ function M.config()
 
 			-- create shortened path for display
 			local target_width = 35
+            -- FIXME: dotfiles dont highlight properly when opening nvim from a non-home directory
 			local path_normalize = plenary_path.new(project.path):normalize()
 			local display_path = vim.fn.fnamemodify(path_normalize, ":.")
 
