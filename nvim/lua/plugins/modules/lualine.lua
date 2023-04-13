@@ -15,6 +15,16 @@ function M.config()
 	custom.command.a.bg = colours.command
 	custom.replace.a.bg = colours.replace
 
+	local sbar = { " ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
+	local function show_scrollbar()
+		local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+		local lines = vim.api.nvim_buf_line_count(0)
+		local i = math.floor((curr_line - 1) / lines * #sbar) + 1
+		if sbar[i] then
+			return string.rep(sbar[i], 2)
+		end
+	end
+
 	require("lualine").setup({
 		options = {
 			theme = custom,
@@ -167,6 +177,7 @@ function M.config()
 					"progress",
 					padding = 2,
 				},
+				{ show_scrollbar, padding = 0 },
 			},
 		},
 		inactive_sections = {
