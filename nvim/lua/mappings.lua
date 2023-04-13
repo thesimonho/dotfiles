@@ -339,13 +339,13 @@ map("n", "<leader>cq", "<cmd>TroubleToggle quickfix<cr>", { desc = "Quickfix" })
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Snippets                                        ║
 -- ╚═════════════════════════════════════════════════╝
-map({ "i", "s" }, "<c-j>", function()
+map({ "n", "i", "s" }, "<c-j>", function()
 	if require("luasnip").expand_or_jumpable() then
 		require("luasnip").expand_or_jump()
 	end
 end, { desc = "Next snippet placeholder" })
 
-map({ "i", "s" }, "<c-k>", function()
+map({ "n", "i", "s" }, "<c-k>", function()
 	if require("luasnip").jumpable(-1) then
 		require("luasnip").jump(-1)
 	end
@@ -403,7 +403,7 @@ Hydra({
 		{ "<f6>", cmd("lua require('dap').step_over()"), { exit = false, desc = "Step over" } },
 		{ "<f7>", cmd("lua require('dap').step_into()"), { exit = false, desc = "Step into" } },
 		{ "<f8>", cmd("lua require('dap').step_out()"), { exit = false, desc = "Step out" } },
-        { "q", cmd("lua require('dap').terminate()"), { exit = true, desc = "Stop debugging" } },
+		{ "q", cmd("lua require('dap').terminate()"), { exit = true, desc = "Stop debugging" } },
 		{ "b", cmd("lua require('dap').toggle_breakpoint()"), { exit = false, desc = "Toggle breakpoint" } },
 		{ "r", cmd("lua require('dap').repl.open()"), { exit = true, desc = "REPL" } },
 		{ "l", cmd("lua require('dap').run_last()"), { exit = true, desc = "Run last" } },
