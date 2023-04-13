@@ -95,27 +95,27 @@ function M.config()
 		},
 	})
 
-	cmp.setup.cmdline(":", {
-		mapping = mapping,
-		sources = cmp.config.sources({
-			{ name = "path" },
-		}, {
-			{
-				name = "cmdline",
-				option = {
-					ignore_cmds = { "Man", "!" },
-				},
-			},
-		}),
-	})
+	-- cmp.setup.cmdline(":", {
+	-- 	mapping = mapping,
+	-- 	sources = cmp.config.sources({
+	-- 		{ name = "path" },
+	-- 	}, {
+	-- 		{
+	-- 			name = "cmdline",
+	-- 			option = {
+	-- 				ignore_cmds = { "Man", "!" },
+	-- 			},
+	-- 		},
+	-- 	}),
+	-- })
 
-	cmp.setup.cmdline("@", {
-		mapping = mapping,
-		sources = cmp.config.sources({
-			{ name = "path" },
-			{ name = "cmdline" },
-		}),
-	})
+	-- cmp.setup.cmdline("@", {
+	-- 	mapping = mapping,
+	-- 	sources = cmp.config.sources({
+	-- 		{ name = "path" },
+	-- 		{ name = "cmdline" },
+	-- 	}),
+	-- })
 end
 
 return M
