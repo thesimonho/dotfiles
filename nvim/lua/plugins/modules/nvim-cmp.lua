@@ -87,7 +87,7 @@ function M.config()
 		}),
 	})
 
-	-- FIXME: completion not showing up for this
+	-- FIXME: completion not showing up for this, or are not navigatable
 	cmp.setup.cmdline({ "/", "?" }, {
 		mapping = mapping,
 		sources = {

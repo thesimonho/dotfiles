@@ -49,7 +49,6 @@ function M.config()
 				},
 				{
 					"diff",
-					-- symbols = { added = "+", modified = "⇆ ", removed = "-" },
 					symbols = { added = " ", modified = " ", removed = " " },
 					color = { bg = require("colours").status },
 					padding = { left = 1, right = 2 },
@@ -102,7 +101,7 @@ function M.config()
 					end,
 				},
 			},
-			lualine_x = {}, -- TODO: add last keys pressed
+			lualine_x = {},
 			lualine_y = {
 				{
 					function()
