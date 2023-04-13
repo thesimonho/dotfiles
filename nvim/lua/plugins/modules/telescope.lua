@@ -27,6 +27,10 @@ function M.config()
 			file_ignore_patterns = {
 				"node_modules",
 			},
+			preview = {
+				filesize_limit = 2,
+				timeout = 200,
+			},
 			mappings = {
 				i = {
 					["<C-j>"] = actions.move_selection_next,
