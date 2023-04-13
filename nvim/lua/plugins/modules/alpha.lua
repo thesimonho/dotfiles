@@ -144,7 +144,7 @@ function M.config()
 
 			-- get semantic letter for project
 			local letter
-			local project_shortname = project.title:match("[/\\][%a%s]*$")
+			local project_shortname = project.title:match("[/\\][%w%s%d]*$")
 			if project_shortname == nil then
 				letter = string.sub(project.title, 1, 1):lower()
 				project_shortname = project.title
