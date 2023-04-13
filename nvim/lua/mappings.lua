@@ -383,7 +383,7 @@ local hint = [[
  _<f5>_: Continue      _b_: Breakpoint      _h_: Hover         _f_: Frames
  _<f6>_: Step over     _r_: REPL            _p_: Preview       _s_: Scopes
  _<f7>_: Step into     _l_: Run last
- _<f8>_: Step out
+ _<f8>_: Step out                                          ^_q_: Quit
 ]]
 Hydra({
 	name = "Debug",
@@ -403,6 +403,7 @@ Hydra({
 		{ "<f6>", cmd("lua require('dap').step_over()"), { exit = false, desc = "Step over" } },
 		{ "<f7>", cmd("lua require('dap').step_into()"), { exit = false, desc = "Step into" } },
 		{ "<f8>", cmd("lua require('dap').step_out()"), { exit = false, desc = "Step out" } },
+        { "q", cmd("lua require('dap').terminate()"), { exit = true, desc = "Stop debugging" } },
 		{ "b", cmd("lua require('dap').toggle_breakpoint()"), { exit = false, desc = "Toggle breakpoint" } },
 		{ "r", cmd("lua require('dap').repl.open()"), { exit = true, desc = "REPL" } },
 		{ "l", cmd("lua require('dap').run_last()"), { exit = true, desc = "Run last" } },
