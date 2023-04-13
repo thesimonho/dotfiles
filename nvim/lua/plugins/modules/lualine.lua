@@ -81,6 +81,21 @@ function M.config()
 			},
 			lualine_c = {
 				{
+					function()
+						return "⚒"
+					end,
+					color = require("colours").status_icon,
+					cond = function()
+						local tasks = require("overseer").list_tasks()
+						if vim.tbl_isempty(tasks) then
+							return false
+						else
+							return true
+						end
+					end,
+					separator = { left = "", right = "" },
+				},
+				{
 					"overseer",
 					on_click = function()
 						vim.cmd("OverseerToggle")
