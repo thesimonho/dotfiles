@@ -133,7 +133,7 @@ function M.config()
 			-- create shortened path for display
 			local target_width = 35
 			local path_normalize = plenary_path.new(project.path):normalize()
-			local display_path = vim.fn.fnamemodify(path_normalize, ":~")
+			local display_path = vim.fn.fnamemodify(path_normalize, ":.")
 
 			if #display_path > target_width then
 				display_path = plenary_path.new(display_path):shorten(1, { -2, -1 })
@@ -144,7 +144,7 @@ function M.config()
 
 			-- get semantic letter for project
 			local letter
-			local project_shortname = project.title:match("[/\\][%w%s%d]*$")
+			local project_shortname = project.title:match("[/\\][%w%s%.%-]*$")
 			if project_shortname == nil then
 				letter = string.sub(project.title, 1, 1):lower()
 				project_shortname = project.title
