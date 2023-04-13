@@ -6,6 +6,7 @@ local M = {
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-nvim-lua",
+		"hrsh7th/cmp-cmdline",
 		"hrsh7th/cmp-emoji",
 	},
 	event = { "InsertEnter" },
@@ -22,6 +23,30 @@ end
 function M.config()
 	local cmp = require("cmp")
 	local lspkind = require("lspkind")
+	local mapping = {
+		["<CR>"] = cmp.mapping.confirm({ select = false }), -- don't autoselect first
+		["<C-Space>"] = cmp.mapping.complete(),
+		["<C-e>"] = cmp.mapping({
+			i = cmp.mapping.abort(),
+			c = cmp.mapping.close(),
+		}),
+		["<Tab>"] = vim.schedule_wrap(function(fallback)
+			if cmp.visible() and has_words_before() then
+				cmp.select_next_item({ behavior = cmp.SelectBehavior })
+			elseif has_words_before() then
+				cmp.complete()
+			else
+				fallback()
+			end
+		end),
+		["<S-Tab>"] = vim.schedule_wrap(function(fallback)
+			if cmp.visible() and has_words_before() then
+				cmp.select_prev_item({ behavior = cmp.SelectBehavior })
+			else
+				fallback()
+			end
+		end),
+	}
 
 	cmp.setup({
 		preselect = cmp.PreselectMode.None,
@@ -49,30 +74,7 @@ function M.config()
 				max_width = 50,
 			}),
 		},
-		mapping = {
-			["<CR>"] = cmp.mapping.confirm({ select = false }), -- don't autoselect first
-			["<C-Space>"] = cmp.mapping.complete(),
-			["<C-e>"] = cmp.mapping({
-				i = cmp.mapping.abort(),
-				c = cmp.mapping.close(),
-			}),
-			["<Tab>"] = vim.schedule_wrap(function(fallback)
-				if cmp.visible() and has_words_before() then
-					cmp.select_next_item({ behavior = cmp.SelectBehavior })
-				elseif has_words_before() then
-					cmp.complete()
-				else
-					fallback()
-				end
-			end),
-			["<S-Tab>"] = vim.schedule_wrap(function(fallback)
-				if cmp.visible() and has_words_before() then
-					cmp.select_prev_item({ behavior = cmp.SelectBehavior })
-				else
-					fallback()
-				end
-			end),
-		},
+		mapping = mapping,
 		sources = cmp.config.sources({
 			{ name = "luasnip", priority = 700, keyword_length = 2, option = { show_autosnippets = true } },
 			{ name = "otter" },
@@ -82,6 +84,36 @@ function M.config()
 			{ name = "path" },
 			{ name = "crates" },
 			{ name = "emoji" },
+		}),
+	})
+
+	-- FIXME: completion not showing up for this
+	cmp.setup.cmdline({ "/", "?" }, {
+		mapping = mapping,
+		sources = {
+			{ name = "buffer", keyword_length = 1 },
+		},
+	})
+
+	cmp.setup.cmdline(":", {
+		mapping = mapping,
+		sources = cmp.config.sources({
+			{ name = "path" },
+		}, {
+			{
+				name = "cmdline",
+				option = {
+					ignore_cmds = { "Man", "!" },
+				},
+			},
+		}),
+	})
+
+	cmp.setup.cmdline("@", {
+		mapping = mapping,
+		sources = cmp.config.sources({
+			{ name = "path" },
+			{ name = "cmdline" },
 		}),
 	})
 end
