@@ -24,7 +24,7 @@ function M.config()
 				with_expanders = true,
 			},
 			modified = {
-				symbol = "[+] ",
+				symbol = " ",
 				highlight = "NeoTreeModified",
 			},
 			icon = {
@@ -33,18 +33,20 @@ function M.config()
 				folder_empty = "",
 				folder_empty_open = "",
 			},
-			symbols = {
-				-- Change type
-				added = "✚",
-				deleted = "✖",
-				modified = "",
-				renamed = "",
-				-- Status type
-				untracked = "",
-				ignored = "",
-				unstaged = "",
-				staged = "",
-				conflict = "",
+			git_status = {
+				symbols = {
+					-- Change type
+					added = "",
+					deleted = "",
+					modified = "",
+					renamed = "",
+					-- Status type
+					untracked = "",
+					ignored = "",
+					unstaged = "",
+					staged = "",
+					conflict = "",
+				},
 			},
 		},
 		window = {
