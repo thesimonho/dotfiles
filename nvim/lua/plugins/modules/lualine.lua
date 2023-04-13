@@ -87,7 +87,7 @@ function M.config()
 					end,
 				},
 			},
-			lualine_x = {},
+			lualine_x = {}, -- TODO: add last keys pressed
 			lualine_y = {
 				{
 					function()
@@ -150,7 +150,7 @@ function M.config()
 					color = { fg = require("colours").textLight, bg = require("colours").status },
 					fmt = function(str, _)
 						local loc = vim.split(str, ":")
-						return string.format("L:%d C:%d", loc[1], loc[2])
+						return string.format("L:%d/%d C:%d", loc[1], vim.api.nvim_buf_line_count(0), loc[2])
 					end,
 					on_click = function()
 						vim.ui.input({
