@@ -101,6 +101,17 @@ function M.config()
 					colored = false,
 					color = { fg = require("colours").textLight, bg = require("colours").status },
 					icon = { align = "left" },
+					on_click = function()
+						vim.ui.input({
+							prompt = "Enter new filetype: ",
+							default = vim.bo.filetype,
+							completion = "filetype",
+						}, function(input)
+							if input ~= nil and input ~= "" then
+								vim.cmd("set filetype=" .. input)
+							end
+						end)
+					end,
 				},
 				{
 					function()
@@ -120,7 +131,7 @@ function M.config()
 					end,
 					color = { fg = require("colours").textLight, bg = require("colours").status },
 					padding = { left = 1, right = 2 },
-					icon = "LSP:",
+					icon = " ",
 					on_click = function()
 						vim.cmd("LspInfo")
 					end,
@@ -140,6 +151,16 @@ function M.config()
 					fmt = function(str, _)
 						local loc = vim.split(str, ":")
 						return string.format("L:%d C:%d", loc[1], loc[2])
+					end,
+					on_click = function()
+						vim.ui.input({
+							prompt = "Go to line: ",
+							default = vim.fn.line("."),
+						}, function(input)
+							if input ~= nil and input ~= "" then
+								vim.cmd("normal! " .. input .. "G")
+							end
+						end)
 					end,
 				},
 				{
