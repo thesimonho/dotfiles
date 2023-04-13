@@ -1,39 +1,23 @@
--- Integrate Mason with nvim-dap
 local M = {
-	"jay-babu/mason-nvim-dap.nvim",
+	"mfussenegger/nvim-dap",
 	enabled = true,
-	dependencies = {
-		"williamboman/mason.nvim",
-		"mfussenegger/nvim-dap",
-		"mfussenegger/nvim-dap-python",
-	},
+	dependencies = "mfussenegger/nvim-dap-python",
 	event = "VeryLazy",
 }
 
 function M.config()
-	require("mason").setup()
-	require("mason-nvim-dap").setup({
-		ensure_installed = {
-			"codelldb",
-			"python",
-		},
-		automatic_setup = true,
-	})
-
-	-- setup mason-installed debugpy and python
+	-- python debugpy setup
 	local path_debugpy = vim.fn.stdpath("data") .. "/mason/packages/debugpy/venv/Scripts/python.exe"
-
-	-- local path_python = vim.env.HOME .. "/miniconda3/python.exe"
-	local path_python = vim.api.nvim_exec("!which python.exe", true)
-	path_python = vim.split(path_python, "\n")[2] -- get result of the command
-	path_python = path_python:gsub("^/(%a+)/", "%1:/")
-
 	require("dap-python").setup(path_debugpy)
 	require("dap-python").resolve_python = function()
+		-- FIXME: use plenary to deal with this stupid windows path mess
+		local path_python = vim.api.nvim_exec("!which python.exe", true)
+		path_python = vim.split(path_python, "\r\n\n")[2] -- get result of the command
+		path_python = path_python:gsub("^/(%a+)/", "%1://"):gsub("\n", "")
 		return path_python
 	end
 
-	-- set up rust and codelldb
+	-- rust and codelldb setup
 	local dap = require("dap")
 	local codelldb_root = vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/"
 	local codelldb_path = codelldb_root .. "adapter/codelldb.exe"
