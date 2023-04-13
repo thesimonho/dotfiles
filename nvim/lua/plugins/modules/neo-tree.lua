@@ -11,6 +11,16 @@ local M = {
 }
 
 function M.config()
+	local function open_no_focus(state)
+		local node = state.tree:get_node()
+		if require("neo-tree.utils").is_expandable(node) then
+			state.commands["toggle_node"](state)
+		else
+			state.commands["open"](state)
+			vim.cmd("Neotree reveal")
+		end
+	end
+
 	require("neo-tree").setup({
 		close_if_last_window = true,
 		popup_border_style = "single",
@@ -65,15 +75,8 @@ function M.config()
 			},
 			mappings = {
 				["<space>"] = "none",
-				["<tab>"] = function(state)
-					local node = state.tree:get_node()
-					if require("neo-tree.utils").is_expandable(node) then
-						state.commands["toggle_node"](state)
-					else
-						state.commands["open"](state)
-						vim.cmd("Neotree reveal")
-					end
-				end,
+				["<cr>"] = open_no_focus,
+				["<tab>"] = open_no_focus,
 				["a"] = {
 					"add",
 					config = {
