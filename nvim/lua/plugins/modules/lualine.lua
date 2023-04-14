@@ -28,7 +28,7 @@ function M.config()
 		},
 		sections = {
 			lualine_a = {
-				{ "mode", padding = 2, icon = "" },
+				{ "mode", padding = 2 },
 			},
 			lualine_b = {
 				{
