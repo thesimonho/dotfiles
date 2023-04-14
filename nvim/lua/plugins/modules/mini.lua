@@ -34,6 +34,20 @@ function M.config()
 			join = "",
 		},
 	})
+
+	require("mini.comment").setup({
+		options = {
+			-- Whether to ignore blank lines
+			ignore_blank_line = true,
+
+			-- Whether to recognize as comment only lines without indent
+			start_of_line = false,
+
+			-- Whether to ensure single space pad for comment parts
+			pad_comment_parts = true,
+		},
+	})
+
 	require("mini.pairs").setup()
 	require("mini.move").setup()
 	require("mini.cursorword").setup()
