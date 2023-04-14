@@ -4,7 +4,7 @@ local M = {}
 
 M.basic_binds = {
 	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
-	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
+	{ key = "p", mods = "CTRL|SHIFT", action = act.ActivateCommandPalette },
 	{ key = "n", mods = "LEADER", action = act.SpawnWindow },
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "manage_pane" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false }) },

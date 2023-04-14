@@ -10,6 +10,8 @@ local pcmd = require("hydra.keymap-util").pcmd
 map("n", "<leader>qq", "<cmd>qa<cr>") -- Quit all windows
 map({ "n", "i", "x" }, "<C-S>", "<Cmd>silent! update | redraw<CR>", { desc = "Save" })
 map("n", "<esc>", "<cmd>nohlsearch<cr>", { desc = "Clear highlights" }) -- Clear highlights on ESC
+map("n", "<c-p>", "<cmd>lua require('telescope.builtin').keymaps()<cr>", { desc = "Command Palette" })
+
 map("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; C-H = C-BS
 map("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
 map("n", "<Tab>", "<C-^>", { desc = "Alternate file" }) -- Switch to previous file
@@ -17,15 +19,14 @@ map("n", "<Tab>", "<C-^>", { desc = "Alternate file" }) -- Switch to previous fi
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Help                                            ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>?", "{}", { desc = "Help" })
-map("n", "<leader>?h", "<cmd>lua require('telescope.builtin').help_tags()<cr>", { desc = "Help" })
-map("n", "<leader>?k", "<cmd>lua require('telescope.builtin').keymaps()<cr>", { desc = "Keymaps" })
-map("n", "<leader>?c", "<cmd>lua require('telescope.builtin').commands()<cr>", { desc = "Commands" })
-map("n", "<leader>?a", "<cmd>lua require('telescope.builtin').autocommands()<cr>", { desc = "Autocommands" })
-map("n", "<leader>?g", "<cmd>lua require('telescope.builtin').highlights()<cr>", { desc = "Highlight groups" })
-map("n", "<leader>?v", "<cmd>lua require('telescope.builtin').vim_options()<cr>", { desc = "Vim options" })
-map("n", "<leader>?n", "<cmd>NoiceHistory<cr>", { desc = "Notifications" })
-map("n", "<leader>?m", "<cmd>messages<cr>", { desc = "Messages" })
+map({ "n", "x", "v" }, "<F1><F1>", "<cmd>execute 'h ' . expand('<cword>')<cr>", { desc = "Current word help" })
+map({ "n", "x", "v" }, "<F1>h", "<cmd>lua require('telescope.builtin').help_tags()<cr>", { desc = "Search help" })
+map({ "n", "x", "v" }, "<F1>c", "<cmd>lua require('telescope.builtin').commands()<cr>", { desc = "Commands" })
+map({ "n", "x", "v" }, "<F1>a", "<cmd>lua require('telescope.builtin').autocommands()<cr>", { desc = "Autocommands" })
+map({ "n", "x", "v" }, "<F1>g", "<cmd>lua require('telescope.builtin').highlights()<cr>", { desc = "Highlight groups" })
+map({ "n", "x", "v" }, "<F1>v", "<cmd>lua require('telescope.builtin').vim_options()<cr>", { desc = "Vim options" })
+map({ "n", "x", "v" }, "<F1>n", "<cmd>NoiceHistory<cr>", { desc = "Notifications" })
+map({ "n", "x", "v" }, "<F1>m", "<cmd>messages<cr>", { desc = "Messages" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tools                                           ║
