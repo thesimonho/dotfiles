@@ -265,9 +265,6 @@ map(
 )
 map("n", "<leader>crpc", "<cmd>lua require('refactoring').debug.cleanup({})<cr>", { desc = "Cleanup print statements" })
 
--- map("n", "<leader>R", "<CMD>SearchReplaceSingleBufferCWord<CR>", { desc = "Search and replace" })
--- map("v", "<leader>R", "<CMD>SearchReplaceSingleBufferVisualSelection<CR>", { desc = "Search and replace" })
-
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Folds                                           ║
 -- ╚═════════════════════════════════════════════════╝
