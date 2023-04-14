@@ -182,11 +182,6 @@ map({ "n", "x" }, "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Up" }) -- 
 map({ "n", "x" }, "gg", "mjgg", { desc = "Mark and go to top" }) -- Mark and go to top
 map({ "n", "x" }, "G", "mjG", { desc = "Mark and go to bottom" }) -- Mark and go to bottom
 
-map({ "n", "x" }, "w", "<Plug>(smartword-w)")
-map({ "n", "x" }, "b", "<Plug>(smartword-b)")
-map({ "n", "x" }, "e", "<Plug>(smartword-e)")
-map({ "n", "x" }, "ge", "<Plug>(smartword-ge)", { desc = "Previous end of word" })
-
 map("i", "<M-h>", "<Left>", { noremap = false, desc = "Left" })
 map("i", "<M-j>", "<Down>", { noremap = false, desc = "Down" })
 map("i", "<M-k>", "<Up>", { noremap = false, desc = "Up" })
