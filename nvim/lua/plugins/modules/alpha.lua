@@ -131,7 +131,7 @@ function M.config()
 
 			-- create shortened path for display
 			local target_width = 35
-			local display_path = project.path:gsub("/", "\\") -- standardize display of all separators
+			local display_path = project.path:gsub("/", "\\"):gsub("\\\\", "\\")
 			if #display_path > target_width then
 				display_path = plenary_path.new(display_path):shorten(1, { -2, -1 })
 				if #display_path > target_width then
