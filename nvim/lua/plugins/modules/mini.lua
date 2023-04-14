@@ -26,6 +26,7 @@ function M.config()
 			winblend = 25,
 		},
 	})
+
 	require("mini.splitjoin").setup({
 		mappings = {
 			toggle = "",
@@ -33,6 +34,8 @@ function M.config()
 			join = "",
 		},
 	})
+
+	require("mini.move").setup()
 end
 
 return M
