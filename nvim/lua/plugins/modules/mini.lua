@@ -36,7 +36,10 @@ function M.config()
 	})
 
 	require("mini.move").setup()
+	require("mini.cursorword").setup()
 	require("mini.surround").setup({ silent = true })
+
+	vim.cmd("hi! MiniCursorwordCurrent guifg=NONE guibg=NONE gui=NONE cterm=NONE")
 end
 
 return M
