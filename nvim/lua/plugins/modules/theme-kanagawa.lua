@@ -104,8 +104,6 @@ function M.config()
 				JupyniumMarkdownCellContent = { bg = colors.palette.sumiInk4 },
 				JupyniumMagicCommand = { link = "Keyword" },
 
-				ScrollbarCursor = { fg = colors.palette.oldWhite },
-
 				TelescopeTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonBlue, bold = true },
 				TelescopeSelection = { bg = colors.palette.winterYellow },
 				TelescopePromptNormal = { bg = colors.theme.ui.bg_p2 },

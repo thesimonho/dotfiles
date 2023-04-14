@@ -8,7 +8,6 @@ local M = {
 function M.config()
 	local colours = require("colours")
 	local custom = require("lualine.themes.base16")
-	local utils = require("utils")
 	custom.normal.a.bg = colours.normal
 	custom.insert.a.bg = colours.insert
 	custom.visual.a.bg = colours.visual
@@ -182,6 +181,9 @@ function M.config()
 					padding = 1,
 					fmt = function(str, _)
 						return string.format(": %s", str)
+					end,
+					on_click = function()
+						vim.cmd("lua MiniMap.toggle()")
 					end,
 				},
 			},

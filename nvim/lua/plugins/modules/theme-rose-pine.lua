@@ -48,9 +48,6 @@ function M.config()
 			JupyniumMarkdownCellContent = { bg = "overlay" },
 			JupyniumMagicCommand = { link = "Keyword" },
 
-			Scrollbar = { bg = "highlight_med" },
-			ScrollbarCursor = { fg = "foam" },
-
 			WhichKey = { fg = "love" },
 			WhichKeyGroup = { fg = "subtle" },
 			WhichKeyFloat = { bg = "overlay" },
