@@ -1,5 +1,5 @@
 local M = {
-	"anuvyklack/vim-smartword",
+	"chaoren/vim-wordmotion",
 	enabled = true,
 	event = { "BufReadPost", "BufNewFile" },
 }
