@@ -227,8 +227,8 @@ map("n", "g#", [[g#<Cmd>lua require('hlslens').start()<CR>]])
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Leap                                            ║
 -- ╚═════════════════════════════════════════════════╝
-map({ "n", "x", "o" }, "s", "<Plug>(leap-forward-to)", { desc = "Leap forward" })
-map({ "n", "x", "o" }, "S", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
+map({ "n", "x", "o" }, "<leader>j", "<Plug>(leap-forward-to)", { desc = "Leap forward" })
+map({ "n", "x", "o" }, "<leader>k", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Refactoring                                     ║
