@@ -60,3 +60,10 @@ vim.api.nvim_create_autocmd("User", {
 	pattern = "AlphaClosed",
 	command = "set laststatus=3 | set showtabline=2",
 })
+
+-- minimap
+local minimap_group = vim.api.nvim_create_augroup("minimap", { clear = true })
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+	group = minimap_group,
+	command = "lua MiniMap.open()",
+})
