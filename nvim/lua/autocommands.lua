@@ -24,11 +24,15 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*",
 	callback = function()
-		if vim.api.nvim_buf_get_option(0, "buftype") == "terminal" then
-			vim.api.nvim_command("startinsert")
-		else
-			vim.api.nvim_command("stopinsert")
-		end
+		vim.schedule(function()
+			local bufnr = vim.api.nvim_get_current_buf()
+			if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
+				vim.api.nvim_command("startinsert")
+			elseif vim.api.nvim_buf_get_option(bufnr, "filetype") ~= "TelescopePrompt" then
+				-- without this^, telescope will exit insert when no matches are found
+				vim.api.nvim_command("stopinsert")
+			end
+		end)
 	end,
 })
 
