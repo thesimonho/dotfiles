@@ -34,7 +34,7 @@ function M.config()
 			join = "",
 		},
 	})
-
+	require("mini.pairs").setup()
 	require("mini.move").setup()
 	require("mini.cursorword").setup()
 	require("mini.surround").setup({ silent = true })
