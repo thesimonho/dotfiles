@@ -28,7 +28,7 @@ function M.config()
 		},
 		sections = {
 			lualine_a = {
-				{ "mode", padding = 2 },
+				{ "mode", padding = 2, icon = "" },
 			},
 			lualine_b = {
 				{
@@ -157,14 +157,14 @@ function M.config()
 						return ""
 					end,
 					color = require("colours").status_icon,
-					separator = { left = "", right = "" },
+					separator = { left = "" },
 				},
 				{
 					"location",
-					color = { fg = require("colours").textLight, bg = require("colours").status },
+					padding = { left = 1, right = 0 },
 					fmt = function(str, _)
 						local loc = vim.split(str, ":")
-						return string.format("L:%d/%d C:%d", loc[1], vim.api.nvim_buf_line_count(0), loc[2])
+						return string.format("%d/%d", loc[1], vim.api.nvim_buf_line_count(0))
 					end,
 					on_click = function()
 						vim.ui.input({
@@ -179,7 +179,10 @@ function M.config()
 				},
 				{
 					"progress",
-					padding = 3,
+					padding = 1,
+					fmt = function(str, _)
+						return string.format(": %s", str)
+					end,
 				},
 			},
 		},

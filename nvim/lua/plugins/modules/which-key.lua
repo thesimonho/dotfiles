@@ -4,7 +4,7 @@ local M = {
 	event = "VeryLazy",
 }
 
--- TODO: add nvchad cheatsheet: https://github.com/NvChad/ui/tree/v2.0/lua/nvchad_ui/cheatsheet
+-- TODO: add nvchad cheat grid: https://github.com/NvChad/ui/tree/v2.0/lua/nvchad_ui/cheatsheet
 function M.config()
 	vim.opt.timeoutlen = 100
 

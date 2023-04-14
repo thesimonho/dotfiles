@@ -44,21 +44,21 @@ M.get_mode_colour = function()
 	local mode = vim.api.nvim_get_mode()["mode"]
 
 	if mode == "n" then
-		return { fg = colours.normal }
+		return colours.normal
 	elseif mode == "i" then
-		return { fg = colours.insert }
+		return colours.insert
 	elseif mode == "v" then
-		return { fg = colours.visual }
+		return colours.visual
 	elseif mode == "V" then
-		return { fg = colours.visual }
+		return colours.visual
 	elseif mode == "s" then
-		return { fg = colours.visual }
+		return colours.visual
 	elseif mode == "R" then
-		return { fg = colours.replace }
+		return colours.replace
 	elseif mode == "c" then
-		return { fg = colours.command }
+		return colours.command
 	else
-		return { fg = colours.text }
+		return colours.textLight
 	end
 end
 
