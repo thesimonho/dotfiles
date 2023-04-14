@@ -12,14 +12,22 @@ function M.config()
 		end,
 		backends = { "lsp", "treesitter", "markdown", "man" },
 		layout = {
-			-- max_width = { 40, 0.2 },
-			-- width = nil,
-			-- min_width = 10,
-			default_direction = "right",
+			default_direction = "float",
 			preserve_equality = true,
+		},
+		float = {
+			--   cursor - Opens float on top of the cursor
+			--   editor - Opens float centered in the editor
+			--   win    - Opens float centered in the window
+			relative = "win",
+			border = "rounded",
+			max_height = 0.9,
+			height = nil,
+			min_height = { 8, 0.1 },
 		},
 		lazy_load = true,
 		close_automatic_events = { "unsupported" },
+		close_on_select = true,
 		highlight_on_hover = true,
 		show_guides = true,
 	})
