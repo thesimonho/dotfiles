@@ -36,6 +36,7 @@ function M.config()
 	})
 
 	require("mini.move").setup()
+	require("mini.surround").setup({ silent = true })
 end
 
 return M
