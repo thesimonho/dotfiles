@@ -27,7 +27,9 @@ return {
 			[[
             import seaborn as sns
             import matplotlib.pyplot as plt
+            import matplotx
             import pygwalker as pyg
+            plt.style.use(matplotx.styles.ayu["light"])
         ]],
 			{}
 		)
@@ -47,7 +49,8 @@ return {
 		fmta(
 			[[
             p = sns.<>plot(data=<>, x="<>", y="<>")
-            p.set(title="<>plot of <> and <>", xlabel="<>", ylabel="<>")
+            p.set(title="<>plot of <> and <>", xlabel="<>")
+            matplotx.ylabel_top("<>")
         ]],
 			{
 				c(1, { t("bar"), t("box"), t("line"), t("scatter"), t("lm") }),
@@ -67,7 +70,8 @@ return {
 		fmta(
 			[[
             p = sns.<>plot(data=<>, x="<>", y="<>", hue="<>")
-            p.set(title="<>plot of <> and <>\ngrouped by <>", xlabel="<>", ylabel="<>")
+            p.set(title="<>plot of <> and <>\ngrouped by <>", xlabel="<>")
+            matplotx.ylabel_top("<>")
         ]],
 			{
 				c(1, { t("bar"), t("line"), t("lm"), t("scatter") }),

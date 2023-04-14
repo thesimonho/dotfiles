@@ -28,5 +28,6 @@ dependencies:
   - statsmodels
   - tqdm
   - pip:
-    - opencv-contrib-python
+      - opencv-contrib-python
+      - matplotx[all]
 name: base
