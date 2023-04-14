@@ -93,7 +93,6 @@ function M.config()
 	local links = {
 		type = "group",
 		val = {
-			{ type = "text", val = "Tools", opts = { hl = "SpecialComment", position = "center" } },
 			dashboard.button("l", "💤 Lazy", "<cmd>Lazy<CR>"),
 			dashboard.button("m", "🧱 Mason", "<cmd>Mason<CR>"),
 		},
@@ -132,10 +131,7 @@ function M.config()
 
 			-- create shortened path for display
 			local target_width = 35
-            -- FIXME: dotfiles dont highlight properly when opening nvim from a non-home directory
-			local path_normalize = plenary_path.new(project.path):normalize()
-			local display_path = vim.fn.fnamemodify(path_normalize, ":.")
-
+			local display_path = project.path:gsub("/", "\\") -- standardize display of all separators
 			if #display_path > target_width then
 				display_path = plenary_path.new(display_path):shorten(1, { -2, -1 })
 				if #display_path > target_width then
@@ -145,14 +141,13 @@ function M.config()
 
 			-- get semantic letter for project
 			local letter
-			local project_shortname = project.title:match("[/\\][%w%s%.%-]*$")
-			if project_shortname == nil then
-				letter = string.sub(project.title, 1, 1):lower()
-				project_shortname = project.title
-			else
-				letter = string.sub(project_shortname, 2, 2):lower()
-				project_shortname = project_shortname:gsub("[/\\]", "")
+			local project_name = display_path:match("[/\\][%w%s%.%-]*$")
+			if project_name == nil then
+				project_name = display_path
 			end
+			project_name = project_name:gsub("[/\\]", "")
+			letter = string.sub(project_name, 1, 1):lower()
+
 			-- get alternate letter if not available
 			if string.find(alphabet, letter) == nil then
 				letter = string.sub(alphabet, 1, 1):lower()
@@ -166,16 +161,13 @@ function M.config()
 				letter,
 				icon .. display_path,
 				"<cmd>lua require('telescope.builtin').find_files( { cwd = '"
-					.. path_normalize:gsub("\\", "/")
+					.. project.path:gsub("\\", "/")
 					.. "' }) <cr>"
 			)
 
 			-- create hl group for the start of the path
 			local fb_hl = {}
-			local path_parents = project.title:match("[/\\].*$")
-			if path_parents ~= nil then
-				table.insert(fb_hl, { "Comment", 0, #icon + #display_path - #project_shortname })
-			end
+			table.insert(fb_hl, { "Comment", 0, #icon + #display_path - #project_name })
 			file_button_el.opts.hl = fb_hl
 
 			table.insert(tbl, file_button_el)
@@ -193,13 +185,11 @@ function M.config()
 		{ type = "padding", val = 4 },
 		get_header({ headers.cool, headers.panda }),
 		{ type = "padding", val = 1 },
-		-- get_info(),
-		-- { type = "padding", val = 2 },
 		links,
 		{ type = "padding", val = 2 },
 		get_projects(5),
 		{ type = "padding", val = 2 },
-		get_mru(5),
+		get_mru(7),
 		{ type = "padding", val = 3 },
 		get_footer({ quotes.roar }, 50),
 	}
