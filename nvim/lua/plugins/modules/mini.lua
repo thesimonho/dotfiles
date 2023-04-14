@@ -16,6 +16,8 @@ function M.config()
 
 		symbols = {
 			encode = map.gen_encode_symbols.dot("3x2"),
+			scroll_line = '▶ ',
+			scroll_view = "┃",
 		},
 
 		window = {
