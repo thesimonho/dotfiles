@@ -74,6 +74,13 @@ function M.config()
 				max_width = 50,
 			}),
 		},
+		matching = {
+			disallow_fuzzy_matching = true,
+			disallow_fullfuzzy_matching = true,
+			disallow_partial_fuzzy_matching = true,
+			disallow_partial_matching = true,
+			disallow_prefix_unmatching = false,
+		},
 		mapping = mapping,
 		sources = cmp.config.sources({
 			{ name = "luasnip", priority = 700, keyword_length = 2, option = { show_autosnippets = true } },
@@ -87,7 +94,7 @@ function M.config()
 		}),
 	})
 
-	-- FIXME: completion not showing up for this, or are not navigatable
+	-- FIXME: completion not showing up for this, or is not navigatable
 	cmp.setup.cmdline({ "/", "?" }, {
 		mapping = mapping,
 		sources = {
