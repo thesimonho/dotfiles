@@ -59,7 +59,6 @@ function M.config()
 				order_by = "recent",
 				search_by = "title",
 				on_project_selected = function(prompt_bufnr)
-                    -- TODO: open new tab?
 					project_actions.find_project_files(prompt_bufnr, false)
 					-- project_actions.change_working_directory(prompt_bufnr)
 					-- vim.cmd("%bw!")

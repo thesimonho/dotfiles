@@ -16,7 +16,7 @@ function M.config()
 
 		symbols = {
 			encode = map.gen_encode_symbols.dot("3x2"),
-			scroll_line = '▶ ',
+			scroll_line = "▶ ",
 			scroll_view = "┃",
 		},
 
@@ -39,7 +39,6 @@ function M.config()
 
 	require("mini.comment").setup({
 		options = {
-			-- Whether to ignore blank lines
 			ignore_blank_line = true,
 
 			-- Whether to recognize as comment only lines without indent
