@@ -45,4 +45,35 @@ return {
 			}
 		)
 	),
+	s(
+		{ trig = "fnm", dscr = "Create module function", snippetType = "autosnippet", regTrig = false },
+		fmta(
+			[[
+                <>.<> = function(<>) 
+                    <>
+                end
+	        ]],
+			{
+				i(1, "M"),
+				i(2),
+				i(3),
+				i(4),
+			}
+		)
+	),
+	s(
+		{ trig = "fnl", dscr = "Create function", snippetType = "autosnippet", regTrig = false },
+		fmta(
+			[[
+                local <> = function(<>) 
+                    <>
+                end
+	        ]],
+			{
+				i(1),
+				i(2),
+				i(3),
+			}
+		)
+	),
 }
