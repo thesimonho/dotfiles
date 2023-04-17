@@ -72,6 +72,7 @@ function M.config()
 				{
 					"diagnostics",
 					color = { bg = require("colours").status },
+					padding = { left = 1, right = 2 },
 					on_click = function()
 						vim.cmd("TroubleToggle")
 					end,
@@ -236,7 +237,7 @@ function M.config()
 					"filename",
 					color = { fg = require("colours").bufVisible },
 					symbols = {
-						modified = "*", -- Text to show when the file is modified.
+						modified = "", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
 					},
 					padding = { left = 0, right = 4 },
