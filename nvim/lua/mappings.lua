@@ -83,6 +83,8 @@ Hydra({
 		{ "<right>", cmd("vertical resize +15"), { exit = false, desc = "Resize right" } },
 
 		{ "m", cmd("lua MiniMap.toggle_focus()"), { exit = true, desc = "Focus minimap" } },
+		{ "M", cmd("lua MiniMap.toggle()"), { exit = true, desc = "Toggle minimap" } },
+
 		{ "q", pcmd("close", "E444"), { exit = true, desc = "close window" } },
 		{ "<Esc>", nil, { exit = true, desc = false } },
 	},
