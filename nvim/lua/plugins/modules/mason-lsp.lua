@@ -198,16 +198,16 @@ function M.config()
 			})
 
 			-- format on save
-			if client.supports_method("textDocument/formatting") then
-				local format_group = vim.api.nvim_create_augroup("autoformat", { clear = true })
-				vim.api.nvim_create_autocmd("BufWritePre", {
-					group = format_group,
-					buffer = bufnr,
-					callback = function()
-						vim.cmd("NullFormat")
-					end,
-				})
-			end
+			-- if client.supports_method("textDocument/formatting") then
+			-- 	local format_group = vim.api.nvim_create_augroup("autoformat", { clear = true })
+			-- 	vim.api.nvim_create_autocmd("BufWritePre", {
+			-- 		group = format_group,
+			-- 		buffer = bufnr,
+			-- 		callback = function()
+			-- 			vim.cmd("NullFormat")
+			-- 		end,
+			-- 	})
+			-- end
 		end,
 		sources = {
 			-- Anything not supported by mason.
