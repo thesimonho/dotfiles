@@ -25,7 +25,7 @@ function M.config()
 			side = "right",
 			show_integration_count = false,
 			width = 10,
-			winblend = 25,
+			winblend = 50,
 		},
 	})
 
