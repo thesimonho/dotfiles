@@ -2,7 +2,7 @@ local M = {
 	"echasnovski/mini.nvim",
 	version = false,
 	enabled = true,
-	event = "VeryLazy",
+	lazy = false,
 }
 
 function M.config()
