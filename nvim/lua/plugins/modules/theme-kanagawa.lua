@@ -91,7 +91,7 @@ function M.config()
 				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
-				NvimTreeRootFolder = { fg = colors.palette.autumnGreen },
+				NvimTreeRootFolder = { fg = colors.palette.autumnRed },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
