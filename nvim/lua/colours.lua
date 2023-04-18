@@ -14,6 +14,13 @@ vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#993939" })
 vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#61afef" })
 vim.api.nvim_set_hl(0, "DapStopped", { fg = "#98c379" })
 
+-- linked groups
+vim.api.nvim_set_hl(0, "TroubleCount", { link = "DiagnosticOk" })
+vim.api.nvim_set_hl(0, "TroubleTextHint", { link = "DiagnosticHint" })
+vim.api.nvim_set_hl(0, "TroubleTextError", { link = "DiagnosticError" })
+vim.api.nvim_set_hl(0, "TroubleTextWarning", { link = "DiagnosticWarn" })
+vim.api.nvim_set_hl(0, "TroubleTextInformation", { link = "DiagnosticInfo" })
+
 local C = {}
 
 local function set_theme_colours(theme)

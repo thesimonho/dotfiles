@@ -71,7 +71,6 @@ function M.config()
 		overrides = function(colors) -- add/modify highlights
 			HoverBG = colors.theme.ui.bg_p1
 
-			-- FIXME: trouble panel bg colour for certain hl groups is incorrect
 			return {
 				LazyNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
 				MasonNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
@@ -92,8 +91,7 @@ function M.config()
 				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
 				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
-				NvimTreeNormalNC = { link = "NormalNC" },
-				NvimTreeRootFolder = { fg = colors.palette.autumnYellow },
+				NvimTreeRootFolder = { fg = colors.palette.autumnGreen },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
