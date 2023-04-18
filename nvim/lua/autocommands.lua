@@ -26,10 +26,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	callback = function()
 		vim.schedule(function()
 			local bufnr = vim.api.nvim_get_current_buf()
-			if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
+			local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
+			local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+
+			if buftype == "terminal" then
 				vim.api.nvim_command("startinsert")
 				vim.cmd("lua MiniMap.close()")
-			elseif vim.api.nvim_buf_get_option(bufnr, "filetype") ~= "TelescopePrompt" then
+			elseif filetype ~= "TelescopePrompt" and filetype ~= "alpha" then
 				-- without this^, telescope will exit insert when no matches are found
 				vim.api.nvim_command("stopinsert")
 				vim.cmd("lua MiniMap.open()")
