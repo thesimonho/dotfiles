@@ -49,8 +49,8 @@ function M.config()
 		},
 	})
 
-	require("mini.pairs").setup()
 	require("mini.move").setup()
+	require("mini.pairs").setup()
 	require("mini.cursorword").setup()
 	require("mini.surround").setup({ silent = true })
 

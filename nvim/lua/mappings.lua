@@ -193,23 +193,15 @@ map("t", "<M-j>", "<Down>", { desc = "Down" })
 map("t", "<M-k>", "<Up>", { desc = "Up" })
 map("t", "<M-l>", "<Right>", { desc = "Right" })
 
-map("n", "<M-h>", "<Plug>GoNSMLeft", { desc = "Move selection left" })
-map("n", "<M-j>", "<Plug>GoNSMDown", { desc = "Move selection down" })
-map("n", "<M-k>", "<Plug>GoNSMUp", { desc = "Move selection up" })
-map("n", "<M-l>", "<Plug>GoNSMRight", { desc = "Move selection right" })
-map("x", "<M-h>", "<Plug>GoVSMLeft", { desc = "Move selection left" })
-map("x", "<M-j>", "<Plug>GoVSMDown", { desc = "Move selection down" })
-map("x", "<M-k>", "<Plug>GoVSMUp", { desc = "Move selection up" })
-map("x", "<M-l>", "<Plug>GoVSMRight", { desc = "Move selection right" })
-
-map("n", "<M-Left>", "<Plug>GoNSDLeft", { desc = "Duplicate selection left" })
-map("n", "<M-Down>", "<Plug>GoNSDDown", { desc = "Duplicate selection down" })
-map("n", "<M-Up>", "<Plug>GoNSDUp", { desc = "Duplicate selection up" })
-map("n", "<M-Right>", "<Plug>GoNSDRight", { desc = "Duplicate selection right" })
-map("x", "<M-Left>", "<Plug>GoVSDLeft", { desc = "Duplicate selection left" })
-map("x", "<M-Down>", "<Plug>GoVSDDown", { desc = "Duplicate selection down" })
-map("x", "<M-Up>", "<Plug>GoVSDUp", { desc = "Duplicate selection up" })
-map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" })
+-- TODO: recreate this using standard commands
+-- map("n", "<M-Left>", "<Plug>GoNSDLeft", { desc = "Duplicate selection left" })
+-- map("n", "<M-Down>", "<Plug>GoNSDDown", { desc = "Duplicate selection down" })
+-- map("n", "<M-Up>", "<Plug>GoNSDUp", { desc = "Duplicate selection up" })
+-- map("n", "<M-Right>", "<Plug>GoNSDRight", { desc = "Duplicate selection right" })
+-- map("x", "<M-Left>", "<Plug>GoVSDLeft", { desc = "Duplicate selection left" })
+-- map("x", "<M-Down>", "<Plug>GoVSDDown", { desc = "Duplicate selection down" })
+-- map("x", "<M-Up>", "<Plug>GoVSDUp", { desc = "Duplicate selection up" })
+-- map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Search                                          ║
