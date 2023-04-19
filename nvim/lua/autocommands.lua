@@ -31,11 +31,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 			if buftype == "terminal" then
 				vim.api.nvim_command("startinsert")
-				vim.cmd("lua MiniMap.close()")
+				-- vim.cmd("lua MiniMap.close()")
 			elseif filetype ~= "TelescopePrompt" and filetype ~= "alpha" then
 				-- without this^, telescope will exit insert when no matches are found
 				vim.api.nvim_command("stopinsert")
-				vim.cmd("lua MiniMap.open()")
+				-- vim.cmd("lua MiniMap.open()")
 			end
 		end)
 	end,
@@ -71,8 +71,8 @@ vim.api.nvim_create_autocmd("User", {
 })
 
 -- minimap
-local minimap_group = vim.api.nvim_create_augroup("minimap", { clear = true })
-vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
-	group = minimap_group,
-	command = "lua MiniMap.open()",
-})
+-- local minimap_group = vim.api.nvim_create_augroup("minimap", { clear = true })
+-- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+-- 	group = minimap_group,
+-- 	command = "lua MiniMap.open()",
+-- })
