@@ -6,6 +6,7 @@ local M = {
 }
 
 function M.config()
+    -- TODO: replace this with something that provides more control
 	local map = require("mini.map")
 	map.setup({
 		integrations = {

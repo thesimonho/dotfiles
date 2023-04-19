@@ -6,8 +6,6 @@ local M = {
 
 -- TODO: add nvchad cheat grid: https://github.com/NvChad/ui/tree/v2.0/lua/nvchad_ui/cheatsheet
 function M.config()
-	vim.opt.timeoutlen = 100
-
 	local wk = require("which-key")
 	wk.setup({
 		plugins = {
