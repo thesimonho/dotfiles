@@ -42,6 +42,7 @@ vim.opt.autochdir = false
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undo"
 
+vim.opt.timeoutlen = 500
 vim.opt.verbose = 0
 vim.opt.report = 99999
 vim.opt.shortmess:append("astWAIcFS")
