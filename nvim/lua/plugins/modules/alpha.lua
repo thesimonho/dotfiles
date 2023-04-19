@@ -191,7 +191,7 @@ function M.config()
 		{ type = "padding", val = 2 },
 		get_mru(7),
 		{ type = "padding", val = 3 },
-		get_footer({ quotes.roar }, 50),
+		get_footer({ quotes.roar, quotes.path }, 50),
 	}
 	require("alpha").setup(theme.config)
 end
