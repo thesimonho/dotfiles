@@ -40,7 +40,7 @@ function M.config()
 				{
 					"branch",
 					icon = "",
-					padding = { left = 0, right = 1 },
+					padding = { left = 0, right = 2 },
 					color = { fg = require("colours").textLight, bg = require("colours").status },
 					on_click = function()
 						require("telescope.builtin").git_branches()
