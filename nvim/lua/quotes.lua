@@ -7,4 +7,9 @@ M.roar = {
 	[[do something else."]],
 }
 
+M.path = {
+	[["Follow your own path,]],
+	[[and let the people talk."]],
+}
+
 return M

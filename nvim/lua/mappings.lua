@@ -193,16 +193,6 @@ map("t", "<M-j>", "<Down>", { desc = "Down" })
 map("t", "<M-k>", "<Up>", { desc = "Up" })
 map("t", "<M-l>", "<Right>", { desc = "Right" })
 
--- TODO: recreate this using standard commands
--- map("n", "<M-Left>", "<Plug>GoNSDLeft", { desc = "Duplicate selection left" })
--- map("n", "<M-Down>", "<Plug>GoNSDDown", { desc = "Duplicate selection down" })
--- map("n", "<M-Up>", "<Plug>GoNSDUp", { desc = "Duplicate selection up" })
--- map("n", "<M-Right>", "<Plug>GoNSDRight", { desc = "Duplicate selection right" })
--- map("x", "<M-Left>", "<Plug>GoVSDLeft", { desc = "Duplicate selection left" })
--- map("x", "<M-Down>", "<Plug>GoVSDDown", { desc = "Duplicate selection down" })
--- map("x", "<M-Up>", "<Plug>GoVSDUp", { desc = "Duplicate selection up" })
--- map("x", "<M-Right>", "<Plug>GoVSDRight", { desc = "Duplicate selection right" })
-
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Search                                          ║
 -- ╚═════════════════════════════════════════════════╝
