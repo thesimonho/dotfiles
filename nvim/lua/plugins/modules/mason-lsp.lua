@@ -18,10 +18,8 @@ function M.config()
 		-- lsp
 		"docker-compose-language-service",
 		"lua-language-server",
-		"marksman",
-		"powershell-editor-services",
 		"python-lsp-server",
-		"pyright", -- static type checking only
+		"pyright", -- for static type checking only
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -98,27 +96,31 @@ function M.config()
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
 
-		local vt = {
+		-- local vt = {
+		-- 	spacing = 10,
+		-- 	severity = { min = vim.diagnostic.severity.WARN },
+		-- 	format = function(diagnostic)
+		-- 		local severity_letter = string.sub(vim.diagnostic.severity[diagnostic.severity], 1, 1)
+		-- 		local msg = diagnostic.message
+		-- 		local msg_threshold = 100
+
+		-- 		local num_windows = #vim.api.nvim_tabpage_list_wins(0) / 2
+		-- 		if num_windows > 1 then
+		-- 			msg_threshold = msg_threshold / num_windows
+		-- 		end
+
+		-- 		if string.len(msg) > msg_threshold then
+		-- 			msg = string.sub(msg, 1, msg_threshold) .. "..."
+		-- 		end
+
+		-- 		return string.format("%s: %s", severity_letter, msg)
+		-- 	end,
+		-- }
+		local vt_basic = {
 			spacing = 10,
 			severity = { min = vim.diagnostic.severity.WARN },
-			format = function(diagnostic)
-				local severity_letter = string.sub(vim.diagnostic.severity[diagnostic.severity], 1, 1)
-				local msg = diagnostic.message
-				local msg_threshold = 100
-
-				local num_windows = #vim.api.nvim_tabpage_list_wins(0) / 2
-				if num_windows > 1 then
-					msg_threshold = msg_threshold / num_windows
-				end
-
-				if string.len(msg) > msg_threshold then
-					msg = string.sub(msg, 1, msg_threshold) .. "..."
-				end
-
-				return string.format("%s: %s", severity_letter, msg)
-			end,
 		}
-		vim.diagnostic.config({ virtual_text = vt })
+		vim.diagnostic.config({ virtual_text = vt_basic })
 
 		-- create buffer local autocommands to show and hide virtual diagnostic text
 		-- vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
