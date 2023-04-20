@@ -4,6 +4,7 @@ local M = {
 	event = { "BufReadPost", "BufNewFile" },
 }
 
+-- FIXME: yankring often gives errors
 function M.config()
 	local utils = require("yanky.utils")
 
