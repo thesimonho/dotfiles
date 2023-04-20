@@ -78,12 +78,16 @@ function M.config()
 				DiagnosticVirtualTextWarn = { fg = colors.palette.roninYellow },
 				DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
 				DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
+				WinSeparator = { fg = colors.palette.dragonBlue },
 				Search = { bg = colors.palette.dragonBlue, fg = colors.theme.ui.bg },
+
+				CodewindowBorder = { fg = colors.palette.oldWhite },
+
 				HLSearchLens = { bg = colors.theme.ui.bg, fg = colors.palette.springViolet1 },
 				HLSearchLensNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 				HLSearchNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 
-				CodewindowBorder = { fg = colors.palette.fujiWhite },
+				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
@@ -92,7 +96,6 @@ function M.config()
 				NoiceFormatProgressTodo = { bg = colors.theme.ui.bg },
 				NoiceLspProgressSpinner = { link = "NoiceLspProgressClient" },
 
-				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
 				NvimTreeRootFolder = { fg = colors.palette.autumnRed },
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
@@ -119,7 +122,6 @@ function M.config()
 				WhichKeyFloat = { bg = HoverBG },
 				WhichKeyBorder = { bg = HoverBG },
 
-				WinSeparator = { fg = colors.palette.dragonBlue },
 				YankyYanked = { bg = colors.palette.winterYellow },
 				YankyPut = { bg = colors.palette.winterRed },
 			}
