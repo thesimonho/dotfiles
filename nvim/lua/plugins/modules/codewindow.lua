@@ -22,7 +22,6 @@ function M.config()
 		window_border = "single", -- The border style of the floating window (accepts all usual options)
 		events = { "TextChanged", "InsertLeave", "DiagnosticChanged", "FileWritePost" },
 	})
-	codewindow.apply_default_keybinds()
 end
 
 return M

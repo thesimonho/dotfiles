@@ -83,6 +83,8 @@ function M.config()
 				HLSearchLensNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 				HLSearchNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 
+				CodewindowBorder = { fg = colors.palette.fujiWhite },
+
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
 
