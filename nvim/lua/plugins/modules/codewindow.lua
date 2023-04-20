@@ -9,7 +9,18 @@ function M.config()
 	codewindow.setup({
 		active_in_terminals = false, -- Should the minimap activate for terminal buffers
 		auto_enable = true, -- Automatically open the minimap when entering a (non-excluded) buffer
-		exclude_filetypes = { "alpha", "neo-tree", "aerial", "OverseeList", "Trouble" },
+		exclude_filetypes = {
+			"alpha",
+			"neo-tree",
+			"aerial",
+			"OverseeList",
+			"Trouble",
+			"dapui_scopes",
+			"dapui_breakpoints",
+			"dapui_stacks",
+			"dapui_watches",
+			"dap-repl",
+		},
 		max_minimap_height = nil, -- The maximum height the minimap can take (including borders)
 		max_lines = nil, -- If auto_enable is true, don't open the minimap for buffers which have too many lines.
 		minimap_width = 10, -- The width of the text part of the minimap
