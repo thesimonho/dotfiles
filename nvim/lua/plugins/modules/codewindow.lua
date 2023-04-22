@@ -13,7 +13,7 @@ function M.config()
 			"alpha",
 			"neo-tree",
 			"aerial",
-			"OverseeList",
+			"OverseerList",
 			"Trouble",
 			"dapui_scopes",
 			"dapui_breakpoints",

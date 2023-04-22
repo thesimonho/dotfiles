@@ -206,7 +206,7 @@ function M.config()
 					"filename",
 					color = { fg = require("colours").bufSelected },
 					symbols = {
-						modified = "", -- Text to show when the file is modified.
+						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
 					},
 					padding = { left = 0, right = 4 },
@@ -237,7 +237,7 @@ function M.config()
 					"filename",
 					color = { fg = require("colours").bufVisible },
 					symbols = {
-						modified = "", -- Text to show when the file is modified.
+						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
 					},
 					padding = { left = 0, right = 4 },

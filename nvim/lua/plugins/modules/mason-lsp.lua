@@ -18,7 +18,7 @@ function M.config()
 		-- lsp
 		"docker-compose-language-service",
 		"lua-language-server",
-		"python-lsp-server",
+        "python-lsp-server", -- FIXME: this is mega slow
 		"pyright", -- for static type checking only
 		"rust-analyzer",
 		"taplo",
