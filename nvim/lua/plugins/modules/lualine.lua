@@ -24,6 +24,11 @@ function M.config()
 				statusline = { "alpha" },
 				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
 			},
+			refresh = {
+				statusline = 2000,
+				tabline = 2000,
+				winbar = 2000,
+			},
 		},
 		sections = {
 			lualine_a = {
