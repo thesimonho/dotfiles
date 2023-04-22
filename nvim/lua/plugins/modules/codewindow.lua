@@ -11,8 +11,9 @@ function M.config()
 		auto_enable = true, -- Automatically open the minimap when entering a (non-excluded) buffer
 		exclude_filetypes = {
 			"alpha",
-			"neo-tree",
 			"aerial",
+            "neo-tree",
+            "noice",
 			"OverseerList",
 			"Trouble",
 			"dapui_scopes",

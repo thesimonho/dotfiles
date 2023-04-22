@@ -18,8 +18,8 @@ function M.config()
 		-- lsp
 		"docker-compose-language-service",
 		"lua-language-server",
-        "python-lsp-server", -- FIXME: this is mega slow
 		"pyright", -- for static type checking only
+		"ruff-lsp",
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -29,7 +29,6 @@ function M.config()
 		-- linters
 		"eslint_d",
 		"markdownlint",
-		"ruff",
 
 		-- formatters
 		"black",
@@ -59,7 +58,6 @@ function M.config()
 			Lua = {
 				telemetry = { enable = false },
 				runtime = {
-					-- Tell the language server which version of Lua you're using
 					version = "LuaJIT",
 					path = runtime_path,
 				},
@@ -77,15 +75,19 @@ function M.config()
 				},
 			},
 		},
-		pylsp = {
-			pylsp = {
-				plugins = {
-					jedi_completion = { enabled = true, fuzzy = true },
-					pydocstyle = { enabled = true, convention = "google" },
-					pycodestyle = { enabled = false },
-					pyflakes = { enabled = false },
-					autopep8 = { enabled = false },
-					yapf = { enabled = false },
+		pyrite = {
+			disableLanguageServices = true,
+			disableOrganizeImports = true,
+			python = {
+				analysis = {
+					autoImportCompletions = false,
+					autoSearchPaths = true,
+					useLibraryCodeForTypes = true,
+					typeCheckingMode = "basic",
+					diagnosticMode = "openFilesOnly",
+					diagnosticSeverityOverrides = {
+						reportGeneralTypeIssues = "information", -- broken on pyrites end
+					},
 				},
 			},
 		},
@@ -95,6 +97,11 @@ function M.config()
 	local on_attach = function(client, bufnr)
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
+
+		if client.name == "ruff_lsp" then
+			-- Disable this in favor of pyrite's hover
+			client.server_capabilities.hoverProvider = false
+		end
 
 		-- local vt = {
 		-- 	spacing = 10,
