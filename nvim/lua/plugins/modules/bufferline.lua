@@ -87,7 +87,9 @@ function M.config()
 						auto_close = false,
 						priority = 3,
 						matcher = function(buf)
-							return buf.filename:match("%.toml") or buf.filename:match("%.yaml")
+							return buf.filename:match("%.toml")
+								or buf.filename:match("%.yaml")
+								or buf.filename:match("%.cfg")
 						end,
 					},
 				},
