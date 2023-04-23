@@ -83,6 +83,24 @@ function M.config()
 						show_path = "relative", -- "none", "relative", "absolute"
 					},
 				},
+				["A"] = {
+					"add_directory",
+					config = {
+						show_path = "relative", -- "none", "relative", "absolute"
+					},
+				},
+				["c"] = {
+					"copy",
+					config = {
+						show_path = "relative", -- "none", "relative", "absolute"
+					},
+				},
+				["m"] = {
+					"move",
+					config = {
+						show_path = "relative", -- "none", "relative", "absolute"
+					},
+				},
 			},
 		},
 		source_selector = {
