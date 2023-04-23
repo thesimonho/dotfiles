@@ -1,7 +1,3 @@
--- Disable builtin plugins
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 -- TODO: add sql
 -- TOOD: add tests
 
@@ -35,5 +31,19 @@ require("lazy").setup("plugins.modules", {
 	change_detection = {
 		enabled = true,
 		notify = false,
+	},
+	performance = {
+		rtp = {
+			disabled_plugins = {
+				-- "gzip",
+				-- "matchit",
+				-- "matchparen",
+				"netrwPlugin",
+				-- "tarPlugin",
+				-- "tohtml",
+				-- "tutor",
+				-- "zipPlugin",
+			},
+		},
 	},
 })
