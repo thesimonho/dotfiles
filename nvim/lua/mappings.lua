@@ -140,38 +140,16 @@ Hydra({
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tabs                                            ║
 -- ╚═════════════════════════════════════════════════╝
-local hint = [[
-    _t_: New       _[_: Previous
-    _q_: Close     _]_: Next
-    ]]
-Hydra({
-	name = "Tabs",
-	hint = hint,
-	config = {
-		invoke_on_body = true,
-		hint = {
-			position = "top-right",
-			offset = 2,
-			border = "none",
-		},
-	},
-	mode = "n",
-	body = "<leader>t",
-	heads = {
-		{
-			"t",
-			function()
-				vim.cmd("tabnew")
-				require("telescope").extensions.project.project({})
-			end,
-			{ exit = true, desc = "New" },
-		},
-		{ "q", cmd("tabclose"), { exit = true, desc = "Close" } },
-		{ "[", cmd("tabprev"), { exit = true, desc = "Prev" } },
-		{ "]", cmd("tabnext"), { exit = true, desc = "Next" } },
-		{ "<Esc>", nil, { exit = true, desc = false } },
-	},
-})
+map("n", "<leader>tt", function()
+	vim.cmd("tabnew")
+	require("telescope").extensions.project.project({})
+end, { desc = "New tab" })
+map("n", "<leader>tq", cmd("tabclose"), { desc = "Close tab" })
+map("n", "[t", cmd("tabprev"), { desc = "Prev tab" })
+map("n", "]t", cmd("tabnext"), { desc = "Next tab" })
+for i = 1, 9 do
+	map("n", string.format("<leader>t%d", i), string.format("%dgt", i), { desc = string.format("Go to Tab %d", i) })
+end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
@@ -492,17 +470,6 @@ Hydra({
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
 map("n", "<c-f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
-
--- ╔═════════════════════════════════════════════════╗
--- ║ Todo                                            ║
--- ╚═════════════════════════════════════════════════╝
-map("n", "]t", function()
-	require("todo-comments").jump_next()
-end, { desc = "Next todo comment" })
-
-map("n", "[t", function()
-	require("todo-comments").jump_prev()
-end, { desc = "Previous todo comment" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ REPL                                            ║
