@@ -73,6 +73,9 @@ function M.config()
 						vim.fn.stdpath("config") .. "/lua",
 					},
 				},
+				completion = {
+					callSnippet = "Replace",
+				},
 			},
 		},
 		pyrite = {
