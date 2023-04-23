@@ -25,9 +25,9 @@ function M.config()
 				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
 			},
 			refresh = {
-				statusline = 2000,
+				statusline = 1000,
 				tabline = 2000,
-				winbar = 2000,
+				winbar = 500,
 			},
 		},
 		sections = {
