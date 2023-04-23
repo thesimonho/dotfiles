@@ -113,7 +113,7 @@ map("n", "<leader>bL", cmd("BufferLineMoveNext"), { desc = "Move Next" })
 for i = 1, 9 do
 	map(
 		"n",
-		string.format("<leader>%d", i),
+		string.format("\\%d", i),
 		string.format("<cmd>lua require'bufferline'.go_to(%d)<CR>", i),
 		{ desc = string.format("Buffer %d", i) }
 	)
@@ -130,7 +130,7 @@ map("n", "<leader>tq", cmd("tabclose"), { desc = "Close tab" })
 map("n", "[t", cmd("tabprev"), { desc = "Prev tab" })
 map("n", "]t", cmd("tabnext"), { desc = "Next tab" })
 for i = 1, 9 do
-	map("n", string.format("<leader>t%d", i), string.format("%dgt", i), { desc = string.format("Go to Tab %d", i) })
+	map("n", string.format("\\t%d", i), string.format("%dgt", i), { desc = string.format("Go to Tab %d", i) })
 end
 
 -- ╔═════════════════════════════════════════════════╗
