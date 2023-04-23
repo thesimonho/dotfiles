@@ -267,6 +267,10 @@ map("n", "<leader>cf", "<cmd>NullFormat<cr>", { desc = "Format" })
 map("n", "<leader>co", "<cmd>AerialToggle<cr>", { desc = "Aerial Outline" })
 map("n", "<leader>cs", "<cmd>lua MiniSplitjoin.toggle()<cr>", { desc = "Split/join" })
 map("n", "<leader>ct", "<cmd>TodoTelescope<cr>", { desc = "TODO" })
+map("n", "<leader>cT", function()
+	require("neotest").run.run({ suite = true, strategy = "integrated" })
+	require("neotest").summary.open()
+end, { desc = "Run tests" })
 map("n", "<leader>cq", "<cmd>TroubleToggle quickfix<cr>", { desc = "Quickfix" })
 
 -- ╔═════════════════════════════════════════════════╗
