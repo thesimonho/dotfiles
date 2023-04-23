@@ -136,6 +136,14 @@ Hydra({
 		{ "<Esc>", nil, { exit = true, desc = false } },
 	},
 })
+for i = 1, 9 do
+	map(
+		"n",
+		string.format("<leader>%d", i),
+		string.format("<cmd>lua require'bufferline'.go_to(%d)<CR>", i),
+		{ desc = string.format("Buffer %d", i) }
+	)
+end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tabs                                            ║
