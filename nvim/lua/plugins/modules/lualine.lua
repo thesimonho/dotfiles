@@ -188,9 +188,6 @@ function M.config()
 					fmt = function(str, _)
 						return string.format(": %s", str)
 					end,
-					on_click = function()
-						vim.cmd("lua require('codewindow').toggle_minimap()")
-					end,
 				},
 			},
 		},
