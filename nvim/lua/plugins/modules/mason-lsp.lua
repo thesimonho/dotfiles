@@ -19,7 +19,7 @@ function M.config()
 		"docker-compose-language-service",
 		"lua-language-server",
 		"pyright", -- for static type checking only
-		"ruff-lsp",
+		"ruff-lsp", -- FIXME: sometimes doesnt show lint errors
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -105,7 +105,7 @@ function M.config()
 
 		-- local vt = {
 		-- 	spacing = 10,
-		-- 	severity = { min = vim.diagnostic.severity.WARN },
+		-- 	severity = { min = vim.diagnostic.severity.INFO },
 		-- 	format = function(diagnostic)
 		-- 		local severity_letter = string.sub(vim.diagnostic.severity[diagnostic.severity], 1, 1)
 		-- 		local msg = diagnostic.message
@@ -125,7 +125,7 @@ function M.config()
 		-- }
 		local vt_basic = {
 			spacing = 10,
-			severity = { min = vim.diagnostic.severity.WARN },
+			severity = { min = vim.diagnostic.severity.INFO },
 		}
 		vim.diagnostic.config({ virtual_text = vt_basic })
 

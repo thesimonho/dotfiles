@@ -43,6 +43,7 @@ function M.config()
 	end
 
 	local function get_header(headers)
+		-- FIXME: are headers and quotes being randomized correctly?
 		math.randomseed(os.time())
 		local header_text = headers[math.random(#headers)]
 		return apply_gradient_hl(header_text)

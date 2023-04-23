@@ -11,6 +11,8 @@ local M = {
 }
 
 function M.config()
+	vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
 	local function open_no_focus(state)
 		local node = state.tree:get_node()
 		if require("neo-tree.utils").is_expandable(node) then
