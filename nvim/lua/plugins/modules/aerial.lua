@@ -12,7 +12,7 @@ function M.config()
 		end,
 		backends = { "lsp", "treesitter", "markdown", "man" },
 		layout = {
-			default_direction = "float",
+			default_direction = "right",
 			preserve_equality = true,
 		},
 		float = {
