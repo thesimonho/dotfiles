@@ -32,7 +32,7 @@ function M.config()
 		sort_case_insensitive = true,
 		default_component_configs = {
 			indent = {
-				with_markers = false,
+				with_markers = true,
 				with_expanders = true,
 			},
 			modified = {

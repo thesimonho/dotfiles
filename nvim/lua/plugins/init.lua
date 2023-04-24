@@ -1,5 +1,4 @@
 -- TODO: add sql
--- TOOD: add tests
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
