@@ -24,6 +24,11 @@ function M.config()
 				statusline = { "alpha" },
 				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
 			},
+			refresh = {
+				statusline = 1000,
+				tabline = 2000,
+				winbar = 500,
+			},
 		},
 		sections = {
 			lualine_a = {
@@ -206,7 +211,7 @@ function M.config()
 					"filename",
 					color = { fg = require("colours").bufSelected },
 					symbols = {
-						modified = "", -- Text to show when the file is modified.
+						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
 					},
 					padding = { left = 0, right = 4 },

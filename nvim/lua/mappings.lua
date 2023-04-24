@@ -93,88 +93,48 @@ Hydra({
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Buffers                                         ║
 -- ╚═════════════════════════════════════════════════╝
-local hint = [[
-    _b_: Pick      _[_: Previous       _c_: Pick close
-    _f_: Find      _]_: Next           _q_: Close current
-    _p_: Pin       _H_: Move left      _Q_: Close others
-    ^             _L_: Move right
-    ]]
-Hydra({
-	name = "Buffers",
-	hint = hint,
-	config = {
-		invoke_on_body = true,
-		hint = {
-			position = "top",
-			offset = 2,
-			border = "none",
-		},
-	},
-	mode = "n",
-	body = "<leader>b",
-	heads = {
-		{ "b", cmd("BufferLinePick"), { exit = true, desc = "Pick" } },
-		{ "c", cmd("BufferLinePickClose"), { exit = true, desc = "Pick close" } },
-		{ "q", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { exit = true, desc = "Close current" } },
-		{
-			"Q",
-			function()
-				local cur_buf = vim.fn.bufnr()
-				for _, e in ipairs(require("bufferline").get_elements().elements) do
-					vim.schedule(function()
-						if e.id ~= cur_buf then
-							vim.cmd("bd " .. e.id)
-						end
-					end)
-				end
-			end,
-			{ exit = true, desc = "Close others" },
-		},
-		{ "p", cmd("BufferLineTogglePin"), { exit = true, desc = "Pin" } },
-		{ "f", cmd("lua require('telescope.builtin').buffers()"), { exit = true, desc = "Find" } },
-		{ "[", cmd("BufferLineCyclePrev"), { exit = false, desc = "Prev" } },
-		{ "]", cmd("BufferLineCycleNext"), { exit = false, desc = "Next" } },
-		{ "H", cmd("BufferLineMovePrev"), { exit = false, desc = "Move Prev" } },
-		{ "L", cmd("BufferLineMoveNext"), { exit = false, desc = "Move Next" } },
-		{ "<Esc>", nil, { exit = true, desc = false } },
-	},
-})
+map("n", "<leader>bb", cmd("BufferLinePick"), { desc = "Pick" })
+map("n", "<leader>bc", cmd("BufferLinePickClose"), { desc = "Pick close" })
+map("n", "<leader>bq", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { desc = "Close current" })
+map("n", "<leader>bQ", function()
+	local cur_buf = vim.fn.bufnr()
+	for _, e in ipairs(require("bufferline").get_elements().elements) do
+		vim.schedule(function()
+			if e.id ~= cur_buf then
+				vim.cmd("bd " .. e.id)
+			end
+		end)
+	end
+end, { desc = "Close others" })
+map("n", "<leader>bp", cmd("BufferLineTogglePin"), { desc = "Pin" })
+map("n", "<leader>bf", cmd("lua require('telescope.builtin').buffers()"), { desc = "Find" })
+map("n", "[b", cmd("BufferLineCyclePrev"), { desc = "Prev" })
+map("n", "]b", cmd("BufferLineCycleNext"), { desc = "Next" })
+map("n", "<leader>bH", cmd("BufferLineMovePrev"), { desc = "Move Prev" })
+map("n", "<leader>bL", cmd("BufferLineMoveNext"), { desc = "Move Next" })
+
+for i = 1, 9 do
+	map(
+		"n",
+		string.format("\\%d", i),
+		string.format("<cmd>lua require'bufferline'.go_to(%d)<CR>", i),
+		{ desc = string.format("Buffer %d", i) }
+	)
+end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tabs                                            ║
 -- ╚═════════════════════════════════════════════════╝
-local hint = [[
-    _t_: New       _[_: Previous
-    _q_: Close     _]_: Next
-    ]]
-Hydra({
-	name = "Tabs",
-	hint = hint,
-	config = {
-		invoke_on_body = true,
-		hint = {
-			position = "top-right",
-			offset = 2,
-			border = "none",
-		},
-	},
-	mode = "n",
-	body = "<leader>t",
-	heads = {
-		{
-			"t",
-			function()
-				vim.cmd("tabnew")
-				require("telescope").extensions.project.project({})
-			end,
-			{ exit = true, desc = "New" },
-		},
-		{ "q", cmd("tabclose"), { exit = true, desc = "Close" } },
-		{ "[", cmd("tabprev"), { exit = true, desc = "Prev" } },
-		{ "]", cmd("tabnext"), { exit = true, desc = "Next" } },
-		{ "<Esc>", nil, { exit = true, desc = false } },
-	},
-})
+map("n", "<leader>tt", function()
+	vim.cmd("tabnew")
+	require("telescope").extensions.project.project({})
+end, { desc = "New tab" })
+map("n", "<leader>tq", cmd("tabclose"), { desc = "Close tab" })
+map("n", "[t", cmd("tabprev"), { desc = "Prev tab" })
+map("n", "]t", cmd("tabnext"), { desc = "Next tab" })
+for i = 1, 9 do
+	map("n", string.format("\\t%d", i), string.format("%dgt", i), { desc = string.format("Go to Tab %d", i) })
+end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
@@ -310,6 +270,10 @@ map("n", "<leader>cf", "<cmd>NullFormat<cr>", { desc = "Format" })
 map("n", "<leader>co", "<cmd>AerialToggle<cr>", { desc = "Aerial Outline" })
 map("n", "<leader>cs", "<cmd>lua MiniSplitjoin.toggle()<cr>", { desc = "Split/join" })
 map("n", "<leader>ct", "<cmd>TodoTelescope<cr>", { desc = "TODO" })
+map("n", "<leader>cT", function()
+	require("neotest").run.run({ suite = true, strategy = "integrated" })
+	require("neotest").summary.open()
+end, { desc = "Run tests" })
 map("n", "<leader>cq", "<cmd>TroubleToggle quickfix<cr>", { desc = "Quickfix" })
 
 -- ╔═════════════════════════════════════════════════╗
@@ -495,17 +459,6 @@ Hydra({
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
 map("n", "<c-f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
-
--- ╔═════════════════════════════════════════════════╗
--- ║ Todo                                            ║
--- ╚═════════════════════════════════════════════════╝
-map("n", "]t", function()
-	require("todo-comments").jump_next()
-end, { desc = "Next todo comment" })
-
-map("n", "[t", function()
-	require("todo-comments").jump_prev()
-end, { desc = "Previous todo comment" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ REPL                                            ║

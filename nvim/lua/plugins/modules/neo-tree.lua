@@ -11,6 +11,8 @@ local M = {
 }
 
 function M.config()
+	vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+
 	local function open_no_focus(state)
 		local node = state.tree:get_node()
 		if require("neo-tree.utils").is_expandable(node) then
@@ -30,7 +32,7 @@ function M.config()
 		sort_case_insensitive = true,
 		default_component_configs = {
 			indent = {
-				with_markers = false,
+				with_markers = true,
 				with_expanders = true,
 			},
 			modified = {
@@ -79,6 +81,24 @@ function M.config()
 				["<tab>"] = open_no_focus,
 				["a"] = {
 					"add",
+					config = {
+						show_path = "relative", -- "none", "relative", "absolute"
+					},
+				},
+				["A"] = {
+					"add_directory",
+					config = {
+						show_path = "relative", -- "none", "relative", "absolute"
+					},
+				},
+				["c"] = {
+					"copy",
+					config = {
+						show_path = "relative", -- "none", "relative", "absolute"
+					},
+				},
+				["m"] = {
+					"move",
 					config = {
 						show_path = "relative", -- "none", "relative", "absolute"
 					},

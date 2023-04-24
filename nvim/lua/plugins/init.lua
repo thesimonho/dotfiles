@@ -1,6 +1,4 @@
--- Disable builtin plugins
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+-- TODO: add sql
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -32,5 +30,19 @@ require("lazy").setup("plugins.modules", {
 	change_detection = {
 		enabled = true,
 		notify = false,
+	},
+	performance = {
+		rtp = {
+			disabled_plugins = {
+				-- "gzip",
+				-- "matchit",
+				-- "matchparen",
+				"netrwPlugin",
+				-- "tarPlugin",
+				-- "tohtml",
+				-- "tutor",
+				-- "zipPlugin",
+			},
+		},
 	},
 })

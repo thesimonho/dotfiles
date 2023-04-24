@@ -18,8 +18,8 @@ function M.config()
 		-- lsp
 		"docker-compose-language-service",
 		"lua-language-server",
-		"python-lsp-server",
 		"pyright", -- for static type checking only
+		"ruff-lsp", -- FIXME: sometimes doesnt show lint errors
 		"rust-analyzer",
 		"taplo",
 		"typescript-language-server",
@@ -29,7 +29,6 @@ function M.config()
 		-- linters
 		"eslint_d",
 		"markdownlint",
-		"ruff",
 
 		-- formatters
 		"black",
@@ -59,7 +58,6 @@ function M.config()
 			Lua = {
 				telemetry = { enable = false },
 				runtime = {
-					-- Tell the language server which version of Lua you're using
 					version = "LuaJIT",
 					path = runtime_path,
 				},
@@ -75,17 +73,24 @@ function M.config()
 						vim.fn.stdpath("config") .. "/lua",
 					},
 				},
+				completion = {
+					callSnippet = "Replace",
+				},
 			},
 		},
-		pylsp = {
-			pylsp = {
-				plugins = {
-					jedi_completion = { enabled = true, fuzzy = true },
-					pydocstyle = { enabled = true, convention = "google" },
-					pycodestyle = { enabled = false },
-					pyflakes = { enabled = false },
-					autopep8 = { enabled = false },
-					yapf = { enabled = false },
+		pyrite = {
+			disableLanguageServices = true,
+			disableOrganizeImports = true,
+			python = {
+				analysis = {
+					autoImportCompletions = false,
+					autoSearchPaths = true,
+					useLibraryCodeForTypes = true,
+					typeCheckingMode = "basic",
+					diagnosticMode = "openFilesOnly",
+					diagnosticSeverityOverrides = {
+						reportGeneralTypeIssues = "information", -- broken on pyrites end
+					},
 				},
 			},
 		},
@@ -96,9 +101,14 @@ function M.config()
 		-- map buffer local keys once lsp is attached
 		MapLSP(bufnr)
 
+		if client.name == "ruff_lsp" then
+			-- Disable this in favor of pyrite's hover
+			client.server_capabilities.hoverProvider = false
+		end
+
 		-- local vt = {
 		-- 	spacing = 10,
-		-- 	severity = { min = vim.diagnostic.severity.WARN },
+		-- 	severity = { min = vim.diagnostic.severity.INFO },
 		-- 	format = function(diagnostic)
 		-- 		local severity_letter = string.sub(vim.diagnostic.severity[diagnostic.severity], 1, 1)
 		-- 		local msg = diagnostic.message
@@ -118,7 +128,7 @@ function M.config()
 		-- }
 		local vt_basic = {
 			spacing = 10,
-			severity = { min = vim.diagnostic.severity.WARN },
+			severity = { min = vim.diagnostic.severity.INFO },
 		}
 		vim.diagnostic.config({ virtual_text = vt_basic })
 

@@ -1,7 +1,7 @@
 local M = {
 	"akinsho/bufferline.nvim",
 	enabled = true,
-	version = "v3.5.0",
+	version = "*",
 	dependencies = { "nvim-tree/nvim-web-devicons", "tiagovla/scope.nvim" },
 	event = "VimEnter",
 }
@@ -34,7 +34,6 @@ function M.config()
 			color_icons = true, -- whether or not to add the filetype icon highlights
 			show_buffer_icons = true, -- disable filetype icons for buffers
 			show_buffer_close_icons = true,
-			show_buffer_default_icon = true, -- whether or not an unrecognised filetype should show a default icon
 			show_close_icon = true,
 			show_tab_indicators = true,
 			show_duplicate_prefix = true, -- whether to show duplicate buffer prefix
@@ -57,41 +56,43 @@ function M.config()
 					separator = false,
 				},
 			},
-			groups = {
-				options = {
-					toggle_hidden_on_enter = true, -- when you re-enter a hidden group this options re-opens the group
-				},
-				items = {
-					require("bufferline.groups").builtin.pinned:with({ icon = "" }),
-					{
-						name = "Docs",
-						highlight = { bold = false, italic = false, sp = "green" },
-						auto_close = false,
-						priority = 1,
-						matcher = function(buf)
-							return buf.filename:match("%.md") or buf.filename:match("%.txt")
-						end,
-					},
-					{
-						name = "Tests",
-						highlight = { bold = false, italic = false, sp = "blue" },
-						auto_close = false,
-						priority = 2,
-						matcher = function(buf)
-							return buf.filename:match("%.test") or buf.filename:match("%.spec")
-						end,
-					},
-					{
-						name = "Config",
-						highlight = { bold = false, italic = false, sp = "red" },
-						auto_close = false,
-						priority = 3,
-						matcher = function(buf)
-							return buf.filename:match("%.toml") or buf.filename:match("%.yaml")
-						end,
-					},
-				},
-			},
+			-- groups = {
+			-- 	options = {
+			-- 		toggle_hidden_on_enter = true, -- when you re-enter a hidden group this options re-opens the group
+			-- 	},
+			-- 	items = {
+			-- 		require("bufferline.groups").builtin.pinned:with({ icon = "" }),
+			-- 		{
+			-- 			name = "Docs",
+			-- 			highlight = { bold = false, italic = false, sp = "green" },
+			-- 			auto_close = false,
+			-- 			priority = 1,
+			-- 			matcher = function(buf)
+			-- 				return buf.filename:match("%.md") or buf.filename:match("%.txt")
+			-- 			end,
+			-- 		},
+			-- 		{
+			-- 			name = "Tests",
+			-- 			highlight = { bold = false, italic = false, sp = "blue" },
+			-- 			auto_close = false,
+			-- 			priority = 2,
+			-- 			matcher = function(buf)
+			-- 				return buf.filename:match("%.test") or buf.filename:match("%.spec")
+			-- 			end,
+			-- 		},
+			-- 		{
+			-- 			name = "Config",
+			-- 			highlight = { bold = false, italic = false, sp = "red" },
+			-- 			auto_close = false,
+			-- 			priority = 3,
+			-- 			matcher = function(buf)
+			-- 				return buf.filename:match("%.toml")
+			-- 					or buf.filename:match("%.yaml")
+			-- 					or buf.filename:match("%.cfg")
+			-- 			end,
+			-- 		},
+			-- 	},
+			-- },
 		},
 		highlights = {
 			-- fill = {

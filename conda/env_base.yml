@@ -30,4 +30,5 @@ dependencies:
   - pip:
       - opencv-contrib-python
       - matplotx[all]
+      - pytest
 name: base

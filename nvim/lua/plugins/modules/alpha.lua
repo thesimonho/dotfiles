@@ -14,6 +14,8 @@ function M.config()
 		return
 	end
 
+	math.randomseed(os.time())
+
 	-- Header
 	local function apply_gradient_hl(text)
 		local gradient = require("utils").create_gradient("#DCA561", "#658594", #text)
@@ -43,14 +45,12 @@ function M.config()
 	end
 
 	local function get_header(headers)
-		math.randomseed(os.time())
 		local header_text = headers[math.random(#headers)]
 		return apply_gradient_hl(header_text)
 	end
 
 	-- Footer
 	local function get_footer(quotes, width)
-		math.randomseed(os.time())
 		local quote_text = quotes[math.random(#quotes)]
 
 		local max_width = width or 35
