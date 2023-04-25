@@ -132,9 +132,6 @@ end, { desc = "New tab" })
 map("n", "<leader>tq", cmd("tabclose"), { desc = "Close tab" })
 map("n", "[t", cmd("tabprev"), { desc = "Prev tab" })
 map("n", "]t", cmd("tabnext"), { desc = "Next tab" })
-for i = 1, 9 do
-	map("n", string.format("\\t%d", i), string.format("%dgt", i), { desc = string.format("Go to Tab %d", i) })
-end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
