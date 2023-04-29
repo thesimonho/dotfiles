@@ -6,6 +6,7 @@ local M = {
 }
 
 function M.config()
+	local utils = require("utils")
 	local colours = require("colours")
 	local custom = require("lualine.themes.base16")
 	custom.normal.a.bg = colours.normal
@@ -40,6 +41,7 @@ function M.config()
 						return " "
 					end,
 					color = require("colours").status_icon,
+					cond = utils.is_git_repo,
 					separator = { right = "" },
 				},
 				{

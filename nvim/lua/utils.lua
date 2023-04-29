@@ -158,6 +158,12 @@ M.UI_select = function(item_map)
 	end)
 end
 
+-- check if cwd is a git repo
+M.is_git_repo = function()
+	local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
+	return vim.v.shell_error == 0
+end
+
 -- find file's root directory based on a list of patterns
 Root_cache = {}
 M.find_root = function(buf_id, patterns)
