@@ -40,15 +40,15 @@ function M.config()
 					function()
 						return " "
 					end,
-					color = require("colours").status_icon,
 					cond = utils.is_git_repo,
+					color = colours.status_icon,
 					separator = { right = "" },
 				},
 				{
 					"branch",
 					icon = "",
 					padding = { left = 0, right = 2 },
-					color = { fg = require("colours").textLight, bg = require("colours").status },
+					color = { fg = require("colours").textLight, bg = colours.status },
 					on_click = function()
 						require("telescope.builtin").git_branches()
 					end,
@@ -56,7 +56,7 @@ function M.config()
 				{
 					"diff",
 					symbols = { added = " ", modified = " ", removed = " " },
-					color = { bg = require("colours").status },
+					color = { bg = colours.status },
 					padding = { left = 0, right = 2 },
 					on_click = function()
 						require("telescope.builtin").git_status()
@@ -66,7 +66,7 @@ function M.config()
 					function()
 						return "⚐"
 					end,
-					color = require("colours").status_icon,
+					color = colours.status_icon,
 					separator = { left = "", right = "" },
 					cond = function()
 						if #vim.diagnostic.get(0, { severity = { min = vim.diagnostic.severity.HINT } }) > 0 then
@@ -78,7 +78,7 @@ function M.config()
 				},
 				{
 					"diagnostics",
-					color = { bg = require("colours").status },
+					color = { bg = colours.status },
 					padding = { left = 1, right = 2 },
 					on_click = function()
 						vim.cmd("TroubleToggle")
@@ -90,7 +90,7 @@ function M.config()
 					function()
 						return "⚒"
 					end,
-					color = require("colours").status_icon,
+					color = colours.status_icon,
 					cond = function()
 						local tasks = require("overseer").list_tasks()
 						if vim.tbl_isempty(tasks) then
@@ -114,13 +114,13 @@ function M.config()
 					function()
 						return ""
 					end,
-					color = require("colours").status_icon,
+					color = colours.status_icon,
 					separator = { left = "", right = "" },
 				},
 				{
 					"filetype",
 					colored = false,
-					color = { fg = require("colours").textLight, bg = require("colours").status },
+					color = { fg = colours.textLight, bg = colours.status },
 					icon = { align = "left" },
 					on_click = function()
 						vim.ui.input({
@@ -150,7 +150,7 @@ function M.config()
 						end
 						return msg
 					end,
-					color = { fg = require("colours").textLight, bg = require("colours").status },
+					color = { fg = colours.textLight, bg = colours.status },
 					padding = { left = 1, right = 2 },
 					icon = " ",
 					on_click = function()
@@ -163,7 +163,7 @@ function M.config()
 					function()
 						return ""
 					end,
-					color = require("colours").status_icon,
+					color = colours.status_icon,
 					separator = { left = "" },
 				},
 				{
@@ -190,9 +190,6 @@ function M.config()
 					fmt = function(str, _)
 						return string.format(": %s", str)
 					end,
-					on_click = function()
-						vim.cmd("lua require('codewindow').toggle_minimap()")
-					end,
 				},
 			},
 		},
@@ -211,7 +208,7 @@ function M.config()
 				{ "filetype", colored = true, icon_only = true },
 				{
 					"filename",
-					color = { fg = require("colours").bufSelected },
+					color = { fg = colours.bufSelected },
 					symbols = {
 						modified = "*", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
@@ -238,11 +235,11 @@ function M.config()
 					"filetype",
 					colored = false,
 					icon_only = true,
-					color = { fg = require("colours").bufVisible },
+					color = { fg = colours.bufVisible },
 				},
 				{
 					"filename",
-					color = { fg = require("colours").bufVisible },
+					color = { fg = colours.bufVisible },
 					symbols = {
 						modified = "", -- Text to show when the file is modified.
 						readonly = "(RO)", -- Text to show when the file is non-modifiable or readonly.
