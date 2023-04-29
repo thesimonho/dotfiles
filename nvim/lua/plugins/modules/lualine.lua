@@ -55,7 +55,7 @@ function M.config()
 					"diff",
 					symbols = { added = " ", modified = " ", removed = " " },
 					color = { bg = require("colours").status },
-					padding = { left = 1, right = 2 },
+					padding = { left = 0, right = 2 },
 					on_click = function()
 						require("telescope.builtin").git_status()
 					end,
