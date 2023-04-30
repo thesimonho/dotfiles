@@ -453,6 +453,7 @@ map("n", "<leader>rc", function()
 	vim.api.nvim_command('SlimeSend0 "\n"')
 end, { desc = "Send cell" })
 
+-- FIXME: only seems to send the current line
 map("v", "<leader>rv", function()
 	vim.cmd("SlimeSend")
 	vim.api.nvim_command('SlimeSend0 "\n"')
