@@ -63,7 +63,6 @@
   "plenary.nvim": { "branch": "master", "commit": "9ac3e9541bbabd9d73663d757e4fe48a675bb054" },
   "promise-async": { "branch": "main", "commit": "e94f35161b8c5d4a4ca3b6ff93dd073eb9214c0e" },
   "quarto-nvim": { "branch": "main", "commit": "d8ea8f7dbe5fb9747073a67ac1ad609ecf097bc8" },
-  "refactoring.nvim": { "branch": "master", "commit": "e7c40818b2995016ede93c5620055206b1aba44f" },
   "rust-tools.nvim": { "branch": "master", "commit": "71d2cf67b5ed120a0e31b2c8adb210dd2834242f" },
   "scope.nvim": { "branch": "main", "commit": "2db6d31de8e3a98d2b41c0f0d1f5dc299ee76875" },
   "smartcolumn.nvim": { "branch": "main", "commit": "0c572e3eae48874f25b74394a486f38cadb5c958" },

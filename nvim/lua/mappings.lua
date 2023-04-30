@@ -167,41 +167,6 @@ map({ "n", "x", "o" }, "<leader>j", "<Plug>(leap-forward-to)", { desc = "Leap fo
 map({ "n", "x", "o" }, "<leader>k", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
 
 -- ╔═════════════════════════════════════════════════╗
--- ║ Refactoring                                     ║
--- ╚═════════════════════════════════════════════════╝
-map(
-	"v",
-	"<leader>crf",
-	[[ <Esc><cmd>lua require('refactoring').refactor('Extract Function')<cr>]],
-	{ desc = "Extract to a function", expr = false }
-)
-map(
-	"v",
-	"<leader>crv",
-	[[ <Esc><cmd>lua require('refactoring').refactor('Extract Variable')<cr>]],
-	{ desc = "Extract to a variable", expr = false }
-)
-map(
-	"n",
-	"<leader>cri",
-	[[ <cmd>lua require('refactoring').refactor('Inline Variable')<cr>]],
-	{ desc = "Inline a variable", expr = false }
-)
-map(
-	"n",
-	"<leader>crpf",
-	"<cmd>lua require('refactoring').debug.printf({below = false})<cr>",
-	{ desc = "Add print statement (function)" }
-)
-map(
-	"n",
-	"<leader>crpv",
-	"<cmd>lua require('refactoring').debug.print_var({ normal = true })<cr>",
-	{ desc = "Add print statement (variable)" }
-)
-map("n", "<leader>crpc", "<cmd>lua require('refactoring').debug.cleanup({})<cr>", { desc = "Cleanup print statements" })
-
--- ╔═════════════════════════════════════════════════╗
 -- ║ Folds                                           ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "zR", "<cmd>lua require('ufo').openAllFolds()<cr>", { desc = "Open all folds" })
@@ -255,7 +220,7 @@ function MapLSP(bufnr)
 	map("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next error", buffer = bufnr })
 
 	-- Binds that dont belong under "g" but should only be set when LSP is attached
-	map("n", "<leader>crr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
+	map("n", "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
 	map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 end
 
