@@ -30,6 +30,7 @@ winget install -e --id Posit.Quarto -s winget --accept-source-agreements --force
 winget install -e --id RProject.R
 winget install -e --id RStudio.RStudio.OpenSource -s winget --accept-source-agreements --force
 winget install -e --id Rustlang.Rustup -s winget --accept-source-agreements --force
+winget install -e --id SQLite.SQLite -s winget
 winget install -e --id Valve.Steam
 winget install -e --id wez.wezterm
 winget install wingetui
