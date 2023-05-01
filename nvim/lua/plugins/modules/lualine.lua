@@ -253,11 +253,13 @@ function M.config()
 		},
 		extensions = {
 			"aerial",
+            "lazy",
 			"man",
 			"neo-tree",
 			"nvim-dap-ui",
 			"quickfix",
 			"toggleterm",
+            "trouble",
 			"overseer",
 		},
 	})

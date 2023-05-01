@@ -160,8 +160,13 @@ end
 
 -- check if cwd is a git repo
 M.is_git_repo = function()
-	local is_repo = vim.fn.system("git rev-parse --is-inside-work-tree")
-	return vim.v.shell_error == 0
+	local path = vim.loop.cwd() .. "/.git"
+	local ok, _ = vim.loop.fs_stat(path)
+	if not ok then
+		return false
+	else
+		return true
+	end
 end
 
 -- find file's root directory based on a list of patterns
