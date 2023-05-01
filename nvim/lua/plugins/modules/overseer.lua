@@ -20,10 +20,10 @@ function M.config()
 			hidden = false,
 		},
 		dap = true,
-		auto_scroll = nil,
+		auto_scroll = true,
 		close_on_exit = false,
 		open_on_start = true,
-		templates = { "builtin", "user.python_run", "user.scripts_run" },
+		templates = { "builtin", "user.python_run", "user.python_pytest", "user.scripts_run" },
 	})
 end
 

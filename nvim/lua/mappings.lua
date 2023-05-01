@@ -431,8 +431,8 @@ Hydra({
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Overseer                                        ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
-map("n", "<c-f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
+map("n", "<f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
+map("n", "<c-f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ REPL                                            ║
