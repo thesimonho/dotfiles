@@ -23,7 +23,7 @@ function M.config()
 			component_separators = "",
 			disabled_filetypes = {
 				statusline = { "alpha" },
-				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
+				winbar = { "neo-tree", "aerial", "OverseerList", "alpha", "dap-repl" },
 			},
 			refresh = {
 				statusline = 1000,
