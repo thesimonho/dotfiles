@@ -138,8 +138,8 @@ map("n", "]t", cmd("tabnext"), { desc = "Next tab" })
 -- ╚═════════════════════════════════════════════════╝
 map({ "n", "x" }, "j", "v:count ? 'j' : 'gj'", { expr = true, desc = "Down" }) -- Move down across wraps
 map({ "n", "x" }, "k", "v:count ? 'k' : 'gk'", { expr = true, desc = "Up" }) -- Move up across wraps
-map({ "n", "x" }, "gg", "mmgg", { desc = "Mark and go to top" }) -- Mark and go to top
-map({ "n", "x" }, "G", "mmG", { desc = "Mark and go to bottom" }) -- Mark and go to bottom
+map({ "n", "x" }, "gg", "mggg", { desc = "Mark and go to top" }) -- Mark and go to top
+map({ "n", "x" }, "G", "mgG", { desc = "Mark and go to bottom" }) -- Mark and go to bottom
 
 map("i", "<M-h>", "<Left>", { noremap = false, desc = "Left" })
 map("i", "<M-j>", "<Down>", { noremap = false, desc = "Down" })
