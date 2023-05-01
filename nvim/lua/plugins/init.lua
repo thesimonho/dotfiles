@@ -1,4 +1,4 @@
--- TODO: add sql
+-- TODO: add sql browser
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -8,7 +8,7 @@ if not vim.loop.fs_stat(lazypath) then
 		"clone",
 		"--filter=blob:none",
 		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
+		"--branch=stable",
 		lazypath,
 	})
 end
@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup("plugins.modules", {
 	defaults = {
 		lazy = true,
-		version = nil, -- dont use version="*" ... too risky
+		version = nil, -- dont use version="*"
 	},
 	install = {
 		missing = true,
@@ -34,14 +34,14 @@ require("lazy").setup("plugins.modules", {
 	performance = {
 		rtp = {
 			disabled_plugins = {
-				-- "gzip",
+				"gzip",
 				-- "matchit",
 				-- "matchparen",
 				"netrwPlugin",
-				-- "tarPlugin",
-				-- "tohtml",
+				"tarPlugin",
+				"tohtml",
 				-- "tutor",
-				-- "zipPlugin",
+				"zipPlugin",
 			},
 		},
 	},
