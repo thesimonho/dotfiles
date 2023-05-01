@@ -24,13 +24,14 @@ function M.config()
 			"terminal",
 		},
 		excluded_filetypes = {
-			"prompt",
-			"TelescopePrompt",
+            "aerial",
+            "lazy",
 			"noice",
 			"neo-tree",
 			"NvimTree",
-			"aerial",
-			"OverseerList",
+            "OverseerList",
+            "prompt",
+            "TelescopePrompt",
 		},
 		handlers = {
 			cursor = true,
