@@ -31,4 +31,5 @@ dependencies:
       - opencv-contrib-python
       - matplotx[all]
       - pytest
+      - wandb
 name: base
