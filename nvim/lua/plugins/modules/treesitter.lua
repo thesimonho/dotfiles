@@ -51,6 +51,7 @@ function M.config()
 			"typescript",
 			"vim",
 			"vimdoc",
+            "vue",
 			"yaml",
 		},
 		auto_install = true, -- disable if no tree-sitter cli installed
