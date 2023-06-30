@@ -25,6 +25,7 @@ function M.config()
 		"typescript-language-server",
 		"vim-language-server",
 		"yaml-language-server",
+		"vue-language-server",
 
 		-- linters
 		"eslint_d",
