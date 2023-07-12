@@ -40,6 +40,7 @@ map("n", "<leader>zi", "<cmd>Inspect<CR>", { desc = "TS Inspect" })
 map("n", "<leader>zI", "<cmd>InspectTree<CR>", { desc = "TS Inspect Tree" })
 map("n", "<leader>zpm", "<cmd>MarkdownPreview<cr>", { desc = "Markdown" })
 map("n", "<leader>zpq", "<cmd>!start quarto preview %:p<cr>", { desc = "Quarto" })
+map("n", "<leader>zn", "<cmd>Telescope package_info<cr>", { desc = "npm" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Window / Splits                                 ║
