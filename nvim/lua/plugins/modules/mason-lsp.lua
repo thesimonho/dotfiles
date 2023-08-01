@@ -22,6 +22,7 @@ function M.config()
 		"ruff-lsp", -- FIXME: sometimes doesnt show lint errors
 		"rust-analyzer",
 		"taplo",
+		"terraform-ls",
 		"typescript-language-server",
 		"vim-language-server",
 		"yaml-language-server",
