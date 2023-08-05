@@ -1,14 +1,13 @@
 return {
-	name = "pytest",
+	name = "format",
 	builder = function()
-		local file = vim.fn.expand("%:p")
 		return {
-			cmd = { "pytest" },
-			-- args = { file },
+			cmd = { "terraform" },
+			args = {  "fmt", "--recursive" },
 			components = { { "on_complete_notify" }, "default" },
 		}
 	end,
 	condition = {
-		filetype = { "python" },
+		filetype = { "terraform" },
 	},
 }

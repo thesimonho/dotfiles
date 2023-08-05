@@ -23,7 +23,7 @@ function M.config()
 		auto_scroll = true,
 		close_on_exit = false,
 		open_on_start = true,
-		templates = { "builtin", "user.python_run", "user.python_pytest", "user.scripts_run" },
+		templates = { "builtin", "scripts", "python", "terraform" },
 	})
 end
 
