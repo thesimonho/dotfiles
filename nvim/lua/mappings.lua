@@ -167,14 +167,6 @@ map({ "n", "x", "o" }, "<leader>j", "<Plug>(leap-forward-to)", { desc = "Leap fo
 map({ "n", "x", "o" }, "<leader>k", "<Plug>(leap-backward-to)", { desc = "Leap backward" })
 
 -- ╔═════════════════════════════════════════════════╗
--- ║ Folds                                           ║
--- ╚═════════════════════════════════════════════════╝
-map("n", "zR", "<cmd>lua require('ufo').openAllFolds()<cr>", { desc = "Open all folds" })
-map("n", "zM", "<cmd>lua require('ufo').closeAllFolds)<cr>", { desc = "Close all folds" })
-map("n", "zr", "<cmd>lua require('ufo').openFoldsExceptKinds()<cr>", { desc = "Open folds except kinds" })
-map("n", "zm", "<cmd>lua require('ufo').closeFoldsWithKinds()<cr>", { desc = "Close folds with kinds" })
-
--- ╔═════════════════════════════════════════════════╗
 -- ║ Find                                            ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Files" })
