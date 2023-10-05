@@ -93,7 +93,6 @@ Hydra({
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Buffers                                         ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>bb", cmd("BufferLinePick"), { desc = "Pick" })
 map("n", "<leader>bc", cmd("BufferLinePickClose"), { desc = "Pick close" })
 map("n", "<leader>bq", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { desc = "Close current" })
 map("n", "<leader>bQ", function()
@@ -177,8 +176,14 @@ map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.project.project
 map(
 	"n",
 	"<leader>fn",
-	"<cmd>Neotree position=left reveal=true reveal_force_cwd=false toggle=true<cr>",
+	"<cmd>Neotree filesystem focus position=left reveal=true reveal_force_cwd=false<cr>",
 	{ desc = "Tree" }
+)
+map(
+	"n",
+	"<leader>fb",
+	"<cmd>Neotree buffers position=float reveal=true reveal_force_cwd=false toggle=true<cr>",
+	{ desc = "Buffers" }
 )
 
 -- ╔═════════════════════════════════════════════════╗
