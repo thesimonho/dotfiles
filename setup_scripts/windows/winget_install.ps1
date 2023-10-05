@@ -19,17 +19,14 @@ winget install -e --id GIMP.GIMP
 winget install -e --id Git.Git
 winget install -e --id Axosoft.GitKraken
 winget install -e --id TheDocumentFoundation.LibreOffice
-winget install -e --id Anaconda.Miniconda3 -s winget --accept-source-agreements --force
 winget install -e --id Neovim.Neovim
 winget install -e --id OBSProject.OBSStudio
 winget install -e --id JanDeDobbeleer.OhMyPosh -s winget
 winget install -e --id Parsec.Parsec
 winget install -e --id Microsoft.PowerShell
 winget install -e --id Microsoft.PowerToys
-winget install -e --id Posit.Quarto -s winget --accept-source-agreements --force
 winget install -e --id RProject.R
 winget install -e --id RStudio.RStudio.OpenSource -s winget --accept-source-agreements --force
-winget install -e --id Rustlang.Rustup -s winget --accept-source-agreements --force
 winget install -e --id SQLite.SQLite -s winget
 winget install -e --id Valve.Steam
 winget install -e --id wez.wezterm
