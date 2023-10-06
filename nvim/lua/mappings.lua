@@ -106,7 +106,6 @@ map("n", "<leader>bQ", function()
 	end
 end, { desc = "Close others" })
 map("n", "<leader>bp", cmd("BufferLineTogglePin"), { desc = "Pin" })
-map("n", "<leader>bf", cmd("lua require('telescope.builtin').buffers()"), { desc = "Find" })
 map("n", "[b", cmd("BufferLineCyclePrev"), { desc = "Prev" })
 map("n", "]b", cmd("BufferLineCycleNext"), { desc = "Next" })
 map("n", "<leader>bH", cmd("BufferLineMovePrev"), { desc = "Move Prev" })
@@ -169,6 +168,7 @@ map({ "n", "x", "o" }, "<leader>k", "<Plug>(leap-backward-to)", { desc = "Leap b
 -- ║ Find                                            ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Files" })
+map("n", "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Buffers" })
 map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_root()<cr>", { desc = "Grep project" })
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
@@ -178,12 +178,6 @@ map(
 	"<leader>fn",
 	"<cmd>Neotree filesystem focus position=left reveal=true reveal_force_cwd=false<cr>",
 	{ desc = "Tree" }
-)
-map(
-	"n",
-	"<leader>fb",
-	"<cmd>Neotree buffers position=float reveal=true reveal_force_cwd=false toggle=true<cr>",
-	{ desc = "Buffers" }
 )
 
 -- ╔═════════════════════════════════════════════════╗

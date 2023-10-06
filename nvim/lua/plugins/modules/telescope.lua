@@ -42,6 +42,14 @@ function M.config()
 				},
 			},
 		},
+		pickers = {
+			buffers = {
+				theme = "dropdown",
+				previewer = false,
+				winblend = 5,
+				path_display = { "smart" },
+			},
+		},
 		extensions = {
 			fzf = {
 				fuzzy = true, -- false will only do exact matching
