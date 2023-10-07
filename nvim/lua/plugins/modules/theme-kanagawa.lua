@@ -85,7 +85,7 @@ function M.config()
 				HLSearchLensNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 				HLSearchNear = { bg = colors.palette.springViolet1, fg = colors.theme.ui.bg },
 
-				IndentBlanklineChar = { fg = colors.palette.sumiInk4 },
+				IblIndent = { fg = colors.palette.sumiInk4 },
 
 				LeapLabelPrimary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnRed },
 				LeapLabelSecondary = { fg = colors.palette.sumiInk0, bg = colors.palette.autumnYellow },
@@ -98,13 +98,8 @@ function M.config()
 				NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
 				NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
 				NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
-				NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
+				NeoTreeIndentMarker = { link = "IblIndent" },
 				NeoTreeWinSeparator = { fg = colors.theme.ui.bg_dim, bg = colors.theme.ui.bg_dim },
-
-				JupyniumCodeCellSeparator = { bg = colors.palette.winterYellow },
-				JupyniumMarkdownCellSeparator = { bg = colors.palette.winterRed },
-				JupyniumMarkdownCellContent = { bg = colors.palette.sumiInk4 },
-				JupyniumMagicCommand = { link = "Keyword" },
 
 				TelescopeTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonBlue, bold = true },
 				TelescopeSelection = { bg = colors.palette.winterYellow },

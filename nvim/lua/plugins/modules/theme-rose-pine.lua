@@ -22,7 +22,7 @@ function M.config()
 			Directory = { fg = "gold" },
 			NormalFloat = { bg = "overlay" },
 			Pmenu = { bg = "surface" },
-			IndentBlanklineChar = { fg = "highlight_low" },
+			IblIndent = { fg = "highlight_low" },
 			SignColumn = { guibg = NONE },
 
 			BufferCurrent = { bg = "overlay", fg = "text" },
@@ -41,7 +41,7 @@ function M.config()
 
 			LeapLabelPrimary = { fg = "base", bg = "iris" },
 			LeapLabelSecondary = { fg = "base", bg = "love" },
-			NeoTreeIndentMarker = { link = "IndentBlanklineChar" },
+			NeoTreeIndentMarker = { link = "IblIndent" },
 
 			JupyniumCodeCellSeparator = { bg = "#286983" },
 			JupyniumMarkdownCellSeparator = { bg = "#286983" },

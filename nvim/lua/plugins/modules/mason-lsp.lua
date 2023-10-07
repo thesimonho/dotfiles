@@ -20,7 +20,6 @@ function M.config()
 		"lua-language-server",
 		"pyright", -- for static type checking only
 		"ruff-lsp", -- FIXME: sometimes doesnt show lint errors
-		"rust-analyzer",
 		"taplo",
 		"terraform-ls",
 		"typescript-language-server",
@@ -36,7 +35,6 @@ function M.config()
 		"black",
 		"isort",
 		"prettierd",
-		"rustfmt",
 		"stylua",
 	}
 
