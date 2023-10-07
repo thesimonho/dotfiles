@@ -1,6 +1,6 @@
 local M = {
 	"stevearc/dressing.nvim",
-	enabled = true,
+	enabled = false,
 	event = "VeryLazy",
 }
 

@@ -1,6 +1,6 @@
 local M = {
 	"akinsho/bufferline.nvim",
-	enabled = true,
+	enabled = false,
 	version = "*",
 	dependencies = { "nvim-tree/nvim-web-devicons", "tiagovla/scope.nvim" },
 	event = "VimEnter",

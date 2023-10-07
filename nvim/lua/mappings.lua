@@ -33,13 +33,11 @@ map({ "n", "x", "v" }, "<F1>m", "<cmd>messages<cr>", { desc = "Messages" })
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
 map("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
-map("n", "<leader>zc", "<cmd>CccPick<cr>", { desc = "Colour picker" })
 map("n", "<leader>zs", "<cmd>lua require('luasnip.loaders').edit_snippet_files()<cr>", { desc = "Edit snippets" })
 map("n", "<leader>zr", "<cmd>luafile %<CR>", { desc = "Source current file" })
 map("n", "<leader>zi", "<cmd>Inspect<CR>", { desc = "TS Inspect" })
 map("n", "<leader>zI", "<cmd>InspectTree<CR>", { desc = "TS Inspect Tree" })
 map("n", "<leader>zpm", "<cmd>MarkdownPreview<cr>", { desc = "Markdown" })
-map("n", "<leader>zpq", "<cmd>!start quarto preview %:p<cr>", { desc = "Quarto" })
 map("n", "<leader>zn", "<cmd>Telescope package_info<cr>", { desc = "npm" })
 
 -- ╔═════════════════════════════════════════════════╗
@@ -93,32 +91,32 @@ Hydra({
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Buffers                                         ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>bc", cmd("BufferLinePickClose"), { desc = "Pick close" })
-map("n", "<leader>bq", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { desc = "Close current" })
-map("n", "<leader>bQ", function()
-	local cur_buf = vim.fn.bufnr()
-	for _, e in ipairs(require("bufferline").get_elements().elements) do
-		vim.schedule(function()
-			if e.id ~= cur_buf then
-				vim.cmd("bd " .. e.id)
-			end
-		end)
-	end
-end, { desc = "Close others" })
-map("n", "<leader>bp", cmd("BufferLineTogglePin"), { desc = "Pin" })
-map("n", "[b", cmd("BufferLineCyclePrev"), { desc = "Prev" })
-map("n", "]b", cmd("BufferLineCycleNext"), { desc = "Next" })
-map("n", "<leader>bH", cmd("BufferLineMovePrev"), { desc = "Move Prev" })
-map("n", "<leader>bL", cmd("BufferLineMoveNext"), { desc = "Move Next" })
+-- map("n", "<leader>bc", cmd("BufferLinePickClose"), { desc = "Pick close" })
+-- map("n", "<leader>bq", cmd("bp<bar>sp<bar>bn<bar>bd<CR>"), { desc = "Close current" })
+-- map("n", "<leader>bQ", function()
+-- 	local cur_buf = vim.fn.bufnr()
+-- 	for _, e in ipairs(require("bufferline").get_elements().elements) do
+-- 		vim.schedule(function()
+-- 			if e.id ~= cur_buf then
+-- 				vim.cmd("bd " .. e.id)
+-- 			end
+-- 		end)
+-- 	end
+-- end, { desc = "Close others" })
+-- map("n", "<leader>bp", cmd("BufferLineTogglePin"), { desc = "Pin" })
+-- map("n", "[b", cmd("BufferLineCyclePrev"), { desc = "Prev" })
+-- map("n", "]b", cmd("BufferLineCycleNext"), { desc = "Next" })
+-- map("n", "<leader>bH", cmd("BufferLineMovePrev"), { desc = "Move Prev" })
+-- map("n", "<leader>bL", cmd("BufferLineMoveNext"), { desc = "Move Next" })
 
-for i = 1, 9 do
-	map(
-		"n",
-		string.format("\\%d", i),
-		string.format("<cmd>lua require'bufferline'.go_to(%d)<CR>", i),
-		{ desc = string.format("Buffer %d", i) }
-	)
-end
+-- for i = 1, 9 do
+-- 	map(
+-- 		"n",
+-- 		string.format("\\%d", i),
+-- 		string.format("<cmd>lua require'bufferline'.go_to(%d)<CR>", i),
+-- 		{ desc = string.format("Buffer %d", i) }
+-- 	)
+-- end
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Tabs                                            ║
@@ -231,9 +229,6 @@ end, { desc = "Run all" })
 map("n", "<leader>cTt", function()
 	require("neotest").run.run({ strategy = "integrated" })
 end, { desc = "Run test" })
-map("n", "<leader>cTd", function()
-	require("neotest").run.run({ strategy = "dap" })
-end, { desc = "Debug test" })
 map("n", "<leader>cTs", function()
 	require("neotest").summary.toggle()
 end, { desc = "Show summary" })
@@ -280,59 +275,6 @@ map("n", "<leader>`", function()
 end, { desc = "Terminal" })
 map("t", "<c-q>", "<C-\\><C-n>") -- Back to normal mode in terminal
 map("t", "kj", "<C-\\><C-n>")
-
--- ╔═════════════════════════════════════════════════╗
--- ║ DAP / Debug                                     ║
--- ╚═════════════════════════════════════════════════╝
-local hint = [[
- _<f5>_: Continue      _b_: Breakpoint      _h_: Hover         _f_: Frames
- _<f6>_: Step over     _r_: REPL            _p_: Preview       _s_: Scopes
- _<f7>_: Step into     _l_: Run last
- _<f8>_: Step out                                          ^_q_: Quit
-]]
-Hydra({
-	name = "Debug",
-	hint = hint,
-	config = {
-		color = "red",
-		invoke_on_body = true,
-		hint = {
-			position = "bottom",
-			border = "none",
-		},
-	},
-	mode = { "n", "x" },
-	body = "<leader>d",
-	heads = {
-		{ "<f5>", cmd("lua require('dap').continue()"), { exit = true, desc = "Continue" } },
-		{ "<f6>", cmd("lua require('dap').step_over()"), { exit = false, desc = "Step over" } },
-		{ "<f7>", cmd("lua require('dap').step_into()"), { exit = false, desc = "Step into" } },
-		{ "<f8>", cmd("lua require('dap').step_out()"), { exit = false, desc = "Step out" } },
-		{ "q", cmd("lua require('dap').terminate()"), { exit = true, desc = "Stop debugging" } },
-		{ "b", cmd("lua require('dap').toggle_breakpoint()"), { exit = false, desc = "Toggle breakpoint" } },
-		{ "r", cmd("lua require('dap').repl.open()"), { exit = true, desc = "REPL" } },
-		{ "l", cmd("lua require('dap').run_last()"), { exit = true, desc = "Run last" } },
-		{ "h", cmd("lua require('dap.ui.widgets').hover()"), { exit = true, desc = "Hover" } },
-		{ "p", cmd("lua require('dap.ui.widgets').preview()"), { exit = true, desc = "Preview" } },
-		{
-			"f",
-			function()
-				local widgets = require("dap.ui.widgets")
-				widgets.centered_float(widgets.frames)
-			end,
-			{ exit = true, desc = "Frames" },
-		},
-		{
-			"s",
-			function()
-				local widgets = require("dap.ui.widgets")
-				widgets.centered_float(widgets.scopes)
-			end,
-			{ exit = true, desc = "Scopes" },
-		},
-		{ "<Esc>", nil, { exit = true, nowait = true, desc = false } },
-	},
-})
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Git                                             ║
@@ -424,201 +366,3 @@ Hydra({
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<f5>", "<cmd>OverseerToggle<cr>", { desc = "Overseer List" })
 map("n", "<c-f5>", "<cmd>OverseerRun<cr>", { desc = "Overseer Run" })
-
--- ╔═════════════════════════════════════════════════╗
--- ║ REPL                                            ║
--- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>ro", function()
-	utils.UI_select({
-		["IPython"] = "require('utils').StartREPL('ipython')",
-	})
-end, { desc = "Open REPL" })
-
-map("n", "<leader>rl", function()
-	vim.cmd("SlimeSendCurrentLine")
-	vim.api.nvim_command('SlimeSend0 "\n"')
-end, { desc = "Send line" })
-
-map("n", "<leader>rc", function()
-	vim.cmd([[execute "normal \<Plug>SlimeCellsSendAndGoToNext"]])
-	vim.api.nvim_command('SlimeSend0 "\n"')
-end, { desc = "Send cell" })
-
--- FIXME: only seems to send the current line
-map("v", "<leader>rv", function()
-	vim.cmd("SlimeSend")
-	vim.api.nvim_command('SlimeSend0 "\n"')
-end, { desc = "Send visual selection" })
-
-map("n", "<leader>rR", function()
-	vim.api.nvim_command('SlimeSend0 "get_ipython().reset()"')
-	vim.api.nvim_command('SlimeSend0 "\n"')
-end, { desc = "Restart REPL" })
-
-map("n", "[r", "<Plug>SlimeCellsPrev", { desc = "Previous REPL cell" })
-map("n", "]r", "<Plug>SlimeCellsNext", { desc = "Next REPL cell" })
-map("n", "<leader>rb", "o```{python}<cr>```<esc>O", { desc = "Insert code block" })
-
--- ╔═════════════════════════════════════════════════╗
--- ║ Jupynium                                        ║
--- ╚═════════════════════════════════════════════════╝
-vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-	pattern = { "*.ju.*" },
-	callback = function(event)
-		MapJupynium(event.buf)
-	end,
-})
-
-function MapJupynium(bufnr)
-	local tag_code = "# %%"
-	local tag_md = "# %% [md]"
-
-	local function go_to_end_of_cell()
-		-- TODO: could simplify this by using the inside cell textobject
-		local line_num_pre = vim.fn.line(".")
-		require("jupynium.textobj").goto_next_cell_separator()
-		local line_num_post = vim.fn.line(".")
-
-		if line_num_pre == line_num_post then -- final cell
-			vim.cmd(":$")
-		else
-			vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 1, 0 })
-		end
-	end
-
-	local function insert_above(tag)
-		vim.api.nvim_command("lua require('jupynium.textobj').goto_current_cell_separator()")
-		vim.cmd("call append(line('.')-1, '')")
-		vim.cmd("call append(line('.')-1, '')")
-		vim.cmd("call append(line('.')-1, '')")
-		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 4, vim.fn.line(".") - 3, false, { tag })
-		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") - 2, 0 })
-	end
-
-	local function insert_below(tag)
-		go_to_end_of_cell()
-
-		vim.cmd("call append(line('.'), '')")
-		vim.cmd("call append(line('.'), '')")
-		vim.cmd("call append(line('.'), '')")
-		vim.api.nvim_buf_set_lines(0, vim.fn.line("."), vim.fn.line(".") + 1, false, { tag })
-		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 2, 0 })
-	end
-
-	local function insert_md_quotes()
-		vim.cmd("call append(line('.'), '')")
-		vim.cmd("call append(line('.'), '')")
-		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") - 1, vim.fn.line("."), false, { '"""' })
-		vim.api.nvim_buf_set_lines(0, vim.fn.line(".") + 1, vim.fn.line(".") + 2, false, { '"""' })
-		vim.api.nvim_win_set_cursor(0, { vim.fn.line(".") + 1, 0 })
-	end
-
-	local hint = [[
- _S_: Start server           _kh_: Kernel hover          _ac_: Code above         _[_: Prev cell
- _s_: Sync server            _kr_: Kernel restart        _am_: Markdown above     _]_: Next cell 
- _e_: Execute cell           _ks_: Kernel select         _bc_: Code below         _ij_: Inside cell 
- _E_: Execute all cells      _ki_: Kernel interrupt      _bm_: Markdown below     _aj_: Around cell 
-]]
-	Hydra({
-		name = "Jupyter",
-		hint = hint,
-		config = {
-			color = "red",
-			invoke_on_body = true,
-			hint = {
-				position = "bottom-right",
-				border = "none",
-			},
-		},
-		mode = { "n", "x" },
-		body = "<leader>j",
-		heads = {
-			{
-				"S",
-				cmd("JupyniumStartAndAttachToServer"),
-				{ exit = true, buffer = bufnr, desc = "Start Jupynium server" },
-			},
-			{
-				"s",
-				function()
-					filename_wo_ext = vim.fn.expand("%:r:r")
-					vim.cmd([[JupyniumStartSync ]] .. filename_wo_ext)
-				end,
-				{ exit = true, buffer = bufnr, desc = "Sync server" },
-			},
-			{ "kh", cmd("JupyniumKernelHover"), { exit = true, buffer = bufnr, desc = "Hover" } },
-			{ "kr", cmd("JupyniumKernelRestart"), { exit = true, buffer = bufnr, desc = "Restart kernel" } },
-			{ "ks", cmd("JupyniumKernelSelect"), { exit = true, buffer = bufnr, desc = "Select kernel" } },
-			{ "ki", cmd("JupyniumKernelInterrupt"), { exit = true, buffer = bufnr, desc = "Interrupt kernel" } },
-			{
-				"ac",
-				function()
-					insert_above(tag_code)
-				end,
-				{ exit = true, buffer = bufnr, desc = "Insert code above" },
-			},
-			{
-				"am",
-				function()
-					insert_above(tag_md)
-					insert_md_quotes()
-				end,
-				{ exit = true, buffer = bufnr, desc = "Insert markdown above" },
-			},
-			{
-				"bc",
-				function()
-					insert_below(tag_code)
-				end,
-				{ exit = true, buffer = bufnr, desc = "Insert code below" },
-			},
-			{
-				"bm",
-				function()
-					insert_below(tag_md)
-					insert_md_quotes()
-				end,
-				{ exit = true, buffer = bufnr, desc = "Insert markdown below" },
-			},
-			{
-				"j",
-				cmd("lua require'jupynium.textobj'.goto_current_cell_separator()"),
-				{ buffer = bufnr, desc = "Go to current cell" },
-			},
-			{ "e", cmd("JupyniumExecuteSelectedCells"), { exit = true, buffer = bufnr, desc = "Execute cell" } },
-			-- TODO: jump back to prev cursor location
-			{
-				"E",
-				"ggVG<cmd>JupyniumExecuteSelectedCells<cr><esc>",
-				{ exit = true, buffer = bufnr, desc = "Execute all cells" },
-			},
-			{ "oc", cmd("JupyniumClearSelectedCellsOutputs"), { exit = false, buffer = bufnr, desc = "Clear output" } },
-			{
-				"ot",
-				cmd("JupyniumToggleSelectedCellsOutputsScroll"),
-				{ exit = true, buffer = bufnr, desc = "Toggle output" },
-			},
-			{
-				"[",
-				cmd("lua require'jupynium.textobj'.goto_previous_cell_separator()"),
-				{ exit = false, buffer = bufnr, desc = "Previous cell" },
-			},
-			{
-				"]",
-				cmd("lua require'jupynium.textobj'.goto_next_cell_separator()"),
-				{ exit = false, buffer = bufnr, desc = "Next cell" },
-			},
-			{
-				"aj",
-				cmd("lua require'jupynium.textobj'.select_cell(true, false)"),
-				{ exit = true, buffer = bufnr, desc = "Around cell" },
-			},
-			{
-				"ij",
-				cmd("lua require'jupynium.textobj'.select_cell(false, false)"),
-				{ exit = true, buffer = bufnr, desc = "Inside cell" },
-			},
-			{ "<Esc>", nil, { exit = true, buffer = bufnr, nowait = true, desc = false } },
-		},
-	})
-end
