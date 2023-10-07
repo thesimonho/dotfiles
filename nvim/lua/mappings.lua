@@ -1,8 +1,5 @@
 local utils = require("utils")
 local map = utils.map
-local Hydra = require("hydra")
-local cmd = require("hydra.keymap-util").cmd
-local pcmd = require("hydra.keymap-util").pcmd
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ General                                         ║
@@ -43,50 +40,23 @@ map("n", "<leader>zn", "<cmd>Telescope package_info<cr>", { desc = "npm" })
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Window / Splits                                 ║
 -- ╚═════════════════════════════════════════════════╝
-local hint = [[
- ^^^^^^^^^^^^     Move       ^^    Size    ^^    _q_: close
- ^^^^^^^^^^^^-------------   ^^------------^^
- ^ ^ _k_ ^ ^  ^ ^ _K_ ^ ^   ^     _<up>_   ^
- _h_ ^ ^ _l_  _H_ ^ ^ _L_   _<left>_  _<right>_
- ^ ^ _j_ ^ ^  ^ ^ _J_ ^ ^   ^    _<down>_   ^  
- focus^^^^^^  window^^^^^^
-]]
 
-Hydra({
-	name = "Windows",
-	hint = hint,
-	config = {
-		invoke_on_body = true,
-		hint = {
-			position = "middle",
-			border = "none",
-		},
-	},
-	mode = "n",
-	body = "<leader>w",
-	heads = {
-		{ "h", cmd("lua require('utils').move_create_split('h')"), { exit = true, desc = "Focus/split left" } },
-		{ "j", cmd("lua require('utils').move_create_split('j')"), { exit = true, desc = "Focus/split down" } },
-		{ "k", cmd("lua require('utils').move_create_split('k')"), { exit = true, desc = "Focus/split up" } },
-		{ "l", cmd("lua require('utils').move_create_split('l')"), { exit = true, desc = "Focus/split right" } },
+map("n", "<leader>wh", "<cmd>lua require('utils').move_create_split('h')<cr>", { desc = "Focus/split left" })
+map("n", "<leader>wj", "<cmd>lua require('utils').move_create_split('j')<cr>", { desc = "Focus/split down" })
+map("n", "<leader>wk", "<cmd>lua require('utils').move_create_split('k')<cr>", { desc = "Focus/split up" })
+map("n", "<leader>wl", "<cmd>lua require('utils').move_create_split('l')<cr>", { desc = "Focus/split right" })
 
-		{ "H", "<C-W>H", { exit = false, desc = "Move left" } },
-		{ "J", "<C-W>J", { exit = false, desc = "Move down" } },
-		{ "K", "<C-W>K", { exit = false, desc = "Move up" } },
-		{ "L", "<C-W>L", { exit = false, desc = "Move right" } },
+map("n", "<leader>wH", "<C-W>H", { desc = "Move left" })
+map("n", "<leader>wJ", "<C-W>J", { desc = "Move down" })
+map("n", "<leader>wK", "<C-W>K", { desc = "Move up" })
+map("n", "<leader>wL", "<C-W>L", { desc = "Move right" })
 
-		{ "<up>", cmd("resize +15"), { exit = false, desc = "Resize up" } }, -- FIXME: fix the direction on these
-		{ "<down>", cmd("resize -15"), { exit = false, desc = "Resize down" } },
-		{ "<left>", cmd("vertical resize -15"), { exit = false, desc = "Resize left" } },
-		{ "<right>", cmd("vertical resize +15"), { exit = false, desc = "Resize right" } },
+map("n", "<leader>w<up>", "<cmd>resize +15<cr>", { desc = "Resize up" })
+map("n", "<leader>w<down>", "<cmd>resize -15<cr>", { desc = "Resize down" })
+map("n", "<leader>w<left>", "<cmd>vertical resize +15<cr>", { desc = "Resize left" })
+map("n", "<leader>w<right>", "<cmd>vertical resize -15<cr>", { desc = "Resize right" })
 
-		{ "m", "<cmd>lua require('codewindow').toggle_focus()<cr>", { exit = true, desc = "Focus minimap" } },
-		{ "M", "<cmd>lua require('codewindow').toggle_minimap()<cr>", { exit = true, desc = "Toggle minimap" } },
-
-		{ "q", pcmd("close", "E444"), { exit = true, desc = "close window" } },
-		{ "<Esc>", nil, { exit = true, desc = false } },
-	},
-})
+map("n", "<leader>wq", "<C-W>c", { desc = "Close" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Buffers                                         ║
@@ -125,9 +95,9 @@ map("n", "<leader>tt", function()
 	vim.cmd("tabnew")
 	require("telescope").extensions.project.project({})
 end, { desc = "New tab" })
-map("n", "<leader>tq", cmd("tabclose"), { desc = "Close tab" })
-map("n", "[t", cmd("tabprev"), { desc = "Prev tab" })
-map("n", "]t", cmd("tabnext"), { desc = "Next tab" })
+map("n", "<leader>tq", "<cmd>tabclose<cr>", { desc = "Close tab" })
+map("n", "[t", "<cmd>tabprev<cr>", { desc = "Prev tab" })
+map("n", "]t", "<cmd>tabnext<cr>", { desc = "Next tab" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Movement                                        ║
@@ -279,87 +249,7 @@ map("t", "kj", "<C-\\><C-n>")
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Git                                             ║
 -- ╚═════════════════════════════════════════════════╝
-local gitsigns = require("gitsigns")
-local hint = [[
- _]_: next hunk    _s_: stage hunk        _d_: show deleted   _b_: blame line
- _[_: prev hunk    _S_: stage buffer      _p_: preview hunk   _B_: blame show full 
- _D_: diff view    _u_: undo last stage      ^ ^
- ^
- ^ ^              _<Enter>_: Lazygit
-]]
-Hydra({
-	name = "Git",
-	hint = hint,
-	config = {
-		color = "pink",
-		invoke_on_body = true,
-		hint = {
-			position = "bottom",
-			border = "none",
-		},
-		on_enter = function()
-			vim.cmd("mkview")
-			vim.cmd("silent! %foldopen!")
-			vim.bo.modifiable = false
-			gitsigns.toggle_linehl(true)
-			gitsigns.toggle_deleted(true)
-		end,
-		on_exit = function()
-			local cursor_pos = vim.api.nvim_win_get_cursor(0)
-			vim.cmd("loadview")
-			vim.api.nvim_win_set_cursor(0, cursor_pos)
-			vim.cmd("normal zv")
-			gitsigns.toggle_linehl(false)
-			gitsigns.toggle_deleted(false)
-		end,
-	},
-	mode = { "n", "x" },
-	body = "<leader>G",
-	heads = {
-		{
-			"]",
-			function()
-				if vim.wo.diff then
-					return "]c"
-				end
-				vim.schedule(function()
-					gitsigns.next_hunk()
-				end)
-				return "<Ignore>"
-			end,
-			{ expr = true, desc = "next hunk" },
-		},
-		{
-			"[",
-			function()
-				if vim.wo.diff then
-					return "[c"
-				end
-				vim.schedule(function()
-					gitsigns.prev_hunk()
-				end)
-				return "<Ignore>"
-			end,
-			{ expr = true, desc = "prev hunk" },
-		},
-		{ "D", gitsigns.diffthis, { exit = false, silent = true, desc = "diff view" } },
-		{ "s", cmd("Gitsigns stage_hunk"), { silent = true, desc = "stage hunk" } },
-		{ "u", gitsigns.undo_stage_hunk, { desc = "undo last stage" } },
-		{ "S", gitsigns.stage_buffer, { desc = "stage buffer" } },
-		{ "p", gitsigns.preview_hunk, { desc = "preview hunk" } },
-		{ "d", gitsigns.toggle_deleted, { nowait = true, desc = "toggle deleted" } },
-		{ "b", gitsigns.blame_line, { desc = "blame" } },
-		{
-			"B",
-			function()
-				gitsigns.blame_line({ full = true })
-			end,
-			{ desc = "blame show full" },
-		},
-		{ "<Enter>", cmd("lua require('utils').toggle_lazygit()"), { exit = true, desc = "Lazygit" } },
-		{ "<Esc>", nil, { exit = true, nowait = true, desc = false } },
-	},
-})
+map("n", "<leader>G", "<cmd>lua require('utils').toggle_lazygit()<cr>", { desc = "Lazygit" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Overseer                                        ║
