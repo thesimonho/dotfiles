@@ -23,7 +23,7 @@ function M.config()
 			component_separators = "",
 			disabled_filetypes = {
 				statusline = { "alpha" },
-				winbar = { "neo-tree", "aerial", "OverseerList", "alpha", "dap-repl" },
+				winbar = { "neo-tree", "aerial", "OverseerList", "alpha" },
 			},
 			refresh = {
 				statusline = 1000,
@@ -256,7 +256,6 @@ function M.config()
             "lazy",
 			"man",
 			"neo-tree",
-			"nvim-dap-ui",
 			"quickfix",
 			"toggleterm",
             "trouble",

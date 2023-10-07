@@ -32,6 +32,7 @@ function M.config()
             "OverseerList",
             "prompt",
             "TelescopePrompt",
+            "JABSwindow"
 		},
 		handlers = {
 			cursor = true,

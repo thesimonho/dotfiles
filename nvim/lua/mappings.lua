@@ -136,7 +136,7 @@ map({ "n", "x", "o" }, "<leader>k", "<Plug>(leap-backward-to)", { desc = "Leap b
 -- ║ Find                                            ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Files" })
-map("n", "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Buffers" })
+map("n", "<leader>fb", "<cmd>JABSOpen<cr>", { desc = "Buffers" })
 map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_root()<cr>", { desc = "Grep project" })
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
