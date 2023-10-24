@@ -1,6 +1,7 @@
 local M = {
 	"nvim-treesitter/nvim-treesitter",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	build = function()
 		require("nvim-treesitter.install").update({ with_sync = true })
 	end,

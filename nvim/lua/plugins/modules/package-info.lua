@@ -1,8 +1,7 @@
--- handle folds
-
 local M = {
 	"vuki656/package-info.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	dependencies = "MunifTanjim/nui.nvim",
 	ft = "json",
 }

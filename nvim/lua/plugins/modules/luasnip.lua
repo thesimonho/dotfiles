@@ -2,6 +2,7 @@ local M = {
 	"L3MON4D3/LuaSnip",
 	version = "1.*",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	dependencies = {
 		"hrsh7th/nvim-cmp",
 		"saadparwaiz1/cmp_luasnip",

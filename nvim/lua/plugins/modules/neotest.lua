@@ -1,6 +1,7 @@
 local M = {
 	"nvim-neotest/neotest",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"folke/neodev.nvim",

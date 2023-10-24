@@ -1,6 +1,7 @@
 local M = {
 	"lukas-reineke/indent-blankline.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	main = "ibl",
 	event = { "BufReadPre", "BufNewFile" },
 }

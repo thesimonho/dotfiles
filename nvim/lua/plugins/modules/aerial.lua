@@ -1,6 +1,7 @@
 local M = {
 	"stevearc/aerial.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	cmd = { "AerialToggle", "AerialOpen", "AerialOpenAll" },
 }
 

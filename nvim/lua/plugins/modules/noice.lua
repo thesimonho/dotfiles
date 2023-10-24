@@ -1,6 +1,7 @@
 local M = {
 	"folke/noice.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	dependencies = {
 		"MunifTanjim/nui.nvim",
 		"rcarriga/nvim-notify",

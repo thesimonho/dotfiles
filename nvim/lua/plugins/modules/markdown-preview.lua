@@ -2,6 +2,7 @@ local M = {
 	"iamcco/markdown-preview.nvim",
 	build = "cd app && npm install",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	ft = "markdown",
 }
 

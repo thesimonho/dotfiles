@@ -1,6 +1,7 @@
 local M = {
 	"nvim-telescope/telescope.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"nvim-tree/nvim-web-devicons",

@@ -1,6 +1,7 @@
 local M = {
 	"matbme/JABS.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	event = { "BufReadPost", "BufNewFile" },
 }
 

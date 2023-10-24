@@ -1,6 +1,7 @@
 local M = {
 	"folke/trouble.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	dependencies = { "nvim-tree/nvim-web-devicons", "folke/lsp-colors.nvim" },
 	cmd = { "Trouble", "TroubleToggle" },
 }

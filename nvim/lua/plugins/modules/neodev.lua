@@ -1,6 +1,7 @@
 local M = {
 	"folke/neodev.nvim",
 	enabled = true,
+    cond = vim.g.vscode == nil,
 	priority = 500,
 	dependencies = {
 		"nvim-lua/plenary.nvim",
