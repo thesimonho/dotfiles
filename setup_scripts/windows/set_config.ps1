@@ -3,26 +3,26 @@
 #-----------------------------------------------------
 
 $HOMEPATH = "C:\Users\" + $env:USERNAME
-[Environment]::SetEnvironmentVariable("HOME", $HOMEPATH)
+[Environment]::SetEnvironmentVariable("HOME", $HOMEPATH, "User")
 
 #-----------------------------------------------------
 # Clone dotfiles repo and symlink them
 #-----------------------------------------------------
-if (!(Test-Path $env:USERPROFILE\dotfiles)) {
-    Write-Host "Cloning dotfiles repo..."
-    git clone https://github.com/sho-87/dotfiles.git $env:USERPROFILE\dotfiles
-}
+# if (!(Test-Path $env:USERPROFILE\dotfiles)) {
+#     Write-Host "Cloning dotfiles repo..."
+#     git clone https://github.com/sho-87/dotfiles.git $env:USERPROFILE\dotfiles
+# }
 
-if (!(Test-Path $env:USERPROFILE\AppData\Local\nvim)) {
-    Write-Host "Symlinking nvim config..."
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\nvim -Target $env:USERPROFILE\dotfiles\nvim
-}
+# if (!(Test-Path $env:USERPROFILE\AppData\Local\nvim)) {
+#     Write-Host "Symlinking nvim config..."
+#     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\nvim -Target $env:USERPROFILE\dotfiles\nvim
+# }
 
-if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
-    Write-Host "Symlinking wezterm config..."
-    New-Item -ItemType Directory -Path $env:USERPROFILE\.config
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\wezterm
-}
+# if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
+#     Write-Host "Symlinking wezterm config..."
+#     New-Item -ItemType Directory -Path $env:USERPROFILE\.config
+#     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\wezterm
+# }
 
 #-----------------------------------------------------
 # Set default shell
