@@ -1,4 +1,11 @@
 #-----------------------------------------------------
+# Set ENVs
+#-----------------------------------------------------
+
+$HOMEPATH = "C:\Users\" + $env:USERNAME
+[Environment]::SetEnvironmentVariable("HOME", $HOMEPATH)
+
+#-----------------------------------------------------
 # Clone dotfiles repo and symlink them
 #-----------------------------------------------------
 if (!(Test-Path $env:USERPROFILE\dotfiles)) {
