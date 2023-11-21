@@ -24,6 +24,11 @@ if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\wezterm
 }
 
+if (!(Test-Path $env:USERPROFILE\.emacs.d\layers)) {
+    Write-Host "Symlinking emacs config..."
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\init.el -Force
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\layers -Target $env:USERPROFILE\dotfiles\emacs\custom\layers -Force
+}
 #-----------------------------------------------------
 # Set default shell
 #-----------------------------------------------------
