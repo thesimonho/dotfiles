@@ -57,3 +57,4 @@
 (load "org")
 (load "completion")
 (load "projects")
+(load "navigation")

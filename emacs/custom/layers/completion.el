@@ -43,10 +43,12 @@
   (leader-def
   :wk-full-keys nil
     "b"       (cons "buffers" (make-sparse-keymap))
-    "bb" '(consult-buffer :wk "find buffer")
+    "bb" '(persp-switch-to-buffer :wk "find buffer")
+    "bd" '(persp-kill-buffer :wk "delete buffer")
 
     "f"       (cons "files" (make-sparse-keymap))
     "fed"       (cons "files" (lambda () (interactive) (consult-find "~/.emacs.d")))
+    "fs" '(save-buffer :wk "Save") 
     "ff" '(consult-dir :wk "find file")
     "fr" '(consult-recent-file :wk "recent files")
     "fg" '(consult-ripgrep :wk "grep")

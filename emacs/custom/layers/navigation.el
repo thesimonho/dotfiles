@@ -2,12 +2,15 @@
 
 (use-package treemacs
   :ensure t
+  :init
+  (setq treemacs-python-executable "~/anaconda3/python.exe")
   :config
   (treemacs-follow-mode t)
   (treemacs-project-follow-mode t)
   (treemacs-filewatch-mode t)
   (treemacs-git-mode 'deferred)
-  (treemacs-fringe-indicator-mode 'always))
+  (treemacs-fringe-indicator-mode 'always)
+  (treemacs-git-commit-diff-mode t))
 
 (use-package treemacs-evil
   :after (treemacs evil)
