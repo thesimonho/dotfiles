@@ -50,6 +50,10 @@
 
 ;; Load layers
 (add-to-list 'load-path (expand-file-name "layers" user-emacs-directory))
-(load "appearance/init")
-(load "editing/init")
-(load "org/init")
+(load "keymaps")
+(load "base")
+(load "appearance")
+(load "editing")
+(load "org")
+(load "completion")
+(load "projects")
