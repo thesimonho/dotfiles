@@ -88,7 +88,7 @@
   (match                                         (:background carpYellow :foreground sumiInk-0))
   (menu                                          (:background sumiInk-0 :foreground fujiWhite))
   (mode-line                                     (:background sumiInk-0))
-  (mode-line-inactive                            (:background nil :foreground sumiInk-4 :bold nil))
+  (mode-line-inactive                            (:foreground sumiInk-4 :bold nil))
   (mode-line-active                              (:background sumiInk-0 :foreground old-white :bold nil))
   (mode-line-highlight                           (:foreground boatYellow2))
   (mode-line-buffer-id                           (:foreground waveAqua2 :bold t))
@@ -294,10 +294,10 @@
   
   ;; ivy
   (ivy-current-match                             (:background crystalBlue :foreground sumiInk-0 :bold t))
-  (ivy-action                                    (:background nil :foreground fujiWhite))
-  (ivy-grep-line-number                          (:background nil :foreground springGreen))
-  (ivy-minibuffer-match-face-1                   (:background nil :foreground waveRed))
-  (ivy-minibuffer-match-face-2                   (:background nil :foreground springGreen))
+  (ivy-action                                    (:foreground fujiWhite))
+  (ivy-grep-line-number                          (:foreground springGreen))
+  (ivy-minibuffer-match-face-1                   (:foreground waveRed))
+  (ivy-minibuffer-match-face-2                   (:foreground springGreen))
   (ivy-minibuffer-match-highlight                (:foreground lightBlue))
   (ivy-grep-info                                 (:foreground lightBlue))
   (ivy-grep-line-number                          (:foreground springViolet2))
@@ -331,7 +331,7 @@
 
   (lsp-ui-doc-background                         (:background sumiInk-0 :foreground peachRed))
   (lsp-ui-doc-header                             (:background sumiInk-0 :foreground peachRed))
-  (lsp-ui-doc-border                             (:background nil :foreground nil))
+  (lsp-ui-doc-border                             (:foreground lightBlue))
   (lsp-ui-peek-filename                          (:foreground lightBlue))
   (lsp-ui-sideline-code-action                   (:foreground carpYellow))
   (lsp-ui-sideline-current-symbol                (:foreground springBlue))
@@ -404,7 +404,7 @@
   (orderless-match-face-0                        (:foreground crystalBlue :bold t))
   
   (comint-highlight-prompt                       (:background springViolet2 :foreground sumiInk-1))
-  (completions-annotations                       (:background nil :foreground dragonBlue :italic t))
+  (completions-annotations                       (:foreground dragonBlue :italic t))
   
   ;; hydra
   (hydra-face-amaranth                           (:foreground autumnRed))
@@ -427,7 +427,7 @@
   (centaur-tabs-modified-marker-unselected       (:background sumiInk-0 :foreground sumiInk-4))
   (centaur-tabs-close-unselected                 (:background sumiInk-0 :foreground sumiInk-4))
 
-  (centaur-tabs-close-mouse-face                 (:background nil :foreground peachRed))
+  (centaur-tabs-close-mouse-face                 (:foreground peachRed))
   (centaur-tabs-default                          (:background roninYellow ))
   (centaur-tabs-name-mouse-face                  (:foreground springBlue :bold t))
 
