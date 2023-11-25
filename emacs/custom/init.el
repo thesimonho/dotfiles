@@ -155,12 +155,9 @@
   :states '(normal insert motion emacs)
   :keymaps 'override
   :major-modes t
-  :prefix "SPC m"
-  :non-normal-prefix "M-SPC m")
+  :prefix ","
+  :non-normal-prefix "M-,")
 (major-mode-def "" nil)
-
-(general-def universal-argument-map
-    "SPC u" 'universal-argument-more)
 
 ;; Global Keybindings
 (leader-def
@@ -168,8 +165,6 @@
   "SPC"     '("M-x" . execute-extended-command)
   "TAB"     '("last buffer" . alternate-buffer)
   "u"       '("universal arg" . universal-argument)
-
-  "m"       (cons "major mode" (make-sparse-keymap))
 
   "h"       (cons "help" (make-sparse-keymap))
   "hb"      'describe-bindings
@@ -208,6 +203,9 @@
   "qq"      'save-buffers-kill-emacs
   )
 
+(general-def universal-argument-map
+    "SPC u" 'universal-argument-more)
+
 (general-define-key
   :keymaps 'override
   "C-s" 'save-buffer)
@@ -229,6 +227,8 @@
   :init
   (global-corfu-mode)
   (corfu-history-mode)
+  (setq corfu-popupinfo-delay 0.2)
+  (corfu-popupinfo-mode)
   :general
   (corfu-map
 	    "TAB" 'corfu-next
@@ -412,6 +412,38 @@ lsp-warn-no-matched-clients nil
 
 (use-package flycheck
   :init (global-flycheck-mode))
+
+(use-package toc-org
+    :hook (org-mode . toc-org-mode))
+
+(use-package org-modern
+  :init
+  (setq
+  ;; Edit settings
+  org-auto-align-tags nil
+  org-tags-column 0
+  org-catch-invisible-edits 'show-and-error
+  org-special-ctrl-a/e t
+  org-insert-heading-respect-content t
+
+  ;; Org styling, hide markup etc.
+  org-hide-emphasis-markers t
+  org-pretty-entities t
+
+  ;; Agenda styling
+  org-agenda-tags-column 0
+  org-agenda-block-separator ?-)
+  :config
+  (global-org-modern-mode))
+
+(major-mode-def
+:keymaps 'org-mode-map
+:wk-full-keys nil
+"o" '(org-open-at-point :wk "open link")
+"x" '(org-babel-execute-src-block :wk "execute block")
+"i"       (cons "insert" (make-sparse-keymap))
+"is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
+"it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
 
 (set-frame-font "FiraCode NF-11")
 

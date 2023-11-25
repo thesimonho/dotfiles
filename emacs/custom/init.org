@@ -1,6 +1,25 @@
 #+title: Emacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
+* Table of contents                                                     :TOC:
+- [[#auto-tangle-configuration-files][Auto-tangle Configuration Files]]
+- [[#profile-emacs-startup][Profile Emacs startup]]
+- [[#package-management][Package management]]
+- [[#user-config][User config]]
+- [[#emacs-settings][Emacs settings]]
+- [[#native-compilation][Native compilation]]
+- [[#evil][Evil]]
+- [[#which-key][Which key]]
+- [[#key-bindings][Key bindings]]
+- [[#completion][Completion]]
+  - [[#corfu][Corfu]]
+  - [[#vertico-stack][Vertico stack]]
+- [[#project-management][Project management]]
+- [[#editor-navigation][Editor navigation]]
+- [[#lsp-goodness][LSP goodness]]
+- [[#org-mode][Org mode]]
+- [[#aesthetics][Aesthetics]]
+
 * Auto-tangle Configuration Files
 
 This snippet adds a hook to =org-mode= buffers so that =org-babel-tangle-config= gets executed each time such a buffer gets saved.  This function checks to see if the file being saved is the init file, and if so, automatically exports the configuration here to the associated output files.
@@ -187,88 +206,86 @@ Use elpaca for package management
 
 #+begin_src emacs-lisp
 
-(use-package general
-  :demand t
-  :after evil
-  :config
-  (general-evil-setup t))
-(elpaca-wait)
+  (use-package general
+    :demand t
+    :after evil
+    :config
+    (general-evil-setup t))
+  (elpaca-wait)
 
-;; Leader key
-(general-define-key
-   :states '(normal insert motion emacs)
-   :keymaps 'override
-   :prefix-map 'leader-map
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC")
-(general-create-definer leader-def :keymaps 'leader-map)
-(leader-def "" nil)
+  ;; Leader key
+  (general-define-key
+     :states '(normal insert motion emacs)
+     :keymaps 'override
+     :prefix-map 'leader-map
+     :prefix "SPC"
+     :non-normal-prefix "M-SPC")
+  (general-create-definer leader-def :keymaps 'leader-map)
+  (leader-def "" nil)
 
-;; Major mode key
-(general-create-definer major-mode-def
-  :states '(normal insert motion emacs)
-  :keymaps 'override
-  :major-modes t
-  :prefix "SPC m"
-  :non-normal-prefix "M-SPC m")
-(major-mode-def "" nil)
+  ;; Major mode key
+  (general-create-definer major-mode-def
+    :states '(normal insert motion emacs)
+    :keymaps 'override
+    :major-modes t
+    :prefix ","
+    :non-normal-prefix "M-,")
+  (major-mode-def "" nil)
 
-(general-def universal-argument-map
-    "SPC u" 'universal-argument-more)
+  ;; Global Keybindings
+  (leader-def
+  :wk-full-keys nil
+    "SPC"     '("M-x" . execute-extended-command)
+    "TAB"     '("last buffer" . alternate-buffer)
+    "u"       '("universal arg" . universal-argument)
 
-;; Global Keybindings
-(leader-def
-:wk-full-keys nil
-  "SPC"     '("M-x" . execute-extended-command)
-  "TAB"     '("last buffer" . alternate-buffer)
-  "u"       '("universal arg" . universal-argument)
+    "h"       (cons "help" (make-sparse-keymap))
+    "hb"      'describe-bindings
+    "hc"      'describe-char
+    "hf"      'describe-function
+    "hF"      'describe-face
+    "hi"      'info-emacs-manual
+    "hI"      'info-display-manual
+    "hk"      'describe-key
+    "hK"      'describe-keymap
+    "hm"      'describe-mode
+    "hM"      'woman
+    "hp"      'describe-package
+    "ht"      'describe-text-properties
+    "hv"      'describe-variable
 
-  "m"       (cons "major mode" (make-sparse-keymap))
+    "w"       (cons "windows" (make-sparse-keymap))
+    "wb"      'switch-to-minibuffer-window
+    "wd"      'delete-window
+    "wD"      'delete-other-windows
+    "wm"      'toggle-maximize-buffer
+    "wh"      'evil-window-left
+    "wj"      'evil-window-down
+    "wk"      'evil-window-up
+    "wl"      'evil-window-right
+    "wr"      'rotate-windows-forward
+    "ws"      'split-window-vertically
+    "wu"      'winner-undo
+    "wU"      'winner-redo
+    "wv"      'split-window-horizontally
 
-  "h"       (cons "help" (make-sparse-keymap))
-  "hb"      'describe-bindings
-  "hc"      'describe-char
-  "hf"      'describe-function
-  "hF"      'describe-face
-  "hi"      'info-emacs-manual
-  "hI"      'info-display-manual
-  "hk"      'describe-key
-  "hK"      'describe-keymap
-  "hm"      'describe-mode
-  "hM"      'woman
-  "hp"      'describe-package
-  "ht"      'describe-text-properties
-  "hv"      'describe-variable
+    "q"       (cons "quit" (make-sparse-keymap))
+    "qd"      'restart-emacs-debug-init
+    "qr"      'restart-emacs
+    "qf"      'delete-frame
+    "qq"      'save-buffers-kill-emacs
+    )
+ 
+  (general-def universal-argument-map
+      "SPC u" 'universal-argument-more)
 
-  "w"       (cons "windows" (make-sparse-keymap))
-  "wb"      'switch-to-minibuffer-window
-  "wd"      'delete-window
-  "wD"      'delete-other-windows
-  "wm"      'toggle-maximize-buffer
-  "wh"      'evil-window-left
-  "wj"      'evil-window-down
-  "wk"      'evil-window-up
-  "wl"      'evil-window-right
-  "wr"      'rotate-windows-forward
-  "ws"      'split-window-vertically
-  "wu"      'winner-undo
-  "wU"      'winner-redo
-  "wv"      'split-window-horizontally
+  (general-define-key
+    :keymaps 'override
+    "C-s" 'save-buffer)
 
-  "q"       (cons "quit" (make-sparse-keymap))
-  "qd"      'restart-emacs-debug-init
-  "qr"      'restart-emacs
-  "qf"      'delete-frame
-  "qq"      'save-buffers-kill-emacs
-  )
-
-(general-define-key
-  :keymaps 'override
-  "C-s" 'save-buffer)
-
-(general-define-key
- :keymaps 'insert
- "C-v" 'yank)
+  (general-define-key
+   :keymaps 'insert
+   "C-v" 'yank)
 #+end_src
 
 * Completion
@@ -278,25 +295,27 @@ Use elpaca for package management
 Inbuffer completion with corfu
 
 #+begin_src emacs-lisp
-(use-package corfu
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-delay 0.0)
-  (corfu-quit-at-boundary 'separator)   
-  (corfu-quit-no-match t)
-  (corfu-echo-documentation 0.0)
-  (corfu-preselect 'directory)      
-  (corfu-on-exact-match 'quit)    
-  :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  :general
-  (corfu-map
-	    "TAB" 'corfu-next
-	    [tab] 'corfu-next
-	    "S-TAB" 'corfu-previous
-	    [backtab] 'corfu-previous))
+  (use-package corfu
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)                 ;; Enable auto completion
+    (corfu-auto-delay 0.0)
+    (corfu-quit-at-boundary 'separator)   
+    (corfu-quit-no-match t)
+    (corfu-echo-documentation 0.0)
+    (corfu-preselect 'directory)      
+    (corfu-on-exact-match 'quit)    
+    :init
+    (global-corfu-mode)
+    (corfu-history-mode)
+    (setq corfu-popupinfo-delay 0.2)
+    (corfu-popupinfo-mode)
+    :general
+    (corfu-map
+	      "TAB" 'corfu-next
+	      [tab] 'corfu-next
+	      "S-TAB" 'corfu-previous
+	      [backtab] 'corfu-previous))
 #+end_src
 
 ** Vertico stack
@@ -499,6 +518,44 @@ lsp-warn-no-matched-clients nil
   :init (global-flycheck-mode))
 
 #+end_src
+
+* Org mode
+
+#+begin_src emacs-lisp
+  (use-package toc-org
+      :hook (org-mode . toc-org-mode))
+
+  (use-package org-modern
+    :init
+    (setq
+    ;; Edit settings
+    org-auto-align-tags nil
+    org-tags-column 0
+    org-catch-invisible-edits 'show-and-error
+    org-special-ctrl-a/e t
+    org-insert-heading-respect-content t
+
+    ;; Org styling, hide markup etc.
+    org-hide-emphasis-markers t
+    org-pretty-entities t
+
+    ;; Agenda styling
+    org-agenda-tags-column 0
+    org-agenda-block-separator ?-)
+    :config
+    (global-org-modern-mode))
+
+  (major-mode-def
+  :keymaps 'org-mode-map
+  :wk-full-keys nil
+  "o" '(org-open-at-point :wk "open link")
+  "x" '(org-babel-execute-src-block :wk "execute block")
+  "i"       (cons "insert" (make-sparse-keymap))
+  "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
+  "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+#+end_src
+
+#+RESULTS:
 
 * Aesthetics
 
