@@ -7,10 +7,10 @@
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 ;; (add-hook 'emacs-startup-hook
-;; 	  (lambda ()
-;; 	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
-;; 		     (emacs-init-time "%.2f")
-;; 		     gcs-done)))
+  ;; 	  (lambda ()
+  ;; 	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
+  ;; 		     (emacs-init-time "%.2f")
+  ;; 		     gcs-done)))
 
 (setq use-package-compute-statistics t)
 
@@ -19,9 +19,9 @@
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
+			      :ref nil
+			      :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+			      :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
@@ -31,18 +31,18 @@
     (make-directory repo t)
     (when (< emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (call-process "git" nil buffer t "clone"
-                                       (plist-get order :repo) repo)))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
+	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+		 ((zerop (call-process "git" nil buffer t "clone"
+				       (plist-get order :repo) repo)))
+		 ((zerop (call-process "git" nil buffer t "checkout"
+				       (or (plist-get order :ref) "--"))))
+		 (emacs (concat invocation-directory invocation-name))
+		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+				       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+		 ((require 'elpaca))
+		 ((elpaca-generate-autoloads "elpaca" repo)))
+	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+	  (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
@@ -100,24 +100,24 @@
   :demand t
   :init
   (setq evil-want-integration t
-        evil-want-keybinding nil
-        evil-symbol-word-search t
-        evil-ex-search-vim-style-regexp t
-        evil-want-C-u-scroll t
-        evil-want-C-i-jump nil)
+	evil-want-keybinding nil
+	evil-symbol-word-search t
+	evil-ex-search-vim-style-regexp t
+	evil-want-C-u-scroll t
+	evil-want-C-i-jump nil)
   :config
   (setq evil-cross-lines t
-        evil-kill-on-visual-paste nil
-        evil-move-beyond-eol t
-        evil-want-fine-undo t
-        evil-v$-excludes-newline t)
+	evil-kill-on-visual-paste nil
+	evil-move-beyond-eol t
+	evil-want-fine-undo t
+	evil-v$-excludes-newline t)
 
   (setq evil-normal-state-cursor  '("DarkGoldenrod2" box)
-        evil-insert-state-cursor  '("chartreuse3" (bar . 2))
-        evil-emacs-state-cursor   '("SkyBlue2" box)
-        evil-replace-state-cursor '("chocolate" (hbar . 2))
-        evil-visual-state-cursor  '("gray" (hbar . 2))
-        evil-motion-state-cursor  '("plum3" box))
+	evil-insert-state-cursor  '("chartreuse3" (bar . 2))
+	evil-emacs-state-cursor   '("SkyBlue2" box)
+	evil-replace-state-cursor '("chocolate" (hbar . 2))
+	evil-visual-state-cursor  '("gray" (hbar . 2))
+	evil-motion-state-cursor  '("plum3" box))
 
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
@@ -126,11 +126,11 @@
   :demand t
   :init
   (setq 
-    which-key-idle-delay 0.1
-    which-key-idle-secondary-delay 0.01
-    which-key-allow-evil-operators t
-    which-key-add-column-padding 1
-    which-key-max-display-columns 4)
+   which-key-idle-delay 0.1
+   which-key-idle-secondary-delay 0.01
+   which-key-allow-evil-operators t
+   which-key-add-column-padding 1
+   which-key-max-display-columns 4)
   (which-key-mode))
 
 (use-package general
@@ -231,31 +231,31 @@
   (corfu-popupinfo-mode)
   :general
   (corfu-map
-	    "TAB" 'corfu-next
-	    [tab] 'corfu-next
-	    "S-TAB" 'corfu-previous
-	    [backtab] 'corfu-previous))
+   "TAB" 'corfu-next
+   [tab] 'corfu-next
+   "S-TAB" 'corfu-previous
+   [backtab] 'corfu-previous))
 
 (use-package vertico
   :init
   (setq read-file-name-completion-ignore-case t
-      read-buffer-completion-ignore-case t
-      completion-ignore-case t)
+	read-buffer-completion-ignore-case t
+	completion-ignore-case t)
   (vertico-mode)
   (savehist-mode)
-  
+
   :general (:keymaps 'vertico-map
-         "C-j" 'vertico-next
-         "C-k" 'vertico-previous))
+		     "C-j" 'vertico-next
+		     "C-k" 'vertico-previous))
 
 ;; Add prompt indicator to `completing-read-multiple'.
 (defun crm-indicator (args)
   (cons (format "[CRM%s] %s"
-                (replace-regexp-in-string
-                 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                 crm-separator)
-                (car args))
-        (cdr args)))
+		(replace-regexp-in-string
+		 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		 crm-separator)
+		(car args))
+	(cdr args)))
 (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
 ;; Do not allow the cursor in the minibuffer prompt
@@ -269,11 +269,13 @@
 (use-package orderless
   :init
   (setq completion-styles '(orderless basic substring partial-completion flex)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package consult
   :config
+  (add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
+  (add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode-check-buffers)
   (recentf-mode)
   :general 
   (leader-def
@@ -308,22 +310,22 @@
   :ensure t
   :init
   (when (and (system-is-mswindows) (executable-find "find")
-               (not (file-in-directory-p
-                     (executable-find "find") "C:\\Windows")))
+	     (not (file-in-directory-p
+		   (executable-find "find") "C:\\Windows")))
     (setq projectile-indexing-method 'alien
-          projectile-generic-command "find . -type f")
-          projectile-project-search-path '("~/dotfiles" "F:\\")
-          projectile-sort-order 'recently-active
-          projectile-enable-caching t
-          projectile-require-project-root t
-          projectile-current-project-on-switch t
-          projectile-switch-project-action #'projectile-find-file
-  )
+	  projectile-generic-command "find . -type f")
+    projectile-project-search-path '("~/dotfiles" "F:\\")
+    projectile-sort-order 'recently-active
+    projectile-enable-caching t
+    projectile-require-project-root t
+    projectile-current-project-on-switch t
+    projectile-switch-project-action #'projectile-find-file
+    )
   :config
   (projectile-mode)
   :general 
   (leader-def
-  :wk-full-keys nil
+    :wk-full-keys nil
     "p"       (cons "projects" (make-sparse-keymap))
     "pp" '(projectile-persp-switch-project :wk "Switch project")
     "pf" '(consult-project-buffer :wk "Project files")
@@ -395,10 +397,11 @@
   (setq lsp-modeline-diagnostics-enable t
 	lsp-modeline-code-actions-mode t
 	lsp-headerline-breadcrumb-mode t
-lsp-warn-no-matched-clients nil
+	lsp-warn-no-matched-clients nil
+	lsp-keymap-prefix "SPC l"
 	lsp-enable-suggest-server-download t)
   :hook ((prog-mode . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration))
+	 (lsp-mode . lsp-enable-which-key-integration))
   :commands (lsp lsp-deferred))
 
 (use-package lsp-ui :commands lsp-ui-mode)
@@ -413,8 +416,13 @@ lsp-warn-no-matched-clients nil
 (use-package flycheck
   :init (global-flycheck-mode))
 
+(use-package lispy
+  :hook
+  (emacs-lisp-mode . lispy-mode)
+  (org-mode . lispy-mode))
+
 (use-package toc-org
-    :hook (org-mode . toc-org-mode))
+  :hook (org-mode . toc-org-mode))
 
 (use-package org-modern
   :init
@@ -448,26 +456,26 @@ lsp-warn-no-matched-clients nil
 (set-frame-font "FiraCode NF-11")
 
 (use-package dashboard
-:elpaca t
-:init
-(setq
-dashboard-startup-banner 'official
-dashboard-projects-backend 'projectile
-dashboard-center-content t
-dashboard-icon-type 'nerd-icons
-dashboard-set-heading-icons t
-dashboard-set-file-icons t
-dashboard-show-shortcuts nil
-dashboard-set-init-info t
-dashboard-footer-messages '("Dashboard is pretty cool!")
-dashboard-projects-switch-function 'projectile-persp-switch-project)
-(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-(setq dashboard-items '((recents  . 5)
-		    (projects . 5)))
-:config
-(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
-(dashboard-setup-startup-hook))
+  :elpaca t
+  :init
+  (setq
+   dashboard-startup-banner 'official
+   dashboard-projects-backend 'projectile
+   dashboard-center-content t
+   dashboard-icon-type 'nerd-icons
+   dashboard-set-heading-icons t
+   dashboard-set-file-icons t
+   dashboard-show-shortcuts nil
+   dashboard-set-init-info t
+   dashboard-footer-messages '("Dashboard is pretty cool!")
+   dashboard-projects-switch-function 'projectile-persp-switch-project)
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  (setq dashboard-items '((recents  . 5)
+			  (projects . 5)))
+  :config
+  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+  (dashboard-setup-startup-hook))
 
 (use-package nerd-icons)
 (use-package all-the-icons)
