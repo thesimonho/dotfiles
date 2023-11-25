@@ -64,3 +64,23 @@
   (marginalia-mode))
 
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-delay 0.0)
+  (corfu-quit-at-boundary 'separator)   ;; Never quit at completion boundary
+  (corfu-quit-no-match t)
+  (corfu-echo-documentation 0.0)
+  (corfu-preselect 'directory)      ;; Preselect the prompt
+  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  :general
+  (corfu-map
+	    "TAB" 'corfu-next
+	    [tab] 'corfu-next
+	    "S-TAB" 'corfu-previous
+	    [backtab] 'corfu-previous))

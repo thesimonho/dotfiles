@@ -3,6 +3,7 @@
       user-mail-address "simonho.ubc@gmail.com")
 
 (setq gc-cons-threshold 100000000
+      read-process-output-max (* 1024 1024)
       warning-minimum-level :error
       ring-bell-function 'ignore
       visible-bell t

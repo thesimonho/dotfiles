@@ -58,3 +58,4 @@
 (load "completion")
 (load "projects")
 (load "navigation")
+(load "lsp")
