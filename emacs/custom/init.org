@@ -1,18 +1,45 @@
-(defun org-babel-tangle-config ()
-  (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle)
-      (message "%s tangled" buffer-file-name)))
+#+title: Emacs Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
+* Auto-tangle Configuration Files
 
-(add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
-		     (emacs-init-time "%.2f")
-		     gcs-done)))
+This snippet adds a hook to =org-mode= buffers so that =org-babel-tangle-config= gets executed each time such a buffer gets saved.  This function checks to see if the file being saved is the init file, and if so, automatically exports the configuration here to the associated output files.
+Must be evaluated at least once.
 
-(setq use-package-compute-statistics t)
+#+begin_src emacs-lisp
+  (defun org-babel-tangle-config ()
+    (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
+      (let ((org-confirm-babel-evaluate nil))
+	(org-babel-tangle)
+	(message "%s tangled" buffer-file-name)))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
+#+end_src
+
+#+RESULTS:
+| (lambda nil (add-hook 'after-save-hook #'org-babel-tangle-config)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] |
+
+* Profile Emacs startup
+
+Adds a hook to profile Emacs startup time.
+
+Also computes startup statistics for packages. Check the stats using `use-package-report`.
+
+#+begin_src emacs-lisp
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (message "*** Emacs loaded in %s seconds with %d garbage collections."
+		       (emacs-init-time "%.2f")
+		       gcs-done)))
+
+  (setq use-package-compute-statistics t)
+#+end_src
+
+* Package management
+
+Use elpaca for package management
+
+#+begin_src emacs-lisp
 
 (defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -60,41 +87,59 @@
 
 ;; Block until current queue processed.
 (elpaca-wait)
+#+end_src
 
+* User config
+
+#+begin_src emacs-lisp
 (setq user-full-name "Simon Ho"
       user-mail-address "simonho.ubc@gmail.com")
+#+end_src
+ 
+* Emacs settings
 
-;; Maximize the Emacs frame at startup
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+#+begin_src emacs-lisp
+  ;; Maximize the Emacs frame at startup
+  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-(setq gc-cons-threshold 100000000
-      read-process-output-max (* 1024 1024)
-      warning-minimum-level :error
-      ring-bell-function 'ignore
-      visible-bell t
-      sentence-end-double-space nil
-      save-interprogram-paste-before-kill t
-      use-dialog-box nil
-      compilation-scroll-output 'first-error
-      use-short-answers t
-      fast-but-imprecise-scrolling t
-      make-backup-files nil
-      auto-save-default nil
-      create-lockfiles nil
-      auto-revert-mode t
-      sentence-end-double-space nil
-      delete-selection-mode t
-      column-number-mode t
-      tool-bar-mode 0
-      use-dialog-box nil
-      set-charset-priority 'unicode
-      prefer-coding-system 'utf-8-unix)
+  (setq gc-cons-threshold 100000000
+	read-process-output-max (* 1024 1024)
+	warning-minimum-level :error
+	ring-bell-function 'ignore
+	visible-bell t
+	sentence-end-double-space nil
+	save-interprogram-paste-before-kill t
+	use-dialog-box nil
+	compilation-scroll-output 'first-error
+	use-short-answers t
+	fast-but-imprecise-scrolling t
+	make-backup-files nil
+	auto-save-default nil
+	create-lockfiles nil
+	auto-revert-mode t
+	sentence-end-double-space nil
+	delete-selection-mode t
+	column-number-mode t
+	tool-bar-mode 0
+	use-dialog-box nil
+	set-charset-priority 'unicode
+	prefer-coding-system 'utf-8-unix)
+#+end_src
 
+* Native compilation
+
+#+begin_src emacs-lisp
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+#+end_src
+
+
+* Evil
+
+#+begin_src emacs-lisp
 
 (use-package evil
   :demand t
@@ -121,7 +166,11 @@
 
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
+#+end_src
 
+* Which key
+
+#+begin_src emacs-lisp
 (use-package which-key
   :demand t
   :init
@@ -132,6 +181,11 @@
     which-key-add-column-padding 1
     which-key-max-display-columns 4)
   (which-key-mode))
+#+end_src
+
+* Key bindings
+
+#+begin_src emacs-lisp
 
 (use-package general
   :demand t
@@ -215,7 +269,15 @@
 (general-define-key
  :keymaps 'insert
  "C-v" 'yank)
+#+end_src
 
+* Completion
+
+** Corfu
+
+Inbuffer completion with corfu
+
+#+begin_src emacs-lisp
 (use-package corfu
   :custom
   (corfu-cycle t)
@@ -235,7 +297,13 @@
 	    [tab] 'corfu-next
 	    "S-TAB" 'corfu-previous
 	    [backtab] 'corfu-previous))
+#+end_src
 
+** Vertico stack
+
+Minibuffer completion with Vertico et al.
+
+#+begin_src emacs-lisp
 (use-package vertico
   :init
   (setq read-file-name-completion-ignore-case t
@@ -300,6 +368,13 @@
   (marginalia-mode))
 
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+#+end_src
+
+* Project management
+
+Projectile + perspective
+
+#+begin_src emacs-lisp
 
 (defun system-is-mswindows ()
   (eq system-type 'windows-nt))
@@ -348,7 +423,13 @@
 (use-package persp-projectile
   :ensure t
   :after (projectile perspective))
+#+end_src
 
+* Editor navigation
+
+File tree, tabs, minimaps etc
+
+#+begin_src emacs-lisp
 (use-package treemacs
   :ensure t
   :init
@@ -389,7 +470,11 @@
   :config
   (centaur-tabs-mode t)
   (centaur-tabs-headline-match))
+#+end_src
 
+* LSP goodness
+
+#+begin_src emacs-lisp
 (use-package lsp-mode
   :init
   (setq lsp-modeline-diagnostics-enable t
@@ -413,6 +498,13 @@ lsp-warn-no-matched-clients nil
 (use-package flycheck
   :init (global-flycheck-mode))
 
+#+end_src
+
+* Aesthetics
+
+Fonts, icons, and things
+
+#+begin_src emacs-lisp
 (set-frame-font "FiraCode NF-11")
 
 (use-package all-the-icons)
@@ -430,3 +522,4 @@ lsp-warn-no-matched-clients nil
   :ensure t)
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+#+end_src
