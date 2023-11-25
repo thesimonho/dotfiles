@@ -457,6 +457,10 @@
 "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
 "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
 
+(use-package autothemer
+  :config
+  (load-theme 'kanagawa t))
+
 (set-frame-font "FiraCode NF-11")
 
 (use-package dashboard

@@ -28,7 +28,7 @@ if ((!Test-Path $env:USERPROFILE\.emacs.d\layers)) {
     Write-Host "Symlinking emacs config..."
     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\init.el -Force
     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\early-init.el -Force
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\layers -Target $env:USERPROFILE\dotfiles\emacs\custom\layers -Force
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\kanagawa-theme.el -Target $env:USERPROFILE\dotfiles\emacs\custom\kanagawa-theme.el -Force
 }
 #-----------------------------------------------------
 # Set default shell
