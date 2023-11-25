@@ -6,11 +6,11 @@
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
-(add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
-		     (emacs-init-time "%.2f")
-		     gcs-done)))
+;; (add-hook 'emacs-startup-hook
+;; 	  (lambda ()
+;; 	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
+;; 		     (emacs-init-time "%.2f")
+;; 		     gcs-done)))
 
 (setq use-package-compute-statistics t)
 
@@ -100,7 +100,7 @@
   :demand t
   :init
   (setq evil-want-integration t
-        evil-want-keybinding t
+        evil-want-keybinding nil
         evil-symbol-word-search t
         evil-ex-search-vim-style-regexp t
         evil-want-C-u-scroll t
@@ -283,7 +283,7 @@
     "bd" '(persp-kill-buffer :wk "delete buffer")
 
     "f"       (cons "files" (make-sparse-keymap))
-    "fed"       (cons "files" (lambda () (interactive) (consult-find "~/.emacs.d")))
+    "fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
     "fs" '(save-buffer :wk "Save") 
     "ff" '(consult-dir :wk "find file")
     "fr" '(consult-recent-file :wk "recent files")
@@ -447,18 +447,41 @@ lsp-warn-no-matched-clients nil
 
 (set-frame-font "FiraCode NF-11")
 
+(use-package dashboard
+:elpaca t
+:init
+(setq
+dashboard-startup-banner 'official
+dashboard-projects-backend 'projectile
+dashboard-center-content t
+dashboard-icon-type 'nerd-icons
+dashboard-set-heading-icons t
+dashboard-set-file-icons t
+dashboard-show-shortcuts nil
+dashboard-set-init-info t
+dashboard-footer-messages '("Dashboard is pretty cool!")
+dashboard-projects-switch-function 'projectile-persp-switch-project)
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+(setq dashboard-items '((recents  . 5)
+		    (projects . 5)))
+:config
+(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+(dashboard-setup-startup-hook))
+
+(use-package nerd-icons)
 (use-package all-the-icons)
 
 (use-package all-the-icons-completion
-  :after all-the-icons
-  :init (all-the-icons-completion-mode))
+    :after all-the-icons
+    :init (all-the-icons-completion-mode))
 
 (use-package all-the-icons-dired
-  :after all-the-icons
-  :hook (dired-mode . all-the-icons-dired-mode))
+    :after all-the-icons
+    :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package treemacs-all-the-icons
-  :after (treemacs all-the-icons)
-  :ensure t)
+    :after (treemacs all-the-icons)
+    :ensure t)
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
