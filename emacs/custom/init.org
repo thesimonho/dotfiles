@@ -150,6 +150,7 @@ Use elpaca for package management
 
 	(setq-default tab-width 2)
 	
+	(blink-cursor-mode 0)
 	(set-fringe-mode 10)
 	(tool-bar-mode -1)
 	(scroll-bar-mode -1)
@@ -305,12 +306,12 @@ Make editing easier
 	  evil-want-fine-undo t
 	  evil-v$-excludes-newline t)
 
-    (setq evil-normal-state-cursor  '("DarkGoldenrod2" box)
-	  evil-insert-state-cursor  '("chartreuse3" (bar . 2))
-	  evil-emacs-state-cursor   '("SkyBlue2" box)
-	  evil-replace-state-cursor '("chocolate" (hbar . 2))
-	  evil-visual-state-cursor  '("gray" (hbar . 2))
-	  evil-motion-state-cursor  '("plum3" box))
+    (setq evil-normal-state-cursor  '("#FF9E3B" box)
+	  evil-insert-state-cursor  '("#C34043" (bar . 2))
+	  evil-emacs-state-cursor   '("#FF9E3B" box)
+	  evil-replace-state-cursor '("#C34043" (hbar . 2))
+	  evil-visual-state-cursor  '("#76946A" (hbar . 2))
+	  evil-motion-state-cursor  '("#FF9E3B" box))
 
     (evil-set-undo-system 'undo-redo)
     (evil-mode 1))
@@ -397,6 +398,8 @@ Make editing easier
 		"wu"      'winner-undo
 		"wU"      'winner-redo
 		"wv"      'split-window-horizontally
+		"wn"			'clone-frame
+		"wo"			'other-frame
 
 		"q"       (cons "quit" (make-sparse-keymap))
 		"qd"      'restart-emacs-debug-init

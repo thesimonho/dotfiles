@@ -91,6 +91,7 @@
 
 (setq-default tab-width 2)
 
+(blink-cursor-mode 0)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -211,12 +212,12 @@ user-mail-address "simonho.ubc@gmail.com")
 	evil-want-fine-undo t
 	evil-v$-excludes-newline t)
 
-  (setq evil-normal-state-cursor  '("DarkGoldenrod2" box)
-	evil-insert-state-cursor  '("chartreuse3" (bar . 2))
-	evil-emacs-state-cursor   '("SkyBlue2" box)
-	evil-replace-state-cursor '("chocolate" (hbar . 2))
-	evil-visual-state-cursor  '("gray" (hbar . 2))
-	evil-motion-state-cursor  '("plum3" box))
+  (setq evil-normal-state-cursor  '("#FF9E3B" box)
+	evil-insert-state-cursor  '("#C34043" (bar . 2))
+	evil-emacs-state-cursor   '("#FF9E3B" box)
+	evil-replace-state-cursor '("#C34043" (hbar . 2))
+	evil-visual-state-cursor  '("#76946A" (hbar . 2))
+	evil-motion-state-cursor  '("#FF9E3B" box))
 
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
@@ -294,6 +295,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	"wu"      'winner-undo
 	"wU"      'winner-redo
 	"wv"      'split-window-horizontally
+	"wn"			'clone-frame
+	"wo"			'other-frame
 
 	"q"       (cons "quit" (make-sparse-keymap))
 	"qd"      'restart-emacs-debug-init
@@ -629,16 +632,3 @@ user-mail-address "simonho.ubc@gmail.com")
   "i"       (cons "insert" (make-sparse-keymap))
   "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
   "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-	 '("15558f17ee1bc591275ce300f129046446fb175ef875d5536737dd039080dbe5" "36248fac642449e8e0bfd34a003a8e6b6ebc98d08f48a6dd75e15d7d412320e1" default)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
