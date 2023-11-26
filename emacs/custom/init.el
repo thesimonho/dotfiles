@@ -501,11 +501,15 @@
   :hook
   (org-mode . global-org-modern-mode))
 
+(use-package evil-org
+  :hook (org-mode . evil-org-mode)
+  :config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))
+
 (major-mode-def
-:keymaps 'org-mode-map
-:wk-full-keys nil
-"o" '(org-open-at-point :wk "open link")
-"x" '(org-babel-execute-src-block :wk "execute block")
-"i"       (cons "insert" (make-sparse-keymap))
-"is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
-"it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+  :keymaps 'org-mode-map
+  :wk-full-keys nil
+  "o" '(org-open-at-point :wk "open link")
+  "x" '(org-babel-execute-src-block :wk "execute block")
+  "i"       (cons "insert" (make-sparse-keymap))
+  "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
+  "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
