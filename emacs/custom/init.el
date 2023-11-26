@@ -7,12 +7,15 @@
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 ;; (add-hook 'emacs-startup-hook
-  ;; 	  (lambda ()
-  ;; 	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
-  ;; 		     (emacs-init-time "%.2f")
-  ;; 		     gcs-done)))
-
-(setq use-package-compute-statistics t)
+    ;; 	  (lambda ()
+    ;; 	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
+    ;; 		     (emacs-init-time "%.2f")
+    ;; 		     gcs-done)))
+  
+(setq use-package-verbose nil		; don't print anything
+      use-package-compute-statistics t ; compute statistics about package initialization
+      use-package-minimum-reported-time 0.0001
+      use-package-always-defer t)	; always defer, don't "require", except when :demand
 
 (defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -61,9 +64,6 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
-(setq user-full-name "Simon Ho"
-      user-mail-address "simonho.ubc@gmail.com")
-
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
@@ -74,7 +74,6 @@
       visible-bell t
       sentence-end-double-space nil
       save-interprogram-paste-before-kill t
-      use-dialog-box nil
       compilation-scroll-output 'first-error
       use-short-answers t
       fast-but-imprecise-scrolling t
@@ -82,6 +81,7 @@
       auto-save-default nil
       create-lockfiles nil
       auto-revert-mode t
+      revert-without-query t
       sentence-end-double-space nil
       delete-selection-mode t
       column-number-mode t
@@ -95,6 +95,59 @@
 
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+
+(setq user-full-name "Simon Ho"
+      user-mail-address "simonho.ubc@gmail.com")
+
+(use-package autothemer
+  :demand t
+  :config
+  (load-theme 'kanagawa t))
+
+(set-frame-font "FiraCode NF-11")
+
+(use-package nerd-icons
+  :demand t)
+
+(use-package nerd-icons-dired
+  :after nerd-icons
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+(use-package nerd-icons-completion
+  :after (nerd-icons marginalia)
+  :config
+  (nerd-icons-completion-mode))
+
+(use-package treemacs-nerd-icons
+  :after (nerd-icons treemacs)
+  :config
+  (treemacs-load-theme "nerd-icons"))
+
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+(use-package dashboard
+  :demand t
+  :after projectile
+  :init
+  (setq
+   dashboard-startup-banner 'official
+   dashboard-projects-backend 'projectile
+   dashboard-center-content t
+   dashboard-icon-type 'nerd-icons
+   dashboard-set-heading-icons t
+   dashboard-set-file-icons t
+   dashboard-show-shortcuts nil
+   dashboard-set-init-info t
+   dashboard-footer-messages '("Dashboard is pretty cool!")
+   dashboard-projects-switch-function 'projectile-persp-switch-project)
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+  (setq dashboard-items '((recents  . 5)
+			  (projects . 5)))
+  :config
+  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+  (dashboard-setup-startup-hook))
 
 (use-package evil
   :demand t
@@ -214,100 +267,11 @@
  :keymaps 'insert
  "C-v" 'yank)
 
-(use-package corfu
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-auto-delay 0.0)
-  (corfu-quit-at-boundary 'separator)   
-  (corfu-quit-no-match t)
-  (corfu-echo-documentation 0.0)
-  (corfu-preselect 'directory)      
-  (corfu-on-exact-match 'quit)    
-  :init
-  (global-corfu-mode)
-  (corfu-history-mode)
-  (setq corfu-popupinfo-delay 0.2)
-  (corfu-popupinfo-mode)
-  :general
-  (corfu-map
-   "TAB" 'corfu-next
-   [tab] 'corfu-next
-   "S-TAB" 'corfu-previous
-   [backtab] 'corfu-previous))
-
-(use-package vertico
-  :init
-  (setq read-file-name-completion-ignore-case t
-	read-buffer-completion-ignore-case t
-	completion-ignore-case t)
-  (vertico-mode)
-  (savehist-mode)
-
-  :general (:keymaps 'vertico-map
-		     "C-j" 'vertico-next
-		     "C-k" 'vertico-previous))
-
-;; Add prompt indicator to `completing-read-multiple'.
-(defun crm-indicator (args)
-  (cons (format "[CRM%s] %s"
-		(replace-regexp-in-string
-		 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-		 crm-separator)
-		(car args))
-	(cdr args)))
-(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-;; Do not allow the cursor in the minibuffer prompt
-(setq minibuffer-prompt-properties
-      '(read-only t cursor-intangible t face minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-;; Enable recursive minibuffers
-(setq enable-recursive-minibuffers t)
-
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless basic substring partial-completion flex)
-	completion-category-defaults nil
-	completion-category-overrides '((file (styles partial-completion)))))
-
-(use-package consult
-  :config
-  (add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
-  (add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode-check-buffers)
-  (recentf-mode)
-  :general 
-  (leader-def
-  :wk-full-keys nil
-    "b"       (cons "buffers" (make-sparse-keymap))
-    "bb" '(persp-switch-to-buffer :wk "find buffer")
-    "bd" '(persp-kill-buffer :wk "delete buffer")
-
-    "f"       (cons "files" (make-sparse-keymap))
-    "fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
-    "fs" '(save-buffer :wk "Save") 
-    "ff" '(consult-dir :wk "find file")
-    "fr" '(consult-recent-file :wk "recent files")
-    "fg" '(consult-ripgrep :wk "grep")
-    "ft" '(treemacs :wk "file tree")
-))
-
-(use-package consult-dir
-  :ensure t)
-
-(use-package marginalia
-  :ensure t
-  :init
-  (marginalia-mode))
-
-(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
-
 (defun system-is-mswindows ()
   (eq system-type 'windows-nt))
 
 (use-package projectile
-  :ensure t
+  :demand t
   :init
   (when (and (system-is-mswindows) (executable-find "find")
 	     (not (file-in-directory-p
@@ -341,18 +305,106 @@
     ))
 
 (use-package perspective
-  :ensure t
+  :demand t
   :config
   (setq persp-initial-frame-name "default")
   (setq persp-suppress-no-prefix-key-warning t)
   (persp-mode))
 
 (use-package persp-projectile
-  :ensure t
+  :demand t
   :after (projectile perspective))
 
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto-delay 0.0)
+  (corfu-quit-at-boundary 'separator)   
+  (corfu-quit-no-match t)
+  (corfu-echo-documentation 0.0)
+  (corfu-preselect 'directory)      
+  (corfu-on-exact-match 'quit)    
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (setq corfu-popupinfo-delay 0.2)
+  (corfu-popupinfo-mode)
+  :general
+  (corfu-map
+   "TAB" 'corfu-next
+   [tab] 'corfu-next
+   "S-TAB" 'corfu-previous
+   [backtab] 'corfu-previous))
+
+(use-package vertico
+    :init
+    (setq read-file-name-completion-ignore-case t
+	  read-buffer-completion-ignore-case t
+	  completion-ignore-case t
+	  vertico-resize t)
+    (vertico-mode)
+    :general (:keymaps 'vertico-map
+		       "C-j" 'vertico-next
+		       "C-k" 'vertico-previous))
+
+  ;; Add prompt indicator to `completing-read-multiple'.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+		  (replace-regexp-in-string
+		   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		   crm-separator)
+		  (car args))
+	  (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+	'(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t)
+
+  (use-package orderless
+    :demand t
+    :config
+    (setq completion-styles '(orderless basic substring partial-completion flex)
+	  completion-category-defaults nil
+	  completion-category-overrides '((file (styles partial-completion)))))
+
+  (use-package consult
+    :config
+    (add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
+    (add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode-check-buffers)
+    (recentf-mode)
+    :general 
+    (leader-def
+    :wk-full-keys nil
+      "b"       (cons "buffers" (make-sparse-keymap))
+      "bb" '(persp-switch-to-buffer :wk "find buffer")
+      "bd" '(persp-kill-buffer :wk "delete buffer")
+
+      "f"       (cons "files" (make-sparse-keymap))
+      "fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
+      "fs" '(save-buffer :wk "Save") 
+      "ff" '(consult-dir :wk "find file")
+      "fr" '(consult-recent-file :wk "recent files")
+      "fg" '(consult-ripgrep :wk "grep")
+      "ft" '(treemacs :wk "file tree")
+  ))
+
+  (use-package consult-dir)
+
+  (use-package marginalia
+    :defer 1
+    :config
+    (marginalia-mode))
+
+(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+
 (use-package treemacs
-  :ensure t
+  :demand t
   :init
   (setq treemacs-python-executable "~/anaconda3/python.exe")
   :config
@@ -364,20 +416,18 @@
   (treemacs-git-commit-diff-mode t))
 
 (use-package treemacs-evil
-  :after (treemacs evil)
-  :ensure t)
+  :demand t
+  :after (treemacs evil))
 
 (use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
+  :after (treemacs projectile))
 
 (use-package treemacs-perspective
   :after (treemacs perspective)
-  :ensure t
   :config (treemacs-set-scope-type 'Perspectives))
 
 (use-package centaur-tabs
-  :ensure t
+  :demand t
   :init
   (setq centaur-tabs-style "bar"
 	centaur-tabs-height 32
@@ -422,8 +472,11 @@
 
 (use-package lispy
   :hook
-  (emacs-lisp-mode . lispy-mode)
-  (org-mode . lispy-mode))
+  ((emacs-lisp-mode org-mode). lispy-mode))
+
+(use-package lispyville
+  :hook
+  (lispy-mode . lispyville-mode))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
@@ -445,8 +498,8 @@
   ;; Agenda styling
   org-agenda-tags-column 0
   org-agenda-block-separator ?-)
-  :config
-  (global-org-modern-mode))
+  :hook
+  (org-mode . global-org-modern-mode))
 
 (major-mode-def
 :keymaps 'org-mode-map
@@ -456,48 +509,3 @@
 "i"       (cons "insert" (make-sparse-keymap))
 "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
 "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
-
-(use-package autothemer
-  :config
-  (load-theme 'kanagawa t))
-
-(set-frame-font "FiraCode NF-11")
-
-(use-package dashboard
-  :elpaca t
-  :init
-  (setq
-   dashboard-startup-banner 'official
-   dashboard-projects-backend 'projectile
-   dashboard-center-content t
-   dashboard-icon-type 'nerd-icons
-   dashboard-set-heading-icons t
-   dashboard-set-file-icons t
-   dashboard-show-shortcuts nil
-   dashboard-set-init-info t
-   dashboard-footer-messages '("Dashboard is pretty cool!")
-   dashboard-projects-switch-function 'projectile-persp-switch-project)
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  (setq dashboard-items '((recents  . 5)
-			  (projects . 5)))
-  :config
-  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
-  (dashboard-setup-startup-hook))
-
-(use-package nerd-icons)
-(use-package all-the-icons)
-
-(use-package all-the-icons-completion
-    :after all-the-icons
-    :init (all-the-icons-completion-mode))
-
-(use-package all-the-icons-dired
-    :after all-the-icons
-    :hook (dired-mode . all-the-icons-dired-mode))
-
-(use-package treemacs-all-the-icons
-    :after (treemacs all-the-icons)
-    :ensure t)
-
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)

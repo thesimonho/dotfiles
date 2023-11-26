@@ -5,22 +5,23 @@
 - [[#auto-tangle-configuration-files][Auto-tangle Configuration Files]]
 - [[#profile-emacs-startup][Profile Emacs startup]]
 - [[#package-management][Package management]]
-- [[#user-config][User config]]
 - [[#emacs-settings][Emacs settings]]
-- [[#native-compilation][Native compilation]]
+  - [[#native-compilation][Native compilation]]
+  - [[#user-config][User config]]
+- [[#aesthetics][Aesthetics]]
+- [[#dashboard][Dashboard]]
 - [[#evil][Evil]]
 - [[#which-key][Which key]]
 - [[#key-bindings][Key bindings]]
+- [[#project-management][Project management]]
 - [[#completion][Completion]]
   - [[#corfu][Corfu]]
   - [[#vertico-stack][Vertico stack]]
-- [[#project-management][Project management]]
 - [[#editor-navigation][Editor navigation]]
 - [[#lsp-goodness][LSP goodness]]
 - [[#languages][Languages]]
   - [[#emacs-lisp][Emacs lisp]]
 - [[#org-mode][Org mode]]
-- [[#aesthetics][Aesthetics]]
 
 * Auto-tangle Configuration Files
 
@@ -37,9 +38,6 @@ Must be evaluated at least once.
   (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 #+end_src
 
-#+RESULTS:
-| (lambda nil (add-hook 'after-save-hook #'org-babel-tangle-config)) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-fold-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes | #[0 \301\211\207 [imenu-create-index-function org-imenu-get-tree] 2] |
-
 * Profile Emacs startup
 
 Adds a hook to profile Emacs startup time. Commented out as dashboard also provides startup time
@@ -53,8 +51,11 @@ Also computes startup statistics for packages. Check the stats using `use-packag
     ;; 		     (emacs-init-time "%.2f")
     ;; 		     gcs-done)))
   
-  (setq use-package-compute-statistics t)
-#+end_src
+(setq use-package-verbose nil		; don't print anything
+      use-package-compute-statistics t ; compute statistics about package initialization
+      use-package-minimum-reported-time 0.0001
+      use-package-always-defer t)	; always defer, don't "require", except when :demand
+      #+end_src
 
 * Package management
 
@@ -110,13 +111,6 @@ Use elpaca for package management
   (elpaca-wait)
 #+end_src
 
-* User config
-
-#+begin_src emacs-lisp
-  (setq user-full-name "Simon Ho"
-	user-mail-address "simonho.ubc@gmail.com")
-#+end_src
- 
 * Emacs settings
 
 #+begin_src emacs-lisp
@@ -130,7 +124,6 @@ Use elpaca for package management
 	visible-bell t
 	sentence-end-double-space nil
 	save-interprogram-paste-before-kill t
-	use-dialog-box nil
 	compilation-scroll-output 'first-error
 	use-short-answers t
 	fast-but-imprecise-scrolling t
@@ -138,6 +131,7 @@ Use elpaca for package management
 	auto-save-default nil
 	create-lockfiles nil
 	auto-revert-mode t
+	revert-without-query t
 	sentence-end-double-space nil
 	delete-selection-mode t
 	column-number-mode t
@@ -147,7 +141,7 @@ Use elpaca for package management
 	prefer-coding-system 'utf-8-unix)
 #+end_src
 
-* Native compilation
+** Native compilation
 
 #+begin_src emacs-lisp
 ;; Silence compiler warnings as they can be pretty disruptive
@@ -157,6 +151,72 @@ Use elpaca for package management
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 #+end_src
 
+** User config
+
+#+begin_src emacs-lisp
+  (setq user-full-name "Simon Ho"
+	user-mail-address "simonho.ubc@gmail.com")
+#+end_src
+ 
+* Aesthetics
+
+Fonts, icons, and things
+
+#+begin_src emacs-lisp
+  (use-package autothemer
+    :demand t
+    :config
+    (load-theme 'kanagawa t))
+
+  (set-frame-font "FiraCode NF-11")
+
+  (use-package nerd-icons
+    :demand t)
+
+  (use-package nerd-icons-dired
+    :after nerd-icons
+    :hook
+    (dired-mode . nerd-icons-dired-mode))
+
+  (use-package nerd-icons-completion
+    :after (nerd-icons marginalia)
+    :config
+    (nerd-icons-completion-mode))
+
+  (use-package treemacs-nerd-icons
+    :after (nerd-icons treemacs)
+    :config
+    (treemacs-load-theme "nerd-icons"))
+
+  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+#+end_src
+
+* Dashboard
+
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :demand t
+    :after projectile
+    :init
+    (setq
+     dashboard-startup-banner 'official
+     dashboard-projects-backend 'projectile
+     dashboard-center-content t
+     dashboard-icon-type 'nerd-icons
+     dashboard-set-heading-icons t
+     dashboard-set-file-icons t
+     dashboard-show-shortcuts nil
+     dashboard-set-init-info t
+     dashboard-footer-messages '("Dashboard is pretty cool!")
+     dashboard-projects-switch-function 'projectile-persp-switch-project)
+    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+    (setq dashboard-items '((recents  . 5)
+			    (projects . 5)))
+    :config
+    (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+    (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+    (dashboard-setup-startup-hook))
+#+end_src
 
 * Evil
 
@@ -290,6 +350,61 @@ Use elpaca for package management
    "C-v" 'yank)
 #+end_src
 
+* Project management
+
+Projectile + perspective
+
+#+begin_src emacs-lisp
+
+  (defun system-is-mswindows ()
+    (eq system-type 'windows-nt))
+
+  (use-package projectile
+    :demand t
+    :init
+    (when (and (system-is-mswindows) (executable-find "find")
+	       (not (file-in-directory-p
+		     (executable-find "find") "C:\\Windows")))
+      (setq projectile-indexing-method 'alien
+	    projectile-generic-command "find . -type f")
+      projectile-project-search-path '("~/dotfiles" "F:\\")
+      projectile-sort-order 'recently-active
+      projectile-enable-caching t
+      projectile-require-project-root t
+      projectile-current-project-on-switch t
+      projectile-switch-project-action #'projectile-find-file
+      )
+    :config
+    (projectile-mode)
+    :general 
+    (leader-def
+      :wk-full-keys nil
+      "p"       (cons "projects" (make-sparse-keymap))
+      "pp" '(projectile-persp-switch-project :wk "Switch project")
+      "pf" '(consult-project-buffer :wk "Project files")
+      "pa" '(projectile-add-known-project :wk "Add project")
+      "pd" '(projectile-remove-known-project :wk "Remove project")
+      "p!" '(projectile-run-shell-command-in-root :wk "Run command in root")
+
+      "p1" '((lambda () (interactive) (persp-switch-by-number 1)) :wk "Project 1")
+      "p2" '((lambda () (interactive) (persp-switch-by-number 2)) :wk "Project 2")
+      "p3" '((lambda () (interactive) (persp-switch-by-number 3)) :wk "Project 3")
+      "p4" '((lambda () (interactive) (persp-switch-by-number 4)) :wk "Project 4")
+      "p5" '((lambda () (interactive) (persp-switch-by-number 5)) :wk "Project 5")
+      ))
+
+  (use-package perspective
+    :demand t
+    :config
+    (setq persp-initial-frame-name "default")
+    (setq persp-suppress-no-prefix-key-warning t)
+    (persp-mode))
+
+  (use-package persp-projectile
+    :demand t
+    :after (projectile perspective))
+#+end_src
+
 * Completion
 
 ** Corfu
@@ -329,10 +444,9 @@ Minibuffer completion with Vertico et al.
     :init
     (setq read-file-name-completion-ignore-case t
 	  read-buffer-completion-ignore-case t
-	  completion-ignore-case t)
+	  completion-ignore-case t
+	  vertico-resize t)
     (vertico-mode)
-    (savehist-mode)
-
     :general (:keymaps 'vertico-map
 		       "C-j" 'vertico-next
 		       "C-k" 'vertico-previous))
@@ -356,7 +470,8 @@ Minibuffer completion with Vertico et al.
   (setq enable-recursive-minibuffers t)
 
   (use-package orderless
-    :init
+    :demand t
+    :config
     (setq completion-styles '(orderless basic substring partial-completion flex)
 	  completion-category-defaults nil
 	  completion-category-overrides '((file (styles partial-completion)))))
@@ -382,70 +497,14 @@ Minibuffer completion with Vertico et al.
       "ft" '(treemacs :wk "file tree")
   ))
 
-  (use-package consult-dir
-    :ensure t)
+  (use-package consult-dir)
 
   (use-package marginalia
-    :ensure t
-    :init
+    :defer 1
+    :config
     (marginalia-mode))
 
-  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
-#+end_src
-
-* Project management
-
-Projectile + perspective
-
-#+begin_src emacs-lisp
-
-  (defun system-is-mswindows ()
-    (eq system-type 'windows-nt))
-
-  (use-package projectile
-    :ensure t
-    :init
-    (when (and (system-is-mswindows) (executable-find "find")
-	       (not (file-in-directory-p
-		     (executable-find "find") "C:\\Windows")))
-      (setq projectile-indexing-method 'alien
-	    projectile-generic-command "find . -type f")
-      projectile-project-search-path '("~/dotfiles" "F:\\")
-      projectile-sort-order 'recently-active
-      projectile-enable-caching t
-      projectile-require-project-root t
-      projectile-current-project-on-switch t
-      projectile-switch-project-action #'projectile-find-file
-      )
-    :config
-    (projectile-mode)
-    :general 
-    (leader-def
-      :wk-full-keys nil
-      "p"       (cons "projects" (make-sparse-keymap))
-      "pp" '(projectile-persp-switch-project :wk "Switch project")
-      "pf" '(consult-project-buffer :wk "Project files")
-      "pa" '(projectile-add-known-project :wk "Add project")
-      "pd" '(projectile-remove-known-project :wk "Remove project")
-      "p!" '(projectile-run-shell-command-in-root :wk "Run command in root")
-
-      "p1" '((lambda () (interactive) (persp-switch-by-number 1)) :wk "Project 1")
-      "p2" '((lambda () (interactive) (persp-switch-by-number 2)) :wk "Project 2")
-      "p3" '((lambda () (interactive) (persp-switch-by-number 3)) :wk "Project 3")
-      "p4" '((lambda () (interactive) (persp-switch-by-number 4)) :wk "Project 4")
-      "p5" '((lambda () (interactive) (persp-switch-by-number 5)) :wk "Project 5")
-      ))
-
-  (use-package perspective
-    :ensure t
-    :config
-    (setq persp-initial-frame-name "default")
-    (setq persp-suppress-no-prefix-key-warning t)
-    (persp-mode))
-
-  (use-package persp-projectile
-    :ensure t
-    :after (projectile perspective))
+(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 #+end_src
 
 * Editor navigation
@@ -454,7 +513,7 @@ File tree, tabs, minimaps etc
 
 #+begin_src emacs-lisp
   (use-package treemacs
-    :ensure t
+    :demand t
     :init
     (setq treemacs-python-executable "~/anaconda3/python.exe")
     :config
@@ -466,20 +525,18 @@ File tree, tabs, minimaps etc
     (treemacs-git-commit-diff-mode t))
 
   (use-package treemacs-evil
-    :after (treemacs evil)
-    :ensure t)
+    :demand t
+    :after (treemacs evil))
 
   (use-package treemacs-projectile
-    :after (treemacs projectile)
-    :ensure t)
+    :after (treemacs projectile))
 
   (use-package treemacs-perspective
     :after (treemacs perspective)
-    :ensure t
     :config (treemacs-set-scope-type 'Perspectives))
 
   (use-package centaur-tabs
-    :ensure t
+    :demand t
     :init
     (setq centaur-tabs-style "bar"
 	  centaur-tabs-height 32
@@ -534,11 +591,14 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 ** Emacs lisp
 
 #+begin_src emacs-lisp
-    (use-package lispy
-      :hook
-      (emacs-lisp-mode . lispy-mode)
-      (org-mode . lispy-mode))
-#+end_src
+  (use-package lispy
+    :hook
+    ((emacs-lisp-mode org-mode). lispy-mode))
+
+  (use-package lispyville
+    :hook
+    (lispy-mode . lispyville-mode))
+      #+end_src
 
 * Org mode
 
@@ -563,8 +623,8 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
       ;; Agenda styling
       org-agenda-tags-column 0
       org-agenda-block-separator ?-)
-      :config
-      (global-org-modern-mode))
+      :hook
+      (org-mode . global-org-modern-mode))
 
     (major-mode-def
     :keymaps 'org-mode-map
@@ -574,57 +634,4 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
     "i"       (cons "insert" (make-sparse-keymap))
     "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
     "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
-#+end_src
-
-#+RESULTS:
-
-* Aesthetics
-
-Fonts, icons, and things
-
-#+begin_src emacs-lisp
-  (use-package autothemer
-    :config
-    (load-theme 'kanagawa t))
-    
-  (set-frame-font "FiraCode NF-11")
-
-  (use-package dashboard
-    :elpaca t
-    :init
-    (setq
-     dashboard-startup-banner 'official
-     dashboard-projects-backend 'projectile
-     dashboard-center-content t
-     dashboard-icon-type 'nerd-icons
-     dashboard-set-heading-icons t
-     dashboard-set-file-icons t
-     dashboard-show-shortcuts nil
-     dashboard-set-init-info t
-     dashboard-footer-messages '("Dashboard is pretty cool!")
-     dashboard-projects-switch-function 'projectile-persp-switch-project)
-    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-    (setq dashboard-items '((recents  . 5)
-			    (projects . 5)))
-    :config
-    (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-    (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
-    (dashboard-setup-startup-hook))
-
-  (use-package nerd-icons)
-  (use-package all-the-icons)
-
-  (use-package all-the-icons-completion
-      :after all-the-icons
-      :init (all-the-icons-completion-mode))
-
-  (use-package all-the-icons-dired
-      :after all-the-icons
-      :hook (dired-mode . all-the-icons-dired-mode))
-
-  (use-package treemacs-all-the-icons
-      :after (treemacs all-the-icons)
-      :ensure t)
-
-  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+end_src
