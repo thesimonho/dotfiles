@@ -377,6 +377,12 @@
     :config
     (add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
     (add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode-check-buffers)
+    (consult-customize
+      consult-theme consult-ripgrep consult-git-grep consult-grep
+      consult-bookmark consult-recent-file consult-xref
+      consult--source-bookmark consult--source-file-register
+      consult--source-recent-file consult--source-project-recent-file
+      :preview-key '(:debounce 0.5 any))
     (recentf-mode)
     :general 
     (leader-def
