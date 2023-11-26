@@ -9,6 +9,7 @@
   - [[#native-compilation][Native compilation]]
   - [[#user-config][User config]]
 - [[#aesthetics][Aesthetics]]
+  - [[#modeline][Modeline]]
 - [[#dashboard][Dashboard]]
 - [[#evil][Evil]]
 - [[#which-key][Which key]]
@@ -114,32 +115,34 @@ Use elpaca for package management
 * Emacs settings
 
 #+begin_src emacs-lisp
-  ;; Maximize the Emacs frame at startup
-  (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+    ;; Maximize the Emacs frame at startup
+    (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-  (setq gc-cons-threshold 100000000
-	read-process-output-max (* 1024 1024)
-	warning-minimum-level :error
-	ring-bell-function 'ignore
-	visible-bell t
-	sentence-end-double-space nil
-	save-interprogram-paste-before-kill t
-	compilation-scroll-output 'first-error
-	use-short-answers t
-	fast-but-imprecise-scrolling t
-	make-backup-files nil
-	auto-save-default nil
-	create-lockfiles nil
-	auto-revert-mode t
-	revert-without-query t
-	sentence-end-double-space nil
-	delete-selection-mode t
-	column-number-mode t
-	tool-bar-mode 0
-	use-dialog-box nil
-	set-charset-priority 'unicode
-	prefer-coding-system 'utf-8-unix)
-#+end_src
+    (setq gc-cons-threshold 100000000
+	  read-process-output-max (* 1024 1024)
+	  warning-minimum-level :error
+	  ring-bell-function 'ignore
+	  visible-bell t
+	  sentence-end-double-space nil
+	  save-interprogram-paste-before-kill t
+	  compilation-scroll-output 'first-error
+	  use-short-answers t
+	  fast-but-imprecise-scrolling t
+	  make-backup-files nil
+	  auto-save-default nil
+	  create-lockfiles nil
+	  auto-revert-mode t
+	  revert-without-query t
+	  sentence-end-double-space nil
+	  delete-selection-mode t
+	  column-number-mode t
+	  use-dialog-box nil
+	  set-charset-priority 'unicode
+	  prefer-coding-system 'utf-8-unix)
+
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+  #+end_src
 
 ** Native compilation
 
@@ -190,6 +193,29 @@ Fonts, icons, and things
 
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+end_src
+
+** Modeline
+
+#+begin_src emacs-lisp
+  (use-package doom-modeline
+    :ensure t
+    :init
+    (setq doom-modeline-height 30
+	  doom-modeline-project-detection 'auto
+	  doom-modeline-buffer-modification-icon t
+	  doom-modeline-lsp-icon t
+	  doom-modeline-time-icon nil
+	  doom-modeline-highlight-modified-buffer-name t
+	  doom-modeline-position-column-line-format '("L%l:C%c")
+	  doom-modeline-minor-modes t
+	  doom-modeline-checker-simple-format nil
+	  doom-modeline-modal-icon t
+	  doom-modeline-modal-modern-icon t)
+    (doom-modeline-mode 1))
+#+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (25954 39985 688657 0) :use-package-secs (0 0 3128 0) :init (25954 39879 92267 0) :config (25954 39879 92260 0) :config-secs (0 0 2 0) :init-secs (0 0 81130 0)))
 
 * Dashboard
 

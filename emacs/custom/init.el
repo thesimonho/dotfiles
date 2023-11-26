@@ -85,10 +85,12 @@
       sentence-end-double-space nil
       delete-selection-mode t
       column-number-mode t
-      tool-bar-mode 0
       use-dialog-box nil
       set-charset-priority 'unicode
       prefer-coding-system 'utf-8-unix)
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
@@ -125,6 +127,22 @@
   (treemacs-load-theme "nerd-icons"))
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+(use-package doom-modeline
+  :ensure t
+  :init
+  (setq doom-modeline-height 30
+	doom-modeline-project-detection 'auto
+	doom-modeline-buffer-modification-icon t
+	doom-modeline-lsp-icon t
+	doom-modeline-time-icon nil
+	doom-modeline-highlight-modified-buffer-name t
+	doom-modeline-position-column-line-format '("L%l:C%c")
+	doom-modeline-minor-modes t
+	doom-modeline-checker-simple-format nil
+	doom-modeline-modal-icon t
+	doom-modeline-modal-modern-icon t)
+  (doom-modeline-mode 1))
 
 (use-package dashboard
   :demand t
