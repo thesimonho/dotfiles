@@ -20,7 +20,7 @@
 
   ;; Define our color palette
   (fujiWhite		"#DCD7BA" "#ffffff")
-  (old-white		"#C8C093" "#ffffff")
+  (oldWhite		"#C8C093" "#ffffff")
 
   (sumiInk-0		"#16161D" "#000000")
   (sumiInk-1b		"#181820" "#000000")
@@ -67,8 +67,8 @@
 
   ;; Customize faces
   (
-  (default                                       (:background sumiInk-1b :foreground fujiWhite))
-  (border                                        (:background sumiInk-1b :foreground sumiInk-0))
+  (default                                       (:background sumiInk-1 :foreground fujiWhite))
+  (border                                        (:background sumiInk-2 :foreground sumiInk-0))
   (button                                        (:foreground waveAqua2))
   (child-frame                                   (:background sumiInk-0 :foreground sumiInk-0))
   (child-frame-border                            (:background sumiInk-0 :foreground sumiInk-0))
@@ -87,12 +87,13 @@
   (lv-separator                                  (:foreground waveBlue-2 :background sumiInk-2))
   (match                                         (:background carpYellow :foreground sumiInk-0))
   (menu                                          (:background sumiInk-0 :foreground fujiWhite))
-  (mode-line                                     (:background sumiInk-0))
+  (mode-line                                     (:background sumiInk-3))
   (mode-line-inactive                            (:foreground sumiInk-4 :bold nil))
-  (mode-line-active                              (:background sumiInk-0 :foreground old-white :bold nil))
+  (mode-line-active                              (:background sumiInk-3 :foreground oldWhite :bold nil))
   (mode-line-highlight                           (:foreground boatYellow2))
   (mode-line-buffer-id                           (:foreground waveAqua2 :bold t))
   (numbers                                       (:background sakuraPink))
+  (persp-selected-face													 (:foreground autumnGreen))
   (region                                        (:background waveBlue-2))
   (separator-line                                (:background sumiInk-0))
   (shadow                                        (:background sumiInk-0))
@@ -139,13 +140,13 @@
   (doom-modeline-battery-full                    (:foreground waveAqua2))
   
   ;; Doom visual state
-  (doom-modeline-evil-motion-state               (:foreground lightBlue))
-  (doom-modeline-evil-emacs-state                (:foreground crystalBlue))
-  (doom-modeline-evil-insert-state               (:foreground peachRed))
-  (doom-modeline-evil-normal-state               (:foreground lightBlue))
-  (doom-modeline-evil-visual-state               (:foreground springGreen))
-  (doom-modeline-evil-replace-state              (:foreground roninYellow))
-  (doom-modeline-evil-operator-state             (:foreground crystalBlue))
+  (doom-modeline-evil-motion-state               (:foreground roninYellow))
+  (doom-modeline-evil-emacs-state                (:foreground roninYellow))
+  (doom-modeline-evil-insert-state               (:foreground autumnRed))
+  (doom-modeline-evil-normal-state               (:foreground roninYellow))
+  (doom-modeline-evil-visual-state               (:foreground autumnGreen))
+  (doom-modeline-evil-replace-state              (:foreground autumnRed))
+  (doom-modeline-evil-operator-state             (:foreground autumnRed))
 
   (doom-modeline-project-dir                     (:bold t :foreground waveAqua2))
   (doom-modeline-buffer-path                     (:inherit 'bold :foreground waveAqua2))
@@ -167,9 +168,9 @@
   (message-header-name                           (:foreground sumiInk-4))
   (message-header-other                          (:foreground surimiOrange))
   (message-header-subject                        (:foreground carpYellow))
-  (message-header-to                             (:foreground old-white))
+  (message-header-to                             (:foreground oldWhite))
   (message-header-cc                             (:foreground waveAqua2))
-  (message-header-xheader                        (:foreground old-white))
+  (message-header-xheader                        (:foreground oldWhite))
   (custom-link                                   (:foreground crystalBlue))
   (link                                          (:foreground crystalBlue))
 
@@ -242,7 +243,7 @@
   ;; show-paren
   (show-paren-match                              (:background waveAqua1 :foreground sumiInk-0 :bold t))
   (show-paren-match-expression	                 (:background waveAqua1 :foreground sumiInk-0 :bold t))
-  (show-paren-mismatch                           (:background peachRed :foreground old-white))
+  (show-paren-mismatch                           (:background peachRed :foreground oldWhite))
   (tooltip                                       (:foreground sumiInk-0 :background carpYellow :bold t))
   
   ;; company-box
@@ -364,7 +365,7 @@
   (term-color-black                              (:background sumiInk-0 :foreground fujiWhite))
   (term-color-bright-black                       (:background sumiInk-1b :foreground sumiInk-1b))
   (term-color-white                              (:background fujiWhite :foreground fujiWhite))
-  (term-color-bright-white                       (:background old-white :foreground old-white))
+  (term-color-bright-white                       (:background oldWhite :foreground oldWhite))
   (term-color-red                                (:background peachRed :foreground peachRed))
   (term-color-bright-red                         (:background springGreen :foreground springGreen))
   (term-color-yellow                             (:background carpYellow :foreground carpYellow))
@@ -450,8 +451,8 @@
   (ansi-color-red                                (:foreground peachRed))
   (ansi-color-white                              (:foreground fujiWhite))
   (ansi-color-yellow                             (:foreground autumnYellow))
-  (ansi-color-bright-white                       (:foreground old-white))
-  (ansi-color-bright-white                       (:foreground old-white))
+  (ansi-color-bright-white                       (:foreground oldWhite))
+  (ansi-color-bright-white                       (:foreground oldWhite))
 
   (tree-sitter-hl-face:attribute                 (:foreground surimiOrange))
   (tree-sitter-hl-face:escape                    (:foreground waveRed))
@@ -473,7 +474,7 @@
   (tree-sitter-hl-face:method.call               (:foreground lightBlue))
 
   (tree-sitter-hl-face:property                  (:foreground carpYellow))
-  (tree-sitter-hl-face:property.definition       (:foreground old-white :italic t))
+  (tree-sitter-hl-face:property.definition       (:foreground oldWhite :italic t))
   
   (tree-sitter-hl-face:tag                       (:foreground peachRed))
 
