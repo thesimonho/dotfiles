@@ -9,7 +9,9 @@
   - [[#native-compilation][Native compilation]]
   - [[#user-config][User config]]
 - [[#aesthetics][Aesthetics]]
+  - [[#icons][Icons]]
   - [[#modeline][Modeline]]
+  - [[#editing][Editing]]
 - [[#dashboard][Dashboard]]
 - [[#evil][Evil]]
 - [[#which-key][Which key]]
@@ -18,10 +20,14 @@
 - [[#completion][Completion]]
   - [[#corfu][Corfu]]
   - [[#vertico-stack][Vertico stack]]
-- [[#editor-navigation][Editor navigation]]
+- [[#editor][Editor]]
+  - [[#formatting][Formatting]]
+  - [[#navigation][Navigation]]
 - [[#lsp-goodness][LSP goodness]]
 - [[#languages][Languages]]
+  - [[#npm][NPM]]
   - [[#emacs-lisp][Emacs lisp]]
+  - [[#python][Python]]
 - [[#org-mode][Org mode]]
 
 * Auto-tangle Configuration Files
@@ -30,13 +36,13 @@ This snippet adds a hook to =org-mode= buffers so that =org-babel-tangle-config=
 Must be evaluated at least once.
 
 #+begin_src emacs-lisp
-  (defun org-babel-tangle-config ()
+    ;; -*- lexical-binding: t; -*-
+   (defun org-babel-tangle-config ()
     (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
-      (let ((org-confirm-babel-evaluate nil))
-	(org-babel-tangle)
-	(message "%s tangled" buffer-file-name)))
-
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle)
+      (message "%s tangled" buffer-file-name)))
+    (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 #+end_src
 
 * Profile Emacs startup
@@ -115,33 +121,36 @@ Use elpaca for package management
 * Emacs settings
 
 #+begin_src emacs-lisp
-    ;; Maximize the Emacs frame at startup
-    (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+	;; Maximize the Emacs frame at startup
+	(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-    (setq gc-cons-threshold 100000000
-	  read-process-output-max (* 1024 1024)
-	  warning-minimum-level :error
-	  ring-bell-function 'ignore
-	  visible-bell t
-	  sentence-end-double-space nil
-	  save-interprogram-paste-before-kill t
-	  compilation-scroll-output 'first-error
-	  use-short-answers t
-	  fast-but-imprecise-scrolling t
-	  make-backup-files nil
-	  auto-save-default nil
-	  create-lockfiles nil
-	  auto-revert-mode t
-	  revert-without-query t
-	  sentence-end-double-space nil
-	  delete-selection-mode t
-	  column-number-mode t
-	  use-dialog-box nil
-	  set-charset-priority 'unicode
-	  prefer-coding-system 'utf-8-unix)
+	(setq gc-cons-threshold 100000000
+		read-process-output-max (* 1024 1024)
+		warning-minimum-level :error
+		ring-bell-function 'ignore
+		visible-bell t
+		sentence-end-double-space nil
+		save-interprogram-paste-before-kill t
+		compilation-scroll-output 'first-error
+		use-short-answers t
+		fast-but-imprecise-scrolling t
+		make-backup-files nil
+		auto-save-default nil
+		create-lockfiles nil
+		auto-revert-mode t
+		revert-without-query t
+		sentence-end-double-space nil
+		delete-selection-mode t
+		column-number-mode t
+		use-dialog-box nil
+		set-charset-priority 'unicode
+		prefer-coding-system 'utf-8-unix)
 
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1)
+	(setq-default tab-width 2)
+	
+	(set-fringe-mode 10)
+	(tool-bar-mode -1)
+	(scroll-bar-mode -1)
   #+end_src
 
 ** Native compilation
@@ -164,6 +173,8 @@ Use elpaca for package management
 * Aesthetics
 
 Fonts, icons, and things
+
+** Icons
 
 #+begin_src emacs-lisp
   (use-package autothemer
@@ -214,8 +225,38 @@ Fonts, icons, and things
     (doom-modeline-mode 1))
 #+end_src
 
+** Editing
+
+Make editing easier
+
+#+begin_src emacs-lisp
+  (use-package beacon
+    :demand t
+    :config
+    (beacon-mode 1))
+
+  (use-package auto-highlight-symbol
+    :hook
+    (prog-mode . auto-highlight-symbol-mode))
+
+  (use-package rainbow-mode
+    :hook
+    (prog-mode . rainbow-mode))
+
+  (use-package dimmer
+    :demand t
+    :init
+    (setq dimmer-adjustment-mode :foreground
+	  dimmer-fraction 0.5
+	  dimmer-watch-frame-focus-events nil) 
+    :config
+    (dimmer-configure-which-key)
+    (add-to-list 'dimmer-buffer-exclusion-regexps "^\\*corfu\\*$")
+    (dimmer-mode t))
+  #+end_src
+
 #+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (25954 39985 688657 0) :use-package-secs (0 0 3128 0) :init (25954 39879 92267 0) :config (25954 39879 92260 0) :config-secs (0 0 2 0) :init-secs (0 0 81130 0)))
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (25954 47441 11946 0) :use-package-secs (0 0 2471 0) :init (25954 47285 752962 0) :config (25954 47285 752958 0) :config-secs (0 0 15 0) :init-secs (0 0 6891 0)))
 
 * Dashboard
 
@@ -254,6 +295,7 @@ Fonts, icons, and things
     (setq evil-want-integration t
 	  evil-want-keybinding nil
 	  evil-symbol-word-search t
+	  evil-respect-visual-line-mode t
 	  evil-ex-search-vim-style-regexp t
 	  evil-want-C-u-scroll t
 	  evil-want-C-i-jump nil)
@@ -319,7 +361,7 @@ Fonts, icons, and things
     :prefix ","
     :non-normal-prefix "M-,")
   (major-mode-def "" nil)
-
+  
   ;; Global Keybindings
   (leader-def
   :wk-full-keys nil
@@ -364,6 +406,8 @@ Fonts, icons, and things
     "qq"      'save-buffers-kill-emacs
     )
 
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
   (general-def universal-argument-map
       "SPC u" 'universal-argument-more)
 
@@ -373,6 +417,7 @@ Fonts, icons, and things
 
   (general-define-key
    :keymaps 'insert
+   "TAB" 'tab-to-tab-stop
    "C-v" 'yank)
 #+end_src
 
@@ -539,49 +584,95 @@ Minibuffer completion with Vertico et al.
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 #+end_src
 
-* Editor navigation
+* Editor
 
 File tree, tabs, minimaps etc
 
 #+begin_src emacs-lisp
-  (use-package treemacs
-    :demand t
-    :init
-    (setq treemacs-python-executable "~/anaconda3/python.exe")
-    :config
-    (treemacs-follow-mode t)
-    (treemacs-project-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-git-mode 'deferred)
-    (treemacs-fringe-indicator-mode 'always)
-    (treemacs-git-commit-diff-mode t))
+	(use-package treemacs
+		:demand t
+		:init
+		(setq treemacs-python-executable "~/anaconda3/python.exe")
+		:config
+		(treemacs-follow-mode t)
+		(treemacs-project-follow-mode t)
+		(treemacs-filewatch-mode t)
+		(treemacs-git-mode 'deferred)
+		(treemacs-fringe-indicator-mode 'always)
+		(treemacs-git-commit-diff-mode t))
 
-  (use-package treemacs-evil
-    :demand t
-    :after (treemacs evil))
+	(use-package treemacs-evil
+		:demand t
+		:after (treemacs evil))
 
-  (use-package treemacs-projectile
-    :after (treemacs projectile))
+	(use-package treemacs-projectile
+		:after (treemacs projectile))
 
-  (use-package treemacs-perspective
-    :after (treemacs perspective)
-    :config (treemacs-set-scope-type 'Perspectives))
+	(use-package treemacs-perspective
+		:after (treemacs perspective)
+		:config (treemacs-set-scope-type 'Perspectives))
 
-  (use-package centaur-tabs
-    :demand t
-    :init
-    (setq centaur-tabs-style "bar"
-	  centaur-tabs-height 32
-	  centaur-tabs-set-icons t
-	  centaur-tabs-set-bar 'under
-	  x-underline-at-descent-line t
-	  centaur-tabs-cycle-scope 'tabs
-	  centaur-tabs-show-navigation-buttons t
-	  centaur-tabs-show-new-tab-button t
-	  centaur-tabs-gray-out-icons 'buffer)
-    :config
-    (centaur-tabs-mode t)
-    (centaur-tabs-headline-match))
+	(use-package centaur-tabs
+		:demand t
+		:init
+		(setq centaur-tabs-style "bar"
+		centaur-tabs-height 32
+		centaur-tabs-set-icons t
+		centaur-tabs-set-bar 'under
+		x-underline-at-descent-line t
+		centaur-tabs-cycle-scope 'tabs
+		centaur-tabs-show-navigation-buttons t
+		centaur-tabs-show-new-tab-button t
+		centaur-tabs-gray-out-icons 'buffer)
+		:config
+		(centaur-tabs-mode t)
+		(centaur-tabs-headline-match))
+
+	#+end_src
+
+Expand selection; treesitter style
+
+#+begin_src emacs-lisp
+	(use-package expand-region
+	:general
+	(leader-def
+		:wk-full-keys nil
+		"v" '(er/expand-region :wk "expand region")))
+#+end_src
+
+** Formatting
+
+Format all command (useful for languages with no lsp support)
+
+#+begin_src emacs-lisp
+	(use-package format-all
+		:commands format-all-mode
+		:hook (prog-mode . format-all-mode)
+		:config
+		(setq-default format-all-formatters '(("Typescript" (prettierd))
+																					("Javascript" (prettierd))
+																					("Vue" (prettierd))
+																					("GraphQL" (prettierd))
+																					("Python" (black))
+																					))
+		:general
+		(leader-def
+			:wk-full-keys nil
+			"c"       (cons "code" (make-sparse-keymap))
+			"cf" '(format-all-region-or-buffer :wk "format")))
+#+end_src
+
+** Navigation
+
+#+begin_src emacs-lisp
+	(use-package avy
+		:demand t
+		:general
+		(leader-def
+			:wk-full-keys nil
+			"j"       (cons "jump" (make-sparse-keymap))
+			"jj" 'avy-goto-char-timer
+			"jl" 'avy-goto-line))
 #+end_src
 
 * LSP goodness
@@ -620,54 +711,72 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 
 * Languages
 
+** NPM
+
+#+begin_src emacs-lisp
+	(use-package npm
+		:general
+		(major-mode-def
+			:keymaps '(js-mode-map typescript-ts-mode-map)
+			:wk-full-keys nil
+			"n" 'npm)
+		)
+#+end_src
+
 ** Emacs lisp
 
 #+begin_src emacs-lisp
   (use-package lispy
     :hook
-    ((emacs-lisp-mode org-mode). lispy-mode))
+    ((emacs-lisp-mode). lispy-mode))
 
   (use-package lispyville
     :hook
     (lispy-mode . lispyville-mode))
       #+end_src
 
+** Python
+
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
+#+end_src
+
 * Org mode
 
 #+begin_src emacs-lisp
-    (use-package toc-org
-      :hook (org-mode . toc-org-mode))
+  (use-package toc-org
+    :hook (org-mode . toc-org-mode))
 
-    (use-package org-modern
-      :init
-      (setq
-      ;; Edit settings
-      org-auto-align-tags nil
-      org-tags-column 0
-      org-catch-invisible-edits 'show-and-error
-      org-special-ctrl-a/e t
-      org-insert-heading-respect-content t
+  (use-package org-modern
+    :init
+    (setq
+    ;; Edit settings
+    org-auto-align-tags nil
+    org-tags-column 0
+    org-catch-invisible-edits 'show-and-error
+    org-special-ctrl-a/e t
+    org-insert-heading-respect-content t
 
-      ;; Org styling, hide markup etc.
-      org-hide-emphasis-markers t
-      org-pretty-entities t
+    ;; Org styling, hide markup etc.
+    org-hide-emphasis-markers t
+    org-pretty-entities t
 
-      ;; Agenda styling
-      org-agenda-tags-column 0
-      org-agenda-block-separator ?-)
-      :hook
-      (org-mode . global-org-modern-mode))
+    ;; Agenda styling
+    org-agenda-tags-column 0
+    org-agenda-block-separator ?-)
+    :hook
+    (org-mode . global-org-modern-mode))
+  
+  (use-package evil-org
+    :hook (org-mode . evil-org-mode)
+    :config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
 
-    (use-package evil-org
-      :hook (org-mode . evil-org-mode)
-      :config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))
-
-    (major-mode-def
-      :keymaps 'org-mode-map
-      :wk-full-keys nil
-      "o" '(org-open-at-point :wk "open link")
-      "x" '(org-babel-execute-src-block :wk "execute block")
-      "i"       (cons "insert" (make-sparse-keymap))
-      "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
-      "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+  (major-mode-def
+    :keymaps 'org-mode-map
+    :wk-full-keys nil
+    "o" '(org-open-at-point :wk "open link")
+    "x" '(org-babel-execute-src-block :wk "execute block")
+    "i"       (cons "insert" (make-sparse-keymap))
+    "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
+    "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
 #+end_src

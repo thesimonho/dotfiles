@@ -1,10 +1,10 @@
+;; -*- lexical-binding: t; -*-
 (defun org-babel-tangle-config ()
-  (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle)
-      (message "%s tangled" buffer-file-name)))
-
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
+ (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
+ (let ((org-confirm-babel-evaluate nil))
+   (org-babel-tangle)
+   (message "%s tangled" buffer-file-name)))
+ (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 ;; (add-hook 'emacs-startup-hook
     ;; 	  (lambda ()
@@ -22,13 +22,13 @@
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-			      :ref nil
-			      :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-			      :build (:not elpaca--activate-package)))
+			:ref nil
+			:files (:defaults "elpaca-test.el" (:exclude "extensions"))
+			:build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
+ (build (expand-file-name "elpaca/" elpaca-builds-directory))
+ (order (cdr elpaca-order))
+ (default-directory repo))
   (add-to-list 'load-path (if (file-exists-p build) build repo))
   (unless (file-exists-p repo)
     (make-directory repo t)
@@ -36,17 +36,17 @@
     (condition-case-unless-debug err
 	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
 		 ((zerop (call-process "git" nil buffer t "clone"
-				       (plist-get order :repo) repo)))
+				 (plist-get order :repo) repo)))
 		 ((zerop (call-process "git" nil buffer t "checkout"
-				       (or (plist-get order :ref) "--"))))
+				 (or (plist-get order :ref) "--"))))
 		 (emacs (concat invocation-directory invocation-name))
 		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-				       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+				 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
 		 ((require 'elpaca))
 		 ((elpaca-generate-autoloads "elpaca" repo)))
 	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
 	  (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
     (elpaca-generate-autoloads "elpaca" repo)
@@ -68,27 +68,30 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (setq gc-cons-threshold 100000000
-      read-process-output-max (* 1024 1024)
-      warning-minimum-level :error
-      ring-bell-function 'ignore
-      visible-bell t
-      sentence-end-double-space nil
-      save-interprogram-paste-before-kill t
-      compilation-scroll-output 'first-error
-      use-short-answers t
-      fast-but-imprecise-scrolling t
-      make-backup-files nil
-      auto-save-default nil
-      create-lockfiles nil
-      auto-revert-mode t
-      revert-without-query t
-      sentence-end-double-space nil
-      delete-selection-mode t
-      column-number-mode t
-      use-dialog-box nil
-      set-charset-priority 'unicode
-      prefer-coding-system 'utf-8-unix)
+	read-process-output-max (* 1024 1024)
+	warning-minimum-level :error
+	ring-bell-function 'ignore
+	visible-bell t
+	sentence-end-double-space nil
+	save-interprogram-paste-before-kill t
+	compilation-scroll-output 'first-error
+	use-short-answers t
+	fast-but-imprecise-scrolling t
+	make-backup-files nil
+	auto-save-default nil
+	create-lockfiles nil
+	auto-revert-mode t
+	revert-without-query t
+	sentence-end-double-space nil
+	delete-selection-mode t
+	column-number-mode t
+	use-dialog-box nil
+	set-charset-priority 'unicode
+	prefer-coding-system 'utf-8-unix)
 
+(setq-default tab-width 2)
+
+(set-fringe-mode 10)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
@@ -99,7 +102,7 @@
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq user-full-name "Simon Ho"
-      user-mail-address "simonho.ubc@gmail.com")
+user-mail-address "simonho.ubc@gmail.com")
 
 (use-package autothemer
   :demand t
@@ -144,6 +147,30 @@
 	doom-modeline-modal-modern-icon t)
   (doom-modeline-mode 1))
 
+(use-package beacon
+  :demand t
+  :config
+  (beacon-mode 1))
+
+(use-package auto-highlight-symbol
+  :hook
+  (prog-mode . auto-highlight-symbol-mode))
+
+(use-package rainbow-mode
+  :hook
+  (prog-mode . rainbow-mode))
+
+(use-package dimmer
+  :demand t
+  :init
+  (setq dimmer-adjustment-mode :foreground
+	dimmer-fraction 0.5
+	dimmer-watch-frame-focus-events nil) 
+  :config
+  (dimmer-configure-which-key)
+  (add-to-list 'dimmer-buffer-exclusion-regexps "^\\*corfu\\*$")
+  (dimmer-mode t))
+
 (use-package dashboard
   :demand t
   :after projectile
@@ -173,6 +200,7 @@
   (setq evil-want-integration t
 	evil-want-keybinding nil
 	evil-symbol-word-search t
+	evil-respect-visual-line-mode t
 	evil-ex-search-vim-style-regexp t
 	evil-want-C-u-scroll t
 	evil-want-C-i-jump nil)
@@ -274,6 +302,8 @@
   "qq"      'save-buffers-kill-emacs
   )
 
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
 (general-def universal-argument-map
     "SPC u" 'universal-argument-more)
 
@@ -283,6 +313,7 @@
 
 (general-define-key
  :keymaps 'insert
+ "TAB" 'tab-to-tab-stop
  "C-v" 'yank)
 
 (defun system-is-mswindows ()
@@ -363,8 +394,8 @@
 	  vertico-resize t)
     (vertico-mode)
     :general (:keymaps 'vertico-map
-		       "C-j" 'vertico-next
-		       "C-k" 'vertico-previous))
+		 "C-j" 'vertico-next
+		 "C-k" 'vertico-previous))
 
   ;; Add prompt indicator to `completing-read-multiple'.
   (defun crm-indicator (args)
@@ -396,26 +427,26 @@
     (add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
     (add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode-check-buffers)
     (consult-customize
-      consult-theme consult-ripgrep consult-git-grep consult-grep
-      consult-bookmark consult-recent-file consult-xref
-      consult--source-bookmark consult--source-file-register
-      consult--source-recent-file consult--source-project-recent-file
-      :preview-key '(:debounce 0.5 any))
+consult-theme consult-ripgrep consult-git-grep consult-grep
+consult-bookmark consult-recent-file consult-xref
+consult--source-bookmark consult--source-file-register
+consult--source-recent-file consult--source-project-recent-file
+:preview-key '(:debounce 0.5 any))
     (recentf-mode)
     :general 
     (leader-def
     :wk-full-keys nil
-      "b"       (cons "buffers" (make-sparse-keymap))
-      "bb" '(persp-switch-to-buffer :wk "find buffer")
-      "bd" '(persp-kill-buffer :wk "delete buffer")
+"b"       (cons "buffers" (make-sparse-keymap))
+"bb" '(persp-switch-to-buffer :wk "find buffer")
+"bd" '(persp-kill-buffer :wk "delete buffer")
 
-      "f"       (cons "files" (make-sparse-keymap))
-      "fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
-      "fs" '(save-buffer :wk "Save") 
-      "ff" '(consult-dir :wk "find file")
-      "fr" '(consult-recent-file :wk "recent files")
-      "fg" '(consult-ripgrep :wk "grep")
-      "ft" '(treemacs :wk "file tree")
+"f"       (cons "files" (make-sparse-keymap))
+"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
+"fs" '(save-buffer :wk "Save") 
+"ff" '(consult-dir :wk "find file")
+"fr" '(consult-recent-file :wk "recent files")
+"fg" '(consult-ripgrep :wk "grep")
+"ft" '(treemacs :wk "file tree")
   ))
 
   (use-package consult-dir)
@@ -428,32 +459,32 @@
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
 (use-package treemacs
-  :demand t
-  :init
-  (setq treemacs-python-executable "~/anaconda3/python.exe")
-  :config
-  (treemacs-follow-mode t)
-  (treemacs-project-follow-mode t)
-  (treemacs-filewatch-mode t)
-  (treemacs-git-mode 'deferred)
-  (treemacs-fringe-indicator-mode 'always)
-  (treemacs-git-commit-diff-mode t))
+	:demand t
+	:init
+	(setq treemacs-python-executable "~/anaconda3/python.exe")
+	:config
+	(treemacs-follow-mode t)
+	(treemacs-project-follow-mode t)
+	(treemacs-filewatch-mode t)
+	(treemacs-git-mode 'deferred)
+	(treemacs-fringe-indicator-mode 'always)
+	(treemacs-git-commit-diff-mode t))
 
 (use-package treemacs-evil
-  :demand t
-  :after (treemacs evil))
+	:demand t
+	:after (treemacs evil))
 
 (use-package treemacs-projectile
-  :after (treemacs projectile))
+	:after (treemacs projectile))
 
 (use-package treemacs-perspective
-  :after (treemacs perspective)
-  :config (treemacs-set-scope-type 'Perspectives))
+	:after (treemacs perspective)
+	:config (treemacs-set-scope-type 'Perspectives))
 
 (use-package centaur-tabs
-  :demand t
-  :init
-  (setq centaur-tabs-style "bar"
+	:demand t
+	:init
+	(setq centaur-tabs-style "bar"
 	centaur-tabs-height 32
 	centaur-tabs-set-icons t
 	centaur-tabs-set-bar 'under
@@ -462,9 +493,40 @@
 	centaur-tabs-show-navigation-buttons t
 	centaur-tabs-show-new-tab-button t
 	centaur-tabs-gray-out-icons 'buffer)
-  :config
-  (centaur-tabs-mode t)
-  (centaur-tabs-headline-match))
+	:config
+	(centaur-tabs-mode t)
+	(centaur-tabs-headline-match))
+
+(use-package expand-region
+:general
+(leader-def
+	:wk-full-keys nil
+	"v" '(er/expand-region :wk "expand region")))
+
+(use-package format-all
+	:commands format-all-mode
+	:hook (prog-mode . format-all-mode)
+	:config
+	(setq-default format-all-formatters '(("Typescript" (prettierd))
+																				("Javascript" (prettierd))
+																				("Vue" (prettierd))
+																				("GraphQL" (prettierd))
+																				("Python" (black))
+																				))
+	:general
+	(leader-def
+		:wk-full-keys nil
+		"c"       (cons "code" (make-sparse-keymap))
+		"cf" '(format-all-region-or-buffer :wk "format")))
+
+(use-package avy
+	:demand t
+	:general
+	(leader-def
+		:wk-full-keys nil
+		"j"       (cons "jump" (make-sparse-keymap))
+		"jj" 'avy-goto-char-timer
+		"jl" 'avy-goto-line))
 
 (use-package lsp-mode
     :init
@@ -480,7 +542,7 @@
     :commands (lsp lsp-deferred)
     :config
     (general-def 'normal lsp-mode :definer 'minor-mode
-      "SPC l" lsp-command-map))
+"SPC l" lsp-command-map))
 
 (use-package lsp-ui :commands lsp-ui-mode)
 
@@ -494,13 +556,23 @@
 (use-package flycheck
     :init (global-flycheck-mode))
 
+(use-package npm
+	:general
+	(major-mode-def
+		:keymaps '(js-mode-map typescript-ts-mode-map)
+		:wk-full-keys nil
+		"n" 'npm)
+	)
+
 (use-package lispy
   :hook
-  ((emacs-lisp-mode org-mode). lispy-mode))
+  ((emacs-lisp-mode). lispy-mode))
 
 (use-package lispyville
   :hook
   (lispy-mode . lispyville-mode))
+
+(add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (use-package toc-org
   :hook (org-mode . toc-org-mode))
@@ -527,7 +599,7 @@
 
 (use-package evil-org
   :hook (org-mode . evil-org-mode)
-  :config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading)))
+  :config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
 
 (major-mode-def
   :keymaps 'org-mode-map
