@@ -244,47 +244,44 @@ Make editing easier
   (use-package rainbow-mode
     :hook
     (prog-mode . rainbow-mode))
-
-  (use-package dimmer
-    :demand t
-    :init
-    (setq dimmer-adjustment-mode :foreground
-	  dimmer-fraction 0.5
-	  dimmer-watch-frame-focus-events nil) 
-    :config
-    (dimmer-configure-which-key)
-    (add-to-list 'dimmer-buffer-exclusion-regexps "^\\*corfu\\*$")
-    (dimmer-mode t))
   #+end_src
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (25954 47441 11946 0) :use-package-secs (0 0 2471 0) :init (25954 47285 752962 0) :config (25954 47285 752958 0) :config-secs (0 0 15 0) :init-secs (0 0 6891 0)))
 
 * Dashboard
 
 #+begin_src emacs-lisp
-  (use-package dashboard
-    :demand t
-    :after projectile
-    :init
-    (setq
-     dashboard-startup-banner 'official
-     dashboard-projects-backend 'projectile
-     dashboard-center-content t
-     dashboard-icon-type 'nerd-icons
-     dashboard-set-heading-icons t
-     dashboard-set-file-icons t
-     dashboard-show-shortcuts nil
-     dashboard-set-init-info t
-     dashboard-footer-messages '("Dashboard is pretty cool!")
-     dashboard-projects-switch-function 'projectile-persp-switch-project)
-    (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-    (setq dashboard-items '((recents  . 5)
-			    (projects . 5)))
-    :config
-    (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-    (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
-    (dashboard-setup-startup-hook))
+	(use-package dashboard
+		:demand t
+		:after projectile
+		:init
+		(setq
+		 dashboard-banner-logo-title nil
+		 dashboard-startup-banner 'official
+		 dashboard-projects-backend 'projectile
+		 dashboard-center-content t
+		 dashboard-icon-type 'nerd-icons
+		 dashboard-set-navigator t
+		 dashboard-set-heading-icons t
+		 dashboard-set-file-icons t
+		 dashboard-show-shortcuts nil
+		 dashboard-set-init-info t
+		 dashboard-footer-messages '("if you have to wait for it to roar out of you, then wait patiently.\n   if it never does roar out of you, do something else.")
+		 dashboard-footer-icon (nerd-icons-codicon "nf-cod-quote"
+																							 :height 1.1
+																							 :v-adjust -0.05
+																							 :face 'font-lock-keyword-face)
+		 dashboard-projects-switch-function 'projectile-persp-switch-project)
+		(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+		(setq dashboard-items '((recents  . 5)
+					(projects . 5)))
+		(setq dashboard-navigator-buttons
+			`((
+				(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) warning)
+				(,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Update Packages" (lambda (&rest _) (elpaca-fetch-all)) error)
+				)))
+		:config
+		(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+		(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+		(dashboard-setup-startup-hook))
 #+end_src
 
 * Evil
@@ -567,7 +564,7 @@ Minibuffer completion with Vertico et al.
 			"bd" '(kill-current-buffer :wk "delete buffer")
 
 			"f"       (cons "files" (make-sparse-keymap))
-			"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
+  		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
 			"fs" '(save-buffer :wk "Save") 
 			"ff" '(consult-buffer :wk "find file")
 			"fr" '(consult-recent-file :wk "recent files")

@@ -160,39 +160,39 @@ user-mail-address "simonho.ubc@gmail.com")
   :hook
   (prog-mode . rainbow-mode))
 
-(use-package dimmer
-  :demand t
-  :init
-  (setq dimmer-adjustment-mode :foreground
-	dimmer-fraction 0.5
-	dimmer-watch-frame-focus-events nil) 
-  :config
-  (dimmer-configure-which-key)
-  (add-to-list 'dimmer-buffer-exclusion-regexps "^\\*corfu\\*$")
-  (dimmer-mode t))
-
 (use-package dashboard
-  :demand t
-  :after projectile
-  :init
-  (setq
-   dashboard-startup-banner 'official
-   dashboard-projects-backend 'projectile
-   dashboard-center-content t
-   dashboard-icon-type 'nerd-icons
-   dashboard-set-heading-icons t
-   dashboard-set-file-icons t
-   dashboard-show-shortcuts nil
-   dashboard-set-init-info t
-   dashboard-footer-messages '("Dashboard is pretty cool!")
-   dashboard-projects-switch-function 'projectile-persp-switch-project)
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
-  (setq dashboard-items '((recents  . 5)
-			  (projects . 5)))
-  :config
-  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
-  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
-  (dashboard-setup-startup-hook))
+	:demand t
+	:after projectile
+	:init
+	(setq
+	 dashboard-banner-logo-title nil
+	 dashboard-startup-banner 'official
+	 dashboard-projects-backend 'projectile
+	 dashboard-center-content t
+	 dashboard-icon-type 'nerd-icons
+	 dashboard-set-navigator t
+	 dashboard-set-heading-icons t
+	 dashboard-set-file-icons t
+	 dashboard-show-shortcuts nil
+	 dashboard-set-init-info t
+	 dashboard-footer-messages '("if you have to wait for it to roar out of you, then wait patiently.\n   if it never does roar out of you, do something else.")
+	 dashboard-footer-icon (nerd-icons-codicon "nf-cod-quote"
+																						 :height 1.1
+																						 :v-adjust -0.05
+																						 :face 'font-lock-keyword-face)
+	 dashboard-projects-switch-function 'projectile-persp-switch-project)
+	(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+	(setq dashboard-items '((recents  . 5)
+				(projects . 5)))
+	(setq dashboard-navigator-buttons
+		`((
+			(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) warning)
+			(,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Update Packages" (lambda (&rest _) (elpaca-fetch-all)) error)
+			)))
+	:config
+	(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+	(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+	(dashboard-setup-startup-hook))
 
 (use-package evil
   :demand t
@@ -440,7 +440,7 @@ user-mail-address "simonho.ubc@gmail.com")
 		"bd" '(kill-current-buffer :wk "delete buffer")
 
 		"f"       (cons "files" (make-sparse-keymap))
-		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
+  	"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
 		"fs" '(save-buffer :wk "Save") 
 		"ff" '(consult-buffer :wk "find file")
 		"fr" '(consult-recent-file :wk "recent files")
@@ -629,3 +629,16 @@ user-mail-address "simonho.ubc@gmail.com")
   "i"       (cons "insert" (make-sparse-keymap))
   "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
   "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+	 '("15558f17ee1bc591275ce300f129046446fb175ef875d5536737dd039080dbe5" "36248fac642449e8e0bfd34a003a8e6b6ebc98d08f48a6dd75e15d7d412320e1" default)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
