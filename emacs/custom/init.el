@@ -458,6 +458,12 @@ consult--source-recent-file consult--source-project-recent-file
 
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
+(use-package expand-region
+:general
+(leader-def
+	:wk-full-keys nil
+	"v" '(er/expand-region :wk "expand region")))
+
 (use-package treemacs
 	:demand t
 	:init
@@ -482,31 +488,28 @@ consult--source-recent-file consult--source-project-recent-file
 	:config (treemacs-set-scope-type 'Perspectives))
 
 (use-package centaur-tabs
-	:demand t
-	:init
-	(setq centaur-tabs-style "bar"
-	centaur-tabs-height 32
-	centaur-tabs-set-icons t
-	centaur-tabs-set-bar 'under
-	x-underline-at-descent-line t
-	centaur-tabs-cycle-scope 'tabs
-	centaur-tabs-show-navigation-buttons t
-	centaur-tabs-show-new-tab-button t
-	centaur-tabs-gray-out-icons 'buffer)
-	:config
-	(centaur-tabs-mode t)
-	(centaur-tabs-headline-match)
-	:general
-	(:keymaps 'evil-normal-state-map
-	:prefix "g"
-	"t" 'centaur-tabs-forward
-	"T" 'centaur-tabs-backward))
-
-(use-package expand-region
+:demand t
+:init
+(setq centaur-tabs-style "bar"
+centaur-tabs-height 32
+centaur-tabs-set-icons t
+centaur-tabs-set-bar 'under
+x-underline-at-descent-line t
+centaur-tabs-cycle-scope 'tabs
+centaur-tabs-show-count t
+centaur-tabs-enable-ido-completion nil
+centaur-tabs-show-navigation-buttons nil
+centaur-tabs-show-new-tab-button t
+centaur-tabs-gray-out-icons 'buffer)
+:config
+(centaur-tabs-mode t)
+(centaur-tabs-headline-match)
+(centaur-tabs-group-by-projectile-project)
 :general
-(leader-def
-	:wk-full-keys nil
-	"v" '(er/expand-region :wk "expand region")))
+(:keymaps 'evil-normal-state-map
+:prefix "g"
+"t" 'centaur-tabs-forward
+"T" 'centaur-tabs-backward))
 
 (use-package format-all
 	:commands format-all-mode
@@ -531,7 +534,8 @@ consult--source-recent-file consult--source-project-recent-file
 		:wk-full-keys nil
 		"j"       (cons "jump" (make-sparse-keymap))
 		"jj" 'avy-goto-char-timer
-		"jl" 'avy-goto-line))
+		"jl" 'avy-goto-line
+		"jb" 'centaur-tabs-ace-jump))
 
 (use-package lsp-mode
     :init
