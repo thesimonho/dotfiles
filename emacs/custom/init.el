@@ -425,7 +425,6 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package consult
 	:config
 	(add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
-	(add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode-check-buffers)
 	(consult-customize
 	 consult-theme consult-ripgrep consult-git-grep consult-grep
 	 consult-bookmark consult-recent-file consult-xref
@@ -437,19 +436,17 @@ user-mail-address "simonho.ubc@gmail.com")
 	(leader-def
 		:wk-full-keys nil
 		"b"       (cons "buffers" (make-sparse-keymap))
-		"bb" '(persp-switch-to-buffer :wk "find buffer")
-		"bd" '(persp-kill-buffer :wk "delete buffer")
+		"bb" '(persp-switch-to-buffer* :wk "find buffer")
+		"bd" '(kill-current-buffer :wk "delete buffer")
 
 		"f"       (cons "files" (make-sparse-keymap))
 		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
 		"fs" '(save-buffer :wk "Save") 
-		"ff" '(consult-dir :wk "find file")
+		"ff" '(consult-buffer :wk "find file")
 		"fr" '(consult-recent-file :wk "recent files")
 		"fg" '(consult-ripgrep :wk "grep")
 		"ft" '(treemacs-select-window :wk "file tree")
 		))
-
-(use-package consult-dir)
 
 (use-package marginalia
 	:defer 1
