@@ -233,83 +233,83 @@ user-mail-address "simonho.ubc@gmail.com")
   (which-key-mode))
 
 (use-package general
-  :demand t
-  :after evil
-  :config
-  (general-evil-setup t))
+	:demand t
+	:after evil
+	:config
+	(general-evil-setup t))
 (elpaca-wait)
 
 ;; Leader key
 (general-define-key
-   :states '(normal insert motion emacs)
-   :keymaps 'override
-   :prefix-map 'leader-map
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC")
+	 :states '(normal insert motion emacs)
+	 :keymaps 'override
+	 :prefix-map 'leader-map
+	 :prefix "SPC"
+	 :non-normal-prefix "M-SPC")
 (general-create-definer leader-def :keymaps 'leader-map)
 (leader-def "" nil)
 
 ;; Major mode key
 (general-create-definer major-mode-def
-  :states '(normal insert motion emacs)
-  :keymaps 'override
-  :major-modes t
-  :prefix ","
-  :non-normal-prefix "M-,")
+	:states '(normal insert motion emacs)
+	:keymaps 'override
+	:major-modes t
+	:prefix ","
+	:non-normal-prefix "M-,")
 (major-mode-def "" nil)
 
 ;; Global Keybindings
 (leader-def
 :wk-full-keys nil
-  "SPC"     '("M-x" . execute-extended-command)
-  "TAB"     '("last buffer" . alternate-buffer)
-  "u"       '("universal arg" . universal-argument)
+	"SPC"     '("M-x" . execute-extended-command)
+	"TAB"     '("last buffer" . alternate-buffer)
+	"u"       '("universal arg" . universal-argument)
 
-  "h"       (cons "help" (make-sparse-keymap))
-  "hb"      'describe-bindings
-  "hc"      'describe-char
-  "hf"      'describe-function
-  "hF"      'describe-face
-  "hi"      'info-emacs-manual
-  "hI"      'info-display-manual
-  "hk"      'describe-key
-  "hK"      'describe-keymap
-  "hm"      'describe-mode
-  "hM"      'woman
-  "hp"      'describe-package
-  "ht"      'describe-text-properties
-  "hv"      'describe-variable
+	"h"       (cons "help" (make-sparse-keymap))
+	"hb"      'describe-bindings
+	"hc"      'describe-char
+	"hf"      'describe-function
+	"hF"      'describe-face
+	"hi"      'info-emacs-manual
+	"hI"      'info-display-manual
+	"hk"      'describe-key
+	"hK"      'describe-keymap
+	"hm"      'describe-mode
+	"hM"      'woman
+	"hp"      'describe-package
+	"ht"      'describe-text-properties
+	"hv"      'describe-variable
 
-  "w"       (cons "windows" (make-sparse-keymap))
-  "wb"      'switch-to-minibuffer-window
-  "wd"      'delete-window
-  "wD"      'delete-other-windows
-  "wm"      'toggle-maximize-buffer
-  "wh"      'evil-window-left
-  "wj"      'evil-window-down
-  "wk"      'evil-window-up
-  "wl"      'evil-window-right
-  "wr"      'rotate-windows-forward
-  "ws"      'split-window-vertically
-  "wu"      'winner-undo
-  "wU"      'winner-redo
-  "wv"      'split-window-horizontally
+	"w"       (cons "windows" (make-sparse-keymap))
+	"wb"      'switch-to-minibuffer-window
+	"wd"      'delete-window
+	"wD"      'delete-other-windows
+	"wm"      'toggle-maximize-buffer
+	"wh"      'evil-window-left
+	"wj"      'evil-window-down
+	"wk"      'evil-window-up
+	"wl"      'evil-window-right
+	"wr"      'rotate-windows-forward
+	"ws"      'split-window-vertically
+	"wu"      'winner-undo
+	"wU"      'winner-redo
+	"wv"      'split-window-horizontally
 
-  "q"       (cons "quit" (make-sparse-keymap))
-  "qd"      'restart-emacs-debug-init
-  "qr"      'restart-emacs
-  "qf"      'delete-frame
-  "qq"      'save-buffers-kill-emacs
-  )
+	"q"       (cons "quit" (make-sparse-keymap))
+	"qd"      'restart-emacs-debug-init
+	"qr"      'restart-emacs
+	"qf"      'delete-frame
+	"qq"      'save-buffers-kill-emacs
+	)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (general-def universal-argument-map
-    "SPC u" 'universal-argument-more)
+		"SPC u" 'universal-argument-more)
 
 (general-define-key
-  :keymaps 'override
-  "C-s" 'save-buffer)
+	:keymaps 'override
+	"C-s" 'save-buffer)
 
 (general-define-key
  :keymaps 'insert
@@ -495,7 +495,12 @@ consult--source-recent-file consult--source-project-recent-file
 	centaur-tabs-gray-out-icons 'buffer)
 	:config
 	(centaur-tabs-mode t)
-	(centaur-tabs-headline-match))
+	(centaur-tabs-headline-match)
+	:general
+	(:keymaps 'evil-normal-state-map
+	:prefix "g"
+	"t" 'centaur-tabs-forward
+	"T" 'centaur-tabs-backward))
 
 (use-package expand-region
 :general
