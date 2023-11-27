@@ -135,23 +135,29 @@ user-mail-address "simonho.ubc@gmail.com")
   (treemacs-load-theme "nerd-icons"))
 
 (use-package doom-modeline
-	:ensure t
-	:init
-	(setq doom-modeline-height 30
-	doom-modeline-project-detection 'auto
-	doom-modeline-buffer-modification-icon t
-	doom-modeline-lsp-icon t
-	doom-modeline-time-icon nil
-	doom-modeline-highlight-modified-buffer-name t
-	doom-modeline-position-column-line-format '("L%l:C%c")
-	doom-modeline-minor-modes t
-	doom-modeline-checker-simple-format nil
-	doom-modeline-modal-icon t
-	doom-modeline-modal-modern-icon t)
-	(doom-modeline-mode 1))
+		:init
+		(setq doom-modeline-height 30
+		doom-modeline-project-detection 'auto
+		doom-modeline-buffer-modification-icon t
+		doom-modeline-lsp t
+		doom-modeline-time-icon nil
+		doom-modeline-highlight-modified-buffer-name t
+		doom-modeline-position-column-line-format '("L%l:C%c")
+		doom-modeline-minor-modes t
+		doom-modeline-checker-simple-format nil
+		doom-modeline-modal-icon t
+		doom-modeline-modal-modern-icon t)
+		(doom-modeline-mode 1))
 
-(use-package diminish
-	:demand t)
+	(use-package diminish)
+
+	(defun diminish-modes ()
+	(dolist (mode '((eldoc-mode)
+									(lsp-lens-mode)
+									))
+		(diminish (car mode) (cdr mode))))
+
+(add-hook 'elpaca-after-init-hook #'diminish-modes)
 
 (use-package beacon
 	:demand t
@@ -290,7 +296,7 @@ user-mail-address "simonho.ubc@gmail.com")
 (leader-def
 :wk-full-keys nil
 	"SPC"     '("M-x" . execute-extended-command)
-	"TAB"     '("last buffer" . alternate-buffer)
+	"TAB"     '("last buffer" . previous-buffer)
 	"`"				'(eshell :wk "shell")
 	"u"       '("universal arg" . universal-argument)
 	"y"				'(consult-yank-pop :wk "kill ring")
@@ -353,6 +359,7 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package projectile
   :demand t
+  :diminish
   :init
   (when (and (system-is-mswindows) (executable-find "find")
 	     (not (file-in-directory-p
@@ -597,10 +604,13 @@ user-mail-address "simonho.ubc@gmail.com")
 			"jo" ace-link-command)))
 
 (use-package lsp-mode
+	:diminish
 	:init
 	(setq
-	 lsp-modeline-diagnostics-enable t
+	 lsp-modeline-diagnostics-enable nil
 	 lsp-modeline-code-actions-mode t
+	 lsp-modeline-code-actions-segments '(icon count)
+	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
 	 lsp-headerline-breadcrumb-mode t
 	 lsp-warn-no-matched-clients nil
 	 lsp-enable-suggest-server-download t)
@@ -614,8 +624,6 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package lsp-ui
 	:commands lsp-ui-mode)
-
-(use-package consult-lsp)
 
 (use-package lsp-treemacs
 	:init
