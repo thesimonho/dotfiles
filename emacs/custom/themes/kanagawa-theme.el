@@ -339,7 +339,7 @@
   (lsp-ui-sideline-symbol                        (:foreground dragonBlue))
 
   ;; dashboard
-  (dashboard-heading                             (:foreground springViolet2 :bold t))
+  (dashboard-heading                             (:foreground autumnRed :bold t))
   (dashboard-items-face                          (:bold nil :foreground fujiWhite))
   (dashboard-banner-logo-title                   (:bold t :height 200))
   (dashboard-no-items-face                       (:foreground sumiInk-4))

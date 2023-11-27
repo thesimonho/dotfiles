@@ -105,12 +105,16 @@
 (setq user-full-name "Simon Ho"
 user-mail-address "simonho.ubc@gmail.com")
 
+(setq custom-theme-directory (expand-file-name "themes/" user-emacs-directory))
+
 (use-package autothemer
-  :demand t
-  :config
-  (load-theme 'kanagawa t))
+	:demand t
+	:config
+	(load-theme 'kanagawa t))
 
 (set-frame-font "FiraCode NF-11")
+
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (use-package nerd-icons
   :demand t)
@@ -130,12 +134,10 @@ user-mail-address "simonho.ubc@gmail.com")
   :config
   (treemacs-load-theme "nerd-icons"))
 
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-
 (use-package doom-modeline
-  :ensure t
-  :init
-  (setq doom-modeline-height 30
+	:ensure t
+	:init
+	(setq doom-modeline-height 30
 	doom-modeline-project-detection 'auto
 	doom-modeline-buffer-modification-icon t
 	doom-modeline-lsp-icon t
@@ -146,20 +148,28 @@ user-mail-address "simonho.ubc@gmail.com")
 	doom-modeline-checker-simple-format nil
 	doom-modeline-modal-icon t
 	doom-modeline-modal-modern-icon t)
-  (doom-modeline-mode 1))
+	(doom-modeline-mode 1))
+
+(use-package diminish
+	:demand t)
 
 (use-package beacon
-  :demand t
-  :config
-  (beacon-mode 1))
+	:demand t
+	:diminish
+	:config
+	(beacon-mode 1))
 
 (use-package auto-highlight-symbol
-  :hook
-  (prog-mode . auto-highlight-symbol-mode))
+	:hook
+	(prog-mode . auto-highlight-symbol-mode))
 
 (use-package rainbow-mode
-  :hook
-  (prog-mode . rainbow-mode))
+	:hook
+	(prog-mode . rainbow-mode))
+
+(use-package rainbow-delimiters
+	:hook
+	(prog-mode . rainbow-delimiters-mode))
 
 (use-package dashboard
 	:demand t
@@ -167,9 +177,10 @@ user-mail-address "simonho.ubc@gmail.com")
 	:init
 	(setq
 	 dashboard-banner-logo-title nil
-	 dashboard-startup-banner 'official
+	 dashboard-startup-banner (concat (expand-file-name "images/" user-emacs-directory) "zzz_small.png")
 	 dashboard-projects-backend 'projectile
 	 dashboard-center-content t
+	 dashboard-display-icons-p t
 	 dashboard-icon-type 'nerd-icons
 	 dashboard-set-navigator t
 	 dashboard-set-heading-icons t
@@ -178,7 +189,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	 dashboard-set-init-info t
 	 dashboard-footer-messages '("if you have to wait for it to roar out of you, then wait patiently.\n   if it never does roar out of you, do something else.")
 	 dashboard-footer-icon (nerd-icons-codicon "nf-cod-quote"
-																						 :height 1.1
+																						 :height 1.0
 																						 :v-adjust -0.05
 																						 :face 'font-lock-keyword-face)
 	 dashboard-projects-switch-function 'projectile-persp-switch-project)
@@ -223,15 +234,16 @@ user-mail-address "simonho.ubc@gmail.com")
   (evil-mode 1))
 
 (use-package which-key
-  :demand t
-  :init
-  (setq 
-   which-key-idle-delay 0.1
-   which-key-idle-secondary-delay 0.01
-   which-key-allow-evil-operators t
-   which-key-add-column-padding 1
-   which-key-max-display-columns 4)
-  (which-key-mode))
+	:demand t
+	:diminish
+	:init
+	(setq 
+	 which-key-idle-delay 0.1
+	 which-key-idle-secondary-delay 0.01
+	 which-key-allow-evil-operators t
+	 which-key-add-column-padding 1
+	 which-key-max-display-columns 4)
+	(which-key-mode))
 
 (use-package general
 	:demand t
@@ -529,6 +541,7 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package whitespace-cleanup-mode
 	:demand t
+	:diminish
 	:config
 	(global-whitespace-cleanup-mode))
 
@@ -598,37 +611,38 @@ user-mail-address "simonho.ubc@gmail.com")
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (use-package toc-org
-  :hook (org-mode . toc-org-mode))
+	:hook (org-mode . toc-org-mode))
 
 (use-package org-modern
-  :init
-  (setq
-  ;; Edit settings
-  org-auto-align-tags nil
-  org-tags-column 0
-  org-catch-invisible-edits 'show-and-error
-  org-special-ctrl-a/e t
-  org-insert-heading-respect-content t
+	:init
+	(setq
+	;; Edit settings
+	org-auto-align-tags nil
+	org-tags-column 0
+	org-catch-invisible-edits 'show-and-error
+	org-special-ctrl-a/e t
+	org-insert-heading-respect-content t
 
-  ;; Org styling, hide markup etc.
-  org-hide-emphasis-markers t
-  org-pretty-entities t
+	;; Org styling, hide markup etc.
+	org-hide-emphasis-markers t
+	org-pretty-entities t
 
-  ;; Agenda styling
-  org-agenda-tags-column 0
-  org-agenda-block-separator ?-)
-  :hook
-  (org-mode . global-org-modern-mode))
+	;; Agenda styling
+	org-agenda-tags-column 0
+	org-agenda-block-separator ?-)
+	:hook
+	(org-mode . global-org-modern-mode))
 
 (use-package evil-org
-  :hook (org-mode . evil-org-mode)
-  :config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
+	:diminish
+	:hook (org-mode . evil-org-mode)
+	:config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
 
 (major-mode-def
-  :keymaps 'org-mode-map
-  :wk-full-keys nil
-  "o" '(org-open-at-point :wk "open link")
-  "x" '(org-babel-execute-src-block :wk "execute block")
-  "i"       (cons "insert" (make-sparse-keymap))
-  "is" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
-  "it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+	:keymaps 'org-mode-map
+	:wk-full-keys nil
+	"o" '(org-open-at-point :wk "open link")
+	"x" '(org-babel-execute-src-block :wk "execute block")
+	"i"       (cons "insert" (make-sparse-keymap))
+	"ic" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
+	"it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))

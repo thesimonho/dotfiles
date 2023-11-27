@@ -24,12 +24,13 @@ if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\wezterm
 }
 
-if ((!Test-Path $env:USERPROFILE\.emacs.d\layers)) {
-    Write-Host "Symlinking emacs config..."
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\init.el -Force
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\early-init.el -Force
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\kanagawa-theme.el -Target $env:USERPROFILE\dotfiles\emacs\custom\kanagawa-theme.el -Force
-}
+
+Write-Host "Symlinking emacs config..."
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\init.el -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\early-init.el -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\themes -Target $env:USERPROFILE\dotfiles\emacs\custom\themes -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $env:USERPROFILE\dotfiles\emacs\custom\images -Force
+
 #-----------------------------------------------------
 # Set default shell
 #-----------------------------------------------------
