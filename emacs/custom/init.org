@@ -182,7 +182,7 @@ Fonts, icons, and things
 
 #+begin_src emacs-lisp
 	(setq custom-theme-directory (expand-file-name "themes/" user-emacs-directory))
-	
+
 	(use-package autothemer
 		:demand t
 		:config
@@ -250,14 +250,17 @@ Make editing easier
 		(beacon-mode 1))
 
 	(use-package auto-highlight-symbol
+		:diminish
 		:hook
 		(prog-mode . auto-highlight-symbol-mode))
 
 	(use-package rainbow-mode
+		:diminish
 		:hook
 		(prog-mode . rainbow-mode))
 
 	(use-package rainbow-delimiters
+		:diminish
 		:hook
 		(prog-mode . rainbow-delimiters-mode))
   #+end_src
@@ -305,32 +308,44 @@ Make editing easier
 
 #+begin_src emacs-lisp
 
-  (use-package evil
-    :demand t
-    :init
-    (setq evil-want-integration t
-	  evil-want-keybinding nil
-	  evil-symbol-word-search t
-	  evil-respect-visual-line-mode t
-	  evil-ex-search-vim-style-regexp t
-	  evil-want-C-u-scroll t
-	  evil-want-C-i-jump nil)
-    :config
-    (setq evil-cross-lines t
-	  evil-kill-on-visual-paste nil
-	  evil-move-beyond-eol t
-	  evil-want-fine-undo t
-	  evil-v$-excludes-newline t)
+	(use-package evil
+		:demand t
+		:init
+		(setq evil-want-integration t
+		evil-want-keybinding nil
+		evil-symbol-word-search t
+		evil-respect-visual-line-mode t
+		evil-ex-search-vim-style-regexp t
+		evil-want-C-u-scroll t
+		evil-want-C-i-jump nil)
+		:config
+		(setq evil-cross-lines t
+		evil-kill-on-visual-paste nil
+		evil-move-beyond-eol t
+		evil-want-fine-undo t
+		evil-v$-excludes-newline t)
 
-    (setq evil-normal-state-cursor  '("#FF9E3B" box)
-	  evil-insert-state-cursor  '("#C34043" (bar . 2))
-	  evil-emacs-state-cursor   '("#FF9E3B" box)
-	  evil-replace-state-cursor '("#C34043" (hbar . 2))
-	  evil-visual-state-cursor  '("#76946A" (hbar . 2))
-	  evil-motion-state-cursor  '("#FF9E3B" box))
+		(setq evil-normal-state-cursor  '("#FF9E3B" box)
+		evil-insert-state-cursor  '("#C34043" (bar . 2))
+		evil-emacs-state-cursor   '("#FF9E3B" box)
+		evil-replace-state-cursor '("#C34043" (hbar . 2))
+		evil-visual-state-cursor  '("#76946A" (hbar . 2))
+		evil-motion-state-cursor  '("#FF9E3B" box))
 
-    (evil-set-undo-system 'undo-redo)
-    (evil-mode 1))
+		(evil-set-undo-system 'undo-redo)
+		(evil-mode 1))
+
+	(use-package evil-commentary
+		:demand t
+		:diminish
+		:config
+		(evil-commentary-mode))
+
+	(use-package evil-surround
+		:demand t
+		:diminish
+		:config
+		(global-evil-surround-mode 1))
 #+end_src
 
 * Which key
@@ -344,8 +359,8 @@ Make editing easier
 		 which-key-idle-delay 0.1
 		 which-key-idle-secondary-delay 0.01
 		 which-key-allow-evil-operators t
-		 which-key-add-column-padding 1
-		 which-key-max-display-columns 4)
+		 which-key-add-column-padding 5
+		 which-key-max-display-columns 5)
 		(which-key-mode))
 #+end_src
 
@@ -384,7 +399,9 @@ Make editing easier
 	:wk-full-keys nil
 		"SPC"     '("M-x" . execute-extended-command)
 		"TAB"     '("last buffer" . alternate-buffer)
+		"`"				'(eshell :wk "shell")
 		"u"       '("universal arg" . universal-argument)
+		"y"				'(consult-yank-pop :wk "kill ring")
 
 		"h"       (cons "help" (make-sparse-keymap))
 		"hb"      'describe-bindings
@@ -470,17 +487,17 @@ Projectile + perspective
     (leader-def
       :wk-full-keys nil
       "p"       (cons "projects" (make-sparse-keymap))
-      "pp" '(projectile-persp-switch-project :wk "Switch project")
-      "pf" '(consult-project-buffer :wk "Project files")
-      "pa" '(projectile-add-known-project :wk "Add project")
-      "pd" '(projectile-remove-known-project :wk "Remove project")
-      "p!" '(projectile-run-shell-command-in-root :wk "Run command in root")
+      "pp" '(projectile-persp-switch-project :wk "switch project")
+      "pf" '(consult-project-buffer :wk "project files")
+      "pa" '(projectile-add-known-project :wk "add project")
+      "pd" '(projectile-remove-known-project :wk "remove project")
+      "p!" '(projectile-run-shell-command-in-root :wk "run command in root")
 
-      "p1" '((lambda () (interactive) (persp-switch-by-number 1)) :wk "Project 1")
-      "p2" '((lambda () (interactive) (persp-switch-by-number 2)) :wk "Project 2")
-      "p3" '((lambda () (interactive) (persp-switch-by-number 3)) :wk "Project 3")
-      "p4" '((lambda () (interactive) (persp-switch-by-number 4)) :wk "Project 4")
-      "p5" '((lambda () (interactive) (persp-switch-by-number 5)) :wk "Project 5")
+      "p1" '((lambda () (interactive) (persp-switch-by-number 1)) :wk "project 1")
+      "p2" '((lambda () (interactive) (persp-switch-by-number 2)) :wk "project 2")
+      "p3" '((lambda () (interactive) (persp-switch-by-number 3)) :wk "project 3")
+      "p4" '((lambda () (interactive) (persp-switch-by-number 4)) :wk "project 4")
+      "p5" '((lambda () (interactive) (persp-switch-by-number 5)) :wk "project 5")
       ))
 
   (use-package perspective
@@ -675,6 +692,7 @@ Format all command (useful for languages with no lsp support)
 
 #+begin_src emacs-lisp
 	(use-package format-all
+		:diminish
 		:commands format-all-mode
 		:hook (prog-mode . format-all-mode)
 		:config
@@ -702,22 +720,36 @@ Format all command (useful for languages with no lsp support)
 #+begin_src emacs-lisp
 	(use-package avy
 		:demand t
-		:after ace-window
 		:general
 		(leader-def
-			:wk-full-keys nil
-			"j"       (cons "jump" (make-sparse-keymap))
-			"jj" 'avy-goto-char-timer
-			"jl" 'avy-goto-line
-			"jb" 'centaur-tabs-ace-jump
-			"jw" 'ace-window))
+				:wk-full-keys nil
+				"j"       (cons "jump" (make-sparse-keymap))
+				"jj" 'avy-goto-char-timer
+				"jl" 'avy-goto-line
+				"jb" 'centaur-tabs-ace-jump
+				"jw" 'ace-window))
 
 	(use-package ace-window
-		:demand t
 		:init
 		(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
 					aw-minibuffer-flag t
 					aw-ignore-current t))
+
+	(use-package ace-link)
+
+	(dolist (mode-mapping '((org-mode-map . ace-link-org)
+													(Info-mode-map . ace-link-info)
+													(help-mode-map . ace-link-help)
+													(woman-mode-map . ace-link-woman)
+													(eww-mode-map . ace-link-eww)
+													(eww-link-keymap . ace-link-eww)
+													))
+		(let ((mode-map (car mode-mapping))
+					(ace-link-command (cdr mode-mapping)))
+			(general-nmap
+				:keymaps mode-map
+				:prefix "SPC"
+				"jo" ace-link-command)))
 #+end_src
 
 * LSP goodness
@@ -725,33 +757,35 @@ Format all command (useful for languages with no lsp support)
 Setting the keymap prefix here is a bit delicate. It requires a hook because we're deferring the loading of the lsp server, but also need to bind the prefix to lsp-command-map so which key can see it
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-      :init
-      (setq
-      lsp-modeline-diagnostics-enable t
-      lsp-modeline-code-actions-mode t
-      lsp-headerline-breadcrumb-mode t
-      lsp-warn-no-matched-clients nil
-      lsp-enable-suggest-server-download t)
-      :hook ((prog-mode . lsp-deferred)
-	     (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
-			   (lsp-enable-which-key-integration))))
-      :commands (lsp lsp-deferred)
-      :config
-      (general-def 'normal lsp-mode :definer 'minor-mode
-	"SPC l" lsp-command-map))
+	(use-package lsp-mode
+		:init
+		(setq
+		 lsp-modeline-diagnostics-enable t
+		 lsp-modeline-code-actions-mode t
+		 lsp-headerline-breadcrumb-mode t
+		 lsp-warn-no-matched-clients nil
+		 lsp-enable-suggest-server-download t)
+		:hook ((prog-mode . lsp-deferred)
+					 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
+												 (lsp-enable-which-key-integration))))
+		:commands (lsp lsp-deferred)
+		:config
+		(general-def 'normal lsp-mode :definer 'minor-mode
+			"SPC l" lsp-command-map))
 
-  (use-package lsp-ui :commands lsp-ui-mode)
+	(use-package lsp-ui
+		:commands lsp-ui-mode)
 
-  (use-package consult-lsp)
+	(use-package consult-lsp)
 
-  (use-package lsp-treemacs
-      :init
-      (lsp-treemacs-sync-mode 1)
-      :commands lsp-treemacs-errors-list)
+	(use-package lsp-treemacs
+		:init
+		(lsp-treemacs-sync-mode 1)
+		:commands lsp-treemacs-errors-list)
 
-  (use-package flycheck
-      :init (global-flycheck-mode))
+	(use-package flycheck
+		:diminish
+		:init (global-flycheck-mode))
 #+end_src
 
 * Languages
@@ -786,7 +820,7 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
   (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 #+end_src
 
-* TODO Org mode
+* Org mode
 
 #+begin_src emacs-lisp
 	(use-package toc-org
@@ -820,7 +854,6 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 	(major-mode-def
 		:keymaps 'org-mode-map
 		:wk-full-keys nil
-		"o" '(org-open-at-point :wk "open link")
 		"x" '(org-babel-execute-src-block :wk "execute block")
 		"i"       (cons "insert" (make-sparse-keymap))
 		"ic" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
