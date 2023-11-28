@@ -27,10 +27,12 @@
   - [[#formatting][Formatting]]
   - [[#navigation][Navigation]]
 - [[#lsp-goodness][LSP goodness]]
+- [[#treesitter][Treesitter]]
 - [[#languages][Languages]]
   - [[#npm][NPM]]
   - [[#emacs-lisp][Emacs lisp]]
   - [[#python][Python]]
+  - [[#vue][Vue]]
 - [[#org-mode][Org mode]]
 
 * Auto-tangle Configuration Files
@@ -254,11 +256,6 @@ Make editing easier
 		:diminish
 		:config
 		(beacon-mode 1))
-
-	(use-package auto-highlight-symbol
-		:diminish
-		:hook
-		(prog-mode . auto-highlight-symbol-mode))
 
 	(use-package rainbow-mode
 		:diminish
@@ -772,7 +769,9 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 		 lsp-modeline-code-actions-mode t
 		 lsp-modeline-code-actions-segments '(icon count)
 		 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
+		 lsp-enable-snippet nil
 		 lsp-headerline-breadcrumb-mode t
+		 lsp-headerline-breadcrumb-segments '(file symbols)
 		 lsp-warn-no-matched-clients nil
 		 lsp-enable-suggest-server-download t)
 		:hook ((prog-mode . lsp-deferred)
@@ -796,6 +795,18 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 		:init (global-flycheck-mode))
 #+end_src
 
+* Treesitter
+
+#+begin_src emacs-lisp
+	(use-package treesit-auto
+		:demand t
+	:custom
+	(treesit-auto-install 'prompt)
+	:config
+	(treesit-auto-add-to-auto-mode-alist 'all)
+	(global-treesit-auto-mode))
+#+end_src
+
 * Languages
 
 ** NPM
@@ -804,7 +815,7 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 	(use-package npm
 		:general
 		(major-mode-def
-			:keymaps '(js-mode-map typescript-ts-mode-map)
+			:keymaps '(js-mode-map typescript-ts-mode-map web-mode-map)
 			:wk-full-keys nil
 			"n" 'npm)
 		)
@@ -826,6 +837,14 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 
 #+begin_src emacs-lisp
   (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
+#+end_src
+
+** Vue
+
+#+begin_src emacs-lisp
+	(use-package web-mode
+		:init
+		(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
 #+end_src
 
 * Org mode

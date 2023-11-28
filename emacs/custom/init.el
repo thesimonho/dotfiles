@@ -165,11 +165,6 @@ user-mail-address "simonho.ubc@gmail.com")
 	:config
 	(beacon-mode 1))
 
-(use-package auto-highlight-symbol
-	:diminish
-	:hook
-	(prog-mode . auto-highlight-symbol-mode))
-
 (use-package rainbow-mode
 	:diminish
 	:hook
@@ -611,7 +606,9 @@ user-mail-address "simonho.ubc@gmail.com")
 	 lsp-modeline-code-actions-mode t
 	 lsp-modeline-code-actions-segments '(icon count)
 	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
+	 lsp-enable-snippet nil
 	 lsp-headerline-breadcrumb-mode t
+	 lsp-headerline-breadcrumb-segments '(file symbols)
 	 lsp-warn-no-matched-clients nil
 	 lsp-enable-suggest-server-download t)
 	:hook ((prog-mode . lsp-deferred)
@@ -634,10 +631,18 @@ user-mail-address "simonho.ubc@gmail.com")
 	:diminish
 	:init (global-flycheck-mode))
 
+(use-package treesit-auto
+	:demand t
+:custom
+(treesit-auto-install 'prompt)
+:config
+(treesit-auto-add-to-auto-mode-alist 'all)
+(global-treesit-auto-mode))
+
 (use-package npm
 	:general
 	(major-mode-def
-		:keymaps '(js-mode-map typescript-ts-mode-map)
+		:keymaps '(js-mode-map typescript-ts-mode-map web-mode-map)
 		:wk-full-keys nil
 		"n" 'npm)
 	)
@@ -651,6 +656,10 @@ user-mail-address "simonho.ubc@gmail.com")
   (lispy-mode . lispyville-mode))
 
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
+
+(use-package web-mode
+	:init
+	(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
 
 (use-package toc-org
 	:hook (org-mode . toc-org-mode))
