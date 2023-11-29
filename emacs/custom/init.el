@@ -639,14 +639,21 @@ user-mail-address "simonho.ubc@gmail.com")
 (treesit-auto-add-to-auto-mode-alist 'all)
 (global-treesit-auto-mode))
 
-(use-package diff-hl
+(use-package git-gutter
 	:demand t
+	:diminish
+	:init
+	(custom-set-variables
+	 '(git-gutter:update-interval 5)
+	 '(git-gutter:modified-sign "~")
+	 '(git-gutter:added-sign "+") 
+	 '(git-gutter:deleted-sign "-"))
 	:config
 	(general-define-key
 	 :states 'normal
-	 "[h" '(diff-hl-previous-hunk :wk "previous hunk")
-	 "]h" '(diff-hl-next-hunk :wk "next hunk"))
-	(global-diff-hl-mode))
+	 "[h" '(git-gutter:previous-hunk :wk "previous hunk")
+	 "]h" '(git-gutter:next-hunk :wk "next hunk"))
+	(global-git-gutter-mode t))
 
 (use-package npm
 	:general
