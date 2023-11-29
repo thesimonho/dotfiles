@@ -568,6 +568,11 @@ Minibuffer completion with Vertico et al.
 											 "C-j" 'vertico-next
 											 "C-k" 'vertico-previous))
 
+	(elpaca nil (use-package vertico-mouse
+		:after vertico)
+		:config
+		(vertico-mouse-mode))
+
 	;; Add prompt indicator to `completing-read-multiple'.
 	(defun crm-indicator (args)
 		(cons (format "[CRM%s] %s"
@@ -611,7 +616,7 @@ Minibuffer completion with Vertico et al.
 			"bd" '(kill-current-buffer :wk "delete buffer")
 
 			"f"       (cons "files" (make-sparse-keymap))
-  		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
+			"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
 			"fs" '(save-buffer :wk "Save") 
 			"ff" '(consult-buffer :wk "find file")
 			"fr" '(consult-recent-file :wk "recent files")
