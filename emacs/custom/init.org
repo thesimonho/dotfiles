@@ -24,7 +24,7 @@
 - [[#editor][Editor]]
   - [[#treemacs][Treemacs]]
   - [[#tabs][Tabs]]
-  - [[#formatting][Formatting]]
+  - [[#editing-1][Editing]]
   - [[#navigation][Navigation]]
 - [[#lsp-goodness][LSP goodness]]
 - [[#treesitter][Treesitter]]
@@ -245,6 +245,11 @@ Fonts, icons, and things
 			(diminish (car mode) (cdr mode))))
 
 	(add-hook 'elpaca-after-init-hook #'diminish-modes)
+
+	(use-package minions
+		:demand t
+		:config
+		(minions-mode))
 #+end_src
 
 ** Editing
@@ -691,7 +696,7 @@ Expand selection; treesitter style
 							"T" 'centaur-tabs-backward))
 #+end_src
 
-** Formatting
+** Editing
 
 Format all command (useful for languages with no lsp support)
 
@@ -718,6 +723,18 @@ Format all command (useful for languages with no lsp support)
 		:diminish
 		:config
 		(global-whitespace-cleanup-mode))
+#+end_src
+
+Find and replace
+
+#+begin_src emacs-lisp
+	(use-package anzu
+	:config
+	(global-anzu-mode +1)
+	:general
+	(leader-def
+		:wk-full-keys nil
+		"cr" '(anzu-query-replace-regexp :wk "replace")))
 #+end_src
 
 ** Navigation

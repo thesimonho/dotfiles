@@ -159,6 +159,11 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (add-hook 'elpaca-after-init-hook #'diminish-modes)
 
+(use-package minions
+	:demand t
+	:config
+	(minions-mode))
+
 (use-package beacon
 	:demand t
 	:diminish
@@ -564,6 +569,14 @@ user-mail-address "simonho.ubc@gmail.com")
 	:diminish
 	:config
 	(global-whitespace-cleanup-mode))
+
+(use-package anzu
+:config
+(global-anzu-mode +1)
+:general
+(leader-def
+	:wk-full-keys nil
+	"cr" '(anzu-query-replace-regexp :wk "replace")))
 
 (use-package avy
 	:demand t
