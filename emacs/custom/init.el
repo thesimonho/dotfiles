@@ -639,6 +639,15 @@ user-mail-address "simonho.ubc@gmail.com")
 (treesit-auto-add-to-auto-mode-alist 'all)
 (global-treesit-auto-mode))
 
+(use-package diff-hl
+	:demand t
+	:config
+	(general-define-key
+	 :states 'normal
+	 "[h" '(diff-hl-previous-hunk :wk "previous hunk")
+	 "]h" '(diff-hl-next-hunk :wk "next hunk"))
+	(global-diff-hl-mode))
+
 (use-package npm
 	:general
 	(major-mode-def
@@ -649,11 +658,11 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package lispy
   :hook
-  ((emacs-lisp-mode). lispy-mode))
+  (emacs-lisp-mode . lispy-mode))
 
 (use-package lispyville
   :hook
-  (lispy-mode . lispyville-mode))
+  (emacs-lisp-mode . lispyville-mode))
 
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 

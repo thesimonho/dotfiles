@@ -85,7 +85,7 @@
    (line-number                                   (:foreground sumiInk-4))
    (line-number-current-line                      (:foreground springViolet2 :background sumiInk-2 :bold t))
    (lv-separator                                  (:foreground waveBlue-2 :background sumiInk-2))
-   (match                                         (:background carpYellow :foreground sumiInk-0))
+   (match                                         (:background roninYellow :foreground sumiInk-0))
    (menu                                          (:background sumiInk-0 :foreground fujiWhite))
    (mode-line                                     (:background sumiInk-3))
    (mode-line-inactive                            (:foreground sumiInk-4 :bold nil))

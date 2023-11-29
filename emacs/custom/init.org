@@ -28,6 +28,7 @@
   - [[#navigation][Navigation]]
 - [[#lsp-goodness][LSP goodness]]
 - [[#treesitter][Treesitter]]
+- [[#vcs][VCS]]
 - [[#languages][Languages]]
   - [[#npm][NPM]]
   - [[#emacs-lisp][Emacs lisp]]
@@ -797,6 +798,8 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 
 * Treesitter
 
+The most useful package ever
+
 #+begin_src emacs-lisp
 	(use-package treesit-auto
 		:demand t
@@ -805,6 +808,19 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 	:config
 	(treesit-auto-add-to-auto-mode-alist 'all)
 	(global-treesit-auto-mode))
+#+end_src
+
+* VCS
+
+#+begin_src emacs-lisp
+	(use-package diff-hl
+		:demand t
+		:config
+		(general-define-key
+		 :states 'normal
+		 "[h" '(diff-hl-previous-hunk :wk "previous hunk")
+		 "]h" '(diff-hl-next-hunk :wk "next hunk"))
+		(global-diff-hl-mode))
 #+end_src
 
 * Languages
@@ -826,11 +842,11 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 #+begin_src emacs-lisp
   (use-package lispy
     :hook
-    ((emacs-lisp-mode). lispy-mode))
+    (emacs-lisp-mode . lispy-mode))
 
   (use-package lispyville
     :hook
-    (lispy-mode . lispyville-mode))
+    (emacs-lisp-mode . lispyville-mode))
       #+end_src
 
 ** Python
