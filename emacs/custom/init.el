@@ -64,6 +64,12 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
+(use-package no-littering
+	:init
+	(setq no-littering-etc-directory (expand-file-name "config/" user-emacs-directory)
+				no-littering-var-directory (expand-file-name "data/" user-emacs-directory)
+				custom-file (no-littering-expand-etc-file-name "custom.el")))
+
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
@@ -87,7 +93,8 @@
 	column-number-mode t
 	use-dialog-box nil
 	set-charset-priority 'unicode
-	prefer-coding-system 'utf-8-unix)
+	prefer-coding-system 'utf-8-unix
+	native-comp-async-report-warnings-errors nil)
 
 (setq-default tab-width 2)
 
@@ -95,12 +102,6 @@
 (set-fringe-mode 10)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-
-;; Silence compiler warnings as they can be pretty disruptive
-(setq native-comp-async-report-warnings-errors nil)
-
-;; Set the right directory to store the native comp cache
-(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
 (setq user-full-name "Simon Ho"
 user-mail-address "simonho.ubc@gmail.com")
@@ -476,6 +477,10 @@ user-mail-address "simonho.ubc@gmail.com")
 	 consult--source-recent-file consult--source-project-recent-file
 	 :preview-key '(:debounce 0.5 any))
 	(recentf-mode)
+	(add-to-list 'recentf-exclude
+							 (recentf-expand-file-name no-littering-var-directory))
+	(add-to-list 'recentf-exclude
+							 (recentf-expand-file-name no-littering-etc-directory))
 	:general 
 	(leader-def
 		:wk-full-keys nil
