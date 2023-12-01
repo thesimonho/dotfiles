@@ -34,6 +34,7 @@
   - [[#emacs-lisp][Emacs lisp]]
   - [[#python][Python]]
   - [[#vue][Vue]]
+- [[#terraform][Terraform]]
 - [[#org-mode][Org mode]]
 
 * Auto-tangle Configuration Files
@@ -902,6 +903,13 @@ The most useful package ever
 	(use-package web-mode
 		:init
 		(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
+#+end_src
+
+* Terraform
+
+#+begin_src emacs-lisp
+	(use-package terraform-mode
+  :custom (terraform-format-on-save t))
 #+end_src
 
 * Org mode

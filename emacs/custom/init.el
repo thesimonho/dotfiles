@@ -708,6 +708,9 @@ user-mail-address "simonho.ubc@gmail.com")
 	:init
 	(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
 
+(use-package terraform-mode
+:custom (terraform-format-on-save t))
+
 (use-package toc-org
 	:hook (org-mode . toc-org-mode))
 
