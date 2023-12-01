@@ -298,7 +298,7 @@ user-mail-address "simonho.ubc@gmail.com")
 :wk-full-keys nil
 	"SPC"     '("M-x" . execute-extended-command)
 	"TAB"     '("last buffer" . previous-buffer)
-	"`"				'(eshell :wk "shell")
+	"`"				'(eshell :wk "eshell")
 	"u"       '("universal arg" . universal-argument)
 	"y"				'(consult-yank-pop :wk "kill ring")
 
@@ -433,7 +433,6 @@ user-mail-address "simonho.ubc@gmail.com")
 				completion-ignore-case t
 				vertico-resize t)
 	(vertico-mode)
-	(keymap-set vertico-map "TAB" #'minibuffer-complete)
 	:general (:keymaps 'vertico-map
 										 "C-j" 'vertico-next
 										 "C-k" 'vertico-previous))
@@ -603,7 +602,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	(leader-def
 			:wk-full-keys nil
 			"j"       (cons "jump" (make-sparse-keymap))
-			"jj" 'avy-goto-char-timer
+			"jj" 'avy-goto-char-2
 			"jl" 'avy-goto-line
 			"jb" 'centaur-tabs-ace-jump
 			"jw" 'ace-window))
