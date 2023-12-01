@@ -12,7 +12,7 @@
     ;; 		     (emacs-init-time "%.2f")
     ;; 		     gcs-done)))
   
-(setq use-package-verbose nil		; don't print anything
+(setq use-package-verbose nil  ; don't print anything
       use-package-compute-statistics t ; compute statistics about package initialization
       use-package-minimum-reported-time 0.0001
       use-package-always-defer t)	; always defer, don't "require", except when :demand
@@ -433,6 +433,7 @@ user-mail-address "simonho.ubc@gmail.com")
 				completion-ignore-case t
 				vertico-resize t)
 	(vertico-mode)
+	(keymap-set vertico-map "TAB" #'minibuffer-complete)
 	:general (:keymaps 'vertico-map
 										 "C-j" 'vertico-next
 										 "C-k" 'vertico-previous))
@@ -489,11 +490,10 @@ user-mail-address "simonho.ubc@gmail.com")
 		"bd" '(kill-current-buffer :wk "delete buffer")
 
 		"f"       (cons "files" (make-sparse-keymap))
-		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "Open Emacs config")
-		"fs" '(save-buffer :wk "Save") 
-		"ff" '(consult-buffer :wk "find file")
+		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "open Emacs config")
+		"fs" '(save-buffer :wk "save") 
+		"ff" '(find-file :wk "find file")
 		"fr" '(consult-recent-file :wk "recent files")
-		"fg" '(consult-ripgrep :wk "grep")
 		"ft" '(treemacs-select-window :wk "file tree")
 		))
 
@@ -509,6 +509,13 @@ user-mail-address "simonho.ubc@gmail.com")
 (leader-def
 	:wk-full-keys nil
 	"v" '(er/expand-region :wk "expand region")))
+
+(use-package smart-hungry-delete
+	:demand t
+	:init (smart-hungry-delete-add-default-hooks)
+	:general
+	(general-imap "C-<backspace>" 'smart-hungry-delete-backward-char)
+	(general-imap "C-<delete>" 'smart-hungry-delete-forward-char))
 
 (use-package treemacs
 	:demand t
@@ -572,7 +579,9 @@ user-mail-address "simonho.ubc@gmail.com")
 	(leader-def
 		:wk-full-keys nil
 		"c"       (cons "code" (make-sparse-keymap))
-		"cf" '(format-all-region-or-buffer :wk "format")))
+		"cf" '(format-all-region-or-buffer :wk "format")
+		"cs" '(consult-line :wk "search")
+		"co" '(consult-imenu :wk "outline")))
 
 (use-package whitespace-cleanup-mode
 	:demand t
