@@ -92,6 +92,7 @@
 	delete-selection-mode t
 	column-number-mode t
 	use-dialog-box nil
+	confirm-kill-processes nil
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
 	native-comp-async-report-warnings-errors nil)
@@ -702,6 +703,14 @@ user-mail-address "simonho.ubc@gmail.com")
   :hook
   (emacs-lisp-mode . lispyville-mode))
 
+(major-mode-def
+	:keymaps 'python-ts-mode-map
+	:wk-full-keys nil
+	"s" 'run-python
+	"x" 'send-shell-send-buffer)
+
+(setq python-shell-interpreter "~/anaconda3/python"
+			lsp-ruff-lsp-python-path "python")
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (use-package web-mode
