@@ -610,11 +610,11 @@ user-mail-address "simonho.ubc@gmail.com")
 															:repo "zerolfx/copilot.el"
 															:branch "main"
 															:files ("dist" "*.el"))
-	:demand t
 	:init
 	(setq copilot-indent-warning-suppress t)
-	:config
-	(global-copilot-mode)
+	:hook
+	(prog-mode . copilot-mode)
+	(org-mode . copilot-mode)
 	:general
 	(:keymaps 'copilot-completion-map
 						"<tab>" 'copilot-accept-completion
