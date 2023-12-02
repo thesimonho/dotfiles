@@ -73,6 +73,10 @@
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
+;; Make sure conda python is found before emacs python
+(setq python-path "~/anaconda3/")
+(setq exec-path (cons python-path exec-path))
+
 (setq gc-cons-threshold 50000000
 	read-process-output-max (* 1024 1024)
 	warning-minimum-level :error
@@ -520,7 +524,7 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package treemacs
 	:demand t
 	:init
-	(setq treemacs-python-executable "~/anaconda3/python.exe")
+	(setq treemacs-python-executable (concat python-path "python.exe"))
 	:config
 	(treemacs-follow-mode t)
 	(treemacs-project-follow-mode t)
@@ -709,8 +713,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	"s" 'run-python
 	"x" 'python-shell-send-buffer)
 
-(setq python-shell-interpreter "~/anaconda3/python"
-			lsp-ruff-lsp-python-path "python")
+(setq python-shell-interpreter (concat python-path "python.exe")
+			lsp-ruff-lsp-python-path (concat python-path "python.exe"))
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (use-package web-mode
