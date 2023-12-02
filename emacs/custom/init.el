@@ -510,12 +510,12 @@ user-mail-address "simonho.ubc@gmail.com")
 	:wk-full-keys nil
 	"v" '(er/expand-region :wk "expand region")))
 
-(use-package smart-hungry-delete
-	:demand t
-	:init (smart-hungry-delete-add-default-hooks)
-	:general
-	(general-imap "C-<backspace>" 'smart-hungry-delete-backward-char)
-	(general-imap "C-<delete>" 'smart-hungry-delete-forward-char))
+;; (use-package smart-hungry-delete
+;; 	:demand t
+;; 	:init (smart-hungry-delete-add-default-hooks)
+;; 	:general
+;; 	(general-imap "C-<backspace>" 'smart-hungry-delete-backward-char)
+;; 	(general-imap "C-<delete>" 'smart-hungry-delete-forward-char))
 
 (use-package treemacs
 	:demand t
