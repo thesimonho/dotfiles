@@ -339,6 +339,12 @@ user-mail-address "simonho.ubc@gmail.com")
 	"wn"			'clone-frame
 	"wo"			'other-frame
 
+	"z" (cons "tools" (make-sparse-keymap))
+	"zu" 'use-package-report
+	"zp" 'profiler-start
+	"zP" 'profiler-report
+	"zd" 'toggle-debug-on-quit
+
 	"q"       (cons "quit" (make-sparse-keymap))
 	"qd"      'restart-emacs-debug-init
 	"qr"      'restart-emacs
@@ -515,14 +521,14 @@ user-mail-address "simonho.ubc@gmail.com")
 	"v" '(er/expand-region :wk "expand region")))
 
 (elpaca (eshell-toggle :host github :repo "4DA/eshell-toggle")
-:custom
-(eshell-toggle-size-fraction 4)
-(eshell-toggle-use-projectile-root t)
-(eshell-toggle-run-command nil)
-(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
+	:custom
+	(eshell-toggle-size-fraction 4)
+	(eshell-toggle-use-projectile-root t)
+	(eshell-toggle-run-command nil)
+	(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
 
 (use-package treemacs
-	:demand t
+	;; :demand t
 	:init
 	(setq treemacs-python-executable (concat python-path "python.exe"))
 	:config
@@ -659,6 +665,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	:commands lsp-ui-mode)
 
 (use-package lsp-treemacs
+	:after '(lsp-mode treemacs)
 	:init
 	(lsp-treemacs-sync-mode 1)
 	:commands lsp-treemacs-errors-list)

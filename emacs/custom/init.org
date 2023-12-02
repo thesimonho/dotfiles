@@ -25,7 +25,7 @@
   - [[#shell][Shell]]
   - [[#treemacs][Treemacs]]
   - [[#tabs][Tabs]]
-  - [[#editing-1][Editing]]
+  - [[#text-editing][Text Editing]]
   - [[#navigation][Navigation]]
 - [[#lsp-goodness][LSP goodness]]
 - [[#treesitter][Treesitter]]
@@ -451,6 +451,12 @@ Make editing easier
 		"wn"			'clone-frame
 		"wo"			'other-frame
 
+		"z" (cons "tools" (make-sparse-keymap))
+		"zu" 'use-package-report
+		"zp" 'profiler-start
+		"zP" 'profiler-report
+		"zd" 'toggle-debug-on-quit
+
 		"q"       (cons "quit" (make-sparse-keymap))
 		"qd"      'restart-emacs-debug-init
 		"qr"      'restart-emacs
@@ -660,18 +666,18 @@ Expand selection; treesitter style
 
 #+begin_src emacs-lisp
 	(elpaca (eshell-toggle :host github :repo "4DA/eshell-toggle")
-	:custom
-	(eshell-toggle-size-fraction 4)
-	(eshell-toggle-use-projectile-root t)
-	(eshell-toggle-run-command nil)
-	(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
+		:custom
+		(eshell-toggle-size-fraction 4)
+		(eshell-toggle-use-projectile-root t)
+		(eshell-toggle-run-command nil)
+		(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
 #+end_src
 
 ** Treemacs
 
 #+begin_src emacs-lisp
 	(use-package treemacs
-		:demand t
+		;; :demand t
 		:init
 		(setq treemacs-python-executable (concat python-path "python.exe"))
 		:config
@@ -722,7 +728,7 @@ Expand selection; treesitter style
 							"T" 'centaur-tabs-backward))
 #+end_src
 
-** Editing
+** Text Editing
 
 Format all command (useful for languages with no lsp support)
 
@@ -832,6 +838,7 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 		:commands lsp-ui-mode)
 
 	(use-package lsp-treemacs
+		:after '(lsp-mode treemacs)
 		:init
 		(lsp-treemacs-sync-mode 1)
 		:commands lsp-treemacs-errors-list)
