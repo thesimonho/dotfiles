@@ -707,10 +707,10 @@ user-mail-address "simonho.ubc@gmail.com")
 	:keymaps 'python-ts-mode-map
 	:wk-full-keys nil
 	"s" 'run-python
-	"x" 'send-shell-send-buffer)
+	"x" 'python-shell-send-buffer)
 
 (setq python-shell-interpreter "~/anaconda3/python"
-			lsp-ruff-lsp-python-path "python")
+			lsp-ruff-lsp-python-path "python"
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (use-package web-mode

@@ -895,15 +895,15 @@ The most useful package ever
 ** Python
 
 #+begin_src emacs-lisp
-	(major-mode-def
-		:keymaps 'python-ts-mode-map
-		:wk-full-keys nil
-		"s" 'run-python
-		"x" 'send-shell-send-buffer)
+		(major-mode-def
+			:keymaps 'python-ts-mode-map
+			:wk-full-keys nil
+			"s" 'run-python
+			"x" 'python-shell-send-buffer)
 
-	(setq python-shell-interpreter "~/anaconda3/python"
-				lsp-ruff-lsp-python-path "python")
-	(add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
+		(setq python-shell-interpreter "~/anaconda3/python"
+					lsp-ruff-lsp-python-path "python"
+		(add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 #+end_src
 
 ** Vue
