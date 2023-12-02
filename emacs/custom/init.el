@@ -77,7 +77,7 @@
 (setq python-path "~/anaconda3/")
 (setq exec-path (cons python-path exec-path))
 
-(setq gc-cons-threshold 50000000
+(setq gc-cons-threshold 100000000
 	read-process-output-max (* 1024 1024)
 	warning-minimum-level :error
 	ring-bell-function 'ignore
@@ -224,27 +224,27 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package evil
 	:demand t
-	:init
-	(setq evil-want-integration t
-	evil-want-keybinding nil
-	evil-symbol-word-search t
-	evil-respect-visual-line-mode t
-	evil-ex-search-vim-style-regexp t
-	evil-want-C-u-scroll t
-	evil-want-C-i-jump nil)
 	:config
-	(setq evil-cross-lines t
-	evil-kill-on-visual-paste nil
-	evil-move-beyond-eol t
-	evil-want-fine-undo t
-	evil-v$-excludes-newline t)
+	(setq
+	 evil-want-integration t
+	 evil-want-keybinding nil
+	 evil-symbol-word-search t
+	 evil-respect-visual-line-mode t
+	 evil-ex-search-vim-style-regexp t
+	 evil-want-C-u-scroll t
+	 evil-want-C-i-jump nil
+	 evil-cross-lines t
+	 evil-kill-on-visual-paste nil
+	 evil-move-beyond-eol t
+	 evil-want-fine-undo t
+	 evil-v$-excludes-newline t)
 
 	(setq evil-normal-state-cursor  '("#FF9E3B" box)
-	evil-insert-state-cursor  '("#C34043" (bar . 2))
-	evil-emacs-state-cursor   '("#FF9E3B" box)
-	evil-replace-state-cursor '("#C34043" (hbar . 2))
-	evil-visual-state-cursor  '("#76946A" (hbar . 2))
-	evil-motion-state-cursor  '("#FF9E3B" box))
+				evil-insert-state-cursor  '("#C34043" (bar . 2))
+				evil-emacs-state-cursor   '("#FF9E3B" box)
+				evil-replace-state-cursor '("#C34043" (hbar . 2))
+				evil-visual-state-cursor  '("#76946A" (hbar . 2))
+				evil-motion-state-cursor  '("#FF9E3B" box))
 
 	(evil-set-undo-system 'undo-redo)
 	(evil-mode 1))
@@ -522,7 +522,6 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (elpaca (eshell-toggle :host github :repo "4DA/eshell-toggle")
 	:custom
-	(eshell-toggle-size-fraction 4)
 	(eshell-toggle-use-projectile-root t)
 	(eshell-toggle-run-command nil)
 	(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
@@ -666,6 +665,9 @@ user-mail-address "simonho.ubc@gmail.com")
 	 lsp-headerline-breadcrumb-mode t
 	 lsp-headerline-breadcrumb-segments '(file symbols)
 	 lsp-warn-no-matched-clients nil
+	 lsp-ui-peek-enable nil
+	 lsp-ui-doc-show-with-cursor nil
+	 lsp-ui-doc-show-with-mouse nil
 	 lsp-enable-suggest-server-download t)
 	:hook ((prog-mode . lsp-deferred)
 				 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
