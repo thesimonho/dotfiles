@@ -26,6 +26,7 @@
   - [[#treemacs][Treemacs]]
   - [[#tabs][Tabs]]
   - [[#text-editing][Text Editing]]
+  - [[#copilot][Copilot]]
   - [[#navigation][Navigation]]
 - [[#lsp-goodness][LSP goodness]]
 - [[#treesitter][Treesitter]]
@@ -232,6 +233,7 @@ Fonts, icons, and things
 			:init
 			(setq doom-modeline-height 30
 			doom-modeline-project-detection 'auto
+			doom-modeline-display-default-persp-name nil
 			doom-modeline-buffer-modification-icon t
 			doom-modeline-lsp t
 			doom-modeline-time-icon nil
@@ -767,6 +769,24 @@ Find and replace
 	(leader-def
 		:wk-full-keys nil
 		"cr" '(anzu-query-replace-regexp :wk "replace")))
+#+end_src
+
+** Copilot
+
+#+begin_src emacs-lisp
+	(use-package copilot :elpaca (:host github
+																:repo "zerolfx/copilot.el"
+																:branch "main"
+																:files ("dist" "*.el"))
+		:demand t
+		:init
+		(setq copilot-indent-warning-suppress t)
+		:config
+		(global-copilot-mode)
+		:general
+		(:keymaps 'copilot-completion-map
+							"<tab>" 'copilot-accept-completion
+							"ESC" 'copilot-clear-overlay))
 #+end_src
 
 ** Navigation

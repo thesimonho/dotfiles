@@ -144,6 +144,7 @@ user-mail-address "simonho.ubc@gmail.com")
 		:init
 		(setq doom-modeline-height 30
 		doom-modeline-project-detection 'auto
+		doom-modeline-display-default-persp-name nil
 		doom-modeline-buffer-modification-icon t
 		doom-modeline-lsp t
 		doom-modeline-time-icon nil
@@ -605,6 +606,20 @@ user-mail-address "simonho.ubc@gmail.com")
 (leader-def
 	:wk-full-keys nil
 	"cr" '(anzu-query-replace-regexp :wk "replace")))
+
+(use-package copilot :elpaca (:host github
+															:repo "zerolfx/copilot.el"
+															:branch "main"
+															:files ("dist" "*.el"))
+	:demand t
+	:init
+	(setq copilot-indent-warning-suppress t)
+	:config
+	(global-copilot-mode)
+	:general
+	(:keymaps 'copilot-completion-map
+						"<tab>" 'copilot-accept-completion
+						"ESC" 'copilot-clear-overlay))
 
 (use-package avy
 	:demand t
