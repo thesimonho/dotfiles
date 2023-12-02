@@ -73,7 +73,7 @@
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-(setq gc-cons-threshold 100000000
+(setq gc-cons-threshold 50000000
 	read-process-output-max (* 1024 1024)
 	warning-minimum-level :error
 	ring-bell-function 'ignore
@@ -299,7 +299,7 @@ user-mail-address "simonho.ubc@gmail.com")
 :wk-full-keys nil
 	"SPC"     '("M-x" . execute-extended-command)
 	"TAB"     '("last buffer" . previous-buffer)
-	"`"				'(eshell :wk "eshell")
+	"`"				'(eshell-toggle :wk "eshell")
 	"u"       '("universal arg" . universal-argument)
 	"y"				'(consult-yank-pop :wk "kill ring")
 
@@ -510,12 +510,12 @@ user-mail-address "simonho.ubc@gmail.com")
 	:wk-full-keys nil
 	"v" '(er/expand-region :wk "expand region")))
 
-;; (use-package smart-hungry-delete
-;; 	:demand t
-;; 	:init (smart-hungry-delete-add-default-hooks)
-;; 	:general
-;; 	(general-imap "C-<backspace>" 'smart-hungry-delete-backward-char)
-;; 	(general-imap "C-<delete>" 'smart-hungry-delete-forward-char))
+(elpaca (eshell-toggle :host github :repo "4DA/eshell-toggle")
+:custom
+(eshell-toggle-size-fraction 4)
+(eshell-toggle-use-projectile-root t)
+(eshell-toggle-run-command nil)
+(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
 
 (use-package treemacs
 	:demand t
@@ -710,7 +710,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	"x" 'python-shell-send-buffer)
 
 (setq python-shell-interpreter "~/anaconda3/python"
-			lsp-ruff-lsp-python-path "python"
+			lsp-ruff-lsp-python-path "python")
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (use-package web-mode
