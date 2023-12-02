@@ -752,10 +752,17 @@ user-mail-address "simonho.ubc@gmail.com")
 	:hook (org-mode . evil-org-mode)
 	:config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
 
+(with-eval-after-load 'org
+	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
+	(add-to-list 'org-structure-template-alist '("sp" . "src python")))
+
 (major-mode-def
 	:keymaps 'org-mode-map
 	:wk-full-keys nil
 	"x" '(org-babel-execute-src-block :wk "execute block")
+	"e" '(org-edit-special :wk "edit block")
 	"i"       (cons "insert" (make-sparse-keymap))
-	"ic" '((lambda() (interactive) (org-insert-structure-template "src")) :wk "src block")
+	"is"      (cons "src block" (make-sparse-keymap))
+	"ise" '((lambda() (interactive) (org-insert-structure-template "src emacs-lisp")) :wk "emacs-lisp")
+	"isp" '((lambda() (interactive) (org-insert-structure-template "src python")) :wk "python")
 	"it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
