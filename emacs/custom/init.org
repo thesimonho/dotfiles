@@ -383,7 +383,6 @@ Make editing easier
 * Key bindings
 
 #+begin_src emacs-lisp
-
 	(use-package general
 		:demand t
 		:after evil
@@ -438,7 +437,6 @@ Make editing easier
 		"wb"      'switch-to-minibuffer-window
 		"wd"      'delete-window
 		"wD"      'delete-other-windows
-		"wm"      'toggle-maximize-buffer
 		"wh"      'evil-window-left
 		"wj"      'evil-window-down
 		"wk"      'evil-window-up
@@ -855,13 +853,30 @@ The most useful package ever
 #+begin_src emacs-lisp
 	(use-package treesit-auto
 		:demand t
-	:custom
-	(treesit-auto-install 'prompt)
-	:config
-	(treesit-auto-add-to-auto-mode-alist 'all)
-	(global-treesit-auto-mode))
+		:custom
+		(treesit-auto-install 'prompt)
+		:config
+		(treesit-auto-add-to-auto-mode-alist 'all)
+		(global-treesit-auto-mode))
 #+end_src
 
+Text objects
+
+#+begin_src emacs-lisp
+	(use-package evil-textobj-tree-sitter
+		:demand t
+		:general
+		(:keymaps 'evil-outer-text-objects-map
+							"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+							"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
+							"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+		(:keymaps 'evil-inner-text-objects-map
+							"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+							"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
+							"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+		)
+#+end_src
+ 
 * VCS
 
 #+begin_src emacs-lisp

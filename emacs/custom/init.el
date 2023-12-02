@@ -326,7 +326,6 @@ user-mail-address "simonho.ubc@gmail.com")
 	"wb"      'switch-to-minibuffer-window
 	"wd"      'delete-window
 	"wD"      'delete-other-windows
-	"wm"      'toggle-maximize-buffer
 	"wh"      'evil-window-left
 	"wj"      'evil-window-down
 	"wk"      'evil-window-up
@@ -676,11 +675,24 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package treesit-auto
 	:demand t
-:custom
-(treesit-auto-install 'prompt)
-:config
-(treesit-auto-add-to-auto-mode-alist 'all)
-(global-treesit-auto-mode))
+	:custom
+	(treesit-auto-install 'prompt)
+	:config
+	(treesit-auto-add-to-auto-mode-alist 'all)
+	(global-treesit-auto-mode))
+
+(use-package evil-textobj-tree-sitter
+	:demand t
+	:general
+	(:keymaps 'evil-outer-text-objects-map
+						"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+						"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
+						"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+	(:keymaps 'evil-inner-text-objects-map
+						"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+						"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
+						"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+	)
 
 (use-package git-gutter
 	:demand t
