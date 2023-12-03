@@ -14,9 +14,11 @@
   - [[#modeline][Modeline]]
   - [[#editing][Editing]]
 - [[#dashboard][Dashboard]]
-- [[#evil][Evil]]
-- [[#which-key][Which key]]
 - [[#key-bindings][Key bindings]]
+  - [[#evil][Evil]]
+  - [[#which-key][Which key]]
+  - [[#helpful][Helpful]]
+  - [[#general][General]]
 - [[#project-management][Project management]]
 - [[#completion][Completion]]
   - [[#corfu][Corfu]]
@@ -322,7 +324,9 @@ Make editing easier
 		(dashboard-setup-startup-hook))
 #+end_src
 
-* Evil
+* Key bindings
+
+** Evil
 
 #+begin_src emacs-lisp
 	(use-package evil
@@ -365,7 +369,7 @@ Make editing easier
 		(global-evil-surround-mode 1))
 #+end_src
 
-* Which key
+** Which key
 
 #+begin_src emacs-lisp
 	(use-package which-key
@@ -381,7 +385,13 @@ Make editing easier
 		(which-key-mode))
 #+end_src
 
-* Key bindings
+** Helpful
+
+#+begin_src emacs-lisp
+	(use-package helpful)
+#+end_src
+
+** General
 
 #+begin_src emacs-lisp
 	(use-package general
@@ -420,19 +430,20 @@ Make editing easier
 		"y"				'(consult-yank-pop :wk "kill ring")
 
 		"h"       (cons "help" (make-sparse-keymap))
+	  "hh" 			'helpful-at-point
 		"hb"      'describe-bindings
 		"hc"      'describe-char
-		"hf"      'describe-function
+		"hf"      'helpful-callable
 		"hF"      'describe-face
 		"hi"      'info-emacs-manual
 		"hI"      'info-display-manual
-		"hk"      'describe-key
+		"hk"      'helpful-key
 		"hK"      'describe-keymap
 		"hm"      'describe-mode
 		"hM"      'woman
 		"hp"      'describe-package
 		"ht"      'describe-text-properties
-		"hv"      'describe-variable
+		"hv"      'helpful-variable
 
 		"w"       (cons "windows" (make-sparse-keymap))
 		"wb"      'switch-to-minibuffer-window

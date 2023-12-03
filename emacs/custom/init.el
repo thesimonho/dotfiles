@@ -273,6 +273,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	 which-key-max-display-columns 5)
 	(which-key-mode))
 
+(use-package helpful)
+
 (use-package general
 	:demand t
 	:after evil
@@ -309,19 +311,20 @@ user-mail-address "simonho.ubc@gmail.com")
 	"y"				'(consult-yank-pop :wk "kill ring")
 
 	"h"       (cons "help" (make-sparse-keymap))
+	"hh" 			'helpful-at-point
 	"hb"      'describe-bindings
 	"hc"      'describe-char
-	"hf"      'describe-function
+	"hf"      'helpful-callable
 	"hF"      'describe-face
 	"hi"      'info-emacs-manual
 	"hI"      'info-display-manual
-	"hk"      'describe-key
+	"hk"      'helpful-key
 	"hK"      'describe-keymap
 	"hm"      'describe-mode
 	"hM"      'woman
 	"hp"      'describe-package
 	"ht"      'describe-text-properties
-	"hv"      'describe-variable
+	"hv"      'helpful-variable
 
 	"w"       (cons "windows" (make-sparse-keymap))
 	"wb"      'switch-to-minibuffer-window
