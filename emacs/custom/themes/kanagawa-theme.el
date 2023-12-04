@@ -178,7 +178,7 @@
    (org-done                                      (:foreground dragonBlue))
    (org-code                                      (:background sumiInk-0))
    (org-meta-line                                 (:background winterGreen :foreground springGreen))
-   (org-block                                     (:background sumiInk-0 :foreground sumiInk-4))
+   (org-block                                     (:background sumiInk-0 :foreground fujiWhite))
    (org-block-begin-line                          (:background winterBlue :foreground springBlue))
    (org-block-end-line	                         (:background winterRed :foreground peachRed))
    (org-headline-done                             (:foreground dragonBlue :strike-through t))
@@ -502,6 +502,7 @@
    (tree-sitter-hl-face:variable.synthesized      (:foreground waveRed))
    (tree-sitter-hl-face:keyword.compiler          (:foreground peachRed :bold t :italic t))
 
+	 (copilot-overlay-face 												(:foreground winterYellow))
 
    (focus-unfocused (:foreground sumiInk-4))))
 
