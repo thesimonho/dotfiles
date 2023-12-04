@@ -104,6 +104,7 @@
 	use-dialog-box nil
 	confirm-kill-processes nil
 	history-length 25
+	display-line-numbers-type 'relative
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
 	native-comp-async-report-warnings-errors nil)
@@ -279,7 +280,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	 which-key-idle-secondary-delay 0.01
 	 which-key-allow-evil-operators t
 	 which-key-add-column-padding 5
-	 which-key-max-display-columns 5)
+	 which-key-max-display-columns 6)
 	(which-key-mode))
 
 (use-package helpful)
@@ -560,11 +561,11 @@ user-mail-address "simonho.ubc@gmail.com")
 	:demand t
 	:init
 	(setq centaur-tabs-style "bar"
+				centaur-tabs-set-bar 'left
+				centaur-tabs-modified-marker "\u2022"
 				centaur-tabs-height 32
 				centaur-tabs-set-icons t
 				centaur-tabs-set-modified-marker t
-				centaur-tabs-set-bar 'under
-				x-underline-at-descent-line t
 				centaur-tabs-cycle-scope 'tabs
 				centaur-tabs-show-count t
 				centaur-tabs-enable-ido-completion nil
@@ -575,6 +576,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	(centaur-tabs-mode t)
 	(centaur-tabs-headline-match)
 	(centaur-tabs-group-by-projectile-project)
+	:hook
+	((dashboard-mode dired-mode eshell-mode) . centaur-tabs-local-mode)
 	:general
 	(:keymaps 'evil-normal-state-map
 						:prefix "g"
