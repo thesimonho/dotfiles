@@ -93,7 +93,7 @@
    (mode-line-highlight                           (:foreground boatYellow2))
    (mode-line-buffer-id                           (:foreground waveAqua2 :bold t))
    (numbers                                       (:background sakuraPink))
-   (persp-selected-face													 (:foreground autumnGreen))
+   (persp-selected-face													  (:foreground autumnGreen))
    (region                                        (:background waveBlue-2))
    (separator-line                                (:background sumiInk-0))
    (shadow                                        (:background sumiInk-0))
@@ -120,7 +120,7 @@
    (font-lock-comment-delimiter-face              (:foreground fujiGray :italic t))
    (font-lock-doc-face                            (:foreground comet))
    (font-lock-doc-markup-face                     (:foreground comet))
-   (font-lock-preprocessor-face	                 (:foreground boatYellow2))
+   (font-lock-preprocessor-face	                  (:foreground boatYellow2))
    (elisp-shorthand-font-lock-face                (:foreground fujiWhite))
 
    (info-xref                                     (:foreground carpYellow))
@@ -242,7 +242,7 @@
 
    ;; show-paren
    (show-paren-match                              (:background waveAqua1 :foreground sumiInk-0 :bold t))
-   (show-paren-match-expression	                 (:background waveAqua1 :foreground sumiInk-0 :bold t))
+   (show-paren-match-expression	                  (:background waveAqua1 :foreground sumiInk-0 :bold t))
    (show-paren-mismatch                           (:background peachRed :foreground oldWhite))
    (tooltip                                       (:foreground sumiInk-0 :background carpYellow :bold t))
   
@@ -386,7 +386,7 @@
    (anzu-match-3                                  (:foreground lightBlue :background sumiInk-2))
 
    (anzu-mode-line                                (:foreground sumiInk-0 :background springViolet2))
-   (anzu-mode-no-match	                         (:foreground fujiWhite :background peachRed))
+   (anzu-mode-no-match	                          (:foreground fujiWhite :background peachRed))
    (anzu-replace-to                               (:foreground springBlue :background winterBlue))
    (anzu-replace-highlight                        (:foreground peachRed :background winterRed :strike-through t))
 
@@ -416,9 +416,9 @@
 
    ;; centaur-tabs
    (centaur-tabs-active-bar-face                  (:background springBlue :foreground fujiWhite))
-   (centaur-tabs-selected                         (:background sumiInk-1b :foreground fujiWhite :bold t))
-   (centaur-tabs-selected-modified                (:background sumiInk-1b :foreground fujiWhite))
-   (centaur-tabs-modified-marker-selected         (:background sumiInk-1b :foreground autumnYellow))
+   (centaur-tabs-selected                         (:background sumiInk-1 :foreground fujiWhite :bold t))
+   (centaur-tabs-selected-modified                (:background sumiInk-1 :foreground fujiWhite))
+   (centaur-tabs-modified-marker-selected         (:background sumiInk-1 :foreground autumnYellow))
    (centaur-tabs-close-selected                   (:inherit 'centaur-tabs-selected))
    (tab-line                                      (:background sumiInk-0))
 
@@ -431,6 +431,8 @@
    (centaur-tabs-close-mouse-face                 (:foreground peachRed))
    (centaur-tabs-default                          (:background roninYellow ))
    (centaur-tabs-name-mouse-face                  (:foreground springBlue :bold t))
+   (centaur-tabs-jump-identifier-selected         (:foreground samuraiRed :background sumiInk-1 :bold t))
+   (centaur-tabs-jump-identifier-unselected       (:foreground samuraiRed :bold t))
 
    (git-gutter:added                              (:foreground autumnGreen))
    (git-gutter:deleted                            (:foreground waveRed))
