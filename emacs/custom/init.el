@@ -460,10 +460,10 @@ user-mail-address "simonho.ubc@gmail.com")
 										 "C-j" 'vertico-next
 										 "C-k" 'vertico-previous))
 
-(elpaca nil (use-package vertico-mouse
-	:after vertico)
-	:config
-	(vertico-mouse-mode))
+;; (elpaca nil (use-package vertico-mouse
+;; 	:after vertico)
+;; 	:config
+;; 	(vertico-mouse-mode))
 
 ;; Add prompt indicator to `completing-read-multiple'.
 (defun crm-indicator (args)
@@ -562,6 +562,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	(setq centaur-tabs-style "bar"
 				centaur-tabs-height 32
 				centaur-tabs-set-icons t
+				centaur-tabs-set-modified-marker t
 				centaur-tabs-set-bar 'under
 				x-underline-at-descent-line t
 				centaur-tabs-cycle-scope 'tabs
@@ -599,12 +600,6 @@ user-mail-address "simonho.ubc@gmail.com")
 		"cs" '(consult-line :wk "search")
 		"co" '(consult-imenu :wk "outline")))
 
-(use-package whitespace-cleanup-mode
-	:demand t
-	:diminish
-	:config
-	(global-whitespace-cleanup-mode))
-
 (use-package anzu
 :config
 (global-anzu-mode +1)
@@ -624,7 +619,10 @@ user-mail-address "simonho.ubc@gmail.com")
 	(org-mode . copilot-mode)
 	:general
 	(:keymaps 'copilot-completion-map
-						"<tab>" 'copilot-accept-completion
+						"C-j" 'copilot-next-completion
+						"C-k" 'copilot-previous-completion
+						"C-l" 'copilot-accept-completion
+						"M-l" 'copilot-accept-completion-by-word
 						"ESC" 'copilot-clear-overlay))
 
 (use-package avy
@@ -695,18 +693,19 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package flycheck
 	:diminish
-	:init (global-flycheck-mode))
+	:hook
+	(prog-mode . flycheck-mode))
 
 (use-package treesit-auto
-	:demand t
 	:custom
 	(treesit-auto-install 'prompt)
 	:config
 	(treesit-auto-add-to-auto-mode-alist 'all)
-	(global-treesit-auto-mode))
+	:hook
+	(prog-mode . treesit-auto-mode))
 
 (use-package evil-textobj-tree-sitter
-	:demand t
+	:after evil
 	:general
 	(:keymaps 'evil-outer-text-objects-map
 						"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
@@ -739,8 +738,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	(major-mode-def
 		:keymaps '(js-mode-map typescript-ts-mode-map web-mode-map)
 		:wk-full-keys nil
-		"n" 'npm)
-	)
+		"n" 'npm))
 
 (use-package lispy
   :hook
@@ -781,14 +779,14 @@ user-mail-address "simonho.ubc@gmail.com")
 	org-insert-heading-respect-content t
 
 	;; Org styling, hide markup etc.
-	org-hide-emphasis-markers t
+	org-hide-emphasis-markers nil
 	org-pretty-entities t
 
 	;; Agenda styling
 	org-agenda-tags-column 0
 	org-agenda-block-separator ?-)
 	:hook
-	(org-mode . global-org-modern-mode))
+	(org-mode . org-modern-mode))
 
 (use-package evil-org
 	:diminish

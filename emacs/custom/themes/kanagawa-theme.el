@@ -502,7 +502,7 @@
    (tree-sitter-hl-face:variable.synthesized      (:foreground waveRed))
    (tree-sitter-hl-face:keyword.compiler          (:foreground peachRed :bold t :italic t))
 
-	 (copilot-overlay-face 												(:foreground winterYellow))
+	 (copilot-overlay-face 												(:foreground sumiInk-3))
 
    (focus-unfocused (:foreground sumiInk-4))))
 
