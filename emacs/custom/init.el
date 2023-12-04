@@ -563,7 +563,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	(setq centaur-tabs-style "bar"
 				centaur-tabs-set-bar 'left
 				centaur-tabs-modified-marker "\u2022"
-				centaur-tabs-height 32
+				centaur-tabs-height 22
 				centaur-tabs-set-icons t
 				centaur-tabs-set-modified-marker t
 				centaur-tabs-cycle-scope 'tabs
