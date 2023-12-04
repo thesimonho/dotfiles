@@ -68,7 +68,12 @@
 	:init
 	(setq no-littering-etc-directory (expand-file-name "config/" user-emacs-directory)
 				no-littering-var-directory (expand-file-name "data/" user-emacs-directory)
-				custom-file (no-littering-expand-etc-file-name "custom.el")))
+				custom-file (no-littering-expand-etc-file-name "custom.el"))
+	(recentf-mode 1)
+	(add-to-list 'recentf-exclude
+							(recentf-expand-file-name no-littering-var-directory))
+	(add-to-list 'recentf-exclude
+							(recentf-expand-file-name no-littering-etc-directory)))
 
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
@@ -90,19 +95,23 @@
 	make-backup-files nil
 	auto-save-default nil
 	create-lockfiles nil
-	auto-revert-mode t
+	global-auto-revert-mode t
+	global-auto-revert-non-file-buffers t
 	revert-without-query t
 	sentence-end-double-space nil
 	delete-selection-mode t
 	column-number-mode t
 	use-dialog-box nil
 	confirm-kill-processes nil
+	history-length 25
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
 	native-comp-async-report-warnings-errors nil)
 
 (setq-default tab-width 2)
 
+(savehist-mode 1)
+(save-place-mode 1)
 (blink-cursor-mode 0)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
@@ -490,11 +499,6 @@ user-mail-address "simonho.ubc@gmail.com")
 	 consult--source-bookmark consult--source-file-register
 	 consult--source-recent-file consult--source-project-recent-file
 	 :preview-key '(:debounce 0.5 any))
-	(recentf-mode)
-	(add-to-list 'recentf-exclude
-							 (recentf-expand-file-name no-littering-var-directory))
-	(add-to-list 'recentf-exclude
-							 (recentf-expand-file-name no-littering-etc-directory))
 	:general 
 	(leader-def
 		:wk-full-keys nil
