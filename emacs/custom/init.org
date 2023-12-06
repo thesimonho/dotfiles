@@ -63,12 +63,6 @@ Adds a hook to profile Emacs startup time. Commented out as dashboard also provi
 Also computes startup statistics for packages. Check the stats using `use-package-report`.
 
 #+begin_src emacs-lisp
-    ;; (add-hook 'emacs-startup-hook
-    ;; 	  (lambda ()
-    ;; 	    (message "*** Emacs loaded in %s seconds with %d garbage collections."
-    ;; 		     (emacs-init-time "%.2f")
-    ;; 		     gcs-done)))
-  
 (setq use-package-verbose nil  ; don't print anything
       use-package-compute-statistics t ; compute statistics about package initialization
       use-package-minimum-reported-time 0.0001
@@ -241,36 +235,36 @@ Fonts, icons, and things
 ** Modeline
 
 #+begin_src emacs-lisp
-		(use-package doom-modeline
-			:init
-			(setq doom-modeline-height 30
-			doom-modeline-project-detection 'auto
-			doom-modeline-display-default-persp-name nil
-			doom-modeline-buffer-modification-icon t
-			doom-modeline-lsp t
-			doom-modeline-time-icon nil
-			doom-modeline-highlight-modified-buffer-name t
-			doom-modeline-position-column-line-format '("L%l:C%c")
-			doom-modeline-minor-modes t
-			doom-modeline-checker-simple-format nil
-			doom-modeline-modal-icon t
-			doom-modeline-modal-modern-icon t)
-			(doom-modeline-mode 1))
+	(use-package doom-modeline
+		:init
+		(setq doom-modeline-height 30
+		doom-modeline-project-detection 'auto
+		doom-modeline-display-default-persp-name nil
+		doom-modeline-buffer-modification-icon t
+		doom-modeline-lsp t
+		doom-modeline-time-icon nil
+		doom-modeline-highlight-modified-buffer-name t
+		doom-modeline-position-column-line-format '("L%l:C%c")
+		doom-modeline-minor-modes t
+		doom-modeline-checker-simple-format nil
+		doom-modeline-modal-icon t
+		doom-modeline-modal-modern-icon t)
+		(doom-modeline-mode 1))
 
-		(use-package diminish)
+	(use-package diminish)
 
-		(defun diminish-modes ()
-		(dolist (mode '((eldoc-mode)
-										(lsp-lens-mode)
-										))
-			(diminish (car mode) (cdr mode))))
+	(defun diminish-modes ()
+	(dolist (mode '((eldoc-mode)
+									(lsp-lens-mode)
+									))
+		(diminish (car mode) (cdr mode))))
 
 	(add-hook 'elpaca-after-init-hook #'diminish-modes)
 
 	(use-package minions
-		:demand t
-		:config
-		(minions-mode))
+	:demand t
+	:config
+	(minions-mode))
 #+end_src
 
 ** Editing
@@ -504,7 +498,6 @@ Make editing easier
 Projectile + perspective
 
 #+begin_src emacs-lisp
-
   (defun system-is-mswindows ()
     (eq system-type 'windows-nt))
 
@@ -601,11 +594,6 @@ Minibuffer completion with Vertico et al.
 											 "C-j" 'vertico-next
 											 "C-k" 'vertico-previous))
 
-	;; (elpaca nil (use-package vertico-mouse
-	;; 	:after vertico)
-	;; 	:config
-	;; 	(vertico-mouse-mode))
-
 	;; Add prompt indicator to `completing-read-multiple'.
 	(defun crm-indicator (args)
 		(cons (format "[CRM%s] %s"
@@ -646,6 +634,7 @@ Minibuffer completion with Vertico et al.
 			"b"       (cons "buffers" (make-sparse-keymap))
 			"bb" '(persp-switch-to-buffer* :wk "find buffer")
 			"bd" '(kill-current-buffer :wk "delete buffer")
+			"bD" '(centaur-tabs-kill-other-buffers-in-current-group :wk "delete other buffers")
 
 			"f"       (cons "files" (make-sparse-keymap))
 			"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "open Emacs config")
@@ -691,7 +680,6 @@ Expand selection; treesitter style
 
 #+begin_src emacs-lisp
 	(use-package treemacs
-		;; :demand t
 		:init
 		(setq treemacs-python-executable (concat python-path "python.exe"))
 		:config
@@ -951,10 +939,6 @@ Text objects
 ** Emacs lisp
 
 #+begin_src emacs-lisp
-  (use-package lispy
-    :hook
-    (emacs-lisp-mode . lispy-mode))
-
   (use-package lispyville
     :hook
     (emacs-lisp-mode . lispyville-mode))
