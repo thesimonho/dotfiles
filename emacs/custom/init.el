@@ -178,6 +178,10 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package beacon
 	:demand t
 	:diminish
+	:init
+	(setq beacon-blink-when-window-scrolls nil
+				beacon-blink-when-window-changes t
+				beacon-blink-when-point-moves t)
 	:config
 	(beacon-mode 1))
 
