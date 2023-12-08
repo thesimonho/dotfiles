@@ -506,6 +506,7 @@ user-mail-address "simonho.ubc@gmail.com")
 
 		"f"       (cons "files" (make-sparse-keymap))
 		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "open Emacs config")
+		"fer" '((lambda () (interactive) (load-file user-init-file)) :wk "reload Emacs config")
 		"fs" '(save-buffer :wk "save") 
 		"ff" '(find-file :wk "find file")
 		"fr" '(consult-recent-file :wk "recent files")
