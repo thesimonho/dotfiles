@@ -44,7 +44,12 @@ return {
 	leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 },
 	keys = keybinds.basic_binds,
 	key_tables = keybinds.key_tables,
+	default_prog = { "nu.exe" },
 	launch_menu = {
+		{
+			label = "nushell",
+			args = { "nu.exe" },
+		},
 		{
 			label = "PowerShell",
 			args = { "pwsh.exe" },
