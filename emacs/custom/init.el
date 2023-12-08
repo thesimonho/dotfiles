@@ -147,15 +147,18 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package doom-modeline
 	:init
 	(setq doom-modeline-height 30
+	doom-modeline-hud nil	
 	doom-modeline-project-detection 'auto
 	doom-modeline-display-default-persp-name nil
-	doom-modeline-buffer-modification-icon t
+	doom-modeline-buffer-modification-icon nil
+	doom-modeline-buffer-encoding nil
 	doom-modeline-lsp t
 	doom-modeline-time-icon nil
 	doom-modeline-highlight-modified-buffer-name t
 	doom-modeline-position-column-line-format '("L%l:C%c")
 	doom-modeline-minor-modes t
 	doom-modeline-checker-simple-format nil
+	doom-modeline-major-mode-icon nil
 	doom-modeline-modal-icon t
 	doom-modeline-modal-modern-icon t)
 	(doom-modeline-mode 1))
