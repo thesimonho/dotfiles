@@ -101,8 +101,7 @@
 	display-line-numbers-type 'relative
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
-	native-comp-async-report-warnings-errors nil
-	evil-respect-visual-line-mode t)
+	native-comp-async-report-warnings-errors nil)
 
 (setq-default tab-width 2)
 
@@ -156,7 +155,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	doom-modeline-lsp t
 	doom-modeline-time-icon nil
 	doom-modeline-highlight-modified-buffer-name t
-	doom-modeline-position-column-line-format '("L%l:C%c")
+	doom-modeline-position-column-line-format '("L:%l")
 	doom-modeline-minor-modes t
 	doom-modeline-checker-simple-format nil
 	doom-modeline-major-mode-icon nil
@@ -245,6 +244,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	 evil-want-C-u-scroll t
 	 evil-want-C-i-jump nil
 	 evil-cross-lines t
+	 evil-respect-visual-line-mode t
 	 evil-kill-on-visual-paste nil
 	 evil-want-fine-undo t
 	 evil-v$-excludes-newline t)
@@ -349,8 +349,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	"wu"      'winner-undo
 	"wU"      'winner-redo
 	"wv"      'split-window-horizontally
-	"wn"			'clone-frame
-	"wo"			'other-frame
+	"wn"			'(clone-frame :wk "new frame")
+	"wo"			'(other-frame :wk "switch frame")
 
 	"z" (cons "tools" (make-sparse-keymap))
 	"zu" 'use-package-report
@@ -361,8 +361,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	"q"       (cons "quit" (make-sparse-keymap))
 	"qd"      'restart-emacs-debug-init
 	"qr"      'restart-emacs
-	"qf"      'delete-frame
-	"qq"      'save-buffers-kill-emacs
+	"qq"      'delete-frame
+	"qQ"      'save-buffers-kill-emacs
 	)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -670,7 +670,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	 lsp-headerline-breadcrumb-mode t
 	 lsp-headerline-breadcrumb-segments '(file symbols)
 	 lsp-warn-no-matched-clients nil
-	 lsp-ui-peek-enable nil
+	 lsp-ui-peek-enable t
 	 lsp-ui-doc-show-with-cursor nil
 	 lsp-ui-doc-show-with-mouse nil
 	 lsp-enable-suggest-server-download t)
@@ -685,11 +685,11 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package lsp-ui
 	:commands lsp-ui-mode)
 
-(use-package lsp-treemacs
-	:after '(lsp-mode treemacs)
-	:init
-	(lsp-treemacs-sync-mode 1)
-	:commands lsp-treemacs-errors-list)
+;; (use-package lsp-treemacs
+;; 	:after '(lsp-mode treemacs)
+;; 	:init
+;; 	(lsp-treemacs-sync-mode 1)
+;; 	:commands lsp-treemacs-errors-list)
 
 (use-package flycheck
 	:diminish
