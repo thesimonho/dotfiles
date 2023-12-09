@@ -294,6 +294,15 @@ Make editing easier
 		:diminish
 		:hook
 		(prog-mode . rainbow-delimiters-mode))
+
+	(use-package hl-todo
+		:demand t
+		:config
+		(general-define-key
+		 :states 'normal
+		 "[t" '(hl-todo-previous :wk "previous todo")
+		 "]t" '(hl-todo-next :wk "next todo"))
+		(global-hl-todo-mode 1))
   #+end_src
 
 * Dashboard
@@ -652,10 +661,14 @@ Minibuffer completion with Vertico et al.
 			"ft" '(treemacs-select-window :wk "file tree")
 			))
 
+	(use-package consult-todo
+	:demand t
+	:after (consult hl-todo))
+
 	(use-package marginalia
-		:defer 1
-		:config
-		(marginalia-mode))
+	:defer 1
+	:config
+	(marginalia-mode))
 
 	(add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 #+end_src
@@ -763,6 +776,7 @@ Format all command (useful for languages with no lsp support)
 			"c"       (cons "code" (make-sparse-keymap))
 			"cf" '(format-all-region-or-buffer :wk "format")
 			"cs" '(consult-line :wk "search")
+			"ct" '(consult-todo-all :wk "todo")
 			"co" '(consult-imenu :wk "outline")))
 #+end_src
 

@@ -198,6 +198,15 @@ user-mail-address "simonho.ubc@gmail.com")
 	:hook
 	(prog-mode . rainbow-delimiters-mode))
 
+(use-package hl-todo
+	:demand t
+	:config
+	(general-define-key
+	 :states 'normal
+	 "[t" '(hl-todo-previous :wk "previous todo")
+	 "]t" '(hl-todo-next :wk "next todo"))
+	(global-hl-todo-mode 1))
+
 (use-package dashboard
 	:demand t
 	:after projectile
@@ -513,10 +522,14 @@ user-mail-address "simonho.ubc@gmail.com")
 		"ft" '(treemacs-select-window :wk "file tree")
 		))
 
+(use-package consult-todo
+:demand t
+:after (consult hl-todo))
+
 (use-package marginalia
-	:defer 1
-	:config
-	(marginalia-mode))
+:defer 1
+:config
+(marginalia-mode))
 
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
@@ -598,6 +611,7 @@ user-mail-address "simonho.ubc@gmail.com")
 		"c"       (cons "code" (make-sparse-keymap))
 		"cf" '(format-all-region-or-buffer :wk "format")
 		"cs" '(consult-line :wk "search")
+		"ct" '(consult-todo-all :wk "todo")
 		"co" '(consult-imenu :wk "outline")))
 
 (use-package anzu
