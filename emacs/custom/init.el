@@ -101,7 +101,8 @@
 	display-line-numbers-type 'relative
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
-	native-comp-async-report-warnings-errors nil)
+	native-comp-async-report-warnings-errors nil
+	evil-respect-visual-line-mode t)
 
 (setq-default tab-width 2)
 
@@ -235,21 +236,19 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package evil
 	:demand t
-	:config
+	:init
 	(setq
 	 evil-want-integration t
 	 evil-want-keybinding nil
 	 evil-symbol-word-search t
-	 evil-respect-visual-line-mode t
 	 evil-ex-search-vim-style-regexp t
 	 evil-want-C-u-scroll t
 	 evil-want-C-i-jump nil
 	 evil-cross-lines t
 	 evil-kill-on-visual-paste nil
-	 evil-move-beyond-eol t
 	 evil-want-fine-undo t
 	 evil-v$-excludes-newline t)
-
+	:config
 	(setq evil-normal-state-cursor  '("#FF9E3B" box)
 				evil-insert-state-cursor  '("#C34043" (bar . 2))
 				evil-emacs-state-cursor   '("#FF9E3B" box)
@@ -406,7 +405,7 @@ user-mail-address "simonho.ubc@gmail.com")
     :wk-full-keys nil
     "p"       (cons "projects" (make-sparse-keymap))
     "pp" '(projectile-persp-switch-project :wk "switch project")
-    "pf" '(consult-project-buffer :wk "project files")
+    "pf" '(project-find-file :wk "project files")
     "pa" '(projectile-add-known-project :wk "add project")
     "pd" '(projectile-remove-known-project :wk "remove project")
     "p!" '(projectile-run-shell-command-in-root :wk "run command in root")
@@ -456,7 +455,8 @@ user-mail-address "simonho.ubc@gmail.com")
 	(setq read-file-name-completion-ignore-case t
 				read-buffer-completion-ignore-case t
 				completion-ignore-case t
-				vertico-resize t)
+				eldoc-echo-area-use-multiline-p nil
+				vertico-resize nil)
 	(vertico-mode)
 	:general (:keymaps 'vertico-map
 										 "C-j" 'vertico-next
