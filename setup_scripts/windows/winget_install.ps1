@@ -34,4 +34,5 @@ winget install wingetui
 winget install -e --id Microsoft.VisualStudioCode
 winget install -e --id VideoLAN.VLC
 winget install -e --id DigitalScholar.Zotero
+winget install -e --id JohnMacFarlane.Pandoc
 winget install nushell

@@ -754,12 +754,52 @@ user-mail-address "simonho.ubc@gmail.com")
 			lsp-ruff-lsp-python-path (concat python-path "python.exe"))
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
+(setq src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
+
+(defun replace-current-line-with-src-jupyter ()
+(interactive)
+(move-beginning-of-line nil)
+(kill-line)
+(insert src-jupyter-block-header))
+
+(use-package jupyter
+:after code-cells)
+
+(use-package code-cells
+:init
+(setq code-cells-convert-ipynb-style '(("pandoc" "--to" "ipynb" "--from" "org")
+("pandoc" "--to" "org" "--from" "ipynb")
+(lambda () #'org-mode)))
+:hook
+((org-mode python-mode python-ts-mode) . code-cells-mode)
+:general
+(major-mode-def
+:keymaps 'code-cells-mode-map
+:wk-full-keys nil
+"X" '(jupyter-org-clear-all-results :wk "clear results")
+"R" '(replace-current-line-with-src-jupyter :wk "replace jupyter src")
+))
+
 (use-package web-mode
 	:init
 	(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
 
 (use-package terraform-mode
 :custom (terraform-format-on-save t))
+
+(use-package org
+	:elpaca nil
+	:defer t
+	:config
+	;; to avoid having to confirm each code block evaluation in the minibuffer
+	(setq org-confirm-babel-evaluate nil)
+	;; use python-mode in jupyter-python code blocks
+	(org-babel-do-load-languages 'org-babel-load-languages '((python . t)
+																													 (shell . t)
+																													 (emacs-lisp . t)
+																													 (jupyter . t)))
+	:hook
+	(org-babel-after-execute . org-display-inline-images))
 
 (use-package toc-org
 	:hook (org-mode . toc-org-mode))
@@ -772,6 +812,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	org-tags-column 0
 	org-catch-invisible-edits 'show-and-error
 	org-special-ctrl-a/e t
+	org-src-tab-acts-natively nil
 	org-insert-heading-respect-content t
 
 	;; Org styling, hide markup etc.
@@ -791,15 +832,17 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (with-eval-after-load 'org
 	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
+	(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
 	(add-to-list 'org-structure-template-alist '("sp" . "src python")))
 
 (major-mode-def
 	:keymaps 'org-mode-map
 	:wk-full-keys nil
-	"x" '(org-babel-execute-src-block :wk "execute block")
-	"e" '(org-edit-special :wk "edit block")
-	"i"       (cons "insert" (make-sparse-keymap))
-	"is"      (cons "src block" (make-sparse-keymap))
-	"ise" '((lambda() (interactive) (org-insert-structure-template "src emacs-lisp")) :wk "emacs-lisp")
-	"isp" '((lambda() (interactive) (org-insert-structure-template "src python")) :wk "python")
-	"it" '((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+	"C-<return>" '(org-babel-execute-src-block :wk "execute block")
+	"e"			'(org-edit-special :wk "edit block")
+	"i"      (cons "insert" (make-sparse-keymap))
+	"is"     (cons "src block" (make-sparse-keymap))
+	"ise"		'((lambda() (interactive) (org-insert-structure-template "src emacs-lisp")) :wk "emacs-lisp")
+	"isp"		'((lambda() (interactive) (org-insert-structure-template "src python")) :wk "python")
+	"isj"	  '((lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)) :wk "jupyter")
+	"it"		'((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
