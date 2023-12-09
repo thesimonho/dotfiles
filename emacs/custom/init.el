@@ -546,26 +546,27 @@ user-mail-address "simonho.ubc@gmail.com")
 	(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
 
 (use-package treemacs
-	:init
-	(setq treemacs-python-executable (concat python-path "python.exe"))
-	:config
-	(treemacs-follow-mode t)
-	(treemacs-project-follow-mode t)
-	(treemacs-filewatch-mode t)
-	(treemacs-git-mode 'deferred)
-	(treemacs-fringe-indicator-mode 'always)
-	(treemacs-git-commit-diff-mode t))
+:init
+(setq treemacs-python-executable (concat python-path "python.exe"))
+:config
+(setq treemacs-follow-mode t
+treemacs-project-follow-mode t
+treemacs-filewatch-mode t
+treemacs-git-mode 'simple
+treemacs-collapse-dirs nil
+treemacs-fringe-indicator-mode 'always
+treemacs-git-commit-diff-mode nil))
 
 (use-package treemacs-evil
-	:demand t
-	:after (treemacs evil))
+:demand t
+:after (treemacs evil))
 
 (use-package treemacs-projectile
-	:after (treemacs projectile))
+:after (treemacs projectile))
 
 (use-package treemacs-perspective
-	:after (treemacs perspective)
-	:config (treemacs-set-scope-type 'Perspectives))
+:after (treemacs perspective)
+:config (treemacs-set-scope-type 'Perspectives))
 
 (use-package centaur-tabs
 	:demand t
@@ -699,11 +700,11 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package lsp-ui
 	:commands lsp-ui-mode)
 
-;; (use-package lsp-treemacs
-;; 	:after '(lsp-mode treemacs)
-;; 	:init
-;; 	(lsp-treemacs-sync-mode 1)
-;; 	:commands lsp-treemacs-errors-list)
+(use-package lsp-treemacs
+	:after '(lsp-mode treemacs)
+	:init
+	(lsp-treemacs-sync-mode 1)
+	:commands lsp-treemacs-errors-list)
 
 (use-package flycheck
 	:diminish
