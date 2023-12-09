@@ -977,13 +977,20 @@ https://martibosch.github.io/jupyter-emacs-universe/
 https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 
 #+begin_src emacs-lisp
-	(setq src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
+	(defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
 	
-	(defun replace-current-line-with-src-jupyter ()
+	(defun replace-current-header-with-src-jupyter ()
   (interactive)
   (move-beginning-of-line nil)
   (kill-line)
   (insert src-jupyter-block-header))
+
+(defun replace-all-header-with-src-jupyter ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^#\\+begin_src jupyter-python\\s-*$" nil t)
+      (replace-match (concat "#+begin_" src-jupyter-block-header) nil nil))))
 	
 	(use-package jupyter
 	:after code-cells)
@@ -999,8 +1006,9 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 	(major-mode-def
 	:keymaps 'code-cells-mode-map
 	:wk-full-keys nil
-	"X" '(jupyter-org-clear-all-results :wk "clear results")
-	"R" '(replace-current-line-with-src-jupyter :wk "replace jupyter src")
+	"D" '(jupyter-org-clear-all-results :wk "clear results")
+	"r" '(replace-current-header-with-src-jupyter :wk "replace jupyter src")
+	"R" '(replace-all-header-with-src-jupyter :wk "replace all jupyter src")
 	))
 #+end_src
 
@@ -1073,7 +1081,8 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 	(major-mode-def
 		:keymaps 'org-mode-map
 		:wk-full-keys nil
-		"C-<return>" '(org-babel-execute-src-block :wk "execute block")
+		"x" '(org-babel-execute-src-block :wk "execute block")
+		"X" '(org-babel-execute-buffer :wk "execute all")
 		"e"			'(org-edit-special :wk "edit block")
 		"i"      (cons "insert" (make-sparse-keymap))
 		"is"     (cons "src block" (make-sparse-keymap))

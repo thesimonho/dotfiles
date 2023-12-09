@@ -754,31 +754,39 @@ user-mail-address "simonho.ubc@gmail.com")
 			lsp-ruff-lsp-python-path (concat python-path "python.exe"))
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
-(setq src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
+(defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
+	
+	(defun replace-current-header-with-src-jupyter ()
+  (interactive)
+  (move-beginning-of-line nil)
+  (kill-line)
+  (insert src-jupyter-block-header))
 
-(defun replace-current-line-with-src-jupyter ()
-(interactive)
-(move-beginning-of-line nil)
-(kill-line)
-(insert src-jupyter-block-header))
+(defun replace-all-header-with-src-jupyter ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^#\\+begin_src jupyter-python\\s-*$" nil t)
+      (replace-match (concat "#+begin_" src-jupyter-block-header) nil nil))))
+	
+	(use-package jupyter
+	:after code-cells)
 
-(use-package jupyter
-:after code-cells)
-
-(use-package code-cells
-:init
-(setq code-cells-convert-ipynb-style '(("pandoc" "--to" "ipynb" "--from" "org")
-("pandoc" "--to" "org" "--from" "ipynb")
-(lambda () #'org-mode)))
-:hook
-((org-mode python-mode python-ts-mode) . code-cells-mode)
-:general
-(major-mode-def
-:keymaps 'code-cells-mode-map
-:wk-full-keys nil
-"X" '(jupyter-org-clear-all-results :wk "clear results")
-"R" '(replace-current-line-with-src-jupyter :wk "replace jupyter src")
-))
+	(use-package code-cells
+	:init
+	(setq code-cells-convert-ipynb-style '(("pandoc" "--to" "ipynb" "--from" "org")
+	("pandoc" "--to" "org" "--from" "ipynb")
+	(lambda () #'org-mode)))
+	:hook
+	((org-mode python-mode python-ts-mode) . code-cells-mode)
+	:general
+	(major-mode-def
+	:keymaps 'code-cells-mode-map
+	:wk-full-keys nil
+	"D" '(jupyter-org-clear-all-results :wk "clear results")
+	"r" '(replace-current-header-with-src-jupyter :wk "replace jupyter src")
+	"R" '(replace-all-header-with-src-jupyter :wk "replace all jupyter src")
+	))
 
 (use-package web-mode
 	:init
@@ -838,7 +846,8 @@ user-mail-address "simonho.ubc@gmail.com")
 (major-mode-def
 	:keymaps 'org-mode-map
 	:wk-full-keys nil
-	"C-<return>" '(org-babel-execute-src-block :wk "execute block")
+	"x" '(org-babel-execute-src-block :wk "execute block")
+	"X" '(org-babel-execute-buffer :wk "execute all")
 	"e"			'(org-edit-special :wk "edit block")
 	"i"      (cons "insert" (make-sparse-keymap))
 	"is"     (cons "src block" (make-sparse-keymap))
