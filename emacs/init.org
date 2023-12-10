@@ -409,7 +409,7 @@ Make editing easier
 		"hv"      'helpful-variable
 
 		"w"       (cons "windows" (make-sparse-keymap))
-		"wb"      'switch-to-minibuffer-window
+		"wm"      'switch-to-minibuffer
 		"wd"      'delete-window
 		"wD"      'delete-other-windows
 		"wh"      'evil-window-left
@@ -748,14 +748,11 @@ Expand selection; treesitter style
 	(use-package treemacs
 	:init
 	(setq treemacs-python-executable (concat python-path "python.exe"))
-	:config
 	(setq treemacs-follow-mode t
 	treemacs-project-follow-mode t
 	treemacs-filewatch-mode t
-	treemacs-git-mode 'simple
 	treemacs-collapse-dirs nil
-	treemacs-fringe-indicator-mode 'always
-	treemacs-git-commit-diff-mode nil))
+	treemacs-fringe-indicator-mode 'always))
 	
 	(use-package treemacs-evil
 	:demand t
@@ -946,6 +943,8 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 The most useful package ever
 
 #+begin_src emacs-lisp
+	(setq treesit-font-lock-level 4)
+	
 	(use-package treesit-auto
 		:custom
 		(treesit-auto-install 'prompt)

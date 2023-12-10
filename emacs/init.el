@@ -302,7 +302,7 @@ beacon-blink-when-point-moves t)
 	"hv"      'helpful-variable
 
 	"w"       (cons "windows" (make-sparse-keymap))
-	"wb"      'switch-to-minibuffer-window
+	"wm"      'switch-to-minibuffer
 	"wd"      'delete-window
 	"wD"      'delete-other-windows
 	"wh"      'evil-window-left
@@ -593,14 +593,11 @@ beacon-blink-when-point-moves t)
 (use-package treemacs
 :init
 (setq treemacs-python-executable (concat python-path "python.exe"))
-:config
 (setq treemacs-follow-mode t
 treemacs-project-follow-mode t
 treemacs-filewatch-mode t
-treemacs-git-mode 'simple
 treemacs-collapse-dirs nil
-treemacs-fringe-indicator-mode 'always
-treemacs-git-commit-diff-mode nil))
+treemacs-fringe-indicator-mode 'always))
 
 (use-package treemacs-evil
 :demand t
@@ -756,6 +753,8 @@ treemacs-git-commit-diff-mode nil))
 	:diminish
 	:hook
 	(prog-mode . flycheck-mode))
+
+(setq treesit-font-lock-level 4)
 
 (use-package treesit-auto
 	:custom
