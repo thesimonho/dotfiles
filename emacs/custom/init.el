@@ -251,97 +251,8 @@ beacon-blink-when-point-moves t)
 	(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
 	(dashboard-setup-startup-hook))
 
-(use-package evil
-	:demand t
-	:init
-	(setq
-	 evil-want-integration t
-	 evil-want-keybinding nil
-	 evil-symbol-word-search t
-	 evil-ex-search-vim-style-regexp t
-	 evil-want-C-u-scroll t
-	 evil-want-C-i-jump nil
-	 evil-cross-lines t
-	 evil-respect-visual-line-mode t
-	 evil-kill-on-visual-paste nil
-	 evil-want-fine-undo t
-	 evil-v$-excludes-newline t)
-	:config
-	(setq evil-normal-state-cursor  '("#FF9E3B" box)
-				evil-insert-state-cursor  '("#C34043" (bar . 2))
-				evil-emacs-state-cursor   '("#FF9E3B" box)
-				evil-replace-state-cursor '("#C34043" (hbar . 2))
-				evil-visual-state-cursor  '("#76946A" (hbar . 2))
-				evil-motion-state-cursor  '("#FF9E3B" box))
-	(evil-define-key 'motion 'global
-		"j" 'evil-next-visual-line
-		"k" 'evil-previous-visual-line)
-	(evil-set-undo-system 'undo-redo)
-	(evil-mode 1))
-
-(use-package scroll-on-jump
-:demand t
-:after evil
-:init
-(setq scroll-on-jump-duration 0.4
-			scroll-on-jump-smooth t
-			scroll-on-jump-curve 'smooth)
-:config
-(with-eval-after-load 'evil
-(scroll-on-jump-advice-add evil-undo)
-(scroll-on-jump-advice-add evil-redo)
-(scroll-on-jump-advice-add evil-jump-item)
-(scroll-on-jump-advice-add evil-jump-forward)
-(scroll-on-jump-advice-add evil-jump-backward)
-(scroll-on-jump-advice-add evil-search-next)
-(scroll-on-jump-advice-add evil-search-previous)
-(scroll-on-jump-advice-add evil-ex-search-next)
-(scroll-on-jump-advice-add evil-ex-search-previous)
-(scroll-on-jump-advice-add evil-forward-paragraph)
-(scroll-on-jump-advice-add evil-backward-paragraph)
-(scroll-on-jump-advice-add evil-goto-mark)
-
-(scroll-on-jump-with-scroll-advice-add evil-goto-line)
-(scroll-on-jump-with-scroll-advice-add evil-goto-first-line)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
-
-(with-eval-after-load 'goto-chg
-(scroll-on-jump-advice-add goto-last-change)
-(scroll-on-jump-advice-add goto-last-change-reverse)))
-
-(use-package evil-commentary
-	:demand t
-	:diminish
-	:config
-	(evil-commentary-mode))
-
-(use-package evil-surround
-	:demand t
-	:diminish
-	:config
-	(global-evil-surround-mode 1))
-
-(use-package which-key
-	:demand t
-	:diminish
-	:init
-	(setq 
-	 which-key-idle-delay 0.1
-	 which-key-idle-secondary-delay 0.01
-	 which-key-allow-evil-operators t
-	 which-key-add-column-padding 5
-	 which-key-max-display-columns 6)
-	(which-key-mode))
-
-(use-package helpful)
-
 (use-package general
 	:demand t
-	:after evil
 	:config
 	(general-evil-setup t))
 (elpaca-wait)
@@ -432,6 +343,95 @@ beacon-blink-when-point-moves t)
  :keymaps 'insert
  "TAB" 'tab-to-tab-stop
  "C-v" 'yank)
+
+(use-package evil
+	:demand t
+	:after general
+	:init
+	(setq
+	 evil-want-integration t
+	 evil-want-keybinding nil
+	 evil-symbol-word-search t
+	 evil-ex-search-vim-style-regexp t
+	 evil-want-C-u-scroll t
+	 evil-want-C-i-jump nil
+	 evil-cross-lines t
+	 evil-respect-visual-line-mode t
+	 evil-kill-on-visual-paste nil
+	 evil-want-fine-undo t
+	 evil-v$-excludes-newline t)
+	:config
+	(setq evil-normal-state-cursor  '("#FF9E3B" box)
+				evil-insert-state-cursor  '("#C34043" (bar . 2))
+				evil-emacs-state-cursor   '("#FF9E3B" box)
+				evil-replace-state-cursor '("#C34043" (hbar . 2))
+				evil-visual-state-cursor  '("#76946A" (hbar . 2))
+				evil-motion-state-cursor  '("#FF9E3B" box))
+	(evil-define-key 'motion 'global
+		"j" 'evil-next-visual-line
+		"k" 'evil-previous-visual-line)
+	(evil-set-undo-system 'undo-redo)
+	(evil-mode 1))
+
+(use-package scroll-on-jump
+:demand t
+:after evil
+:init
+(setq scroll-on-jump-duration 0.4
+			scroll-on-jump-smooth t
+			scroll-on-jump-curve 'smooth)
+:config
+(with-eval-after-load 'evil
+(scroll-on-jump-advice-add evil-undo)
+(scroll-on-jump-advice-add evil-redo)
+(scroll-on-jump-advice-add evil-jump-item)
+(scroll-on-jump-advice-add evil-jump-forward)
+(scroll-on-jump-advice-add evil-jump-backward)
+(scroll-on-jump-advice-add evil-search-next)
+(scroll-on-jump-advice-add evil-search-previous)
+(scroll-on-jump-advice-add evil-ex-search-next)
+(scroll-on-jump-advice-add evil-ex-search-previous)
+(scroll-on-jump-advice-add evil-forward-paragraph)
+(scroll-on-jump-advice-add evil-backward-paragraph)
+(scroll-on-jump-advice-add evil-goto-mark)
+
+(scroll-on-jump-with-scroll-advice-add evil-goto-line)
+(scroll-on-jump-with-scroll-advice-add evil-goto-first-line)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
+
+(with-eval-after-load 'goto-chg
+(scroll-on-jump-advice-add goto-last-change)
+(scroll-on-jump-advice-add goto-last-change-reverse)))
+
+(use-package evil-commentary
+	:demand t
+	:diminish
+	:config
+	(evil-commentary-mode))
+
+(use-package evil-surround
+	:demand t
+	:diminish
+	:config
+	(global-evil-surround-mode 1))
+
+(use-package which-key
+	:demand t
+	:diminish
+	:init
+	(setq 
+	 which-key-idle-delay 0.1
+	 which-key-idle-secondary-delay 0.01
+	 which-key-allow-evil-operators t
+	 which-key-add-column-padding 5
+	 which-key-max-display-columns 6)
+	(which-key-mode))
+
+(use-package helpful)
 
 (defun system-is-mswindows ()
   (eq system-type 'windows-nt))
