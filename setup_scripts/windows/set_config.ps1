@@ -26,10 +26,10 @@ if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
 
 
 Write-Host "Symlinking emacs config..."
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\init.el -Force
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $env:USERPROFILE\dotfiles\emacs\custom\early-init.el -Force
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\themes -Target $env:USERPROFILE\dotfiles\emacs\custom\themes -Force
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $env:USERPROFILE\dotfiles\emacs\custom\images -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\init.el -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $env:USERPROFILE\dotfiles\emacs\early-init.el -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\themes -Target $env:USERPROFILE\dotfiles\emacs\themes -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $env:USERPROFILE\dotfiles\emacs\images -Force
 
 #-----------------------------------------------------
 # Set default shell

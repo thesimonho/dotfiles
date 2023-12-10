@@ -121,7 +121,7 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package autothemer
 	:demand t
 	:config
-	(load-theme 'kanagawa t))
+	(load-theme 'kanagawa-paper t))
 
 (set-frame-font "FiraCode NF-11")
 
@@ -559,7 +559,7 @@ beacon-blink-when-point-moves t)
 		"bD" '(centaur-tabs-kill-other-buffers-in-current-group :wk "delete other buffers")
 
 		"f"       (cons "files" (make-sparse-keymap))
-		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) :wk "open Emacs config")
+		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/init.org")) :wk "open Emacs config")
 		"fer" '((lambda () (interactive) (load-file user-init-file)) :wk "reload Emacs config")
 		"fs" '(save-buffer :wk "save") 
 		"ff" '(find-file :wk "find file")
@@ -729,6 +729,7 @@ treemacs-git-commit-diff-mode nil))
 	 lsp-enable-snippet nil
 	 lsp-headerline-breadcrumb-mode t
 	 lsp-headerline-breadcrumb-segments '(file symbols)
+	 lsp-enable-symbol-highlighting nil
 	 lsp-warn-no-matched-clients nil
 	 lsp-ui-peek-enable t
 	 lsp-ui-doc-show-with-cursor nil
