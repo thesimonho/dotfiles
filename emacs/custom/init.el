@@ -81,6 +81,7 @@
 	warning-minimum-level :error
 	ring-bell-function 'ignore
 	visible-bell t
+	pixel-scroll-precision-mode t
 	sentence-end-double-space nil
 	save-interprogram-paste-before-kill t
 	compilation-scroll-output 'first-error
@@ -179,33 +180,41 @@ user-mail-address "simonho.ubc@gmail.com")
 (minions-mode))
 
 (use-package beacon
-	:demand t
-	:diminish
-	:init
-	(setq beacon-blink-when-window-scrolls nil
-				beacon-blink-when-window-changes t
-				beacon-blink-when-point-moves t)
-	:config
-	(beacon-mode 1))
+:demand t
+:diminish
+:init
+(setq beacon-blink-when-window-scrolls nil
+beacon-blink-when-window-changes t
+beacon-blink-when-point-moves t)
+:config
+(beacon-mode 1))
 
 (use-package rainbow-mode
-	:diminish
-	:hook
-	(prog-mode . rainbow-mode))
+:diminish
+:hook
+(prog-mode . rainbow-mode))
 
 (use-package rainbow-delimiters
-	:diminish
-	:hook
-	(prog-mode . rainbow-delimiters-mode))
+:diminish
+:hook
+(prog-mode . rainbow-delimiters-mode))
 
 (use-package hl-todo
-	:demand t
-	:config
-	(general-define-key
-	 :states 'normal
-	 "[t" '(hl-todo-previous :wk "previous todo")
-	 "]t" '(hl-todo-next :wk "next todo"))
-	(global-hl-todo-mode 1))
+:demand t
+:config
+(general-define-key
+:states 'normal
+"[t" '(hl-todo-previous :wk "previous todo")
+"]t" '(hl-todo-next :wk "next todo"))
+(global-hl-todo-mode 1))
+
+(use-package yascroll
+:demand t
+:custom
+(yascroll:delay-to-hide nil)
+(yascroll:scroll-bar 'right-fringe)
+:config
+(global-yascroll-bar-mode 1))
 
 (use-package dashboard
 	:demand t
