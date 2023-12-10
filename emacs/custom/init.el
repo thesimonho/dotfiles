@@ -273,9 +273,45 @@ beacon-blink-when-point-moves t)
 				evil-replace-state-cursor '("#C34043" (hbar . 2))
 				evil-visual-state-cursor  '("#76946A" (hbar . 2))
 				evil-motion-state-cursor  '("#FF9E3B" box))
-
+	(evil-define-key 'motion 'global
+		"j" 'evil-next-visual-line
+		"k" 'evil-previous-visual-line)
 	(evil-set-undo-system 'undo-redo)
 	(evil-mode 1))
+
+(use-package scroll-on-jump
+:demand t
+:after evil
+:init
+(setq scroll-on-jump-duration 0.4
+			scroll-on-jump-smooth t
+			scroll-on-jump-curve 'smooth)
+:config
+(with-eval-after-load 'evil
+(scroll-on-jump-advice-add evil-undo)
+(scroll-on-jump-advice-add evil-redo)
+(scroll-on-jump-advice-add evil-jump-item)
+(scroll-on-jump-advice-add evil-jump-forward)
+(scroll-on-jump-advice-add evil-jump-backward)
+(scroll-on-jump-advice-add evil-search-next)
+(scroll-on-jump-advice-add evil-search-previous)
+(scroll-on-jump-advice-add evil-ex-search-next)
+(scroll-on-jump-advice-add evil-ex-search-previous)
+(scroll-on-jump-advice-add evil-forward-paragraph)
+(scroll-on-jump-advice-add evil-backward-paragraph)
+(scroll-on-jump-advice-add evil-goto-mark)
+
+(scroll-on-jump-with-scroll-advice-add evil-goto-line)
+(scroll-on-jump-with-scroll-advice-add evil-goto-first-line)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
+(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
+
+(with-eval-after-load 'goto-chg
+(scroll-on-jump-advice-add goto-last-change)
+(scroll-on-jump-advice-add goto-last-change-reverse)))
 
 (use-package evil-commentary
 	:demand t
