@@ -467,7 +467,8 @@ beacon-blink-when-point-moves t)
     "pp" '(projectile-persp-switch-project :wk "switch project")
     "pf" '(project-find-file :wk "project files")
     "pa" '(projectile-add-known-project :wk "add project")
-    "pd" '(projectile-remove-known-project :wk "remove project")
+    "pd" '(persp-kill :wk "close project")
+    "px" '(projectile-remove-known-project :wk "remove project")
     "p!" '(projectile-run-shell-command-in-root :wk "run command in root")
 
     "p1" '((lambda () (interactive) (persp-switch-by-number 1)) :wk "project 1")
@@ -629,7 +630,7 @@ beacon-blink-when-point-moves t)
 			dirvish-attributes '(nerd-icons subtree-state))
 :config
 (define-key dirvish-mode-map (kbd "<mouse-1>") 'dirvish-subtree-toggle)
-(define-key dirvish-mode-map (kbd "<mouse-2>") 'dired-mouse-find-file-other-window)
+(define-key dirvish-mode-map (kbd "<mouse-3>") 'dired-mouse-find-file)
 (dirvish-override-dired-mode)
 (dirvish-side-follow-mode)
 :general
