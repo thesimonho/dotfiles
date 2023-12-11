@@ -132,10 +132,10 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package nerd-icons
 	:demand t)
 
-(use-package nerd-icons-dired
-	:after nerd-icons
-	:hook
-	(dired-mode . nerd-icons-dired-mode))
+;; (use-package nerd-icons-dired
+;; 	:after nerd-icons
+;; 	:hook
+;; 	(dired-mode . nerd-icons-dired-mode))
 
 (use-package nerd-icons-completion
 	:after (nerd-icons marginalia)
@@ -626,7 +626,7 @@ beacon-blink-when-point-moves t)
 			delete-by-moving-to-trash t
 			dirvish-reuse-session t
 			dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
-			dirvish-attributes '(subtree-state))
+			dirvish-attributes '(nerd-icons subtree-state))
 :config
 (define-key dirvish-mode-map (kbd "<mouse-1>") 'dirvish-subtree-toggle)
 (define-key dirvish-mode-map (kbd "<mouse-2>") 'dired-mouse-find-file-other-window)
