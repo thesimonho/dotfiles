@@ -19,34 +19,34 @@
    ((class color) (min-colors #xFF)))           ; col 2 Xterm/256
 
   ;; Define our color palette
-  (fujiWhite		"#DCD7BA" "#ffffff")
-  (oldWhite		"#C8C093" "#ffffff")
+  (fujiWhite		  "#DCD7BA" "#ffffff")
+  (oldWhite		    "#C8C093" "#ffffff")
 
-  (sumiInk-0		"#16161D" "#000000")
-  (sumiInk-1b		"#181820" "#000000")
-  (sumiInk-1		"#1F1F28" "#080808")
-  (sumiInk-2		"#2A2A37" "#121212")
-  (sumiInk-3		"#363646" "#303030")
-  (sumiInk-4		"#54546D" "#303030")
+  (sumiInk-0		  "#16161D" "#000000")
+  (sumiInk-1b	  	"#181820" "#000000")
+  (sumiInk-1		  "#1F1F28" "#080808")
+  (sumiInk-2	  	"#2A2A37" "#121212")
+  (sumiInk-3		  "#363646" "#303030")
+  (sumiInk-4	  	"#54546D" "#303030")
 
-  (waveBlue-1		"#223249" "#4e4e4e")
-  (waveBlue-2		"#2D4F67" "#585858")
-  (waveAqua1		"#6A9589" "#6a9589")
-  (waveAqua2		"#7AA89F" "#717C7C")
+  (waveBlue-1		  "#223249" "#4e4e4e")
+  (waveBlue-2	  	"#2D4F67" "#585858")
+  (waveAqua1		  "#6A9589" "#6a9589")
+  (waveAqua2		  "#7AA89F" "#717C7C")
 
   (winterGreen		"#2B3328" "#585858")
   (winterYellow		"#49443C" "#585858")
-  (winterRed		"#43242B" "#585858")
-  (winterBlue		"#252535" "#585858")
+  (winterRed	  	"#43242B" "#585858")
+  (winterBlue		  "#252535" "#585858")
 
   (autumnGreen		"#76946A" "#585858")
-  (autumnRed		"#C34043" "#585858")
+  (autumnRed		  "#C34043" "#585858")
   (autumnYellow		"#DCA561" "#585858")
 
-  (samuraiRed		"#E82424" "#585858")
+  (samuraiRed	  	"#E82424" "#585858")
   (roninYellow		"#FF9E3B" "#585858")
 
-  (dragonBlue		"#658594" "#658594")
+  (dragonBlue		  "#658594" "#658594")
   (dragonBlue2		"#8ba4b0" "#8ba4b0")
   (dragonBlack0		"#0d0c0c" "#0d0c0c")
   (dragonBlack1		"#12120f" "#12120f")
@@ -58,36 +58,36 @@
   (dragonWhite 		"#c5c9c5" "#c5c9c5")
   (dragonGreen 		"#87a987" "#87a987")
   (dragonGreen2		"#8a9a7b" "#8a9a7b")
-  (dragonPink		"#a292a3" "#a292a3")
+  (dragonPink	  	"#a292a3" "#a292a3")
   (dragonOrange		"#b6927b" "#b6927b")
-  (dragonOrange2		"#b98d7b" "#b98d7b")
-  (dragonGray		"#a6a69c" "#a6a69c")
+  (dragonOrange2	"#b98d7b" "#b98d7b")
+  (dragonGray		  "#a6a69c" "#a6a69c")
   (dragonGray2		"#9e9b93" "#9e9b93")
   (dragonGray3		"#7a8382" "#7a8382")
   (dragonViolet		"#8992a7" "#8992a7")
-  (dragonRed		"#c4746e" "#c4746e")
-  (dragonAqua		"#8ea4a2" "#8ea4a2")
-  (dragonAsh		"#737c73" "#737c73")
-  (dragonTeal		"#949fb5" "#949fb5")
+  (dragonRed		  "#c4746e" "#c4746e")
+  (dragonAqua	  	"#8ea4a2" "#8ea4a2")
+  (dragonAsh		  "#737c73" "#737c73")
+  (dragonTeal	  	"#949fb5" "#949fb5")
   (dragonYellow		"#c4b28a" "#c4b28a")
 
-  (fujiGray         "#727169" "#717C7C")
-  (oniViolet		"#957FB8" "#717C7C")
+  (fujiGray       "#727169" "#717C7C")
+  (oniViolet		  "#957FB8" "#717C7C")
   (springViolet1	"#938AA9" "#717C7C")
   (springViolet2	"#9CABCA" "#717C7C")
   (crystalBlue		"#7E9CD8" "#717C7C")
-  (springBlue		"#7FB4CA" "#717C7C")
-  (lightBlue		"#A3D4D5" "#717C7C")
+  (springBlue	  	"#7FB4CA" "#717C7C")
+  (lightBlue		  "#A3D4D5" "#717C7C")
   (springGreen		"#98BB6C" "#717C7C")
   (boatYellow1		"#938056" "#717C7C")
   (boatYellow2		"#C0A36E" "#717C7C")
-  (carpYellow		"#E6C384" "#717C7C")
-  (sakuraPink		"#D27E99" "#717C7C")
-  (waveRed          "#E46876" "#717C7C")
-  (peachRed         "#FF5D62" "#717C7C")
+  (carpYellow		  "#E6C384" "#717C7C")
+  (sakuraPink	  	"#D27E99" "#717C7C")
+  (waveRed        "#E46876" "#717C7C")
+  (peachRed       "#FF5D62" "#717C7C")
   (surimiOrange		"#FFA066" "#717C7C")
-  (katanaGray		"#717C7C" "#717C7C")
-  (comet            "#54536D" "#4e4e4e"))
+  (katanaGray		  "#717C7C" "#717C7C")
+  (comet          "#54536D" "#4e4e4e"))
 
   ;; Customize faces
   (
@@ -113,7 +113,7 @@
    (menu                                          (:background sumiInk-0 :foreground fujiWhite))
    (mode-line                                     (:background sumiInk-3))
    (mode-line-inactive                            (:background sumiInk-2 :foreground sumiInk-4 :bold nil))
-   (mode-line-active                              (:background sumiInk-3 :foreground oldWhite :bold nil))
+   (mode-line-active                              (:background dragonBlack5 :foreground oldWhite :bold nil))
    (mode-line-highlight                           (:foreground boatYellow2))
    (mode-line-buffer-id                           (:foreground waveAqua2 :bold t))
    (numbers                                       (:background dragonPink))
@@ -158,7 +158,6 @@
    (epa-mark                                      (:foreground waveRed))
    (dired-mark                                    (:foreground waveRed))
    (trailing-whitespace                           (:background comet))
-   (mode-line                                     (:background sumiInk-0 :foreground fujiWhite :bold t))
 
    ;; Battery colors
    (doom-modeline-battery-critical                (:foreground peachRed))
@@ -177,16 +176,16 @@
    (doom-modeline-evil-replace-state              (:foreground autumnRed))
    (doom-modeline-evil-operator-state             (:foreground autumnRed))
 
-   (doom-modeline-project-dir                     (:bold t :foreground waveAqua2))
-   (doom-modeline-buffer-path                     (:inherit 'bold :foreground waveAqua2))
-   (doom-modeline-buffer-file                     (:inherit 'bold :foreground oniViolet))
+   (doom-modeline-project-dir                     (:foreground waveAqua2))
+   (doom-modeline-buffer-path                     (:foreground waveAqua2))
+   (doom-modeline-buffer-file                     (:bold t :foreground oniViolet))
    (doom-modeline-buffer-modified                 (:inherit 'bold :foreground carpYellow))
+   (doom-modeline-buffer-major-mode               (:bold t :foreground waveAqua2))
    (doom-modeline-error                           (:background peachRed))
-   (doom-modeline-buffer-major-mode               (:foreground waveAqua2 :bold t))
-   (doom-modeline-info                            (:bold t :foreground lightBlue))
-   (doom-modeline-project-dir                     (:bold t :foreground surimiOrange))
+   (doom-modeline-warning                         (:foreground roninYellow))
+   (doom-modeline-info                            (:foreground lightBlue))
    (doom-modeline-bar                             (:bold t :background springViolet1))
-   (doom-modeline-panel                           (:inherit 'bold :background boatYellow2 :foreground sumiInk-2))
+   (doom-modeline-panel                           (:background boatYellow2 :foreground oldWhite))
    (doom-themes-visual-bell                       (:background autumnRed))
 
    ;; message colors
@@ -215,39 +214,23 @@
    (org-hide                                      (:background sumiInk-1b :foreground sumiInk-1b))
    (org-date                                      (:foreground waveBlue-2))
    (org-ellipsis                                  (:foreground waveBlue-2 :bold t))
-   (org-level-1                                   (:foreground peachRed :height 1.3 :bold t))
-   (org-level-2                                   (:foreground springViolet2 :height 1.15 :bold t))
-   (org-level-3                                   (:foreground boatYellow2 :height 1.05))
+   (org-level-1                                   (:foreground dragonRed :height 1.3 :bold t))
+   (org-level-2                                   (:foreground dragonViolet :height 1.15 :bold t))
+   (org-level-3                                   (:foreground dragonYellow :height 1.05))
    (org-level-4                                   (:foreground fujiWhite))
-   (org-level-5                                   (:foreground fujiWhite))
-   (org-level-6                                   (:foreground carpYellow))
-   (org-level-7                                   (:foreground surimiOrange))
-   (org-level-8                                   (:foreground springGreen))
+   (org-level-5                                   (:foreground oldWhite))
+   (org-level-6                                   (:foreground dragonAqua))
+   (org-level-7                                   (:foreground dragonOrange))
+   (org-level-8                                   (:foreground dragonGreen))
 
    ;; which-key
-   (which-key-key-face                            (:inherit 'font-lock-variable-name-face))
+   (which-key-key-face                            (:foreground dragonOrange :bold t))
    (which-func                                    (:inherit 'font-lock-function-name-face :bold t))
    (which-key-group-description-face              (:foreground waveRed))
    (which-key-command-description-face            (:foreground crystalBlue))
    (which-key-local-map-description-face          (:foreground carpYellow))
    (which-key-posframe                            (:background waveBlue-1))
-   (which-key-posframe-border	                 (:background waveBlue-1))
-
-   ;; swiper
-   (swiper-line-face                              (:foreground carpYellow))
-   (swiper-background-match-face-1                (:background surimiOrange :foreground sumiInk-0))
-   (swiper-background-match-face-2                (:background crystalBlue :foreground sumiInk-0))
-   (swiper-background-match-face-3                (:background boatYellow2 :foreground sumiInk-0))
-   (swiper-background-match-face-4                (:background peachRed :foreground sumiInk-0))
-   (swiper-match-face-1                           (:inherit 'swiper-background-match-face-1))
-   (swiper-match-face-2                           (:inherit 'swiper-background-match-face-2))
-   (swiper-match-face-3                           (:inherit 'swiper-background-match-face-3))
-   (swiper-match-face-4                           (:inherit 'swiper-background-match-face-4))
-
-   (counsel-outline-default                       (:foreground carpYellow))
-   (info-header-xref                              (:foreground carpYellow))
-   (xref-file-header                              (:foreground carpYellow))
-   (xref-match                                    (:foreground carpYellow))
+   (which-key-posframe-border											(:background waveBlue-1))
 
    ;; rainbow delimiters
    (rainbow-delimiters-mismatched-face            (:foreground peachRed))
@@ -271,23 +254,6 @@
    (show-paren-mismatch                           (:background dragonRed :foreground oldWhite))
    (tooltip                                       (:foreground sumiInk-0 :background carpYellow :bold t))
   
-   ;; company-box
-   (company-tooltip                               (:background sumiInk-2))
-   (company-tooltip-common                        (:foreground autumnYellow))
-   (company-tooltip-quick-access                  (:foreground springViolet2))
-   (company-tooltip-scrollbar-thumb               (:background autumnRed))
-   (company-tooltip-scrollbar-track               (:background sumiInk-2))
-   (company-tooltip-search                        (:background carpYellow :foreground sumiInk-0 :distant-foreground fujiWhite))
-   (company-tooltip-selection                     (:background peachRed :foreground winterRed :bold t))
-   (company-tooltip-mouse                         (:background sumiInk-2 :foreground sumiInk-0 :distant-foreground fujiWhite))
-   (company-tooltip-annotation                    (:foreground peachRed :distant-foreground sumiInk-1))
-   (company-scrollbar-bg                          (:inherit 'tooltip))
-   (company-scrollbar-fg                          (:background peachRed))
-   (company-preview                               (:foreground carpYellow))
-   (company-preview-common                        (:foreground peachRed :bold t))
-   (company-preview-search                        (:inherit 'company-tooltip-search))
-   (company-template-field                        (:inherit 'match))
-
    ;; flycheck
    (flycheck-posframe-background-face             (:background sumiInk-0))
    (flycheck-posframe-face                        (:background sumiInk-0))
@@ -304,35 +270,6 @@
    (flycheck-inline-info                          (:foreground dragonBlue :background winterBlue :italic t  :bold t :height 138))
    (flycheck-inline-warning                       (:foreground winterYellow :background carpYellow :italic t :bold t :height 138))
 
-   ;; indent dots
-   (highlight-indent-guides-character-face        (:foreground sumiInk-3))
-   (highlight-indent-guides-stack-character-face  (:foreground sumiInk-3))
-   (highlight-indent-guides-stack-odd-face        (:foreground sumiInk-3))
-   (highlight-indent-guides-stack-even-face       (:foreground comet))
-   (highlight-indent-guides-stack-character-face  (:foreground sumiInk-3))
-   (highlight-indent-guides-even-face             (:foreground sumiInk-2))
-   (highlight-indent-guides-odd-face              (:foreground comet))
-
-   (highlight-operators-face                      (:foreground boatYellow2))
-   (highlight-quoted-symbol                       (:foreground springGreen))
-   (highlight-numbers-face                        (:foreground sakuraPink))
-   (highlight-symbol-face                         (:background waveBlue-1 :foreground lightBlue))
-  
-   ;; ivy
-   (ivy-current-match                             (:background crystalBlue :foreground sumiInk-0 :bold t))
-   (ivy-action                                    (:foreground fujiWhite))
-   (ivy-grep-line-number                          (:foreground springGreen))
-   (ivy-minibuffer-match-face-1                   (:foreground waveRed))
-   (ivy-minibuffer-match-face-2                   (:foreground springGreen))
-   (ivy-minibuffer-match-highlight                (:foreground lightBlue))
-   (ivy-grep-info                                 (:foreground lightBlue))
-   (ivy-grep-line-number                          (:foreground springViolet2))
-   (ivy-confirm-face                              (:foreground waveAqua2))
-
-   ;; posframe's
-   (ivy-posframe                                  (:background sumiInk-2))
-   (ivy-posframe-border                           (:background sumiInk-3))
-  
    ;;treemacs
    (treemacs-directory-collapsed-face             (:foreground fujiWhite))
    (treemacs-directory-face                       (:foreground fujiWhite))
@@ -380,25 +317,9 @@
    (evil-ex-substitute-replacement                (:foreground surimiOrange :strike-through nil :inherit 'evil-ex-substitute-matches))
    (evil-search-highlight-persist-highlight-face  (:background carpYellow))
 
-   ;; term
-   (term                                          (:background sumiInk-0 :foreground fujiWhite))
-   (term-color-blue                               (:background dragonBlue2 :foreground dragonBlue2))
-   (term-color-bright-blue                        (:inherit 'term-color-blue))
-   (term-color-green                              (:background dragonGreen2 :foreground dragonGreen2))
-   (term-color-bright-green                       (:inherit 'term-color-green))
-   (term-color-black                              (:background dragonBlack0 :foreground fujiWhite))
-   (term-color-bright-black                       (:background dragonGray :foreground sumiInk-1b))
-   (term-color-white                              (:background oldWhite :foreground fujiWhite))
-   (term-color-bright-white                       (:background dragonWhite :foreground oldWhite))
-   (term-color-red                                (:background dragonRed :foreground dragonRed))
-   (term-color-bright-red                         (:background waveRed :foreground waveRed))
-   (term-color-yellow                             (:background dragonYellow :foreground dragonYellow))
-   (term-color-bright-yellow                      (:background carpYellow :foreground carpYellow))
-   (term-color-cyan                               (:background dragonAqua :foreground dragonAqua))
-   (term-color-bright-cyan                        (:background waveAqua2 :foreground waveAqua2))
-   (term-color-magenta                            (:background dragonPink :foreground dragonPink))
-   (term-color-bright-magenta                     (:background springViolet1 :foreground springViolet1))
-
+	 ;; yascroll
+	 (yascroll:thumb-fringe                         (:background dragonAqua :foreground dragonAqua))
+	 
    ;; popup
    (popup-face                                    (:inherit 'tooltip))
    (popup-selection-face                          (:inherit 'tooltip))
@@ -413,10 +334,6 @@
    (anzu-mode-no-match	                          (:foreground fujiWhite :background peachRed))
    (anzu-replace-to                               (:foreground springBlue :background winterBlue))
    (anzu-replace-highlight                        (:foreground peachRed :background winterRed :strike-through t))
-
-   ;; ace
-   (ace-jump-face-background                      (:foreground waveBlue-2))
-   (ace-jump-face-foreground                      (:foreground peachRed :background sumiInk-0 :bold t))
   
    ;; vertico
    (vertico-multiline                             (:background samuraiRed))
@@ -458,18 +375,34 @@
    (centaur-tabs-jump-identifier-selected         (:foreground samuraiRed :background sumiInk-1 :bold t))
    (centaur-tabs-jump-identifier-unselected       (:foreground samuraiRed :bold t))
 
-   (git-gutter:added                              (:foreground winterGreen))
-   (git-gutter:deleted                            (:foreground winterRed))
-   (git-gutter:modified                           (:foreground winterBlue))
+   (git-gutter:added                              (:foreground dragonGreen))
+   (git-gutter:deleted                            (:foreground dragonRed))
+   (git-gutter:modified                           (:foreground dragonBlue))
 
-   (diff-hl-margin-change                         (:foreground springBlue :background winterBlue))
-   (diff-hl-margin-delete                         (:foreground peachRed :background winterRed))
-   (diff-hl-margin-insert                         (:foreground comet :background winterBlue))
+	 (copilot-overlay-face													(:foreground sumiInk-4))
 
-   (bm-fringe-face                                (:background peachRed :foreground sumiInk-3))
-   (bm-fringe-persistent-face                     (:background peachRed :foreground sumiInk-3))
+	 (focus-unfocused (:foreground sumiInk-4))
 
-   (ansi-color-green                              (:foreground dragonGreen2))
+	 ;; term
+   (term                                          (:background sumiInk-0 :foreground fujiWhite))
+   (term-color-blue                               (:background dragonBlue2 :foreground dragonBlue2))
+   (term-color-bright-blue                        (:inherit 'term-color-blue))
+   (term-color-green                              (:background dragonGreen2 :foreground dragonGreen2))
+   (term-color-bright-green                       (:inherit 'term-color-green))
+   (term-color-black                              (:background dragonBlack0 :foreground fujiWhite))
+   (term-color-bright-black                       (:background dragonGray :foreground sumiInk-1b))
+   (term-color-white                              (:background oldWhite :foreground fujiWhite))
+   (term-color-bright-white                       (:background dragonWhite :foreground oldWhite))
+   (term-color-red                                (:background dragonRed :foreground dragonRed))
+   (term-color-bright-red                         (:background waveRed :foreground waveRed))
+   (term-color-yellow                             (:background dragonYellow :foreground dragonYellow))
+   (term-color-bright-yellow                      (:background carpYellow :foreground carpYellow))
+   (term-color-cyan                               (:background dragonAqua :foreground dragonAqua))
+   (term-color-bright-cyan                        (:background waveAqua2 :foreground waveAqua2))
+   (term-color-magenta                            (:background dragonPink :foreground dragonPink))
+   (term-color-bright-magenta                     (:background springViolet1 :foreground springViolet1))
+
+	 (ansi-color-green                              (:foreground dragonGreen2))
    (ansi-color-black                              (:background dragonBlack0))
    (ansi-color-cyan                               (:foreground dragonAqua))
    (ansi-color-magenta                            (:foreground dragonPink))
@@ -478,6 +411,79 @@
    (ansi-color-white                              (:foreground oldWhite))
    (ansi-color-yellow                             (:foreground dragonYellow))
    (ansi-color-bright-white                       (:foreground dragonWhite))
+
+   ;; ace
+   ;; (ace-jump-face-background                      (:foreground waveBlue-2))
+   ;; (ace-jump-face-foreground                      (:foreground peachRed :background sumiInk-0 :bold t))
+
+	 ;; swiper
+   ;; (swiper-line-face                              (:foreground carpYellow))
+   ;; (swiper-background-match-face-1                (:background surimiOrange :foreground sumiInk-0))
+   ;; (swiper-background-match-face-2                (:background crystalBlue :foreground sumiInk-0))
+   ;; (swiper-background-match-face-3                (:background boatYellow2 :foreground sumiInk-0))
+   ;; (swiper-background-match-face-4                (:background peachRed :foreground sumiInk-0))
+   ;; (swiper-match-face-1                           (:inherit 'swiper-background-match-face-1))
+   ;; (swiper-match-face-2                           (:inherit 'swiper-background-match-face-2))
+   ;; (swiper-match-face-3                           (:inherit 'swiper-background-match-face-3))
+   ;; (swiper-match-face-4                           (:inherit 'swiper-background-match-face-4))
+
+   ;; (counsel-outline-default                       (:foreground carpYellow))
+   ;; (info-header-xref                              (:foreground carpYellow))
+   ;; (xref-file-header                              (:foreground carpYellow))
+   ;; (xref-match                                    (:foreground carpYellow))
+
+	 ;; company-box
+   ;; (company-tooltip                               (:background sumiInk-2))
+   ;; (company-tooltip-common                        (:foreground autumnYellow))
+   ;; (company-tooltip-quick-access                  (:foreground springViolet2))
+   ;; (company-tooltip-scrollbar-thumb               (:background autumnRed))
+   ;; (company-tooltip-scrollbar-track               (:background sumiInk-2))
+   ;; (company-tooltip-search                        (:background carpYellow :foreground sumiInk-0 :distant-foreground fujiWhite))
+   ;; (company-tooltip-selection                     (:background peachRed :foreground winterRed :bold t))
+   ;; (company-tooltip-mouse                         (:background sumiInk-2 :foreground sumiInk-0 :distant-foreground fujiWhite))
+   ;; (company-tooltip-annotation                    (:foreground peachRed :distant-foreground sumiInk-1))
+   ;; (company-scrollbar-bg                          (:inherit 'tooltip))
+   ;; (company-scrollbar-fg                          (:background peachRed))
+   ;; (company-preview                               (:foreground carpYellow))
+   ;; (company-preview-common                        (:foreground peachRed :bold t))
+   ;; (company-preview-search                        (:inherit 'company-tooltip-search))
+   ;; (company-template-field                        (:inherit 'match))
+
+	 ;; indent dots
+   ;; (highlight-indent-guides-character-face        (:foreground sumiInk-3))
+   ;; (highlight-indent-guides-stack-character-face  (:foreground sumiInk-3))
+   ;; (highlight-indent-guides-stack-odd-face        (:foreground sumiInk-3))
+   ;; (highlight-indent-guides-stack-even-face       (:foreground comet))
+   ;; (highlight-indent-guides-stack-character-face  (:foreground sumiInk-3))
+   ;; (highlight-indent-guides-even-face             (:foreground sumiInk-2))
+   ;; (highlight-indent-guides-odd-face              (:foreground comet))
+
+   ;; (highlight-operators-face                      (:foreground boatYellow2))
+   ;; (highlight-quoted-symbol                       (:foreground springGreen))
+   ;; (highlight-numbers-face                        (:foreground sakuraPink))
+   ;; (highlight-symbol-face                         (:background waveBlue-1 :foreground lightBlue))
+  
+   ;; ivy
+   ;; (ivy-current-match                             (:background crystalBlue :foreground sumiInk-0 :bold t))
+   ;; (ivy-action                                    (:foreground fujiWhite))
+   ;; (ivy-grep-line-number                          (:foreground springGreen))
+   ;; (ivy-minibuffer-match-face-1                   (:foreground waveRed))
+   ;; (ivy-minibuffer-match-face-2                   (:foreground springGreen))
+   ;; (ivy-minibuffer-match-highlight                (:foreground lightBlue))
+   ;; (ivy-grep-info                                 (:foreground lightBlue))
+   ;; (ivy-grep-line-number                          (:foreground springViolet2))
+   ;; (ivy-confirm-face                              (:foreground waveAqua2))
+
+   ;; posframe's
+   ;; (ivy-posframe                                  (:background sumiInk-2))
+   ;; (ivy-posframe-border                           (:background sumiInk-3))
+
+   ;; (diff-hl-margin-change                         (:foreground springBlue :background winterBlue))
+   ;; (diff-hl-margin-delete                         (:foreground peachRed :background winterRed))
+   ;; (diff-hl-margin-insert                         (:foreground comet :background winterBlue))
+
+   ;; (bm-fringe-face                                (:background peachRed :foreground sumiInk-3))
+   ;; (bm-fringe-persistent-face                     (:background peachRed :foreground sumiInk-3))
 
    ;; (tree-sitter-hl-face:attribute                 (:foreground surimiOrange))
    ;; (tree-sitter-hl-face:escape                    (:foreground waveRed))
@@ -526,10 +532,7 @@
    ;; (tree-sitter-hl-face:case-pattern              (:foreground waveRed))
    ;; (tree-sitter-hl-face:variable.synthesized      (:foreground waveRed))
    ;; (tree-sitter-hl-face:keyword.compiler          (:foreground peachRed :bold t :italic t))
-
-	 (copilot-overlay-face													(:foreground sumiInk-4))
-
-   (focus-unfocused (:foreground sumiInk-4))))
+))
 
 ;;;###autoload
 (and load-file-name

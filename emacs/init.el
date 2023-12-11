@@ -243,7 +243,7 @@ beacon-blink-when-point-moves t)
 				(projects . 5)))
 	(setq dashboard-navigator-buttons
 		`((
-			(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/custom/init.org")) warning)
+			(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
 			(,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Update Packages" (lambda (&rest _) (elpaca-fetch-all)) error)
 			)))
 	:config
@@ -726,7 +726,7 @@ treemacs-fringe-indicator-mode 'always))
 	 lsp-enable-snippet nil
 	 lsp-headerline-breadcrumb-mode t
 	 lsp-headerline-breadcrumb-segments '(file symbols)
-	 lsp-enable-symbol-highlighting nil
+	 lsp-enable-symbol-highlighting t
 	 lsp-warn-no-matched-clients nil
 	 lsp-ui-peek-enable t
 	 lsp-ui-doc-show-with-cursor nil
