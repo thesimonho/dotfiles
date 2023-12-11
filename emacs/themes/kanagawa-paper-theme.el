@@ -302,8 +302,8 @@
    ;; dashboard
    (dashboard-heading                             (:foreground autumnRed :bold t))
    (dashboard-items-face                          (:bold nil :foreground fujiWhite))
-   (dashboard-banner-logo-title                   (:bold t :height 200))
-   (dashboard-no-items-face                       (:foreground sumiInk-4))
+   (dashboard-banner-logo-title                   (:bold t :height 200 :foreground dragonGreen))
+	 (dashboard-text-banner                         (:foreground dragonBlue))
 
    ;; all-the-icons
    (all-the-icons-dgreen                          (:foreground waveAqua2))

@@ -82,6 +82,7 @@
 	ring-bell-function 'ignore
 	visible-bell t
 	pixel-scroll-precision-mode t
+	scroll-margin 3
 	sentence-end-double-space nil
 	save-interprogram-paste-before-kill t
 	compilation-scroll-output 'first-error
@@ -109,6 +110,7 @@
 (savehist-mode 1)
 (save-place-mode 1)
 (blink-cursor-mode 0)
+(global-hl-line-mode 1)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -395,8 +397,6 @@ beacon-blink-when-point-moves t)
 (scroll-on-jump-advice-add evil-backward-paragraph)
 (scroll-on-jump-advice-add evil-goto-mark)
 
-(scroll-on-jump-with-scroll-advice-add evil-goto-line)
-(scroll-on-jump-with-scroll-advice-add evil-goto-first-line)
 (scroll-on-jump-with-scroll-advice-add evil-scroll-down)
 (scroll-on-jump-with-scroll-advice-add evil-scroll-up)
 (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
@@ -636,7 +636,7 @@ treemacs-fringe-indicator-mode 'always))
 	(centaur-tabs-headline-match)
 	(centaur-tabs-group-by-projectile-project)
 	:hook
-	((dashboard-mode dired-mode eshell-mode) . centaur-tabs-local-mode)
+	((dashboard-mode dired-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
 	:general
 	(:keymaps 'evil-normal-state-map
 						:prefix "g"
@@ -718,7 +718,7 @@ diary-mode))
 																				("Javascript" (prettierd))
 																				("Vue" (prettierd))
 																				("GraphQL" (prettierd))
-																				("Python" (black))
+																				("Python" (ruff))
 																				))
 	:general
 	(leader-def
@@ -865,6 +865,67 @@ diary-mode))
 	 "]h" '(git-gutter:next-hunk :wk "next hunk"))
 	(global-git-gutter-mode t))
 
+(use-package org
+	:elpaca nil
+	:defer t
+	:config
+	;; to avoid having to confirm each code block evaluation in the minibuffer
+	(setq org-confirm-babel-evaluate nil)
+	;; use python-mode in jupyter-python code blocks
+	(org-babel-do-load-languages 'org-babel-load-languages '((python . t)
+																													 (shell . t)
+																													 (emacs-lisp . t)
+																													 (jupyter . t)))
+	:hook
+	(org-babel-after-execute . org-display-inline-images))
+
+(use-package toc-org
+	:hook (org-mode . toc-org-mode))
+
+(use-package org-modern
+	:init
+	(setq
+	;; Edit settings
+	org-auto-align-tags nil
+	org-tags-column 0
+	org-catch-invisible-edits 'show-and-error
+	org-special-ctrl-a/e t
+	org-src-tab-acts-natively nil
+	org-insert-heading-respect-content t
+
+	;; Org styling, hide markup etc.
+	org-hide-emphasis-markers nil
+	org-pretty-entities t
+
+	;; Agenda styling
+	org-agenda-tags-column 0
+	org-agenda-block-separator ?-)
+	:hook
+	(org-mode . org-modern-mode))
+
+(use-package evil-org
+	:diminish
+	:hook (org-mode . evil-org-mode)
+	:config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
+
+(with-eval-after-load 'org
+	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
+	(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
+	(add-to-list 'org-structure-template-alist '("sp" . "src python")))
+
+(major-mode-def
+	:keymaps 'org-mode-map
+	:wk-full-keys nil
+	"x" '(org-babel-execute-src-block :wk "execute block")
+	"X" '(org-babel-execute-buffer :wk "execute all")
+	"e"			'(org-edit-special :wk "edit block")
+	"i"      (cons "insert" (make-sparse-keymap))
+	"is"     (cons "src block" (make-sparse-keymap))
+	"ise"		'((lambda() (interactive) (org-insert-structure-template "src emacs-lisp")) :wk "emacs-lisp")
+	"isp"		'((lambda() (interactive) (org-insert-structure-template "src python")) :wk "python")
+	"isj"	  '((lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)) :wk "jupyter")
+	"it"		'((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
+
 (use-package npm
 	:general
 	(major-mode-def
@@ -934,64 +995,3 @@ diary-mode))
   (with-eval-after-load 'treesit
     (add-to-list 'treesit-language-source-alist
                  '(graphql "https://github.com/bkegley/tree-sitter-graphql"))))
-
-(use-package org
-	:elpaca nil
-	:defer t
-	:config
-	;; to avoid having to confirm each code block evaluation in the minibuffer
-	(setq org-confirm-babel-evaluate nil)
-	;; use python-mode in jupyter-python code blocks
-	(org-babel-do-load-languages 'org-babel-load-languages '((python . t)
-																													 (shell . t)
-																													 (emacs-lisp . t)
-																													 (jupyter . t)))
-	:hook
-	(org-babel-after-execute . org-display-inline-images))
-
-(use-package toc-org
-	:hook (org-mode . toc-org-mode))
-
-(use-package org-modern
-	:init
-	(setq
-	;; Edit settings
-	org-auto-align-tags nil
-	org-tags-column 0
-	org-catch-invisible-edits 'show-and-error
-	org-special-ctrl-a/e t
-	org-src-tab-acts-natively nil
-	org-insert-heading-respect-content t
-
-	;; Org styling, hide markup etc.
-	org-hide-emphasis-markers nil
-	org-pretty-entities t
-
-	;; Agenda styling
-	org-agenda-tags-column 0
-	org-agenda-block-separator ?-)
-	:hook
-	(org-mode . org-modern-mode))
-
-(use-package evil-org
-	:diminish
-	:hook (org-mode . evil-org-mode)
-	:config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
-
-(with-eval-after-load 'org
-	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
-	(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
-	(add-to-list 'org-structure-template-alist '("sp" . "src python")))
-
-(major-mode-def
-	:keymaps 'org-mode-map
-	:wk-full-keys nil
-	"x" '(org-babel-execute-src-block :wk "execute block")
-	"X" '(org-babel-execute-buffer :wk "execute all")
-	"e"			'(org-edit-special :wk "edit block")
-	"i"      (cons "insert" (make-sparse-keymap))
-	"is"     (cons "src block" (make-sparse-keymap))
-	"ise"		'((lambda() (interactive) (org-insert-structure-template "src emacs-lisp")) :wk "emacs-lisp")
-	"isp"		'((lambda() (interactive) (org-insert-structure-template "src python")) :wk "python")
-	"isj"	  '((lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)) :wk "jupyter")
-	"it"		'((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
