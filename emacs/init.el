@@ -130,22 +130,22 @@ user-mail-address "simonho.ubc@gmail.com")
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (use-package nerd-icons
-  :demand t)
+	:demand t)
 
 (use-package nerd-icons-dired
-  :after nerd-icons
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+	:after nerd-icons
+	:hook
+	(dired-mode . nerd-icons-dired-mode))
 
 (use-package nerd-icons-completion
-  :after (nerd-icons marginalia)
-  :config
-  (nerd-icons-completion-mode))
+	:after (nerd-icons marginalia)
+	:config
+	(nerd-icons-completion-mode))
 
-(use-package treemacs-nerd-icons
-  :after (nerd-icons treemacs)
-  :config
-  (treemacs-load-theme "nerd-icons"))
+;; (use-package treemacs-nerd-icons
+;;   :after (nerd-icons treemacs)
+;;   :config
+;;   (treemacs-load-theme "nerd-icons"))
 
 (use-package doom-modeline
 	:init
@@ -570,7 +570,8 @@ beacon-blink-when-point-moves t)
 		"fs" '(save-buffer :wk "save") 
 		"ff" '(find-file :wk "find file")
 		"fr" '(consult-recent-file :wk "recent files")
-		"ft" '(treemacs-select-window :wk "file tree")
+		"fd" '(dirvish-side :wk "file directory")
+		;; "ft" '(treemacs-select-window :wk "file tree")
 		))
 
 (use-package consult-todo
@@ -596,25 +597,49 @@ beacon-blink-when-point-moves t)
 	(eshell-toggle-run-command nil)
 	(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
 
-(use-package treemacs
+;; (use-package treemacs
+;; :init
+;; (setq treemacs-python-executable (concat python-path "python.exe"))
+;; (setq treemacs-follow-mode t
+;; treemacs-project-follow-mode t
+;; treemacs-filewatch-mode t
+;; treemacs-collapse-dirs nil
+;; treemacs-fringe-indicator-mode 'always))
+
+;; (use-package treemacs-evil
+;; :demand t
+;; :after (treemacs evil))
+
+;; (use-package treemacs-projectile
+;; :after (treemacs projectile))
+
+;; (use-package treemacs-perspective
+;; :after (treemacs perspective)
+;; :config (treemacs-set-scope-type 'Perspectives))
+
+(use-package dirvish
 :init
-(setq treemacs-python-executable (concat python-path "python.exe"))
-(setq treemacs-follow-mode t
-treemacs-project-follow-mode t
-treemacs-filewatch-mode t
-treemacs-collapse-dirs nil
-treemacs-fringe-indicator-mode 'always))
-
-(use-package treemacs-evil
-:demand t
-:after (treemacs evil))
-
-(use-package treemacs-projectile
-:after (treemacs projectile))
-
-(use-package treemacs-perspective
-:after (treemacs perspective)
-:config (treemacs-set-scope-type 'Perspectives))
+(setq dirvish-side-auto-expand t
+			dired-mouse-drag-files t
+			mouse-drag-and-drop-region-cross-program t
+			mouse-1-click-follows-link nil
+			delete-by-moving-to-trash t
+			dirvish-reuse-session t
+			dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
+			dirvish-attributes '(subtree-state))
+:config
+(define-key dirvish-mode-map (kbd "<mouse-1>") 'dirvish-subtree-toggle)
+(define-key dirvish-mode-map (kbd "<mouse-2>") 'dired-mouse-find-file-other-window)
+(dirvish-override-dired-mode)
+(dirvish-side-follow-mode)
+:general
+(:keymaps 'dirvish-mode-map
+"q" ' dirvish-quit
+"TAB" 'dirvish-subtree-toggle
+"<return>" 'dired-find-file
+"h" 'dired-up-directory
+"p" 'dirvish-yank
+))
 
 (use-package centaur-tabs
 	:demand t
@@ -636,7 +661,7 @@ treemacs-fringe-indicator-mode 'always))
 	(centaur-tabs-headline-match)
 	(centaur-tabs-group-by-projectile-project)
 	:hook
-	((dashboard-mode dired-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
+	((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
 	:general
 	(:keymaps 'evil-normal-state-map
 						:prefix "g"

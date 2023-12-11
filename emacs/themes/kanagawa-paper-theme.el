@@ -375,6 +375,10 @@
    (centaur-tabs-jump-identifier-selected         (:foreground samuraiRed :background sumiInk-1 :bold t))
    (centaur-tabs-jump-identifier-unselected       (:foreground samuraiRed :bold t))
 
+	 ;; dirvish
+	 (dirvish-subtree-state													(:background sumiInk-1))
+	 (dirvish-subtree-guide													(:background sumiInk-1))
+
    (git-gutter:added                              (:foreground dragonGreen))
    (git-gutter:deleted                            (:foreground dragonRed))
    (git-gutter:modified                           (:foreground dragonBlue))
