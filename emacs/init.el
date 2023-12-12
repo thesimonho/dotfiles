@@ -585,7 +585,6 @@ beacon-blink-when-point-moves t)
 (setq dirvish-side-auto-expand t
 			dired-mouse-drag-files t
 			mouse-drag-and-drop-region-cross-program t
-			mouse-1-click-follows-link nil
 			delete-by-moving-to-trash t
 			dirvish-reuse-session t
 			dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
@@ -595,6 +594,8 @@ beacon-blink-when-point-moves t)
 (define-key dirvish-mode-map (kbd "<mouse-3>") 'dired-mouse-find-file-other-window)
 (dirvish-override-dired-mode)
 (dirvish-side-follow-mode)
+:hook
+(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
 :general
 (:keymaps 'dirvish-mode-map
 "q" ' dirvish-quit
