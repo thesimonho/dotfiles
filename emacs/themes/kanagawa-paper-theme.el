@@ -113,11 +113,10 @@
    (menu                                          (:background sumiInk-0 :foreground fujiWhite))
    (mode-line                                     (:background sumiInk-3))
    (mode-line-inactive                            (:background sumiInk-2 :foreground sumiInk-4 :bold nil))
-   (mode-line-active                              (:background dragonBlack5 :foreground oldWhite :bold nil))
+   (mode-line-active                              (:background winterRed :foreground dragonGray2 :bold nil))
    (mode-line-highlight                           (:foreground boatYellow2))
    (mode-line-buffer-id                           (:foreground waveAqua2 :bold t))
    (numbers                                       (:background dragonPink))
-   (persp-selected-face													  (:foreground autumnGreen))
    (region                                        (:background waveBlue-2))
    (separator-line                                (:background sumiInk-0))
    (shadow                                        (:background sumiInk-0))
@@ -176,15 +175,17 @@
    (doom-modeline-evil-replace-state              (:foreground autumnRed))
    (doom-modeline-evil-operator-state             (:foreground autumnRed))
 
+   (persp-selected-face				                    (:bold t :foreground dragonBlue))
    (doom-modeline-project-dir                     (:foreground waveAqua2))
    (doom-modeline-buffer-path                     (:foreground waveAqua2))
-   (doom-modeline-buffer-file                     (:bold t :foreground oniViolet))
+   (doom-modeline-buffer-file                     (:bold t :foreground dragonBlue))
    (doom-modeline-buffer-modified                 (:inherit 'bold :foreground carpYellow))
-   (doom-modeline-buffer-major-mode               (:bold t :foreground waveAqua2))
+   (doom-modeline-buffer-major-mode               (:bold t :foreground dragonGray2))
+   (doom-modeline-buffer-minor-mode               (:foreground dragonGray)) ;; minions
    (doom-modeline-error                           (:background peachRed))
    (doom-modeline-warning                         (:foreground roninYellow))
-   (doom-modeline-info                            (:foreground lightBlue))
-   (doom-modeline-bar                             (:bold t :background springViolet1))
+   (doom-modeline-info                            (:foreground dragonGray2)) ;; VCS branch
+   (doom-modeline-bar                             (:bold t :background dragonWhite))
    (doom-modeline-panel                           (:background waveBlue-2 :foreground oldWhite))
    (doom-themes-visual-bell                       (:background autumnRed))
 
@@ -269,17 +270,6 @@
    (flycheck-inline-error                         (:foreground samuraiRed :background winterRed :italic t :bold t :height 138))
    (flycheck-inline-info                          (:foreground dragonBlue :background winterBlue :italic t  :bold t :height 138))
    (flycheck-inline-warning                       (:foreground winterYellow :background carpYellow :italic t :bold t :height 138))
-
-   ;;treemacs
-   (treemacs-directory-collapsed-face             (:foreground fujiWhite))
-   (treemacs-directory-face                       (:foreground fujiWhite))
-   (treemacs-file-face                            (:foreground fujiWhite))
-
-   (treemacs-git-added-face                       (:foreground winterGreen))
-   (treemacs-git-renamed-face                     (:foreground fujiWhite))
-   (treemacs-git-ignored-face                     (:foreground dragonGray))
-   (treemacs-git-unmodified-face                  (:foreground fujiWhite))
-   (treemacs-git-modified-face                    (:foreground dragonOrange))
    
    ;; lsp and lsp-ui
    (lsp-headerline-breadcrumb-path-error-face     (:underline (:color springGreen :style 'wave) :foreground sumiInk-4 :background sumiInk-0))
@@ -318,7 +308,7 @@
    (evil-search-highlight-persist-highlight-face  (:background carpYellow))
 
 	 ;; yascroll
-	 (yascroll:thumb-fringe                         (:background dragonAqua :foreground dragonAqua))
+	 (yascroll:thumb-fringe                         (:background sumiInk-3 :foreground sumiInk-3))
 	 
    ;; popup
    (popup-face                                    (:inherit 'tooltip))
@@ -418,6 +408,17 @@
    (ansi-color-white                              (:foreground oldWhite))
    (ansi-color-yellow                             (:foreground dragonYellow))
    (ansi-color-bright-white                       (:foreground dragonWhite))
+
+   ;;treemacs
+   ;; (treemacs-directory-collapsed-face             (:foreground fujiWhite))
+   ;; (treemacs-directory-face                       (:foreground fujiWhite))
+   ;; (treemacs-file-face                            (:foreground fujiWhite))
+
+   ;; (treemacs-git-added-face                       (:foreground winterGreen))
+   ;; (treemacs-git-renamed-face                     (:foreground fujiWhite))
+   ;; (treemacs-git-ignored-face                     (:foreground dragonGray))
+   ;; (treemacs-git-unmodified-face                  (:foreground fujiWhite))
+   ;; (treemacs-git-modified-face                    (:foreground dragonOrange))
 
    ;; ace
    ;; (ace-jump-face-background                      (:foreground waveBlue-2))
