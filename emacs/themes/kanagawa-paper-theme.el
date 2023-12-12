@@ -377,8 +377,8 @@
 
 	 ;; dirvish
 	 (dirvish-hl-line																(:background sumiInk-2))
-	 (dirvish-subtree-state													(:background nil))
-	 (dirvish-subtree-guide													(:background sumiInk-1))
+	 (dirvish-subtree-state													(:background nil :foreground sumiInk-3))
+	 (dirvish-subtree-guide													(:background sumiInk-1 :foreground sumiInk-3))
 
    (git-gutter:added                              (:foreground dragonGreen))
    (git-gutter:deleted                            (:foreground dragonRed))

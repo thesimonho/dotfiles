@@ -132,20 +132,10 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package nerd-icons
 	:demand t)
 
-;; (use-package nerd-icons-dired
-;; 	:after nerd-icons
-;; 	:hook
-;; 	(dired-mode . nerd-icons-dired-mode))
-
 (use-package nerd-icons-completion
 	:after (nerd-icons marginalia)
 	:config
 	(nerd-icons-completion-mode))
-
-;; (use-package treemacs-nerd-icons
-;;   :after (nerd-icons treemacs)
-;;   :config
-;;   (treemacs-load-theme "nerd-icons"))
 
 (use-package doom-modeline
 	:init
@@ -283,7 +273,7 @@ beacon-blink-when-point-moves t)
 :wk-full-keys nil
 	"SPC"     '("M-x" . execute-extended-command)
 	"TAB"     '("last buffer" . previous-buffer)
-	"`"				'(eshell-toggle :wk "eshell")
+	"`"				'(eshell :wk "eshell")
 	"u"       '("universal arg" . universal-argument)
 	"y"				'(consult-yank-pop :wk "kill ring")
 
@@ -492,7 +482,7 @@ beacon-blink-when-point-moves t)
 (use-package corfu
   :custom
   (corfu-cycle t)
-  (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto t)
   (corfu-auto-delay 0.0)
   (corfu-quit-at-boundary 'separator)   
   (corfu-quit-no-match t)
@@ -571,8 +561,7 @@ beacon-blink-when-point-moves t)
 		"fs" '(save-buffer :wk "save") 
 		"ff" '(find-file :wk "find file")
 		"fr" '(consult-recent-file :wk "recent files")
-		"fd" '(dirvish-side :wk "file directory")
-		;; "ft" '(treemacs-select-window :wk "file tree")
+		"fd" '(dirvish-side :wk "directory")
 		))
 
 (use-package consult-todo
@@ -592,32 +581,6 @@ beacon-blink-when-point-moves t)
 	:wk-full-keys nil
 	"v" '(er/expand-region :wk "expand region")))
 
-(elpaca (eshell-toggle :host github :repo "4DA/eshell-toggle")
-	:custom
-	(eshell-toggle-use-projectile-root t)
-	(eshell-toggle-run-command nil)
-	(eshell-toggle-init-function #'eshell-toggle-init-ansi-term))
-
-;; (use-package treemacs
-;; :init
-;; (setq treemacs-python-executable (concat python-path "python.exe"))
-;; (setq treemacs-follow-mode t
-;; treemacs-project-follow-mode t
-;; treemacs-filewatch-mode t
-;; treemacs-collapse-dirs nil
-;; treemacs-fringe-indicator-mode 'always))
-
-;; (use-package treemacs-evil
-;; :demand t
-;; :after (treemacs evil))
-
-;; (use-package treemacs-projectile
-;; :after (treemacs projectile))
-
-;; (use-package treemacs-perspective
-;; :after (treemacs perspective)
-;; :config (treemacs-set-scope-type 'Perspectives))
-
 (use-package dirvish
 :init
 (setq dirvish-side-auto-expand t
@@ -630,7 +593,7 @@ beacon-blink-when-point-moves t)
 			dirvish-attributes '(nerd-icons subtree-state))
 :config
 (define-key dirvish-mode-map (kbd "<mouse-1>") 'dirvish-subtree-toggle)
-(define-key dirvish-mode-map (kbd "<mouse-3>") 'dired-mouse-find-file)
+(define-key dirvish-mode-map (kbd "<mouse-3>") 'dired-mouse-find-file-other-window)
 (dirvish-override-dired-mode)
 (dirvish-side-follow-mode)
 :general
@@ -841,11 +804,13 @@ diary-mode))
 (use-package lsp-ui
 	:commands lsp-ui-mode)
 
-;; (use-package lsp-treemacs
-;; 	:after '(lsp-mode treemacs)
-;; 	:init
-;; 	(lsp-treemacs-sync-mode 1)
-;; 	:commands lsp-treemacs-errors-list)
+(use-package consult-lsp
+	:after lsp-mode
+	:general
+	(leader-def
+	:wk-full-keys nil
+	"ld" '(consult-lsp-diagnostics :wk "diagnostics")
+	"ls" '(consult-lsp-file-symbols :wk "symbols")))
 
 (use-package flycheck
 	:diminish
