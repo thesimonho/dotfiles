@@ -158,19 +158,18 @@ Use elpaca for package management
 		save-interprogram-paste-before-kill t
 		compilation-scroll-output 'first-error
 		use-short-answers t
-		fast-but-imprecise-scrolling t
 		make-backup-files nil
 		auto-save-default nil
 		create-lockfiles nil
 		global-auto-revert-mode t
 		global-auto-revert-non-file-buffers t
 		revert-without-query t
-		sentence-end-double-space nil
 		delete-selection-mode t
 		column-number-mode t
 		use-dialog-box nil
 		confirm-kill-processes nil
 		history-length 25
+		kill-ring-max 50
 		display-line-numbers-type 'relative
 		set-charset-priority 'unicode
 		prefer-coding-system 'utf-8-unix
