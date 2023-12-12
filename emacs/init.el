@@ -419,7 +419,7 @@ beacon-blink-when-point-moves t)
 	:diminish
 	:init
 	(setq 
-	 which-key-idle-delay 0.1
+	 which-key-idle-delay 0.3
 	 which-key-idle-secondary-delay 0.01
 	 which-key-allow-evil-operators t
 	 which-key-add-column-padding 5
@@ -840,21 +840,12 @@ diary-mode))
 						"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
 	)
 
-(use-package git-gutter
-	:demand t
-	:diminish
-	:init
-	(custom-set-variables
-	 '(git-gutter:update-interval 5)
-	 '(git-gutter:modified-sign "~")
-	 '(git-gutter:added-sign "+") 
-	 '(git-gutter:deleted-sign "-"))
-	:config
-	(general-define-key
-	 :states 'normal
-	 "[h" '(git-gutter:previous-hunk :wk "previous hunk")
-	 "]h" '(git-gutter:next-hunk :wk "next hunk"))
-	(global-git-gutter-mode t))
+(use-package diff-hl
+:demand t 
+:hook
+(after-save . diff-hl-update)
+:config
+(global-diff-hl-mode))
 
 (use-package org
 	:elpaca nil

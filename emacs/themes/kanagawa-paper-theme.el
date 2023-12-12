@@ -185,7 +185,7 @@
    (doom-modeline-warning                         (:foreground roninYellow))
    (doom-modeline-info                            (:foreground lightBlue))
    (doom-modeline-bar                             (:bold t :background springViolet1))
-   (doom-modeline-panel                           (:background boatYellow2 :foreground oldWhite))
+   (doom-modeline-panel                           (:background waveBlue-2 :foreground oldWhite))
    (doom-themes-visual-bell                       (:background autumnRed))
 
    ;; message colors
@@ -380,10 +380,12 @@
 	 (dirvish-subtree-state													(:background nil :foreground sumiInk-3))
 	 (dirvish-subtree-guide													(:background sumiInk-1 :foreground sumiInk-3))
 
-   (git-gutter:added                              (:foreground dragonGreen))
-   (git-gutter:deleted                            (:foreground dragonRed))
-   (git-gutter:modified                           (:foreground dragonBlue))
+	 ;; vcs
+   (diff-hl-change																(:foreground autumnYellow :background winterYellow))
+   (diff-hl-delete																(:foreground autumnRed :background winterRed))
+   (diff-hl-insert																(:foreground autumnGreen :background winterGreen))
 
+	 ;; copilot
 	 (copilot-overlay-face													(:foreground sumiInk-4))
 
 	 (focus-unfocused (:foreground sumiInk-4))
@@ -483,9 +485,6 @@
    ;; (ivy-posframe                                  (:background sumiInk-2))
    ;; (ivy-posframe-border                           (:background sumiInk-3))
 
-   ;; (diff-hl-margin-change                         (:foreground springBlue :background winterBlue))
-   ;; (diff-hl-margin-delete                         (:foreground peachRed :background winterRed))
-   ;; (diff-hl-margin-insert                         (:foreground comet :background winterBlue))
 
    ;; (bm-fringe-face                                (:background peachRed :foreground sumiInk-3))
    ;; (bm-fringe-persistent-face                     (:background peachRed :foreground sumiInk-3))
