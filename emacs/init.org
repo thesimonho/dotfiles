@@ -5,7 +5,9 @@
 - [[#auto-tangle-configuration-files][Auto-tangle Configuration Files]]
 - [[#profile-emacs-startup][Profile Emacs startup]]
 - [[#package-management][Package management]]
-- [[#no-littering][No littering]]
+- [[#cleanup][Cleanup]]
+  - [[#no-littering][No littering]]
+  - [[#gc-buffers][GC Buffers]]
 - [[#emacs-settings][Emacs settings]]
   - [[#user-config][User config]]
 - [[#aesthetics][Aesthetics]]
@@ -122,7 +124,9 @@ Use elpaca for package management
   (elpaca-wait)
 #+end_src
 
-* No littering
+* Cleanup
+
+** No littering
 
 #+begin_src emacs-lisp
 	(use-package no-littering
@@ -135,6 +139,19 @@ Use elpaca for package management
 								(recentf-expand-file-name no-littering-var-directory))
 		(add-to-list 'recentf-exclude
 								(recentf-expand-file-name no-littering-etc-directory)))
+#+end_src
+
+** GC Buffers
+
+#+begin_src emacs-lisp
+	(defun gc-buffers-scratch (buffer)
+		(string= (buffer-name buffer) "*scratch*"))
+
+	(use-package gc-buffers :elpaca (:host "www.codeberg.org"
+																	 :repo "akib/emacs-gc-buffers")
+		:config
+		(add-to-list 'gc-buffers-functions #'gc-buffers-scratch)
+		(gc-buffers-mode t))
 #+end_src
 
 * Emacs settings
@@ -173,8 +190,15 @@ Use elpaca for package management
 		display-line-numbers-type 'relative
 		set-charset-priority 'unicode
 		prefer-coding-system 'utf-8-unix
+		garbage-collection-messages t
 		native-comp-async-report-warnings-errors nil)
 
+		;; Run garbage collection when Emacs is idle for 15 seconds
+		(run-with-idle-timer 15 t #'garbage-collect)
+
+		;; Run garbage collection when the Emacs window loses focus
+		(add-hook 'focus-out-hook 'garbage-collect)
+		
 	(setq-default tab-width 2)
 
 	(savehist-mode 1)
@@ -948,6 +972,8 @@ Find and replace
 				:keymaps mode-map
 				:prefix "SPC"
 				"jo" ace-link-command)))
+
+				
 #+end_src
 
 * LSP goodness

@@ -69,6 +69,15 @@
 	(add-to-list 'recentf-exclude
 							(recentf-expand-file-name no-littering-etc-directory)))
 
+(defun gc-buffers-scratch (buffer)
+	(string= (buffer-name buffer) "*scratch*"))
+
+(use-package gc-buffers :elpaca (:host "www.codeberg.org"
+																 :repo "akib/emacs-gc-buffers")
+	:config
+	(add-to-list 'gc-buffers-functions #'gc-buffers-scratch)
+	(gc-buffers-mode t))
+
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
@@ -102,7 +111,14 @@
 	display-line-numbers-type 'relative
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
+	garbage-collection-messages t
 	native-comp-async-report-warnings-errors nil)
+
+	;; Run garbage collection when Emacs is idle for 15 seconds
+	(run-with-idle-timer 15 t #'garbage-collect)
+
+	;; Run garbage collection when the Emacs window loses focus
+	(add-hook 'focus-out-hook 'garbage-collect)
 
 (setq-default tab-width 2)
 
