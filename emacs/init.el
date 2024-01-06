@@ -6,6 +6,9 @@
    (message "%s tangled" buffer-file-name)))
  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
+(defun system-is-mswindows ()
+  (eq system-type 'windows-nt))
+
 (setq use-package-verbose nil  ; don't print anything
       use-package-compute-statistics t ; compute statistics about package initialization
       use-package-minimum-reported-time 0.0001
@@ -82,7 +85,9 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; Make sure conda python is found before emacs python
-(setq python-path "~/anaconda3/")
+(setq python-path (if (system-is-mswindows)
+											"~/anaconda3"
+											"~/anaconda3/bin"))
 (setq exec-path (cons python-path exec-path))
 
 (setq gc-cons-threshold 100000000
@@ -248,11 +253,11 @@ beacon-blink-when-point-moves t)
 	(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 	(setq dashboard-items '((recents  . 5)
 				(projects . 5)))
-	(setq dashboard-navigator-buttons
-		`((
-			(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
-			(,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Update Packages" (lambda (&rest _) (elpaca-fetch-all)) error)
-			)))
+	;; (setq dashboard-navigator-buttons
+	;; 	`((
+	;; 		(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
+	;; 		(,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Update Packages" (lambda (&rest _) (elpaca-fetch-all)) error)
+	;; 		)))
 	:config
 	(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
 	(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
@@ -443,9 +448,6 @@ beacon-blink-when-point-moves t)
 	(which-key-mode))
 
 (use-package helpful)
-
-(defun system-is-mswindows ()
-  (eq system-type 'windows-nt))
 
 (use-package projectile
   :demand t
@@ -941,8 +943,14 @@ diary-mode))
 	"s" 'run-python
 	"x" 'python-shell-send-buffer)
 
-(setq python-shell-interpreter (concat python-path "python.exe")
-			lsp-ruff-lsp-python-path (concat python-path "python.exe"))
+(setq python-shell-interpreter (if (system-is-mswindows)
+											"python.exe"
+											"python3"))
+
+(setq lsp-ruff-lsp-python-path (if (system-is-mswindows)
+											"python.exe"
+											"python3"))
+
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
