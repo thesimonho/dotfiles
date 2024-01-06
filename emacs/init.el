@@ -140,7 +140,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	:config
 	(load-theme 'kanagawa-paper t))
 
-(set-frame-font "FiraCode NF-11")
+(set-frame-font "FiraCode Nerd Font-11")
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
