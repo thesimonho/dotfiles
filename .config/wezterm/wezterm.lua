@@ -1,10 +1,36 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 
-wezterm.on("gui-startup", function(cmd)
-	local _, _, window = wezterm.mux.spawn_window(cmd or {})
-	window:gui_window():maximize()
-end)
+--wezterm.on("gui-startup", function(cmd)
+--	local _, _, window = wezterm.mux.spawn_window(cmd or {})
+--	window:gui_window():maximize()
+--end)
+
+local is_windows = function()
+	return wezterm.target_triple:find("windows") ~= nil
+end
+
+if(is_windows)
+then
+	local default_prog = { "nu.exe" }
+	local launch_menu = {
+		{
+			label = "nushell",
+			args = { "nu.exe" },
+		},
+		{
+			label = "PowerShell",
+			args = { "pwsh.exe" },
+		},
+		{
+			label = "cmd",
+			args = { "cmd.exe" },
+		},
+	}
+else
+	local default_prog = {}
+	local launch_menu = {}
+end
 
 return {
 	show_update_window = true,
@@ -13,7 +39,7 @@ return {
 	color_scheme = "kanagawa",
 	font_size = 11,
 	font = wezterm.font_with_fallback({
-		{ family = "FiraCode NF", weight = "Regular" },
+		{ family = "FiraCode Nerd Font", weight = "Regular" },
 		"Source_Code_Pro",
 		"JetBrains Mono",
 	}),
@@ -44,19 +70,6 @@ return {
 	leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 },
 	keys = keybinds.basic_binds,
 	key_tables = keybinds.key_tables,
-	default_prog = { "nu.exe" },
-	launch_menu = {
-		{
-			label = "nushell",
-			args = { "nu.exe" },
-		},
-		{
-			label = "PowerShell",
-			args = { "pwsh.exe" },
-		},
-		{
-			label = "cmd",
-			args = { "cmd.exe" },
-		},
-	},
+	default_prog = default_prog,
+	launch_menu = launch_menu,
 }
