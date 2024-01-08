@@ -1,0 +1,31 @@
+{
+    // General Settings
+    "layer": "top",
+    "margin-left": 0,
+    "margin-right": 0,    
+    "spacing": 0,
+
+    // Load Modules
+    "include": ["~/.config/waybar/modules.json"],
+
+    // Modules Left
+    "modules-left": [
+        "custom/appmenu",
+        "group/quicklinks",
+    ],
+
+    // Modules Center
+    "modules-center": [
+        "hyprland/window",
+    ],
+
+    // Modules Right    
+    "modules-right": [
+				"wlr/taskbar",
+			  "tray",
+        "pulseaudio",
+        "group/hardware",
+        "custom/exit",
+        "clock"
+    ]
+}
