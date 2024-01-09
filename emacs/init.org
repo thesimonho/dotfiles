@@ -1023,11 +1023,6 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 		:wk-full-keys nil
 		"ld" '(consult-lsp-diagnostics :wk "diagnostics")
 		"ls" '(consult-lsp-file-symbols :wk "symbols")))
-
-	(use-package flycheck
-		:diminish
-		:hook
-		(prog-mode . flycheck-mode))
 #+end_src
 
 * Treesitter

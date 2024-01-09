@@ -830,11 +830,6 @@ diary-mode))
 	"ld" '(consult-lsp-diagnostics :wk "diagnostics")
 	"ls" '(consult-lsp-file-symbols :wk "symbols")))
 
-(use-package flycheck
-	:diminish
-	:hook
-	(prog-mode . flycheck-mode))
-
 (setq treesit-font-lock-level 4)
 
 (use-package treesit-auto
