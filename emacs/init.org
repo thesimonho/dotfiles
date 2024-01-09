@@ -132,6 +132,13 @@ Use elpaca for package management
   (elpaca-wait)
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package explain-pause-mode :elpaca (:host github
+		:repo "lastquestion/explain-pause-mode")
+		:config
+		(explain-pause-mode))
+#+end_src
+
 * Cleanup
 
 ** No littering

@@ -61,6 +61,11 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
+(use-package explain-pause-mode :elpaca (:host github
+		:repo "lastquestion/explain-pause-mode")
+		:config
+		(explain-pause-mode))
+
 (use-package no-littering
 	:init
 	(setq no-littering-etc-directory (expand-file-name "config/" user-emacs-directory)
