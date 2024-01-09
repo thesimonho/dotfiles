@@ -813,6 +813,8 @@ diary-mode))
 	 lsp-enable-symbol-highlighting t
 	 lsp-warn-no-matched-clients nil
 	 lsp-ui-peek-enable t
+	 lsp-ui-sideline-enable t
+	 lsp-ui-sideline-show-code-actions t
 	 lsp-ui-doc-show-with-cursor nil
 	 lsp-ui-doc-show-with-mouse nil
 	 lsp-enable-suggest-server-download t)
