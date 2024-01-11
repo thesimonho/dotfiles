@@ -10,10 +10,12 @@ local is_windows = function()
 	return wezterm.target_triple:find("windows") ~= nil
 end
 
-if(is_windows)
-then
-	local default_prog = { "nu.exe" }
-	local launch_menu = {
+local default_prog
+local launch_menu
+
+if(is_windows == true) then
+	default_prog = { "nu.exe" }
+	launch_menu = {
 		{
 			label = "nushell",
 			args = { "nu.exe" },
@@ -28,8 +30,8 @@ then
 		},
 	}
 else
-	local default_prog = {}
-	local launch_menu = {}
+	default_prog = { "nu" }
+	launch_menu = {}
 end
 
 return {
@@ -57,14 +59,14 @@ return {
 		top = 0,
 		bottom = 0,
 	},
-	window_background_opacity = 0.99,
+	window_background_opacity = 0.9,
 	window_decorations = "TITLE|RESIZE",
 	use_resize_increments = true,
 	inactive_pane_hsb = {
 		saturation = 0.9,
 		brightness = 0.7,
 	},
-	hide_tab_bar_if_only_one_tab = true,
+	hide_tab_bar_if_only_one_tab = false,
 	use_fancy_tab_bar = true,
 	disable_default_key_bindings = true,
 	leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1000 },
