@@ -31,7 +31,17 @@ if(is_windows == true) then
 	}
 else
 	default_prog = { "nu" }
-	launch_menu = {}
+	launch_menu = {
+		{
+			label = "nu",
+			args = { "nu" },
+		},
+		{
+			label = "bash",
+			args = { "bash"},
+		}
+
+	}
 end
 
 return {
