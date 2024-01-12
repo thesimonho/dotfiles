@@ -578,10 +578,10 @@ beacon-blink-when-point-moves t)
 		"bD" '(centaur-tabs-kill-other-buffers-in-current-group :wk "delete other buffers")
 
 		"f"       (cons "files" (make-sparse-keymap))
-		"fed"       '((lambda () (interactive) (find-file "~/dotfiles/emacs/init.org")) :wk "open Emacs config")
-		"fer" '((lambda () (interactive) (load-file user-init-file)) :wk "reload Emacs config")
 		"fs" '(save-buffer :wk "save") 
 		"ff" '(find-file :wk "find file")
+		"fF" '(consult-locate :wk "locate file")
+		"fg" '(consult-ripgrep :wk "grep string")
 		"fr" '(consult-recent-file :wk "recent files")
 		"fd" '(dirvish-side :wk "directory")
 		))
@@ -953,6 +953,7 @@ diary-mode))
 											"python.exe"
 											"python3"))
 
+(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
@@ -995,6 +996,8 @@ diary-mode))
 
 (use-package terraform-mode
 :custom (terraform-format-on-save t))
+
+(add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
 
 (use-package graphql-ts-mode
   :demand t
