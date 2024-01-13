@@ -804,35 +804,37 @@ beacon-blink-when-point-moves t)
 ;;	)
 
 (use-package eglot
-		:demand t
-		:config 
-		(evil-define-minor-mode-key 'normal 'eglot-mode-map 
-					(kbd "<leader>ge")  '("errors" . eldoc)
-					(kbd "<leader>ga")  '("code actions" . eglot-code-actions)
-					(kbd "<leader>gR")  '("lsp rename" . eglot-rename)
-					(kbd "<leader>gd")  '("definitions" . xref-find-definitions)
-					(kbd "<leader>gD")  '("declarations" . xref-find-declaration)
-					(kbd "<leader>gr")  '("references" . xref-find-references)
-					(kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition)
-					(kbd "<leader>gi")  '("implementations" . eglot-find-implementation)
-		)
-		 (setq-default eglot-workspace-configuration
-		 '((:pylsp . (:configurationSources ["flake8"]
-		 :plugins (
-				 :pycodestyle (:enabled :json-false)
-				 :mccabe (:enabled :json-false)
-				 :pyflakes (:enabled :json-false)
-				 :flake8 (:enabled :json-false
-				 :maxLineLength 88)
-				 :ruff (:enabled t
-				 :lineLength 88)
-				 :pydocstyle (:enabled t
-						 :convention "google")
-				 :yapf (:enabled :json-false)
-				 :autopep8 (:enabled :json-false)
-				 :black (:enabled f
-						 :line_length 88
-						 :cache_config t))))))
+	:elpaca nil
+	:init
+	(setq eglot-report-progress t)
+	:config 
+	(define-key eglot-mode-map (kbd "<leader>gh")  '("help" . eldoc))
+	(define-key eglot-mode-map (kbd "<leader>ga")  '("code actions" . eglot-code-actions))
+	(define-key eglot-mode-map (kbd "<leader>gf")  '("format" . eglot-format))
+	(define-key eglot-mode-map (kbd "<leader>gR")  '("lsp rename" . eglot-rename))
+	(define-key eglot-mode-map (kbd "<leader>gd")  '("definitions" . xref-find-definitions))
+	(define-key eglot-mode-map (kbd "<leader>gD")  '("declarations" . xref-find-declaration))
+	(define-key eglot-mode-map (kbd "<leader>gr")  '("references" . xref-find-references))
+	(define-key eglot-mode-map (kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition))
+	(define-key eglot-mode-map (kbd "<leader>gi")  '("implementations" . eglot-find-implementation))
+
+	(setq-default eglot-workspace-configuration
+	'((:pylsp . (:configurationSources ["flake8"]
+	:plugins (
+			:pycodestyle (:enabled :json-false)
+			:mccabe (:enabled :json-false)
+			:pyflakes (:enabled :json-false)
+			:flake8 (:enabled :json-false
+			:maxLineLength 88)
+			:ruff (:enabled t
+			:lineLength 88)
+			:pydocstyle (:enabled t
+					:convention "google")
+			:yapf (:enabled :json-false)
+			:autopep8 (:enabled :json-false)
+			:black (:enabled f
+					:line_length 88
+					:cache_config t))))))
 )
 
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
@@ -924,6 +926,8 @@ beacon-blink-when-point-moves t)
 	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
 	(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
 	(add-to-list 'org-structure-template-alist '("sp" . "src python")))
+
+(use-package markdown-mode)
 
 (use-package npm)
 (with-eval-after-load 'evil
