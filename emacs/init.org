@@ -470,19 +470,42 @@ Make editing easier
 		"qQ"      'save-buffers-kill-emacs
 		)
 
-	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+	(defun backward-kill-spaces-or-char-or-word ()
+		(interactive)
+		(cond
+		((looking-back (rx (char word)) 1)
+				(backward-kill-word 1))
+		((looking-back (rx (char blank)) 1)
+				(delete-horizontal-space t))
+		(t
+				(backward-delete-char 1))))
 
-	(general-def universal-argument-map
-			"SPC u" 'universal-argument-more)
+	(defun forward-kill-spaces-or-char-or-word ()
+		(interactive)
+		(cond
+		((looking-at (rx (char word)) 1)
+				(kill-word 1))
+		((looking-at (rx (char blank)) 1)
+				(delete-horizontal-space))
+		(t
+				(delete-forward-char 1))))
+
+	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+	(global-set-key (kbd "<C-backspace>") 'backward-kill-spaces-or-char-or-word)
+	(global-set-key (kbd "<C-delete>") 'forward-kill-spaces-or-char-or-word)
+
+	(general-define-key
+		:keymaps 'universal-argument-map
+		"SPC u" 'universal-argument-more)
 
 	(general-define-key
 		:keymaps 'override
 		"C-s" 'save-buffer)
 
 	(general-define-key
-	 :keymaps 'insert
-	 "TAB" 'tab-to-tab-stop
-	 "C-v" 'yank)
+		:keymaps 'insert
+		"TAB" 'tab-to-tab-stop
+		"C-v" 'yank)
 #+end_src
 
 ** Evil
