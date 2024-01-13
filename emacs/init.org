@@ -897,6 +897,14 @@ Format all command (useful for languages with no lsp support)
 	)
 #+end_src
 
+Aggressive indent
+
+#+begin_src emacs-lisp
+(use-package aggressive-indent
+:config
+(global-aggressive-indent-mode 1))
+#+end_src
+
 Find and replace
 
 #+begin_src emacs-lisp
@@ -923,13 +931,13 @@ Find and replace
 		(prog-mode . copilot-mode)
 		(org-mode . copilot-mode)
 		:config
-		(evil-define-key 'insert copilot-completion-map
+		(evil-define-key 'nil copilot-completion-map
 				(kbd "C-j")   'copilot-next-completion
 				(kbd "C-k")   'copilot-previous-completion
 				(kbd "C-l")   'copilot-accept-completion
 				(kbd "M-l")   'copilot-accept-completion-by-word
 				(kbd "ESC")   'copilot-clear-overlay
-		)
+				)
 	)
 #+end_src
 

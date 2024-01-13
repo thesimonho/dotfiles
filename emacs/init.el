@@ -719,6 +719,10 @@ beacon-blink-when-point-moves t)
 	)
 )
 
+(use-package aggressive-indent
+:config
+(global-aggressive-indent-mode 1))
+
 (use-package anzu
 :config
 	(global-anzu-mode +1)
@@ -738,13 +742,13 @@ beacon-blink-when-point-moves t)
 	(prog-mode . copilot-mode)
 	(org-mode . copilot-mode)
 	:config
-	(evil-define-key 'insert copilot-completion-map
+	(evil-define-key 'nil copilot-completion-map
 			(kbd "C-j")   'copilot-next-completion
 			(kbd "C-k")   'copilot-previous-completion
 			(kbd "C-l")   'copilot-accept-completion
 			(kbd "M-l")   'copilot-accept-completion-by-word
 			(kbd "ESC")   'copilot-clear-overlay
-	)
+			)
 )
 
 (use-package avy
