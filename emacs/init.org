@@ -19,8 +19,8 @@
   - [[#editing][Editing]]
 - [[#dashboard][Dashboard]]
 - [[#key-bindings][Key bindings]]
-  - [[#general][General]]
   - [[#evil][Evil]]
+  - [[#general-binds][General binds]]
   - [[#which-key][Which key]]
   - [[#helpful][Helpful]]
 - [[#project-management][Project management]]
@@ -41,7 +41,6 @@
 - [[#org-mode][Org mode]]
 - [[#languages][Languages]]
   - [[#npm][NPM]]
-  - [[#emacs-lisp][Emacs lisp]]
   - [[#python][Python]]
   - [[#vue][Vue]]
   - [[#terraform][Terraform]]
@@ -56,7 +55,7 @@ This snippet adds a hook to =org-mode= buffers so that =org-babel-tangle-config=
 Must be evaluated at least once.
 
 #+begin_src emacs-lisp
-    ;; -*- lexical-binding: t; -*-
+    ;; -*- lexical-binding: t; -*- 
    (defun org-babel-tangle-config ()
     (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
     (let ((org-confirm-babel-evaluate nil))
@@ -70,6 +69,26 @@ Must be evaluated at least once.
 #+begin_src emacs-lisp
   (defun system-is-mswindows ()
     (eq system-type 'windows-nt))
+		
+	(defun backward-kill-spaces-or-char-or-word ()
+		(interactive)
+		(cond
+		((looking-back (rx (char word)) 1)
+				(backward-kill-word 1))
+		((looking-back (rx (char blank)) 1)
+				(delete-horizontal-space t))
+		(t
+				(backward-delete-char 1))))
+
+	(defun forward-kill-spaces-or-char-or-word ()
+		(interactive)
+		(cond
+		((looking-at (rx (char word)) 1)
+				(kill-word 1))
+		((looking-at (rx (char blank)) 1)
+				(delete-horizontal-space))
+		(t
+				(delete-forward-char 1))))
 #+end_src
 
 * Profile Emacs startup 
@@ -328,21 +347,21 @@ Make editing easier
 	:diminish
 	:hook
 	(prog-mode . rainbow-mode))
-	
+
 	(use-package rainbow-delimiters
 	:diminish
 	:hook
 	(prog-mode . rainbow-delimiters-mode))
-	
+
 	(use-package hl-todo
 	:demand t
+	:after evil
 	:config
-	(general-define-key
-	:states 'normal
-	"[t" '(hl-todo-previous :wk "previous todo")
-	"]t" '(hl-todo-next :wk "next todo"))
+	;; (evil-define-key 'normal
+	;; "[t" '(hl-todo-previous :wk "previous todo")
+	;; "]t" '(hl-todo-next :wk "next todo"))
 	(global-hl-todo-mode 1))
-	
+
 	(use-package yascroll
 	:demand t
 	:custom
@@ -393,126 +412,6 @@ Make editing easier
 
 * Key bindings
 
-** General
-
-#+begin_src emacs-lisp
-	(use-package general
-		:demand t
-		:config
-		(general-evil-setup t))
-	(elpaca-wait)
-
-	;; Leader key
-	(general-define-key
-		 :states '(normal insert motion emacs)
-		 :keymaps 'override
-		 :prefix-map 'leader-map
-		 :prefix "SPC"
-		 :non-normal-prefix "M-SPC")
-	(general-create-definer leader-def :keymaps 'leader-map)
-	(leader-def "" nil)
-
-	;; Major mode key
-	(general-create-definer major-mode-def
-		:states '(normal insert motion emacs)
-		:keymaps 'override
-		:major-modes t
-		:prefix ","
-		:non-normal-prefix "M-,")
-	(major-mode-def "" nil)
-
-	;; Global Keybindings
-	(leader-def
-	:wk-full-keys nil
-		"SPC"     '("M-x" . execute-extended-command)
-		"TAB"     '("last buffer" . previous-buffer)
-		"`"				'(eshell :wk "eshell")
-		"u"       '("universal arg" . universal-argument)
-		"y"				'(consult-yank-pop :wk "kill ring")
-
-		"h"       (cons "help" (make-sparse-keymap))
-		"hh" 			'helpful-at-point
-		"hb"      'describe-bindings
-		"hc"      'describe-char
-		"hf"      'helpful-callable
-		"hF"      'describe-face
-		"hi"      'info-emacs-manual
-		"hI"      'info-display-manual
-		"hk"      'helpful-key
-		"hK"      'describe-keymap
-		"hm"      'describe-mode
-		"hM"      'woman
-		"hp"      'describe-package
-		"ht"      'describe-text-properties
-		"hv"      'helpful-variable
-
-		"w"       (cons "windows" (make-sparse-keymap))
-		"wm"      'switch-to-minibuffer
-		"wd"      'delete-window
-		"wD"      'delete-other-windows
-		"wh"      'evil-window-left
-		"wj"      'evil-window-down
-		"wk"      'evil-window-up
-		"wl"      'evil-window-right
-		"wr"      'rotate-windows-forward
-		"ws"      'split-window-vertically
-		"wu"      'winner-undo
-		"wU"      'winner-redo
-		"wv"      'split-window-horizontally
-		"wn"			'(clone-frame :wk "new frame")
-		"wo"			'(other-frame :wk "switch frame")
-
-		"z" (cons "tools" (make-sparse-keymap))
-		"zu" 'use-package-report
-		"zp" 'profiler-start
-		"zP" 'profiler-report
-		"zd" 'toggle-debug-on-quit
-
-		"q"       (cons "quit" (make-sparse-keymap))
-		"qd"      'restart-emacs-debug-init
-		"qr"      'restart-emacs
-		"qq"      'delete-frame
-		"qQ"      'save-buffers-kill-emacs
-		)
-
-	(defun backward-kill-spaces-or-char-or-word ()
-		(interactive)
-		(cond
-		((looking-back (rx (char word)) 1)
-				(backward-kill-word 1))
-		((looking-back (rx (char blank)) 1)
-				(delete-horizontal-space t))
-		(t
-				(backward-delete-char 1))))
-
-	(defun forward-kill-spaces-or-char-or-word ()
-		(interactive)
-		(cond
-		((looking-at (rx (char word)) 1)
-				(kill-word 1))
-		((looking-at (rx (char blank)) 1)
-				(delete-horizontal-space))
-		(t
-				(delete-forward-char 1))))
-
-	(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-	(global-set-key (kbd "<C-backspace>") 'backward-kill-spaces-or-char-or-word)
-	(global-set-key (kbd "<C-delete>") 'forward-kill-spaces-or-char-or-word)
-
-	(general-define-key
-		:keymaps 'universal-argument-map
-		"SPC u" 'universal-argument-more)
-
-	(general-define-key
-		:keymaps 'override
-		"C-s" 'save-buffer)
-
-	(general-define-key
-		:keymaps 'insert
-		"TAB" 'tab-to-tab-stop
-		"C-v" 'yank)
-#+end_src
-
 ** Evil
 
 #+begin_src emacs-lisp
@@ -520,7 +419,6 @@ Make editing easier
 
 	(use-package evil
 		:demand t
-		:after general
 		:init
 		(setq
 		 evil-want-integration t
@@ -543,10 +441,6 @@ Make editing easier
 		:config
 		(evil-set-leader nil (kbd "SPC"))
 		(evil-set-leader nil "," t)
-		
-		(evil-define-key 'motion 'global
-			"j" 'evil-next-visual-line
-			"k" 'evil-previous-visual-line)
 		(evil-set-undo-system 'undo-redo)
 		(evil-mode 1))
 
@@ -603,6 +497,76 @@ Make editing easier
 		(evil-collection-init '(dired eshell explain-pause)))
 #+end_src
 
+** General binds
+
+#+begin_src emacs-lisp
+
+	(with-eval-after-load 'evil
+		(evil-define-key '(normal visual) 'global
+			"j" 'evil-next-visual-line
+			"k" 'evil-previous-visual-line
+			(kbd "<leader>SPC")     '("M-x" . execute-extended-command)
+			(kbd "<leader>`")       '("shell" . eshell)
+			(kbd "<leader>u")       '("universal" . universal-argument)
+			(kbd "<leader>y")				'("kill ring" . consult-yank-pop)
+
+			(kbd "<leader>hh") 			'("help" . helpful-at-point)
+			(kbd "<leader>hb")      '("bindings" . describe-bindings)
+			(kbd "<leader>hc")      '("character" . describe-char)
+			(kbd "<leader>hf")      '("function" . helpful-callable)
+			(kbd "<leader>hF")      '("face" . describe-face)
+			(kbd "<leader>he")      '("Emacs manual" . info-emacs-manual)
+			(kbd "<leader>hk")      '("key" . helpful-key)
+			(kbd "<leader>hK")      '("keymap" . describe-keymap)
+			(kbd "<leader>hm")      '("mode" . describe-mode)
+			(kbd "<leader>hM")      '("woman" . woman)
+			(kbd "<leader>hp")      '("package" . describe-package)
+			(kbd "<leader>ht")      '("text" . describe-text-properties)
+			(kbd "<leader>hv")      '("variable" . helpful-variable)
+
+			(kbd "<leader>wm")      '("minibuffer" . switch-to-minibuffer)
+			(kbd "<leader>wd")      '("delete" . delete-window)
+			(kbd "<leader>wD")      '("delete others" . delete-other-windows)
+			(kbd "<leader>wh")      '("left" . evil-window-left)
+			(kbd "<leader>wj")      '("down" . evil-window-down)
+			(kbd "<leader>wk")      '("up" . evil-window-up)
+			(kbd "<leader>wl")      '("right" . evil-window-right)
+			(kbd "<leader>wr")      '("rotate" . rotate-windows-forward)
+			(kbd "<leader>wu")      '("winner undo" . winner-undo)
+			(kbd "<leader>wU")      '("winner redo" . winner-redo)
+			(kbd "<leader>ws")      '("split vertical" . split-window-vertically)
+			(kbd "<leader>wv")      '("split horizontal" . split-window-horizontally)
+			(kbd "<leader>wn")			'("new frame" . clone-frame)
+			(kbd "<leader>wo")			'("switch frame" . other-frame)
+
+			(kbd "<leader>zu")		  '("use package report" . use-package-report)
+			(kbd "<leader>zp")		  '("profiler start" . profiler-start)
+			(kbd "<leader>zP")		  '("profiler report" . profiler-report)
+			(kbd "<leader>zd")			'("toggle debug on quit" . toggle-debug-on-quit)
+
+			(kbd "<leader>qr")      '("restart" . restart-emacs)
+			(kbd "<leader>qR")      '("restart debug init" . restart-emacs-debug-init)
+			(kbd "<leader>qq")      '("kill frame" . delete-frame)
+			(kbd "<leader>qQ")      '("kill emacs" . save-buffers-kill-emacs)
+			)
+
+		(evil-define-key nil 'global
+			(kbd "<escape>") 'keyboard-escape-quit
+		)
+		 
+		(evil-define-key '(normal insert) 'global
+			(kbd "C-s") 'save-buffer
+			(kbd "C-v") 'yank
+		)
+
+		(evil-define-key 'insert 'global
+			(kbd "TAB") 'tab-to-tab-stop
+			(kbd "<C-backspace>") 'backward-kill-spaces-or-char-or-word
+			(kbd "<C-delete>") 'forward-kill-spaces-or-char-or-word
+		)
+	)
+#+end_src
+
 ** Which key
 
 #+begin_src emacs-lisp
@@ -639,7 +603,7 @@ Projectile + perspective
 		     (executable-find "find") "C:\\Windows")))
       (setq projectile-indexing-method 'alien
 	    projectile-generic-command "find . -type f")
-      projectile-project-search-path '("~/dotfiles" "F:\\")
+      projectile-project-search-path '("/mnt/Projects")
       projectile-sort-order 'recently-active
       projectile-enable-caching t
       projectile-require-project-root t
@@ -648,23 +612,21 @@ Projectile + perspective
       )
     :config
     (projectile-mode)
-    :general 
-    (leader-def
-      :wk-full-keys nil
-      "p"       (cons "projects" (make-sparse-keymap))
-      "pp" '(projectile-persp-switch-project :wk "switch project")
-      "pf" '(project-find-file :wk "project files")
-      "pa" '(projectile-add-known-project :wk "add project")
-      "pd" '(persp-kill :wk "close project")
-      "px" '(projectile-remove-known-project :wk "remove project")
-      "p!" '(projectile-run-shell-command-in-root :wk "run command in root")
+		(evil-define-key 'normal 'global
+      (kbd "<leader>pp")     '("switch project" . projectile-persp-switch-project)
+      (kbd "<leader>pf")     '("project files" . project-find-file)
+      (kbd "<leader>pa")     '("add project" . projectile-add-known-project)
+      (kbd "<leader>pd")     '("close project" . persp-kill)
+      (kbd "<leader>px")     '("remove project" . projectile-remove-known-project)
+      (kbd "<leader>p!")     '("run command in root" . projectile-run-shell-command-in-root)
 
-      "p1" '((lambda () (interactive) (persp-switch-by-number 1)) :wk "project 1")
-      "p2" '((lambda () (interactive) (persp-switch-by-number 2)) :wk "project 2")
-      "p3" '((lambda () (interactive) (persp-switch-by-number 3)) :wk "project 3")
-      "p4" '((lambda () (interactive) (persp-switch-by-number 4)) :wk "project 4")
-      "p5" '((lambda () (interactive) (persp-switch-by-number 5)) :wk "project 5")
-      ))
+      (kbd "<leader>p1")     '("project 1" . (lambda () (interactive) (persp-switch-by-number 1)))
+      (kbd "<leader>p2")     '("project 2" . (lambda () (interactive) (persp-switch-by-number 2)))
+      (kbd "<leader>p3")     '("project 3" . (lambda () (interactive) (persp-switch-by-number 3)))
+      (kbd "<leader>p4")     '("project 4" . (lambda () (interactive) (persp-switch-by-number 4)))
+      (kbd "<leader>p5")     '("project 5" . (lambda () (interactive) (persp-switch-by-number 5)))
+		)
+  )
 
   (use-package perspective
     :demand t
@@ -700,12 +662,13 @@ Inbuffer completion with corfu
     (corfu-history-mode)
     (setq corfu-popupinfo-delay 0.2)
     (corfu-popupinfo-mode)
-    :general
-    (corfu-map
+
+		(evil-define-key 'insert corfu-map
      "TAB" 'corfu-next
      [tab] 'corfu-next
      "S-TAB" 'corfu-previous
-     [backtab] 'corfu-previous))
+     [backtab] 'corfu-previous)
+	)
 #+end_src
 
 ** Vertico stack
@@ -721,9 +684,10 @@ Minibuffer completion with Vertico et al.
 					eldoc-echo-area-use-multiline-p nil
 					vertico-resize nil)
 		(vertico-mode)
-		:general (:keymaps 'vertico-map
-											 "C-j" 'vertico-next
-											 "C-k" 'vertico-previous))
+		(evil-define-key nil vertico-map
+				(kbd "C-j") 'vertico-next
+				(kbd "C-k") 'vertico-previous)
+  )
 
 	;; Add prompt indicator to `completing-read-multiple'.
 	(defun crm-indicator (args)
@@ -751,6 +715,7 @@ Minibuffer completion with Vertico et al.
 					completion-category-overrides '((file (styles partial-completion)))))
 
 	(use-package consult
+		:demand t
 		:config
 		(add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode-check-buffers)
 		(consult-customize
@@ -759,27 +724,23 @@ Minibuffer completion with Vertico et al.
 		 consult--source-bookmark consult--source-file-register
 		 consult--source-recent-file consult--source-project-recent-file
 		 :preview-key '(:debounce 0.5 any))
-		:general 
-		(leader-def
-			:wk-full-keys nil
-			"b"       (cons "buffers" (make-sparse-keymap))
-			;; "bb" '(persp-switch-to-buffer* :wk "find buffer")
-			"bb" '(consult-project-buffer :wk "find buffer")
-			"bd" '(kill-current-buffer :wk "delete buffer")
-			"bD" '(centaur-tabs-kill-other-buffers-in-current-group :wk "delete other buffers")
 
-			"f"       (cons "files" (make-sparse-keymap))
-			"fs" '(save-buffer :wk "save") 
-			"ff" '(find-file :wk "find file")
-			"fF" '(consult-locate :wk "locate file")
-			"fg" '(consult-ripgrep :wk "grep string")
-			"fr" '(consult-recent-file :wk "recent files")
-			"fd" '(dirvish-side :wk "directory")
-			))
+		(evil-define-key 'normal 'global
+			(kbd "<leader>bb")     '("find buffer" . consult-project-buffer)
+			(kbd "<leader>bd")     '("delete buffer" . kill-current-buffer)
+			(kbd "<leader>bD")     '("delete other buffers" . centaur-tabs-kill-other-buffers-in-current-group)
 
-	(use-package consult-todo
-	:demand t
-	:after (consult hl-todo))
+			(kbd "<leader>fs")     '("save" . save-buffer) 
+			(kbd "<leader>ff")     '("find file" . find-file)
+			(kbd "<leader>fF")     '("locate file" . consult-locate)
+			(kbd "<leader>fg")     '("grep string" . consult-ripgrep)
+			(kbd "<leader>fr")     '("recent files" . consult-recent-file)
+			(kbd "<leader>fd")     '("directory" . dirvish-side)
+
+			(kbd "<leader>cs")     '("search" . consult-line)
+			(kbd "<leader>co")     '("outline" . consult-imenu)
+		)
+	)
 
 	(use-package marginalia
 	:defer 1
@@ -791,45 +752,33 @@ Minibuffer completion with Vertico et al.
 
 * Editor
 
-File tree, tabs, minimaps etc
-
-Expand selection; treesitter style
-
-#+begin_src emacs-lisp
-	(use-package expand-region
-	:general
-	(leader-def
-		:wk-full-keys nil
-		"v" '(er/expand-region :wk "expand region")))
-#+end_src
-
 ** File Tree
 
 #+begin_src emacs-lisp
 	(use-package dirvish
 	:init
-	(setq dirvish-side-auto-expand t
-				dired-mouse-drag-files t
-				mouse-drag-and-drop-region-cross-program t
-				delete-by-moving-to-trash t
-				dirvish-reuse-session t
-				dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
-				dirvish-attributes '(nerd-icons subtree-state))
-	:config
-	(define-key dirvish-mode-map (kbd "<mouse-1>") 'dirvish-subtree-toggle)
-	(define-key dirvish-mode-map (kbd "<mouse-3>") 'dired-mouse-find-file-other-window)
-	(dirvish-override-dired-mode)
-	(dirvish-side-follow-mode)
+		(setq dirvish-side-auto-expand t
+						dired-mouse-drag-files t
+						mouse-drag-and-drop-region-cross-program t
+						delete-by-moving-to-trash t
+						dirvish-reuse-session t
+						dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
+						dirvish-attributes '(nerd-icons subtree-state))
 	:hook
-	(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
-	:general
-	(:keymaps 'dirvish-mode-map
-	"q" ' dirvish-quit
-	"TAB" 'dirvish-subtree-toggle
-	"<return>" 'dired-find-file
-	"h" 'dired-up-directory
-	"p" 'dirvish-yank
-	))
+		(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
+	:config
+		(dirvish-override-dired-mode)
+		(dirvish-side-follow-mode)
+		(evil-define-key nil dirvish-mode-map
+				(kbd "<mouse-1>") 'dirvish-subtree-toggle
+				(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
+				(kbd "q")					'dirvish-quit
+				(kbd "TAB")				'dirvish-subtree-toggle
+				(kbd "<return>")  'dired-find-file
+				(kbd "h")					'dired-up-directory
+				(kbd "p")					'dirvish-yank
+		)
+	)
 	#+end_src
 
 ** Tabs
@@ -856,76 +805,72 @@ Expand selection; treesitter style
 		(centaur-tabs-group-by-projectile-project)
 		:hook
 		((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
-		:general
-		(:keymaps 'evil-normal-state-map
-							:prefix "g"
-							"t" 'centaur-tabs-forward
-							"T" 'centaur-tabs-backward))
+	)
 
 	(defun centaur-tabs-buffer-groups ()
-  "`centaur-tabs-buffer-groups' control buffers' group rules.
-	
-	Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-	All buffer name start with * will group to \"Emacs\".
-	Other buffer group by `centaur-tabs-get-group-name' with project name."
-  (list
-  (cond
-  ((or (string-equal "*" (substring (buffer-name) 0 1))
-  (memq major-mode '(magit-process-mode
-  magit-status-mode
-  magit-diff-mode
-  magit-log-mode
-  magit-file-mode
-  magit-blob-mode
-  magit-blame-mode
-  )))
-  "Emacs")
-  ((derived-mode-p 'prog-mode)
-  "Editing")
-  ((derived-mode-p 'dired-mode)
-  "Dired")
-  ((memq major-mode '(helpful-mode
-  help-mode))
-  "Help")
-  ((memq major-mode '(org-mode
-  org-agenda-clockreport-mode
-  org-src-mode
-  org-agenda-mode
-  org-beamer-mode
-  org-indent-mode
-  org-bullets-mode
-  org-cdlatex-mode
-  org-agenda-log-mode
-  diary-mode))
-  "OrgMode")
-  (t
-  (centaur-tabs-get-group-name (current-buffer))))))
+		"`centaur-tabs-buffer-groups' control buffers' group rules.
+
+		Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+		All buffer name start with * will group to \"Emacs\".
+		Other buffer group by `centaur-tabs-get-group-name' with project name."
+		(list
+		(cond
+		((or (string-equal "*" (substring (buffer-name) 0 1))
+		(memq major-mode '(magit-process-mode
+		magit-status-mode
+		magit-diff-mode
+		magit-log-mode
+		magit-file-mode
+		magit-blob-mode
+		magit-blame-mode
+		)))
+		"Emacs")
+		((derived-mode-p 'prog-mode)
+		"Editing")
+		((derived-mode-p 'dired-mode)
+		"Dired")
+		((memq major-mode '(helpful-mode
+		help-mode))
+		"Help")
+		((memq major-mode '(org-mode
+		org-agenda-clockreport-mode
+		org-src-mode
+		org-agenda-mode
+		org-beamer-mode
+		org-indent-mode
+		org-bullets-mode
+		org-cdlatex-mode
+		org-agenda-log-mode
+		diary-mode))
+		"OrgMode")
+		(t
+		(centaur-tabs-get-group-name (current-buffer))))))
 
 	(defun centaur-tabs-hide-tab (x)
-  "Do no to show buffer X in tabs."
-  (let ((name (format "%s" x)))
-  (or
-  ;; Current window is not dedicated window.
-  (window-dedicated-p (selected-window))
-	
-  ;; Buffer name not match below blacklist.
-  (string-prefix-p "*epc" name)
-  (string-prefix-p "*helm" name)
-  (string-prefix-p "*Helm" name)
-  (string-prefix-p "*Compile-Log*" name)
-  (string-prefix-p "*lsp" name)
-  (string-prefix-p "*company" name)
-  (string-prefix-p "*Flycheck" name)
-  (string-prefix-p "*tramp" name)
-  (string-prefix-p " *Mini" name)
-  (string-prefix-p "*help" name)
-  (string-prefix-p "*straight" name)
-  (string-prefix-p " *temp" name)
-  (string-prefix-p "*Help" name)
-	
-  ;; Is not magit buffer.
-  (and (string-prefix-p "magit" name)
-  (not (file-name-extension name)))
+		"Do no to show buffer X in tabs."
+		(let ((name (format "%s" x)))
+		(or
+		;; Current window is not dedicated window.
+		(window-dedicated-p (selected-window))
+
+		;; Buffer name not match below blacklist.
+		(string-prefix-p "*epc" name)
+		(string-prefix-p "*helm" name)
+		(string-prefix-p "*Helm" name)
+		(string-prefix-p "*Compile-Log*" name)
+		(string-prefix-p "*lsp" name)
+		(string-prefix-p "*company" name)
+		(string-prefix-p "*Flycheck" name)
+		(string-prefix-p "*tramp" name)
+		(string-prefix-p " *Mini" name)
+		(string-prefix-p "*help" name)
+		(string-prefix-p "*straight" name)
+		(string-prefix-p " *temp" name)
+		(string-prefix-p "*Help" name)
+
+		;; Is not magit buffer.
+		(and (string-prefix-p "magit" name)
+		(not (file-name-extension name)))
   )))
 #+end_src
 
@@ -945,14 +890,10 @@ Format all command (useful for languages with no lsp support)
 																					("GraphQL" (prettierd))
 																					("Python" (ruff))
 																					))
-		:general
-		(leader-def
-			:wk-full-keys nil
-			"c"       (cons "code" (make-sparse-keymap))
-			"cf" '(format-all-region-or-buffer :wk "format")
-			"cs" '(consult-line :wk "search")
-			"ct" '(consult-todo-all :wk "todo")
-			"co" '(consult-imenu :wk "outline")))
+		(evil-define-key 'normal 'global
+			(kbd "<leader>cf")    '("format all" . format-all-region-or-buffer)
+		)
+	)
 #+end_src
 
 Find and replace
@@ -960,11 +901,12 @@ Find and replace
 #+begin_src emacs-lisp
 	(use-package anzu
 	:config
-	(global-anzu-mode +1)
-	:general
-	(leader-def
-		:wk-full-keys nil
-		"cr" '(anzu-query-replace-regexp :wk "replace")))
+		(global-anzu-mode +1)
+	:init
+		(evil-define-key 'normal 'global
+			(kbd "<leader>cr")    '("search replace" . anzu-query-replace-regexp)
+		)
+	)
 #+end_src
 
 ** Copilot
@@ -979,13 +921,15 @@ Find and replace
 		:hook
 		(prog-mode . copilot-mode)
 		(org-mode . copilot-mode)
-		:general
-		(:keymaps 'copilot-completion-map
-							"C-j" 'copilot-next-completion
-							"C-k" 'copilot-previous-completion
-							"C-l" 'copilot-accept-completion
-							"M-l" 'copilot-accept-completion-by-word
-							"ESC" 'copilot-clear-overlay))
+		:config
+		(evil-define-key 'insert copilot-completion-map
+				(kbd "C-j")   'copilot-next-completion
+				(kbd "C-k")   'copilot-previous-completion
+				(kbd "C-l")   'copilot-accept-completion
+				(kbd "M-l")   'copilot-accept-completion-by-word
+				(kbd "ESC")   'copilot-clear-overlay
+		)
+	)
 #+end_src
 
 ** Navigation
@@ -993,38 +937,20 @@ Find and replace
 #+begin_src emacs-lisp
 	(use-package avy
 		:demand t
-		:general
-		(leader-def
-				:wk-full-keys nil
-				"j"       (cons "jump" (make-sparse-keymap))
-				"jj" 'avy-goto-char-2
-				"jl" 'avy-goto-line
-				"jb" 'centaur-tabs-ace-jump
-				"jw" 'ace-window))
+		:config
+		(evil-define-key 'normal 'global
+			(kbd "<leader>jj")   '("jump 2char" . avy-goto-char-2)
+			(kbd "<leader>jl")   '("jump line" . avy-goto-line)
+			(kbd "<leader>jb")   '("jump tab" . centaur-tabs-ace-jump)
+			(kbd "<leader>jw")   '("jump window" . ace-window)
+		)
+	)
 
 	(use-package ace-window
 		:init
 		(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
 					aw-minibuffer-flag t
 					aw-ignore-current t))
-
-	(use-package ace-link)
-
-	(dolist (mode-mapping '((org-mode-map . ace-link-org)
-													(Info-mode-map . ace-link-info)
-													(help-mode-map . ace-link-help)
-													(woman-mode-map . ace-link-woman)
-													(eww-mode-map . ace-link-eww)
-													(eww-link-keymap . ace-link-eww)
-													))
-		(let ((mode-map (car mode-mapping))
-					(ace-link-command (cdr mode-mapping)))
-			(general-nmap
-				:keymaps mode-map
-				:prefix "SPC"
-				"jo" ace-link-command)))
-
-				
 #+end_src
 
 * LSP goodness
@@ -1058,19 +984,20 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 	;; 											 (lsp-enable-which-key-integration))))
 	;; 	:commands (lsp lsp-deferred)
 	;; 	:config
-	;; 	(general-def 'normal lsp-mode :definer 'minor-mode
-	;; 		"SPC l" lsp-command-map))
+	;; 	(evil-define-key 'normal lsp-mode :definer 'minor-mode
+	;; 		(kbd "<leader>l") lsp-command-map))
 
 	;; (use-package lsp-ui
 	;; 	:commands lsp-ui-mode)
 
 	;; (use-package consult-lsp
 	;; 	:after lsp-mode
-	;; 	:general
-	;; 	(leader-def
-	;; 	:wk-full-keys nil
-	;; 	"ld" '(consult-lsp-diagnostics :wk "diagnostics")
-	;; 	"ls" '(consult-lsp-file-symbols :wk "symbols")))
+	;;  :config
+	;;	(evil-define-key 'normal 'global
+	;; 	(kbd "<leader>ld")   '("diagnostics" . consult-lsp-diagnostics)
+	;; 	(kbd "<leader>ls")   '("symbols" . consult-lsp-file-symbols)
+	;;	)
+	;;	)
 #+end_src
 
 ** eglot
@@ -1078,8 +1005,17 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 #+begin_src emacs-lisp
 	(use-package eglot
 			:demand t
-			:defer t
 			:config 
+			(evil-define-minor-mode-key 'normal 'eglot-mode-map 
+						(kbd "<leader>ge")  '("errors" . eldoc)
+						(kbd "<leader>ga")  '("code actions" . eglot-code-actions)
+						(kbd "<leader>gR")  '("lsp rename" . eglot-rename)
+						(kbd "<leader>gd")  '("definitions" . xref-find-definitions)
+						(kbd "<leader>gD")  '("declarations" . xref-find-declaration)
+						(kbd "<leader>gr")  '("references" . xref-find-references)
+						(kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition)
+						(kbd "<leader>gi")  '("implementations" . eglot-find-implementation)
+			)
 			 (setq-default eglot-workspace-configuration
 			 '((:pylsp . (:configurationSources ["flake8"]
 			 :plugins (
@@ -1097,25 +1033,10 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 					 :black (:enabled f
 							 :line_length 88
 							 :cache_config t))))))
-			)
+	)
 
 	(add-hook 'python-ts-mode-hook 'eglot-ensure)
 	(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
-
-	(leader-def
-		:keymaps 'eglot-mode-map
-		:wk-full-keys nil
-		"g"     (cons "lsp" (make-sparse-keymap))
-		"ge" '(eldoc :wk "errors")
-		"ga" '(eglot-code-actions :wk "code actions")
-		"gR" '(eglot-rename :wk "lsp rename")
-		"gd" '(xref-find-definitions :wk "definitions")
-		"gD" '(xref-find-declaration :wk "declaration")
-		"gr" '(xref-find-references :wk "references")
-		"gt" '(eglot-find-typeDefinition :wk "type definition")
-		"gi" '(eglot-find-implementation :wk "implementation")
-		)
-
 #+end_src
 
 * Treesitter
@@ -1138,17 +1059,18 @@ Text objects
 
 #+begin_src emacs-lisp
 	(use-package evil-textobj-tree-sitter
+		:demand t
 		:after evil
-		:general
-		(:keymaps 'evil-outer-text-objects-map
-							"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
-							"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
-							"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
-		(:keymaps 'evil-inner-text-objects-map
-							"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
-							"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
-							"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
-		)
+		:config
+		(evil-define-key nil evil-outer-text-objects-map
+				"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+				"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
+				"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+		(evil-define-key nil evil-inner-text-objects-map
+				"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+				"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
+				"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+	)
 #+end_src
  
 * VCS
@@ -1176,6 +1098,14 @@ Text objects
 																														 (shell . t)
 																														 (emacs-lisp . t)
 																														 (jupyter . t)))
+		(evil-define-key 'normal org-mode-map
+				(kbd "<localleader>x")   '("execute block" . org-babel-execute-src-block)
+				(kbd "<localleader>X")   '("execute all" . org-babel-execute-buffer)
+				(kbd "<localleader>e")	 '("edit block" . org-edit-special)
+				(kbd "<localleader>ie")  '("insert emacs-lisp" . (lambda() (interactive) (org-insert-structure-template "src emacs-lisp")))
+				(kbd "<localleader>ip")  '("insert python" . (lambda() (interactive) (org-insert-structure-template "src python")))
+				(kbd "<localleader>ij")  '("insert jupyer" . (lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)))
+		)
 		:hook
 		(org-babel-after-execute . org-display-inline-images))
 
@@ -1196,7 +1126,7 @@ Text objects
 		;; Org styling, hide markup etc.
 		org-hide-emphasis-markers nil
 		org-pretty-entities t
-
+ 
 		;; Agenda styling
 		org-agenda-tags-column 0
 		org-agenda-block-separator ?-)
@@ -1212,19 +1142,6 @@ Text objects
 		(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
 		(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
 		(add-to-list 'org-structure-template-alist '("sp" . "src python")))
-
-	(major-mode-def
-		:keymaps 'org-mode-map
-		:wk-full-keys nil
-		"x" '(org-babel-execute-src-block :wk "execute block")
-		"X" '(org-babel-execute-buffer :wk "execute all")
-		"e"			'(org-edit-special :wk "edit block")
-		"i"      (cons "insert" (make-sparse-keymap))
-		"is"     (cons "src block" (make-sparse-keymap))
-		"ise"		'((lambda() (interactive) (org-insert-structure-template "src emacs-lisp")) :wk "emacs-lisp")
-		"isp"		'((lambda() (interactive) (org-insert-structure-template "src python")) :wk "python")
-		"isj"	  '((lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)) :wk "jupyter")
-		"it"		'((lambda() (interactive) (org-set-tags-command "TOC")) :wk "TOC"))
 #+end_src
 
 * Languages
@@ -1232,31 +1149,21 @@ Text objects
 ** NPM
 
 #+begin_src emacs-lisp
-	(use-package npm
-		:general
-		(major-mode-def
-			:keymaps '(js-mode-map typescript-ts-mode-map web-mode-map)
-			:wk-full-keys nil
-			"n" 'npm))
+	(use-package npm)
+	(with-eval-after-load 'evil
+		(evil-define-key 'normal web-mode-map
+		(kbd "<localleader>n")  '("npm" . npm))
+	)
 #+end_src
-
-** Emacs lisp
-
-#+begin_src emacs-lisp
-  (use-package lispyville
-    :hook
-    (emacs-lisp-mode . lispyville-mode))
-      #+end_src
 
 ** Python
 
 #+begin_src emacs-lisp
-	(major-mode-def
-		:keymaps 'python-ts-mode-map
-		:wk-full-keys nil
-		"s" 'run-python
-		"x" 'python-shell-send-buffer)
-
+	(with-eval-after-load 'evil
+		(evil-define-key 'normal python-ts-mode-map
+				(kbd "<localleader>s") '("start python" . run-python)
+				(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
+	)
 	(setq python-shell-interpreter (if (system-is-mswindows)
 												"python.exe"
 												"python3"))
@@ -1282,7 +1189,7 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 #+begin_src emacs-lisp
 	(defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
 	
-	(defun replace-current-header-with-src-jupyter ()
+(defun replace-current-header-with-src-jupyter ()
   (interactive)
   (move-beginning-of-line nil)
   (kill-line)
@@ -1303,16 +1210,14 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 	(setq code-cells-convert-ipynb-style '(("pandoc" "--to" "ipynb" "--from" "org")
 	("pandoc" "--to" "org" "--from" "ipynb")
 	(lambda () #'org-mode)))
+	(evil-define-key 'normal code-cells-mode-map
+		(kbd "<localleader>D")   '("clear results" . jupyter-org-clear-all-results)
+		(kbd "<localleader>r")   '("replace jupyter src" . replace-current-header-with-src-jupyter)
+		(kbd "<localleader>R")   '("replace all jupyter src" .  replace-all-header-with-src-jupyter)
+	)
 	:hook
-	((org-mode python-mode python-ts-mode) . code-cells-mode)
-	:general
-	(major-mode-def
-	:keymaps 'code-cells-mode-map
-	:wk-full-keys nil
-	"D" '(jupyter-org-clear-all-results :wk "clear results")
-	"r" '(replace-current-header-with-src-jupyter :wk "replace jupyter src")
-	"R" '(replace-all-header-with-src-jupyter :wk "replace all jupyter src")
-	))
+	((org-mode) . code-cells-mode)
+	)
 #+end_src
 
 ** Vue
