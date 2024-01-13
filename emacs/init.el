@@ -390,9 +390,6 @@ beacon-blink-when-point-moves t)
 		:demand t
 		:after general
 		:init
-		(evil-set-leader nil (kbd "SPC"))
-		(evil-set-leader nil "," t)
-		
 		(setq
 		 evil-want-integration t
 		 evil-want-keybinding nil
@@ -404,14 +401,17 @@ beacon-blink-when-point-moves t)
 		 evil-respect-visual-line-mode t
 		 evil-kill-on-visual-paste nil
 		 evil-want-fine-undo t
-		 evil-v$-excludes-newline t)
+		 evil-v$-excludes-newline t
+		 evil-normal-state-cursor  '("#FF9E3B" box)
+		 evil-insert-state-cursor  '("#C34043" (bar . 2))
+		 evil-emacs-state-cursor   '("#FF9E3B" box)
+	   evil-replace-state-cursor '("#C34043" (hbar . 2))
+		 evil-visual-state-cursor  '("#76946A" (hbar . 2))
+		 evil-motion-state-cursor  '("#FF9E3B" box))
 		:config
-		(setq evil-normal-state-cursor  '("#FF9E3B" box)
-					evil-insert-state-cursor  '("#C34043" (bar . 2))
-					evil-emacs-state-cursor   '("#FF9E3B" box)
-					evil-replace-state-cursor '("#C34043" (hbar . 2))
-					evil-visual-state-cursor  '("#76946A" (hbar . 2))
-					evil-motion-state-cursor  '("#FF9E3B" box))
+		(evil-set-leader nil (kbd "SPC"))
+		(evil-set-leader nil "," t)
+		
 		(evil-define-key 'motion 'global
 			"j" 'evil-next-visual-line
 			"k" 'evil-previous-visual-line)
