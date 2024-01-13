@@ -596,7 +596,8 @@ beacon-blink-when-point-moves t)
 	(leader-def
 		:wk-full-keys nil
 		"b"       (cons "buffers" (make-sparse-keymap))
-		"bb" '(persp-switch-to-buffer* :wk "find buffer")
+		;; "bb" '(persp-switch-to-buffer* :wk "find buffer")
+		"bb" '(consult-project-buffer :wk "find buffer")
 		"bd" '(kill-current-buffer :wk "delete buffer")
 		"bD" '(centaur-tabs-kill-other-buffers-in-current-group :wk "delete other buffers")
 
