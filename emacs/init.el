@@ -384,84 +384,91 @@ beacon-blink-when-point-moves t)
 	"TAB" 'tab-to-tab-stop
 	"C-v" 'yank)
 
-(use-package evil
-	:demand t
-	:after general
-	:init
-	(setq
-	 evil-want-integration t
-	 evil-want-keybinding nil
-	 evil-symbol-word-search t
-	 evil-ex-search-vim-style-regexp t
-	 evil-want-C-u-scroll t
-	 evil-want-C-i-jump nil
-	 evil-cross-lines t
-	 evil-respect-visual-line-mode t
-	 evil-kill-on-visual-paste nil
-	 evil-want-fine-undo t
-	 evil-v$-excludes-newline t)
-	:config
-	(setq evil-normal-state-cursor  '("#FF9E3B" box)
-				evil-insert-state-cursor  '("#C34043" (bar . 2))
-				evil-emacs-state-cursor   '("#FF9E3B" box)
-				evil-replace-state-cursor '("#C34043" (hbar . 2))
-				evil-visual-state-cursor  '("#76946A" (hbar . 2))
-				evil-motion-state-cursor  '("#FF9E3B" box))
-	(evil-define-key 'motion 'global
-		"j" 'evil-next-visual-line
-		"k" 'evil-previous-visual-line)
-	(evil-set-undo-system 'undo-redo)
-	(evil-mode 1))
+;; https://github.com/noctuid/evil-guide
 
-(use-package scroll-on-jump
-:demand t
-:after evil
-:init
-(setq scroll-on-jump-duration 0.4
-			scroll-on-jump-smooth t
-			scroll-on-jump-curve 'smooth)
-:config
-(with-eval-after-load 'evil
-(scroll-on-jump-advice-add evil-undo)
-(scroll-on-jump-advice-add evil-redo)
-(scroll-on-jump-advice-add evil-jump-item)
-(scroll-on-jump-advice-add evil-jump-forward)
-(scroll-on-jump-advice-add evil-jump-backward)
-(scroll-on-jump-advice-add evil-search-next)
-(scroll-on-jump-advice-add evil-search-previous)
-(scroll-on-jump-advice-add evil-ex-search-next)
-(scroll-on-jump-advice-add evil-ex-search-previous)
-(scroll-on-jump-advice-add evil-forward-paragraph)
-(scroll-on-jump-advice-add evil-backward-paragraph)
-(scroll-on-jump-advice-add evil-goto-mark)
+	(use-package evil
+		:demand t
+		:after general
+		:init
+		(evil-set-leader nil (kbd "SPC"))
+		(evil-set-leader nil "," t)
+		
+		(setq
+		 evil-want-integration t
+		 evil-want-keybinding nil
+		 evil-symbol-word-search t
+		 evil-ex-search-vim-style-regexp t
+		 evil-want-C-u-scroll t
+		 evil-want-C-i-jump nil
+		 evil-cross-lines t
+		 evil-respect-visual-line-mode t
+		 evil-kill-on-visual-paste nil
+		 evil-want-fine-undo t
+		 evil-v$-excludes-newline t)
+		:config
+		(setq evil-normal-state-cursor  '("#FF9E3B" box)
+					evil-insert-state-cursor  '("#C34043" (bar . 2))
+					evil-emacs-state-cursor   '("#FF9E3B" box)
+					evil-replace-state-cursor '("#C34043" (hbar . 2))
+					evil-visual-state-cursor  '("#76946A" (hbar . 2))
+					evil-motion-state-cursor  '("#FF9E3B" box))
+		(evil-define-key 'motion 'global
+			"j" 'evil-next-visual-line
+			"k" 'evil-previous-visual-line)
+		(evil-set-undo-system 'undo-redo)
+		(evil-mode 1))
 
-(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
-(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
+	(use-package scroll-on-jump
+		:demand t
+		:after evil
+		:init
+		(setq scroll-on-jump-duration 0.4
+						scroll-on-jump-smooth t
+						scroll-on-jump-curve 'smooth)
+		:config
+		(with-eval-after-load 'evil
+		(scroll-on-jump-advice-add evil-undo)
+		(scroll-on-jump-advice-add evil-redo)
+		(scroll-on-jump-advice-add evil-jump-item)
+		(scroll-on-jump-advice-add evil-jump-forward)
+		(scroll-on-jump-advice-add evil-jump-backward)
+		(scroll-on-jump-advice-add evil-search-next)
+		(scroll-on-jump-advice-add evil-search-previous)
+		(scroll-on-jump-advice-add evil-ex-search-next)
+		(scroll-on-jump-advice-add evil-ex-search-previous)
+		(scroll-on-jump-advice-add evil-forward-paragraph)
+		(scroll-on-jump-advice-add evil-backward-paragraph)
+		(scroll-on-jump-advice-add evil-goto-mark)
 
-(with-eval-after-load 'goto-chg
-(scroll-on-jump-advice-add goto-last-change)
-(scroll-on-jump-advice-add goto-last-change-reverse)))
+		(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+		(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
+		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
+		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
 
-(use-package evil-commentary
-	:demand t
-	:diminish
-	:config
-	(evil-commentary-mode))
+		(with-eval-after-load 'goto-chg
+		(scroll-on-jump-advice-add goto-last-change)
+		(scroll-on-jump-advice-add goto-last-change-reverse)))
 
-(use-package evil-surround
-	:demand t
-	:diminish
-	:config
-	(global-evil-surround-mode 1))
+	(use-package evil-commentary
+		:demand t
+		:after evil
+		:diminish
+		:config
+		(evil-commentary-mode))
 
-(use-package evil-collection
-:after evil
-:demand t
-:config
-(evil-collection-init))
+	(use-package evil-surround
+		:demand t
+		:after evil
+		:diminish
+		:config
+		(global-evil-surround-mode 1))
+
+	(use-package evil-collection
+		:demand t
+		:after evil
+		:config
+		(evil-collection-init '(dired eshell explain-pause)))
 
 (use-package which-key
 	:demand t
@@ -823,43 +830,83 @@ diary-mode))
 			:prefix "SPC"
 			"jo" ace-link-command)))
 
-(use-package lsp-mode
-	:diminish
-	:init
-	(setq
-	 lsp-modeline-diagnostics-enable nil
-	 lsp-modeline-code-actions-mode t
-	 lsp-modeline-code-actions-segments '(icon count)
-	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
-	 lsp-enable-snippet nil
-	 lsp-headerline-breadcrumb-mode t
-	 lsp-headerline-breadcrumb-segments '(file symbols)
-	 lsp-enable-symbol-highlighting t
-	 lsp-warn-no-matched-clients nil
-	 lsp-ui-peek-enable t
-	 lsp-ui-sideline-enable t
-	 lsp-ui-sideline-show-code-actions t
-	 lsp-ui-doc-show-with-cursor nil
-	 lsp-ui-doc-show-with-mouse nil
-	 lsp-enable-suggest-server-download t)
-	:hook ((prog-mode . lsp-deferred)
-				 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
-											 (lsp-enable-which-key-integration))))
-	:commands (lsp lsp-deferred)
-	:config
-	(general-def 'normal lsp-mode :definer 'minor-mode
-		"SPC l" lsp-command-map))
+;; (use-package lsp-mode
+;; 	:diminish
+;; 	:init
+;; 	(setq
+;; 	 lsp-modeline-diagnostics-enable nil
+;; 	 lsp-modeline-code-actions-mode t
+;; 	 lsp-modeline-code-actions-segments '(icon count)
+;; 	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
+;; 	 lsp-enable-snippet nil
+;; 	 lsp-headerline-breadcrumb-mode t
+;; 	 lsp-headerline-breadcrumb-segments '(file symbols)
+;; 	 lsp-enable-symbol-highlighting t
+;; 	 lsp-warn-no-matched-clients nil
+;; 	 lsp-ui-peek-enable t
+;; 	 lsp-ui-sideline-enable t
+;; 	 lsp-ui-sideline-show-code-actions t
+;; 	 lsp-ui-doc-show-with-cursor nil
+;; 	 lsp-ui-doc-show-with-mouse nil
+;; 	 lsp-enable-suggest-server-download t)
+;; 	:hook ((prog-mode . lsp-deferred)
+;; 				 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
+;; 											 (lsp-enable-which-key-integration))))
+;; 	:commands (lsp lsp-deferred)
+;; 	:config
+;; 	(general-def 'normal lsp-mode :definer 'minor-mode
+;; 		"SPC l" lsp-command-map))
 
-(use-package lsp-ui
-	:commands lsp-ui-mode)
+;; (use-package lsp-ui
+;; 	:commands lsp-ui-mode)
 
-(use-package consult-lsp
-	:after lsp-mode
-	:general
-	(leader-def
+;; (use-package consult-lsp
+;; 	:after lsp-mode
+;; 	:general
+;; 	(leader-def
+;; 	:wk-full-keys nil
+;; 	"ld" '(consult-lsp-diagnostics :wk "diagnostics")
+;; 	"ls" '(consult-lsp-file-symbols :wk "symbols")))
+
+(use-package eglot
+		:demand t
+		:defer t
+		:config 
+		 (setq-default eglot-workspace-configuration
+		 '((:pylsp . (:configurationSources ["flake8"]
+		 :plugins (
+				 :pycodestyle (:enabled :json-false)
+				 :mccabe (:enabled :json-false)
+				 :pyflakes (:enabled :json-false)
+				 :flake8 (:enabled :json-false
+				 :maxLineLength 88)
+				 :ruff (:enabled t
+				 :lineLength 88)
+				 :pydocstyle (:enabled t
+						 :convention "google")
+				 :yapf (:enabled :json-false)
+				 :autopep8 (:enabled :json-false)
+				 :black (:enabled f
+						 :line_length 88
+						 :cache_config t))))))
+		)
+
+(add-hook 'python-ts-mode-hook 'eglot-ensure)
+(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
+
+(leader-def
+	:keymaps 'eglot-mode-map
 	:wk-full-keys nil
-	"ld" '(consult-lsp-diagnostics :wk "diagnostics")
-	"ls" '(consult-lsp-file-symbols :wk "symbols")))
+	"g"     (cons "lsp" (make-sparse-keymap))
+	"ge" '(eldoc :wk "errors")
+	"ga" '(eglot-code-actions :wk "code actions")
+	"gR" '(eglot-rename :wk "lsp rename")
+	"gd" '(xref-find-definitions :wk "definitions")
+	"gD" '(xref-find-declaration :wk "declaration")
+	"gr" '(xref-find-references :wk "references")
+	"gt" '(eglot-find-typeDefinition :wk "type definition")
+	"gi" '(eglot-find-implementation :wk "implementation")
+	)
 
 (setq treesit-font-lock-level 4)
 
