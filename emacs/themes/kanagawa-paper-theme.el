@@ -296,6 +296,9 @@
   (lsp-ui-sideline-current-symbol                (:foreground springBlue))
   (lsp-ui-sideline-symbol                        (:foreground dragonBlue))
 
+	(eglot-diagnostic-tag-unnecessary-face         (:foreground sumiInk-3))
+	(eglot-diagnostic-tag-deprecated-face          (:foreground sumiInk-3 :strike-through t))
+
   ;; dashboard
   (dashboard-heading                             (:foreground autumnRed :bold t))
   (dashboard-items-face                          (:bold nil :foreground fujiWhite))
