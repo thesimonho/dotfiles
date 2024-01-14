@@ -811,34 +811,34 @@ beacon-blink-when-point-moves t)
 	:elpaca nil
 	:init
 	(setq eglot-events-buffer-config '(:size 0))
-	:config 
+	:config
 	(eglot-inlay-hints-mode nil)
 	(evil-define-key 'normal eglot-mode-map
-	 (kbd "<leader>gh")  '("help" . eldoc)
-	 (kbd "<leader>ga")  '("code actions" . eglot-code-actions)
-	 (kbd "<leader>gf")  '("format" . eglot-format)
-	 (kbd "<leader>gR")  '("lsp rename" . eglot-rename)
-	 (kbd "<leader>gd")  '("definitions" . xref-find-definitions)
-	 (kbd "<leader>gD")  '("declarations" . xref-find-declaration)
-	 (kbd "<leader>gr")  '("references" . xref-find-references)
-	 (kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition)
-	 (kbd "<leader>gi")  '("implementations" . eglot-find-implementation))
+		(kbd "<leader>gh")  '("help" . eldoc)
+		(kbd "<leader>ga")  '("code actions" . eglot-code-actions)
+		(kbd "<leader>gf")  '("format" . eglot-format)
+		(kbd "<leader>gR")  '("lsp rename" . eglot-rename)
+		(kbd "<leader>gd")  '("definitions" . xref-find-definitions)
+		(kbd "<leader>gD")  '("declarations" . xref-find-declaration)
+		(kbd "<leader>gr")  '("references" . xref-find-references)
+		(kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition)
+		(kbd "<leader>gi")  '("implementations" . eglot-find-implementation))
 
 	(setq-default eglot-workspace-configuration
-							'((:pylsp . (:plugins (
-									:ruff (:enabled t
-												 :lineLength 88
-												 :format {"I", "F", "E", "W", "D", "UP", "NP", "RUF"}
-												 :ignore {"D210"}
-												 :perFileIgnores { ["__init__.py"] = "CPY001" })
-									:pydocstyle (:enabled t
-															 :convention "google")
-									:pylsp_mypy (:enabled t
-															 :live_mode :json-false
-															 :dmypy t
-															 :exclude = ["**/tests/*"])
-							)))))
-)
+								'((:pylsp . (:plugins (
+																			 :ruff (:enabled t
+																											 :lineLength 88
+																											 :format {"I", "F", "E", "W", "D", "UP", "NP", "RUF"}
+																											 :ignore {"D210"}
+																											 :perFileIgnores { ["__init__.py"] = "CPY001" })
+																			 :pydocstyle (:enabled t
+																														 :convention "google")
+																			 :pylsp_mypy (:enabled t
+																														 :live_mode :json-false
+																														 :dmypy t
+																														 :exclude = ["**/tests/*"])
+																			 )))))
+	)
 
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
@@ -885,6 +885,10 @@ beacon-blink-when-point-moves t)
 																													 (shell . t)
 																													 (emacs-lisp . t)
 																													 (jupyter . t)))
+	(evil-define-key 'nil org-src-mode-map
+			(kbd "<localleader>q")  '("abort" . org-edit-src-abort)
+			(kbd "<localleader>s")  '("save" . org-edit-src-exit)
+	)
 	(evil-define-key 'normal org-mode-map
 			(kbd "<localleader>x")   '("execute block" . org-babel-execute-src-block)
 			(kbd "<localleader>X")   '("execute all" . org-babel-execute-buffer)
