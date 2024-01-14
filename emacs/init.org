@@ -342,9 +342,9 @@ Make editing easier
 	:demand t
 	:after evil
 	:config
-	;; (evil-define-key 'normal
-	;; "[t" '(hl-todo-previous :wk "previous todo")
-	;; "]t" '(hl-todo-next :wk "next todo"))
+	(evil-define-key 'normal 'global
+	(kbd "[t") 'hl-todo-previous
+	(kbd "]t") 'hl-todo-next)
 	(global-hl-todo-mode 1))
 
 	(use-package yascroll
