@@ -233,6 +233,20 @@ beacon-blink-when-point-moves t)
 :config
 (global-yascroll-bar-mode 1))
 
+(use-package dimmer
+:demand t
+:init
+(setq dimmer-fraction 0.6
+			dimmer-adjustment-mode :foreground
+			dimmer-watch-frame-focus-events nil)
+:config
+(dimmer-configure-which-key)
+(dimmer-configure-hydra)
+(dimmer-configure-magit)
+(dimmer-configure-org)
+(dimmer-configure-posframe)
+(dimmer-mode t))
+
 (use-package dashboard
 	:demand t
 	:after projectile

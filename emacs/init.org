@@ -354,6 +354,20 @@ Make editing easier
 	(yascroll:scroll-bar 'right-fringe)
 	:config
 	(global-yascroll-bar-mode 1))
+
+	(use-package dimmer
+	:demand t
+	:init
+	(setq dimmer-fraction 0.6
+				dimmer-adjustment-mode :foreground
+				dimmer-watch-frame-focus-events nil)
+	:config
+	(dimmer-configure-which-key)
+	(dimmer-configure-hydra)
+	(dimmer-configure-magit)
+	(dimmer-configure-org)
+	(dimmer-configure-posframe)
+	(dimmer-mode t))
   #+end_src
 
 * Dashboard
