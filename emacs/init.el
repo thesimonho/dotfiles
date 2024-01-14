@@ -893,7 +893,8 @@ beacon-blink-when-point-moves t)
 :hook
 (after-save . diff-hl-update)
 :config
-(global-diff-hl-mode))
+(global-diff-hl-mode)
+(global-diff-hl-show-hunk-mouse-mode))
 
 (use-package org
 	:elpaca nil

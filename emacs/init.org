@@ -72,6 +72,10 @@ Must be evaluated at least once.
     (eq system-type 'windows-nt))
 #+end_src
 
+
+
+
+
 * Profile Emacs startup 
 
 Adds a hook to profile Emacs startup time. Commented out as dashboard also provides startup time
@@ -1111,7 +1115,8 @@ Text objects
 :hook
 (after-save . diff-hl-update)
 :config
-(global-diff-hl-mode))
+(global-diff-hl-mode)
+(global-diff-hl-show-hunk-mouse-mode))
 #+end_src
 
 * Org mode
