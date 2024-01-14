@@ -664,7 +664,7 @@ Inbuffer completion with corfu
     (setq corfu-popupinfo-delay 0.2)
     (corfu-popupinfo-mode)
 
-		(evil-define-key 'insert corfu-map
+		(evil-define-key 'nil corfu-map
      "TAB" 'corfu-next
      [tab] 'corfu-next
      "S-TAB" 'corfu-previous
@@ -1014,36 +1014,32 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 #+begin_src emacs-lisp
 	(use-package eglot
 		:elpaca nil
-		:init
-		(setq eglot-report-progress t)
 		:config 
-		(define-key eglot-mode-map (kbd "<leader>gh")  '("help" . eldoc))
-		(define-key eglot-mode-map (kbd "<leader>ga")  '("code actions" . eglot-code-actions))
-		(define-key eglot-mode-map (kbd "<leader>gf")  '("format" . eglot-format))
-		(define-key eglot-mode-map (kbd "<leader>gR")  '("lsp rename" . eglot-rename))
-		(define-key eglot-mode-map (kbd "<leader>gd")  '("definitions" . xref-find-definitions))
-		(define-key eglot-mode-map (kbd "<leader>gD")  '("declarations" . xref-find-declaration))
-		(define-key eglot-mode-map (kbd "<leader>gr")  '("references" . xref-find-references))
-		(define-key eglot-mode-map (kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition))
-		(define-key eglot-mode-map (kbd "<leader>gi")  '("implementations" . eglot-find-implementation))
-		
+		(evil-define-key 'normal eglot-mode-map
+		 (kbd "<leader>gh")  '("help" . eldoc)
+		 (kbd "<leader>ga")  '("code actions" . eglot-code-actions)
+		 (kbd "<leader>gf")  '("format" . eglot-format)
+		 (kbd "<leader>gR")  '("lsp rename" . eglot-rename)
+		 (kbd "<leader>gd")  '("definitions" . xref-find-definitions)
+		 (kbd "<leader>gD")  '("declarations" . xref-find-declaration)
+		 (kbd "<leader>gr")  '("references" . xref-find-references)
+		 (kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition)
+		 (kbd "<leader>gi")  '("implementations" . eglot-find-implementation))
+
 		(setq-default eglot-workspace-configuration
-		'((:pylsp . (:configurationSources ["flake8"]
-		:plugins (
-				:pycodestyle (:enabled :json-false)
-				:mccabe (:enabled :json-false)
-				:pyflakes (:enabled :json-false)
-				:flake8 (:enabled :json-false
-				:maxLineLength 88)
-				:ruff (:enabled t
-				:lineLength 88)
-				:pydocstyle (:enabled t
-						:convention "google")
-				:yapf (:enabled :json-false)
-				:autopep8 (:enabled :json-false)
-				:black (:enabled f
-						:line_length 88
-						:cache_config t))))))
+								'((:pylsp . (:plugins (
+										:ruff (:enabled t
+													 :lineLength 88
+													 :format {"I", "F", "E", "W", "D", "UP", "NP", "RUF"}
+													 :ignore {"D210"}
+													 :perFileIgnores { ["__init__.py"] = "CPY001" })
+										:pydocstyle (:enabled t
+																 :convention "google")
+										:pylsp_mypy (:enabled t
+																 :live_mode :json-false
+																 :dmypy t
+																 :exclude = ["**/tests/*"])
+								)))))
 	)
 
 	(add-hook 'python-ts-mode-hook 'eglot-ensure)
