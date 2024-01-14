@@ -921,6 +921,12 @@ Format all command (useful for languages with no lsp support)
 	)
 #+end_src
 
+Hide/show minor mode
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+#+end_src
+
 Aggressive indent
 
 #+begin_src emacs-lisp

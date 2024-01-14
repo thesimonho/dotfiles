@@ -740,6 +740,8 @@ beacon-blink-when-point-moves t)
 	)
 )
 
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+
 (use-package aggressive-indent
 :config
 (global-aggressive-indent-mode 1))
