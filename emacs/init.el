@@ -9,26 +9,6 @@
 (defun system-is-mswindows ()
   (eq system-type 'windows-nt))
 
-(defun backward-kill-spaces-or-char-or-word ()
-	(interactive)
-	(cond
-	((looking-back (rx (char word)) 1)
-			(backward-kill-word 1))
-	((looking-back (rx (char blank)) 1)
-			(delete-horizontal-space t))
-	(t
-			(backward-delete-char 1))))
-
-(defun forward-kill-spaces-or-char-or-word ()
-	(interactive)
-	(cond
-	((looking-at (rx (char word)) 1)
-			(kill-word 1))
-	((looking-at (rx (char blank)) 1)
-			(delete-horizontal-space))
-	(t
-			(delete-forward-char 1))))
-
 (setq use-package-verbose nil  ; don't print anything
       use-package-compute-statistics t ; compute statistics about package initialization
       use-package-minimum-reported-time 0.0001
@@ -369,10 +349,44 @@ beacon-blink-when-point-moves t)
 		:config
 		(evil-collection-init '(dired eshell explain-pause)))
 
+(defun mark-gg ()
+	(interactive)
+	(evil-set-marker ?g (point))
+	(evil-goto-first-line)
+	)
+
+(defun mark-G ()
+	(interactive)
+	(evil-set-marker ?g (point))
+	(end-of-buffer)
+	)
+
+(defun backward-kill-spaces-or-char-or-word ()
+	(interactive)
+	(cond
+	((looking-back (rx (char word)) 1)
+			(backward-kill-word 1))
+	((looking-back (rx (char blank)) 1)
+			(delete-horizontal-space t))
+	(t
+			(backward-delete-char 1))))
+
+(defun forward-kill-spaces-or-char-or-word ()
+	(interactive)
+	(cond
+	((looking-at (rx (char word)) 1)
+			(kill-word 1))
+	((looking-at (rx (char blank)) 1)
+			(delete-horizontal-space))
+	(t
+			(delete-forward-char 1))))
+
 (with-eval-after-load 'evil
 	(evil-define-key '(normal visual) 'global
 		"j" 'evil-next-visual-line
 		"k" 'evil-previous-visual-line
+		"gg" 'mark-gg
+		"G"  'mark-G
 		(kbd "<leader>SPC")     '("M-x" . execute-extended-command)
 		(kbd "<leader>`")       '("shell" . eshell)
 		(kbd "<leader>u")       '("universal" . universal-argument)
