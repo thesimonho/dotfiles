@@ -383,7 +383,7 @@ beacon-blink-when-point-moves t)
 		:demand t
 		:after evil
 		:config
-		(evil-collection-init '(dired eshell explain-pause)))
+		(evil-collection-init))
 
 (defun mark-gg ()
 	(interactive)
@@ -460,10 +460,9 @@ beacon-blink-when-point-moves t)
 		(kbd "<leader>zu")		  '("use package report" . use-package-report)
 		(kbd "<leader>zp")		  '("profiler start" . profiler-start)
 		(kbd "<leader>zP")		  '("profiler report" . profiler-report)
-		(kbd "<leader>zd")			'("toggle debug on quit" . toggle-debug-on-quit)
 
 		(kbd "<leader>qr")      '("restart" . restart-emacs)
-		(kbd "<leader>qR")      '("restart debug init" . restart-emacs-debug-init)
+		(kbd "<leader>qR")			'("toggle debug on quit" . toggle-debug-on-quit)
 		(kbd "<leader>qq")      '("kill frame" . delete-frame)
 		(kbd "<leader>qQ")      '("kill emacs" . save-buffers-kill-emacs)
 		)
