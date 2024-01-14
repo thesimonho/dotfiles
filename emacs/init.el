@@ -756,6 +756,18 @@ beacon-blink-when-point-moves t)
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
+(use-package drag-stuff
+:demand t
+:config
+(drag-stuff-global-mode 1)
+(evil-define-key 'nil drag-stuff-mode-map
+		(kbd "<M-up>")			'drag-stuff-up
+		(kbd "<M-down>")		'drag-stuff-down
+		(kbd "<M-left>")		'drag-stuff-left
+		(kbd "<M-right>")   'drag-stuff-right
+		)
+)
+
 (use-package aggressive-indent
 :config
 (global-aggressive-indent-mode 1))
@@ -965,7 +977,7 @@ beacon-blink-when-point-moves t)
 (use-package evil-org
 	:diminish
 	:hook (org-mode . evil-org-mode)
-	:config (evil-org-set-key-theme '(textobjects insert navigation additional shift todo)))
+	:config (evil-org-set-key-theme '(textobjects insert navigation shift todo)))
 
 (with-eval-after-load 'org
 	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
