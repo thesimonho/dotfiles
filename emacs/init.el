@@ -703,6 +703,13 @@ beacon-blink-when-point-moves t)
 	(not (file-name-extension name)))
 )))
 
+(defun dual-format-function ()
+	"Format code using lsp-format if eglot is active, otherwise use format-all."
+	(interactive)
+	(if (bound-and-true-p eglot--managed-mode)
+			(eglot-format)
+		(format-all-region-or-buffer)))
+
 (use-package format-all
 	:diminish
 	:commands format-all-mode
@@ -715,7 +722,7 @@ beacon-blink-when-point-moves t)
 																				("Python" (ruff))
 																				))
 	(evil-define-key 'normal 'global
-		(kbd "<leader>cf")    '("format all" . format-all-region-or-buffer)
+		(kbd "<leader>cf")    '("format all" . dual-format-function)
 	)
 )
 
@@ -812,7 +819,7 @@ beacon-blink-when-point-moves t)
 	:init
 	(setq eglot-events-buffer-config '(:size 0))
 	:config
-	(eglot-inlay-hints-mode nil)
+	(setq eglot-inlay-hints-mode nil)
 	(evil-define-key 'normal eglot-mode-map
 		(kbd "<leader>gh")  '("help" . eldoc)
 		(kbd "<leader>ga")  '("code actions" . eglot-code-actions)
