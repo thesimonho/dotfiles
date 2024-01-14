@@ -1014,7 +1014,10 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 #+begin_src emacs-lisp
 	(use-package eglot
 		:elpaca nil
+		:init
+		(setq eglot-events-buffer-config '(:size 0))
 		:config 
+		(eglot-inlay-hints-mode nil)
 		(evil-define-key 'normal eglot-mode-map
 		 (kbd "<leader>gh")  '("help" . eldoc)
 		 (kbd "<leader>ga")  '("code actions" . eglot-code-actions)

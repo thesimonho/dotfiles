@@ -809,7 +809,10 @@ beacon-blink-when-point-moves t)
 
 (use-package eglot
 	:elpaca nil
+	:init
+	(setq eglot-events-buffer-config '(:size 0))
 	:config 
+	(eglot-inlay-hints-mode nil)
 	(evil-define-key 'normal eglot-mode-map
 	 (kbd "<leader>gh")  '("help" . eldoc)
 	 (kbd "<leader>ga")  '("code actions" . eglot-code-actions)
