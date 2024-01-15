@@ -283,7 +283,7 @@ beacon-blink-when-point-moves t)
 	 dashboard-set-navigator t
 	 dashboard-set-heading-icons t
 	 dashboard-set-file-icons t
-	 dashboard-show-shortcuts nil
+	 dashboard-show-shortcuts t
 	 dashboard-set-init-info t
 	 dashboard-footer-messages '("if you have to wait for it to roar out of you, then wait patiently.\n   if it never does roar out of you, do something else.")
 	 dashboard-footer-icon (nerd-icons-codicon "nf-cod-quote"
@@ -846,6 +846,7 @@ beacon-blink-when-point-moves t)
 ;; 	 lsp-modeline-code-actions-mode t
 ;; 	 lsp-modeline-code-actions-segments '(icon count)
 ;; 	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
+;;	 lsp-log-io nil
 ;; 	 lsp-enable-snippet nil
 ;; 	 lsp-headerline-breadcrumb-mode t
 ;; 	 lsp-headerline-breadcrumb-segments '(file symbols)
@@ -884,15 +885,15 @@ beacon-blink-when-point-moves t)
 	:config
 	(setq eglot-inlay-hints-mode nil)
 	(evil-define-key 'normal eglot-mode-map
-		(kbd "<leader>gh")  '("help" . eldoc)
-		(kbd "<leader>ga")  '("code actions" . eglot-code-actions)
-		(kbd "<leader>gf")  '("format" . eglot-format)
-		(kbd "<leader>gR")  '("lsp rename" . eglot-rename)
-		(kbd "<leader>gd")  '("definitions" . xref-find-definitions)
-		(kbd "<leader>gD")  '("declarations" . xref-find-declaration)
-		(kbd "<leader>gr")  '("references" . xref-find-references)
-		(kbd "<leader>gt")  '("type definitions" . eglot-find-typeDefinition)
-		(kbd "<leader>gi")  '("implementations" . eglot-find-implementation))
+		(kbd "<leader>lh")  '("help" . eldoc)
+		(kbd "<leader>la")  '("code actions" . eglot-code-actions)
+		(kbd "<leader>lf")  '("format" . eglot-format)
+		(kbd "<leader>lR")  '("lsp rename" . eglot-rename)
+		(kbd "<leader>ld")  '("definitions" . xref-find-definitions)
+		(kbd "<leader>lD")  '("declarations" . xref-find-declaration)
+		(kbd "<leader>lr")  '("references" . xref-find-references)
+		(kbd "<leader>lt")  '("type definitions" . eglot-find-typeDefinition)
+		(kbd "<leader>li")  '("implementations" . eglot-find-implementation))
 
 	(setq-default eglot-workspace-configuration
 								'((:pylsp . (:plugins (
