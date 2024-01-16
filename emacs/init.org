@@ -1127,24 +1127,38 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 																				 )))))
 		)
 
+	(defun vue-eglot-init-options ()
+		(let ((tsdk-path (expand-file-name
+											"lib"
+											(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+			`(:typescript (:tsdk ,tsdk-path
+													 :languageFeatures (:completion
+																							(:defaultTagNameCase "both"
+																																	 :defaultAttrNameCase "kebabCase"
+																																	 :getDocumentNameCasesRequest nil
+																																	 :getDocumentSelectionRequest nil)
+																							:diagnostics
+																							(:getDocumentVersionRequest nil))
+													 :documentFeatures (:documentFormatting
+																							(:defaultPrintWidth 100
+																																	:getDocumentPrintWidthRequest nil)
+																							:documentSymbol t
+																							:documentColor t)))))
+
+	(with-eval-after-load 'eglot
+	(add-to-list 'eglot-server-programs
+							 `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
+
+
 	(add-hook 'python-ts-mode-hook 'eglot-ensure)
 	(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
+	(add-hook 'vue-mode-hook 'eglot-ensure)
 #+end_src
 
 * Treesitter
 
-The most useful package ever
-
 #+begin_src emacs-lisp
 	(setq treesit-font-lock-level 4)
-	
-	(use-package treesit-auto
-		:custom
-		(treesit-auto-install 'prompt)
-		:config
-		(treesit-auto-add-to-auto-mode-alist 'all)
-		:hook
-		(prog-mode . treesit-auto-mode))
 #+end_src
 
 Text objects
@@ -1174,7 +1188,7 @@ Text objects
 (after-save . diff-hl-update)
 :config
 (global-diff-hl-mode)
-(global-diff-hl-show-hunk-mouse-mode))
+(global-diff-hl-show-hunk-mouse-mode)) 
 #+end_src
 
 * Org mode
@@ -1328,7 +1342,8 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 #+begin_src emacs-lisp
 	(use-package web-mode
 		:init
-		(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
+		(define-derived-mode vue-mode web-mode "Vue")
+		(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode)))
 #+end_src
 
 ** Terraform

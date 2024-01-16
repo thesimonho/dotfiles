@@ -911,18 +911,34 @@ beacon-blink-when-point-moves t)
 																			 )))))
 	)
 
+(defun vue-eglot-init-options ()
+	(let ((tsdk-path (expand-file-name
+										"lib"
+										(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+		`(:typescript (:tsdk ,tsdk-path
+												 :languageFeatures (:completion
+																						(:defaultTagNameCase "both"
+																																 :defaultAttrNameCase "kebabCase"
+																																 :getDocumentNameCasesRequest nil
+																																 :getDocumentSelectionRequest nil)
+																						:diagnostics
+																						(:getDocumentVersionRequest nil))
+												 :documentFeatures (:documentFormatting
+																						(:defaultPrintWidth 100
+																																:getDocumentPrintWidthRequest nil)
+																						:documentSymbol t
+																						:documentColor t)))))
+
+(with-eval-after-load 'eglot
+(add-to-list 'eglot-server-programs
+						 `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
+
+
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
+(add-hook 'vue-mode-hook 'eglot-ensure)
 
 (setq treesit-font-lock-level 4)
-
-(use-package treesit-auto
-	:custom
-	(treesit-auto-install 'prompt)
-	:config
-	(treesit-auto-add-to-auto-mode-alist 'all)
-	:hook
-	(prog-mode . treesit-auto-mode))
 
 (use-package evil-textobj-tree-sitter
 	:demand t
@@ -1064,7 +1080,8 @@ beacon-blink-when-point-moves t)
 
 (use-package web-mode
 	:init
-	(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
+	(define-derived-mode vue-mode web-mode "Vue")
+	(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode)))
 
 (use-package terraform-mode
 :custom (terraform-format-on-save t))
