@@ -46,6 +46,7 @@ end
 
 return {
 	show_update_window = true,
+	enable_wayland = false,
 	unicode_version = 14,
 	color_scheme_dirs = { "~/.config/wezterm/colors" },
 	color_scheme = "kanagawa",
@@ -69,7 +70,7 @@ return {
 		top = 0,
 		bottom = 0,
 	},
-	window_background_opacity = 0.9,
+	window_background_opacity = 0.95,
 	window_decorations = "TITLE|RESIZE",
 	use_resize_increments = true,
 	inactive_pane_hsb = {
