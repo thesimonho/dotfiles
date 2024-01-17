@@ -121,6 +121,7 @@
 	display-line-numbers-type 'relative
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
+	x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
 	garbage-collection-messages t
 	native-comp-async-report-warnings-errors nil)
 
@@ -132,6 +133,7 @@
 
 (setq-default tab-width 2)
 
+(set-clipboard-coding-system 'utf-8-unix)
 (savehist-mode 1)
 (save-place-mode 1)
 (blink-cursor-mode 0)

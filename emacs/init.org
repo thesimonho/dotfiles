@@ -72,10 +72,6 @@ Must be evaluated at least once.
     (eq system-type 'windows-nt))
 #+end_src
 
-
-
-
-
 * Profile Emacs startup 
 
 Adds a hook to profile Emacs startup time. Commented out as dashboard also provides startup time
@@ -217,6 +213,7 @@ Use elpaca for package management
 		display-line-numbers-type 'relative
 		set-charset-priority 'unicode
 		prefer-coding-system 'utf-8-unix
+		x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
 		garbage-collection-messages t
 		native-comp-async-report-warnings-errors nil)
 
@@ -227,7 +224,8 @@ Use elpaca for package management
 		(add-hook 'focus-out-hook 'garbage-collect)
 		
 	(setq-default tab-width 2)
-
+	
+	(set-clipboard-coding-system 'utf-8-unix)
 	(savehist-mode 1)
 	(save-place-mode 1)
 	(blink-cursor-mode 0)
