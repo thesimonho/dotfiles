@@ -755,8 +755,8 @@ beacon-blink-when-point-moves t)
 (defun dual-format-function ()
 	"Format code using lsp-format if eglot is active, otherwise use format-all."
 	(interactive)
-	(if (bound-and-true-p eglot--managed-mode)
-			(eglot-format)
+	(if (bound-and-true-p lsp-mode)
+			(lsp-format-buffer)
 		(format-all-region-or-buffer)))
 
 (use-package format-all
@@ -848,108 +848,108 @@ beacon-blink-when-point-moves t)
 				aw-minibuffer-flag t
 				aw-ignore-current t))
 
-;; (use-package lsp-mode
-;; 	:diminish
-;; 	:init
-;; 	(setq
-;; 	 lsp-modeline-diagnostics-enable nil
-;; 	 lsp-modeline-code-actions-mode t
-;; 	 lsp-modeline-code-actions-segments '(icon count)
-;; 	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
-;;	 lsp-log-io nil
-;; 	 lsp-enable-snippet nil
-;; 	 lsp-headerline-breadcrumb-mode t
-;; 	 lsp-headerline-breadcrumb-segments '(file symbols)
-;; 	 lsp-enable-symbol-highlighting t
-;; 	 lsp-warn-no-matched-clients nil
-;; 	 lsp-ui-peek-enable t
-;; 	 lsp-ui-sideline-enable t
-;; 	 lsp-ui-sideline-show-code-actions t
-;; 	 lsp-ui-doc-show-with-cursor nil
-;; 	 lsp-ui-doc-show-with-mouse nil
-;; 	 lsp-enable-suggest-server-download t)
-;; 	:hook ((prog-mode . lsp-deferred)
-;; 				 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
-;; 											 (lsp-enable-which-key-integration))))
-;; 	:commands (lsp lsp-deferred)
-;; 	:config
-;; 	(evil-define-key 'normal lsp-mode :definer 'minor-mode
-;; 		(kbd "<leader>l") lsp-command-map))
-
-;; (use-package lsp-ui
-;; 	:commands lsp-ui-mode)
-
-;; (use-package consult-lsp
-;; 	:after lsp-mode
-;;  :config
-;;	(evil-define-key 'normal 'global
-;; 	(kbd "<leader>ld")   '("diagnostics" . consult-lsp-diagnostics)
-;; 	(kbd "<leader>ls")   '("symbols" . consult-lsp-file-symbols)
-;;	)
-;;	)
-
-(use-package eglot
-	:elpaca nil
+(use-package lsp-mode
+	:diminish
 	:init
-	(setq eglot-events-buffer-config '(:size 0))
+	(setq
+	 lsp-modeline-diagnostics-enable nil
+	 lsp-modeline-code-actions-mode t
+	 lsp-modeline-code-actions-segments '(icon count)
+	 lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
+	 lsp-log-io nil
+	 lsp-enable-snippet nil
+	 lsp-headerline-breadcrumb-mode t
+	 lsp-headerline-breadcrumb-segments '(file symbols)
+	 lsp-enable-symbol-highlighting t
+	 lsp-warn-no-matched-clients nil
+	 lsp-ui-peek-enable t
+	 lsp-ui-sideline-enable t
+	 lsp-ui-sideline-show-code-actions t
+	 lsp-ui-doc-show-with-cursor nil
+	 lsp-ui-doc-show-with-mouse nil
+	 lsp-enable-suggest-server-download t)
+	:hook ((prog-mode . lsp-deferred)
+				 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
+											 (lsp-enable-which-key-integration))))
+	:commands (lsp lsp-deferred)
 	:config
-	(setq eglot-inlay-hints-mode nil)
-	(evil-define-key 'normal eglot-mode-map
-		(kbd "<leader>lh")  '("help" . eldoc)
-		(kbd "<leader>la")  '("code actions" . eglot-code-actions)
-		(kbd "<leader>lf")  '("format" . eglot-format)
-		(kbd "<leader>lR")  '("lsp rename" . eglot-rename)
-		(kbd "<leader>ld")  '("definitions" . xref-find-definitions)
-		(kbd "<leader>lD")  '("declarations" . xref-find-declaration)
-		(kbd "<leader>lr")  '("references" . xref-find-references)
-		(kbd "<leader>lt")  '("type definitions" . eglot-find-typeDefinition)
-		(kbd "<leader>li")  '("implementations" . eglot-find-implementation))
+	(evil-define-key 'normal lsp-mode :definer 'minor-mode
+		(kbd "<leader>l") lsp-command-map))
 
-	(setq-default eglot-workspace-configuration
-								'((:pylsp . (:plugins (
-																			 :ruff (:enabled t
-																											 :lineLength 88
-																											 :format {"I", "F", "E", "W", "D", "UP", "NP", "RUF"}
-																											 :ignore {"D210"}
-																											 :perFileIgnores { ["__init__.py"] = "CPY001" })
-																			 :pydocstyle (:enabled t
-																														 :convention "google")
-																			 :pylsp_mypy (:enabled t
-																														 :live_mode :json-false
-																														 :dmypy t
-																														 :exclude = ["**/tests/*"])
-																			 )))))
+(use-package lsp-ui
+	:commands lsp-ui-mode)
+
+(use-package consult-lsp
+	:after lsp-mode
+ :config
+	(evil-define-key 'normal 'global
+	(kbd "<leader>ld")   '("diagnostics" . consult-lsp-diagnostics)
+	(kbd "<leader>ls")   '("symbols" . consult-lsp-file-symbols)
+	)
 	)
 
-(defun vue-eglot-init-options ()
-	(let ((tsdk-path (expand-file-name
-										"lib"
-										(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
-		`(:typescript (:tsdk ,tsdk-path
-												 :languageFeatures (:completion
-																						(:defaultTagNameCase "both"
-																																 :defaultAttrNameCase "kebabCase"
-																																 :getDocumentNameCasesRequest nil
-																																 :getDocumentSelectionRequest nil)
-																						:diagnostics
-																						(:getDocumentVersionRequest nil))
-												 :documentFeatures (:documentFormatting
-																						(:defaultPrintWidth 100
-																																:getDocumentPrintWidthRequest nil)
-																						:documentSymbol t
-																						:documentColor t)))))
+;; (use-package eglot
+;; 	:elpaca nil
+;; 	:init
+;; 	(setq eglot-events-buffer-config '(:size 0))
+;; 	:config
+;; 	(setq eglot-inlay-hints-mode nil)
+;; 	(evil-define-key 'normal eglot-mode-map
+;; 		(kbd "<leader>lh")  '("help" . eldoc)
+;; 		(kbd "<leader>la")  '("code actions" . eglot-code-actions)
+;; 		(kbd "<leader>lf")  '("format" . eglot-format)
+;; 		(kbd "<leader>lR")  '("lsp rename" . eglot-rename)
+;; 		(kbd "<leader>ld")  '("definitions" . xref-find-definitions)
+;; 		(kbd "<leader>lD")  '("declarations" . xref-find-declaration)
+;; 		(kbd "<leader>lr")  '("references" . xref-find-references)
+;; 		(kbd "<leader>lt")  '("type definitions" . eglot-find-typeDefinition)
+;; 		(kbd "<leader>li")  '("implementations" . eglot-find-implementation))
 
-(with-eval-after-load 'eglot
-	(add-to-list 'eglot-server-programs
-							 '(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))
-							 '(terraform-mode . ("terraform-ls" "serve"))
-	))
+;; 	(setq-default eglot-workspace-configuration
+;; 								'((:pylsp . (:plugins (
+;; 																			 :ruff (:enabled t
+;; 																											 :lineLength 88
+;; 																											 :format {"I", "F", "E", "W", "D", "UP", "NP", "RUF"}
+;; 																											 :ignore {"D210"}
+;; 																											 :perFileIgnores { ["__init__.py"] = "CPY001" })
+;; 																			 :pydocstyle (:enabled t
+;; 																														 :convention "google")
+;; 																			 :pylsp_mypy (:enabled t
+;; 																														 :live_mode :json-false
+;; 																														 :dmypy t
+;; 																														 :exclude = ["**/tests/*"])
+;; 																			 )))))
+;; 	)
+
+;; (defun vue-eglot-init-options ()
+;; 	(let ((tsdk-path (expand-file-name
+;; 										"lib"
+;; 										(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+;; 		`(:typescript (:tsdk ,tsdk-path
+;; 												 :languageFeatures (:completion
+;; 																						(:defaultTagNameCase "both"
+;; 																																 :defaultAttrNameCase "kebabCase"
+;; 																																 :getDocumentNameCasesRequest nil
+;; 																																 :getDocumentSelectionRequest nil)
+;; 																						:diagnostics
+;; 																						(:getDocumentVersionRequest nil))
+;; 												 :documentFeatures (:documentFormatting
+;; 																						(:defaultPrintWidth 100
+;; 																																:getDocumentPrintWidthRequest nil)
+;; 																						:documentSymbol t
+;; 																						:documentColor t)))))
+
+;; (with-eval-after-load 'eglot
+;; 	(add-to-list 'eglot-server-programs
+;; 							 '(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))
+;; 							 '(terraform-mode . ("terraform-ls" "serve"))
+;; 	))
 
 
-(add-hook 'python-ts-mode-hook 'eglot-ensure)
-(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
-(add-hook 'vue-mode-hook 'eglot-ensure)
-(add-hook 'terraform-mode-hook 'eglot-ensure)
+;; (add-hook 'python-ts-mode-hook 'eglot-ensure)
+;; (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
+;; (add-hook 'vue-mode-hook 'eglot-ensure)
+;; (add-hook 'terraform-mode-hook 'eglot-ensure)
 
 (setq treesit-font-lock-level 4)
 
