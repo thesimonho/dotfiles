@@ -425,7 +425,6 @@ beacon-blink-when-point-moves t)
 		"G"  'mark-G
 		(kbd "<leader>SPC")     '("M-x" . execute-extended-command)
 		(kbd "<leader>`")       '("shell" . eshell)
-		(kbd "<leader>u")       '("universal" . universal-argument)
 		(kbd "<leader>y")				'("kill ring" . consult-yank-pop)
 
 		(kbd "<leader>hh") 			'("help" . helpful-at-point)
@@ -468,6 +467,7 @@ beacon-blink-when-point-moves t)
 		)
 
 	(evil-define-key nil 'global
+		(kbd "M-u")			 'universal-argument 
 		(kbd "<escape>") 'keyboard-escape-quit
 	)
 
@@ -786,6 +786,16 @@ beacon-blink-when-point-moves t)
 		(kbd "<M-down>")		'drag-stuff-down
 		(kbd "<M-left>")		'drag-stuff-left
 		(kbd "<M-right>")   'drag-stuff-right
+		)
+)
+
+(use-package vundo
+	:demand t
+	:init
+	(setq vundo-glyph-alist vundo-unicode-symbols)
+	:config
+	(evil-define-key 'normal 'global
+		(kbd "<leader>u")			'vundo
 		)
 )
 

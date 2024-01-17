@@ -526,7 +526,7 @@ Make editing easier
 		(evil-set-marker ?g (point))
 		(evil-goto-first-line)
 		)
-		
+
 	(defun mark-G ()
 		(interactive)
 		(evil-set-marker ?g (point))
@@ -552,7 +552,7 @@ Make editing easier
 				(delete-horizontal-space))
 		(t
 				(delete-forward-char 1))))
-				
+
 	(with-eval-after-load 'evil
 		(evil-define-key '(normal visual) 'global
 			"j" 'evil-next-visual-line
@@ -561,7 +561,6 @@ Make editing easier
 			"G"  'mark-G
 			(kbd "<leader>SPC")     '("M-x" . execute-extended-command)
 			(kbd "<leader>`")       '("shell" . eshell)
-			(kbd "<leader>u")       '("universal" . universal-argument)
 			(kbd "<leader>y")				'("kill ring" . consult-yank-pop)
 
 			(kbd "<leader>hh") 			'("help" . helpful-at-point)
@@ -604,9 +603,10 @@ Make editing easier
 			)
 
 		(evil-define-key nil 'global
+			(kbd "M-u")			 'universal-argument 
 			(kbd "<escape>") 'keyboard-escape-quit
 		)
-		 
+
 		(evil-define-key '(normal insert) 'global
 			(kbd "C-s") 'save-buffer
 			(kbd "C-v") 'yank
@@ -956,7 +956,7 @@ Format all command (useful for languages with no lsp support)
 	)
 #+end_src
 
-Hide/show minor mode
+Hide/show minor mode for folding
 
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'hs-minor-mode)
@@ -976,6 +976,20 @@ Move lines up/down
 			(kbd "<M-right>")   'drag-stuff-right
 			)
 	)
+#+end_src
+
+Undo tree
+
+#+begin_src emacs-lisp
+(use-package vundo
+	:demand t
+	:init
+	(setq vundo-glyph-alist vundo-unicode-symbols)
+	:config
+	(evil-define-key 'normal 'global
+		(kbd "<leader>u")			'vundo
+		)
+)
 #+end_src
 
 Aggressive indent
