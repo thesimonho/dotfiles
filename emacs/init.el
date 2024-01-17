@@ -799,10 +799,6 @@ beacon-blink-when-point-moves t)
 		)
 )
 
-(use-package aggressive-indent
-:config
-(global-aggressive-indent-mode 1))
-
 (use-package anzu
 :config
 	(global-anzu-mode +1)
@@ -1121,6 +1117,7 @@ beacon-blink-when-point-moves t)
 
 (add-to-list 'auto-mode-alist '("\\.tf\\(vars\\)?\\'" . terraform-mode))
 
+(add-to-list 'auto-mode-alist '("\\.ts\\(x\\)?\\'" . typescript-mode))
 (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
 
 (use-package graphql-ts-mode
