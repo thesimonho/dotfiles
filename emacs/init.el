@@ -930,13 +930,16 @@ beacon-blink-when-point-moves t)
 																						:documentColor t)))))
 
 (with-eval-after-load 'eglot
-(add-to-list 'eglot-server-programs
-						 `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
+	(add-to-list 'eglot-server-programs
+							 '(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))
+							 '(terraform-mode . ("terraform-ls" "serve"))
+	))
 
 
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
 (add-hook 'vue-mode-hook 'eglot-ensure)
+(add-hook 'terraform-mode-hook 'eglot-ensure)
 
 (setq treesit-font-lock-level 4)
 
@@ -1085,6 +1088,8 @@ beacon-blink-when-point-moves t)
 
 (use-package terraform-mode
 :custom (terraform-format-on-save t))
+
+(add-to-list 'auto-mode-alist '("\\.tf\\(vars\\)?\\'" . terraform-mode))
 
 (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
 

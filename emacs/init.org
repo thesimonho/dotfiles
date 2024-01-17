@@ -1146,13 +1146,16 @@ Setting the keymap prefix here is a bit delicate. It requires a hook because we'
 																							:documentColor t)))))
 
 	(with-eval-after-load 'eglot
-	(add-to-list 'eglot-server-programs
-							 `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
+		(add-to-list 'eglot-server-programs
+								 '(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))
+								 '(terraform-mode . ("terraform-ls" "serve"))
+		))
 
 
 	(add-hook 'python-ts-mode-hook 'eglot-ensure)
 	(add-hook 'typescript-ts-mode-hook 'eglot-ensure)
 	(add-hook 'vue-mode-hook 'eglot-ensure)
+	(add-hook 'terraform-mode-hook 'eglot-ensure)
 #+end_src
 
 * Treesitter
@@ -1351,6 +1354,8 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 #+begin_src emacs-lisp
 	(use-package terraform-mode
   :custom (terraform-format-on-save t))
+
+	(add-to-list 'auto-mode-alist '("\\.tf\\(vars\\)?\\'" . terraform-mode))
 #+end_src
 
 ** Typescript
