@@ -1,0 +1,51 @@
+add_newline = true
+format = """
+╭$directory$git_branch$git_status$conda
+╰$character
+"""
+
+[aws]
+symbol = " "
+format = '@ [$symbol(\($region\) $duration)]($style)'
+disabled = true
+
+[conda]
+symbol = " "
+format = 'via [$symbol$environment]($style) '
+ignore_base = false
+
+[directory]
+read_only = " 󰌾"
+format = '[$read_only]($read_only_style) [$path]($style) '
+truncate_to_repo = false
+
+[directory.substitutions]
+'~' = 'Home'
+'/mnt/Projects' = 'Projects'
+'/mnt/Games' = 'Games'
+
+[docker_context]
+symbol = " "
+
+[git_branch]
+symbol = " "
+format = 'on [$symbol$branch(:$remote_branch)]($style) '
+
+[line_break]
+disabled = false
+
+[nodejs]
+symbol = " "
+
+[package]
+symbol = "󰏗 "
+
+[python]
+symbol = " "
+
+[sudo]
+disabled = true
+
+[terraform]
+format = 'via [$symbol$workspace]($style) '
+disabled = true
