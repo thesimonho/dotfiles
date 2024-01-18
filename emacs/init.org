@@ -964,9 +964,10 @@ Format all command (useful for languages with no lsp support)
 			(format-all-region-or-buffer)))
 
 	(use-package format-all
-		:diminish
-		:commands format-all-mode
-		:hook (prog-mode . format-all-mode)
+		:demand t
+		:commands (format-all-mode format-all-region-or-buffer)
+		:init
+		(setq format-all-show-errors 'errors)
 		:config
 		(setq-default format-all-formatters '(("Typescript" (prettierd))
 																					("Javascript" (prettierd))
@@ -983,7 +984,7 @@ Format all command (useful for languages with no lsp support)
 Hide/show minor mode for folding
 
 #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'hs-minor-mode)
+	(add-hook 'prog-mode-hook #'hs-minor-mode)
 #+end_src
 
 Move lines up/down

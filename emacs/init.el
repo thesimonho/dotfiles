@@ -783,9 +783,10 @@ beacon-blink-when-point-moves t)
 		(format-all-region-or-buffer)))
 
 (use-package format-all
-	:diminish
-	:commands format-all-mode
-	:hook (prog-mode . format-all-mode)
+	:demand t
+	:commands (format-all-mode format-all-region-or-buffer)
+	:init
+	(setq format-all-show-errors 'errors)
 	:config
 	(setq-default format-all-formatters '(("Typescript" (prettierd))
 																				("Javascript" (prettierd))
