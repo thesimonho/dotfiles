@@ -643,11 +643,14 @@ beacon-blink-when-point-moves t)
 (use-package dirvish
 :init
 	(setq dirvish-side-auto-expand t
+					dirvish-side-width 30
+					dirvish-use-header-line 'global
+					dirvish-use-mode-line 'global
 					dired-mouse-drag-files t
 					mouse-drag-and-drop-region-cross-program t
 					delete-by-moving-to-trash t
 					dirvish-reuse-session t
-					dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"
+					dired-listing-switches "-l -v --almost-all --human-readable --group-directories-first --no-group"
 					dirvish-attributes '(nerd-icons subtree-state))
 :hook
 	(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
@@ -664,6 +667,12 @@ beacon-blink-when-point-moves t)
 			(kbd "p")					'dirvish-yank
 	)
 )
+
+(use-package dired-gitignore
+	:demand t
+	:after dirvish
+	:config
+	(dired-gitignore-global-mode t))
 
 (use-package centaur-tabs
 	:demand t
