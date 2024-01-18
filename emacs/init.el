@@ -142,6 +142,16 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+(use-package eat :elpaca (:host github
+													:repo "https://codeberg.org/akib/emacs-eat")
+	:demand t
+	:commands (eat eshell)
+)
+
+(add-hook 'eshell-load-hook #'eat-eshell-mode)
+(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
+(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+
 (setq user-full-name "Simon Ho"
 user-mail-address "simonho.ubc@gmail.com")
 
@@ -657,14 +667,16 @@ beacon-blink-when-point-moves t)
 :config
 	(dirvish-override-dired-mode)
 	(dirvish-side-follow-mode)
-	(evil-define-key nil dirvish-mode-map
+	(evil-define-key 'normal dirvish-mode-map
 			(kbd "<mouse-1>") 'dirvish-subtree-toggle
 			(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
 			(kbd "q")					'dirvish-quit
 			(kbd "TAB")				'dirvish-subtree-toggle
 			(kbd "<return>")  'dired-find-file
-			(kbd "h")					'dired-up-directory
+			(kbd "u")					'dired-up-directory
 			(kbd "p")					'dirvish-yank
+			(kbd "z")				  'dirvish-quicksort
+			(kbd "s")				  'dirvish-ls-switches-menu
 	)
 )
 
