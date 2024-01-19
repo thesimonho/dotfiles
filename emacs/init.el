@@ -377,6 +377,16 @@ beacon-blink-when-point-moves t)
 		(scroll-on-jump-advice-add goto-last-change)
 		(scroll-on-jump-advice-add goto-last-change-reverse)))
 
+	(use-package evil-escape
+		:demand t
+		:after evil
+		:init
+		(setq-default evil-escape-key-sequence "kj"
+									evil-escape-delay 0.1
+									evil-escape-unordered-key-sequence nil)
+		:config
+		(evil-escape-mode))
+
 	(use-package evil-commentary
 		:demand t
 		:after evil
