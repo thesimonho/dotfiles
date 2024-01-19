@@ -306,11 +306,11 @@ beacon-blink-when-point-moves t)
 	(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 	(setq dashboard-items '((recents  . 5)
 				(projects . 5)))
-	;; (setq dashboard-navigator-buttons
-	;; 	`((
-	;; 		(,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
-	;; 		(,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Update Packages" (lambda (&rest _) (elpaca-fetch-all)) error)
-	;; 		)))
+	(setq dashboard-navigator-buttons
+		`((
+			;; (,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
+			(,(nerd-icons-codicon "nf-cod-package") " Elpaca" "Elpaca Manager UI" (lambda (&rest _) (elpaca-manager)) error)
+			)))
 	:config
 	(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
 	(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
@@ -832,24 +832,24 @@ beacon-blink-when-point-moves t)
 	)
 )
 
-(use-package copilot :elpaca (:host github
-															:repo "zerolfx/copilot.el"
-															:branch "main"
-															:files ("dist" "*.el"))
-	:init
-	(setq copilot-indent-warning-suppress t)
-	:hook
-	(prog-mode . copilot-mode)
-	(org-mode . copilot-mode)
-	:config
-	(evil-define-key 'nil copilot-completion-map
-			(kbd "C-j")   'copilot-next-completion
-			(kbd "C-k")   'copilot-previous-completion
-			(kbd "C-l")   'copilot-accept-completion
-			(kbd "M-l")   'copilot-accept-completion-by-word
-			(kbd "ESC")   'copilot-clear-overlay
-			)
-)
+;;	(use-package copilot :elpaca (:host github
+;;																:repo "zerolfx/copilot.el"
+;;																:branch "main"
+;;																:files ("dist" "*.el"))
+;;		:init
+;;		(setq copilot-indent-warning-suppress t)
+;;		:hook
+;;		(prog-mode . copilot-mode)
+;;		(org-mode . copilot-mode)
+;;		:config
+;;		(evil-define-key 'insert copilot-completion-map
+;;				(kbd "C-j")   'copilot-next-completion
+;;				(kbd "C-k")   'copilot-previous-completion
+;;				(kbd "C-l")   'copilot-accept-completion
+;;				(kbd "M-l")   'copilot-accept-completion-by-word
+;;				(kbd "ESC")   'copilot-clear-overlay
+;;				)
+;;	)
 
 (use-package avy
 	:demand t
