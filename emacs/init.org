@@ -539,14 +539,14 @@ Make editing easier
 		:demand t
 		:after evil
 		:config
-		(evil-collection-init))
+		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca explain-pause-mode magit magit-section magit-todos vundo which-key)))
 #+end_src
 
 ** General binds
 
 #+begin_src emacs-lisp
 	(defun mark-gg ()
-		(interactive)
+		(interactive) 
 		(evil-set-marker ?g (point))
 		(evil-goto-first-line)
 		)

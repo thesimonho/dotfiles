@@ -405,10 +405,10 @@ beacon-blink-when-point-moves t)
 		:demand t
 		:after evil
 		:config
-		(evil-collection-init))
+		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca explain-pause-mode magit magit-section magit-todos vundo which-key)))
 
 (defun mark-gg ()
-	(interactive)
+	(interactive) 
 	(evil-set-marker ?g (point))
 	(evil-goto-first-line)
 	)
