@@ -25,6 +25,7 @@
   - [[#which-key][Which key]]
   - [[#helpful][Helpful]]
 - [[#project-management][Project management]]
+- [[#git][Git]]
 - [[#completion][Completion]]
   - [[#corfu][Corfu]]
   - [[#vertico-stack][Vertico stack]]
@@ -714,6 +715,16 @@ Projectile + perspective
   (use-package persp-projectile
     :demand t
     :after (projectile perspective))
+#+end_src
+
+* Git
+
+#+begin_src emacs-lisp
+(use-package magit
+	:commands magit
+	:init
+	(evil-define-key 'normal 'global
+		(kbd "<leader>g")  '("magit" . magit)))
 #+end_src
 
 * Completion

@@ -564,6 +564,12 @@ beacon-blink-when-point-moves t)
   :demand t
   :after (projectile perspective))
 
+(use-package magit
+	:commands magit
+	:init
+	(evil-define-key 'normal 'global
+		(kbd "<leader>g")  '("magit" . magit)))
+
 (use-package corfu
   :custom
   (corfu-cycle t)
