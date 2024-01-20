@@ -385,6 +385,12 @@
   (diff-hl-delete																(:foreground autumnRed :background winterRed))
   (diff-hl-insert																(:foreground autumnGreen :background winterGreen))
 
+	(magit-branch-local														(:foreground springGreen :bold t))
+	(magit-branch-current													(:foreground springGreen :box 1 :bold t))
+	(magit-branch-remote													(:foreground oniViolet))
+	(magit-branch-remote-head											(:foreground oniViolet :box 1))
+	(magit-log-author													    (:foreground dragonOrange))
+
 	;; copilot
 	(copilot-overlay-face													(:foreground sumiInk-4))
 

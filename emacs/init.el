@@ -240,6 +240,7 @@ beacon-blink-when-point-moves t)
 (use-package yascroll
 :demand t
 :custom
+(yascroll:disabled-modes '(magit-log-mode))
 (yascroll:delay-to-hide nil)
 (yascroll:scroll-bar 'right-fringe)
 :config
@@ -568,7 +569,9 @@ beacon-blink-when-point-moves t)
 	:commands magit
 	:init
 	(evil-define-key 'normal 'global
-		(kbd "<leader>g")  '("magit" . magit)))
+		(kbd "<leader>g")  '("magit status" . magit)
+		(kbd "<leader>G")  '("magit log" . magit-log-all)
+		))
 
 (use-package corfu
   :custom
