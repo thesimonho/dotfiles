@@ -887,6 +887,7 @@ beacon-blink-when-point-moves t)
 				aw-minibuffer-flag t
 				aw-ignore-current t))
 
+(setq lsp-keymap-prefix "SPC l") ;; set before package load
 (use-package lsp-mode
 	:diminish
 	:init
@@ -928,13 +929,8 @@ beacon-blink-when-point-moves t)
 				lsp-pylsp-plugins-yapf-enabled nil
 				)
 	:hook ((prog-mode . lsp-deferred)
-				 (lsp-mode . (lambda () (setq lsp-keymap-prefix "SPC l")
-																	 (lsp-enable-which-key-integration))))
-	:commands (lsp lsp-deferred)
-	:config
-	(evil-define-key 'normal lsp-mode :definer 'minor-mode
-		(kbd "<leader>l") lsp-command-map)
-		)
+				 (lsp-mode . (lambda () (lsp-enable-which-key-integration))))
+	:commands (lsp lsp-deferred))
 
 (use-package lsp-ui
 	:commands lsp-ui-mode
