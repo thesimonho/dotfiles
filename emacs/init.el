@@ -1027,6 +1027,8 @@ beacon-blink-when-point-moves t)
 :demand t 
 :hook
 (after-save . diff-hl-update)
+(magit-pre-refresh . diff-hl-magit-pre-refresh)
+(magit-post-refresh . diff-hl-magit-post-refresh)
 :config
 (global-diff-hl-mode)
 (global-diff-hl-show-hunk-mouse-mode))
