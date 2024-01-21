@@ -251,30 +251,17 @@
 
   ;; show-paren
   (show-paren-match                              (:background waveAqua1 :foreground sumiInk-0 :bold t))
-  (show-paren-match-expression	                  (:background waveAqua1 :foreground sumiInk-0 :bold t))
+  (show-paren-match-expression	                 (:background waveAqua1 :foreground sumiInk-0 :bold t))
   (show-paren-mismatch                           (:background dragonRed :foreground oldWhite))
   (tooltip                                       (:foreground sumiInk-0 :background carpYellow :bold t))
 
-  ;; flymake
-  (flymake-error								                  (:foreground samuraiRed))
-  (flymake-warning												        (:foreground roninYellow))
-  (flymake-note																	(:foreground dragonBlue))
+	;; indents
+	(indent-guide-face														 (:foreground dragonGray3))	
 
-  ;; flycheck
-  (flycheck-posframe-background-face             (:background sumiInk-0))
-  (flycheck-posframe-face                        (:background sumiInk-0))
-  (flycheck-posframe-info-face                   (:background sumiInk-0 :foreground autumnGreen))
-  (flycheck-posframe-warning-face                (:background sumiInk-0 :foreground lightBlue))
-  (flycheck-posframe-error-face                  (:background sumiInk-0 :foreground samuraiRed))
-  (flycheck-fringe-warning                       (:foreground roninYellow))
-  (flycheck-fringe-error                         (:foreground samuraiRed))
-  (flycheck-fringe-info                          (:foreground dragonBlue))
-  (flycheck-error-list-warning                   (:foreground roninYellow :bold t))
-  (flycheck-error-list-error                     (:foreground samuraiRed :bold t))
-  (flycheck-error-list-info                      (:foreground dragonBlue :bold t))
-  (flycheck-inline-error                         (:foreground samuraiRed :background winterRed :italic t :bold t :height 138))
-  (flycheck-inline-info                          (:foreground dragonBlue :background winterBlue :italic t  :bold t :height 138))
-  (flycheck-inline-warning                       (:foreground winterYellow :background carpYellow :italic t :bold t :height 138))
+  ;; flymake
+  (flymake-error								                 (:foreground samuraiRed))
+  (flymake-warning												       (:foreground roninYellow))
+  (flymake-note																	 (:foreground dragonBlue))
 
   ;; lsp and lsp-ui
   (lsp-headerline-breadcrumb-path-error-face     (:underline (:color dragonRed :style 'wave)))
@@ -553,6 +540,22 @@
   ;; (tree-sitter-hl-face:case-pattern              (:foreground waveRed))
   ;; (tree-sitter-hl-face:variable.synthesized      (:foreground waveRed))
   ;; (tree-sitter-hl-face:keyword.compiler          (:foreground peachRed :bold t :italic t))
+
+	  ;; flycheck
+  ;; (flycheck-posframe-background-face             (:background sumiInk-0))
+  ;; (flycheck-posframe-face                        (:background sumiInk-0))
+  ;; (flycheck-posframe-info-face                   (:background sumiInk-0 :foreground autumnGreen))
+  ;; (flycheck-posframe-warning-face                (:background sumiInk-0 :foreground lightBlue))
+  ;; (flycheck-posframe-error-face                  (:background sumiInk-0 :foreground samuraiRed))
+  ;; (flycheck-fringe-warning                       (:foreground roninYellow))
+  ;; (flycheck-fringe-error                         (:foreground samuraiRed))
+  ;; (flycheck-fringe-info                          (:foreground dragonBlue))
+  ;; (flycheck-error-list-warning                   (:foreground roninYellow :bold t))
+  ;; (flycheck-error-list-error                     (:foreground samuraiRed :bold t))
+  ;; (flycheck-error-list-info                      (:foreground dragonBlue :bold t))
+  ;; (flycheck-inline-error                         (:foreground samuraiRed :background winterRed :italic t :bold t :height 138))
+  ;; (flycheck-inline-info                          (:foreground dragonBlue :background winterBlue :italic t  :bold t :height 138))
+  ;; (flycheck-inline-warning                       (:foreground winterYellow :background carpYellow :italic t :bold t :height 138))
 	))
 
 ;;;###autoload
