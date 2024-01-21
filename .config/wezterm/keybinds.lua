@@ -3,6 +3,7 @@ local act = wezterm.action
 local M = {}
 
 M.basic_binds = {
+	{ key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
 	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 	{ key = "p", mods = "CTRL|SHIFT", action = act.ActivateCommandPalette },
 	{ key = "n", mods = "LEADER", action = act.SpawnWindow },
