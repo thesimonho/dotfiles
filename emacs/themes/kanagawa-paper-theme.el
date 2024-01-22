@@ -378,6 +378,11 @@
 	(magit-branch-remote-head											(:foreground oniViolet :box 1))
 	(magit-log-author													    (:foreground dragonOrange))
 
+	;; markdown
+	(markdown-list-face														(:foreground dragonViolet))
+	(markdown-header-delimiter-face								(:foreground dragonViolet))
+	(markdown-markup-face													(:foreground oldWhite))
+
 	;; copilot
 	(copilot-overlay-face													(:foreground sumiInk-4))
 
