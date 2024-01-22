@@ -1,10 +1,11 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 
---wezterm.on("gui-startup", function(cmd)
---	local _, _, window = wezterm.mux.spawn_window(cmd or {})
---	window:gui_window():maximize()
---end)
+wezterm.on("gui-startup", function(cmd)
+	local _, _, window = wezterm.mux.spawn_window(cmd or {})
+	-- window:gui_window():maximize()
+	window:gui_window():set_inner_size(850, 500)
+end)
 
 local is_windows = function()
 	return wezterm.target_triple:find("windows") ~= nil
