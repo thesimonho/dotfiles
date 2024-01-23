@@ -222,6 +222,7 @@ Use elpaca for package management
 		(add-hook 'focus-out-hook 'garbage-collect)
 		
 	(setq-default tab-width 2)
+	(set-frame-parameter nil 'alpha-background 92)
 	
 	(set-clipboard-coding-system 'utf-8-unix)
 	(savehist-mode 1)
@@ -416,7 +417,7 @@ Make editing easier
 		:init
 		(setq
 		 dashboard-banner-logo-title nil
-		 dashboard-startup-banner (concat (expand-file-name "images/" user-emacs-directory) "zzz_small.png")
+		 dashboard-startup-banner (concat (expand-file-name "images/" user-emacs-directory) "zzz_small.webp")
 		 dashboard-projects-backend 'projectile
 		 dashboard-center-content t
 		 dashboard-display-icons-p t
