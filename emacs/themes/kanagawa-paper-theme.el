@@ -143,12 +143,12 @@
   (font-lock-variable-use-face                   (:foreground fujiWhite))
   (font-lock-property-use-face                   (:foreground dragonOrange))
   (font-lock-negation-char-face                  (:foreground dragonRed))
-  (font-lock-operator-face												(:foreground dragonGray2))
+  (font-lock-operator-face											 (:foreground dragonGray2))
   (font-lock-comment-face                        (:foreground dragonAsh :italic t))
   (font-lock-comment-delimiter-face              (:foreground dragonAsh :italic t))
   (font-lock-doc-face                            (:foreground comet))
   (font-lock-doc-markup-face                     (:foreground comet))
-  (font-lock-preprocessor-face	                  (:foreground boatYellow2))
+  (font-lock-preprocessor-face	                 (:foreground boatYellow2))
   (elisp-shorthand-font-lock-face                (:foreground fujiWhite))
 
   (info-xref                                     (:foreground carpYellow))
@@ -175,7 +175,7 @@
   (doom-modeline-evil-replace-state              (:foreground autumnRed))
   (doom-modeline-evil-operator-state             (:foreground autumnRed))
 
-  (persp-selected-face				                    (:bold t :foreground dragonBlue))
+  (persp-selected-face				                   (:bold t :foreground dragonBlue))
   (doom-modeline-project-dir                     (:foreground waveAqua2))
   (doom-modeline-buffer-path                     (:foreground waveAqua2))
   (doom-modeline-buffer-file                     (:bold t :foreground dragonBlue))
@@ -205,7 +205,7 @@
   (org-meta-line                                 (:background winterGreen :foreground springGreen))
   (org-block                                     (:background sumiInk-0 :foreground fujiWhite))
   (org-block-begin-line                          (:background winterBlue :foreground springBlue))
-  (org-block-end-line	                         (:background winterRed :foreground peachRed))
+  (org-block-end-line														 (:background winterRed :foreground peachRed))
   (org-headline-done                             (:foreground dragonBlue :strike-through t))
   (org-todo                                      (:foreground surimiOrange :bold t))
   (org-headline-todo                             (:foreground sumiInk-2))
@@ -231,7 +231,7 @@
   (which-key-command-description-face            (:foreground crystalBlue))
   (which-key-local-map-description-face          (:foreground carpYellow))
   (which-key-posframe                            (:background waveBlue-1))
-  (which-key-posframe-border											(:background waveBlue-1))
+  (which-key-posframe-border										 (:background waveBlue-1))
 
   ;; rainbow delimiters
   (rainbow-delimiters-mismatched-face            (:foreground peachRed))
@@ -262,6 +262,8 @@
   (flymake-error								                 (:foreground samuraiRed))
   (flymake-warning												       (:foreground roninYellow))
   (flymake-note																	 (:foreground dragonBlue))
+  (flymake-posframe-background-face							 (:background dragonViolet))
+  (flymake-posframe-foreground-face							 (:foreground dragonBlack4))
 
   ;; lsp and lsp-ui
   (lsp-headerline-breadcrumb-path-error-face     (:underline (:color dragonRed :style 'wave)))
