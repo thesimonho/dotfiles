@@ -3,7 +3,18 @@ local act = wezterm.action
 local M = {}
 
 M.basic_binds = {
-	{ key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
+	{
+    key = 'c', mods = 'CTRL',
+    action = wezterm.action_callback(function(window, pane)
+        selection_text = window:get_selection_text_for_pane(pane)
+        is_selection_active = string.len(selection_text) ~= 0
+        if is_selection_active then
+            window:perform_action(act.CopyTo('Clipboard'), pane)
+        else
+            window:perform_action(act.SendKey{ key='c', mods='CTRL' }, pane)
+        end
+    end),
+	},
 	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 	{ key = "p", mods = "CTRL|SHIFT", action = act.ActivateCommandPalette },
 	{ key = "n", mods = "LEADER", action = act.SpawnWindow },
