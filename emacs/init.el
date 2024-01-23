@@ -89,12 +89,6 @@
 ;; Maximize the Emacs frame at startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
-;; Make sure conda python is found before emacs python
-(setq python-path (if (system-is-mswindows)
-											"~/anaconda3"
-											"~/anaconda3/bin"))
-(setq exec-path (cons python-path exec-path))
-
 (setq gc-cons-threshold 100000000
 	read-process-output-max (* 1024 1024)
 	warning-minimum-level :error
@@ -118,7 +112,7 @@
 	use-dialog-box nil
 	confirm-kill-processes nil
 	history-length 25
-	kill-ring-max 50
+	kill-ring-max 20
 	display-line-numbers-type 'relative
 	set-charset-priority 'unicode
 	prefer-coding-system 'utf-8-unix
@@ -163,7 +157,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	:config
 	(load-theme 'kanagawa-paper t))
 
-(set-frame-font "FiraCode Nerd Font-11")
+(set-frame-font "FiraCode Nerd Font-11" nil t)
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
@@ -585,14 +579,15 @@ beacon-blink-when-point-moves t)
   (corfu-auto-delay 0.0)
   (corfu-quit-at-boundary 'separator)   
   (corfu-quit-no-match t)
-  (corfu-echo-documentation 0.0)
+  (corfu-echo-delay 0.0)
   (corfu-preselect 'directory)      
   (corfu-on-exact-match 'quit)    
+  (corfu-popupinfo-delay '(2.0 . 1.0))
   :init
   (global-corfu-mode)
-  (corfu-history-mode)
-  (setq corfu-popupinfo-delay 0.2)
   (corfu-popupinfo-mode)
+  (corfu-history-mode 1)
+	(add-to-list 'savehist-additional-variables 'corfu-history)
 
 	(evil-define-key 'nil corfu-map
    "TAB" 'corfu-next
@@ -600,6 +595,12 @@ beacon-blink-when-point-moves t)
    "S-TAB" 'corfu-previous
    [backtab] 'corfu-previous)
 )
+
+(use-package nerd-icons-corfu
+	:demand t
+	:after corfu
+	:config
+	(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package vertico
 	:init
@@ -677,15 +678,15 @@ beacon-blink-when-point-moves t)
 (use-package dirvish
 :init
 	(setq dirvish-side-auto-expand t
-					dirvish-side-width 30
-					dirvish-use-header-line 'global
-					dirvish-use-mode-line 'global
-					dired-mouse-drag-files t
-					mouse-drag-and-drop-region-cross-program t
-					delete-by-moving-to-trash t
-					dirvish-reuse-session t
-					dired-listing-switches "-l -v --almost-all --human-readable --group-directories-first --no-group"
-					dirvish-attributes '(nerd-icons subtree-state))
+				dirvish-side-width 30
+				dirvish-use-header-line 'global
+				dirvish-use-mode-line 'global
+				dired-mouse-drag-files t
+				mouse-drag-and-drop-region-cross-program t
+				delete-by-moving-to-trash t
+				dirvish-reuse-session t
+				dired-listing-switches "-l -v --almost-all --human-readable --group-directories-first --no-group"
+				dirvish-attributes '(nerd-icons subtree-state))
 :hook
 	(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
 :config
@@ -787,6 +788,7 @@ beacon-blink-when-point-moves t)
 	(string-prefix-p "*lsp" name)
 	(string-prefix-p "*company" name)
 	(string-prefix-p "*Flycheck" name)
+	(string-prefix-p "*Flymake" name)
 	(string-prefix-p "*tramp" name)
 	(string-prefix-p " *Mini" name)
 	(string-prefix-p "*help" name)
@@ -892,8 +894,7 @@ beacon-blink-when-point-moves t)
 (use-package lsp-mode
 	:diminish
 	:init
-	(setq
-				lsp-disabled-clients '(tfls)
+	(setq lsp-disabled-clients '(tfls)
 				lsp-enable-links t
 				lsp-enable-suggest-server-download t
 				lsp-enable-snippet nil
@@ -1054,8 +1055,19 @@ beacon-blink-when-point-moves t)
 (use-package flymake-posframe :elpaca (:host github
 																			 :repo "Ladicle/flymake-posframe")
 		:hook (flymake-mode . flymake-posframe-mode)
-		:config
-		(setq flymake-posframe-error-prefix "!!")
+		;; :init
+		;; (defun corfu-popup-active-p ()
+		;; 		(bound-and-true-p corfu--overlay))
+
+		;; (defun my-flymake-posframe-hide-predicate ()
+		;; 		(or (corfu-popup-active-p)
+		;; 				(minibufferp)))
+
+		;; (setq flymake-posframe-hide-posframe-hooks
+		;;     '(pre-command-hook
+		;;       post-command-hook
+		;;       focus-out-hook
+		;;       my-flymake-posframe-hide-predicate))
 	)
 
 (setq treesit-font-lock-level 4)
@@ -1157,6 +1169,13 @@ beacon-blink-when-point-moves t)
 			(kbd "<localleader>s") '("start python" . run-python)
 			(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
 )
+
+;; Make sure conda python is found before emacs python
+(setq python-path (if (system-is-mswindows)
+											"~/anaconda3"
+											"~/anaconda3/bin"))
+(setq exec-path (cons python-path exec-path))
+
 (setq python-shell-interpreter (if (system-is-mswindows)
 											"python.exe"
 											"python3"))
