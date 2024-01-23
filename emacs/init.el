@@ -798,6 +798,13 @@ beacon-blink-when-point-moves t)
 	(not (file-name-extension name)))
 )))
 
+;; (defun dual-format-function ()
+;; 	"Format code using lsp-format if lsp-mode is active, otherwise use format-all."
+;; 	(interactive)
+;; 	(if (bound-and-true-p lsp-mode)
+;; 			(lsp-format-buffer)
+;; 		(format-all-region-or-buffer)))
+
 (defun dual-format-function ()
 	"Format code using lsp-format if eglot is active, otherwise use format-all."
 	(interactive)
@@ -817,9 +824,9 @@ beacon-blink-when-point-moves t)
 																				("GraphQL" (prettierd))
 																				("Python" (ruff))
 																				))
-	;; (evil-define-key 'normal 'global
-	;; 	 (kbd "<leader>cf")    '("format all" . dual-format-function)
-	;; )
+	(evil-define-key 'normal 'global
+		 (kbd "<leader>cf")    '("format all" . dual-format-function)
+	)
 )
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
@@ -881,7 +888,6 @@ beacon-blink-when-point-moves t)
 				aw-minibuffer-flag t
 				aw-ignore-current t))
 
-;; (setq lsp-keymap-prefix "SPC l") ;; set before package load
 ;; (use-package lsp-mode
 ;; 	:diminish
 ;; 	:init
@@ -942,7 +948,8 @@ beacon-blink-when-point-moves t)
 	:init
 	(setq eglot-events-buffer-config '(:size 0))
 	:config
-	(setq eglot-inlay-hints-mode nil)
+	(setq eglot-inlay-hints-mode nil
+				eglot-connect-timeout 120)
 	(evil-define-key 'normal eglot-mode-map
 		(kbd "<leader>lh")  '("help" . eldoc)
 		(kbd "<leader>la")  '("code actions" . eglot-code-actions)
@@ -970,13 +977,15 @@ beacon-blink-when-point-moves t)
 																			 )))))
 	)
 
+;; https://github.com/joaotavora/eglot/discussions/1184
 (defun vue-eglot-init-options ()
 	(let ((tsdk-path (expand-file-name
 										"lib"
-										(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+										(shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\"")
+										)))
 		`(:typescript (:tsdk ,tsdk-path
 												 :languageFeatures (:completion
-																						(:defaultTagNameCase "both"
+																					 (:defaultTagNameCase "both"
 																																 :defaultAttrNameCase "kebabCase"
 																																 :getDocumentNameCasesRequest nil
 																																 :getDocumentSelectionRequest nil)
@@ -989,16 +998,22 @@ beacon-blink-when-point-moves t)
 																						:documentColor t)))))
 
 (with-eval-after-load 'eglot
+	;; https://www.npmjs.com/package/@vue/language-server
 	(add-to-list 'eglot-server-programs
-							 '(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))
-							 '(terraform-mode . ("terraform-ls" "serve"))
-	))
-
+							 '(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
+	;; https://github.com/hashicorp/terraform-ls
+	(add-to-list 'eglot-server-programs
+							 '(terraform-mode . ("terraform-ls" "serve")))
+	;; https://github.com/graphql/graphiql/tree/main/packages/graphql-language-service-cli
+	(add-to-list 'eglot-server-programs
+							 '(graphql-ts-mode . ("graphql-lsp" "server" "--method=stream")))
+	)
 
 (add-hook 'python-ts-mode-hook 'eglot-ensure)
 (add-hook 'typescript-ts-mode-hook 'eglot-ensure)
 (add-hook 'vue-mode-hook 'eglot-ensure)
 (add-hook 'terraform-mode-hook 'eglot-ensure)
+(add-hook 'graphql-ts-mode-hook 'eglot-ensure)
 
 (setq treesit-font-lock-level 4)
 
