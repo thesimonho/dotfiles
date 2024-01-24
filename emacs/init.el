@@ -591,10 +591,10 @@ beacon-blink-when-point-moves t)
 	(add-to-list 'savehist-additional-variables 'corfu-history)
 
 	(evil-define-key 'nil corfu-map
-   "TAB" 'corfu-next
-   [tab] 'corfu-next
-   "S-TAB" 'corfu-previous
-   [backtab] 'corfu-previous)
+   (kbd "TAB")		 'corfu-next
+   (kbd [tab])		 'corfu-next
+   (kbd "S-TAB")	 'corfu-previous
+   (kbd [backtab]) 'corfu-previous)
 )
 
 (use-package nerd-icons-corfu
