@@ -694,8 +694,8 @@ beacon-blink-when-point-moves t)
 	(dirvish-override-dired-mode)
 	(dirvish-side-follow-mode)
 	(evil-define-key 'normal dirvish-mode-map
-			(kbd "<mouse-1>") 'dirvish-subtree-toggle
-			(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
+			(kbd "<mouse-1>") 'dirvish-subtree-toggle-or-open
+			(kbd "<mouse-3>") 'dired-mouse-find-file
 			(kbd "q")					'dirvish-quit
 			(kbd "TAB")				'dirvish-subtree-toggle
 			(kbd "<return>")  'dired-find-file
