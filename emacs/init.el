@@ -1055,20 +1055,29 @@ beacon-blink-when-point-moves t)
 (use-package posframe)
 (use-package flymake-posframe :elpaca (:host github
 																			 :repo "Ladicle/flymake-posframe")
-		:hook (flymake-mode . flymake-posframe-mode)
-		;; :init
-		;; (defun corfu-popup-active-p ()
-		;; 		(bound-and-true-p corfu--overlay))
+	:hook (flymake-mode . flymake-posframe-mode)
+	:config
+	(defun flymake-posframe-p ()
+		"Check if the flymake-posframe is visible."
+		(ignore-errors (frame-visible-p (buffer-local-value 'posframe--frame (get-buffer flymake-posframe-buffer))))
+		)
 
-		;; (defun my-flymake-posframe-hide-predicate ()
-		;; 		(or (corfu-popup-active-p)
-		;; 				(minibufferp)))
+	(with-eval-after-load 'dimmer
+			(add-to-list 'dimmer-prevent-dimming-predicates #'flymake-posframe-p))
 
-		;; (setq flymake-posframe-hide-posframe-hooks
-		;;     '(pre-command-hook
-		;;       post-command-hook
-		;;       focus-out-hook
-		;;       my-flymake-posframe-hide-predicate))
+	;; :init
+	;; (defun corfu-popup-active-p ()
+	;; 		(bound-and-true-p corfu--overlay))
+
+	;; (defun my-flymake-posframe-hide-predicate ()
+	;; 		(or (corfu-popup-active-p)
+	;; 				(minibufferp)))
+
+	;; (setq flymake-posframe-hide-posframe-hooks
+	;;     '(pre-command-hook
+	;;       post-command-hook
+	;;       focus-out-hook
+	;;       my-flymake-posframe-hide-predicate))
 	)
 
 (setq treesit-font-lock-level 4)

@@ -377,7 +377,7 @@ Make editing easier
 		(setq dimmer-fraction 0.5
 					dimmer-adjustment-mode :foreground
 					dimmer-watch-frame-focus-events nil)
-
+ 
 		(defun advise-dimmer-config-change-handler ()
 				"Advise to only force process if no predicate is truthy."
 				(let ((ignore (cl-some (lambda (f) (and (fboundp f) (funcall f)))
@@ -385,7 +385,7 @@ Make editing easier
 					(unless ignore
 						(when (fboundp 'dimmer-process-all)
 							(dimmer-process-all t)))))
-
+	
 		(defun corfu-frame-p ()
 			"Check if the buffer is a corfu frame buffer."
 			(string-match-p "\\` \\*corfu" (buffer-name)))
@@ -1279,20 +1279,29 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 	(use-package posframe)
 	(use-package flymake-posframe :elpaca (:host github
 																				 :repo "Ladicle/flymake-posframe")
-			:hook (flymake-mode . flymake-posframe-mode)
-			;; :init
-			;; (defun corfu-popup-active-p ()
-			;; 		(bound-and-true-p corfu--overlay))
-		
-			;; (defun my-flymake-posframe-hide-predicate ()
-			;; 		(or (corfu-popup-active-p)
-			;; 				(minibufferp)))
+		:hook (flymake-mode . flymake-posframe-mode)
+		:config
+		(defun flymake-posframe-p ()
+			"Check if the flymake-posframe is visible."
+			(ignore-errors (frame-visible-p (buffer-local-value 'posframe--frame (get-buffer flymake-posframe-buffer))))
+			)
 
-			;; (setq flymake-posframe-hide-posframe-hooks
-			;;     '(pre-command-hook
-			;;       post-command-hook
-			;;       focus-out-hook
-			;;       my-flymake-posframe-hide-predicate))
+		(with-eval-after-load 'dimmer
+				(add-to-list 'dimmer-prevent-dimming-predicates #'flymake-posframe-p))
+
+		;; :init
+		;; (defun corfu-popup-active-p ()
+		;; 		(bound-and-true-p corfu--overlay))
+
+		;; (defun my-flymake-posframe-hide-predicate ()
+		;; 		(or (corfu-popup-active-p)
+		;; 				(minibufferp)))
+
+		;; (setq flymake-posframe-hide-posframe-hooks
+		;;     '(pre-command-hook
+		;;       post-command-hook
+		;;       focus-out-hook
+		;;       my-flymake-posframe-hide-predicate))
 		)
 #+end_src
 
