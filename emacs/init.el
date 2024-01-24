@@ -826,6 +826,7 @@ beacon-blink-when-point-moves t)
 																				("Javascript" (prettierd))
 																				("Vue" (prettierd))
 																				("GraphQL" (prettierd))
+																				("Terraform" (terraform-fmt))
 																				("Python" (ruff))
 																				))
 	(evil-define-key 'normal 'global
@@ -1099,7 +1100,7 @@ beacon-blink-when-point-moves t)
 (use-package diff-hl
 :demand t 
 :hook
-(after-save . diff-hl-update)
+;; (after-save . diff-hl-update) ;; this might be slowing down saves
 (magit-pre-refresh . diff-hl-magit-pre-refresh)
 (magit-post-refresh . diff-hl-magit-post-refresh)
 :config
@@ -1235,7 +1236,7 @@ beacon-blink-when-point-moves t)
 	(add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode)))
 
 (use-package terraform-mode
-:custom (terraform-format-on-save t))
+:custom (terraform-format-on-save nil))
 
 (add-to-list 'auto-mode-alist '("\\.tf\\(vars\\)?\\'" . terraform-mode))
 
