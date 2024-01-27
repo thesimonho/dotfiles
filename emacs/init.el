@@ -892,7 +892,8 @@ beacon-blink-when-point-moves t)
 (use-package lsp-mode
 	:diminish
 	:init
-	(setq lsp-disabled-clients '(tfls)
+	(setq lsp-completion-provider :none  ;; use corfu instead
+				lsp-disabled-clients '(tfls)
 				lsp-enable-links t
 				lsp-enable-suggest-server-download t
 				lsp-enable-snippet nil
@@ -935,7 +936,16 @@ beacon-blink-when-point-moves t)
 				lsp-terraform-ls-prefill-required-fields t
 				lsp-terraform-ls-validate-on-save t
 				)
+
+	(defun my/orderless-dispatch-flex-first (_pattern index _total)
+			(and (eq index 0) 'orderless-flex))
+
+	(defun my/lsp-mode-setup-completion ()
+			(setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+					'(orderless))
+			(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local))
 	:hook ((prog-mode . lsp-deferred)
+				 (lsp-completion-mode . my/lsp-mode-setup-completion)
 				 (lsp-mode . lsp-enable-which-key-integration))
 	:commands (lsp lsp-deferred)
 	:config
@@ -1071,10 +1081,10 @@ beacon-blink-when-point-moves t)
 	;; 				(minibufferp)))
 
 	;; (setq flymake-posframe-hide-posframe-hooks
-	;;     '(pre-command-hook
-	;;       post-command-hook
-	;;       focus-out-hook
-	;;       my-flymake-posframe-hide-predicate))
+	;; 		'(pre-command-hook
+	;; 			post-command-hook
+	;; 			focus-out-hook
+	;; 			my-flymake-posframe-hide-predicate))
 	)
 
 (setq treesit-font-lock-level 4)
