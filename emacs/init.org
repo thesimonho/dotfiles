@@ -509,18 +509,6 @@ Make editing easier
 ** General binds
 
 #+begin_src emacs-lisp
-	(defun mark-gg ()
-		(interactive) 
-		(evil-set-marker ?g (point))
-		(evil-goto-first-line)
-		)
-
-	(defun mark-G ()
-		(interactive)
-		(evil-set-marker ?g (point))
-		(end-of-buffer)
-		)
-
 	(defun backward-kill-spaces-or-char-or-word ()
 		(interactive)
 		(cond
@@ -542,6 +530,18 @@ Make editing easier
 				(delete-forward-char 1))))
 
 	(with-eval-after-load 'evil
+		(evil-define-motion mark-gg ()
+				"Set mark at point and go to top of buffer."
+				:type inclusive
+				(evil-set-marker ?g (point))
+				(evil-goto-first-line))
+		
+		(evil-define-motion mark-G ()
+				"Set mark at point and go to end of buffer."
+				:type inclusive
+				(evil-set-marker ?g (point))
+				(end-of-buffer))
+	
 		(evil-define-key '(normal visual) 'global
 			"j" 'evil-next-visual-line
 			"k" 'evil-previous-visual-line

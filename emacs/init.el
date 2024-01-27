@@ -376,18 +376,6 @@ beacon-blink-when-point-moves t)
 		:config
 		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
 
-(defun mark-gg ()
-	(interactive) 
-	(evil-set-marker ?g (point))
-	(evil-goto-first-line)
-	)
-
-(defun mark-G ()
-	(interactive)
-	(evil-set-marker ?g (point))
-	(end-of-buffer)
-	)
-
 (defun backward-kill-spaces-or-char-or-word ()
 	(interactive)
 	(cond
@@ -409,6 +397,18 @@ beacon-blink-when-point-moves t)
 			(delete-forward-char 1))))
 
 (with-eval-after-load 'evil
+	(evil-define-motion mark-gg ()
+			"Set mark at point and go to top of buffer."
+			:type inclusive
+			(evil-set-marker ?g (point))
+			(evil-goto-first-line))
+
+	(evil-define-motion mark-G ()
+			"Set mark at point and go to end of buffer."
+			:type inclusive
+			(evil-set-marker ?g (point))
+			(end-of-buffer))
+
 	(evil-define-key '(normal visual) 'global
 		"j" 'evil-next-visual-line
 		"k" 'evil-previous-visual-line
