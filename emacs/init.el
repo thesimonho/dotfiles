@@ -61,11 +61,6 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
-(use-package explain-pause-mode :elpaca (:host github
-		:repo "lastquestion/explain-pause-mode")
-		:config
-		(explain-pause-mode))
-
 (use-package no-littering
 	:init
 	(setq no-littering-etc-directory (expand-file-name "config/" user-emacs-directory)
@@ -138,16 +133,6 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(use-package eat :elpaca (:host github
-													:repo "https://codeberg.org/akib/emacs-eat")
-	:demand t
-	:commands (eat eshell)
-)
-
-(add-hook 'eshell-load-hook #'eat-eshell-mode)
-(add-hook 'eshell-load-hook #'eat-eshell-visual-command-mode)
-(add-hook 'eshell-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-
 (setq user-full-name "Simon Ho"
 user-mail-address "simonho.ubc@gmail.com")
 
@@ -189,16 +174,6 @@ user-mail-address "simonho.ubc@gmail.com")
 	doom-modeline-modal-modern-icon t)
 	(doom-modeline-mode 1))
 
-(use-package diminish)
-
-(defun diminish-modes ()
-(dolist (mode '((eldoc-mode)
-								(lsp-lens-mode)
-								))
-	(diminish (car mode) (cdr mode))))
-
-(add-hook 'elpaca-after-init-hook #'diminish-modes)
-
 (use-package minions
 :demand t
 :config
@@ -206,7 +181,6 @@ user-mail-address "simonho.ubc@gmail.com")
 
 (use-package beacon
 :demand t
-:diminish
 :init
 (setq beacon-blink-when-window-scrolls nil
 beacon-blink-when-window-changes t
@@ -215,12 +189,10 @@ beacon-blink-when-point-moves t)
 (beacon-mode 1))
 
 (use-package rainbow-mode
-:diminish
 :hook
 (prog-mode . rainbow-mode))
 
 (use-package rainbow-delimiters
-:diminish
 :hook
 (prog-mode . rainbow-delimiters-mode))
 
@@ -267,13 +239,9 @@ beacon-blink-when-point-moves t)
 
 (defun dimmer-configure-corfu ()
 	"Convenience settings for corfu users."
-	(add-to-list
-	'dimmer-prevent-dimming-predicates
-	#'corfu-frame-p))
+	(add-to-list 'dimmer-prevent-dimming-predicates #'corfu-frame-p))
 :config
-(advice-add
- 'dimmer-config-change-handler
- :override 'advise-dimmer-config-change-handler)
+(advice-add 'dimmer-config-change-handler :override 'advise-dimmer-config-change-handler)
 (dimmer-configure-corfu)
 (dimmer-configure-which-key)
 (dimmer-configure-hydra)
@@ -391,14 +359,12 @@ beacon-blink-when-point-moves t)
 	(use-package evil-commentary
 		:demand t
 		:after evil
-		:diminish
 		:config
 		(evil-commentary-mode))
 
 	(use-package evil-surround
 		:demand t
 		:after evil
-		:diminish
 		:config
 		(global-evil-surround-mode 1))
 
@@ -408,7 +374,7 @@ beacon-blink-when-point-moves t)
 		:custom
 		(evil-collection-corfu-key-themes '(default tab-n-go))
 		:config
-		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca explain-pause-mode lsp-ui-imenu magit magit-section magit-todos which-key)))
+		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
 
 (defun mark-gg ()
 	(interactive) 
@@ -510,7 +476,6 @@ beacon-blink-when-point-moves t)
 
 (use-package which-key
 	:demand t
-	:diminish
 	:init
 	(setq 
 	 which-key-idle-delay 0.3
@@ -524,7 +489,6 @@ beacon-blink-when-point-moves t)
 
 (use-package projectile
   :demand t
-  :diminish
   :init
   (when (and (system-is-mswindows) (executable-find "find")
 	     (not (file-in-directory-p
@@ -832,27 +796,6 @@ beacon-blink-when-point-moves t)
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-(use-package drag-stuff
-:demand t
-:config
-(drag-stuff-global-mode 1)
-(evil-define-key 'nil drag-stuff-mode-map
-		(kbd "<M-up>")			'drag-stuff-up
-		(kbd "<M-down>")		'drag-stuff-down
-		(kbd "<M-left>")		'drag-stuff-left
-		(kbd "<M-right>")   'drag-stuff-right
-		)
-)
-
-(use-package anzu
-:config
-	(global-anzu-mode +1)
-:init
-	(evil-define-key 'normal 'global
-		(kbd "<leader>cr")    '("search replace" . anzu-query-replace-regexp)
-	)
-)
-
 ;;	(use-package copilot :elpaca (:host github
 ;;																:repo "zerolfx/copilot.el"
 ;;																:branch "main"
@@ -879,18 +822,10 @@ beacon-blink-when-point-moves t)
 		(kbd "<leader>jj")   '("jump 2char" . avy-goto-char-2)
 		(kbd "<leader>jl")   '("jump line" . avy-goto-line)
 		(kbd "<leader>jb")   '("jump tab" . centaur-tabs-ace-jump)
-		(kbd "<leader>jw")   '("jump window" . ace-window)
 	)
 )
 
-(use-package ace-window
-	:init
-	(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
-				aw-minibuffer-flag t
-				aw-ignore-current t))
-
 (use-package lsp-mode
-	:diminish
 	:init
 	(setq lsp-completion-provider :none  ;; use corfu instead
 				lsp-disabled-clients '(tfls)
@@ -1171,7 +1106,6 @@ beacon-blink-when-point-moves t)
 	(org-mode . org-modern-mode))
 
 (use-package evil-org
-	:diminish
 	:hook (org-mode . evil-org-mode)
 	:config (evil-org-set-key-theme '(textobjects insert navigation shift todo)))
 
@@ -1181,12 +1115,6 @@ beacon-blink-when-point-moves t)
 	(add-to-list 'org-structure-template-alist '("sp" . "src python")))
 
 (use-package markdown-mode)
-
-(use-package npm)
-(with-eval-after-load 'evil
-	(evil-define-key 'normal web-mode-map
-	(kbd "<localleader>n")  '("npm" . npm))
-)
 
 (with-eval-after-load 'evil
 	(evil-define-key 'normal python-ts-mode-map
