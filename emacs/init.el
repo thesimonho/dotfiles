@@ -337,7 +337,7 @@ beacon-blink-when-point-moves t)
 		 evil-normal-state-cursor  '("#FF9E3B" box)
 		 evil-insert-state-cursor  '("#C34043" (bar . 2))
 		 evil-emacs-state-cursor   '("#FF9E3B" box)
-	   evil-replace-state-cursor '("#C34043" (hbar . 2))
+		 evil-replace-state-cursor '("#C34043" (hbar . 2))
 		 evil-visual-state-cursor  '("#76946A" (hbar . 2))
 		 evil-motion-state-cursor  '("#FF9E3B" box))
 		:config
@@ -405,6 +405,8 @@ beacon-blink-when-point-moves t)
 	(use-package evil-collection
 		:demand t
 		:after evil
+		:custom
+		(evil-collection-corfu-key-themes '(default tab-n-go))
 		:config
 		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca explain-pause-mode lsp-ui-imenu magit magit-section magit-todos which-key)))
 
@@ -574,27 +576,21 @@ beacon-blink-when-point-moves t)
 		))
 
 (use-package corfu
-  :custom
-  (corfu-cycle t)
-  (corfu-auto t)
-  (corfu-auto-delay 0.0)
-  (corfu-quit-at-boundary 'separator)   
-  (corfu-quit-no-match t)
-  (corfu-echo-delay 0.0)
-  (corfu-preselect 'directory)      
-  (corfu-on-exact-match 'quit)    
-  (corfu-popupinfo-delay '(2.0 . 1.0))
-  :init
-  (global-corfu-mode)
-  (corfu-popupinfo-mode)
-  (corfu-history-mode 1)
+	:custom
+	(corfu-cycle t)
+	(corfu-auto t)
+	(corfu-auto-delay 0.0)
+	(corfu-quit-at-boundary 'separator)   
+	(corfu-quit-no-match t)
+	(corfu-echo-delay 0.0)
+	(corfu-preselect 'directory)      
+	(corfu-on-exact-match 'quit)    
+	(corfu-popupinfo-delay '(2.0 . 1.0))
+	:init
+	(global-corfu-mode)
+	(corfu-popupinfo-mode)
+	(corfu-history-mode 1)
 	(add-to-list 'savehist-additional-variables 'corfu-history)
-
-	(evil-define-key 'nil corfu-map
-   (kbd "TAB")		 'corfu-next
-   (kbd [tab])		 'corfu-next
-   (kbd "S-TAB")	 'corfu-previous
-   (kbd [backtab]) 'corfu-previous)
 )
 
 (use-package nerd-icons-corfu

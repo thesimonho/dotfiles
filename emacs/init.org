@@ -452,96 +452,98 @@ Make editing easier
 ** Evil
 
 #+begin_src emacs-lisp
-;; https://github.com/noctuid/evil-guide
+	;; https://github.com/noctuid/evil-guide
 
-	(use-package evil
-		:demand t
-		:init
-		(setq
-		 evil-want-integration t
-		 evil-want-keybinding nil
-		 evil-symbol-word-search t
-		 evil-ex-search-vim-style-regexp t
-		 evil-want-C-u-scroll t
-		 evil-want-C-i-jump nil
-		 evil-cross-lines t
-		 evil-respect-visual-line-mode t
-		 evil-kill-on-visual-paste nil
-		 evil-want-fine-undo t
-		 evil-v$-excludes-newline t
-		 evil-normal-state-cursor  '("#FF9E3B" box)
-		 evil-insert-state-cursor  '("#C34043" (bar . 2))
-		 evil-emacs-state-cursor   '("#FF9E3B" box)
-	   evil-replace-state-cursor '("#C34043" (hbar . 2))
-		 evil-visual-state-cursor  '("#76946A" (hbar . 2))
-		 evil-motion-state-cursor  '("#FF9E3B" box))
-		:config
-		(evil-set-leader nil (kbd "SPC"))
-		(evil-set-leader nil "," t)
-		(evil-set-undo-system 'undo-redo)
-		(evil-mode 1))
+		(use-package evil
+			:demand t
+			:init
+			(setq
+			 evil-want-integration t
+			 evil-want-keybinding nil
+			 evil-symbol-word-search t
+			 evil-ex-search-vim-style-regexp t
+			 evil-want-C-u-scroll t
+			 evil-want-C-i-jump nil
+			 evil-cross-lines t
+			 evil-respect-visual-line-mode t
+			 evil-kill-on-visual-paste nil
+			 evil-want-fine-undo t
+			 evil-v$-excludes-newline t
+			 evil-normal-state-cursor  '("#FF9E3B" box)
+			 evil-insert-state-cursor  '("#C34043" (bar . 2))
+			 evil-emacs-state-cursor   '("#FF9E3B" box)
+			 evil-replace-state-cursor '("#C34043" (hbar . 2))
+			 evil-visual-state-cursor  '("#76946A" (hbar . 2))
+			 evil-motion-state-cursor  '("#FF9E3B" box))
+			:config
+			(evil-set-leader nil (kbd "SPC"))
+			(evil-set-leader nil "," t)
+			(evil-set-undo-system 'undo-redo)
+			(evil-mode 1))
 
-	(use-package scroll-on-jump
-		:demand t
-		:after evil
-		:init
-		(setq scroll-on-jump-duration 0.4
-						scroll-on-jump-smooth t
-						scroll-on-jump-curve 'smooth)
-		:config
-		(with-eval-after-load 'evil
-		(scroll-on-jump-advice-add evil-undo)
-		(scroll-on-jump-advice-add evil-redo)
-		(scroll-on-jump-advice-add evil-jump-item)
-		(scroll-on-jump-advice-add evil-jump-forward)
-		(scroll-on-jump-advice-add evil-jump-backward)
-		(scroll-on-jump-advice-add evil-search-next)
-		(scroll-on-jump-advice-add evil-search-previous)
-		(scroll-on-jump-advice-add evil-ex-search-next)
-		(scroll-on-jump-advice-add evil-ex-search-previous)
-		(scroll-on-jump-advice-add evil-forward-paragraph)
-		(scroll-on-jump-advice-add evil-backward-paragraph)
-		(scroll-on-jump-advice-add evil-goto-mark)
+		(use-package scroll-on-jump
+			:demand t
+			:after evil
+			:init
+			(setq scroll-on-jump-duration 0.4
+							scroll-on-jump-smooth t
+							scroll-on-jump-curve 'smooth)
+			:config
+			(with-eval-after-load 'evil
+			(scroll-on-jump-advice-add evil-undo)
+			(scroll-on-jump-advice-add evil-redo)
+			(scroll-on-jump-advice-add evil-jump-item)
+			(scroll-on-jump-advice-add evil-jump-forward)
+			(scroll-on-jump-advice-add evil-jump-backward)
+			(scroll-on-jump-advice-add evil-search-next)
+			(scroll-on-jump-advice-add evil-search-previous)
+			(scroll-on-jump-advice-add evil-ex-search-next)
+			(scroll-on-jump-advice-add evil-ex-search-previous)
+			(scroll-on-jump-advice-add evil-forward-paragraph)
+			(scroll-on-jump-advice-add evil-backward-paragraph)
+			(scroll-on-jump-advice-add evil-goto-mark)
 
-		(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
-		(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
-		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
-		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
-		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
+			(scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+			(scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+			(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
+			(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
+			(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
 
-		(with-eval-after-load 'goto-chg
-		(scroll-on-jump-advice-add goto-last-change)
-		(scroll-on-jump-advice-add goto-last-change-reverse)))
+			(with-eval-after-load 'goto-chg
+			(scroll-on-jump-advice-add goto-last-change)
+			(scroll-on-jump-advice-add goto-last-change-reverse)))
 
-	(use-package evil-escape
-		:demand t
-		:after evil
-		:init
-		(setq-default evil-escape-key-sequence "kj"
-									evil-escape-delay 0.1
-									evil-escape-unordered-key-sequence nil)
-		:config
-		(evil-escape-mode))
+		(use-package evil-escape
+			:demand t
+			:after evil
+			:init
+			(setq-default evil-escape-key-sequence "kj"
+										evil-escape-delay 0.1
+										evil-escape-unordered-key-sequence nil)
+			:config
+			(evil-escape-mode))
 
-	(use-package evil-commentary
-		:demand t
-		:after evil
-		:diminish
-		:config
-		(evil-commentary-mode))
+		(use-package evil-commentary
+			:demand t
+			:after evil
+			:diminish
+			:config
+			(evil-commentary-mode))
 
-	(use-package evil-surround
-		:demand t
-		:after evil
-		:diminish
-		:config
-		(global-evil-surround-mode 1))
+		(use-package evil-surround
+			:demand t
+			:after evil
+			:diminish
+			:config
+			(global-evil-surround-mode 1))
 
-	(use-package evil-collection
-		:demand t
-		:after evil
-		:config
-		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca explain-pause-mode lsp-ui-imenu magit magit-section magit-todos which-key)))
+		(use-package evil-collection
+			:demand t
+			:after evil
+			:custom
+			(evil-collection-corfu-key-themes '(default tab-n-go))
+			:config
+			(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca explain-pause-mode lsp-ui-imenu magit magit-section magit-todos which-key)))
 #+end_src
 
 ** General binds
@@ -738,28 +740,22 @@ Projectile + perspective
 Inbuffer completion with corfu
 
 #+begin_src emacs-lisp
-  (use-package corfu
-    :custom
-    (corfu-cycle t)
-    (corfu-auto t)
-    (corfu-auto-delay 0.0)
-    (corfu-quit-at-boundary 'separator)   
-    (corfu-quit-no-match t)
-    (corfu-echo-delay 0.0)
-    (corfu-preselect 'directory)      
-    (corfu-on-exact-match 'quit)    
-    (corfu-popupinfo-delay '(2.0 . 1.0))
-    :init
-    (global-corfu-mode)
-    (corfu-popupinfo-mode)
-    (corfu-history-mode 1)
+	(use-package corfu
+		:custom
+		(corfu-cycle t)
+		(corfu-auto t)
+		(corfu-auto-delay 0.0)
+		(corfu-quit-at-boundary 'separator)   
+		(corfu-quit-no-match t)
+		(corfu-echo-delay 0.0)
+		(corfu-preselect 'directory)      
+		(corfu-on-exact-match 'quit)    
+		(corfu-popupinfo-delay '(2.0 . 1.0))
+		:init
+		(global-corfu-mode)
+		(corfu-popupinfo-mode)
+		(corfu-history-mode 1)
 		(add-to-list 'savehist-additional-variables 'corfu-history)
-
-		(evil-define-key 'nil corfu-map
-     (kbd "TAB")		 'corfu-next
-     (kbd [tab])		 'corfu-next
-     (kbd "S-TAB")	 'corfu-previous
-     (kbd [backtab]) 'corfu-previous)
 	)
 
 	(use-package nerd-icons-corfu
