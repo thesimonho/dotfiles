@@ -418,7 +418,7 @@ beacon-blink-when-point-moves t)
 		(kbd "<leader>`")       '("shell" . eshell)
 		(kbd "<leader>y")				'("kill ring" . consult-yank-pop)
 
-		(kbd "<leader>hh") 			'("help" . helpful-at-point)
+		(kbd "<leader>hh") 			'("help at point" . helpful-at-point)
 		(kbd "<leader>hb")      '("bindings" . describe-bindings)
 		(kbd "<leader>hc")      '("character" . describe-char)
 		(kbd "<leader>hf")      '("function" . helpful-callable)
@@ -483,6 +483,18 @@ beacon-blink-when-point-moves t)
 	 which-key-allow-evil-operators t
 	 which-key-add-column-padding 5
 	 which-key-max-display-columns 6)
+	:config
+	(which-key-add-key-based-replacements
+  "<SPC> b" "Buffers"
+  "<SPC> c" "Code"
+  "<SPC> f" "Files"
+  "<SPC> h" "Help"
+  "<SPC> j" "Jump"
+  "<SPC> p" "Projects"
+  "<SPC> q" "Quit"
+  "<SPC> w" "Window"
+  "<SPC> z" "Tools"
+  )
 	(which-key-mode))
 
 (use-package helpful)
@@ -1066,6 +1078,9 @@ beacon-blink-when-point-moves t)
 																													 (shell . t)
 																													 (emacs-lisp . t)
 																													 (jupyter . t)))
+	(which-key-add-major-mode-key-based-replacements 'org-mode
+			", i" "Insert"
+	)
 	(evil-define-key 'nil org-src-mode-map
 			(kbd "<localleader>q")  '("abort" . org-edit-src-abort)
 			(kbd "<localleader>s")  '("save" . org-edit-src-exit)
@@ -1074,9 +1089,9 @@ beacon-blink-when-point-moves t)
 			(kbd "<localleader>x")   '("execute block" . org-babel-execute-src-block)
 			(kbd "<localleader>X")   '("execute all" . org-babel-execute-buffer)
 			(kbd "<localleader>e")	 '("edit block" . org-edit-special)
-			(kbd "<localleader>ie")  '("insert emacs-lisp" . (lambda() (interactive) (org-insert-structure-template "src emacs-lisp")))
-			(kbd "<localleader>ip")  '("insert python" . (lambda() (interactive) (org-insert-structure-template "src python")))
-			(kbd "<localleader>ij")  '("insert jupyer" . (lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)))
+			(kbd "<localleader>ie")  '("emacs-lisp" . (lambda() (interactive) (org-insert-structure-template "src emacs-lisp")))
+			(kbd "<localleader>ip")  '("python" . (lambda() (interactive) (org-insert-structure-template "src python")))
+			(kbd "<localleader>ij")  '("jupyer" . (lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)))
 	)
 	:hook
 	(org-babel-after-execute . org-display-inline-images))
