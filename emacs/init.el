@@ -1,62 +1,62 @@
-;; -*- lexical-binding: t; -*- 
+;; -*- lexical-binding: t; -*-
 (defun org-babel-tangle-config ()
- (when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
- (let ((org-confirm-babel-evaluate nil))
-   (org-babel-tangle)
-   (message "%s tangled" buffer-file-name)))
- (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
+	(when (string-equal (file-name-nondirectory (buffer-file-name)) "init.org"))
+	(let ((org-confirm-babel-evaluate nil))
+		(org-babel-tangle)
+		(message "%s tangled" buffer-file-name)))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'org-babel-tangle-config)))
 
 (defun system-is-mswindows ()
-  (eq system-type 'windows-nt))
+	(eq system-type 'windows-nt))
 
 (setq use-package-verbose nil  ; don't print anything
-      use-package-compute-statistics t ; compute statistics about package initialization
-      use-package-minimum-reported-time 0.0001
-      use-package-always-defer t)	; always defer, don't "require", except when :demand
+			use-package-compute-statistics t ; compute statistics about package initialization
+			use-package-minimum-reported-time 0.0001
+			use-package-always-defer t)	; always defer, don't "require", except when :demand
 
 (defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-			:ref nil
-			:files (:defaults "elpaca-test.el" (:exclude "extensions"))
-			:build (:not elpaca--activate-package)))
+															:ref nil
+															:files (:defaults "elpaca-test.el" (:exclude "extensions"))
+															:build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
- (build (expand-file-name "elpaca/" elpaca-builds-directory))
- (order (cdr elpaca-order))
- (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (< emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-		 ((zerop (call-process "git" nil buffer t "clone"
-				 (plist-get order :repo) repo)))
-		 ((zerop (call-process "git" nil buffer t "checkout"
-				 (or (plist-get order :ref) "--"))))
-		 (emacs (concat invocation-directory invocation-name))
-		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-				 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-		 ((require 'elpaca))
-		 ((elpaca-generate-autoloads "elpaca" repo)))
-	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-	  (error "%s" (with-current-buffer buffer (buffer-string))))
-((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (load "./elpaca-autoloads")))
+			 (build (expand-file-name "elpaca/" elpaca-builds-directory))
+			 (order (cdr elpaca-order))
+			 (default-directory repo))
+	(add-to-list 'load-path (if (file-exists-p build) build repo))
+	(unless (file-exists-p repo)
+		(make-directory repo t)
+		(when (< emacs-major-version 28) (require 'subr-x))
+		(condition-case-unless-debug err
+				(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+								 ((zerop (call-process "git" nil buffer t "clone"
+																			 (plist-get order :repo) repo)))
+								 ((zerop (call-process "git" nil buffer t "checkout"
+																			 (or (plist-get order :ref) "--"))))
+								 (emacs (concat invocation-directory invocation-name))
+								 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+																			 "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+								 ((require 'elpaca))
+								 ((elpaca-generate-autoloads "elpaca" repo)))
+						(progn (message "%s" (buffer-string)) (kill-buffer buffer))
+					(error "%s" (with-current-buffer buffer (buffer-string))))
+			((error) (warn "%s" err) (delete-directory repo 'recursive))))
+	(unless (require 'elpaca-autoloads nil t)
+		(require 'elpaca)
+		(elpaca-generate-autoloads "elpaca" repo)
+		(load "./elpaca-autoloads")))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
 ;; Install use-package support
 (elpaca elpaca-use-package
-  ;; Enable :elpaca use-package keyword.
-  (elpaca-use-package-mode)
-  ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
+	;; Enable :elpaca use-package keyword.
+	(elpaca-use-package-mode)
+	;; Assume :elpaca t unless otherwise specified.
+	(setq elpaca-use-package-by-default t))
 
 ;; Block until current queue processed.
 (elpaca-wait)
@@ -68,15 +68,15 @@
 				custom-file (no-littering-expand-etc-file-name "custom.el"))
 	(recentf-mode 1)
 	(add-to-list 'recentf-exclude
-							(recentf-expand-file-name no-littering-var-directory))
+							 (recentf-expand-file-name no-littering-var-directory))
 	(add-to-list 'recentf-exclude
-							(recentf-expand-file-name no-littering-etc-directory)))
+							 (recentf-expand-file-name no-littering-etc-directory)))
 
 (defun gc-buffers-scratch (buffer)
 	(string= (buffer-name buffer) "*scratch*"))
 
 (use-package gc-buffers :elpaca (:host "www.codeberg.org"
-																 :repo "akib/emacs-gc-buffers")
+																			 :repo "akib/emacs-gc-buffers")
 	:config
 	(add-to-list 'gc-buffers-functions #'gc-buffers-scratch)
 	(gc-buffers-mode t))
@@ -85,41 +85,41 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq gc-cons-threshold 100000000
-	read-process-output-max (* 1024 1024)
-	warning-minimum-level :error
-	ring-bell-function 'ignore
-	visible-bell t
-	pixel-scroll-precision-mode t
-	scroll-margin 3
-	max-mini-window-height 0.1
-	sentence-end-double-space nil
-	save-interprogram-paste-before-kill t
-	compilation-scroll-output 'first-error
-	use-short-answers t
-	make-backup-files nil
-	auto-save-default nil
-	create-lockfiles nil
-	global-auto-revert-mode t
-	global-auto-revert-non-file-buffers t
-	revert-without-query t
-	delete-selection-mode t
-	column-number-mode t
-	use-dialog-box nil
-	confirm-kill-processes nil
-	history-length 25
-	kill-ring-max 20
-	display-line-numbers-type 'relative
-	set-charset-priority 'unicode
-	prefer-coding-system 'utf-8-unix
-	x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
-	garbage-collection-messages t
-	native-comp-async-report-warnings-errors nil)
+			read-process-output-max (* 1024 1024)
+			warning-minimum-level :error
+			ring-bell-function 'ignore
+			visible-bell t
+			pixel-scroll-precision-mode t
+			scroll-margin 3
+			max-mini-window-height 0.1
+			sentence-end-double-space nil
+			save-interprogram-paste-before-kill t
+			compilation-scroll-output 'first-error
+			use-short-answers t
+			make-backup-files nil
+			auto-save-default nil
+			create-lockfiles nil
+			global-auto-revert-mode t
+			global-auto-revert-non-file-buffers t
+			revert-without-query t
+			delete-selection-mode t
+			column-number-mode t
+			use-dialog-box nil
+			confirm-kill-processes nil
+			history-length 25
+			kill-ring-max 20
+			display-line-numbers-type 'relative
+			set-charset-priority 'unicode
+			prefer-coding-system 'utf-8-unix
+			x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
+			garbage-collection-messages t
+			native-comp-async-report-warnings-errors nil)
 
-	;; Run garbage collection when Emacs is idle for 15 seconds
-	(run-with-idle-timer 15 t #'garbage-collect)
+;; Run garbage collection when Emacs is idle for 15 seconds
+(run-with-idle-timer 15 t #'garbage-collect)
 
-	;; Run garbage collection when the Emacs window loses focus
-	(add-hook 'focus-out-hook 'garbage-collect)
+;; Run garbage collection when the Emacs window loses focus
+(add-hook 'focus-out-hook 'garbage-collect)
 
 (setq-default tab-width 2)
 (add-to-list 'default-frame-alist '(alpha-background . 92))
@@ -134,7 +134,7 @@
 (scroll-bar-mode -1)
 
 (setq user-full-name "Simon Ho"
-user-mail-address "simonho.ubc@gmail.com")
+			user-mail-address "simonho.ubc@gmail.com")
 
 (setq custom-theme-directory (expand-file-name "themes/" user-emacs-directory))
 
@@ -158,74 +158,74 @@ user-mail-address "simonho.ubc@gmail.com")
 (use-package doom-modeline
 	:init
 	(setq doom-modeline-height 30
-	doom-modeline-hud nil	
-	doom-modeline-project-detection 'auto
-	doom-modeline-display-default-persp-name nil
-	doom-modeline-buffer-modification-icon nil
-	doom-modeline-buffer-encoding nil
-	doom-modeline-lsp t
-	doom-modeline-time-icon nil
-	doom-modeline-highlight-modified-buffer-name t
-	doom-modeline-position-column-line-format '("L:%l")
-	doom-modeline-minor-modes t
-	doom-modeline-checker-simple-format nil
-	doom-modeline-major-mode-icon nil
-	doom-modeline-modal-icon t
-	doom-modeline-modal-modern-icon t)
+				doom-modeline-hud nil
+				doom-modeline-project-detection 'auto
+				doom-modeline-display-default-persp-name nil
+				doom-modeline-buffer-modification-icon nil
+				doom-modeline-buffer-encoding nil
+				doom-modeline-lsp t
+				doom-modeline-time-icon nil
+				doom-modeline-highlight-modified-buffer-name t
+				doom-modeline-position-column-line-format '("L:%l")
+				doom-modeline-minor-modes t
+				doom-modeline-checker-simple-format nil
+				doom-modeline-major-mode-icon nil
+				doom-modeline-modal-icon t
+				doom-modeline-modal-modern-icon t)
 	(doom-modeline-mode 1))
 
 (use-package minions
-:demand t
-:config
-(minions-mode))
+	:demand t
+	:config
+	(minions-mode))
 
 (use-package beacon
-:demand t
-:init
-(setq beacon-blink-when-window-scrolls nil
-beacon-blink-when-window-changes t
-beacon-blink-when-point-moves t)
-:config
-(beacon-mode 1))
+	:demand t
+	:init
+	(setq beacon-blink-when-window-scrolls nil
+				beacon-blink-when-window-changes t
+				beacon-blink-when-point-moves t)
+	:config
+	(beacon-mode 1))
 
 (use-package rainbow-mode
-:hook
-(prog-mode . rainbow-mode))
+	:hook
+	(prog-mode . rainbow-mode))
 
 (use-package rainbow-delimiters
-:hook
-(prog-mode . rainbow-delimiters-mode))
+	:hook
+	(prog-mode . rainbow-delimiters-mode))
 
 (use-package indent-guide
-:hook
-(prog-mode . indent-guide-mode))
+	:hook
+	(prog-mode . indent-guide-mode))
 
 (use-package hl-todo
-:demand t
-:after evil
-:config
-(evil-define-key 'normal 'global
-(kbd "[t") 'hl-todo-previous
-(kbd "]t") 'hl-todo-next)
-(global-hl-todo-mode 1))
+	:demand t
+	:after evil
+	:config
+	(evil-define-key 'normal 'global
+		(kbd "[t") 'hl-todo-previous
+		(kbd "]t") 'hl-todo-next)
+	(global-hl-todo-mode 1))
 
 (use-package yascroll
-:demand t
-:custom
-(yascroll:disabled-modes '(magit-log-mode))
-(yascroll:delay-to-hide nil)
-(yascroll:scroll-bar 'right-fringe)
-:config
-(global-yascroll-bar-mode 1))
+	:demand t
+	:custom
+	(yascroll:disabled-modes '(magit-log-mode))
+	(yascroll:delay-to-hide nil)
+	(yascroll:scroll-bar 'right-fringe)
+	:config
+	(global-yascroll-bar-mode 1))
 
 (use-package dimmer
-:demand t
-:init
-(setq dimmer-fraction 0.5
-			dimmer-adjustment-mode :foreground
-			dimmer-watch-frame-focus-events nil)
+	:demand t
+	:init
+	(setq dimmer-fraction 0.5
+				dimmer-adjustment-mode :foreground
+				dimmer-watch-frame-focus-events nil)
 
-(defun advise-dimmer-config-change-handler ()
+	(defun advise-dimmer-config-change-handler ()
 		"Advise to only force process if no predicate is truthy."
 		(let ((ignore (cl-some (lambda (f) (and (fboundp f) (funcall f)))
 													 dimmer-prevent-dimming-predicates)))
@@ -233,22 +233,22 @@ beacon-blink-when-point-moves t)
 				(when (fboundp 'dimmer-process-all)
 					(dimmer-process-all t)))))
 
-(defun corfu-frame-p ()
-	"Check if the buffer is a corfu frame buffer."
-	(string-match-p "\\` \\*corfu" (buffer-name)))
+	(defun corfu-frame-p ()
+		"Check if the buffer is a corfu frame buffer."
+		(string-match-p "\\` \\*corfu" (buffer-name)))
 
-(defun dimmer-configure-corfu ()
-	"Convenience settings for corfu users."
-	(add-to-list 'dimmer-prevent-dimming-predicates #'corfu-frame-p))
-:config
-(advice-add 'dimmer-config-change-handler :override 'advise-dimmer-config-change-handler)
-(dimmer-configure-corfu)
-(dimmer-configure-which-key)
-(dimmer-configure-hydra)
-(dimmer-configure-magit)
-(dimmer-configure-org)
-(dimmer-configure-posframe)
-(dimmer-mode t))
+	(defun dimmer-configure-corfu ()
+		"Convenience settings for corfu users."
+		(add-to-list 'dimmer-prevent-dimming-predicates #'corfu-frame-p))
+	:config
+	(advice-add 'dimmer-config-change-handler :override 'advise-dimmer-config-change-handler)
+	(dimmer-configure-corfu)
+	(dimmer-configure-which-key)
+	(dimmer-configure-hydra)
+	(dimmer-configure-magit)
+	(dimmer-configure-org)
+	(dimmer-configure-posframe)
+	(dimmer-mode t))
 
 (use-package dashboard
 	:demand t
@@ -274,12 +274,12 @@ beacon-blink-when-point-moves t)
 	 dashboard-projects-switch-function 'projectile-persp-switch-project)
 	(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 	(setq dashboard-items '((recents  . 10)
-				(projects . 5)))
+													(projects . 5)))
 	(setq dashboard-navigator-buttons
-		`((
-			;; (,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
-			(,(nerd-icons-codicon "nf-cod-package") " Elpaca" "Elpaca Manager UI" (lambda (&rest _) (elpaca-manager)) error)
-			)))
+				`((
+					 ;; (,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
+					 (,(nerd-icons-codicon "nf-cod-package") " Elpaca" "Elpaca Manager UI" (lambda (&rest _) (elpaca-manager)) error)
+					 )))
 	:config
 	(add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
 	(add-hook 'elpaca-after-init-hook #'dashboard-initialize)
@@ -287,42 +287,42 @@ beacon-blink-when-point-moves t)
 
 ;; https://github.com/noctuid/evil-guide
 
-	(use-package evil
-		:demand t
-		:init
-		(setq
-		 evil-want-integration t
-		 evil-want-keybinding nil
-		 evil-symbol-word-search t
-		 evil-ex-search-vim-style-regexp t
-		 evil-want-C-u-scroll t
-		 evil-want-C-i-jump nil
-		 evil-cross-lines t
-		 evil-respect-visual-line-mode t
-		 evil-kill-on-visual-paste nil
-		 evil-want-fine-undo t
-		 evil-v$-excludes-newline t
-		 evil-normal-state-cursor  '("#FF9E3B" box)
-		 evil-insert-state-cursor  '("#C34043" (bar . 2))
-		 evil-emacs-state-cursor   '("#FF9E3B" box)
-		 evil-replace-state-cursor '("#C34043" (hbar . 2))
-		 evil-visual-state-cursor  '("#76946A" (hbar . 2))
-		 evil-motion-state-cursor  '("#FF9E3B" box))
-		:config
-		(evil-set-leader nil (kbd "SPC"))
-		(evil-set-leader nil "," t)
-		(evil-set-undo-system 'undo-redo)
-		(evil-mode 1))
+(use-package evil
+	:demand t
+	:init
+	(setq
+	 evil-want-integration t
+	 evil-want-keybinding nil
+	 evil-symbol-word-search t
+	 evil-ex-search-vim-style-regexp t
+	 evil-want-C-u-scroll t
+	 evil-want-C-i-jump nil
+	 evil-cross-lines t
+	 evil-respect-visual-line-mode t
+	 evil-kill-on-visual-paste nil
+	 evil-want-fine-undo t
+	 evil-v$-excludes-newline t
+	 evil-normal-state-cursor  '("#FF9E3B" box)
+	 evil-insert-state-cursor  '("#C34043" (bar . 2))
+	 evil-emacs-state-cursor   '("#FF9E3B" box)
+	 evil-replace-state-cursor '("#C34043" (hbar . 2))
+	 evil-visual-state-cursor  '("#76946A" (hbar . 2))
+	 evil-motion-state-cursor  '("#FF9E3B" box))
+	:config
+	(evil-set-leader nil (kbd "SPC"))
+	(evil-set-leader nil "," t)
+	(evil-set-undo-system 'undo-redo)
+	(evil-mode 1))
 
-	(use-package scroll-on-jump
-		:demand t
-		:after evil
-		:init
-		(setq scroll-on-jump-duration 0.4
-						scroll-on-jump-smooth t
-						scroll-on-jump-curve 'smooth)
-		:config
-		(with-eval-after-load 'evil
+(use-package scroll-on-jump
+	:demand t
+	:after evil
+	:init
+	(setq scroll-on-jump-duration 0.4
+				scroll-on-jump-smooth t
+				scroll-on-jump-curve 'smooth)
+	:config
+	(with-eval-after-load 'evil
 		(scroll-on-jump-advice-add evil-undo)
 		(scroll-on-jump-advice-add evil-redo)
 		(scroll-on-jump-advice-add evil-jump-item)
@@ -342,72 +342,72 @@ beacon-blink-when-point-moves t)
 		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
 		(scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
 
-		(with-eval-after-load 'goto-chg
+	(with-eval-after-load 'goto-chg
 		(scroll-on-jump-advice-add goto-last-change)
 		(scroll-on-jump-advice-add goto-last-change-reverse)))
 
-	(use-package evil-escape
-		:demand t
-		:after evil
-		:init
-		(setq-default evil-escape-key-sequence "kj"
-									evil-escape-delay 0.1
-									evil-escape-unordered-key-sequence nil)
-		:config
-		(evil-escape-mode))
+(use-package evil-escape
+	:demand t
+	:after evil
+	:init
+	(setq-default evil-escape-key-sequence "kj"
+								evil-escape-delay 0.1
+								evil-escape-unordered-key-sequence nil)
+	:config
+	(evil-escape-mode))
 
-	(use-package evil-commentary
-		:demand t
-		:after evil
-		:config
-		(evil-commentary-mode))
+(use-package evil-commentary
+	:demand t
+	:after evil
+	:config
+	(evil-commentary-mode))
 
-	(use-package evil-surround
-		:demand t
-		:after evil
-		:config
-		(global-evil-surround-mode 1))
+(use-package evil-surround
+	:demand t
+	:after evil
+	:config
+	(global-evil-surround-mode 1))
 
-	(use-package evil-collection
-		:demand t
-		:after evil
-		:custom
-		(evil-collection-corfu-key-themes '(default tab-n-go))
-		:config
-		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
+(use-package evil-collection
+	:demand t
+	:after evil
+	:custom
+	(evil-collection-corfu-key-themes '(default tab-n-go))
+	:config
+	(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
 
 (defun backward-kill-spaces-or-char-or-word ()
 	(interactive)
 	(cond
-	((looking-back (rx (char word)) 1)
-			(backward-kill-word 1))
-	((looking-back (rx (char blank)) 1)
-			(delete-horizontal-space t))
-	(t
-			(backward-delete-char 1))))
+	 ((looking-back (rx (char word)) 1)
+		(backward-kill-word 1))
+	 ((looking-back (rx (char blank)) 1)
+		(delete-horizontal-space t))
+	 (t
+		(backward-delete-char 1))))
 
 (defun forward-kill-spaces-or-char-or-word ()
 	(interactive)
 	(cond
-	((looking-at (rx (char word)) 1)
-			(kill-word 1))
-	((looking-at (rx (char blank)) 1)
-			(delete-horizontal-space))
-	(t
-			(delete-forward-char 1))))
+	 ((looking-at (rx (char word)) 1)
+		(kill-word 1))
+	 ((looking-at (rx (char blank)) 1)
+		(delete-horizontal-space))
+	 (t
+		(delete-forward-char 1))))
 
 (with-eval-after-load 'evil
 	(evil-define-motion mark-gg ()
-			"Set mark at point and go to top of buffer."
-			:type inclusive
-			(evil-set-marker ?g (point))
-			(evil-goto-first-line))
+		"Set mark at point and go to top of buffer."
+		:type inclusive
+		(evil-set-marker ?g (point))
+		(evil-goto-first-line))
 
 	(evil-define-motion mark-G ()
-			"Set mark at point and go to end of buffer."
-			:type inclusive
-			(evil-set-marker ?g (point))
-			(end-of-buffer))
+		"Set mark at point and go to end of buffer."
+		:type inclusive
+		(evil-set-marker ?g (point))
+		(end-of-buffer))
 
 	(evil-define-key '(normal visual) 'global
 		"j" 'evil-next-visual-line
@@ -458,26 +458,26 @@ beacon-blink-when-point-moves t)
 		)
 
 	(evil-define-key nil 'global
-		(kbd "M-u")			 'universal-argument 
+		(kbd "M-u")			 'universal-argument
 		(kbd "<escape>") 'keyboard-escape-quit
-	)
+		)
 
 	(evil-define-key '(normal insert) 'global
 		(kbd "C-s") 'save-buffer
 		(kbd "C-v") 'yank
-	)
+		)
 
 	(evil-define-key 'insert 'global
-		(kbd "TAB") 'tab-to-tab-stop
+		(kbd "TAB")						'tab-to-tab-stop
 		(kbd "<C-backspace>") 'backward-kill-spaces-or-char-or-word
-		(kbd "<C-delete>") 'forward-kill-spaces-or-char-or-word
+		(kbd "<C-delete>")		'forward-kill-spaces-or-char-or-word
+		)
 	)
-)
 
 (use-package which-key
 	:demand t
 	:init
-	(setq 
+	(setq
 	 which-key-idle-delay 0.3
 	 which-key-idle-secondary-delay 0.01
 	 which-key-allow-evil-operators t
@@ -485,63 +485,63 @@ beacon-blink-when-point-moves t)
 	 which-key-max-display-columns 6)
 	:config
 	(which-key-add-key-based-replacements
-  "<SPC> b" "Buffers"
-  "<SPC> c" "Code"
-  "<SPC> f" "Files"
-  "<SPC> h" "Help"
-  "<SPC> j" "Jump"
-  "<SPC> p" "Projects"
-  "<SPC> q" "Quit"
-  "<SPC> w" "Window"
-  "<SPC> z" "Tools"
-  )
+		"<SPC> b" "Buffers"
+		"<SPC> c" "Code"
+		"<SPC> f" "Files"
+		"<SPC> h" "Help"
+		"<SPC> j" "Jump"
+		"<SPC> p" "Projects"
+		"<SPC> q" "Quit"
+		"<SPC> w" "Window"
+		"<SPC> z" "Tools"
+		)
 	(which-key-mode))
 
 (use-package helpful)
 
 (use-package projectile
-  :demand t
-  :init
-  (when (and (system-is-mswindows) (executable-find "find")
-	     (not (file-in-directory-p
-		   (executable-find "find") "C:\\Windows")))
-    (setq projectile-indexing-method 'alien
-	  projectile-generic-command "find . -type f")
-    projectile-project-search-path '("/mnt/Projects")
-    projectile-sort-order 'recently-active
-    projectile-enable-caching t
-    projectile-require-project-root t
-    projectile-current-project-on-switch t
-    projectile-switch-project-action #'projectile-find-file
-    )
-  :config
-  (projectile-mode)
+	:demand t
+	:init
+	(when (and (system-is-mswindows) (executable-find "find")
+						 (not (file-in-directory-p
+									 (executable-find "find") "C:\\Windows")))
+		(setq projectile-indexing-method 'alien
+					projectile-generic-command "find . -type f")
+		projectile-project-search-path '("/mnt/Projects")
+		projectile-sort-order 'recently-active
+		projectile-enable-caching t
+		projectile-require-project-root t
+		projectile-current-project-on-switch t
+		projectile-switch-project-action #'projectile-find-file
+		)
+	:config
+	(projectile-mode)
 	(evil-define-key 'normal 'global
-    (kbd "<leader>pp")     '("switch project" . projectile-persp-switch-project)
-    (kbd "<leader>pf")     '("project files" . project-find-file)
-    (kbd "<leader>pa")     '("add project" . projectile-add-known-project)
-    (kbd "<leader>pd")     '("close project" . persp-kill)
-    (kbd "<leader>px")     '("remove project" . projectile-remove-known-project)
-    (kbd "<leader>p!")     '("run command in root" . projectile-run-shell-command-in-root)
+		(kbd "<leader>pp")     '("switch project" . projectile-persp-switch-project)
+		(kbd "<leader>pf")     '("project files" . project-find-file)
+		(kbd "<leader>pa")     '("add project" . projectile-add-known-project)
+		(kbd "<leader>pd")     '("close project" . persp-kill)
+		(kbd "<leader>px")     '("remove project" . projectile-remove-known-project)
+		(kbd "<leader>p!")     '("run command in root" . projectile-run-shell-command-in-root)
 
-    (kbd "<leader>p1")     '("project 1" . (lambda () (interactive) (persp-switch-by-number 1)))
-    (kbd "<leader>p2")     '("project 2" . (lambda () (interactive) (persp-switch-by-number 2)))
-    (kbd "<leader>p3")     '("project 3" . (lambda () (interactive) (persp-switch-by-number 3)))
-    (kbd "<leader>p4")     '("project 4" . (lambda () (interactive) (persp-switch-by-number 4)))
-    (kbd "<leader>p5")     '("project 5" . (lambda () (interactive) (persp-switch-by-number 5)))
+		(kbd "<leader>p1")     '("project 1" . (lambda () (interactive) (persp-switch-by-number 1)))
+		(kbd "<leader>p2")     '("project 2" . (lambda () (interactive) (persp-switch-by-number 2)))
+		(kbd "<leader>p3")     '("project 3" . (lambda () (interactive) (persp-switch-by-number 3)))
+		(kbd "<leader>p4")     '("project 4" . (lambda () (interactive) (persp-switch-by-number 4)))
+		(kbd "<leader>p5")     '("project 5" . (lambda () (interactive) (persp-switch-by-number 5)))
+		)
 	)
-)
 
 (use-package perspective
-  :demand t
-  :config
-  (setq persp-initial-frame-name "default")
-  (setq persp-suppress-no-prefix-key-warning t)
-  (persp-mode))
+	:demand t
+	:config
+	(setq persp-initial-frame-name "default")
+	(setq persp-suppress-no-prefix-key-warning t)
+	(persp-mode))
 
 (use-package persp-projectile
-  :demand t
-  :after (projectile perspective))
+	:demand t
+	:after (projectile perspective))
 
 (use-package magit
 	:commands magit
@@ -556,18 +556,18 @@ beacon-blink-when-point-moves t)
 	(corfu-cycle t)
 	(corfu-auto t)
 	(corfu-auto-delay 0.0)
-	(corfu-quit-at-boundary 'separator)   
+	(corfu-quit-at-boundary 'separator)
 	(corfu-quit-no-match t)
 	(corfu-echo-delay 0.0)
-	(corfu-preselect 'directory)      
-	(corfu-on-exact-match 'quit)    
+	(corfu-preselect 'directory)
+	(corfu-on-exact-match 'quit)
 	(corfu-popupinfo-delay '(2.0 . 1.0))
 	:init
 	(global-corfu-mode)
 	(corfu-popupinfo-mode)
 	(corfu-history-mode 1)
 	(add-to-list 'savehist-additional-variables 'corfu-history)
-)
+	)
 
 (use-package nerd-icons-corfu
 	:demand t
@@ -584,9 +584,9 @@ beacon-blink-when-point-moves t)
 				vertico-resize nil)
 	(vertico-mode)
 	(evil-define-key nil vertico-map
-			(kbd "C-j") 'vertico-next
-			(kbd "C-k") 'vertico-previous)
-)
+		(kbd "C-j") 'vertico-next
+		(kbd "C-k") 'vertico-previous)
+	)
 
 ;; Add prompt indicator to `completing-read-multiple'.
 (defun crm-indicator (args)
@@ -629,7 +629,7 @@ beacon-blink-when-point-moves t)
 		(kbd "<leader>bd")     '("delete buffer" . kill-current-buffer)
 		(kbd "<leader>bD")     '("delete other buffers" . centaur-tabs-kill-other-buffers-in-current-group)
 
-		(kbd "<leader>fs")     '("save" . save-buffer) 
+		(kbd "<leader>fs")     '("save" . save-buffer)
 		(kbd "<leader>ff")     '("find file" . find-file)
 		(kbd "<leader>fF")     '("locate file" . consult-locate)
 		(kbd "<leader>fg")     '("grep string" . consult-ripgrep)
@@ -638,18 +638,18 @@ beacon-blink-when-point-moves t)
 
 		(kbd "<leader>cs")     '("search" . consult-line)
 		(kbd "<leader>co")     '("outline" . consult-imenu)
+		)
 	)
-)
 
 (use-package marginalia
-:defer 1
-:config
-(marginalia-mode))
+	:defer 1
+	:config
+	(marginalia-mode))
 
 (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
 (use-package dirvish
-:init
+	:init
 	(setq dirvish-side-auto-expand t
 				dirvish-side-width 30
 				dirvish-use-header-line 'global
@@ -660,23 +660,23 @@ beacon-blink-when-point-moves t)
 				dirvish-reuse-session t
 				dired-listing-switches "-l -v --almost-all --human-readable --group-directories-first --no-group"
 				dirvish-attributes '(nerd-icons subtree-state))
-:hook
+	:hook
 	(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
-:config
+	:config
 	(dirvish-override-dired-mode)
 	(dirvish-side-follow-mode)
 	(evil-define-key 'normal dirvish-mode-map
-			(kbd "<mouse-1>") 'dirvish-subtree-toggle-or-open
-			(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
-			(kbd "q")					'dirvish-quit
-			(kbd "TAB")				'dirvish-subtree-toggle
-			(kbd "<return>")  'dired-find-file
-			(kbd "u")					'dired-up-directory
-			(kbd "p")					'dirvish-yank
-			(kbd "z")				  'dirvish-quicksort
-			(kbd "s")				  'dirvish-ls-switches-menu
+		(kbd "<mouse-1>") 'dirvish-subtree-toggle-or-open
+		(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
+		(kbd "q")					'dirvish-quit
+		(kbd "TAB")				'dirvish-subtree-toggle
+		(kbd "<return>")  'dired-find-file
+		(kbd "u")					'dired-up-directory
+		(kbd "p")					'dirvish-yank
+		(kbd "z")				  'dirvish-quicksort
+		(kbd "s")				  'dirvish-ls-switches-menu
+		)
 	)
-)
 
 (use-package dired-gitignore
 	:demand t
@@ -705,7 +705,7 @@ beacon-blink-when-point-moves t)
 	(centaur-tabs-group-by-projectile-project)
 	:hook
 	((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
-)
+	)
 
 (defun centaur-tabs-buffer-groups ()
 	"`centaur-tabs-buffer-groups' control buffers' group rules.
@@ -714,65 +714,65 @@ beacon-blink-when-point-moves t)
 	All buffer name start with * will group to \"Emacs\".
 	Other buffer group by `centaur-tabs-get-group-name' with project name."
 	(list
-	(cond
-	((or (string-equal "*" (substring (buffer-name) 0 1))
-	(memq major-mode '(magit-process-mode
-	magit-status-mode
-	magit-diff-mode
-	magit-log-mode
-	magit-file-mode
-	magit-blob-mode
-	magit-blame-mode
-	)))
-	"Emacs")
-	((derived-mode-p 'prog-mode)
-	"Editing")
-	((derived-mode-p 'dired-mode)
-	"Dired")
-	((memq major-mode '(helpful-mode
-	help-mode))
-	"Help")
-	((memq major-mode '(org-mode
-	org-agenda-clockreport-mode
-	org-src-mode
-	org-agenda-mode
-	org-beamer-mode
-	org-indent-mode
-	org-bullets-mode
-	org-cdlatex-mode
-	org-agenda-log-mode
-	diary-mode))
-	"OrgMode")
-	(t
-	(centaur-tabs-get-group-name (current-buffer))))))
+	 (cond
+		((or (string-equal "*" (substring (buffer-name) 0 1))
+				 (memq major-mode '(magit-process-mode
+														magit-status-mode
+														magit-diff-mode
+														magit-log-mode
+														magit-file-mode
+														magit-blob-mode
+														magit-blame-mode
+														)))
+		 "Emacs")
+		((derived-mode-p 'prog-mode)
+		 "Editing")
+		((derived-mode-p 'dired-mode)
+		 "Dired")
+		((memq major-mode '(helpful-mode
+												help-mode))
+		 "Help")
+		((memq major-mode '(org-mode
+												org-agenda-clockreport-mode
+												org-src-mode
+												org-agenda-mode
+												org-beamer-mode
+												org-indent-mode
+												org-bullets-mode
+												org-cdlatex-mode
+												org-agenda-log-mode
+												diary-mode))
+		 "OrgMode")
+		(t
+		 (centaur-tabs-get-group-name (current-buffer))))))
 
 (defun centaur-tabs-hide-tab (x)
 	"Do no to show buffer X in tabs."
 	(let ((name (format "%s" x)))
-	(or
-	;; Current window is not dedicated window.
-	(window-dedicated-p (selected-window))
+		(or
+		 ;; Current window is not dedicated window.
+		 (window-dedicated-p (selected-window))
 
-	;; Buffer name not match below blacklist.
-	(string-prefix-p "*epc" name)
-	(string-prefix-p "*helm" name)
-	(string-prefix-p "*Helm" name)
-	(string-prefix-p "*Compile-Log*" name)
-	(string-prefix-p "*lsp" name)
-	(string-prefix-p "*company" name)
-	(string-prefix-p "*Flycheck" name)
-	(string-prefix-p "*Flymake" name)
-	(string-prefix-p "*tramp" name)
-	(string-prefix-p " *Mini" name)
-	(string-prefix-p "*help" name)
-	(string-prefix-p "*straight" name)
-	(string-prefix-p " *temp" name)
-	(string-prefix-p "*Help" name)
+		 ;; Buffer name not match below blacklist.
+		 (string-prefix-p "*epc" name)
+		 (string-prefix-p "*helm" name)
+		 (string-prefix-p "*Helm" name)
+		 (string-prefix-p "*Compile-Log*" name)
+		 (string-prefix-p "*lsp" name)
+		 (string-prefix-p "*company" name)
+		 (string-prefix-p "*Flycheck" name)
+		 (string-prefix-p "*Flymake" name)
+		 (string-prefix-p "*tramp" name)
+		 (string-prefix-p " *Mini" name)
+		 (string-prefix-p "*help" name)
+		 (string-prefix-p "*straight" name)
+		 (string-prefix-p " *temp" name)
+		 (string-prefix-p "*Help" name)
 
-	;; Is not magit buffer.
-	(and (string-prefix-p "magit" name)
-	(not (file-name-extension name)))
-)))
+		 ;; Is not magit buffer.
+		 (and (string-prefix-p "magit" name)
+					(not (file-name-extension name)))
+		 )))
 
 (defun dual-format-function ()
 	"Format code using lsp-format if lsp-mode is active, otherwise use format-all."
@@ -800,32 +800,33 @@ beacon-blink-when-point-moves t)
 																				("GraphQL" (prettierd))
 																				("Terraform" (terraform-fmt))
 																				("Python" (ruff))
+																				("Emacs Lisp" (emacs-lisp))
 																				))
 	(evil-define-key 'normal 'global
-		 (kbd "<leader>cf")    '("format all" . dual-format-function)
+		(kbd "<leader>cf")    '("format all" . dual-format-function)
+		)
 	)
-)
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-;;	(use-package copilot :elpaca (:host github
-;;																:repo "zerolfx/copilot.el"
-;;																:branch "main"
-;;																:files ("dist" "*.el"))
-;;		:init
-;;		(setq copilot-indent-warning-suppress t)
-;;		:hook
-;;		(prog-mode . copilot-mode)
-;;		(org-mode . copilot-mode)
-;;		:config
-;;		(evil-define-key 'insert copilot-completion-map
-;;				(kbd "C-j")   'copilot-next-completion
-;;				(kbd "C-k")   'copilot-previous-completion
-;;				(kbd "C-l")   'copilot-accept-completion
-;;				(kbd "M-l")   'copilot-accept-completion-by-word
-;;				(kbd "ESC")   'copilot-clear-overlay
-;;				)
-;;	)
+;; (use-package copilot :elpaca (:host github
+;; 																		:repo "zerolfx/copilot.el"
+;; 																		:branch "main"
+;; 																		:files ("dist" "*.el"))
+;; 	:init
+;; 	(setq copilot-indent-warning-suppress t)
+;; 	:hook
+;; 	(prog-mode . copilot-mode)
+;; 	(org-mode . copilot-mode)
+;; 	:config
+;; 	(evil-define-key 'insert copilot-completion-map
+;; 		(kbd "C-j")   'copilot-next-completion
+;; 		(kbd "C-k")   'copilot-previous-completion
+;; 		(kbd "C-l")   'copilot-accept-completion
+;; 		(kbd "M-l")   'copilot-accept-completion-by-word
+;; 		(kbd "ESC")   'copilot-clear-overlay
+;; 		)
+;; 	)
 
 (use-package avy
 	:demand t
@@ -834,8 +835,8 @@ beacon-blink-when-point-moves t)
 		(kbd "<leader>jj")   '("jump 2char" . avy-goto-char-2)
 		(kbd "<leader>jl")   '("jump line" . avy-goto-line)
 		(kbd "<leader>jb")   '("jump tab" . centaur-tabs-ace-jump)
+		)
 	)
-)
 
 (use-package lsp-mode
 	:init
@@ -885,12 +886,12 @@ beacon-blink-when-point-moves t)
 				)
 
 	(defun my/orderless-dispatch-flex-first (_pattern index _total)
-			(and (eq index 0) 'orderless-flex))
+		(and (eq index 0) 'orderless-flex))
 
 	(defun my/lsp-mode-setup-completion ()
-			(setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+		(setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
 					'(orderless))
-			(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local))
+		(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local))
 	:hook ((prog-mode . lsp-deferred)
 				 (lsp-completion-mode . my/lsp-mode-setup-completion)
 				 (lsp-mode . lsp-enable-which-key-integration))
@@ -910,7 +911,7 @@ beacon-blink-when-point-moves t)
 		(kbd "<leader>li")  '("implementations" . lsp-find-implementation)
 		(kbd "<leader>lI")  '("implementations peek" . lsp-ui-peek-find-implementation)
 		(kbd "<leader>lo")  '("organize imports" . lsp-organize-imports)
-		)	
+		)
 	)
 
 (use-package lsp-ui
@@ -923,7 +924,7 @@ beacon-blink-when-point-moves t)
 		(kbd "C-k")        '("previous" . lsp-ui-peek--select-prev)
 		(kbd "C-l")        '("next file" . lsp-ui-peek--select-next-file)
 		(kbd "C-h")        '("previous file" . lsp-ui-peek--select-prev-file)
-	)
+		)
 	)
 
 (use-package consult-lsp
@@ -1007,7 +1008,7 @@ beacon-blink-when-point-moves t)
 ;; (add-hook 'graphql-ts-mode-hook 'eglot-ensure)
 
 (use-package flymake-popon :elpaca (:host "www.codeberg.org"
-																		:repo "akib/emacs-flymake-popon")
+																					:repo "akib/emacs-flymake-popon")
 	:hook
 	(prog-mode . flymake-popon-mode)
 	:config
@@ -1016,56 +1017,56 @@ beacon-blink-when-point-moves t)
 		flymake-popon--popup)
 
 	(with-eval-after-load 'dimmer
-			(add-to-list 'dimmer-prevent-dimming-predicates #'flymake-popon-p))
+		(add-to-list 'dimmer-prevent-dimming-predicates #'flymake-popon-p))
 	)
 
 (setq treesit-font-lock-level 4)
 
 (setq treesit-language-source-alist
- '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-   (cmake "https://github.com/uyha/tree-sitter-cmake")
-   (css "https://github.com/tree-sitter/tree-sitter-css")
-   (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-   (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-   (go "https://github.com/tree-sitter/tree-sitter-go")
-   (gomod "https://github.com/camdencheek/tree-sitter-go-mod")
-	 (graphql "https://github.com/bkegley/tree-sitter-graphql")
-   (html "https://github.com/tree-sitter/tree-sitter-html")
-   (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-   (json "https://github.com/tree-sitter/tree-sitter-json")
-   (make "https://github.com/alemuller/tree-sitter-make")
-   (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-   (python "https://github.com/tree-sitter/tree-sitter-python")
-   (toml "https://github.com/tree-sitter/tree-sitter-toml")
-   (terraform "https://github.com/MichaHoffmann/tree-sitter-hcl")
-   (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-   (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-   (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-	 ))
+			'((bash "https://github.com/tree-sitter/tree-sitter-bash")
+				(cmake "https://github.com/uyha/tree-sitter-cmake")
+				(css "https://github.com/tree-sitter/tree-sitter-css")
+				(dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+				(elisp "https://github.com/Wilfred/tree-sitter-elisp")
+				(go "https://github.com/tree-sitter/tree-sitter-go")
+				(gomod "https://github.com/camdencheek/tree-sitter-go-mod")
+				(graphql "https://github.com/bkegley/tree-sitter-graphql")
+				(html "https://github.com/tree-sitter/tree-sitter-html")
+				(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+				(json "https://github.com/tree-sitter/tree-sitter-json")
+				(make "https://github.com/alemuller/tree-sitter-make")
+				(markdown "https://github.com/ikatyang/tree-sitter-markdown")
+				(python "https://github.com/tree-sitter/tree-sitter-python")
+				(toml "https://github.com/tree-sitter/tree-sitter-toml")
+				(terraform "https://github.com/MichaHoffmann/tree-sitter-hcl")
+				(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+				(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+				(yaml "https://github.com/ikatyang/tree-sitter-yaml")
+				))
 
 (use-package evil-textobj-tree-sitter
 	:demand t
 	:after evil
 	:config
 	(evil-define-key nil evil-outer-text-objects-map
-			"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
-			"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
-			"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+		"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+		"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
+		"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
 	(evil-define-key nil evil-inner-text-objects-map
-			"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
-			"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
-			"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
-)
+		"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+		"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
+		"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+	)
 
 (use-package diff-hl
-:demand t 
-:hook
-;; (after-save . diff-hl-update) ;; this might be slowing down saves
-(magit-pre-refresh . diff-hl-magit-pre-refresh)
-(magit-post-refresh . diff-hl-magit-post-refresh)
-:config
-(global-diff-hl-mode)
-(global-diff-hl-show-hunk-mouse-mode))
+	:demand t
+	:hook
+	;; (after-save . diff-hl-update) ;; this might be slowing down saves
+	(magit-pre-refresh . diff-hl-magit-pre-refresh)
+	(magit-post-refresh . diff-hl-magit-post-refresh)
+	:config
+	(global-diff-hl-mode)
+	(global-diff-hl-show-hunk-mouse-mode))
 
 (use-package org
 	:elpaca nil
@@ -1079,20 +1080,20 @@ beacon-blink-when-point-moves t)
 																													 (emacs-lisp . t)
 																													 (jupyter . t)))
 	(which-key-add-major-mode-key-based-replacements 'org-mode
-			", i" "Insert"
-	)
+		", i" "Insert"
+		)
 	(evil-define-key 'nil org-src-mode-map
-			(kbd "<localleader>q")  '("abort" . org-edit-src-abort)
-			(kbd "<localleader>s")  '("save" . org-edit-src-exit)
-	)
+		(kbd "<localleader>q")  '("abort" . org-edit-src-abort)
+		(kbd "<localleader>s")  '("save" . org-edit-src-exit)
+		)
 	(evil-define-key 'normal org-mode-map
-			(kbd "<localleader>x")   '("execute block" . org-babel-execute-src-block)
-			(kbd "<localleader>X")   '("execute all" . org-babel-execute-buffer)
-			(kbd "<localleader>e")	 '("edit block" . org-edit-special)
-			(kbd "<localleader>ie")  '("emacs-lisp" . (lambda() (interactive) (org-insert-structure-template "src emacs-lisp")))
-			(kbd "<localleader>ip")  '("python" . (lambda() (interactive) (org-insert-structure-template "src python")))
-			(kbd "<localleader>ij")  '("jupyer" . (lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)))
-	)
+		(kbd "<localleader>x")   '("execute block" . org-babel-execute-src-block)
+		(kbd "<localleader>X")   '("execute all" . org-babel-execute-buffer)
+		(kbd "<localleader>e")	 '("edit block" . org-edit-special)
+		(kbd "<localleader>ie")  '("emacs-lisp" . (lambda() (interactive) (org-insert-structure-template "src emacs-lisp")))
+		(kbd "<localleader>ip")  '("python" . (lambda() (interactive) (org-insert-structure-template "src python")))
+		(kbd "<localleader>ij")  '("jupyer" . (lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)))
+		)
 	:hook
 	(org-babel-after-execute . org-display-inline-images))
 
@@ -1102,21 +1103,21 @@ beacon-blink-when-point-moves t)
 (use-package org-modern
 	:init
 	(setq
-	;; Edit settings
-	org-auto-align-tags nil
-	org-tags-column 0
-	org-catch-invisible-edits 'show-and-error
-	org-special-ctrl-a/e t
-	org-src-tab-acts-natively nil
-	org-insert-heading-respect-content t
+	 ;; Edit settings
+	 org-auto-align-tags nil
+	 org-tags-column 0
+	 org-catch-invisible-edits 'show-and-error
+	 org-special-ctrl-a/e t
+	 org-src-tab-acts-natively nil
+	 org-insert-heading-respect-content t
 
-	;; Org styling, hide markup etc.
-	org-hide-emphasis-markers nil
-	org-pretty-entities t
+	 ;; Org styling, hide markup etc.
+	 org-hide-emphasis-markers nil
+	 org-pretty-entities t
 
-	;; Agenda styling
-	org-agenda-tags-column 0
-	org-agenda-block-separator ?-)
+	 ;; Agenda styling
+	 org-agenda-tags-column 0
+	 org-agenda-block-separator ?-)
 	:hook
 	(org-mode . org-modern-mode))
 
@@ -1133,55 +1134,55 @@ beacon-blink-when-point-moves t)
 
 (with-eval-after-load 'evil
 	(evil-define-key 'normal python-ts-mode-map
-			(kbd "<localleader>s") '("start python" . run-python)
-			(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
-)
+		(kbd "<localleader>s") '("start python" . run-python)
+		(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
+	)
 
 ;; Make sure conda python is found before emacs python
 (setq python-path (if (system-is-mswindows)
 											"~/anaconda3"
-											"~/anaconda3/bin"))
+										"~/anaconda3/bin"))
 (setq exec-path (cons python-path exec-path))
 
 (setq python-shell-interpreter (if (system-is-mswindows)
-											"python.exe"
-											"python3"))
+																	 "python.exe"
+																 "python3"))
 
 (setq lsp-ruff-lsp-python-path (if (system-is-mswindows)
-											"python.exe"
-											"python3"))
+																	 "python.exe"
+																 "python3"))
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 (add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
-	
+
 (defun replace-current-header-with-src-jupyter ()
-  (interactive)
-  (move-beginning-of-line nil)
-  (kill-line)
-  (insert src-jupyter-block-header))
+	(interactive)
+	(move-beginning-of-line nil)
+	(kill-line)
+	(insert src-jupyter-block-header))
 
 (defun replace-all-header-with-src-jupyter ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^#\\+begin_src jupyter-python\\s-*$" nil t)
-      (replace-match (concat "#+begin_" src-jupyter-block-header) nil nil))))
-	
-	(use-package jupyter
+	(interactive)
+	(save-excursion
+		(goto-char (point-min))
+		(while (re-search-forward "^#\\+begin_src jupyter-python\\s-*$" nil t)
+			(replace-match (concat "#+begin_" src-jupyter-block-header) nil nil))))
+
+(use-package jupyter
 	:after code-cells)
 
-	(use-package code-cells
+(use-package code-cells
 	:init
 	(setq code-cells-convert-ipynb-style '(("pandoc" "--to" "ipynb" "--from" "org")
-	("pandoc" "--to" "org" "--from" "ipynb")
-	(lambda () #'org-mode)))
+																				 ("pandoc" "--to" "org" "--from" "ipynb")
+																				 (lambda () #'org-mode)))
 	(evil-define-key 'normal code-cells-mode-map
 		(kbd "<localleader>D")   '("clear results" . jupyter-org-clear-all-results)
 		(kbd "<localleader>r")   '("replace jupyter src" . replace-current-header-with-src-jupyter)
 		(kbd "<localleader>R")   '("replace all jupyter src" .  replace-all-header-with-src-jupyter)
-	)
+		)
 	:hook
 	((org-mode) . code-cells-mode)
 	)
@@ -1194,7 +1195,7 @@ beacon-blink-when-point-moves t)
 (add-to-list 'auto-mode-alist '("\\Dockerfile\\'" . dockerfile-ts-mode))
 
 (use-package terraform-mode
-:custom (terraform-format-on-save nil))
+	:custom (terraform-format-on-save nil))
 
 (add-to-list 'auto-mode-alist '("\\.tf\\(vars\\)?\\'" . terraform-mode))
 
@@ -1202,9 +1203,8 @@ beacon-blink-when-point-moves t)
 (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
 
 (use-package graphql-ts-mode
-  :demand t
-  :mode ("\\.graphql\\'" "\\.gql\\'")
-  )
+	:demand t
+	:mode ("\\.graphql\\'" "\\.gql\\'"))
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
