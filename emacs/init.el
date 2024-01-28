@@ -82,7 +82,7 @@
 	(gc-buffers-mode t))
 
 ;; Maximize the Emacs frame at startup
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq gc-cons-threshold 100000000
 	read-process-output-max (* 1024 1024)
@@ -122,7 +122,7 @@
 	(add-hook 'focus-out-hook 'garbage-collect)
 
 (setq-default tab-width 2)
-(set-frame-parameter nil 'alpha-background 92)
+(add-to-list 'default-frame-alist '(alpha-background . 92))
 
 (set-clipboard-coding-system 'utf-8-unix)
 (savehist-mode 1)
@@ -143,7 +143,7 @@ user-mail-address "simonho.ubc@gmail.com")
 	:config
 	(load-theme 'kanagawa-paper t))
 
-(set-frame-font "FiraCode Nerd Font-11" nil t)
+(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
