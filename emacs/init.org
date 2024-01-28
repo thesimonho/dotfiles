@@ -1482,4 +1482,5 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
 #+end_src
