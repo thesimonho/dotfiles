@@ -151,9 +151,9 @@
   (font-lock-preprocessor-face	                 (:foreground boatYellow2))
   (elisp-shorthand-font-lock-face                (:foreground fujiWhite))
 
-  (info-xref                                     (:foreground carpYellow))
-  (minibuffer-prompt-end                         (:foreground autumnRed :background winterRed))
-  (minibuffer-prompt                             (:foreground carpYellow :background winterYellow))
+  (info-xref                                     (:foreground dragonYellow))
+  (minibuffer-prompt-end                         (:foreground dragonRed :background winterRed))
+  (minibuffer-prompt                             (:foreground dragonYellow :background winterYellow))
   (epa-mark                                      (:foreground waveRed))
   (dired-mark                                    (:foreground waveRed))
   (trailing-whitespace                           (:background comet))
@@ -175,13 +175,13 @@
   (doom-modeline-evil-replace-state              (:foreground autumnRed))
   (doom-modeline-evil-operator-state             (:foreground autumnRed))
 
-  (persp-selected-face				                   (:bold t :foreground dragonBlue))
+  (persp-selected-face				                   (:bold t :foreground waveAqua1))
   (doom-modeline-project-dir                     (:foreground waveAqua2))
   (doom-modeline-buffer-path                     (:foreground waveAqua2))
   (doom-modeline-buffer-file                     (:bold t :foreground dragonBlue))
-  (doom-modeline-buffer-modified                 (:inherit 'bold :foreground carpYellow))
-  (doom-modeline-buffer-major-mode               (:bold t :foreground dragonGray2))
-  (doom-modeline-buffer-minor-mode               (:foreground dragonGray)) ;; minions
+  (doom-modeline-buffer-modified                 (:inherit 'bold :foreground dragonYellow))
+  (doom-modeline-buffer-major-mode               (:bold t :foreground dragonBlue))
+  (doom-modeline-buffer-minor-mode               (:foreground dragonGray3)) ;; minions
   (doom-modeline-error                           (:background peachRed))
   (doom-modeline-warning                         (:foreground roninYellow))
   (doom-modeline-info                            (:foreground dragonGray2)) ;; VCS branch
