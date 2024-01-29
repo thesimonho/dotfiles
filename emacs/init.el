@@ -846,7 +846,8 @@
 
 (use-package lsp-mode
 	:init
-	(setq lsp-completion-provider :none  ;; use corfu instead
+	(setq lsp-auto-execute-action nil
+				lsp-completion-provider :none  ;; use corfu instead
 				lsp-disabled-clients '(tfls)
 				lsp-enable-links t
 				lsp-enable-suggest-server-download t
@@ -860,6 +861,8 @@
 				lsp-modeline-code-actions-mode t
 				lsp-modeline-code-actions-segments '(icon count)
 				lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
+				lsp-progress-function 'lsp-on-progress-legacy
+				lsp-progress-spinner-type 'moon
 				lsp-semantic-tokens-enable t
 				lsp-semantic-tokens-honor-refresh-requests t
 				lsp-symbol-highlighting-skip-current t
@@ -1214,3 +1217,14 @@
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
+
+(use-package gotest
+	:demand t
+	:config
+	(evil-define-key 'normal go-ts-mode-map
+		(kbd "<localleader>x")   '("run" . go-run)
+		(kbd "<localleader>c")   '("coverage" . go-test-current-coverage)
+		(kbd "<localleader>t")   '("test file" . go-test-current-file)
+		(kbd "<localleader>T")   '("test project" . go-test-current-project)
+		)
+	)
