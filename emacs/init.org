@@ -635,6 +635,7 @@ Make editing easier
 			"<SPC> q" "Quit"
 			"<SPC> w" "Window"
 			"<SPC> z" "Tools"
+			", t"     "Tests"
 			)
 		(which-key-mode))
 #+end_src
@@ -1416,6 +1417,18 @@ Text objects
 	(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 #+end_src
 
+*** Pytest
+
+#+begin_src emacs-lisp
+	(use-package python-pytest
+		:demand t
+		:config
+		(evil-define-key 'normal python-ts-mode-map
+			(kbd "<localleader>t")   '("Tests" . python-pytest-dispatch)
+			)
+		)
+#+end_src
+
 *** Jupyter
 
 This is a pseudo replacement for Jupyter notebooks. Opening a .ipynb will allow it to be read and edited as an org file.
@@ -1511,9 +1524,9 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 		:config
 		(evil-define-key 'normal go-ts-mode-map
 			(kbd "<localleader>x")   '("run" . go-run)
-			(kbd "<localleader>c")   '("coverage" . go-test-current-coverage)
-			(kbd "<localleader>t")   '("test file" . go-test-current-file)
-			(kbd "<localleader>T")   '("test project" . go-test-current-project)
+			(kbd "<localleader>tc")   '("coverage" . go-test-current-coverage)
+			(kbd "<localleader>tf")   '("test file" . go-test-current-file)
+			(kbd "<localleader>tp")   '("test project" . go-test-current-project)
 			)
 		)
 #+end_src

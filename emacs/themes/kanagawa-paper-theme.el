@@ -199,6 +199,13 @@
   (custom-link                                   (:foreground crystalBlue))
   (link                                          (:foreground crystalBlue))
 
+	;; transient
+  (transient-inactive-value                      (:foreground dragonGray))
+  (transient-inactive-argument                      (:foreground dragonGray))
+  (transient-delimiter                      (:foreground dragonGray))
+  (transient-unreachable                      (:foreground dragonRed))
+  (transient-unreachable-key                      (:foreground dragonBlue))
+
   ;; org-mode
   (org-done                                      (:foreground dragonBlue))
   (org-code                                      (:background sumiInk-0))

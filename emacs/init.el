@@ -496,6 +496,7 @@
 		"<SPC> q" "Quit"
 		"<SPC> w" "Window"
 		"<SPC> z" "Tools"
+		", t"     "Tests"
 		)
 	(which-key-mode))
 
@@ -1173,6 +1174,14 @@
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
+(use-package python-pytest
+	:demand t
+	:config
+	(evil-define-key 'normal python-ts-mode-map
+		(kbd "<localleader>t")   '("Tests" . python-pytest-dispatch)
+		)
+	)
+
 (defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
 
 (defun replace-current-header-with-src-jupyter ()
@@ -1233,8 +1242,8 @@
 	:config
 	(evil-define-key 'normal go-ts-mode-map
 		(kbd "<localleader>x")   '("run" . go-run)
-		(kbd "<localleader>c")   '("coverage" . go-test-current-coverage)
-		(kbd "<localleader>t")   '("test file" . go-test-current-file)
-		(kbd "<localleader>T")   '("test project" . go-test-current-project)
+		(kbd "<localleader>tc")   '("coverage" . go-test-current-coverage)
+		(kbd "<localleader>tf")   '("test file" . go-test-current-file)
+		(kbd "<localleader>tp")   '("test project" . go-test-current-project)
 		)
 	)
