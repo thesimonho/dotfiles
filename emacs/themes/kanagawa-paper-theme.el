@@ -256,7 +256,7 @@
   (tooltip                                       (:foreground sumiInk-0 :background carpYellow :bold t))
 
 	;; indents
-	(indent-guide-face														 (:foreground dragonGray3))	
+	(indent-guide-face														 (:foreground dragonGray3))
 
   ;; flymake
   (flymake-error								                 (:foreground samuraiRed))
@@ -320,7 +320,7 @@
   (anzu-match-3                                  (:foreground lightBlue :background sumiInk-2))
 
   (anzu-mode-line                                (:foreground sumiInk-0 :background springViolet2))
-  (anzu-mode-no-match	                          (:foreground fujiWhite :background peachRed))
+  (anzu-mode-no-match	                           (:foreground fujiWhite :background peachRed))
   (anzu-replace-to                               (:foreground springBlue :background winterBlue))
   (anzu-replace-highlight                        (:foreground peachRed :background winterRed :strike-through t))
 
@@ -345,24 +345,27 @@
   (hydra-face-teal                               (:foreground lightBlue))
 
   ;; centaur-tabs
-  (centaur-tabs-active-bar-face                  (:background springBlue :foreground fujiWhite))
-  (centaur-tabs-selected                         (:background sumiInk-1 :foreground fujiWhite :bold t))
-  (centaur-tabs-selected-modified                (:background sumiInk-1 :foreground fujiWhite))
-  (centaur-tabs-modified-marker-selected         (:background sumiInk-1 :foreground autumnYellow))
-  (centaur-tabs-close-selected                   (:inherit 'centaur-tabs-selected))
   (tab-line                                      (:background sumiInk-0))
+  (centaur-tabs-default                          (:background sumiInk-0 :foreground sumiInk-4))
+  (centaur-tabs-active-bar-face	 	               (:background dragonPink))
+
+  (centaur-tabs-selected                         (:background sumiInk-1 :foreground fujiWhite :bold t))
+  (centaur-tabs-selected-modified                (:inherit 'centaur-tabs-selected))
 
   (centaur-tabs-unselected                       (:background sumiInk-0 :foreground sumiInk-4))
-  (centaur-tabs-default                          (:background sumiInk-0 :foreground sumiInk-4))
-  (centaur-tabs-unselected-modified              (:background sumiInk-0 :foreground peachRed))
-  (centaur-tabs-modified-marker-unselected       (:background sumiInk-0 :foreground sumiInk-4))
-  (centaur-tabs-close-unselected                 (:background sumiInk-0 :foreground sumiInk-4))
+  (centaur-tabs-unselected-modified              (:inherit 'centaur-tabs-unselected))
+
+  (centaur-tabs-modified-marker-selected         (:inherit 'centaur-tabs-selected :foreground autumnYellow))
+  (centaur-tabs-modified-marker-unselected       (:inherit 'centaur-tabs-unselected))
+
+  (centaur-tabs-close-selected                   (:inherit 'centaur-tabs-selected))
+  (centaur-tabs-close-unselected                 (:inherit 'centaur-tabs-unselected))
 
   (centaur-tabs-close-mouse-face                 (:foreground peachRed))
-  (centaur-tabs-default                          (:background roninYellow ))
-  (centaur-tabs-name-mouse-face                  (:foreground springBlue :bold t))
-  (centaur-tabs-jump-identifier-selected         (:foreground samuraiRed :background sumiInk-1 :bold t))
-  (centaur-tabs-jump-identifier-unselected       (:foreground samuraiRed :bold t))
+  (centaur-tabs-name-mouse-face                  (:foreground dragonBlue :bold t))
+
+  (centaur-tabs-jump-identifier-selected         (:inherit 'centaur-tabs-selected :foreground samuraiRed :bold t))
+  (centaur-tabs-jump-identifier-unselected       (:inherit 'centaur-tabs-unselected :foreground samuraiRed :bold t))
 
 	;; dirvish
 	(dirvish-hl-line																(:background sumiInk-2))
@@ -548,7 +551,7 @@
   ;; (tree-sitter-hl-face:variable.synthesized      (:foreground waveRed))
   ;; (tree-sitter-hl-face:keyword.compiler          (:foreground peachRed :bold t :italic t))
 
-	  ;; flycheck
+	;; flycheck
   ;; (flycheck-posframe-background-face             (:background sumiInk-0))
   ;; (flycheck-posframe-face                        (:background sumiInk-0))
   ;; (flycheck-posframe-info-face                   (:background sumiInk-0 :foreground autumnGreen))

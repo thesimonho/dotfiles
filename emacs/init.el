@@ -112,7 +112,7 @@
 			set-charset-priority 'unicode
 			prefer-coding-system 'utf-8-unix
 			x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
-			garbage-collection-messages t
+			garbage-collection-messages nil
 			native-comp-async-report-warnings-errors nil)
 
 ;; Run garbage collection when Emacs is idle for 15 seconds
@@ -684,13 +684,21 @@
 	:config
 	(dired-gitignore-global-mode t))
 
+(defun set-daemon-faces ()
+	(set-face-attribute 'tab-line nil :background "#16161D")
+	)
+
 (use-package centaur-tabs
 	:demand t
+	:hook
+	((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
+	(server-after-make-frame . set-daemon-faces)
 	:init
 	(setq centaur-tabs-style "bar"
-				centaur-tabs-set-bar 'left
+				centaur-tabs-set-bar 'under
+				x-underline-at-descent-line t
 				centaur-tabs-modified-marker "\u2022"
-				centaur-tabs-height 22
+				centaur-tabs-height 32
 				centaur-tabs-set-icons t
 				centaur-tabs-set-modified-marker t
 				centaur-tabs-cycle-scope 'tabs
@@ -703,8 +711,6 @@
 	(centaur-tabs-mode t)
 	(centaur-tabs-headline-match)
 	(centaur-tabs-group-by-projectile-project)
-	:hook
-	((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
 	)
 
 (defun centaur-tabs-buffer-groups ()
