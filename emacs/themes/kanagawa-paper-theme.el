@@ -333,6 +333,7 @@
   (vertico-posframe-border                       (:background sumiInk-3))
   (vertico-posframe                              (:background sumiInk-2))
   (orderless-match-face-0                        (:foreground crystalBlue :bold t))
+  (marginalia-file-priv-no                       (:foreground crystalBlue))
 
   (comint-highlight-prompt                       (:background springViolet2 :foreground sumiInk-1))
   (completions-annotations                       (:foreground dragonBlue :italic t))
