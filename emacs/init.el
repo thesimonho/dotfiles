@@ -115,13 +115,15 @@
 			garbage-collection-messages nil
 			native-comp-async-report-warnings-errors nil)
 
+(setq-default tab-width 2
+							standard-indent 2)
+
 ;; Run garbage collection when Emacs is idle for 15 seconds
 (run-with-idle-timer 15 t #'garbage-collect)
 
 ;; Run garbage collection when the Emacs window loses focus
 (add-hook 'focus-out-hook 'garbage-collect)
 
-(setq-default tab-width 2)
 (add-to-list 'default-frame-alist '(alpha-background . 92))
 
 (set-clipboard-coding-system 'utf-8-unix)
@@ -1162,7 +1164,6 @@
 																 "python3"))
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-(add-hook 'python-mode-hook (lambda () (setq-local tab-width 4)))
 
 (defvar src-jupyter-block-header "src jupyter-python :session jupyter :async yes")
 
@@ -1217,6 +1218,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
+(setq go-ts-mode-indent-offset 2)
 
 (use-package gotest
 	:demand t
