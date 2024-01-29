@@ -1061,12 +1061,20 @@
 	:config
 	(evil-define-key nil evil-outer-text-objects-map
 		"f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+		"l" (evil-textobj-tree-sitter-get-textobj "loop.outer")
+		"i" (evil-textobj-tree-sitter-get-textobj "conditional.outer")
 		"c" (evil-textobj-tree-sitter-get-textobj "class.outer")
-		"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer"))
+		"b" (evil-textobj-tree-sitter-get-textobj "block.outer")
+		"a" (evil-textobj-tree-sitter-get-textobj "parameter.outer")
+		)
 	(evil-define-key nil evil-inner-text-objects-map
 		"f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+		"l" (evil-textobj-tree-sitter-get-textobj "loop.inner")
+		"i" (evil-textobj-tree-sitter-get-textobj "conditional.inner")
 		"c" (evil-textobj-tree-sitter-get-textobj "class.inner")
-		"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner"))
+		"b" (evil-textobj-tree-sitter-get-textobj "block.inner")
+		"a" (evil-textobj-tree-sitter-get-textobj "parameter.inner")
+		)
 	)
 
 (use-package diff-hl
