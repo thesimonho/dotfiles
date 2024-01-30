@@ -579,6 +579,44 @@
 	:config
 	(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
+(defun cape-prog()
+	(dolist (backend '(cape-file cape-keyword))
+		(add-to-list 'completion-at-point-functions backend))
+	)
+
+(defun cape-elisp()
+	(dolist (backend '(cape-elisp-block cape-elisp-symbol))
+		(add-to-list 'completion-at-point-functions backend))
+	)
+
+(defun cape-text()
+	(dolist (backend '(cape-emoji))
+		(add-to-list 'completion-at-point-functions backend))
+	)
+
+(use-package cape
+	:hook
+	(prog-mode . cape-prog)
+	(emacs-lisp-mode . cape-elisp)
+	(org-mode . cape-elisp)
+	(text-mode . cape-text)
+	:init
+	(setq cape-dabbrev-min-length 3
+				cape-dabbrev-check-other-buffers 'some
+				cape-file-directory-must-exist nil)
+
+	(add-to-list 'completion-at-point-functions #'cape-dabbrev)
+	)
+
+(use-package dabbrev
+	:custom
+	(dabbrev-upcase-means-case-search t)
+	(dabbrev-check-all-buffers nil)
+	(dabbrev-check-other-buffers t)
+	(dabbrev-friend-buffer-function 'dabbrev--same-major-mode-p)
+	(dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))
+	)
+
 (use-package vertico
 	:init
 	(setq read-file-name-completion-ignore-case t
@@ -613,9 +651,9 @@
 (use-package orderless
 	:demand t
 	:config
-	(setq completion-styles '(orderless basic substring partial-completion flex)
+	(setq completion-styles '(orderless partial-completion basic)
 				completion-category-defaults nil
-				completion-category-overrides '((file (styles partial-completion)))))
+				completion-category-overrides nil))
 
 (use-package consult
 	:demand t
@@ -851,6 +889,7 @@
 (use-package lsp-mode
 	:init
 	(setq lsp-auto-execute-action nil
+				lsp-completion-enable nil  ;; disable this to allow cape to work
 				lsp-completion-provider :none  ;; use corfu instead
 				lsp-disabled-clients '(tfls)
 				lsp-enable-links t
@@ -906,7 +945,8 @@
 	(defun my/lsp-mode-setup-completion ()
 		(setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
 					'(orderless))
-		(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local))
+		(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
+		(setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point))))
 	:hook ((prog-mode . lsp-deferred)
 				 (lsp-completion-mode . my/lsp-mode-setup-completion)
 				 (lsp-mode . lsp-enable-which-key-integration))
