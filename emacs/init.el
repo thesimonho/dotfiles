@@ -557,8 +557,10 @@
 	:custom
 	(corfu-cycle t)
 	(corfu-auto t)
-	(corfu-auto-delay 0.0)
-	(corfu-quit-at-boundary 'separator)
+	(corfu-auto-delay 0.2)
+	(corfu-count 15)
+	(corfu-min-width 20)
+	(corfu-quit-at-boundary t)
 	(corfu-quit-no-match t)
 	(corfu-echo-delay 0.0)
 	(corfu-preselect 'directory)
