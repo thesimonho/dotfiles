@@ -609,6 +609,7 @@
 	)
 
 (use-package dabbrev
+	:elpaca nil
 	:custom
 	(dabbrev-upcase-means-case-search t)
 	(dabbrev-check-all-buffers nil)
