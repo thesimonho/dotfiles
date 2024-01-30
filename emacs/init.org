@@ -1465,6 +1465,17 @@ Text objects
 	(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 #+end_src
 
+*** Ruff linter
+
+Does works through the CLI tool, not through LSP ~server~
+
+#+begin_src emacs-lisp
+	(use-package flymake-ruff
+		:hook
+		(python-ts-mode . flymake-ruff-load)
+		(python-ts-mode . flymake-mode))
+#+end_src
+
 *** Pytest
 
 #+begin_src emacs-lisp

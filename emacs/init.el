@@ -1217,6 +1217,11 @@
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
+(use-package flymake-ruff
+	:hook
+	(python-ts-mode . flymake-ruff-load)
+	(python-ts-mode . flymake-mode))
+
 (use-package python-pytest
 	:demand t
 	:config
