@@ -551,7 +551,6 @@
 	:init
 	(evil-define-key 'normal 'global
 		(kbd "<leader>g")  '("magit status" . magit)
-		(kbd "<leader>G")  '("magit log" . magit-log-all)
 		))
 
 (use-package corfu
@@ -887,8 +886,10 @@
 				lsp-pylsp-plugins-mccabe-enabled nil
 				lsp-pylsp-plugins-pycodestyle-enabled	nil
 				lsp-pylsp-plugins-pycodestyle-max-line-length 88
+				;; lsp-pylsp-plugins-pycodestyle-ignore '()
 				lsp-pylsp-plugins-pydocstyle-enabled t
 				lsp-pylsp-plugins-pydocstyle-convention "google"
+				;; lsp-pylsp-plugins-pydocstyle-add-ignore '("D103", "D107")
 				lsp-pylsp-plugins-pyflakes-enabled nil
 				lsp-pylsp-plugins-pylint-enabled t
 				lsp-pylsp-plugins-yapf-enabled nil
