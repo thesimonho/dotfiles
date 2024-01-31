@@ -919,22 +919,20 @@
 				lsp-ui-doc-enable nil
 				lsp-ui-doc-show-with-cursor nil
 				lsp-ui-doc-show-with-mouse nil
-				lsp-pylsp-configuration-sources ["pycodestyle"]
-				lsp-pylsp-plugins-autopep8-enabled nil
-				lsp-pylsp-plugins-black-enabled t
+				;; lsp-pylsp-configuration-sources ["pycodestyle"]
+				;; lsp-pylsp-plugins-autopep8-enabled nil
+				;; lsp-pylsp-plugins-black-enabled t
 				lsp-pylsp-plugins-flake8-enabled nil
-				lsp-pylsp-plugins-isort-enabled t
-				lsp-pylsp-plugins-jedi-completion-enabled t
-				lsp-pylsp-plugins-mccabe-enabled nil
-				lsp-pylsp-plugins-pycodestyle-enabled	nil
-				lsp-pylsp-plugins-pycodestyle-max-line-length 88
-				;; lsp-pylsp-plugins-pycodestyle-ignore '()
-				lsp-pylsp-plugins-pydocstyle-enabled t
-				lsp-pylsp-plugins-pydocstyle-convention "google"
-				;; lsp-pylsp-plugins-pydocstyle-add-ignore '("D103", "D107")
-				lsp-pylsp-plugins-pyflakes-enabled nil
-				lsp-pylsp-plugins-pylint-enabled t
-				lsp-pylsp-plugins-yapf-enabled nil
+				;; lsp-pylsp-plugins-isort-enabled t
+				;; lsp-pylsp-plugins-jedi-completion-enabled t
+				;; lsp-pylsp-plugins-mccabe-enabled nil
+				;; lsp-pylsp-plugins-pycodestyle-enabled	nil
+				;; lsp-pylsp-plugins-pycodestyle-max-line-length 88
+				;; lsp-pylsp-plugins-pydocstyle-enabled t
+				;; lsp-pylsp-plugins-pydocstyle-convention "google"
+				;; lsp-pylsp-plugins-pyflakes-enabled nil
+				lsp-pylsp-plugins-pylint-enabled nil
+				;; lsp-pylsp-plugins-yapf-enabled nil
 				lsp-terraform-ls-enable-show-reference t
 				lsp-terraform-ls-prefill-required-fields t
 				lsp-terraform-ls-validate-on-save t
@@ -1062,6 +1060,8 @@
 ;; (add-hook 'vue-mode-hook 'eglot-ensure)
 ;; (add-hook 'terraform-mode-hook 'eglot-ensure)
 ;; (add-hook 'graphql-ts-mode-hook 'eglot-ensure)
+
+(add-hook 'prog-mode-hook 'flymake-mode)
 
 (use-package flymake-popon :elpaca (:host "www.codeberg.org"
 																					:repo "akib/emacs-flymake-popon")
@@ -1218,10 +1218,7 @@
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
-(use-package flymake-ruff
-	:hook
-	(python-ts-mode . flymake-ruff-load)
-	(python-ts-mode . flymake-mode))
+(setq python-flymake-command '("ruff" "--quiet" "--stdin-filename=stdin" "-"))
 
 (use-package python-pytest
 	:demand t
