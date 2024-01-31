@@ -585,7 +585,7 @@
 	)
 
 (defun cape-elisp()
-	(dolist (backend '(cape-elisp-block cape-elisp-symbol))
+	(dolist (backend '(cape-elisp-block))
 		(add-to-list 'completion-at-point-functions backend))
 	)
 
