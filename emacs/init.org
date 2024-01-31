@@ -1459,10 +1459,6 @@ Text objects
 																		 "python.exe"
 																	 "python3"))
 
-	(setq lsp-ruff-lsp-python-path (if (system-is-mswindows)
-																		 "python.exe"
-																	 "python3"))
-
 	(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 #+end_src
 

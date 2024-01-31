@@ -1212,10 +1212,6 @@
 																	 "python.exe"
 																 "python3"))
 
-(setq lsp-ruff-lsp-python-path (if (system-is-mswindows)
-																	 "python.exe"
-																 "python3"))
-
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
 (setq python-flymake-command '("ruff" "--quiet" "--stdin-filename=stdin" "-"))
