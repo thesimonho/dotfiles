@@ -922,7 +922,7 @@
 				;; lsp-pylsp-configuration-sources ["pycodestyle"]
 				;; lsp-pylsp-plugins-autopep8-enabled nil
 				;; lsp-pylsp-plugins-black-enabled t
-				lsp-pylsp-plugins-flake8-enabled nil
+				;; lsp-pylsp-plugins-flake8-enabled nil
 				;; lsp-pylsp-plugins-isort-enabled t
 				;; lsp-pylsp-plugins-jedi-completion-enabled t
 				;; lsp-pylsp-plugins-mccabe-enabled nil
@@ -931,7 +931,7 @@
 				;; lsp-pylsp-plugins-pydocstyle-enabled t
 				;; lsp-pylsp-plugins-pydocstyle-convention "google"
 				;; lsp-pylsp-plugins-pyflakes-enabled nil
-				lsp-pylsp-plugins-pylint-enabled nil
+				;; lsp-pylsp-plugins-pylint-enabled nil
 				;; lsp-pylsp-plugins-yapf-enabled nil
 				lsp-terraform-ls-enable-show-reference t
 				lsp-terraform-ls-prefill-required-fields t
