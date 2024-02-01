@@ -1282,20 +1282,13 @@ Old eglot config for reference
 * Diagnostics
 
 #+begin_src emacs-lisp
-	(add-hook 'prog-mode-hook 'flymake-mode)
-	
-	(use-package flymake-popon :elpaca (:host "www.codeberg.org"
-																						:repo "akib/emacs-flymake-popon")
-		:hook
-		(prog-mode . flymake-popon-mode)
+	(use-package flycheck
+		:demand t
+		:ensure t
+		:custom
+		(flycheck-display-errors-delay 0.2)
 		:config
-		(defun flymake-popon-p ()
-			"Check if the flymake-popon is visible."
-			flymake-popon--popup)
-
-		(with-eval-after-load 'dimmer
-			(add-to-list 'dimmer-prevent-dimming-predicates #'flymake-popon-p))
-		)
+		(global-flycheck-mode))
 #+end_src
 
 * Treesitter
@@ -1460,14 +1453,6 @@ Text objects
 																	 "python3"))
 
 	(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-#+end_src
-
-*** Ruff linter
-
-This works through the CLI tool, not through LSP, so it frees up an lsp-mode slot to use a server for something else.
-
-#+begin_src emacs-lisp
-	(setq python-flymake-command '("ruff" "--quiet" "--stdin-filename=stdin" "-"))
 #+end_src
 
 *** Pytest

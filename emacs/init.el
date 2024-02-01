@@ -1061,20 +1061,13 @@
 ;; (add-hook 'terraform-mode-hook 'eglot-ensure)
 ;; (add-hook 'graphql-ts-mode-hook 'eglot-ensure)
 
-(add-hook 'prog-mode-hook 'flymake-mode)
-
-(use-package flymake-popon :elpaca (:host "www.codeberg.org"
-																					:repo "akib/emacs-flymake-popon")
-	:hook
-	(prog-mode . flymake-popon-mode)
+(use-package flycheck
+	:demand t
+	:ensure t
+	:custom
+	(flycheck-display-errors-delay 0.2)
 	:config
-	(defun flymake-popon-p ()
-		"Check if the flymake-popon is visible."
-		flymake-popon--popup)
-
-	(with-eval-after-load 'dimmer
-		(add-to-list 'dimmer-prevent-dimming-predicates #'flymake-popon-p))
-	)
+	(global-flycheck-mode))
 
 (setq treesit-font-lock-level 4)
 
@@ -1213,8 +1206,6 @@
 																 "python3"))
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-
-(setq python-flymake-command '("ruff" "--quiet" "--stdin-filename=stdin" "-"))
 
 (use-package python-pytest
 	:demand t
