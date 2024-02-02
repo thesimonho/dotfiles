@@ -1,12 +1,12 @@
-#+title: Emacs Configuration
+
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
 * Table of contents                                                     :TOC:
 - [[#helper-functions][Helper functions]]
   - [[#auto-tangle-configuration-files][Auto-tangle Configuration Files]]
   - [[#utilities][Utilities]]
-- [[#profile-emacs-startup][Profile Emacs startup]]
 - [[#package-management][Package management]]
+- [[#profile-emacs-startup][Profile Emacs startup]]
 - [[#cleanup][Cleanup]]
   - [[#no-littering][No littering]]
   - [[#gc-buffers][GC Buffers]]
@@ -76,19 +76,6 @@ Must be evaluated at least once.
 		(eq system-type 'windows-nt))
 #+end_src
 
-* Profile Emacs startup 
-
-Adds a hook to profile Emacs startup time. Commented out as dashboard also provides startup time
-
-Also computes startup statistics for packages. Check the stats using `use-package-report`.
-
-#+begin_src emacs-lisp
-	(setq use-package-verbose nil  ; don't print anything
-				use-package-compute-statistics t ; compute statistics about package initialization
-				use-package-minimum-reported-time 0.0001
-				use-package-always-defer t)	; always defer, don't "require", except when :demand
-      #+end_src
-
 * Package management
 
 Use elpaca for package management
@@ -131,6 +118,8 @@ Use elpaca for package management
 	(add-hook 'after-init-hook #'elpaca-process-queues)
 	(elpaca `(,@elpaca-order))
 
+	(elpaca-no-symlink-mode)
+
 	;; Install use-package support
 	(elpaca elpaca-use-package
 		;; Enable :elpaca use-package keyword.
@@ -141,6 +130,19 @@ Use elpaca for package management
 	;; Block until current queue processed.
 	(elpaca-wait)
 #+end_src
+
+* Profile Emacs startup 
+
+Adds a hook to profile Emacs startup time. Commented out as dashboard also provides startup time
+
+Also computes startup statistics for packages. Check the stats using `use-package-report`.
+
+#+begin_src emacs-lisp
+	(setq use-package-verbose nil  ; don't print anything
+				use-package-compute-statistics t ; compute statistics about package initialization
+				use-package-minimum-reported-time 0.0001
+				use-package-always-defer t)	; always defer, don't "require", except when :demand
+      #+end_src
 
 * Cleanup
 

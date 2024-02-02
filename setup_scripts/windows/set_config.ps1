@@ -21,8 +21,10 @@ if (!(Test-Path $env:USERPROFILE\AppData\Local\nvim)) {
 if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
     Write-Host "Symlinking wezterm config..."
     New-Item -ItemType Directory -Path $env:USERPROFILE\.config
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\wezterm
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\.config\wezterm
 }
+
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $env:USERPROFILE\dotfiles\.config\starship.toml
 
 
 Write-Host "Symlinking emacs config..."

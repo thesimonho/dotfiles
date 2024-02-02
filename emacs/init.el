@@ -9,11 +9,6 @@
 (defun system-is-mswindows ()
 	(eq system-type 'windows-nt))
 
-(setq use-package-verbose nil  ; don't print anything
-			use-package-compute-statistics t ; compute statistics about package initialization
-			use-package-minimum-reported-time 0.0001
-			use-package-always-defer t)	; always defer, don't "require", except when :demand
-
 (defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -51,6 +46,8 @@
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
+(elpaca-no-symlink-mode)
+
 ;; Install use-package support
 (elpaca elpaca-use-package
 	;; Enable :elpaca use-package keyword.
@@ -60,6 +57,11 @@
 
 ;; Block until current queue processed.
 (elpaca-wait)
+
+(setq use-package-verbose nil  ; don't print anything
+			use-package-compute-statistics t ; compute statistics about package initialization
+			use-package-minimum-reported-time 0.0001
+			use-package-always-defer t)	; always defer, don't "require", except when :demand
 
 (use-package no-littering
 	:init
