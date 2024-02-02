@@ -1,6 +1,6 @@
 add_newline = true
 format = """
-╭$directory$git_branch$git_status$conda
+╭$directory$git_branch$git_status$python$conda
 ╰$character
 """
 
@@ -42,6 +42,8 @@ symbol = "󰏗 "
 
 [python]
 symbol = " "
+format = 'via [${symbol}$virtualenv ]($style)'
+python_binary = ['./venv/bin/python', 'python3']
 
 [sudo]
 disabled = true
