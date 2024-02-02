@@ -89,6 +89,7 @@
 (setq gc-cons-threshold 100000000
 			read-process-output-max (* 1024 1024)
 			warning-minimum-level :error
+			package-install-upgrade-built-in t
 			ring-bell-function 'ignore
 			visible-bell t
 			pixel-scroll-precision-mode t
@@ -1197,17 +1198,37 @@
 		(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
 	)
 
-;; Make sure conda python is found before emacs python
-(setq python-path (if (system-is-mswindows)
-											"~/anaconda3"
-										"~/anaconda3/bin"))
-(setq exec-path (cons python-path exec-path))
-
-(setq python-shell-interpreter (if (system-is-mswindows)
-																	 "python.exe"
-																 "python3"))
-
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+
+(use-package pet
+	:demand t
+	:config
+	(add-hook 'python-base-mode-hook 'pet-mode -10)
+	(add-hook 'python-ts-mode-hook
+						(lambda ()
+							(setq-local python-shell-interpreter (pet-executable-find "python")
+													python-shell-virtualenv-root (pet-virtualenv-root))
+
+							(pet-flycheck-setup)
+
+							(setq-local lsp-pyls-server-command (pet-executable-find "pylsp"))
+							(setq-local python-pytest-executable (pet-executable-find "pytest"))
+							(setq-local dap-python-executable python-shell-interpreter)
+
+							(setq-local lsp-jedi-executable-command (pet-executable-find "jedi-language-server")
+													lsp-pylsp-plugins-jedi-environment python-shell-interpreter)
+
+							(setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
+													lsp-pyright-venv-path python-shell-virtualenv-root)
+
+							(when-let ((black-executable (pet-executable-find "black")))
+								(setq-local python-black-command black-executable)
+								(python-black-on-save-mode))
+
+							(when-let ((isort-executable (pet-executable-find "isort")))
+								(setq-local python-isort-command isort-executable)
+								(python-isort-on-save-mode))))
+	)
 
 (use-package python-pytest
 	:demand t
