@@ -583,17 +583,17 @@
 	(add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (defun cape-prog()
-	(dolist (backend '(cape-file cape-keyword))
+	(dolist (backend '(cape-dabbrev cape-file cape-keyword))
 		(add-to-list 'completion-at-point-functions backend))
 	)
 
 (defun cape-elisp()
-	(dolist (backend '(cape-elisp-block))
+	(dolist (backend '(cape-dabbrev cape-elisp-block))
 		(add-to-list 'completion-at-point-functions backend))
 	)
 
 (defun cape-text()
-	(dolist (backend '(cape-emoji))
+	(dolist (backend '(cape-dabbrev cape-emoji))
 		(add-to-list 'completion-at-point-functions backend))
 	)
 
@@ -607,8 +607,6 @@
 	(setq cape-dabbrev-min-length 3
 				cape-dabbrev-check-other-buffers 'some
 				cape-file-directory-must-exist nil)
-
-	(add-to-list 'completion-at-point-functions #'cape-dabbrev)
 	)
 
 (use-package dabbrev
@@ -988,6 +986,7 @@
 	:demand t
 	:after lsp-mode
 	:config
+	(define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols)
 	(evil-define-key 'normal lsp-mode-map
 		(kbd "<leader>le") '("diagnostics" . consult-lsp-diagnostics)
 		(kbd "<leader>ls") '("symbols" . consult-lsp-symbols)))
@@ -1121,7 +1120,7 @@
 (use-package diff-hl
 	:demand t
 	:hook
-	;; (after-save . diff-hl-update) ;; this might be slowing down saves
+	(focus-in . diff-hl-update)
 	(magit-pre-refresh . diff-hl-magit-pre-refresh)
 	(magit-post-refresh . diff-hl-magit-post-refresh)
 	:config
@@ -1198,6 +1197,9 @@
 		(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
 	)
 
+(setq python-shell-interpreter "~/.config/pdm/global-project/.venv/bin/python"
+			python-shell-virtualenv-root "~/.config/pdm/global-project/.venv")
+
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
 (use-package pet
@@ -1209,17 +1211,17 @@
 							(setq-local python-shell-interpreter (pet-executable-find "python")
 													python-shell-virtualenv-root (pet-virtualenv-root))
 
-							(pet-flycheck-setup)
+							;; (pet-flycheck-setup)
 
 							(setq-local lsp-pyls-server-command (pet-executable-find "pylsp"))
 							(setq-local python-pytest-executable (pet-executable-find "pytest"))
-							(setq-local dap-python-executable python-shell-interpreter)
+							;; (setq-local dap-python-executable python-shell-interpreter)
 
-							(setq-local lsp-jedi-executable-command (pet-executable-find "jedi-language-server")
-													lsp-pylsp-plugins-jedi-environment python-shell-interpreter)
+							;; (setq-local lsp-jedi-executable-command (pet-executable-find "jedi-language-server")
+							;; 						lsp-pylsp-plugins-jedi-environment python-shell-interpreter)
 
-							(setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
-													lsp-pyright-venv-path python-shell-virtualenv-root)
+							;; (setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
+							;; 						lsp-pyright-venv-path python-shell-virtualenv-root)
 
 							(when-let ((black-executable (pet-executable-find "black")))
 								(setq-local python-black-command black-executable)
