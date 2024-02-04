@@ -93,7 +93,8 @@
 			ring-bell-function 'ignore
 			visible-bell t
 			pixel-scroll-precision-mode t
-			scroll-margin 3
+			scroll-margin 10
+			scroll-conservatively 101
 			max-mini-window-height 0.1
 			sentence-end-double-space nil
 			save-interprogram-paste-before-kill t
@@ -109,7 +110,7 @@
 			column-number-mode t
 			use-dialog-box nil
 			confirm-kill-processes nil
-			history-length 25
+			history-length 35
 			kill-ring-max 20
 			display-line-numbers-type 'relative
 			set-charset-priority 'unicode
@@ -708,7 +709,6 @@
 	(dired-mode . (lambda () (setq-local mouse-1-click-follows-link nil)))
 	:config
 	(dirvish-override-dired-mode)
-	(dirvish-side-follow-mode)
 	(evil-define-key 'normal dirvish-mode-map
 		(kbd "<mouse-1>") 'dirvish-subtree-toggle-or-open
 		(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
