@@ -893,6 +893,8 @@
 	(setq lsp-auto-execute-action nil
 				lsp-completion-enable nil  ;; disable this to allow cape to work
 				lsp-completion-provider :none  ;; use corfu instead
+				lsp-completion-show-detail t
+				lsp-completion-show-kind t
 				lsp-disabled-clients '(tfls)
 				lsp-enable-links t
 				lsp-enable-suggest-server-download t
@@ -910,6 +912,8 @@
 				lsp-progress-spinner-type 'moon
 				lsp-semantic-tokens-enable t
 				lsp-semantic-tokens-honor-refresh-requests t
+				lsp-signature-auto-activate t
+				lsp-signature-render-documentation nil
 				lsp-symbol-highlighting-skip-current t
 				lsp-warn-no-matched-clients nil
 				lsp-ui-peek-enable t
