@@ -169,6 +169,7 @@
 				doom-modeline-display-default-persp-name nil
 				doom-modeline-buffer-modification-icon nil
 				doom-modeline-buffer-encoding nil
+				doom-modeline-buffer-file-name-style 'relative-to-project
 				doom-modeline-lsp t
 				doom-modeline-time-icon nil
 				doom-modeline-highlight-modified-buffer-name t
@@ -453,6 +454,7 @@
 		(kbd "<leader>wn")			'("new frame" . clone-frame)
 		(kbd "<leader>wo")			'("switch frame" . other-frame)
 
+		(kbd "<leader>zk")		  '("key history" . view-lossage)
 		(kbd "<leader>zu")		  '("use package report" . use-package-report)
 		(kbd "<leader>zp")		  '("profiler start" . profiler-start)
 		(kbd "<leader>zP")		  '("profiler report" . profiler-report)
