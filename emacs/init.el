@@ -85,39 +85,40 @@
 
 ;; Maximize the Emacs frame at startup
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(alpha-background . 92))
 
 (setq gc-cons-threshold 100000000
 			read-process-output-max (* 1024 1024)
-			warning-minimum-level :error
-			package-install-upgrade-built-in t
-			ring-bell-function 'ignore
-			visible-bell t
-			pixel-scroll-precision-mode t
-			scroll-margin 10
-			scroll-conservatively 101
-			max-mini-window-height 0.1
-			sentence-end-double-space nil
-			save-interprogram-paste-before-kill t
-			compilation-scroll-output 'first-error
-			use-short-answers t
-			make-backup-files nil
 			auto-save-default nil
+			column-number-mode t
+			compilation-scroll-output 'first-error
+			confirm-kill-processes nil
 			create-lockfiles nil
+			delete-selection-mode t
+			display-line-numbers-type 'relative
+			garbage-collection-messages nil
 			global-auto-revert-mode t
 			global-auto-revert-non-file-buffers t
-			revert-without-query t
-			delete-selection-mode t
-			column-number-mode t
-			use-dialog-box nil
-			confirm-kill-processes nil
 			history-length 35
 			kill-ring-max 20
-			display-line-numbers-type 'relative
-			set-charset-priority 'unicode
+			make-backup-files nil
+			max-mini-window-height 0.1
+			native-comp-async-report-warnings-errors nil
+			package-install-upgrade-built-in t
+			pixel-scroll-precision-mode t
 			prefer-coding-system 'utf-8-unix
-			x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
-			garbage-collection-messages nil
-			native-comp-async-report-warnings-errors nil)
+			revert-without-query t
+			ring-bell-function 'ignore
+			save-interprogram-paste-before-kill t
+			scroll-margin 10
+			scroll-conservatively 101
+			sentence-end-double-space nil
+			set-charset-priority 'unicode
+			use-dialog-box nil
+			use-short-answers t
+			visible-bell t
+			warning-minimum-level :error
+			x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (setq-default tab-width 2
 							standard-indent 2)
@@ -127,8 +128,6 @@
 
 ;; Run garbage collection when the Emacs window loses focus
 (add-hook 'focus-out-hook 'garbage-collect)
-
-(add-to-list 'default-frame-alist '(alpha-background . 92))
 
 (set-clipboard-coding-system 'utf-8-unix)
 (savehist-mode 1)
@@ -271,8 +270,8 @@
 	 dashboard-set-navigator t
 	 dashboard-set-heading-icons t
 	 dashboard-set-file-icons t
-	 dashboard-show-shortcuts t
 	 dashboard-set-init-info t
+	 dashboard-show-shortcuts t
 	 dashboard-footer-messages '("if you have to wait for it to roar out of you, then wait patiently.\n   if it never does roar out of you, do something else.")
 	 dashboard-footer-icon (nerd-icons-codicon "nf-cod-quote"
 																						 :height 1.0
@@ -298,16 +297,16 @@
 	:demand t
 	:init
 	(setq
+	 evil-cross-lines t
+	 evil-ex-search-vim-style-regexp t
+	 evil-kill-on-visual-paste nil
+	 evil-move-cursor-back nil
+	 evil-respect-visual-line-mode t
+	 evil-symbol-word-search t
 	 evil-want-integration t
 	 evil-want-keybinding nil
-	 evil-symbol-word-search t
-	 evil-ex-search-vim-style-regexp t
 	 evil-want-C-u-scroll t
 	 evil-want-C-i-jump nil
-	 evil-move-cursor-back nil
-	 evil-cross-lines t
-	 evil-respect-visual-line-mode t
-	 evil-kill-on-visual-paste nil
 	 evil-want-fine-undo t
 	 evil-v$-excludes-newline t
 	 evil-normal-state-cursor  '("#FF9E3B" box)
@@ -485,10 +484,10 @@
 	:demand t
 	:init
 	(setq
-	 which-key-idle-delay 0.3
-	 which-key-idle-secondary-delay 0.01
 	 which-key-allow-evil-operators t
 	 which-key-add-column-padding 5
+	 which-key-idle-delay 0.3
+	 which-key-idle-secondary-delay 0.01
 	 which-key-max-display-columns 6)
 	:config
 	(which-key-add-key-based-replacements
