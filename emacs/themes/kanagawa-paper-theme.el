@@ -390,6 +390,8 @@
 	(magit-branch-remote													(:foreground oniViolet))
 	(magit-branch-remote-head											(:foreground oniViolet :box 1))
 	(magit-log-author													    (:foreground dragonOrange))
+	(magit-diff-hunk-heading-highlight				    (:background dragonYellow :foreground dragonBlack3 :bold t))
+	(magit-diff-hunk-heading									    (:background dragonOrange :foreground dragonBlack3))
 
 	;; markdown
 	(markdown-list-face														(:foreground dragonViolet))
