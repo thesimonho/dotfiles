@@ -924,20 +924,21 @@
 				lsp-ui-doc-enable nil
 				lsp-ui-doc-show-with-cursor nil
 				lsp-ui-doc-show-with-mouse nil
-				;; lsp-pylsp-configuration-sources ["pycodestyle"]
-				;; lsp-pylsp-plugins-autopep8-enabled nil
-				;; lsp-pylsp-plugins-black-enabled t
-				;; lsp-pylsp-plugins-flake8-enabled nil
-				;; lsp-pylsp-plugins-isort-enabled t
-				;; lsp-pylsp-plugins-jedi-completion-enabled t
-				;; lsp-pylsp-plugins-mccabe-enabled nil
-				;; lsp-pylsp-plugins-pycodestyle-enabled	nil
+				;; lsp-pylsp-configuration-sources [""]
+				lsp-pylsp-plugins-autopep8-enabled nil
+				lsp-pylsp-plugins-black-enabled nil
+				lsp-pylsp-plugins-flake8-enabled nil
+				lsp-pylsp-plugins-isort-enabled nil
+				lsp-pylsp-plugins-jedi-completion-enabled nil
+				lsp-pylsp-plugins-mccabe-enabled nil
+				lsp-pylsp-plugins-pycodestyle-enabled	nil
 				;; lsp-pylsp-plugins-pycodestyle-max-line-length 88
-				;; lsp-pylsp-plugins-pydocstyle-enabled t
+				lsp-pylsp-plugins-pydocstyle-enabled nil
 				;; lsp-pylsp-plugins-pydocstyle-convention "google"
-				;; lsp-pylsp-plugins-pyflakes-enabled nil
-				;; lsp-pylsp-plugins-pylint-enabled nil
-				;; lsp-pylsp-plugins-yapf-enabled nil
+				lsp-pylsp-plugins-pyflakes-enabled nil
+				lsp-pylsp-plugins-pylint-enabled nil
+				lsp-pylsp-plugins-rope-completion-enabled nil
+				lsp-pylsp-plugins-yapf-enabled nil
 				lsp-terraform-ls-enable-show-reference t
 				lsp-terraform-ls-prefill-required-fields t
 				lsp-terraform-ls-validate-on-save t
@@ -956,6 +957,10 @@
 				 (lsp-mode . lsp-enable-which-key-integration))
 	:commands (lsp lsp-deferred)
 	:config
+	;; Pass additional settings to pylsp plugins
+	(lsp-register-custom-settings '(("pylsp.plugins.pylsp_mypy.enabled" nil t)
+																	("pylsp.plugins.pylsp_mypy.live_mode" nil t)))
+
 	(evil-define-key 'normal lsp-mode-map
 		(kbd "<leader>l <f2>")  '("rename" . lsp-rename)
 		(kbd "<leader>lh")  '("help" . lsp-describe-thing-at-point)
@@ -1073,6 +1078,7 @@
 	:custom
 	(flycheck-display-errors-delay 0.2)
 	:config
+	(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile))
 	(global-flycheck-mode))
 
 (setq treesit-font-lock-level 4)
@@ -1215,17 +1221,17 @@
 							(setq-local python-shell-interpreter (pet-executable-find "python")
 													python-shell-virtualenv-root (pet-virtualenv-root))
 
-							;; (pet-flycheck-setup)
+							(pet-flycheck-setup)
 
-							(setq-local lsp-pyls-server-command (pet-executable-find "pylsp"))
+							(setq-local lsp-pylsp-server-command (pet-executable-find "pylsp"))
 							(setq-local python-pytest-executable (pet-executable-find "pytest"))
-							;; (setq-local dap-python-executable python-shell-interpreter)
+							(setq-local dap-python-executable python-shell-interpreter)
 
-							;; (setq-local lsp-jedi-executable-command (pet-executable-find "jedi-language-server")
-							;; 						lsp-pylsp-plugins-jedi-environment python-shell-interpreter)
+							(setq-local lsp-jedi-executable-command (pet-executable-find "jedi-language-server")
+													lsp-pylsp-plugins-jedi-environment python-shell-interpreter)
 
-							;; (setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
-							;; 						lsp-pyright-venv-path python-shell-virtualenv-root)
+							(setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
+													lsp-pyright-venv-path python-shell-virtualenv-root)
 
 							(when-let ((black-executable (pet-executable-find "black")))
 								(setq-local python-black-command black-executable)
