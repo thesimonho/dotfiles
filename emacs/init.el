@@ -1295,6 +1295,9 @@
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
 (setq go-ts-mode-indent-offset 2)
 
+(use-package go-mode
+	:mode ("\\.go\\'" "/go\\.mod\\'"))
+
 (use-package gotest
 	:demand t
 	:config
