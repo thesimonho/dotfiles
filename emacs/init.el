@@ -304,6 +304,7 @@
 	 evil-ex-search-vim-style-regexp t
 	 evil-want-C-u-scroll t
 	 evil-want-C-i-jump nil
+	 evil-move-cursor-back nil
 	 evil-cross-lines t
 	 evil-respect-visual-line-mode t
 	 evil-kill-on-visual-paste nil
@@ -330,8 +331,6 @@
 				scroll-on-jump-curve 'smooth)
 	:config
 	(with-eval-after-load 'evil
-		(scroll-on-jump-advice-add evil-undo)
-		(scroll-on-jump-advice-add evil-redo)
 		(scroll-on-jump-advice-add evil-jump-item)
 		(scroll-on-jump-advice-add evil-jump-forward)
 		(scroll-on-jump-advice-add evil-jump-backward)
