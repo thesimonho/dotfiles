@@ -958,8 +958,10 @@
 	:commands (lsp lsp-deferred)
 	:config
 	;; Pass additional settings to pylsp plugins
-	(lsp-register-custom-settings '(("pylsp.plugins.pylsp_mypy.enabled" nil t)
-																	("pylsp.plugins.pylsp_mypy.live_mode" nil t)))
+	(lsp-register-custom-settings '(("pylsp.plugins.ruff.enabled" t)
+																	("pylsp.plugins.ruff.lineLength" 88)
+																	("pylsp.plugins.ruff.ignore" "D")
+																	))
 
 	(evil-define-key 'normal lsp-mode-map
 		(kbd "<leader>l <f2>")  '("rename" . lsp-rename)
@@ -1080,6 +1082,19 @@
 	:config
 	(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile))
 	(global-flycheck-mode))
+
+(defvar-local my/flycheck-local-cache nil)
+
+(defun my/flycheck-checker-get (fn checker property)
+	(or (alist-get property (alist-get checker my/flycheck-local-cache))
+			(funcall fn checker property)))
+
+(advice-add 'flycheck-checker-get :around 'my/flycheck-checker-get)
+
+(add-hook 'lsp-managed-mode-hook
+					(lambda ()
+						(when (derived-mode-p 'python-ts-mode)
+							(setq my/flycheck-local-cache '((lsp . ((next-checkers . (python-pyright)))))))))
 
 (setq treesit-font-lock-level 4)
 
