@@ -102,7 +102,7 @@
   (glyph-face                                    (:background sumiInk-4))
   (glyphless-char                                (:foreground sumiInk-4))
   (header-line                                   (:background sumiInk-0))
-  (highlight                                     (:background comet :foreground springViolet1))
+  (highlight                                     (:background dragonYellow :foreground dragonBlack4))
   (hl-line                                       (:background sumiInk-2))
   (homoglyph                                     (:foreground lightBlue))
   (internal-border                               (:background sumiInk-1b))
@@ -313,23 +313,10 @@
   (evil-ex-substitute-replacement                (:foreground surimiOrange :strike-through nil :inherit 'evil-ex-substitute-matches))
   (evil-search-highlight-persist-highlight-face  (:background carpYellow))
 
-	;; yascroll
-	(yascroll:thumb-fringe                         (:background sumiInk-3 :foreground sumiInk-3))
-
   ;; popup
   (popup-face                                    (:inherit 'tooltip))
   (popup-selection-face                          (:inherit 'tooltip))
   (popup-tip-face                                (:inherit 'tooltip))
-
-  ;; anzu
-  (anzu-match-1                                  (:foreground waveAqua2 :background sumiInk-2))
-  (anzu-match-2                                  (:foreground carpYellow :background sumiInk-2))
-  (anzu-match-3                                  (:foreground lightBlue :background sumiInk-2))
-
-  (anzu-mode-line                                (:foreground sumiInk-0 :background springViolet2))
-  (anzu-mode-no-match	                           (:foreground fujiWhite :background peachRed))
-  (anzu-replace-to                               (:foreground springBlue :background winterBlue))
-  (anzu-replace-highlight                        (:foreground peachRed :background winterRed :strike-through t))
 
   ;; vertico
   (vertico-multiline                             (:background samuraiRed))
@@ -442,6 +429,19 @@
   ;; (treemacs-git-ignored-face                     (:foreground dragonGray))
   ;; (treemacs-git-unmodified-face                  (:foreground fujiWhite))
   ;; (treemacs-git-modified-face                    (:foreground dragonOrange))
+
+  ;; anzu
+  ;; (anzu-match-1                                  (:foreground waveAqua2 :background sumiInk-2))
+  ;; (anzu-match-2                                  (:foreground carpYellow :background sumiInk-2))
+  ;; (anzu-match-3                                  (:foreground lightBlue :background sumiInk-2))
+
+  ;; (anzu-mode-line                                (:foreground sumiInk-0 :background springViolet2))
+  ;; (anzu-mode-no-match	                           (:foreground fujiWhite :background peachRed))
+  ;; (anzu-replace-to                               (:foreground springBlue :background winterBlue))
+  ;; (anzu-replace-highlight                        (:foreground peachRed :background winterRed :strike-through t))
+
+	;; yascroll
+	;; (yascroll:thumb-fringe                         (:background sumiInk-3 :foreground sumiInk-3))
 
   ;; ace
   ;; (ace-jump-face-background                      (:foreground waveBlue-2))
