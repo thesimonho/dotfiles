@@ -102,7 +102,7 @@
   (glyph-face                                    (:background sumiInk-4))
   (glyphless-char                                (:foreground sumiInk-4))
   (header-line                                   (:background sumiInk-0))
-  (highlight                                     (:background dragonYellow :foreground dragonBlack4))
+  (highlight                                     (:background dragonViolet :foreground dragonBlack4))
   (hl-line                                       (:background sumiInk-2))
   (homoglyph                                     (:foreground lightBlue))
   (internal-border                               (:background sumiInk-1b))
