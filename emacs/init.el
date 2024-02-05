@@ -563,13 +563,13 @@
 	(corfu-auto t)
 	(corfu-auto-delay 0.2)
 	(corfu-count 15)
-	(corfu-min-width 20)
+	(corfu-min-width 25)
 	(corfu-quit-at-boundary t)
 	(corfu-quit-no-match t)
 	(corfu-echo-delay 0.0)
 	(corfu-preselect 'directory)
 	(corfu-on-exact-match 'quit)
-	(corfu-popupinfo-delay '(2.0 . 1.0))
+	(corfu-popupinfo-delay '(1.0 . 0.5))
 	:init
 	(global-corfu-mode)
 	(corfu-popupinfo-mode)
@@ -894,7 +894,6 @@
 				lsp-completion-enable t
 				lsp-completion-provider :none  ;; use corfu instead
 				lsp-completion-show-detail t
-				lsp-completion-show-kind t
 				lsp-disabled-clients '(tfls)
 				lsp-enable-links t
 				lsp-enable-suggest-server-download t
@@ -938,7 +937,7 @@
 		(setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
 					'(orderless))
 		(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
-		(setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point))))
+		(setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point) #'cape-dabbrev #'cape-file)))
 	:hook ((prog-mode . lsp-deferred)
 				 (lsp-completion-mode . my/lsp-mode-setup-completion)
 				 (lsp-mode . lsp-enable-which-key-integration))
