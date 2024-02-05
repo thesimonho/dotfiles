@@ -204,7 +204,7 @@ Also computes startup statistics for packages. Check the stats using `use-packag
 				revert-without-query t
 				ring-bell-function 'ignore
 				save-interprogram-paste-before-kill t
-				scroll-margin 10
+				scroll-margin 0 ;; value > 0 causes autocentering
 				scroll-conservatively 101
 				sentence-end-double-space nil
 				set-charset-priority 'unicode
