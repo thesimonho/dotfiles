@@ -1247,9 +1247,10 @@
 								(setq-local python-black-command black-executable)
 								(python-black-on-save-mode))
 
-							(when-let ((isort-executable (pet-executable-find "isort")))
-								(setq-local python-isort-command isort-executable)
-								(python-isort-on-save-mode))))
+							;; (when-let ((isort-executable (pet-executable-find "isort")))
+							;; 	(setq-local python-isort-command isort-executable)
+							;; 	(python-isort-on-save-mode))
+								))
 	)
 
 (use-package python-pytest
