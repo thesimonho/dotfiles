@@ -909,6 +909,7 @@
 				lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
 				lsp-progress-function 'lsp-on-progress-legacy
 				lsp-progress-spinner-type 'moon
+				lsp-response-timeout 20
 				lsp-semantic-tokens-enable t
 				lsp-semantic-tokens-honor-refresh-requests t
 				lsp-signature-auto-activate t
