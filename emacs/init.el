@@ -947,6 +947,7 @@
 	;; Pass additional settings to pylsp plugins
 	(lsp-register-custom-settings '(("pylsp.plugins.ruff.enabled" t)
 																	("pylsp.plugins.ruff.lineLength" 88)
+																	("pylsp.plugins.ruff.format" "I")
 																	("pylsp.plugins.ruff.extendSelect" "D")
 																	("pylsp.plugins.ruff.extendIgnore" "")
 																	("pylsp.plugins.pylsp_mypy.enabled" nil)
