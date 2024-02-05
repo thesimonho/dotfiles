@@ -925,6 +925,7 @@
 				lsp-ui-doc-show-with-cursor nil
 				lsp-ui-doc-show-with-mouse nil
 				lsp-pylsp-plugins-flake8-enabled nil ;; using ruff
+				lsp-pylsp-plugins-pydocstyle-enabled nil ;; using ruff
 				lsp-terraform-ls-enable-show-reference t
 				lsp-terraform-ls-prefill-required-fields t
 				lsp-terraform-ls-validate-on-save t
