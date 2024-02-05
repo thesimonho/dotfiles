@@ -891,7 +891,7 @@
 (use-package lsp-mode
 	:init
 	(setq lsp-auto-execute-action nil
-				lsp-completion-enable nil  ;; disable this to allow cape to work
+				lsp-completion-enable t
 				lsp-completion-provider :none  ;; use corfu instead
 				lsp-completion-show-detail t
 				lsp-completion-show-kind t
@@ -924,21 +924,7 @@
 				lsp-ui-doc-enable nil
 				lsp-ui-doc-show-with-cursor nil
 				lsp-ui-doc-show-with-mouse nil
-				;; lsp-pylsp-configuration-sources [""]
-				lsp-pylsp-plugins-autopep8-enabled nil
-				lsp-pylsp-plugins-black-enabled nil
-				lsp-pylsp-plugins-flake8-enabled nil
-				lsp-pylsp-plugins-isort-enabled nil
-				lsp-pylsp-plugins-jedi-completion-enabled nil
-				lsp-pylsp-plugins-mccabe-enabled nil
-				lsp-pylsp-plugins-pycodestyle-enabled	nil
-				;; lsp-pylsp-plugins-pycodestyle-max-line-length 88
-				lsp-pylsp-plugins-pydocstyle-enabled nil
-				;; lsp-pylsp-plugins-pydocstyle-convention "google"
-				lsp-pylsp-plugins-pyflakes-enabled nil
-				lsp-pylsp-plugins-pylint-enabled nil
-				lsp-pylsp-plugins-rope-completion-enabled nil
-				lsp-pylsp-plugins-yapf-enabled nil
+				lsp-pylsp-plugins-flake8-enabled nil ;; using ruff
 				lsp-terraform-ls-enable-show-reference t
 				lsp-terraform-ls-prefill-required-fields t
 				lsp-terraform-ls-validate-on-save t
@@ -960,7 +946,12 @@
 	;; Pass additional settings to pylsp plugins
 	(lsp-register-custom-settings '(("pylsp.plugins.ruff.enabled" t)
 																	("pylsp.plugins.ruff.lineLength" 88)
-																	("pylsp.plugins.ruff.ignore" "D")
+																	("pylsp.plugins.ruff.extendSelect" "D")
+																	("pylsp.plugins.ruff.extendIgnore" "")
+																	("pylsp.plugins.pylsp_mypy.enabled" nil)
+																	("pylsp.plugins.pylsp_mypy.live_mode" t)
+																	("pylsp.plugins.pylsp_mypy.dmypy" nil)
+																	("pylsp.plugins.pylsp_mypy.report_progress" t)
 																	))
 
 	(evil-define-key 'normal lsp-mode-map
@@ -1083,18 +1074,18 @@
 	(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile))
 	(global-flycheck-mode))
 
-(defvar-local my/flycheck-local-cache nil)
+;; (defvar-local my/flycheck-local-cache nil)
 
-(defun my/flycheck-checker-get (fn checker property)
-	(or (alist-get property (alist-get checker my/flycheck-local-cache))
-			(funcall fn checker property)))
+;; (defun my/flycheck-checker-get (fn checker property)
+;; 	(or (alist-get property (alist-get checker my/flycheck-local-cache))
+;; 			(funcall fn checker property)))
 
-(advice-add 'flycheck-checker-get :around 'my/flycheck-checker-get)
+;; (advice-add 'flycheck-checker-get :around 'my/flycheck-checker-get)
 
-(add-hook 'lsp-managed-mode-hook
-					(lambda ()
-						(when (derived-mode-p 'python-ts-mode)
-							(setq my/flycheck-local-cache '((lsp . ((next-checkers . (python-pyright)))))))))
+;; (add-hook 'lsp-managed-mode-hook
+;; 					(lambda ()
+;; 						(when (derived-mode-p 'python-ts-mode)
+;; 							(setq my/flycheck-local-cache '((lsp . ((next-checkers . (python-pyright)))))))))
 
 (setq treesit-font-lock-level 4)
 
@@ -1197,7 +1188,7 @@
 
 	 ;; Org styling, hide markup etc.
 	 org-hide-emphasis-markers nil
-	 org-pretty-entities t
+	 org-pretty-entities nil
 
 	 ;; Agenda styling
 	 org-agenda-tags-column 0
@@ -1245,8 +1236,10 @@
 							(setq-local lsp-jedi-executable-command (pet-executable-find "jedi-language-server")
 													lsp-pylsp-plugins-jedi-environment python-shell-interpreter)
 
-							(setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
-													lsp-pyright-venv-path python-shell-virtualenv-root)
+							;; (setq-local lsp-pyright-python-executable-cmd python-shell-interpreter
+							;; 						lsp-pyright-venv-path python-shell-virtualenv-root
+							;; 						lsp-pyright-venv-directory python-shell-virtualenv-root
+							;; 						)
 
 							(when-let ((black-executable (pet-executable-find "black")))
 								(setq-local python-black-command black-executable)
