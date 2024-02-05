@@ -215,14 +215,14 @@
 		(kbd "]t") 'hl-todo-next)
 	(global-hl-todo-mode 1))
 
-(use-package yascroll
-	:demand t
-	:custom
-	(yascroll:disabled-modes '(magit-log-mode))
-	(yascroll:delay-to-hide nil)
-	(yascroll:scroll-bar 'right-fringe)
-	:config
-	(global-yascroll-bar-mode 1))
+;; (use-package yascroll
+;; 	:demand t
+;; 	:custom
+;; 	(yascroll:disabled-modes '(magit-log-mode))
+;; 	(yascroll:delay-to-hide nil)
+;; 	(yascroll:scroll-bar 'right-fringe)
+;; 	:config
+;; 	(global-yascroll-bar-mode 1))
 
 (use-package dimmer
 	:demand t
