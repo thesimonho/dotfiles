@@ -1,12 +1,12 @@
 ######################################################
 # Install applications
 ######################################################
-& $PSScriptRoot\winget_install.ps1
+& $PSScriptRoot\install_winget.ps1
 
 ######################################################
 # Get system tools
 ######################################################
-& $PSScriptRoot\get_tools.ps1
+& $PSScriptRoot\install_tools.ps1
 
 ######################################################
 # Set config options

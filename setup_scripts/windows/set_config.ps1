@@ -6,32 +6,45 @@ $HOMEPATH = "C:\Users\" + $env:USERNAME
 [Environment]::SetEnvironmentVariable("HOME", $HOMEPATH, "User")
 
 #-----------------------------------------------------
-# Clone dotfiles repo and symlink them
+# Clone config and symlink them
 #-----------------------------------------------------
-if (!(Test-Path $env:USERPROFILE\dotfiles)) {
+$DOTFILES = "D:\dotfiles"
+
+if (!(Test-Path $DOTFILES)) {
     Write-Host "Cloning dotfiles repo..."
-    git clone https://github.com/sho-87/dotfiles.git $env:USERPROFILE\dotfiles
+    git clone https://github.com/sho-87/dotfiles.git $DOTFILES
 }
 
 if (!(Test-Path $env:USERPROFILE\AppData\Local\nvim)) {
     Write-Host "Symlinking nvim config..."
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\nvim -Target $env:USERPROFILE\dotfiles\nvim
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Local\nvim -Target $DOTFILES\nvim
+}
+
+if (!(Test-Path $env:USERPROFILE\.config)) {
+    Write-Host "Creating .config directory..."
+    New-Item -ItemType Directory -Path $env:USERPROFILE\.config
 }
 
 if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
     Write-Host "Symlinking wezterm config..."
-    New-Item -ItemType Directory -Path $env:USERPROFILE\.config
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $env:USERPROFILE\dotfiles\.config\wezterm
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $DOTFILES\.config\wezterm
 }
 
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $env:USERPROFILE\dotfiles\.config\starship.toml
+if (!(Test-Path $env:USERPROFILE\.config\starship.toml)) {
+    Write-Host "Symlinking starship config..."
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $DOTFILES\.config\starship.toml
+}
 
+if (!(Test-Path $env:USERPROFILE\.emacs.d)) {
+    Write-Host "Creating .emacs.d directory..."
+    New-Item -ItemType Directory -Path $env:USERPROFILE\.emacs.d
+}
 
 Write-Host "Symlinking emacs config..."
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $env:USERPROFILE\dotfiles\emacs\init.el -Force
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $env:USERPROFILE\dotfiles\emacs\early-init.el -Force
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\themes -Target $env:USERPROFILE\dotfiles\emacs\themes -Force
-New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $env:USERPROFILE\dotfiles\emacs\images -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target $DOTFILES\emacs\init.el -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $DOTFILES\emacs\early-init.el -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\themes -Target $DOTFILES\emacs\themes -Force
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $DOTFILES\emacs\images -Force
 
 #-----------------------------------------------------
 # Set default shell
@@ -42,10 +55,10 @@ New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $
 # Configure Git globals
 #-----------------------------------------------------
 
-# Write-Host "Configuring Git globals..."
-#
-# $userName = Read-Host 'Enter your name for git configuration'
-# $userEmail = Read-Host 'Enter your email for git configuration'
-#
-# git config --global user.email $userEmail
-# git config --global user.name $userName
+Write-Host "Configuring Git globals..."
+
+$userName = Read-Host 'Enter your name for git configuration'
+$userEmail = Read-Host 'Enter your email for git configuration'
+
+git config --global user.email $userEmail
+git config --global user.name $userName
