@@ -230,6 +230,7 @@ Also computes startup statistics for packages. Check the stats using `use-packag
 	(global-hl-line-mode 1)
 	(set-fringe-mode 10)
 	(tool-bar-mode -1)
+	(menu-bar-mode -1)
 	(scroll-bar-mode -1)
   #+end_src
 
@@ -517,7 +518,7 @@ Make editing easier
 		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
 #+end_src
 
-** General binds
+** TODO General binds
 
 #+begin_src emacs-lisp
 	(defun backward-kill-spaces-or-char-or-word ()
@@ -575,6 +576,8 @@ Make editing easier
 			(kbd "<leader>hp")      '("package" . describe-package)
 			(kbd "<leader>ht")      '("text" . describe-text-properties)
 			(kbd "<leader>hv")      '("variable" . helpful-variable)
+			
+			(kbd "<leader>tm")      '("menu bar" . toggle-menu-bar-mode-from-frame)
 
 			(kbd "<leader>wm")      '("minibuffer" . switch-to-minibuffer)
 			(kbd "<leader>wd")      '("delete" . delete-window)
@@ -639,6 +642,7 @@ Make editing easier
 			"<SPC> f" "Files"
 			"<SPC> h" "Help"
 			"<SPC> j" "Jump"
+			"<SPC> t" "Toggle"
 			"<SPC> p" "Projects"
 			"<SPC> q" "Quit"
 			"<SPC> w" "Window"
@@ -919,14 +923,13 @@ For some reason, some faces do not get set properly by the theme file if running
 
 #+begin_src emacs-lisp
 	(defun set-daemon-faces ()
-		(set-face-attribute 'tab-line nil :background "#16161D")
-		)
+		(set-face-attribute 'tab-line nil :background "#16161D"))
 
 	(use-package centaur-tabs
 		:demand t
 		:hook
-		((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
 		(server-after-make-frame . set-daemon-faces)
+		((eshell-mode compilation-mode) . centaur-tabs-local-mode)
 		:init
 		(setq centaur-tabs-style "bar"
 					centaur-tabs-set-bar 'under

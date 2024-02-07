@@ -136,6 +136,7 @@
 (global-hl-line-mode 1)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 
 (setq user-full-name "Simon Ho"
@@ -440,6 +441,8 @@
 		(kbd "<leader>ht")      '("text" . describe-text-properties)
 		(kbd "<leader>hv")      '("variable" . helpful-variable)
 
+		(kbd "<leader>tm")      '("menu bar" . toggle-menu-bar-mode-from-frame)
+
 		(kbd "<leader>wm")      '("minibuffer" . switch-to-minibuffer)
 		(kbd "<leader>wd")      '("delete" . delete-window)
 		(kbd "<leader>wD")      '("delete others" . delete-other-windows)
@@ -499,6 +502,7 @@
 		"<SPC> f" "Files"
 		"<SPC> h" "Help"
 		"<SPC> j" "Jump"
+		"<SPC> t" "Toggle"
 		"<SPC> p" "Projects"
 		"<SPC> q" "Quit"
 		"<SPC> w" "Window"
@@ -735,14 +739,13 @@
 	(dired-gitignore-global-mode t))
 
 (defun set-daemon-faces ()
-	(set-face-attribute 'tab-line nil :background "#16161D")
-	)
+	(set-face-attribute 'tab-line nil :background "#16161D"))
 
 (use-package centaur-tabs
 	:demand t
 	:hook
-	((dashboard-mode eshell-mode compilation-mode) . centaur-tabs-local-mode)
 	(server-after-make-frame . set-daemon-faces)
+	((eshell-mode compilation-mode) . centaur-tabs-local-mode)
 	:init
 	(setq centaur-tabs-style "bar"
 				centaur-tabs-set-bar 'under
