@@ -21,6 +21,7 @@ winget install -e --id GIMP.GIMP --accept-source-agreements
 winget install -i -e --id Git.Git --accept-source-agreements
 winget install -e --id Axosoft.GitKraken --accept-source-agreements
 winget install -e --id TheDocumentFoundation.LibreOffice --accept-source-agreements
+winget install -e --id MSYS2.MSYS2 --accept-source-agreements
 winget install -e --id Neovim.Neovim --accept-source-agreements
 winget install -e --id OpenJS.NodeJS --accept-source-agreements
 winget install -e --id Nushell.Nushell --accept-source-agreements
@@ -34,3 +35,4 @@ winget install -e --id Valve.Steam --accept-source-agreements
 winget install -e --id wez.wezterm --accept-source-agreements
 winget install -e --id Microsoft.VisualStudioCode --accept-source-agreements
 winget install -e --id VideoLAN.VLC --accept-source-agreements
+winget install -e --id ajeetdsouza.zoxide --accept-source-agreements
