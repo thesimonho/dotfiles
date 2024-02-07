@@ -1125,7 +1125,7 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 					lsp-modeline-code-actions-segments '(icon count)
 					lsp-modeline-code-action-fallback-icon (nerd-icons-codicon "nf-cod-lightbulb")
 					lsp-progress-function 'lsp-on-progress-legacy
-					lsp-progress-spinner-type 'moon
+					lsp-progress-spinner-type 'vertical-breathing
 					lsp-response-timeout 10
 					lsp-semantic-tokens-enable t
 					lsp-semantic-tokens-honor-refresh-requests t
