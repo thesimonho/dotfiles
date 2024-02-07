@@ -388,7 +388,7 @@ Make editing easier
 		:init
 		(setq
 		 dashboard-banner-logo-title nil
-		 dashboard-startup-banner (concat (expand-file-name "images/" user-emacs-directory) "zzz_small.webp")
+		 dashboard-startup-banner (concat (expand-file-name "images/" user-emacs-directory) "zzz_small.png")
 		 dashboard-projects-backend 'projectile
 		 dashboard-center-content t
 		 dashboard-display-icons-p t
