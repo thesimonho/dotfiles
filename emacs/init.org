@@ -713,6 +713,9 @@ Projectile + perspective
 		(evil-define-key 'normal 'global
 			(kbd "<leader>g")  '("magit status" . magit)
 			))
+
+	(use-package ssh-agency :elpaca (:host github
+																				 :repo "magit/ssh-agency"))
 #+end_src
 
 * Completion

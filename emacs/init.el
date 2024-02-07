@@ -560,6 +560,9 @@
 		(kbd "<leader>g")  '("magit status" . magit)
 		))
 
+(use-package ssh-agency :elpaca (:host github
+																			 :repo "magit/ssh-agency"))
+
 (use-package corfu
 	:custom
 	(corfu-cycle t)
