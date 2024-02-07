@@ -1320,10 +1320,9 @@
 
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
-(setq go-ts-mode-indent-offset 2)
+(add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
 
-(use-package go-mode
-	:mode ("\\.go\\'" "/go\\.mod\\'"))
+(setq go-ts-mode-indent-offset 2)
 
 (use-package gotest
 	:demand t
