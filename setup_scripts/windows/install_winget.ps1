@@ -21,7 +21,6 @@ winget install -e --id GIMP.GIMP --accept-source-agreements
 winget install -i -e --id Git.Git --accept-source-agreements
 winget install -e --id Axosoft.GitKraken --accept-source-agreements
 winget install -e --id TheDocumentFoundation.LibreOffice --accept-source-agreements
-winget install -e --id MSYS2.MSYS2 --accept-source-agreements
 winget install -e --id Neovim.Neovim --accept-source-agreements
 winget install -e --id OpenJS.NodeJS --accept-source-agreements
 winget install -e --id Nushell.Nushell --accept-source-agreements

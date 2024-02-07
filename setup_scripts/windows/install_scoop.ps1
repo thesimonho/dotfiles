@@ -10,3 +10,4 @@ if (!(Test-Path $env:USERPROFILE\scoop)) {
 Write-Host "Installing scoop packages..."
 scoop install main/ripgrep
 scoop install main/ffmpeg
+scoop install main/mingw-winlibs
