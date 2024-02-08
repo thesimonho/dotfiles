@@ -1335,5 +1335,7 @@
 		(kbd "<localleader>tc")   '("coverage" . go-test-current-coverage)
 		(kbd "<localleader>tf")   '("test file" . go-test-current-file)
 		(kbd "<localleader>tp")   '("test project" . go-test-current-project)
+		(kbd "<localleader>tb")   '("benchmark file" . go-test-current-file-benchmarks)
+		(kbd "<localleader>tB")   '("benchmark project" . go-test-current-project-benchmarks)
 		)
 	)
