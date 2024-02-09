@@ -1169,7 +1169,7 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 																		("pylsp.plugins.ruff.lineLength" 88)
 																		("pylsp.plugins.ruff.format" "I")
 																		("pylsp.plugins.ruff.extendSelect" "D")
-																		("pylsp.plugins.ruff.extendIgnore" "")
+																		("pylsp.plugins.ruff.ignore" ["D215", "D103"])
 																		("pylsp.plugins.pylsp_mypy.enabled" nil)
 																		("pylsp.plugins.pylsp_mypy.live_mode" t)
 																		("pylsp.plugins.pylsp_mypy.dmypy" nil)
