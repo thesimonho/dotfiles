@@ -1224,8 +1224,8 @@
 		(kbd "<localleader>x") '("send buffer" . python-shell-send-buffer))
 	)
 
-(setq python-shell-interpreter "~/.config/pdm/global-project/.venv/bin/python"
-			python-shell-virtualenv-root "~/.config/pdm/global-project/.venv")
+(setq python-shell-interpreter "~/AppData/Local/pdm/pdm/global-project/.venv/Scripts/python.exe"
+			python-shell-virtualenv-root "~/AppData/Local/pdm/pdm/global-project/.venv")
 
 (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
@@ -1286,7 +1286,9 @@
 			(replace-match (concat "#+begin_" src-jupyter-block-header) nil nil))))
 
 (use-package jupyter
-	:after code-cells)
+	:after code-cells
+	:init
+	(setq jupyter-executable (pet-executable-find "jupyter")))
 
 (use-package code-cells
 	:init
