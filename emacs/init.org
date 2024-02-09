@@ -1307,6 +1307,8 @@ Old eglot config for reference
 		:ensure t
 		:custom
 		(flycheck-display-errors-delay 0.2)
+		(flycheck-highlighting-mode 'lines)  ;; default: symbols
+		(flycheck-check-syntax-automatically '(save new-line mode-enabled))  ;; default +idle-change
 		:config
 		(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile))
 		(global-flycheck-mode))
