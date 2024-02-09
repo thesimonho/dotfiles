@@ -933,6 +933,7 @@
 				lsp-ui-doc-enable nil
 				lsp-ui-doc-show-with-cursor nil
 				lsp-ui-doc-show-with-mouse nil
+				lsp-pylsp-configuration-sources ["python-lsp-ruff" "pylsp-mypy"]
 				lsp-pylsp-plugins-flake8-enabled nil ;; using ruff
 				lsp-pylsp-plugins-pydocstyle-enabled nil ;; using ruff
 				lsp-terraform-ls-enable-show-reference t
@@ -954,11 +955,12 @@
 	:commands (lsp lsp-deferred)
 	:config
 	;; Pass additional settings to pylsp plugins
+	;; https://github.com/emacs-lsp/lsp-mode/issues/3486
 	(lsp-register-custom-settings '(("pylsp.plugins.ruff.enabled" t)
 																	("pylsp.plugins.ruff.lineLength" 88)
 																	("pylsp.plugins.ruff.format" "I")
 																	("pylsp.plugins.ruff.extendSelect" "D")
-																	("pylsp.plugins.ruff.ignore" ["D215", "D103"])
+																	("pylsp.plugins.ruff.extendIgnore" ["D415" "D103"])
 																	("pylsp.plugins.pylsp_mypy.enabled" nil)
 																	("pylsp.plugins.pylsp_mypy.live_mode" t)
 																	("pylsp.plugins.pylsp_mypy.dmypy" nil)

@@ -1144,6 +1144,7 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 					lsp-ui-doc-enable nil
 					lsp-ui-doc-show-with-cursor nil
 					lsp-ui-doc-show-with-mouse nil
+					lsp-pylsp-configuration-sources ["python-lsp-ruff" "pylsp-mypy"]
 					lsp-pylsp-plugins-flake8-enabled nil ;; using ruff
 					lsp-pylsp-plugins-pydocstyle-enabled nil ;; using ruff
 					lsp-terraform-ls-enable-show-reference t
@@ -1165,17 +1166,18 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 		:commands (lsp lsp-deferred)
 		:config
 		;; Pass additional settings to pylsp plugins
+		;; https://github.com/emacs-lsp/lsp-mode/issues/3486
 		(lsp-register-custom-settings '(("pylsp.plugins.ruff.enabled" t)
 																		("pylsp.plugins.ruff.lineLength" 88)
 																		("pylsp.plugins.ruff.format" "I")
 																		("pylsp.plugins.ruff.extendSelect" "D")
-																		("pylsp.plugins.ruff.ignore" ["D215", "D103"])
+																		("pylsp.plugins.ruff.extendIgnore" ["D415" "D103"])
 																		("pylsp.plugins.pylsp_mypy.enabled" nil)
 																		("pylsp.plugins.pylsp_mypy.live_mode" t)
 																		("pylsp.plugins.pylsp_mypy.dmypy" nil)
 																		("pylsp.plugins.pylsp_mypy.report_progress" t)
 																		))
-
+ 
 		(evil-define-key 'normal lsp-mode-map
 			(kbd "<leader>l <f2>")  '("rename" . lsp-rename)
 			(kbd "<leader>lh")  '("help" . lsp-describe-thing-at-point)
@@ -1215,6 +1217,9 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 			(kbd "<leader>le") '("diagnostics" . consult-lsp-diagnostics)
 			(kbd "<leader>ls") '("symbols" . consult-lsp-symbols)))
 #+end_src
+
+#+RESULTS:
+: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (26054 11431 792132 0) :use-package-secs (0 0 231 0) :init (26054 11217 573839 0) :config (26054 11217 573835 0) :config-secs (0 0 47 0) :init-secs (0 0 5445 0)))
 
 ** eglot
 
