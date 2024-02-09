@@ -167,13 +167,14 @@
 				doom-modeline-hud nil
 				doom-modeline-project-detection 'auto
 				doom-modeline-display-default-persp-name nil
+				doom-modeline-buffer-name t
 				doom-modeline-buffer-modification-icon nil
 				doom-modeline-buffer-encoding nil
-				doom-modeline-buffer-file-name-style 'relative-to-project
+				doom-modeline-buffer-file-name-style 'file-name
 				doom-modeline-lsp t
 				doom-modeline-time-icon nil
 				doom-modeline-highlight-modified-buffer-name t
-				doom-modeline-position-column-line-format '("L:%l")
+				doom-modeline-position-column-line-format '("L%l C%c")
 				doom-modeline-minor-modes t
 				doom-modeline-checker-simple-format nil
 				doom-modeline-major-mode-icon nil
@@ -960,7 +961,7 @@
 																	("pylsp.plugins.ruff.lineLength" 88)
 																	("pylsp.plugins.ruff.format" "I")
 																	("pylsp.plugins.ruff.extendSelect" "D")
-																	("pylsp.plugins.ruff.extendIgnore" ["D415" "D103"])
+																	("pylsp.plugins.ruff.extendIgnore" ["D100" "D103"])
 																	("pylsp.plugins.pylsp_mypy.enabled" nil)
 																	("pylsp.plugins.pylsp_mypy.live_mode" t)
 																	("pylsp.plugins.pylsp_mypy.dmypy" nil)
