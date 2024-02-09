@@ -133,6 +133,7 @@
 (savehist-mode 1)
 (save-place-mode 1)
 (blink-cursor-mode 0)
+(global-display-line-numbers-mode t)
 (global-hl-line-mode 1)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
@@ -150,8 +151,6 @@
 	(load-theme 'kanagawa-paper t))
 
 (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
-
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (use-package nerd-icons
 	:demand t)

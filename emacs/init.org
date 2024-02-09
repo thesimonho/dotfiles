@@ -227,6 +227,7 @@ Also computes startup statistics for packages. Check the stats using `use-packag
 	(savehist-mode 1)
 	(save-place-mode 1)
 	(blink-cursor-mode 0)
+	(global-display-line-numbers-mode t)
 	(global-hl-line-mode 1)
 	(set-fringe-mode 10)
 	(tool-bar-mode -1)
@@ -258,8 +259,6 @@ default-frame-alist is needed here (and other places) to ensure the frame settin
 		(load-theme 'kanagawa-paper t))
 
 	(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
-
-	(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 #+end_src
 
 ** Icons
