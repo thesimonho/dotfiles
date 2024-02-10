@@ -133,7 +133,6 @@
 (savehist-mode 1)
 (save-place-mode 1)
 (blink-cursor-mode 0)
-(global-display-line-numbers-mode t)
 (global-hl-line-mode 1)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
@@ -151,6 +150,16 @@
 	(load-theme 'kanagawa-paper t))
 
 (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
+
+(global-display-line-numbers-mode 1)
+
+(dolist (mode '(term-mode-hook
+								shell-mode-hook
+								eshell-mode-hook
+								compilation-mode-hook
+								dired-mode-hook
+								))
+	(add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 (use-package nerd-icons
 	:demand t)
@@ -215,15 +224,6 @@
 		(kbd "[t") 'hl-todo-previous
 		(kbd "]t") 'hl-todo-next)
 	(global-hl-todo-mode 1))
-
-;; (use-package yascroll
-;; 	:demand t
-;; 	:custom
-;; 	(yascroll:disabled-modes '(magit-log-mode))
-;; 	(yascroll:delay-to-hide nil)
-;; 	(yascroll:scroll-bar 'right-fringe)
-;; 	:config
-;; 	(global-yascroll-bar-mode 1))
 
 (use-package dimmer
 	:demand t
@@ -693,8 +693,7 @@
 
 		(kbd "<leader>cs")     '("search" . consult-line)
 		(kbd "<leader>co")     '("outline" . consult-imenu)
-		)
-	)
+		))
 
 (use-package marginalia
 	:defer 1

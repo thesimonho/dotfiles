@@ -14,6 +14,7 @@
   - [[#user-config][User config]]
 - [[#aesthetics][Aesthetics]]
   - [[#themes][Themes]]
+  - [[#line-numbers][Line numbers]]
   - [[#icons][Icons]]
   - [[#modeline][Modeline]]
   - [[#editing][Editing]]
@@ -227,7 +228,6 @@ Also computes startup statistics for packages. Check the stats using `use-packag
 	(savehist-mode 1)
 	(save-place-mode 1)
 	(blink-cursor-mode 0)
-	(global-display-line-numbers-mode t)
 	(global-hl-line-mode 1)
 	(set-fringe-mode 10)
 	(tool-bar-mode -1)
@@ -259,6 +259,20 @@ default-frame-alist is needed here (and other places) to ensure the frame settin
 		(load-theme 'kanagawa-paper t))
 
 	(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
+#+end_src
+
+** Line numbers
+
+#+begin_src emacs-lisp
+	(global-display-line-numbers-mode 1)
+
+	(dolist (mode '(term-mode-hook
+									shell-mode-hook
+									eshell-mode-hook
+									compilation-mode-hook
+									dired-mode-hook
+									))
+		(add-hook mode (lambda () (display-line-numbers-mode 0))))
 #+end_src
 
 ** Icons
@@ -337,15 +351,6 @@ Make editing easier
 			(kbd "[t") 'hl-todo-previous
 			(kbd "]t") 'hl-todo-next)
 		(global-hl-todo-mode 1))
-
-	;; (use-package yascroll
-	;; 	:demand t
-	;; 	:custom
-	;; 	(yascroll:disabled-modes '(magit-log-mode))
-	;; 	(yascroll:delay-to-hide nil)
-	;; 	(yascroll:scroll-bar 'right-fringe)
-	;; 	:config
-	;; 	(global-yascroll-bar-mode 1))
 
 	(use-package dimmer
 		:demand t
@@ -518,7 +523,7 @@ Make editing easier
 		(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
 #+end_src
 
-** TODO General binds
+** General binds
 
 #+begin_src emacs-lisp
 	(defun backward-kill-spaces-or-char-or-word ()
@@ -865,8 +870,7 @@ Minibuffer completion with Vertico et al.
 
 			(kbd "<leader>cs")     '("search" . consult-line)
 			(kbd "<leader>co")     '("outline" . consult-imenu)
-			)
-		)
+			))
 
 	(use-package marginalia
 		:defer 1

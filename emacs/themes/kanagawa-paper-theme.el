@@ -107,7 +107,7 @@
   (homoglyph                                     (:foreground lightBlue))
   (internal-border                               (:background sumiInk-1b))
   (line-number                                   (:foreground sumiInk-4))
-  (line-number-current-line                      (:foreground roninYellow :background sumiInk-2 :bold t))
+  (line-number-current-line                      (:foreground dragonOrange :background sumiInk-2 :bold t))
   (lv-separator                                  (:foreground waveBlue-2 :background sumiInk-2))
   (match                                         (:background roninYellow :foreground sumiInk-0))
   (menu                                          (:background sumiInk-0 :foreground fujiWhite))
