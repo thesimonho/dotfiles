@@ -1239,7 +1239,8 @@
 	(add-hook 'python-ts-mode-hook
 						(lambda ()
 							(setq-local python-shell-interpreter (pet-executable-find "python")
-													python-shell-virtualenv-root (pet-virtualenv-root))
+													python-shell-virtualenv-root (pet-virtualenv-root)
+													python-shell-exec-path (pet-virtualenv-root))
 
 							(pet-flycheck-setup)
 
