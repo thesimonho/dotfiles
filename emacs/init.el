@@ -9,6 +9,45 @@
 (defun system-is-mswindows ()
 	(eq system-type 'windows-nt))
 
+;; https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-start.el
+;; https://github.com/emacsmirror/gcmh/blob/master/gcmh.el
+
+(defun raise_gc_threshold ()
+	(setq gc-cons-threshold most-positive-fixnum
+				gc-cons-percentage 0.5))
+
+(defun standard_gc_threshold ()
+	(setq gc-cons-threshold (* 16 1024 1024)  ;; 16MB
+				gc-cons-percentage 0.1))
+
+(setq garbage-collection-messages t)
+
+;; no GC during init, back to normal afterwards
+(raise_gc_threshold)
+(add-hook 'elpaca-after-init-hook
+					`(lambda ()
+						 (standard_gc_threshold)
+						 (garbage-collect)) t)
+
+(add-hook 'focus-out-hook        #'clean-buffer-list)
+(add-hook 'focus-out-hook        #'garbage-collect)
+(add-hook 'after-save-hook       #'garbage-collect)
+(add-hook 'suspend-hook          #'garbage-collect)
+
+;; Run garbage collection when Emacs is idle
+(run-with-idle-timer 5 t #'garbage-collect)
+
+(setq-default bidi-display-reordering 'left-to-right
+							bidi-paragraph-direction 'left-to-right
+							cursor-in-non-selected-windows nil)
+
+(setq highlight-nonselected-windows nil)
+
+(when (boundp 'w32-get-true-file-attributes)
+	(setq w32-get-true-file-attributes nil    ; decrease file IO workload
+				w32-pipe-read-delay 0               ; faser IPC
+				w32-pipe-buffer-size (* 64 1024)))  ; read more at a time (was 4K)
+
 (defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -116,18 +155,12 @@
 			set-charset-priority 'unicode
 			use-dialog-box nil
 			use-short-answers t
-			visible-bell t
+			visible-bell nil
 			warning-minimum-level :error
 			x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (setq-default tab-width 2
 							standard-indent 2)
-
-;; Run garbage collection when Emacs is idle for 15 seconds
-(run-with-idle-timer 15 t #'garbage-collect)
-
-;; Run garbage collection when the Emacs window loses focus
-(add-hook 'focus-out-hook 'garbage-collect)
 
 (set-clipboard-coding-system 'utf-8-unix)
 (savehist-mode 1)
