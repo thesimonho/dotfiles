@@ -113,32 +113,24 @@
 	(add-to-list 'recentf-exclude
 							 (recentf-expand-file-name no-littering-etc-directory)))
 
-(defun gc-buffers-scratch (buffer)
-	(string= (buffer-name buffer) "*scratch*"))
-
-(use-package gc-buffers :elpaca (:host "www.codeberg.org"
-																			 :repo "akib/emacs-gc-buffers")
-	:config
-	(add-to-list 'gc-buffers-functions #'gc-buffers-scratch)
-	(gc-buffers-mode t))
-
 ;; Maximize the Emacs frame at startup
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(alpha-background . 92))
 
-(setq gc-cons-threshold 100000000
-			read-process-output-max (* 1024 1024)
+(setq read-process-output-max (* 1024 1024)
 			auto-save-default nil
+			clean-buffer-list-delay-general 1
 			column-number-mode t
 			compilation-scroll-output 'first-error
 			confirm-kill-processes nil
 			create-lockfiles nil
 			delete-selection-mode t
 			display-line-numbers-type 'relative
-			garbage-collection-messages nil
 			global-auto-revert-mode t
 			global-auto-revert-non-file-buffers t
 			history-length 35
+			idle-update-delay 1.0
+			inhibit-compacting-font-caches t  ;; Font compacting can be expensive, especially for rendering icon fonts on Windows
 			kill-ring-max 20
 			make-backup-files nil
 			max-mini-window-height 0.1
