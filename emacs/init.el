@@ -134,6 +134,7 @@
 (save-place-mode 1)
 (blink-cursor-mode 0)
 (global-hl-line-mode 1)
+(electric-pair-mode 1)
 (set-fringe-mode 10)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
