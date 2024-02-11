@@ -1216,6 +1216,7 @@
 	:config (evil-org-set-key-theme '(textobjects insert navigation shift todo)))
 
 (with-eval-after-load 'org
+	(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 	(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
 	(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
 	(add-to-list 'org-structure-template-alist '("sp" . "src python")))

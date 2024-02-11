@@ -1223,9 +1223,6 @@ Also has bugs with jsonrpc and breaks a ton of stuff
 			(kbd "<leader>ls") '("symbols" . consult-lsp-symbols)))
 #+end_src
 
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (26054 11431 792132 0) :use-package-secs (0 0 231 0) :init (26054 11217 573839 0) :config (26054 11217 573835 0) :config-secs (0 0 47 0) :init-secs (0 0 5445 0)))
-
 ** eglot
 
 Old eglot config for reference
@@ -1468,6 +1465,7 @@ Text objects
 		:config (evil-org-set-key-theme '(textobjects insert navigation shift todo)))
 
 	(with-eval-after-load 'org
+		(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 		(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
 		(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
 		(add-to-list 'org-structure-template-alist '("sp" . "src python")))
