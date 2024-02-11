@@ -906,11 +906,12 @@
 				lsp-completion-provider :none  ;; use corfu instead
 				lsp-completion-show-detail t
 				lsp-disabled-clients '(tfls)
+				lsp-eldoc-enable-hover t
 				lsp-enable-links t
-				lsp-enable-suggest-server-download t
+				lsp-enable-suggest-server-download nil
 				lsp-enable-snippet nil
 				lsp-enable-symbol-highlighting t
-				lsp-headerline-breadcrumb-mode t
+				lsp-headerline-breadcrumb-mode nil
 				lsp-headerline-breadcrumb-segments '(file symbols)
 				lsp-idle-delay 0.500
 				lsp-log-io nil
@@ -925,7 +926,7 @@
 				lsp-semantic-tokens-honor-refresh-requests t
 				lsp-signature-auto-activate t
 				lsp-signature-render-documentation nil
-				lsp-symbol-highlighting-skip-current t
+				lsp-symbol-highlighting-skip-current nil
 				lsp-warn-no-matched-clients nil
 				lsp-ui-peek-enable t
 				lsp-ui-sideline-enable t
@@ -1088,7 +1089,7 @@
 	(flycheck-highlighting-mode 'lines)  ;; default: symbols
 	(flycheck-check-syntax-automatically '(save new-line mode-enabled))  ;; default +idle-change
 	:config
-	(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile))
+	(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile go-golint))
 	(global-flycheck-mode))
 
 ;; (defvar-local my/flycheck-local-cache nil)
