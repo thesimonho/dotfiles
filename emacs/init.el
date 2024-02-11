@@ -707,6 +707,7 @@
 	:init
 	(setq dirvish-side-auto-expand t
 				dirvish-side-width 30
+				dirvish-side-auto-close t
 				dirvish-use-header-line 'global
 				dirvish-use-mode-line 'global
 				dired-mouse-drag-files t
