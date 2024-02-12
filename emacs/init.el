@@ -1374,3 +1374,5 @@
 		(kbd "<localleader>tB")   '("benchmark project" . go-test-current-project-benchmarks)
 		)
 	)
+
+(use-package lua-mode)

@@ -55,6 +55,7 @@
   - [[#typescript][Typescript]]
   - [[#graphql][GraphQL]]
   - [[#go][Go]]
+  - [[#lua][Lua]]
 
 * Helper functions
 
@@ -1697,4 +1698,10 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 			(kbd "<localleader>tB")   '("benchmark project" . go-test-current-project-benchmarks)
 			)
 		)
+#+end_src
+
+** Lua
+
+#+begin_src emacs-lisp
+	(use-package lua-mode)
 #+end_src
