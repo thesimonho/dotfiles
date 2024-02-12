@@ -548,7 +548,7 @@
 									 (executable-find "find") "C:\\Windows")))
 		(setq projectile-indexing-method 'alien
 					projectile-generic-command "find . -type f")
-		projectile-project-search-path '("/mnt/Projects")
+		projectile-project-search-path '("D:\\")
 		projectile-sort-order 'recently-active
 		projectile-enable-caching t
 		projectile-require-project-root t
@@ -713,7 +713,7 @@
 
 		(kbd "<leader>fs")     '("save" . save-buffer)
 		(kbd "<leader>ff")     '("find file" . find-file)
-		(kbd "<leader>fF")     '("locate file" . consult-locate)
+		(kbd "<leader>fF")     '("locate file" . projectile-find-file-dwim)
 		(kbd "<leader>fg")     '("grep string" . consult-ripgrep)
 		(kbd "<leader>fr")     '("recent files" . consult-recent-file)
 		(kbd "<leader>fd")     '("directory" . dirvish-side)
