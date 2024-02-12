@@ -8,6 +8,7 @@ $HOMEPATH = "C:\Users\" + $env:USERNAME
 #-----------------------------------------------------
 # Clone config and symlink them
 #-----------------------------------------------------
+
 $DOTFILES = "D:\dotfiles"
 
 if (!(Test-Path $DOTFILES)) {
@@ -53,16 +54,18 @@ New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $
 #-----------------------------------------------------
 # Set default shell
 #-----------------------------------------------------
+
 [Environment]::SetEnvironmentVariable("ComSpec", "C:\WINDOWS\system32\cmd.exe", "Machine")
 
 #-----------------------------------------------------
 # Configure Git globals
 #-----------------------------------------------------
 
-Write-Host "Configuring Git globals..."
+Write-Host "Configuring Git global configs..."
 
-$userName = Read-Host 'Enter your name for git configuration'
-$userEmail = Read-Host 'Enter your email for git configuration'
-
-git config --global user.email $userEmail
-git config --global user.name $userName
+git config --global user.name "Simon Ho"
+git config --global user.email simonho.ubc@gmail.com
+git config --global rerere.enabled true
+git config --global column.ui auto
+git config --global branch.sort -committerdate
+git config --global fetch.writeCommitGraph true
