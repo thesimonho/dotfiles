@@ -1132,6 +1132,7 @@
 
 (setq treesit-font-lock-level 4)
 
+;; https://github.com/emacs-tree-sitter/tree-sitter-langs/
 (setq treesit-language-source-alist
 			'((bash "https://github.com/tree-sitter/tree-sitter-bash")
 				(cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -1144,9 +1145,11 @@
 				(html "https://github.com/tree-sitter/tree-sitter-html")
 				(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
 				(json "https://github.com/tree-sitter/tree-sitter-json")
+				(lua "https://github.com/MunifTanjim/tree-sitter-lua")
 				(make "https://github.com/alemuller/tree-sitter-make")
 				(markdown "https://github.com/ikatyang/tree-sitter-markdown")
 				(python "https://github.com/tree-sitter/tree-sitter-python")
+				(regex "https://github.com/tree-sitter/tree-sitter-regex")
 				(toml "https://github.com/tree-sitter/tree-sitter-toml")
 				(terraform "https://github.com/MichaHoffmann/tree-sitter-hcl")
 				(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
