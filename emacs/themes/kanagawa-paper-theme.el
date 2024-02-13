@@ -201,10 +201,13 @@
 
 	;; transient
   (transient-inactive-value                      (:foreground dragonGray))
-  (transient-inactive-argument                      (:foreground dragonGray))
-  (transient-delimiter                      (:foreground dragonGray))
-  (transient-unreachable                      (:foreground dragonRed))
-  (transient-unreachable-key                      (:foreground dragonBlue))
+  (transient-inactive-argument                   (:foreground dragonGray))
+  (transient-delimiter													 (:foreground dragonGray))
+  (transient-unreachable												 (:foreground dragonRed))
+  (transient-unreachable-key                     (:foreground dragonBlue))
+
+	;; elpaca
+  (elpaca-log-info															 (:foreground dragonGray))
 
   ;; org-mode
   (org-done                                      (:foreground dragonBlue))
@@ -363,30 +366,30 @@
   (centaur-tabs-jump-identifier-unselected       (:inherit 'centaur-tabs-unselected :foreground samuraiRed :bold t))
 
 	;; dirvish
-	(dirvish-hl-line																(:background sumiInk-2))
-	(dirvish-subtree-state													(:background nil :foreground sumiInk-3))
-	(dirvish-subtree-guide													(:background sumiInk-1 :foreground sumiInk-3))
+	(dirvish-hl-line															 (:background sumiInk-2))
+	(dirvish-subtree-state												 (:background nil :foreground sumiInk-3))
+	(dirvish-subtree-guide												 (:background sumiInk-1 :foreground sumiInk-3))
 
 	;; vcs
-  (diff-hl-change																(:foreground autumnYellow :background winterYellow))
-  (diff-hl-delete																(:foreground autumnRed :background winterRed))
-  (diff-hl-insert																(:foreground autumnGreen :background winterGreen))
+  (diff-hl-change															   (:foreground autumnYellow :background winterYellow))
+  (diff-hl-delete																 (:foreground autumnRed :background winterRed))
+  (diff-hl-insert																 (:foreground autumnGreen :background winterGreen))
 
-	(magit-branch-local														(:foreground springGreen :bold t))
-	(magit-branch-current													(:foreground springGreen :box 1 :bold t))
-	(magit-branch-remote													(:foreground oniViolet))
-	(magit-branch-remote-head											(:foreground oniViolet :box 1))
-	(magit-log-author													    (:foreground dragonOrange))
-	(magit-diff-hunk-heading-highlight				    (:background dragonYellow :foreground dragonBlack3 :bold t))
-	(magit-diff-hunk-heading									    (:background dragonOrange :foreground dragonBlack3))
+	(magit-branch-local														 (:foreground springGreen :bold t))
+	(magit-branch-current													 (:foreground springGreen :box 1 :bold t))
+	(magit-branch-remote													 (:foreground oniViolet))
+	(magit-branch-remote-head											 (:foreground oniViolet :box 1))
+	(magit-log-author															 (:foreground dragonOrange))
+	(magit-diff-hunk-heading-highlight						 (:background dragonYellow :foreground dragonBlack3 :bold t))
+	(magit-diff-hunk-heading											 (:background dragonOrange :foreground dragonBlack3))
 
 	;; markdown
-	(markdown-list-face														(:foreground dragonViolet))
-	(markdown-header-delimiter-face								(:foreground dragonViolet))
-	(markdown-markup-face													(:foreground oldWhite))
+	(markdown-list-face														 (:foreground dragonViolet))
+	(markdown-header-delimiter-face								 (:foreground dragonViolet))
+	(markdown-markup-face													 (:foreground oldWhite))
 
 	;; copilot
-	(copilot-overlay-face													(:foreground sumiInk-4))
+	(copilot-overlay-face													 (:foreground sumiInk-4))
 
 	(focus-unfocused (:foreground sumiInk-4))
 

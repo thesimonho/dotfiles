@@ -94,6 +94,7 @@
 	;; Assume :elpaca t unless otherwise specified.
 	(setq elpaca-use-package-by-default t))
 
+(setq elpaca-queue-limit 20)
 ;; Block until current queue processed.
 (elpaca-wait)
 

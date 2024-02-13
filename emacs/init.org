@@ -9,7 +9,7 @@
   - [[#garbage-collection][Garbage collection]]
   - [[#from-doom][From Doom]]
   - [[#windows][Windows]]
-- [[#package-management][Package management]]
+- [[#elpaca][Elpaca]]
 - [[#profile-emacs-startup][Profile Emacs startup]]
 - [[#cleanup][Cleanup]]
   - [[#no-littering][No littering]]
@@ -139,7 +139,7 @@ Performance on Windows is considerably worse than elsewhere. We'll need everythi
 					w32-pipe-buffer-size (* 64 1024)))  ; read more at a time (was 4K)
 #+end_src
 
-* Package management
+* Elpaca
 
 Use elpaca for package management
 
@@ -190,6 +190,7 @@ Use elpaca for package management
 		;; Assume :elpaca t unless otherwise specified.
 		(setq elpaca-use-package-by-default t))
 
+	(setq elpaca-queue-limit 20)
 	;; Block until current queue processed.
 	(elpaca-wait)
 #+end_src
