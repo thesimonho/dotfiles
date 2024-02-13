@@ -6,7 +6,6 @@ Write-Host "Installing winget packages..."
 winget install -e --id SomePythonThings.WingetUIStore --accept-source-agreements
 winget install -e --id 7zip.7zip --accept-source-agreements
 winget install -e --id Adobe.Acrobat.Reader.64-bit --accept-source-agreements
-winget install -e --id Twilio.Authy --accept-source-agreements
 winget install -e --id Betterbird.Betterbird --accept-source-agreements
 winget install -e --id Bitwarden.Bitwarden --accept-source-agreements
 winget install -e --id Google.Chrome --accept-source-agreements
