@@ -17,7 +17,7 @@
 				gc-cons-percentage 0.5))
 
 (defun standard_gc_threshold ()
-	(setq gc-cons-threshold (* 16 1024 1024)  ;; 16MB
+	(setq gc-cons-threshold (* 32 1024 1024)  ;; 32MB
 				gc-cons-percentage 0.1))
 
 (setq garbage-collection-messages nil)
@@ -978,6 +978,10 @@
 					'(orderless))
 		(add-hook 'orderless-style-dispatchers #'my/orderless-dispatch-flex-first nil 'local)
 		(setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point) #'cape-dabbrev #'cape-file)))
+
+	;; Attempt to fix random lsp mode hangs
+	;; https://github.com/minad/corfu/issues/188
+	(advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 	:hook ((prog-mode . lsp-deferred)
 				 (lsp-completion-mode . my/lsp-mode-setup-completion)
 				 (lsp-mode . lsp-enable-which-key-integration))
@@ -989,7 +993,7 @@
 																	("pylsp.plugins.ruff.lineLength" 88)
 																	("pylsp.plugins.ruff.format" ["I"])
 																	("pylsp.plugins.ruff.extendSelect" ["D"])
-																	("pylsp.plugins.ruff.ignore" ["D100" "D101" "D103"])
+																	("pylsp.plugins.ruff.ignore" ["D100" "D101" "D103", "D107"])
 																	("pylsp.plugins.pylsp_mypy.enabled" t)
 																	("pylsp.plugins.pylsp_mypy.live_mode" t)
 																	("pylsp.plugins.pylsp_mypy.dmypy" nil)
@@ -1112,8 +1116,8 @@
 	:ensure t
 	:custom
 	(flycheck-display-errors-delay 0.2)
-	(flycheck-highlighting-mode 'lines)  ;; default: symbols
-	(flycheck-check-syntax-automatically '(save new-line mode-enabled))  ;; default +idle-change
+	(flycheck-highlighting-mode 'symbols)  ;; 'symbols or 'lines
+	(flycheck-check-syntax-automatically '(save new-line mode-enabled idle-change))  ;; default +idle-change
 	:config
 	(setq-default flycheck-disabled-checkers '(python-flake8 python-pylint python-mypy python-pycompile go-golint))
 	(global-flycheck-mode))
