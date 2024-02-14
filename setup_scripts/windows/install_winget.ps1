@@ -18,7 +18,6 @@ winget install -e --id Mozilla.Firefox --accept-source-agreements
 winget install -e --id Nvidia.GeForceExperience --accept-source-agreements
 winget install -e --id GIMP.GIMP --accept-source-agreements
 winget install -i -e --id Git.Git --accept-source-agreements
-winget install -e --id Axosoft.GitKraken --accept-source-agreements
 winget install -e --id TheDocumentFoundation.LibreOffice --accept-source-agreements
 winget install -e --id Neovim.Neovim --accept-source-agreements
 winget install -e --id OpenJS.NodeJS --accept-source-agreements
