@@ -68,6 +68,7 @@ return {
 		saturation = 0.9,
 		brightness = 0.7,
 	},
+	scrollback_lines = 7500,
 	show_update_window = true,
 	underline_position = -2,
 	unicode_version = 14,
