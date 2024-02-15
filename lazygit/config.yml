@@ -1,5 +1,4 @@
 gui:
-  # stuff relating to the UI
   windowSize: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
   scrollHeight: 2 # how many lines you scroll by
   scrollPastBottom: true # enable scrolling past the bottom
@@ -9,30 +8,30 @@ gui:
   expandFocusedSidePanel: false
   mainPanelSplitMode: 'flexible' # one of 'horizontal' | 'flexible' | 'vertical'
   enlargedSideViewLocation: 'left' # one of 'left' | 'top'
-  language: 'en' # one of 'auto' | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru'
+  language: 'en'
   timeFormat: '02 Jan 06' # https://pkg.go.dev/time#Time.Format
   shortTimeFormat: '3:04PM'
   authorColors:
     '*': '#b6927b'
   theme:
     activeBorderColor:
-      - magenta
+      - '#a292a3'
       - bold
     inactiveBorderColor:
-      - white
+      - '#DCD7BA'
     searchingActiveBorderColor:
-      - cyan
+      - '#a292a3'
       - bold
     optionsTextColor:
-      - blue
+      - '#658594'
     selectedLineBgColor:
-      - '#2A2A37' # set to `default` to have no background colour
+      - '#2A2A37'
     cherryPickedCommitBgColor:
-      - cyan
+      - '#8ea4a2'
     cherryPickedCommitFgColor:
-      - blue
+      - '#658594'
     unstagedChangesColor:
-      - red
+      - '#b98d7b'
     defaultFgColor:
       - default
   commitLength:
@@ -48,7 +47,7 @@ gui:
   showPanelJumps: true # for showing the jump-to-panel keybindings as panel subtitles
   showCommandLog: true
   nerdFontsVersion: "3" # nerd fonts version to use ("2" or "3"); empty means don't show nerd font icons
-  showFileIcons: true # for hiding file icons in the file views
+  showFileIcons: true
   commandLogSize: 8
   splitDiff: 'auto' # one of 'auto' | 'always'
   skipRewordInEditorWarning: false # for skipping the confirmation before launching the reword editor
@@ -61,11 +60,6 @@ git:
     useConfig: false
   commit:
     signOff: false
-  merging:
-    # only applicable to unix users
-    manualCommit: false
-    # extra args passed to `git merge`, e.g. --no-ff
-    args: ''
   log:
     # one of date-order, author-date-order, topo-order or default.
     # topo-order makes it easier to read the git log graph, but commits may not
@@ -84,7 +78,7 @@ git:
   autoRefresh: true
   fetchAll: true # Pass --all flag when running git fetch. Set to false to fetch only origin (or the current branch's upstream remote if there is one)
   branchLogCmd: 'git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --'
-  allBranchesLogCmd: 'git log --graph --all --color=always --abbrev-commit --decorate --date=relative  --pretty=medium'
+  allBranchesLogCmd: 'git log --graph --all --color=always --abbrev-commit --decorate --date=relative --pretty=medium'
   overrideGpg: false # prevents lazygit from spawning a separate process when using GPG
   disableForcePushing: false
   parseEmoji: true
