@@ -40,6 +40,9 @@ Write-Host "Symlinking nushell config..."
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Roaming\nushell\config.nu -Target $DOTFILES\nushell\config.nu -Force
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Roaming\nushell\alias.nu -Target $DOTFILES\nushell\alias.nu -Force
 
+Write-Host "Symlinking lazygit config..."
+New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Roaming\lazygit\config.yml -Target $DOTFILES\lazygit\config.yml -Force
+
 if (!(Test-Path $env:USERPROFILE\.emacs.d)) {
     Write-Host "Creating .emacs.d directory..."
     New-Item -ItemType Directory -Path $env:USERPROFILE\.emacs.d
