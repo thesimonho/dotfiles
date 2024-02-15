@@ -12,6 +12,8 @@ gui:
   language: 'en' # one of 'auto' | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru'
   timeFormat: '02 Jan 06' # https://pkg.go.dev/time#Time.Format
   shortTimeFormat: '3:04PM'
+  authorColors:
+    '*': '#b6927b'
   theme:
     activeBorderColor:
       - magenta
@@ -24,7 +26,7 @@ gui:
     optionsTextColor:
       - blue
     selectedLineBgColor:
-      - magenta # set to `default` to have no background colour
+      - '#2A2A37' # set to `default` to have no background colour
     cherryPickedCommitBgColor:
       - cyan
     cherryPickedCommitFgColor:
@@ -40,7 +42,7 @@ gui:
   skipStashWarning: false
   showFileTree: true # for rendering changes files in a tree format
   showListFooter: true # for seeing the '5 of 20' message in list panels
-  showRandomTip: true
+  showRandomTip: false
   showBranchCommitHash: true # show commit hashes alongside branch names
   showBottomLine: false # for hiding the bottom information line (unless it has important information to tell you)
   showPanelJumps: true # for showing the jump-to-panel keybindings as panel subtitles
