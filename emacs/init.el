@@ -434,6 +434,10 @@
 	 (t
 		(delete-forward-char 1))))
 
+(defun previous-buffer ()
+	(interactive)
+	(switch-to-buffer (other-buffer (current-buffer) t)))
+
 (with-eval-after-load 'evil
 	(evil-define-motion mark-gg ()
 		"Set mark at point and go to top of buffer."
@@ -453,6 +457,7 @@
 		"gg" 'mark-gg
 		"G"  'mark-G
 		(kbd "<leader>SPC")     '("M-x" . execute-extended-command)
+		(kbd "<leader>TAB")     '("jump buffer" . centaur-tabs-ace-jump)
 		(kbd "<leader>`")       '("shell" . eshell)
 		(kbd "<leader>y")				'("kill ring" . consult-yank-pop)
 
@@ -503,6 +508,10 @@
 		(kbd "<escape>") 'keyboard-escape-quit
 		)
 
+	(evil-define-key 'normal 'global
+		(kbd "TAB") 'previous-buffer
+		)
+
 	(evil-define-key '(normal insert) 'global
 		(kbd "C-s") 'save-buffer
 		(kbd "C-v") 'yank
@@ -530,7 +539,6 @@
 		"<SPC> c" "Code"
 		"<SPC> f" "Files"
 		"<SPC> h" "Help"
-		"<SPC> j" "Jump"
 		"<SPC> t" "Toggle"
 		"<SPC> p" "Projects"
 		"<SPC> q" "Quit"
@@ -904,9 +912,7 @@
 	:demand t
 	:config
 	(evil-define-key 'normal 'global
-		(kbd "<leader>jj")   '("jump 2char" . avy-goto-char-2)
-		(kbd "<leader>jl")   '("jump line" . avy-goto-line)
-		(kbd "<leader>jb")   '("jump tab" . centaur-tabs-ace-jump)
+		(kbd "<leader>j")   '("jump" . avy-goto-char-2)
 		)
 	)
 
