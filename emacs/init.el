@@ -94,7 +94,9 @@
 	;; Assume :elpaca t unless otherwise specified.
 	(setq elpaca-use-package-by-default t))
 
+;; Fix too many pipes issue when using fetch-all
 (setq elpaca-queue-limit 20)
+
 ;; Block until current queue processed.
 (elpaca-wait)
 
@@ -280,7 +282,7 @@
 	(dimmer-configure-corfu)
 	(dimmer-configure-which-key)
 	(dimmer-configure-hydra)
-	(dimmer-configure-magit)
+	;; (dimmer-configure-magit)
 	(dimmer-configure-org)
 	(dimmer-configure-posframe)
 	(dimmer-mode t))
@@ -312,7 +314,6 @@
 													(projects . 5)))
 	(setq dashboard-navigator-buttons
 				`((
-					 ;; (,(nerd-icons-sucicon "nf-seti-settings") "dotfiles" "Open Emacs config" (lambda (&rest _) (interactive) (find-file "~/dotfiles/emacs/init.org")) warning)
 					 (,(nerd-icons-codicon "nf-cod-package") " Elpaca" "Elpaca Manager UI" (lambda (&rest _) (elpaca-manager)) error)
 					 )))
 	:config
@@ -411,7 +412,7 @@
 	:custom
 	(evil-collection-corfu-key-themes '(default tab-n-go))
 	:config
-	(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu magit magit-section magit-todos which-key)))
+	(evil-collection-init '(corfu dashboard diff-hl dired eldoc elpaca lsp-ui-imenu which-key)))
 
 (defun backward-kill-spaces-or-char-or-word ()
 	(interactive)
@@ -563,7 +564,7 @@
 		(kbd "<leader>pf")     '("project files" . project-find-file)
 		(kbd "<leader>pa")     '("add project" . projectile-add-known-project)
 		(kbd "<leader>pd")     '("close project" . persp-kill)
-		(kbd "<leader>px")     '("remove project" . projectile-remove-known-project)
+		(kbd "<leader>px")     '("remove known project" . projectile-remove-known-project)
 		(kbd "<leader>p!")     '("run command in root" . projectile-run-shell-command-in-root)
 
 		(kbd "<leader>p1")     '("project 1" . (lambda () (interactive) (persp-switch-by-number 1)))
@@ -584,16 +585,6 @@
 (use-package persp-projectile
 	:demand t
 	:after (projectile perspective))
-
-(use-package magit
-	:commands magit
-	:init
-	(evil-define-key 'normal 'global
-		(kbd "<leader>g")  '("magit status" . magit)
-		))
-
-(use-package ssh-agency :elpaca (:host github
-																			 :repo "magit/ssh-agency"))
 
 (use-package corfu
 	:custom
@@ -803,14 +794,15 @@
 	(list
 	 (cond
 		((or (string-equal "*" (substring (buffer-name) 0 1))
-				 (memq major-mode '(magit-process-mode
-														magit-status-mode
-														magit-diff-mode
-														magit-log-mode
-														magit-file-mode
-														magit-blob-mode
-														magit-blame-mode
-														)))
+				 ;; (memq major-mode '(magit-process-mode
+				 ;; 										magit-status-mode
+				 ;; 										magit-diff-mode
+				 ;; 										magit-log-mode
+				 ;; 										magit-file-mode
+				 ;; 										magit-blob-mode
+				 ;; 										magit-blame-mode
+				 ;; 										))
+				 )
 		 "Emacs")
 		((derived-mode-p 'prog-mode)
 		 "Editing")
@@ -857,8 +849,8 @@
 		 (string-prefix-p "*Help" name)
 
 		 ;; Is not magit buffer.
-		 (and (string-prefix-p "magit" name)
-					(not (file-name-extension name)))
+		 ;; (and (string-prefix-p "magit" name)
+		 ;; 			(not (file-name-extension name)))
 		 )))
 
 (defun dual-format-function ()
@@ -867,13 +859,6 @@
 	(if (bound-and-true-p lsp-mode)
 			(lsp-format-buffer)
 		(format-all-region-or-buffer)))
-
-;; (defun dual-format-function ()
-;; 	"Format code using lsp-format if eglot is active, otherwise use format-all."
-;; 	(interactive)
-;; 	(if (bound-and-true-p eglot--managed-mode)
-;; 			(eglot-format-buffer)
-;; 		(format-all-region-or-buffer)))
 
 (use-package format-all
 	:demand t
@@ -1188,8 +1173,8 @@
 	:demand t
 	:hook
 	(focus-in . diff-hl-update)
-	(magit-pre-refresh . diff-hl-magit-pre-refresh)
-	(magit-post-refresh . diff-hl-magit-post-refresh)
+	;; (magit-pre-refresh . diff-hl-magit-pre-refresh)
+	;; (magit-post-refresh . diff-hl-magit-post-refresh)
 	:config
 	(global-diff-hl-mode)
 	(global-diff-hl-show-hunk-mouse-mode))
