@@ -745,7 +745,7 @@
 		(kbd "<mouse-1>") 'dirvish-subtree-toggle-or-open
 		(kbd "<mouse-3>") 'dired-mouse-find-file-other-window
 		(kbd "q")					'dirvish-quit
-		(kbd "TAB")				'dirvish-subtree-toggle
+		(kbd "<tab>")			'dirvish-subtree-toggle
 		(kbd "<return>")  'dired-find-file
 		(kbd "u")					'dired-up-directory
 		(kbd "p")					'dirvish-yank
