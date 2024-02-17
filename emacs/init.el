@@ -158,6 +158,7 @@
 							standard-indent 2)
 
 (set-clipboard-coding-system 'utf-8-unix)
+(global-auto-revert-mode)
 (savehist-mode 1)
 (save-place-mode 1)
 (blink-cursor-mode 0)
