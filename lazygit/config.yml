@@ -91,3 +91,87 @@ os:
   open: ''
   openLink: ''
 notARepository: 'skip' # one of: 'prompt' | 'create' | 'skip' | 'quit'
+customCommands:
+  - key: '<c-e>'
+    description: "Push to a specific remote repository"
+    context: 'global'
+    loadingText: 'Pushing ...'
+    prompts:
+      - type: 'menuFromCommand'
+        title: 'Which remote repository to push to?'
+        command: nu -c "git remote --verbose | rg '.*\s\(push\)'"
+        filter: '(?P<remote>.*)\s+(?P<url>.*) \(push\)'
+        key: 'Remote'
+        valueFormat: '{{ .remote }}'
+        labelFormat: '{{ .remote | bold | cyan }} {{ .url }}'
+      - type: 'menu'
+        title: 'How to push?'
+        key: 'PushType'
+        options:
+          - value: 'push'
+          - value: 'push --force-with-lease'
+          - value: 'push --force'
+    command: 'git {{ .Form.PushType | quote }} {{ .Form.Remote }}'
+  - key: "<c-C>"
+    context: "files"
+    description: "Create new conventional commit"
+    prompts:
+      - type: "menu"
+        key: "Type"
+        title: "Type of change"
+        options:
+          - name: "feat"
+            description: "A new feature"
+            value: "feat"
+          - name: "fix"
+            description: "A bug fix"
+            value: "fix"
+          - name: "test"
+            description: "Adding missing tests or correcting existing tests"
+            value: "test"
+          - name: "chore"
+            description: "Other changes that don't modify src or test files"
+            value: "chore"
+          - name: "perf"
+            description: "A code change that improves performance"
+            value: "perf"
+          - name: "refactor"
+            description: "A code change that neither fixes a bug nor adds a feature"
+            value: "refactor"
+          - name: "style"
+            description: "Changes that do not affect the meaning of the code"
+            value: "style"
+          - name: "revert"
+            description: "Reverts a previous commit"
+            value: "revert"
+          - name: "docs"
+            description: "Documentation only changes"
+            value: "docs"
+          - name: "build"
+            description: "Changes that affect the build system or external dependencies"
+            value: "build"
+          - name: "ci"
+            description: "Changes to CI configuration files and scripts"
+            value: "ci"
+      - type: "input"
+        title: "Scope - Add '(<scope>)'"
+        key: "Scope"
+        initialValue: ""
+      - type: "input"
+        title: "Breaking change - Add '!'"
+        key: "Breaking"
+        initialValue: ""
+      - type: "input"
+        title: "Summary"
+        key: "Summary"
+        initialValue: ""
+      - type: "input"
+        title: "Description"
+        key: "Description"
+        initialValue: ""
+      - type: "confirm"
+        key: "Confirm"
+        title: "Commit"
+        body: "Are you sure you want to commit?"
+    command: 'git commit -m "{{.Form.Type}}{{.Form.Scope}}{{.Form.Breaking}}: {{.Form.Summary}}" -m "{{.Form.Description}}"'
+    loadingText: "Creating conventional commit..."
