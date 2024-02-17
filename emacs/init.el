@@ -951,7 +951,7 @@
 				lsp-ui-sideline-show-code-actions nil
 				lsp-ui-sideline-show-diagnostics t
 				lsp-ui-sideline-show-hover nil
-				lsp-ui-doc-enable nil
+				lsp-ui-doc-enable t
 				lsp-ui-doc-show-with-cursor nil
 				lsp-ui-doc-show-with-mouse nil
 				lsp-pylsp-configuration-sources ["python-lsp-ruff" "pylsp-mypy"]
@@ -1107,7 +1107,7 @@
 	:demand t
 	:ensure t
 	:custom
-	(flycheck-display-errors-delay 0.2)
+	(flycheck-display-errors-delay 0.0)
 	(flycheck-highlighting-mode 'symbols)  ;; 'symbols or 'lines
 	(flycheck-check-syntax-automatically '(save new-line mode-enabled idle-change))  ;; default +idle-change
 	:config
