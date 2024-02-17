@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json.schemastore.org/lazygit.json
+# https://github.com/jesseduffield/lazygit/blob/master/schema/config.json
 gui:
   windowSize: 'normal' # one of 'normal' | 'half' | 'full' default is 'normal'
   scrollHeight: 2 # how many lines you scroll by
@@ -26,6 +28,8 @@ gui:
       - '#658594'
     selectedLineBgColor:
       - '#2A2A37'
+    selectedRangeBgColor:
+      - '#4e6773'
     cherryPickedCommitBgColor:
       - '#8ea4a2'
     cherryPickedCommitFgColor:
