@@ -658,28 +658,23 @@ Make editing easier
 
 			(kbd "<leader>qr")      '("restart" . restart-emacs)
 			(kbd "<leader>qq")      '("kill frame" . delete-frame)
-			(kbd "<leader>qQ")      '("kill emacs" . save-buffers-kill-emacs)
-			)
+			(kbd "<leader>qQ")      '("kill emacs" . save-buffers-kill-emacs))
 
 		(evil-define-key nil 'global
 			(kbd "M-u")			 'universal-argument
-			(kbd "<escape>") 'keyboard-escape-quit
-			)
+			(kbd "<escape>") 'keyboard-escape-quit)
 
 		(evil-define-key 'normal 'global
-			(kbd "TAB") 'previous-buffer
-			)
+			(kbd "<tab>") 'previous-buffer)
 
 		(evil-define-key '(normal insert) 'global
 			(kbd "C-s") 'save-buffer
-			(kbd "C-v") 'yank
-			)
+			(kbd "C-v") 'yank)
 
 		(evil-define-key 'insert 'global
 			(kbd "TAB")						'tab-to-tab-stop
 			(kbd "<C-backspace>") 'backward-kill-spaces-or-char-or-word
-			(kbd "<C-delete>")		'forward-kill-spaces-or-char-or-word
-			)
+			(kbd "<C-delete>")		'forward-kill-spaces-or-char-or-word)
 		)
 #+end_src
 
@@ -706,7 +701,6 @@ Make editing easier
 			"<SPC> q" "Quit"
 			"<SPC> w" "Window"
 			"<SPC> z" "Tools"
-			", t"     "Tests"
 			)
 		(which-key-mode))
 #+end_src
@@ -1437,8 +1431,6 @@ Text objects
 		:demand t
 		:hook
 		(focus-in . diff-hl-update)
-		;; (magit-pre-refresh . diff-hl-magit-pre-refresh)
-		;; (magit-post-refresh . diff-hl-magit-post-refresh)
 		:config
 		(global-diff-hl-mode)
 		(global-diff-hl-show-hunk-mouse-mode))
@@ -1469,6 +1461,7 @@ Text objects
 			(kbd "<localleader>x")   '("execute block" . org-babel-execute-src-block)
 			(kbd "<localleader>X")   '("execute all" . org-babel-execute-buffer)
 			(kbd "<localleader>e")	 '("edit block" . org-edit-special)
+			(kbd "<localleader>t")	 '("toggle TODO" . org-todo)
 			(kbd "<localleader>ie")  '("emacs-lisp" . (lambda() (interactive) (org-insert-structure-template "src emacs-lisp")))
 			(kbd "<localleader>ip")  '("python" . (lambda() (interactive) (org-insert-structure-template "src python")))
 			(kbd "<localleader>ij")  '("jupyer" . (lambda() (interactive) (org-insert-structure-template src-jupyter-block-header)))
@@ -1500,15 +1493,10 @@ Text objects
 		:hook
 		(org-mode . org-modern-mode))
 
-	(use-package evil-org
-		:hook (org-mode . evil-org-mode)
-		:config (evil-org-set-key-theme '(textobjects insert navigation shift todo)))
-
 	(with-eval-after-load 'org
 		(add-to-list 'org-structure-template-alist '("se" . "src emacs-lisp"))
 		(add-to-list 'org-structure-template-alist '("sj" . src-jupyter-block-header))
 		(add-to-list 'org-structure-template-alist '("sp" . "src python")))
-	
 #+end_src
 
 * Languages
@@ -1684,7 +1672,7 @@ https://github.com/martibosch/snakemacs/blob/code-cells-org/main.el
 		:demand t
 		:config
 		(evil-define-key 'normal go-ts-mode-map
-			(kbd "<localleader>x")   '("run" . go-run)
+			(kbd "<localleader>x")    '("run" . go-run)
 			(kbd "<localleader>tc")   '("coverage" . go-test-current-coverage)
 			(kbd "<localleader>tf")   '("test file" . go-test-current-file)
 			(kbd "<localleader>tp")   '("test project" . go-test-current-project)
