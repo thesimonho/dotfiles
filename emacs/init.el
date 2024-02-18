@@ -136,11 +136,12 @@
 			inhibit-compacting-font-caches t  ;; Font compacting can be expensive, especially for rendering icon fonts on Windows
 			kill-ring-max 20
 			make-backup-files nil
-			max-mini-window-height 0.1
+			max-mini-window-height 2
 			native-comp-async-report-warnings-errors nil
 			package-install-upgrade-built-in t
 			pixel-scroll-precision-mode t
 			prefer-coding-system 'utf-8-unix
+			resize-mini-windows t
 			revert-without-query t
 			ring-bell-function 'ignore
 			save-interprogram-paste-before-kill t
@@ -213,7 +214,7 @@
 				doom-modeline-lsp t
 				doom-modeline-time-icon nil
 				doom-modeline-highlight-modified-buffer-name t
-				doom-modeline-position-column-line-format '("L%l C%c")
+				doom-modeline-position-column-line-format '("L%l")
 				doom-modeline-minor-modes t
 				doom-modeline-checker-simple-format nil
 				doom-modeline-major-mode-icon nil
@@ -259,7 +260,7 @@
 (use-package dimmer
 	:demand t
 	:init
-	(setq dimmer-fraction 0.5
+	(setq dimmer-fraction 0.3
 				dimmer-adjustment-mode :foreground
 				dimmer-watch-frame-focus-events nil)
 
@@ -283,7 +284,6 @@
 	(dimmer-configure-corfu)
 	(dimmer-configure-which-key)
 	(dimmer-configure-hydra)
-	;; (dimmer-configure-magit)
 	(dimmer-configure-org)
 	(dimmer-configure-posframe)
 	(dimmer-mode t))
@@ -885,7 +885,7 @@
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
 ;; (use-package copilot :elpaca (:host github
-;; 																		:repo "zerolfx/copilot.el"
+;; 																		:repo "copilot-emacs/copilot.el"
 ;; 																		:branch "main"
 ;; 																		:files ("dist" "*.el"))
 ;; 	:init
@@ -916,7 +916,7 @@
 	(setq lsp-auto-execute-action nil
 				lsp-completion-enable t
 				lsp-completion-provider :none  ;; use corfu instead
-				lsp-completion-show-detail t
+				lsp-completion-show-detail nil
 				lsp-disabled-clients '(tfls)
 				lsp-eldoc-enable-hover t
 				lsp-enable-links t
@@ -938,7 +938,7 @@
 				lsp-semantic-tokens-honor-refresh-requests t
 				lsp-signature-auto-activate t
 				lsp-signature-render-documentation nil
-				lsp-symbol-highlighting-skip-current nil
+				lsp-symbol-highlighting-skip-current t
 				lsp-warn-no-matched-clients nil
 				lsp-ui-peek-enable t
 				lsp-ui-sideline-enable t
