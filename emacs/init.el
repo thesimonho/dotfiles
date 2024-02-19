@@ -296,7 +296,7 @@
 
 (use-package dashboard
 	:demand t
-	:after projectile
+	:after (projectile perspective)
 	:init
 	(setq
 	 dashboard-banner-logo-title nil
@@ -321,7 +321,8 @@
 													(projects . 5)))
 	(setq dashboard-navigator-buttons
 				`((
-					 (,(nerd-icons-codicon "nf-cod-package") " Elpaca" "Elpaca Manager UI" (lambda (&rest _) (elpaca-manager)) error)
+					 (,(nerd-icons-codicon "nf-cod-package") "Elpaca" "Open Elpaca Manager UI" (lambda (&rest _) (elpaca-manager)) error)
+					 (,(nerd-icons-codicon "nf-cod-multiple_windows") "Perspectives" "Load Saved Perspectives" (lambda (&rest _) (persp-state-load persp-state-default-file)) error)
 					 )))
 	:config
 	;; WORKAROUND: no icons are displayed on Windows
@@ -586,9 +587,13 @@
 
 (use-package perspective
 	:demand t
+	:init
+	(setq persp-initial-frame-name "main"
+				persp-suppress-no-prefix-key-warning t
+				persp-state-default-file (concat (expand-file-name "data/" user-emacs-directory) "perspectives.el")
+				persp-sort 'access)
 	:config
-	(setq persp-initial-frame-name "default")
-	(setq persp-suppress-no-prefix-key-warning t)
+	(add-hook 'kill-emacs-hook #'persp-state-save)
 	(persp-mode))
 
 (use-package persp-projectile
