@@ -56,7 +56,7 @@ map("n", "<leader>w<down>", "<cmd>resize -15<cr>", { desc = "Resize down" })
 map("n", "<leader>w<left>", "<cmd>vertical resize +15<cr>", { desc = "Resize left" })
 map("n", "<leader>w<right>", "<cmd>vertical resize -15<cr>", { desc = "Resize right" })
 
-map("n", "<leader>wq", "<C-W>c", { desc = "Close" })
+map("n", "<leader>wd", "<C-W>c", { desc = "Close" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Buffers                                         ║
@@ -140,10 +140,10 @@ map("n", "<leader>fb", "<cmd>JABSOpen<cr>", { desc = "Buffers" })
 map("n", "<leader>fg", "<cmd>lua require('utils').live_grep_from_project_root()<cr>", { desc = "Grep project" })
 map("n", "<leader>fr", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Recent" })
 map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "String" })
-map("n", "<leader>fp", "<cmd>lua require('telescope').extensions.project.project{}<cr>", { desc = "Project" })
+map("n", "<leader>pp", "<cmd>lua require('telescope').extensions.project.project{}<cr>", { desc = "Project" })
 map(
 	"n",
-	"<leader>fn",
+	"<leader>fd",
 	"<cmd>Neotree filesystem focus position=left reveal=true reveal_force_cwd=false<cr>",
 	{ desc = "Tree" }
 )
@@ -163,24 +163,24 @@ local function show_hover()
 		vim.lsp.buf.hover()
 	end
 end
-map("n", "<leader>gh", show_hover, { desc = "Hover" }) -- mapped outside otherwise types w/o LSP won't get the bind
+map("n", "<leader>lh", show_hover, { desc = "Hover" }) -- mapped outside otherwise types w/o LSP won't get the bind
 
 function MapLSP(bufnr)
-	map("n", "<leader>gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration", buffer = bufnr })
-	map("n", "<leader>gd", "<cmd>TroubleToggle lsp_definitions<cr>", { desc = "Definition", buffer = bufnr })
-	map("n", "<leader>gt", "<cmd>TroubleToggle lsp_type_definitions<cr>", { desc = "Type Definition", buffer = bufnr })
-	map("n", "<leader>gr", "<cmd>TroubleToggle lsp_references<cr>", { desc = "Find all references", buffer = bufnr })
-	map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation", buffer = bufnr })
-	map("n", "<leader>gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature", buffer = bufnr })
-	map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Show Error", buffer = bufnr })
-	map("n", "<leader>gE", "<cmd>TroubleToggle<cr>", { desc = "Error List", buffer = bufnr })
+	map("n", "<leader>lD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Declaration", buffer = bufnr })
+	map("n", "<leader>ld", "<cmd>TroubleToggle lsp_definitions<cr>", { desc = "Definition", buffer = bufnr })
+	map("n", "<leader>lt", "<cmd>TroubleToggle lsp_type_definitions<cr>", { desc = "Type Definition", buffer = bufnr })
+	map("n", "<leader>lr", "<cmd>TroubleToggle lsp_references<cr>", { desc = "Find all references", buffer = bufnr })
+	map("n", "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Implementation", buffer = bufnr })
+	map("n", "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<cr>", { desc = "Signature", buffer = bufnr })
+	map("n", "<leader>le", "<cmd>lua vim.diagnostic.open_float()<cr>", { desc = "Show Error", buffer = bufnr })
+	map("n", "<leader>lE", "<cmd>TroubleToggle<cr>", { desc = "Error List", buffer = bufnr })
 
 	map("n", "[e", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Previous error", buffer = bufnr })
 	map("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next error", buffer = bufnr })
 
 	-- Binds that dont belong under "g" but should only be set when LSP is attached
-	map("n", "<leader>cr", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
-	map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
+	map("n", "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "LSP Rename" })
+	map("n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", { desc = "Code Action", buffer = bufnr })
 end
 
 -- ╔═════════════════════════════════════════════════╗

@@ -1,6 +1,6 @@
 local M = {
 	"petertriho/nvim-scrollbar",
-	enabled = true,
+	enabled = false,
     cond = vim.g.vscode == nil,
 	event = { "BufReadPre", "BufNewFile" },
 }

@@ -1,6 +1,6 @@
 local M = {
 	"lewis6991/gitsigns.nvim",
-	enabled = true,
+	enabled = false,
     cond = vim.g.vscode == nil,
 	event = { "BufReadPost, BufNewFile" },
 }
