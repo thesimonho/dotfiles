@@ -901,24 +901,26 @@
 
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-;; (use-package copilot :elpaca (:host github
-;; 																		:repo "copilot-emacs/copilot.el"
-;; 																		:branch "main"
-;; 																		:files ("dist" "*.el"))
-;; 	:init
-;; 	(setq copilot-indent-warning-suppress t)
-;; 	:hook
-;; 	(prog-mode . copilot-mode)
-;; 	(org-mode . copilot-mode)
-;; 	:config
-;; 	(evil-define-key 'insert copilot-completion-map
-;; 		(kbd "C-j")   'copilot-next-completion
-;; 		(kbd "C-k")   'copilot-previous-completion
-;; 		(kbd "C-l")   'copilot-accept-completion
-;; 		(kbd "M-l")   'copilot-accept-completion-by-word
-;; 		(kbd "ESC")   'copilot-clear-overlay
-;; 		)
-;; 	)
+(use-package copilot :elpaca (:host github
+																		:repo "copilot-emacs/copilot.el"
+																		:branch "main"
+																		:files ("dist" "*.el"))
+	:init
+	(setq copilot-indent-warning-suppress t)
+	:hook
+	(prog-mode . copilot-mode)
+	(org-mode . copilot-mode)
+	:config
+	(evil-define-key 'insert 'global
+		(kbd "C-j")   'copilot-next-completion
+		(kbd "C-k")   'copilot-previous-completion
+		(kbd "C-l")   'copilot-accept-completion
+		(kbd "M-l")   'copilot-accept-completion-by-word
+		)
+	(evil-define-key 'insert copilot-completion-map
+		(kbd "ESC")   'copilot-clear-overlay
+		)
+	)
 
 (use-package avy
 	:demand t

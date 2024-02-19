@@ -389,7 +389,7 @@
 	(markdown-markup-face													 (:foreground oldWhite))
 
 	;; copilot
-	(copilot-overlay-face													 (:foreground sumiInk-4))
+	(copilot-overlay-face													 (:inherit 'hl-line :foreground sumiInk-4))
 
 	(focus-unfocused (:foreground sumiInk-4))
 
