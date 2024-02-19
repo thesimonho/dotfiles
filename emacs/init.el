@@ -674,6 +674,7 @@
 				read-buffer-completion-ignore-case t
 				completion-ignore-case t
 				eldoc-echo-area-use-multiline-p nil
+				vertico-preselect 'prompt
 				vertico-resize nil)
 	(vertico-mode)
 	(evil-define-key nil vertico-map
