@@ -940,7 +940,7 @@
 				lsp-enable-suggest-server-download nil
 				lsp-enable-snippet nil
 				lsp-enable-symbol-highlighting t
-				lsp-headerline-breadcrumb-mode nil
+				lsp-headerline-breadcrumb-enable nil
 				lsp-headerline-breadcrumb-segments '(file symbols)
 				lsp-idle-delay 0.500
 				lsp-log-io nil
@@ -954,7 +954,7 @@
 				lsp-semantic-tokens-enable t
 				lsp-semantic-tokens-honor-refresh-requests t
 				lsp-signature-auto-activate t
-				lsp-signature-render-documentation nil
+				lsp-signature-render-documentation t
 				lsp-symbol-highlighting-skip-current t
 				lsp-warn-no-matched-clients nil
 				lsp-ui-peek-enable t
