@@ -233,14 +233,14 @@
 	:config
 	(minions-mode))
 
-(use-package beacon
-	:demand t
-	:init
-	(setq beacon-blink-when-window-scrolls nil
-				beacon-blink-when-window-changes t
-				beacon-blink-when-point-moves t)
-	:config
-	(beacon-mode 1))
+;; (use-package beacon
+;; 	:demand t
+;; 	:init
+;; 	(setq beacon-blink-when-window-scrolls nil
+;; 				beacon-blink-when-window-changes t
+;; 				beacon-blink-when-point-moves t)
+;; 	:config
+;; 	(beacon-mode 1))
 
 (use-package rainbow-mode
 	:hook
@@ -397,7 +397,7 @@
 	:after evil
 	:init
 	(setq-default evil-escape-key-sequence "kj"
-								evil-escape-delay 0.1
+								evil-escape-delay 0.2
 								evil-escape-unordered-key-sequence nil)
 	:config
 	(evil-escape-mode))
