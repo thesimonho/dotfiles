@@ -185,7 +185,7 @@
   (doom-modeline-error                           (:background peachRed))
   (doom-modeline-warning                         (:foreground roninYellow))
   (doom-modeline-info                            (:foreground dragonGray2)) ;; VCS branch
-  (doom-modeline-bar                             (:bold t :background dragonWhite))
+  (doom-modeline-bar                             (:background dragonWhite))
   (doom-modeline-panel                           (:background waveBlue-2 :foreground oldWhite))
   (doom-themes-visual-bell                       (:background autumnRed))
 

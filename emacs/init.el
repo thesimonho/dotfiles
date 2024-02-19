@@ -166,6 +166,7 @@
 
 (set-clipboard-coding-system 'utf-8-unix)
 (global-auto-revert-mode)
+(winner-mode 1)
 (savehist-mode 1)
 (save-place-mode 1)
 (blink-cursor-mode 0)
@@ -209,23 +210,27 @@
 
 (use-package doom-modeline
 	:init
-	(setq doom-modeline-height 30
-				doom-modeline-hud nil
-				doom-modeline-project-detection 'auto
-				doom-modeline-display-default-persp-name nil
-				doom-modeline-buffer-name t
-				doom-modeline-buffer-modification-icon nil
+	(setq	doom-modeline-bar-width 6
 				doom-modeline-buffer-encoding nil
 				doom-modeline-buffer-file-name-style 'file-name
-				doom-modeline-lsp t
-				doom-modeline-time-icon nil
-				doom-modeline-highlight-modified-buffer-name t
-				doom-modeline-position-column-line-format '("L%l")
-				doom-modeline-minor-modes t
+				doom-modeline-buffer-modification-icon nil
+				doom-modeline-buffer-name t
 				doom-modeline-checker-simple-format nil
+				doom-modeline-display-default-persp-name nil
+				doom-modeline-height 30
+				doom-modeline-highlight-modified-buffer-name t
+				doom-modeline-hud t
+				doom-modeline-hud-min-height 4
+				doom-modeline-lsp t
+				doom-modeline-percent-position nil
+				doom-modeline-position-column-line-format '("L%l")
+				doom-modeline-project-detection 'auto
+				doom-modeline-time-icon nil
 				doom-modeline-major-mode-icon nil
+				doom-modeline-minor-modes t
 				doom-modeline-modal-icon t
-				doom-modeline-modal-modern-icon t)
+				doom-modeline-modal-modern-icon t
+				doom-modeline-window-width-limit 75)
 	(doom-modeline-mode 1))
 
 (use-package minions
