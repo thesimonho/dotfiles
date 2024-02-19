@@ -9,6 +9,11 @@
 (defun system-is-mswindows ()
 	(eq system-type 'windows-nt))
 
+(defun inhibit-messages-advice (orig-fun &rest args)
+	"Advice to run function silently."
+	(let ((inhibit-message t))
+		(apply orig-fun args)))
+
 ;; https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-start.el
 ;; https://github.com/emacsmirror/gcmh/blob/master/gcmh.el
 
@@ -29,6 +34,7 @@
 						 (standard_gc_threshold)
 						 (garbage-collect)) t)
 
+(advice-add 'clean-buffer-list :around #'inhibit-messages-advice)
 (add-hook 'focus-out-hook        #'clean-buffer-list)
 (add-hook 'focus-out-hook        #'garbage-collect)
 (add-hook 'after-save-hook       #'garbage-collect)

@@ -78,6 +78,11 @@ Must be evaluated at least once.
 #+begin_src emacs-lisp
 	(defun system-is-mswindows ()
 		(eq system-type 'windows-nt))
+
+	(defun inhibit-messages-advice (orig-fun &rest args)
+		"Advice to run function silently."
+		(let ((inhibit-message t))
+			(apply orig-fun args)))
 #+end_src
 
 * Performance
@@ -87,7 +92,7 @@ Must be evaluated at least once.
 #+begin_src emacs-lisp
 	;; https://github.com/doomemacs/doomemacs/blob/master/lisp/doom-start.el
 	;; https://github.com/emacsmirror/gcmh/blob/master/gcmh.el
-	
+
 	(defun raise_gc_threshold ()
 		(setq gc-cons-threshold most-positive-fixnum
 					gc-cons-percentage 0.5))
@@ -105,6 +110,7 @@ Must be evaluated at least once.
 							 (standard_gc_threshold)
 							 (garbage-collect)) t)
 
+	(advice-add 'clean-buffer-list :around #'inhibit-messages-advice)
 	(add-hook 'focus-out-hook        #'clean-buffer-list)
 	(add-hook 'focus-out-hook        #'garbage-collect)
 	(add-hook 'after-save-hook       #'garbage-collect)
