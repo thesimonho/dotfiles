@@ -158,7 +158,7 @@ customCommands:
             description: "Changes to CI configuration files and scripts"
             value: "ci"
       - type: "input"
-        title: "Scope - Add '(<scope>)'"
+        title: "Scope - Add '<scope>'"
         key: "Scope"
         initialValue: ""
       - type: "input"
@@ -177,5 +177,5 @@ customCommands:
         key: "Confirm"
         title: "Commit"
         body: "Are you sure you want to commit?"
-    command: 'git commit -m "{{.Form.Type}}{{.Form.Scope}}{{.Form.Breaking}}: {{.Form.Summary}}" -m "{{.Form.Description}}"'
+    command: 'git commit -m "{{.Form.Type}}{{if .Form.Scope}}({{.Form.Scope}}){{end}}{{.Form.Breaking}}: {{.Form.Summary}}"{{if .Form.Description}} -m "{{.Form.Description}}"{{end}}'
     loadingText: "Creating conventional commit..."
