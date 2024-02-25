@@ -137,6 +137,7 @@
 			display-line-numbers-type 'relative
 			global-auto-revert-mode t
 			global-auto-revert-non-file-buffers t
+			help-window-select t
 			history-length 35
 			idle-update-delay 1.0
 			inhibit-compacting-font-caches t  ;; Font compacting can be expensive, especially for rendering icon fonts on Windows
@@ -223,7 +224,7 @@
 				doom-modeline-hud-min-height 4
 				doom-modeline-lsp t
 				doom-modeline-percent-position nil
-				doom-modeline-position-column-line-format '("L%l")
+				doom-modeline-position-column-line-format '("L:%l")
 				doom-modeline-project-detection 'auto
 				doom-modeline-time-icon nil
 				doom-modeline-major-mode-icon nil
@@ -447,6 +448,18 @@
 	 (t
 		(delete-forward-char 1))))
 
+(defun split-and-focus-veritcally ()
+	(interactive)
+	(split-window-below)
+	(balance-windows)
+	(other-window 1))
+
+(defun split-and-focus-horizontally ()
+	(interactive)
+	(split-window-right)
+	(balance-windows)
+	(other-window 1))
+
 (defun previous-buffer ()
 	(interactive)
 	(switch-to-buffer (other-buffer (current-buffer) t)))
@@ -493,15 +506,16 @@
 		(kbd "<leader>wm")      '("minibuffer" . switch-to-minibuffer)
 		(kbd "<leader>wd")      '("delete" . delete-window)
 		(kbd "<leader>wD")      '("delete others" . delete-other-windows)
+		(kbd "<leader>wf")      '("follow" . follow-delete-other-windows-and-split)
 		(kbd "<leader>wh")      '("left" . evil-window-left)
 		(kbd "<leader>wj")      '("down" . evil-window-down)
 		(kbd "<leader>wk")      '("up" . evil-window-up)
 		(kbd "<leader>wl")      '("right" . evil-window-right)
-		(kbd "<leader>wr")      '("rotate" . rotate-windows-forward)
+		(kbd "<leader>wr")      '("rotate" . evil-window-rotate-downwards)
 		(kbd "<leader>wu")      '("winner undo" . winner-undo)
 		(kbd "<leader>wU")      '("winner redo" . winner-redo)
-		(kbd "<leader>ws")      '("split vertical" . split-window-vertically)
-		(kbd "<leader>wv")      '("split horizontal" . split-window-horizontally)
+		(kbd "<leader>ws")      '("split vertical" . split-and-focus-vertically)
+		(kbd "<leader>wv")      '("split horizontal" . split-and-focus-horizontally)
 		(kbd "<leader>wn")			'("new frame" . clone-frame)
 		(kbd "<leader>wo")			'("switch frame" . other-frame)
 
