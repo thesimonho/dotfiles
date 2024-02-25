@@ -144,6 +144,7 @@
 			kill-ring-max 20
 			make-backup-files nil
 			max-mini-window-height 2
+			mouse-yank-at-point t
 			native-comp-async-report-warnings-errors nil
 			package-install-upgrade-built-in t
 			pixel-scroll-precision-mode t
@@ -239,15 +240,6 @@
 	:config
 	(minions-mode))
 
-;; (use-package beacon
-;; 	:demand t
-;; 	:init
-;; 	(setq beacon-blink-when-window-scrolls nil
-;; 				beacon-blink-when-window-changes t
-;; 				beacon-blink-when-point-moves t)
-;; 	:config
-;; 	(beacon-mode 1))
-
 (use-package rainbow-mode
 	:hook
 	(prog-mode . rainbow-mode))
@@ -299,6 +291,12 @@
 	(dimmer-configure-org)
 	(dimmer-configure-posframe)
 	(dimmer-mode t))
+
+(defun evil-yank-highlight-advice (orig-fn beg end &rest args)
+	(pulse-momentary-highlight-region beg end 'highlight)
+	(apply orig-fn beg end args))
+
+(advice-add 'evil-yank :around #'evil-yank-highlight-advice)
 
 (use-package dashboard
 	:demand t
@@ -479,6 +477,7 @@
 
 	(evil-define-key '(normal visual) 'global
 		"j" 'evil-next-visual-line
+		"p" 'evil-paste-after-cursor-after
 		"k" 'evil-previous-visual-line
 		"gg" 'mark-gg
 		"G"  'mark-G
@@ -538,7 +537,8 @@
 
 	(evil-define-key '(normal insert) 'global
 		(kbd "C-s") 'save-buffer
-		(kbd "C-v") 'yank)
+		(kbd "C-v") 'yank
+		(kbd "<mouse-2>") 'clipboard-yank)
 
 	(evil-define-key 'insert 'global
 		(kbd "TAB")						'tab-to-tab-stop
