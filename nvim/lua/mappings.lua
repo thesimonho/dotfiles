@@ -189,20 +189,20 @@ end
 map("n", "<Leader>cd", "<cmd>lua require('neogen').generate()<CR>", { desc = "Generate docs" })
 map("n", "<leader>cf", "<cmd>NullFormat<cr>", { desc = "Format" })
 map("n", "<leader>co", "<cmd>AerialToggle<cr>", { desc = "Aerial Outline" })
-map("n", "<leader>cq", "<cmd>TroubleToggle quickfix<cr>", { desc = "Quickfix" })
-map("n", "<leader>cs", "<cmd>lua MiniSplitjoin.toggle()<cr>", { desc = "Split/join" })
+map("n", "<leader>ce", "<cmd>TroubleToggle quickfix<cr>", { desc = "Quickfix" })
+map("n", "<leader>cj", "<cmd>lua MiniSplitjoin.toggle()<cr>", { desc = "Split/join" })
 map("n", "<leader>ct", "<cmd>TodoTelescope<cr>", { desc = "TODO" })
-map("n", "<leader>cTa", function()
+map("n", ",tp", function()
 	require("neotest").run.run({ suite = true, strategy = "integrated" })
 	require("neotest").summary.open()
 end, { desc = "Run all" })
-map("n", "<leader>cTt", function()
+map("n", ",tt", function()
 	require("neotest").run.run({ strategy = "integrated" })
 end, { desc = "Run test" })
-map("n", "<leader>cTs", function()
+map("n", ",ts", function()
 	require("neotest").summary.toggle()
 end, { desc = "Show summary" })
-map("n", "<leader>cTo", function()
+map("n", ",to", function()
 	require("neotest").output.open()
 end, { desc = "Show output" })
 
@@ -249,7 +249,7 @@ map("t", "kj", "<C-\\><C-n>")
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Git                                             ║
 -- ╚═════════════════════════════════════════════════╝
-map("n", "<leader>G", "<cmd>lua require('utils').toggle_lazygit()<cr>", { desc = "Lazygit" })
+map("n", "<leader>g", "<cmd>lua require('utils').toggle_lazygit()<cr>", { desc = "Lazygit" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Overseer                                        ║
