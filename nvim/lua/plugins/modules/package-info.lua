@@ -1,6 +1,6 @@
 local M = {
 	"vuki656/package-info.nvim",
-	enabled = true,
+	enabled = false,
     cond = vim.g.vscode == nil,
 	dependencies = "MunifTanjim/nui.nvim",
 	ft = "json",

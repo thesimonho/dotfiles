@@ -1,6 +1,6 @@
 local M = {
 	"folke/neodev.nvim",
-	enabled = true,
+	enabled = false,
     cond = vim.g.vscode == nil,
 	priority = 500,
 	dependencies = {

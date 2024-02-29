@@ -1,6 +1,6 @@
 local M = {
 	"stevearc/dressing.nvim",
-	enabled = true,
+	enabled = false,
     cond = vim.g.vscode == nil,
 	event = "VeryLazy",
 }

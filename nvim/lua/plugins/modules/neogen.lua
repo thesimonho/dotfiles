@@ -1,6 +1,6 @@
 local M = {
 	"danymat/neogen",
-	enabled = true,
+	enabled = false,
     cond = vim.g.vscode == nil,
 	dependencies = "nvim-treesitter/nvim-treesitter",
 	event = { "BufRead", "BufNewFile" },

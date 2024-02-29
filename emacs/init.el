@@ -974,7 +974,7 @@
 				lsp-symbol-highlighting-skip-current t
 				lsp-warn-no-matched-clients nil
 				lsp-ui-peek-enable t
-				lsp-ui-sideline-enable t
+				lsp-ui-sideline-enable nil
 				lsp-ui-sideline-show-code-actions nil
 				lsp-ui-sideline-show-diagnostics t
 				lsp-ui-sideline-show-hover nil
