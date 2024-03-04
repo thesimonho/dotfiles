@@ -19,6 +19,7 @@ local M = {
       file_ignore_patterns = {
         "node_modules",
         ".terraform",
+        "$RECYCLE.BIN",
       },
       preview = {
         filesize_limit = 2,
@@ -59,8 +60,8 @@ local M = {
         order_by = "recent",
         search_by = "title",
         on_project_selected = function(prompt_bufnr)
-          require("telescope._extensions.project.actions").change_working_directory(prompt_bufnr)
-          -- require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
+          require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
+          -- require("telescope._extensions.project.actions").change_working_directory(prompt_bufnr)
         end,
       },
     },
