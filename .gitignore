@@ -8,3 +8,6 @@ emacs/custom.el
 emacs/.cache
 emacs/elpa
 \.directory
+
+# nvim
+Session.vim

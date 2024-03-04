@@ -1,7 +1,7 @@
 local M = {
 	"nvim-neo-tree/neo-tree.nvim",
 	enabled = true,
-    cond = vim.g.vscode == nil,
+	cond = vim.g.vscode == nil,
 	branch = "v2.x",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
@@ -64,7 +64,7 @@ function M.config()
 		},
 		window = {
 			position = "left",
-			width = 35,
+			width = 40,
 			popup = {
 				position = { col = "2", row = "3" },
 				size = function(state)

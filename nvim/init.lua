@@ -1,6 +1,2 @@
-vim.g.mapleader = " " -- set this before loading plugins
-
-require("plugins")
-require("mappings")
-require("autocommands")
-require("settings")
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
