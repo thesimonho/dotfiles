@@ -1,0 +1,3 @@
+return {
+    "scripts.run"
+}
