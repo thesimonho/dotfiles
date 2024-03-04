@@ -12,15 +12,17 @@ return {
         icon = "▎", -- this should be omitted if indicator style is not 'icon'
         style = "icon",
       },
+      hover = {
+        enabled = true,
+        delay = 200,
+        reveal = { "close" },
+      },
       buffer_close_icon = "",
       modified_icon = "●",
       close_icon = "",
       left_trunc_marker = "",
       right_trunc_marker = "",
-      max_name_length = 18,
-      max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
       truncate_names = true, -- whether or not tab names should be truncated
-      tab_size = 22,
       color_icons = true, -- whether or not to add the filetype icon highlights
       show_buffer_icons = true, -- disable filetype icons for buffers
       show_buffer_close_icons = true,
@@ -30,7 +32,7 @@ return {
       persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
       separator_style = "thick",
       enforce_regular_tabs = false,
-      always_show_bufferline = false,
+      always_show_bufferline = true,
       sort_by = "directory",
       offsets = {
         {
@@ -59,32 +61,9 @@ return {
           .. (diag.warning and icons.Warn .. diag.warning or "")
         return vim.trim(ret)
       end,
-    },
-    highlights = {
-      buffer_selected = {
-        bold = false,
-        italic = false,
-      },
-      duplicate_selected = {
-        italic = false,
-      },
-      duplicate_visible = {
-        italic = false,
-      },
-      duplicate = {
-        italic = false,
-      },
-      pick_selected = {
-        bold = true,
-        italic = false,
-      },
-      pick_visible = {
-        bold = true,
-        italic = false,
-      },
-      pick = {
-        bold = true,
-        italic = false,
+      style_preset = {
+        require("bufferline").style_preset.no_italic,
+        require("bufferline").style_preset.no_bold,
       },
     },
   },
