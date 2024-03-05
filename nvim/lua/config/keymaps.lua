@@ -18,6 +18,7 @@ vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" }) -- Del
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
 vim.keymap.set({ "n", "x" }, "gg", "mggg")
 vim.keymap.set({ "n", "x" }, "G", "mgG")
+vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>w\\", "<C-W>v", { desc = "Split window right" })
 vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
 vim.keymap.set("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
