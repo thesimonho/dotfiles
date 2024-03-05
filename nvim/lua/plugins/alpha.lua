@@ -121,7 +121,12 @@ function M.config()
       { type = "text", val = "Recent Projects", opts = { hl = "SpecialComment", position = "center" } },
     }
 
-    local project_list = require("telescope._extensions.project.utils").get_projects()
+    local success, project_list = pcall(require("telescope._extensions.project.utils").get_projects)
+    print(success)
+    if not success then
+      return { type = "text", val = "No projects found", opts = { hl = "SpecialComment", position = "center" } }
+    end
+
     for i, project in ipairs(project_list) do
       if i > max_shown then
         break
