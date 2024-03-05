@@ -19,6 +19,7 @@ winget install -e --id Nvidia.GeForceExperience --accept-source-agreements
 winget install -e --id GIMP.GIMP --accept-source-agreements
 winget install -i -e --id Git.Git --accept-source-agreements
 winget install -e --id TheDocumentFoundation.LibreOffice --accept-source-agreements
+winget install -e --id Neovide.Neovide --accept-source-agreements
 winget install -e --id Neovim.Neovim --accept-source-agreements
 winget install -e --id OpenJS.NodeJS --accept-source-agreements
 winget install -e --id Nushell.Nushell --accept-source-agreements
