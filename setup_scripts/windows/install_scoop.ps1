@@ -16,3 +16,4 @@ scoop install main/mingw-winlibs
 scoop install main/pandoc
 scoop install extras/lazygit
 scoop install fzf
+scoop install sed 
