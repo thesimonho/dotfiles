@@ -9,7 +9,7 @@ vim.opt.list = false
 vim.o.guifont = "FiraCode Nerd Font:h11"
 
 if vim.g.neovide then
-  vim.g.neovide_transparency = 0.96
+  vim.g.neovide_transparency = 0.95
   vim.keymap.set("v", "<C-c>", '"+y') -- Copy
   vim.keymap.set("n", "<C-v>", '"+P') -- Paste normal mode
   vim.keymap.set("v", "<C-v>", '"+P') -- Paste visual mode

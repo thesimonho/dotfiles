@@ -11,7 +11,7 @@ local M = {
       function()
         require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
       end,
-      desc = "NeoTree",
+      desc = "Explorer",
     },
   },
   opts = {

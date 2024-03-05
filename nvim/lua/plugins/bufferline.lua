@@ -3,9 +3,9 @@ return {
   keys = {
     { "<leader>bl", vim.NIL },
     { "<leader>br", vim.NIL },
-    { "<leader>bo", "<cmd>e #<cr>", desc = "Other buffer" },
-    { "<leader>bb", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
+    { "<leader>bo", vim.NIL },
     { "<leader>bD", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
+    { "<leader><space>", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
   },
   opts = {
     options = {

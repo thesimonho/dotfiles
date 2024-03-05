@@ -97,6 +97,7 @@ function M.config()
         TelescopePreviewBorder = { bg = colors.theme.ui.bg, fg = colors.theme.ui.bg },
 
         WhichKey = { fg = colors.palette.peachRed },
+        WhichKeySeparater = { fg = colors.palette.dragonGray2, italic = false },
         WhichKeyFloat = { bg = HoverBG },
         WhichKeyBorder = { bg = HoverBG },
 
