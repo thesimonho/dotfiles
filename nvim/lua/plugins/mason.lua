@@ -11,7 +11,7 @@ return {
       "typescript-language-server",
       "vim-language-server",
       "yaml-language-server",
-      "vue-language-server",
+      "vue-language-server", -- 1.8.27 is the latest version that works with nvim-lspconfig
 
       -- linters
       "eslint_d",
