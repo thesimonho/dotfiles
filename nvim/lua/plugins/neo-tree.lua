@@ -2,6 +2,18 @@ local M = {
   "nvim-neo-tree/neo-tree.nvim",
   enabled = true,
   cmd = "Neotree",
+  keys = {
+    { "<leader>fe", vim.NIL },
+    { "<leader>fE", vim.NIL },
+    { "<leader>E", vim.NIL },
+    {
+      "<leader>e",
+      function()
+        require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
+      end,
+      desc = "NeoTree",
+    },
+  },
   opts = {
     close_if_last_window = true,
     popup_border_style = "single",

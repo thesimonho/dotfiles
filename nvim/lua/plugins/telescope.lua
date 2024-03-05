@@ -7,8 +7,14 @@ local M = {
   cmd = "Telescope",
   keys = {
     { "<leader>,", vim.NIL },
+    { "<leader>:", vim.NIL },
+    { "<leader>/", vim.NIL },
+    { "<leader>fb", vim.NIL },
+    { "<leader>sg", vim.NIL },
+    { "<leader>sG", vim.NIL },
+    { "<leader>fg", vim.NIL },
+    { "<leader>fg", require("lazyvim.util").telescope("live_grep"), desc = "Grep (root dir)" },
     { "<leader>p", "<cmd>lua require('telescope').extensions.project.project{}<cr>", desc = "Projects" },
-    { "<leader>bb", "<cmd>Telescope buffers<cr>", { noremap = true, silent = true, desc = "Buffer List" } },
   },
   opts = {
     defaults = {

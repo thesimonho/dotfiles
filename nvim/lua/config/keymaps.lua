@@ -6,6 +6,11 @@ vim.api.nvim_del_keymap("n", "<leader>L")
 vim.api.nvim_del_keymap("n", "<leader>-")
 vim.api.nvim_del_keymap("n", "<leader>|")
 vim.api.nvim_del_keymap("n", "<leader>w|")
+vim.api.nvim_del_keymap("n", "<leader>xl")
+vim.api.nvim_del_keymap("n", "<leader>xq")
+vim.api.nvim_del_keymap("n", "<leader>`")
+vim.api.nvim_del_keymap("n", "<leader>ft")
+vim.api.nvim_del_keymap("n", "<leader>fT")
 
 -- Custom keymaps
 vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
@@ -13,3 +18,7 @@ vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- D
 vim.keymap.set({ "n", "x" }, "gg", "mggg")
 vim.keymap.set({ "n", "x" }, "G", "mgG")
 vim.keymap.set("n", "<leader>w\\", "<C-W>v", { desc = "Split window right" })
+vim.keymap.set("n", "<leader>m", "<cmd>Mason<cr>", { desc = "Mason" })
+vim.keymap.set("n", "<leader>`", function()
+  require("lazyvim.util").terminal({ "nu" }, { esc_esc = true, ctrl_hjkl = true })
+end, { desc = "Terminal" })

@@ -9,35 +9,6 @@ M.map = function(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, options)
 end
 
--- move or create split in direction
-local opposite_keys = { h = "l", l = "h", j = "k", k = "j" }
-
-local function split_exists_direction(winnr, direction)
-  vim.cmd("wincmd " .. direction)
-  if winnr == vim.api.nvim_get_current_win() then
-    return false
-  else
-    vim.cmd("wincmd " .. opposite_keys[direction])
-    return true
-  end
-end
-
-M.move_create_split = function(direction)
-  local winnr = vim.api.nvim_get_current_win()
-
-  if split_exists_direction(winnr, direction) == false then
-    if direction == "h" or direction == "l" then
-      vim.cmd("wincmd v")
-      vim.cmd("wincmd " .. direction)
-    elseif direction == "j" or direction == "k" then
-      vim.cmd("wincmd s")
-      vim.cmd("wincmd " .. direction)
-    end
-  else
-    vim.cmd("wincmd " .. direction)
-  end
-end
-
 -- Get colour of the mode
 local colours = require("../config/colours")
 M.get_mode_colour = function()
@@ -60,24 +31,6 @@ M.get_mode_colour = function()
   else
     return colours.textLight
   end
-end
-
--- open toggleterm with lazygit
-M.toggle_lazygit = function()
-  local Terminal = require("toggleterm.terminal").Terminal
-  local lazygit = Terminal:new({
-    cmd = "lazygit",
-    hidden = true,
-    on_open = function(term)
-      vim.cmd("startinsert!")
-    end,
-    close_on_exit = true,
-    direction = "float",
-    float_opts = {
-      border = "single",
-    },
-  })
-  lazygit:toggle()
 end
 
 -- when grepping, cd to the project root directory first
@@ -140,7 +93,7 @@ end
 -- get all keys from a table
 M.get_table_keys = function(tab)
   local keyset = {}
-  for k, v in pairs(tab) do
+  for k, _ in pairs(tab) do
     keyset[#keyset + 1] = k
   end
   return keyset
@@ -195,16 +148,6 @@ M.find_root = function(buf_id, patterns)
   Root_cache[path] = res
 
   return res
-end
-
--- start REPL
-M.StartREPL = function(repl)
-  vim.cmd("vsplit")
-  vim.cmd("terminal " .. repl)
-  vim.opt_local.number = false
-  local term_id = vim.b.terminal_job_id
-  vim.cmd("wincmd p")
-  vim.b.slime_config = { jobid = term_id }
 end
 
 -- string padding
