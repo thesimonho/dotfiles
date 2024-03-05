@@ -1,7 +1,7 @@
 {
   "LazyVim": { "branch": "main", "commit": "fe72424e77cb9c953084bbcaaa0eb7fe8056dc70" },
   "LuaSnip": { "branch": "master", "commit": "a7a4b4682c4b3e2ba82b82a4e6e5f5a0e79dec32" },
-  "SchemaStore.nvim": { "branch": "main", "commit": "d91daa5bf63c409f9e752e55082c3ba088b04c0b" },
+  "SchemaStore.nvim": { "branch": "main", "commit": "88355559bb42cc8e4f6ca7b624dc4c3b654c5c08" },
   "aerial.nvim": { "branch": "master", "commit": "31fbd369bbbeb53080c4b1ead9e76be322725ef5" },
   "alpha-nvim": { "branch": "main", "commit": "41283fb402713fc8b327e60907f74e46166f4cfd" },
   "better-escape.nvim": { "branch": "master", "commit": "7e86edafb8c7e73699e0320f225464a298b96d12" },
@@ -54,7 +54,6 @@
   "nvim-web-devicons": { "branch": "master", "commit": "4adea17610d140a99c313e3f79a9dc01825d59ae" },
   "persistence.nvim": { "branch": "main", "commit": "4982499c1636eac254b72923ab826ee7827b3084" },
   "plenary.nvim": { "branch": "master", "commit": "4f71c0c4a196ceb656c824a70792f3df3ce6bb6d" },
-  "scope.nvim": { "branch": "main", "commit": "cd27af77ad61a7199af5c28d27013fb956eb0e3e" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "6c921ca12321edaa773e324ef64ea301a1d0da62" },
   "telescope-project.nvim": { "branch": "master", "commit": "1aaf16580a614601a7f7077d9639aeb457dc5559" },
   "telescope.nvim": { "branch": "master", "commit": "dc1ea28cc2a02cd1cebb9d80e967807d668f78f8" },

@@ -25,46 +25,8 @@ local M = {
       },
       sections = {
         lualine_a = { "mode" },
-        lualine_b = { "branch" },
-        lualine_c = {
-          require("lazyvim.util").lualine.root_dir(),
-          {
-            "diagnostics",
-            symbols = {
-              error = icons.diagnostics.Error,
-              warn = icons.diagnostics.Warn,
-              info = icons.diagnostics.Info,
-              hint = icons.diagnostics.Hint,
-            },
-          },
-          { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-          { Util.lualine.pretty_path() },
-        },
-
-        lualine_x = {
-          -- stylua: ignore
-          {
-            function() return require("noice").api.status.command.get() end,
-            cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-            color = Util.ui.fg("Statement"),
-          },
-          -- stylua: ignore
-          {
-            function() return require("noice").api.status.mode.get() end,
-            cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-            color = Util.ui.fg("Constant"),
-          },
-          -- stylua: ignore
-          {
-            function() return "  " .. require("dap").status() end,
-            cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
-            color = Util.ui.fg("Debug"),
-          },
-          {
-            require("lazy.status").updates,
-            cond = require("lazy.status").has_updates,
-            color = Util.ui.fg("Special"),
-          },
+        lualine_b = {
+          "branch",
           {
             "diff",
             symbols = {
@@ -84,7 +46,61 @@ local M = {
             end,
           },
         },
-        lualine_y = {},
+        lualine_c = {
+          Util.lualine.root_dir({ cwd = true }),
+        },
+        lualine_x = {
+          -- stylua: ignore
+          {
+            function() return require("noice").api.status.command.get() end,
+            cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+            color = Util.ui.fg("Statement"),
+          },
+          -- stylua: ignore
+          {
+            function()
+              local venv_name = require("venv-selector").get_active_venv()
+              if venv_name ~= nil then
+                local venv = string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
+                venv = string.gsub(venv_name, "\\.venv", "")
+                return "env: " .. venv
+              else
+                return "env: none"
+              end
+            end,
+            cond = function() return vim.bo.filetype == "python" end,
+            on_click = function() require("venv-selector").open() end,
+            color = Util.ui.fg("Statement"),
+          },
+        },
+        lualine_y = {
+          -- stylua: ignore
+          {
+            function() return require("noice").api.status.mode.get() end,
+            cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+            color = Util.ui.fg("Constant"),
+          },
+          -- stylua: ignore
+          {
+            function() return "  " .. require("dap").status() end,
+            cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
+            color = Util.ui.fg("Debug"),
+          },
+          {
+            require("lazy.status").updates,
+            cond = require("lazy.status").has_updates,
+            color = Util.ui.fg("Special"),
+          },
+          {
+            "diagnostics",
+            symbols = {
+              error = icons.diagnostics.Error,
+              warn = icons.diagnostics.Warn,
+              info = icons.diagnostics.Info,
+              hint = icons.diagnostics.Hint,
+            },
+          },
+        },
         lualine_z = {
           { "location", padding = { left = 0, right = 1 } },
           { "progress", separator = " ", padding = { left = 1, right = 1 } },
