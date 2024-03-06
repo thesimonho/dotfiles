@@ -18,4 +18,10 @@ return {
       },
     },
   },
+  {
+    "echasnovski/mini.splitjoin",
+    keys = {
+      { "<leader>cj", "<cmd>lua require('mini.splitjoin').toggle()<cr>", desc = "Split/join" },
+    },
+  },
 }
