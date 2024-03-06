@@ -79,6 +79,9 @@ function M.config()
         WinSeparator = { fg = colors.palette.dragonBlue },
         IblIndent = { fg = colors.palette.sumiInk4 },
 
+        InclineNormal = { bg = colors.palette.fujiWhite, fg = colors.theme.ui.bg_dim },
+        InclineNormalNC = { bg = colors.theme.ui.bg_p2, fg = colors.palette.fujiWhite },
+
         NvimTreeRootFolder = { fg = colors.palette.autumnRed },
         NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
         NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
