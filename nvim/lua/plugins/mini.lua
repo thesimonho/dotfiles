@@ -7,13 +7,15 @@ return {
   },
   {
     "echasnovski/mini.indentscope",
-    draw = {
-      delay = 50,
-      animation = require("mini.indentscope").gen_animation.quadratic({
-        easing = "out",
-        duration = 100,
-        unit = "total",
-      }),
+    opts = {
+      draw = {
+        delay = 50,
+        animation = require("mini.indentscope").gen_animation.quadratic({
+          easing = "out",
+          duration = 10,
+          unit = "step",
+        }),
+      },
     },
   },
 }
