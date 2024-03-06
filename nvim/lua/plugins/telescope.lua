@@ -15,6 +15,8 @@ local M = {
     { "<leader>sD", vim.NIL },
     { "<leader>sg", vim.NIL },
     { "<leader>sG", vim.NIL },
+    { "<leader>ss", vim.NIL },
+    { "<leader>sS", vim.NIL },
     { "<leader>fg", vim.NIL },
     { "<leader>fg", require("lazyvim.util").telescope("live_grep"), desc = "Grep (root dir)" },
     { "<leader>p", "<cmd>lua require('telescope').extensions.project.project{}<cr>", desc = "Projects" },
