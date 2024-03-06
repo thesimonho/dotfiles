@@ -24,4 +24,7 @@ return {
       { "<leader>cj", "<cmd>lua require('mini.splitjoin').toggle()<cr>", desc = "Split/join" },
     },
   },
+  {
+    "echasnovski/mini.animate",
+  },
 }
