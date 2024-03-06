@@ -40,7 +40,7 @@ return {
       separator_style = "thick",
       enforce_regular_tabs = false,
       always_show_bufferline = true,
-      sort_by = "directory",
+      sort_by = "extension",
       offsets = {
         {
           filetype = "aerial",
@@ -56,18 +56,13 @@ return {
         },
         {
           filetype = "neo-tree",
-          text = "Neo-tree",
-          highlight = "Directory",
+          text = "Neotree",
+          -- highlight = "Directory",
           text_align = "left",
+          separator = true,
         },
       },
-      diagnostics = "nvim_lsp",
-      diagnostics_indicator = function(_, _, diag)
-        local icons = require("lazyvim.config").icons.diagnostics
-        local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-          .. (diag.warning and icons.Warn .. diag.warning or "")
-        return vim.trim(ret)
-      end,
+      diagnostics = false,
       style_preset = {
         require("bufferline").style_preset.no_italic,
         require("bufferline").style_preset.no_bold,

@@ -10,7 +10,7 @@ return {
       ["<leader>g"] = { name = " 󰊢 git" },
       ["<leader>q"] = { name = " 󰩈 quit" },
       ["<leader>s"] = { name = "  search" },
-      ["<leader>t"] = { name = " 󰙨 tests" },
+      ["<leader>t"] = { name = "  tests" },
       ["<leader>u"] = { name = " 󰨙 ui" },
       ["<leader>w"] = { name = "  windows" },
       ["<leader>x"] = { name = "  diagnostics" },
