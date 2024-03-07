@@ -13,6 +13,7 @@ return {
       "mason",
       "lazy",
       "aerial",
+      "Outline",
     },
     handlers = {
       cursor = true,

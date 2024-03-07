@@ -43,7 +43,7 @@ return {
       sort_by = "extension",
       offsets = {
         {
-          filetype = "aerial",
+          filetype = "Outline",
           text = "Outline",
           text_align = "center",
           separator = false,
