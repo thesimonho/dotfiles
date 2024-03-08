@@ -44,19 +44,12 @@ local M = {
       additional_vim_regex_highlighting = false,
     },
     incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<c-space>",
-        node_incremental = "+",
-        scope_incremental = false,
-        node_decremental = "_",
-      },
+      enable = false, -- use flash treesitter mode instead
     },
     textobjects = {
       select = {
         enable = true,
         lookahead = true,
-
         keymaps = {
           -- You can use the capture groups defined in textobjects.scm
           ["af"] = { query = "@function.outer", desc = "around a function" },
