@@ -23,9 +23,7 @@ vim.keymap.set({ "n", "x" }, "G", "mgG")
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>w\\", "<C-W>v", { desc = "Split window right" })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
-vim.keymap.set("n", "<leader>`", function()
-  require("lazyvim.util").terminal({ "nu" }, { esc_esc = true, ctrl_hjkl = true })
-end, { desc = "Terminal" })
+vim.keymap.set("n", "<leader>`", "<cmd>terminal nu<CR>", { desc = "Terminal" })
 
 if vim.g.neovide then
   vim.keymap.set("v", "<C-c>", '"+y') -- Copy
