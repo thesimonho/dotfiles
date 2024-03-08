@@ -1,6 +1,10 @@
 return {
   { -- disable default tab behaviour
     "L3MON4D3/LuaSnip",
+    config = function(_, opts)
+      require("cmp").setup(opts)
+      require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/luasnippets" })
+    end,
     keys = function()
       return {}
     end,
