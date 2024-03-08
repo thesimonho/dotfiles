@@ -79,6 +79,13 @@ function M.config()
         WinSeparator = { fg = colors.palette.dragonBlue },
         IblIndent = { fg = colors.palette.sumiInk4 },
 
+        BufferlineIndicatorSelected = { fg = colors.palette.dragonBlue },
+        BufferlineModified = { fg = colors.palette.dragonOrange },
+        BufferlineModifiedSelected = { fg = colors.palette.dragonOrange },
+        BufferlineTabSelected = { bg = colors.theme.ui.bg_p1, fg = colors.palette.fujiWhite },
+        BufferlineTabClose = { fg = colors.palette.dragonRed },
+        BufferlineCloseButtonSelected = { fg = colors.palette.dragonRed },
+
         InclineNormal = { bg = colors.palette.fujiWhite, fg = colors.theme.ui.bg_dim },
         InclineNormalNC = { bg = colors.theme.ui.bg_p2, fg = colors.palette.fujiWhite },
 

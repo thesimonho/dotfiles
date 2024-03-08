@@ -1,5 +1,11 @@
 return {
   "akinsho/bufferline.nvim",
+  dependencies = {
+    "tiagovla/scope.nvim",
+    config = function()
+      require("scope").setup()
+    end,
+  },
   keys = {
     { "<leader>bl", vim.NIL },
     { "<leader>br", vim.NIL },
@@ -39,7 +45,7 @@ return {
       persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
       separator_style = "thick",
       enforce_regular_tabs = false,
-      always_show_bufferline = false,
+      always_show_bufferline = true,
       sort_by = "extension",
       offsets = {
         {
@@ -57,9 +63,9 @@ return {
         {
           filetype = "neo-tree",
           text = "Neotree",
-          -- highlight = "Directory",
+          padding = 1,
           text_align = "left",
-          separator = true,
+          separator = false,
         },
       },
       diagnostics = false,
