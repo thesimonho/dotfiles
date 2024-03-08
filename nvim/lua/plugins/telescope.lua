@@ -30,6 +30,7 @@ local M = {
       file_ignore_patterns = {
         "node_modules",
         ".terraform",
+        ".git",
         "$RECYCLE.BIN",
       },
       preview = {
