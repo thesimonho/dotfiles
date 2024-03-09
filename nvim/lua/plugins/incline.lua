@@ -26,7 +26,10 @@ return {
       end
       local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
       return {
-        ft_icon and { " ", ft_icon, " ", guifg = ft_color } or "",
+        ft_icon
+            and { " ", ft_icon, " ", guibg = ft_color, guifg = require("incline.helpers").contrast_color(ft_color) }
+          or " ",
+        " ",
         { filename },
       }
     end,
