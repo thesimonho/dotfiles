@@ -27,6 +27,7 @@ local M = {
       scroll_strategy = "limit",
       wrap_results = false,
       dynamic_preview_title = true,
+      path_display = { "smart" },
       file_ignore_patterns = {
         "node_modules",
         ".terraform",

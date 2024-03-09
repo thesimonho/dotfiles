@@ -9,10 +9,11 @@ return {
       "noice",
       "prompt",
       "TelescopePrompt",
+      "DressingInput",
       "neo-tree",
       "mason",
       "lazy",
-      "aerial",
+      "Glance",
       "Outline",
     },
     handlers = {
