@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 vim.opt.list = false
+vim.lsp.set_log_level("off")
 
 -- GUI options
 
