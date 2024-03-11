@@ -23,6 +23,14 @@ return {
     codelens = {
       enabled = true,
     },
+    capabilities = {
+      textDocument = {
+        foldingRange = {
+          dynamicRegistration = false,
+          lineFoldingOnly = true,
+        },
+      },
+    },
   },
   {
     "dnlhc/glance.nvim",

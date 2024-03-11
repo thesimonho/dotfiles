@@ -3,6 +3,10 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
 vim.opt.list = false
+vim.o.foldcolumn = "1"
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 vim.lsp.set_log_level("off")
 
 -- GUI options
