@@ -94,7 +94,7 @@ function M.config()
         RainbowDelimiterBlue = { fg = colors.palette.dragonBlue },
         RainbowDelimiterOrange = { fg = colors.palette.dragonOrange },
         RainbowDelimiterGreen = { fg = colors.palette.dragonGreen },
-        RainbowDelimiterViolet = { fg = colors.palette.dragonViolet },
+        RainbowDelimiterViolet = { fg = colors.theme.ui.fg },
         RainbowDelimiterCyan = { fg = colors.palette.dragonTeal },
 
         NvimTreeRootFolder = { fg = colors.palette.autumnRed },
