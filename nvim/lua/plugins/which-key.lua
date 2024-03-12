@@ -15,6 +15,7 @@ return {
       ["<leader>w"] = { name = "  windows" },
       ["<leader>x"] = { name = "  diagnostics" },
       ["<leader>z"] = { name = "  tools" },
+      ["<localleader>n"] = { name = "  npm" },
     },
     key_labels = {
       ["<space>"] = "SPC",
