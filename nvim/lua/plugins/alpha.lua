@@ -72,7 +72,7 @@ function M.config()
   local function get_info()
     local lazy_stats = require("lazy").stats()
     local total_plugins = " " .. lazy_stats.loaded .. "/" .. lazy_stats.count
-    local datetime = os.date(" %A %B %d")
+    local datetime = os.date(" %a %B %d")
     local version = vim.version()
     local nvim_version_info = " " .. version.major .. "." .. version.minor .. "." .. version.patch
 
