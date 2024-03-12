@@ -18,18 +18,21 @@ vim.api.nvim_set_hl(0, "TroubleTextInformation", { link = "DiagnosticInfo" })
 
 local C = {}
 
-local function set_theme_colours(theme)
-  local colors = require("kanagawa.colors").setup()
-  local theme_colors = colors.palette
+local function set_theme_colours()
+  local theme_colors = require("../plugins/theme-kanagawa").palette
+  C.palette = theme_colors
+  C.command = theme_colors.roninYellow
   C.normal = theme_colors.roninYellow
   C.insert = theme_colors.autumnRed
+  C.insertBG = theme_colors.winterRed
   C.visual = theme_colors.autumnGreen
-  C.command = theme_colors.roninYellow
   C.replace = theme_colors.autumnRed
+  C.yank = theme_colors.dragonOrange
   C.comment = theme_colors.fujiGray
   C.overlay = theme_colors.crystalBlue
   C.sep = theme_colors.fujiGray
-  C.status = "#282A2E"
+  C.cursorLine = theme_colors.sumiInk5
+  C.status = theme_colors.dragonBlack4
   C.status_icon = { fg = theme_colors.fujiWhite, bg = theme_colors.dragonBlue }
   C.text = theme_colors.fujiGray
   C.textDark = theme_colors.sumiInk0
@@ -41,7 +44,6 @@ local function set_theme_colours(theme)
   C.bufClose = theme_colors.autumnRed
 end
 
-local current_theme = vim.api.nvim_exec("color", true)
-set_theme_colours(current_theme)
+set_theme_colours()
 
 return C
