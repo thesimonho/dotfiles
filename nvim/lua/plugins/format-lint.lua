@@ -17,7 +17,7 @@ M = {
         "typescript-language-server",
         "vim-language-server",
         "yaml-language-server",
-        "vue-language-server", -- 1.8.27 is the latest version that works with nvim-lspconfig
+        "vue-language-server",
 
         -- linters
         "eslint_d",
@@ -44,7 +44,7 @@ M = {
         markdown = { { "prettierd", "prettier" } },
         go = { "goimports", "golines", "gofumpt" },
         python = { "ruff_fix", "ruff_format" },
-        ["_"] = { "trim_whitespace" },
+        vue = { "prettierd" },
       },
     },
   },
