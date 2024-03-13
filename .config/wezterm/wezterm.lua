@@ -8,13 +8,13 @@ wezterm.on("gui-startup", function(cmd)
 end)
 
 local is_windows = function()
-	return wezterm.target_triple == 'x86_64-pc-windows-msvc'
+	return wezterm.target_triple == "x86_64-pc-windows-msvc"
 end
 
 local default_prog
 local launch_menu
 
-if(is_windows) then
+if is_windows then
 	default_prog = { "nu.exe" }
 	launch_menu = {
 		{
@@ -39,9 +39,8 @@ else
 		},
 		{
 			label = "bash",
-			args = { "bash"},
-		}
-
+			args = { "bash" },
+		},
 	}
 end
 
@@ -51,7 +50,7 @@ return {
 	automatically_reload_config = true,
 	color_scheme_dirs = { "~/.config/wezterm/colors" },
 	color_scheme = "kanagawa",
- 	default_cursor_style = "SteadyBar",
+	default_cursor_style = "SteadyBar",
 	disable_default_key_bindings = true,
 	enable_scroll_bar = true,
 	enable_wayland = true,
@@ -61,7 +60,7 @@ return {
 		"Source_Code_Pro",
 		"JetBrains Mono",
 	}),
-	front_end = "WebGpu",
+	front_end = "OpenGL",
 	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08" },
 	hide_tab_bar_if_only_one_tab = false,
 	inactive_pane_hsb = {
