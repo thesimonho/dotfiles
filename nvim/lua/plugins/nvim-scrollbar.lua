@@ -3,6 +3,7 @@ return {
   event = "LazyFile",
   opts = {
     show_in_active_only = true,
+    hide_if_all_visible = false,
     excluded_filetypes = {
       "cmp_docs",
       "cmp_menu",
@@ -15,6 +16,11 @@ return {
       "lazy",
       "Glance",
       "Outline",
+    },
+    handle = {
+      blend = 50,
+      color = "#54546D",
+      hide_if_all_visible = false,
     },
     handlers = {
       cursor = true,
