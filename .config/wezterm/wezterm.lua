@@ -52,7 +52,7 @@ return {
 	color_scheme = "kanagawa",
 	default_cursor_style = "SteadyBar",
 	disable_default_key_bindings = true,
-	enable_scroll_bar = true,
+	enable_scroll_bar = false,
 	enable_wayland = true,
 	font_size = 11,
 	font = wezterm.font_with_fallback({
@@ -62,7 +62,7 @@ return {
 	}),
 	front_end = "OpenGL",
 	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08" },
-	hide_tab_bar_if_only_one_tab = false,
+	hide_tab_bar_if_only_one_tab = true,
 	inactive_pane_hsb = {
 		saturation = 0.9,
 		brightness = 0.7,
