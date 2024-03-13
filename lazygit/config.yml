@@ -17,7 +17,7 @@ gui:
     "*": "#b6927b"
   theme:
     activeBorderColor:
-      - "#a292a3"
+      - "#c4746e"
       - bold
     inactiveBorderColor:
       - "#DCD7BA"
@@ -117,7 +117,7 @@ customCommands:
           - value: "push --force"
     command: "git {{ .Form.PushType | quote }} {{ .Form.Remote }}"
   - key: "<c-C>"
-    context: "files"
+    context: "global"
     description: "Create new conventional commit"
     prompts:
       - type: "menu"
@@ -175,4 +175,13 @@ customCommands:
         body: "Are you sure you want to commit?"
     command: 'git commit -m "{{.Form.Type}}{{if .Form.Scope}}({{.Form.Scope}}){{end}}: {{.Form.Summary}}"{{if .Form.Description}} -m "{{.Form.Description}}"{{end}}'
     loadingText: "Creating conventional commit..."
+keybinding:
+  universal:
+    prevBlock-alt: '<c-k>' # goto the previous block / panel
+    nextBlock-alt: '<c-j>' # goto the next block / panel
+    nextTab: 'l'
+    prevTab: 'h'
+  commits:
+    moveDownCommit: 'J' # move commit down one
+    moveUpCommit: 'K' # move commit up one
 
