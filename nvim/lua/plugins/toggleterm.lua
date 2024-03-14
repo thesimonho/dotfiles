@@ -2,6 +2,8 @@ return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
+    lazy = true,
+    cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
     keys = {
       { "<leader>``", "<cmd>ToggleTermToggleAll<CR>", desc = "Toggle all" },
       { "<leader>`1", "<cmd>1ToggleTerm<CR>", desc = "Terminal 1" },

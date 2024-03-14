@@ -12,6 +12,7 @@ return {
       "notify",
       "TelescopePrompt",
       "DressingInput",
+      "toggleterm",
       "neo-tree",
       "mason",
       "lazy",
