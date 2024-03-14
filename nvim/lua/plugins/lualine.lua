@@ -88,6 +88,12 @@ local M = {
           },
         },
         lualine_y = {
+          {
+            "overseer",
+            on_click = function()
+              require("overseer").toggle()
+            end,
+          },
           -- stylua: ignore
           {
             function() return require("noice").api.status.mode.get() end,
@@ -101,11 +107,6 @@ local M = {
             color = Util.ui.fg("Debug"),
           },
           {
-            require("lazy.status").updates,
-            cond = require("lazy.status").has_updates,
-            color = Util.ui.fg("Special"),
-          },
-          {
             "diagnostics",
             symbols = {
               error = icons.diagnostics.Error,
@@ -113,6 +114,11 @@ local M = {
               info = icons.diagnostics.Info,
               hint = icons.diagnostics.Hint,
             },
+          },
+          {
+            require("lazy.status").updates,
+            cond = require("lazy.status").has_updates,
+            color = Util.ui.fg("Special"),
           },
         },
         lualine_z = {
