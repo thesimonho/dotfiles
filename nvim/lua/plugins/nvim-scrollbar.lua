@@ -9,6 +9,7 @@ return {
       "cmp_menu",
       "noice",
       "prompt",
+      "notify",
       "TelescopePrompt",
       "DressingInput",
       "neo-tree",
