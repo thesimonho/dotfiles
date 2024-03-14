@@ -3,7 +3,7 @@ return {
     "L3MON4D3/LuaSnip",
     config = function(_, opts)
       require("cmp").setup(opts)
-      require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/luasnippets" })
+      require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/lua/luasnippets" })
     end,
     keys = function()
       return {}
