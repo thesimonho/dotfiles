@@ -4,21 +4,9 @@ M = {
     keys = {
       { "<leader>cm", vim.NIL },
     },
-    opts = {
-      ensure_installed = {
-        -- lsp
-        "graphql-language-service-cli",
-        "gopls",
-        "marksman",
-        "lua-language-server",
-        "pyright",
-        "ruff-lsp",
-        "terraform-ls",
-        "typescript-language-server",
-        "vim-language-server",
-        "yaml-language-server",
-        "vue-language-server",
-
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
         -- linters
         "eslint_d",
         "markdownlint",
@@ -32,8 +20,8 @@ M = {
         "golines",
         "gofumpt",
         "yamlfmt",
-      },
-    },
+      })
+    end,
   },
   { -- formatters
     "stevearc/conform.nvim",

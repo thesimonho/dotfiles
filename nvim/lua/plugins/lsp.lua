@@ -1,5 +1,24 @@
 return {
   {
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
+        "graphql-language-service-cli",
+        "gopls",
+        "marksman",
+        "lua-language-server",
+        "pyright",
+        "ruff-lsp",
+        "terraform-ls",
+        "typescript-language-server",
+        "vim-language-server",
+        "yaml-language-server",
+        "vue-language-server",
+      })
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     init = function()
       local keys = require("lazyvim.plugins.lsp.keymaps").get()
