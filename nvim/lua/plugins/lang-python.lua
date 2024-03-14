@@ -19,7 +19,7 @@ return {
     ft = "python",
     keys = {
       { "<leader>cv", vim.NIL },
-      { "<localleader>v", "<cmd>:VenvSelect<cr>", desc = "Python VirtualEnv" },
+      { "<localleader>v", "<cmd>:VenvSelect<cr>", ft = "python", desc = "virtualenv" },
     },
   },
 }

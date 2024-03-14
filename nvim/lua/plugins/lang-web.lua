@@ -51,11 +51,11 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     ft = { "json" },
     keys = {
-      { "<localleader>nh", ":lua require('package-info').toggle()<CR>", desc = "Hide dependencies" },
-      { "<localleader>nd", ":lua require('package-info').delete()<CR>", desc = "Delete dependency" },
-      { "<localleader>nu", ":lua require('package-info').update()<CR>", desc = "Update dependency" },
-      { "<localleader>nc", ":lua require('package-info').change_version()<CR>", desc = "Change version" },
-      { "<localleader>ni", ":lua require('package-info').install()<CR>", desc = "Install new dependency" },
+      { "<localleader>nh", ":lua require('package-info').toggle()<CR>", ft = "json", desc = "Hide dependencies" },
+      { "<localleader>nd", ":lua require('package-info').delete()<CR>", ft = "json", desc = "Delete dependency" },
+      { "<localleader>nu", ":lua require('package-info').update()<CR>", ft = "json", desc = "Update dependency" },
+      { "<localleader>nc", ":lua require('package-info').change_version()<CR>", ft = "json", desc = "Change version" },
+      { "<localleader>ni", ":lua require('package-info').install()<CR>", ft = "json", desc = "Install new dependency" },
     },
     opts = {
       colors = {
