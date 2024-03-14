@@ -76,6 +76,16 @@ local M = {
             on_click = function() require("venv-selector").open() end,
             color = Util.ui.fg("Statement"),
           },
+          {
+            function()
+              return vim.api.nvim_call_function("codeium#GetStatusString", {})
+            end,
+            icon = "󱙺",
+            color = { fg = colours.bufVisible },
+            on_click = function()
+              return vim.fn["codeium#Chat"]()
+            end,
+          },
         },
         lualine_y = {
           -- stylua: ignore
