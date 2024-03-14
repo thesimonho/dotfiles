@@ -12,12 +12,9 @@ vim.api.nvim_del_keymap("n", "<leader>`")
 vim.api.nvim_del_keymap("n", "<leader>l")
 vim.api.nvim_del_keymap("n", "<leader>ft")
 vim.api.nvim_del_keymap("n", "<leader>fT")
+vim.api.nvim_del_keymap("n", "<leader>gG")
 
--- Custom keymaps
-vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
-vim.keymap.set("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
-vim.keymap.set("n", "<leader>zh", "<cmd>LazyHealth<cr>", { desc = "Health" })
-vim.keymap.set("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
+-- General
 vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
 vim.keymap.set({ "n", "x" }, "gg", "mggg")
@@ -25,8 +22,21 @@ vim.keymap.set({ "n", "x" }, "G", "mgG")
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>w\\", "<C-W>v", { desc = "Split window right" })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
-vim.keymap.set("n", "<leader>`", "<cmd>terminal nu<CR>", { desc = "Terminal" })
 
+-- Tools
+vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
+vim.keymap.set("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
+vim.keymap.set("n", "<leader>zh", "<cmd>LazyHealth<cr>", { desc = "Health" })
+vim.keymap.set("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
+
+-- Terminal
+vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { buffer = 0 })
+vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], { buffer = 0 })
+vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], { buffer = 0 })
+vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], { buffer = 0 })
+vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], { buffer = 0 })
+
+-- GUI
 if vim.g.neovide then
   vim.keymap.set("v", "<C-c>", '"+y') -- Copy
   vim.keymap.set("n", "<C-v>", '"+P') -- Paste normal mode
