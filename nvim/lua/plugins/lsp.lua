@@ -38,6 +38,7 @@ return {
       servers = {
         gopls = {
           keys = {
+            -- { "<leader>td", "<cmd>lua require('dap-go').debug_test()<CR>", desc = "Debug Nearest (Go)" },
             { "<leader>td", vim.NIL },
           },
         },
