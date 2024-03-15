@@ -17,6 +17,14 @@ end
 
 return {
   {
+    "folke/which-key.nvim",
+    opts = {
+      defaults = {
+        ["<localleader>n"] = { name = "  npm" },
+      },
+    },
+  },
+  {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
