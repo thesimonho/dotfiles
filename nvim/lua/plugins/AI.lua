@@ -4,6 +4,7 @@ return {
   cmd = "Codeium",
   build = ":Codeium Auth",
   config = function()
+    vim.g.codeium_disable_bindings = 1
     vim.keymap.set("i", "<M-l>", function()
       return vim.fn["codeium#Accept"]()
     end, { expr = true, silent = true })
