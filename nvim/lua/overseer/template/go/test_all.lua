@@ -1,9 +1,9 @@
 return {
-  name = "go run",
+  name = "go test (all)",
   builder = function()
     return {
       cmd = { "go" },
-      args = { "run", "." },
+      args = { "test" },
       cwd = vim.fn.getcwd(),
       components = {
         "default",

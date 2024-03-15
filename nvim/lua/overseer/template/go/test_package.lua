@@ -1,12 +1,10 @@
 return {
-  name = "go test",
+  name = "go test (package)",
   builder = function()
-    local current_file = vim.fn.expand("%:p")
-    local directory = vim.fn.fnamemodify(current_file, ":h")
     return {
       cmd = { "go" },
       args = { "test" },
-      cwd = directory,
+      cwd = vim.fn.expand("%:p:h"),
       components = {
         "default",
       },

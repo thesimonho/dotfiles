@@ -1,4 +1,6 @@
 return {
-  "go.test",
+  "go.build",
   "go.run",
+  "go.test_all",
+  "go.test_package",
 }

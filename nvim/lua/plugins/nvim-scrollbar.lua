@@ -18,6 +18,8 @@ return {
       "lazy",
       "Glance",
       "Outline",
+      "OverseerList",
+      "OverseerForm",
     },
     handle = {
       blend = 50,
