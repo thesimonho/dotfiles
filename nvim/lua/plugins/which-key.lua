@@ -3,7 +3,6 @@ return {
   opts = {
     defaults = {
       mode = { "n", "v" },
-      ["<leader>`"] = { name = "  terminal" },
       ["<leader><tab>"] = { name = "  tabs" },
       ["<leader>b"] = { name = "  buffer" },
       ["<leader>c"] = { name = "  code" },

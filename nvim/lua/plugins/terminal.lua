@@ -1,5 +1,13 @@
 return {
   {
+    "folke/which-key.nvim",
+    opts = {
+      defaults = {
+        ["<leader>`"] = { name = "  terminal" },
+      },
+    },
+  },
+  {
     "akinsho/toggleterm.nvim",
     version = "*",
     lazy = true,
