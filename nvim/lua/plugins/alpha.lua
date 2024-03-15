@@ -69,6 +69,19 @@ function M.config()
   end
 
   -- Info section
+  local function get_updates()
+    local checker = require("lazy.manage.checker")
+    checker.fast_check({ report = false })
+
+    local updates
+    if require("lazy.status").has_updates() then
+      updates = " (󰁝 " .. #checker.updated .. ")"
+    else
+      updates = ""
+    end
+    return updates
+  end
+
   local function get_info()
     local lazy_stats = require("lazy").stats()
     local total_plugins = " " .. lazy_stats.loaded .. "/" .. lazy_stats.count
@@ -76,7 +89,7 @@ function M.config()
     local version = vim.version()
     local nvim_version_info = " " .. version.major .. "." .. version.minor .. "." .. version.patch
 
-    local info_string = datetime .. "  |  " .. total_plugins .. "  |  " .. nvim_version_info
+    local info_string = datetime .. "  |  " .. total_plugins .. get_updates() .. "  |  " .. nvim_version_info
 
     return {
       type = "text",

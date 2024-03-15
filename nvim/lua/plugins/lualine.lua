@@ -115,11 +115,6 @@ local M = {
               hint = icons.diagnostics.Hint,
             },
           },
-          {
-            require("lazy.status").updates,
-            cond = require("lazy.status").has_updates,
-            color = Util.ui.fg("Special"),
-          },
         },
         lualine_z = {
           { "location", padding = { left = 0, right = 1 } },
