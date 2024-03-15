@@ -74,7 +74,6 @@ local M = {
         search_by = "title",
         on_project_selected = function(prompt_bufnr)
           require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
-          -- require("telescope._extensions.project.actions").change_working_directory(prompt_bufnr)
         end,
       },
     },

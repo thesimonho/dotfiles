@@ -30,8 +30,9 @@ return {
       { "<localleader>v", "<cmd>VenvSelect<cr>", ft = "python", desc = "virtualenv" },
     },
     opts = {
+      poetry_path = os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs",
       changed_venv_hooks = {
-        set_env_hook,
+        -- set_env_hook,
         require("venv-selector").hooks.pyright,
         require("venv-selector").hooks.pylsp,
       },
