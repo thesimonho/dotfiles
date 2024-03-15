@@ -23,6 +23,16 @@ return {
       open_on_start = true,
       hidden = false,
     },
+    component_aliases = {
+      default = {
+        { "display_duration" },
+        { "on_output_summarize" },
+        "on_exit_set_status",
+        "on_complete_notify",
+        "on_complete_dispose",
+        { "on_output_quickfix" },
+      },
+    },
     templates = { "builtin", "scripts", "python", "go" },
   },
 }

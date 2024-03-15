@@ -5,9 +5,11 @@ return {
     local directory = vim.fn.fnamemodify(current_file, ":h")
     return {
       cmd = { "go" },
-      args = { "test", "-v" },
+      args = { "test" },
       cwd = directory,
-      components = { { "on_complete_notify" }, "default" },
+      components = {
+        "default",
+      },
     }
   end,
   condition = {
