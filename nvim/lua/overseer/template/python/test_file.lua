@@ -1,8 +1,9 @@
 return {
-  name = "pytest",
+  name = "pytest (file)",
   builder = function()
     return {
       cmd = { "pytest" },
+      args = { vim.fn.expand("%:p") },
       components = { "default" },
     }
   end,
