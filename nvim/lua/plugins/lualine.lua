@@ -59,9 +59,14 @@ local M = {
             function()
               local venv_name = require("venv-selector").get_active_venv()
               if venv_name ~= nil then
-                local venv = string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
-                venv = string.gsub(venv_name, "\\.venv", "")
-                return "env: " .. venv
+                local venv = vim.fn.fnamemodify(venv_name, ":t")
+                local parts = {}
+                for part in venv:gmatch("[^%-]+") do
+                  table.insert(parts, part)
+                end
+                table.remove(parts, #parts)
+                table.remove(parts, #parts)
+                return "env: " .. table.concat(parts, "-")
               else
                 return "env: none"
               end

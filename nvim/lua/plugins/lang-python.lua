@@ -31,6 +31,7 @@ return {
     },
     opts = {
       poetry_path = os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs",
+      notify_user_on_activate = false,
       changed_venv_hooks = {
         -- set_env_hook,
         require("venv-selector").hooks.pyright,
