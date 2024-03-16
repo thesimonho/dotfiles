@@ -27,7 +27,8 @@ return {
     ft = "python",
     keys = {
       { "<leader>cv", vim.NIL },
-      { "<localleader>v", "<cmd>VenvSelect<cr>", ft = "python", desc = "virtualenv" },
+      { "<localleader>v", "<cmd>VenvSelectCached<cr>", ft = "python", desc = "virtualenv (cached)" },
+      { "<localleader>V", "<cmd>VenvSelect<cr>", ft = "python", desc = "virtualenv (select)" },
     },
     opts = {
       poetry_path = os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs",
