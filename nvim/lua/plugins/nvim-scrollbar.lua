@@ -1,5 +1,6 @@
 return {
   "petertriho/nvim-scrollbar",
+  enabled = false,
   event = "LazyFile",
   opts = {
     show_in_active_only = true,
@@ -34,3 +35,7 @@ return {
     },
   },
 }
+
+-- OR:
+-- https://github.com/gorbit99/codewindow.nvim
+-- https://github.com/wfxr/minimap.vim

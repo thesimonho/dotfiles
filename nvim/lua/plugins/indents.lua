@@ -22,7 +22,7 @@ return {
       error_sign = true,
     },
     indent = {
-      enable = true,
+      enable = false,
       use_treesitter = true,
       chars = {
         "│",

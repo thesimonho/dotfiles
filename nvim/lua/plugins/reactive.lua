@@ -2,6 +2,7 @@ Colours = require("../config/colours")
 
 return {
   "rasulomaroff/reactive.nvim",
+  enabled = false,
   lazy = false,
   config = function()
     require("reactive").add_preset({
