@@ -1,6 +1,5 @@
 local M = {
   "nvim-lualine/lualine.nvim",
-  enabled = true,
   opts = function()
     local colours = require("../config/colours")
     local custom = require("lualine.themes.base16")

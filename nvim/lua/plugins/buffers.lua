@@ -1,12 +1,14 @@
 return {
   {
     "tiagovla/scope.nvim",
+    event = "LazyFile",
     config = function()
       require("scope").setup()
     end,
   },
   {
     "akinsho/bufferline.nvim",
+    event = "LazyFile",
     keys = {
       { "<leader>bl", vim.NIL },
       { "<leader>br", vim.NIL },
@@ -84,7 +86,7 @@ return {
   {
     "chrisgrieser/nvim-early-retirement",
     config = true,
-    event = "VeryLazy",
+    event = "LazyFile",
     opts = {
       retirementAgeMins = 30,
       ignoreAltFile = true,

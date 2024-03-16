@@ -1,6 +1,5 @@
 return {
   "hedyhli/outline.nvim",
-  event = "VeryLazy",
   cmd = { "Outline", "OutlineOpen" },
   keys = {
     { "<leader>cs", "<cmd>Outline<cr>", desc = "Symbols Outline" },

@@ -1,6 +1,6 @@
 return {
   "Exafunction/codeium.vim",
-  event = "BufEnter",
+  event = "InsertEnter",
   cmd = "Codeium",
   build = ":Codeium Auth",
   config = function()

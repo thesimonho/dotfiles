@@ -89,7 +89,7 @@ function M.config()
     local version = vim.version()
     local nvim_version_info = " " .. version.major .. "." .. version.minor .. "." .. version.patch
 
-    local info_string = datetime .. "  |  " .. total_plugins .. get_updates() .. "  |  " .. nvim_version_info
+    local info_string = datetime .. "  |  " .. total_plugins .. "  |  " .. nvim_version_info
 
     return {
       type = "text",
