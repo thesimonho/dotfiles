@@ -23,7 +23,7 @@ return {
   },
   {
     "linux-cultist/venv-selector.nvim",
-    cmd = "VenvSelect",
+    cmd = { "VenvSelect", "VenvSelectCached" },
     ft = "python",
     keys = {
       { "<leader>cv", vim.NIL },

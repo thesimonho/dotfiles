@@ -19,7 +19,7 @@ vim.api.nvim_set_hl(0, "TroubleTextInformation", { link = "DiagnosticInfo" })
 local C = {}
 
 local function set_theme_colours()
-  local theme_colors = require("../plugins/theme-kanagawa").palette
+  local theme_colors = require("../plugins/colourschemes/kanagawa").palette
   C.palette = theme_colors
   C.command = theme_colors.roninYellow
   C.normal = theme_colors.roninYellow
