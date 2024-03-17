@@ -1,25 +1,7 @@
--- set default Todo HL to same as Comment (plugins can use their own HL group for Todo:)
-vim.api.nvim_set_hl(0, "Todo", { link = "Comment" })
-
--- link neotree colours to nvim-tree for automatic theme support
--- https://github.com/nvim-neo-tree/neo-tree.nvim/wiki/Visual-Customizations#colour-scheme
-vim.api.nvim_set_hl(0, "NeoTreeDirectoryIcon", { link = "NvimTreeFolderIcon" })
-vim.api.nvim_set_hl(0, "NeoTreeDirectoryName", { link = "NvimTreeOpenedFolderName" })
-vim.api.nvim_set_hl(0, "NeoTreeSymbolicLinkTarget", { link = "NvimTreeSymlink" })
-vim.api.nvim_set_hl(0, "NeoTreeRootName", { link = "NvimTreeRootFolder" })
-vim.api.nvim_set_hl(0, "NeoTreeFileNameOpened", { link = "NvimTreeOpenedFile" })
-
--- linked groups for all themes
-vim.api.nvim_set_hl(0, "TroubleCount", { link = "DiagnosticOk" })
-vim.api.nvim_set_hl(0, "TroubleTextHint", { link = "DiagnosticHint" })
-vim.api.nvim_set_hl(0, "TroubleTextError", { link = "DiagnosticError" })
-vim.api.nvim_set_hl(0, "TroubleTextWarning", { link = "DiagnosticWarn" })
-vim.api.nvim_set_hl(0, "TroubleTextInformation", { link = "DiagnosticInfo" })
-
 local C = {}
 
 local function set_theme_colours()
-  local theme_colors = require("../plugins/colourschemes/kanagawa").palette
+  local theme_colors = require("plugins/colourschemes/kanagawa").palette
   C.palette = theme_colors
   C.command = theme_colors.roninYellow
   C.normal = theme_colors.roninYellow

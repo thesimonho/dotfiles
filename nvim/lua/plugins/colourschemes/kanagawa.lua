@@ -1,4 +1,3 @@
--- Remember to run :KanagawaCompile after editing
 -- https://github.com/rebelot/kanagawa.nvim
 
 local M = {
@@ -173,7 +172,7 @@ function M.config()
             bg_visual = wave_theme.ui.bg_visual,
 
             pmenu = {
-              fg = wave_theme.ui.shade0,
+              fg = wave_theme.ui.pmenu.fg,
               bg = wave_theme.ui.bg_p1,
               bg_sel = wave_theme.diff.text,
               bg_sbar = wave_theme.ui.bg_m1,
@@ -193,6 +192,8 @@ function M.config()
     },
     overrides = function(colors) -- add/modify highlights
       HoverBG = colors.theme.ui.bg_p1
+      IndentLine = colors.palette.sumiInk4
+      Modified = colors.palette.dragonOrange2
 
       return {
         LazyNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
@@ -202,11 +203,11 @@ function M.config()
         DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
         DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
         WinSeparator = { fg = colors.palette.dragonBlue },
-        IblIndent = { fg = colors.palette.sumiInk4 },
+        IblIndent = { fg = IndentLine },
 
         BufferlineIndicatorSelected = { fg = colors.palette.dragonBlue },
-        BufferlineModified = { fg = colors.palette.dragonOrange },
-        BufferlineModifiedSelected = { fg = colors.palette.dragonOrange },
+        BufferlineModified = { fg = Modified },
+        BufferlineModifiedSelected = { fg = Modified },
         BufferlineTabSelected = { bg = colors.theme.ui.bg_p1, fg = colors.palette.fujiWhite },
         BufferlineTabClose = { fg = colors.palette.dragonRed },
         BufferlineCloseButtonSelected = { fg = colors.palette.dragonRed },
@@ -226,7 +227,8 @@ function M.config()
         NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
         NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
         NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
-        NeoTreeIndentMarker = { link = "IblIndent" },
+        NeoTreeIndentMarker = { fg = IndentLine },
+        NeoTreeModified = { fg = Modified },
         NeoTreeWinSeparator = { fg = colors.theme.ui.bg_dim, bg = colors.theme.ui.bg_dim },
 
         TelescopeTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonBlue, bold = true },
