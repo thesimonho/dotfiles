@@ -12,6 +12,9 @@ vim.o.guifont = "FiraCode Nerd Font:h11"
 
 if vim.g.neovide then
   vim.g.neovide_transparency = 0.95
-  vim.g.neovide_cursor_animation_length = 0.1
-  vim.g.neovide_cursor_trail_size = 0.8
+  vim.g.neovide_cursor_animation_length = 0.05
+  vim.g.neovide_cursor_trail_size = 0.5
+  vim.g.neovide_cursor_animate_in_insert_mode = false
+  vim.g.neovide_floating_blur_amount_x = 2.0
+  vim.g.neovide_floating_blur_amount_y = 2.0
 end

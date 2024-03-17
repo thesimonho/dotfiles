@@ -19,6 +19,7 @@ return {
       always_show = true,
       current_only = true,
       hover = false,
+      zindex = 50,
       diagnostics_severities = { vim.diagnostic.severity.WARN },
       excluded_filetypes = {
         "cmp_docs",
