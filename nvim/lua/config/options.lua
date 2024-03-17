@@ -5,7 +5,6 @@ vim.g.maplocalleader = ","
 vim.opt.list = false
 vim.opt.cursorline = true
 vim.o.foldenable = true
-vim.lsp.set_log_level("ERROR")
 
 -- GUI options
 

@@ -1,3 +1,5 @@
+vim.lsp.set_log_level("ERROR")
+
 return {
   {
     "williamboman/mason.nvim",

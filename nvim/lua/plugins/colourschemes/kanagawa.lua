@@ -248,6 +248,10 @@ function M.config()
 
         YankyYanked = { bg = colors.palette.winterYellow },
         YankyPut = { bg = colors.palette.winterRed },
+
+        ScrollView = { bg = colors.palette.sumiInk5 },
+        ScrollViewCursor = { fg = colors.palette.dragonOrange },
+        ScrollViewMarks = { fg = colors.palette.dragonGreen },
       }
     end,
     background = { -- set theme based on background color
