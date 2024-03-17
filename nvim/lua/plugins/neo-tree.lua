@@ -54,6 +54,11 @@ local M = {
     window = {
       position = "left",
       width = 35,
+      mappings = {
+        ["<tab>"] = {
+          "toggle_node",
+        },
+      },
     },
     filesystem = {
       bind_to_cwd = true, -- true creates a 2-way binding between vim's cwd and neo-tree's root

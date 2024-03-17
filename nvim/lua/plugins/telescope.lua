@@ -41,6 +41,10 @@ local M = {
         i = {
           ["<C-j>"] = require("telescope.actions").move_selection_next,
           ["<C-k>"] = require("telescope.actions").move_selection_previous,
+          ["<c-q>"] = require("trouble.providers.telescope").open_selected_with_trouble,
+        },
+        n = {
+          ["<c-q>"] = require("trouble.providers.telescope").open_selected_with_trouble,
         },
       },
     },
