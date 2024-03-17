@@ -6,8 +6,8 @@ local M = {
 }
 
 function M.config()
-  local headers = require("../config/headers")
-  local quotes = require("../config/quotes")
+  local headers = require("config/headers")
+  local quotes = require("config/quotes")
   local theme = require("alpha.themes.theta")
   local path_ok, plenary_path = pcall(require, "plenary.path")
   if not path_ok then
@@ -18,7 +18,7 @@ function M.config()
 
   -- Header
   local function apply_gradient_hl(text)
-    local gradient = require("../config/utils").create_gradient("#DCA561", "#658594", #text)
+    local gradient = require("config/utils").create_gradient("#DCA561", "#658594", #text)
 
     local lines = {}
     for i, line in ipairs(text) do
@@ -57,7 +57,7 @@ function M.config()
 
     local tbl = {}
     for _, text in ipairs(quote_text) do
-      local padded_text = require("../config/utils").pad_string(text, max_width, "right")
+      local padded_text = require("config/utils").pad_string(text, max_width, "right")
       table.insert(tbl, { type = "text", val = padded_text, opts = { hl = "Comment", position = "center" } })
     end
 

@@ -1,4 +1,4 @@
-Colours = require("../config/colours")
+Colours = require("config/colours")
 
 return {
   "rasulomaroff/reactive.nvim",

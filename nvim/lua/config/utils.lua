@@ -10,7 +10,7 @@ M.map = function(mode, lhs, rhs, opts)
 end
 
 -- Get colour of the mode
-local colours = require("../config/colours")
+local colours = require("config/colours")
 M.get_mode_colour = function()
   local mode = vim.api.nvim_get_mode()["mode"]
 
