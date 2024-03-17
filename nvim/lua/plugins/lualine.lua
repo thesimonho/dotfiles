@@ -23,7 +23,14 @@ local M = {
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
       },
       sections = {
-        lualine_a = { "mode" },
+        lualine_a = {
+          {
+            "mode",
+            fmt = function(str)
+              return str:lower()
+            end,
+          },
+        },
         lualine_b = {
           "branch",
           {
