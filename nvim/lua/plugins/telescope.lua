@@ -28,9 +28,9 @@ local M = {
       dynamic_preview_title = true,
       path_display = { "smart" },
       file_ignore_patterns = {
-        "node_modules",
-        ".terraform",
-        ".git",
+        "node_modules/",
+        ".terraform/",
+        ".git/",
         "$RECYCLE.BIN",
       },
       preview = {

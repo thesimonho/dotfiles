@@ -68,17 +68,21 @@ local M = {
       filtered_items = {
         visible = false, -- when true, they will just be displayed differently than normal items
         hide_dotfiles = false,
-        hide_gitignored = false,
+        hide_gitignored = true,
         hide_hidden = true, -- only works on Windows for hidden files/directories
       },
       follow_current_file = {
         enabled = true,
       },
-      hide_by_name = {
+      hide_by_pattern = {
+        "^./.git/",
+      },
+      never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
         ".DS_Store",
         "thumbs.db",
+        "node_modules",
       },
-      use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
+      use_libuv_file_watcher = true,
     },
     buffers = {
       follow_current_file = {
