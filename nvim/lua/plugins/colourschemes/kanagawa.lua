@@ -252,6 +252,13 @@ function M.config()
         ScrollView = { bg = colors.palette.sumiInk5 },
         ScrollViewCursor = { fg = colors.palette.dragonOrange },
         ScrollViewMarks = { fg = colors.palette.dragonGreen },
+
+        Headline1 = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite, bold = true },
+        Headline2 = { bg = colors.palette.winterRed, fg = colors.palette.fujiWhite, bold = true },
+        Headline3 = { bg = colors.palette.winterYellow, fg = colors.palette.fujiWhite, bold = true },
+        Headline4 = { bg = colors.palette.winterGreen, fg = colors.palette.fujiWhite, bold = true },
+        Headline5 = { bg = colors.palette.dragonRed, fg = colors.palette.fujiWhite, bold = true },
+        Headline6 = { bg = colors.palette.dragonGray, fg = colors.palette.fujiWhite, bold = true },
       }
     end,
     background = { -- set theme based on background color
