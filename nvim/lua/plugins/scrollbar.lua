@@ -37,6 +37,7 @@ return {
         "Outline",
         "OverseerList",
         "OverseerForm",
+        "neotest-summary",
       },
       signs_on_startup = { "diagnostics", "search", "folds", "cursor", "quickfix", "conflicts", "loclist", "marks" },
     },
