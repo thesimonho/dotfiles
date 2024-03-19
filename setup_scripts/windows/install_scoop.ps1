@@ -18,5 +18,4 @@ scoop install extras/lazygit
 scoop install fzf
 scoop install sed
 scoop install fd 
-scoop install gzip
 scoop install pipx

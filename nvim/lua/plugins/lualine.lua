@@ -29,6 +29,7 @@ local M = {
             fmt = function(str)
               return str:lower()
             end,
+            padding = 2,
           },
         },
         lualine_b = {
@@ -122,8 +123,8 @@ local M = {
           },
         },
         lualine_z = {
-          { "location", padding = { left = 0, right = 1 } },
-          { "progress", separator = " ", padding = { left = 1, right = 1 } },
+          { "location", padding = { left = 1, right = 1 } },
+          { "progress", separator = " ", padding = { left = 1, right = 2 } },
         },
       },
       extensions = { "neo-tree", "lazy", "aerial" },
