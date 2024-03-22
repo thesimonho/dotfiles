@@ -1,5 +1,5 @@
 return {
-  "Exafunction/codeium.vim",
+  "Exafunction/codeium.vim", -- this is the .vim version of the plugin
   event = "InsertEnter",
   cmd = "Codeium",
   build = ":Codeium Auth",
