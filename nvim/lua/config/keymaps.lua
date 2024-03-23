@@ -37,7 +37,7 @@ vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], { buffer = 0 })
 
 -- GUI
-if vim.g.neovide then
+if vim.g.neovide or vim.g.nvy then
   vim.keymap.set("v", "<C-c>", '"+y') -- Copy
   vim.keymap.set("n", "<C-v>", '"+P') -- Paste normal mode
   vim.keymap.set("v", "<C-v>", '"+P') -- Paste visual mode

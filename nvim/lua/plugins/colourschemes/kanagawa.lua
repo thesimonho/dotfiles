@@ -259,6 +259,10 @@ function M.config()
         Headline4 = { bg = colors.palette.winterGreen, fg = colors.palette.fujiWhite, bold = true },
         Headline5 = { bg = colors.palette.dragonRed, fg = colors.palette.fujiWhite, bold = true },
         Headline6 = { bg = colors.palette.dragonGray, fg = colors.palette.fujiWhite, bold = true },
+
+        IlluminatedWordRead = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
+        IlluminatedWordText = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
+        IlluminatedWordWrite = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
       }
     end,
     background = { -- set theme based on background color

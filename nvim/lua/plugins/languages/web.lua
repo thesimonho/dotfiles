@@ -1,19 +1,19 @@
-local util = require("lspconfig.util")
-local function get_typescript_plugin_path(root_dir)
-  local global_ts = "~\\AppData\\Roaming\\npm\\node_modules\\@vue\\typescript-plugin"
-  local found_ts = ""
-  local function check_dir(path)
-    found_ts = util.path.join(path, "node_modules", "@vue", "typescript-plugin")
-    if util.path.exists(found_ts) then
-      return path
-    end
-  end
-  if util.search_ancestors(root_dir, check_dir) then
-    return found_ts
-  else
-    return global_ts
-  end
-end
+-- local util = require("lspconfig.util")
+-- local function get_typescript_plugin_path(root_dir)
+--   local global_ts = "~\\AppData\\Roaming\\npm\\node_modules\\@vue\\typescript-plugin"
+--   local found_ts = ""
+--   local function check_dir(path)
+--     found_ts = util.path.join(path, "node_modules", "@vue", "typescript-plugin")
+--     if util.path.exists(found_ts) then
+--       return path
+--     end
+--   end
+--   if util.search_ancestors(root_dir, check_dir) then
+--     return found_ts
+--   else
+--     return global_ts
+--   end
+-- end
 
 return {
   {
@@ -46,34 +46,34 @@ return {
       package_manager = "npm",
     },
   },
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        tsserver = {},
-      },
-      setup = {
-        -- 'npm install -g @vue/typescript-plugin' for vue support. Mason doesnt currently install this
-        tsserver = function(_, opts)
-          require("lspconfig").tsserver.setup({
-            init_options = {
-              plugins = {
-                {
-                  name = "@vue/typescript-plugin",
-                  location = get_typescript_plugin_path(vim.fn.getcwd()),
-                  languages = { "javascript", "typescript", "vue" },
-                },
-              },
-            },
-            filetypes = {
-              "javascript",
-              "typescript",
-              "vue",
-            },
-          })
-          return true
-        end,
-      },
-    },
-  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   opts = {
+  --     servers = {
+  --       tsserver = {},
+  --     },
+  --     setup = {
+  --       -- 'npm install -g @vue/typescript-plugin' for vue support. Mason doesnt currently install this
+  --       tsserver = function(_, opts)
+  --         require("lspconfig").tsserver.setup({
+  --           init_options = {
+  --             plugins = {
+  --               {
+  --                 name = "@vue/typescript-plugin",
+  --                 location = get_typescript_plugin_path(vim.fn.getcwd()),
+  --                 languages = { "javascript", "typescript", "vue" },
+  --               },
+  --             },
+  --           },
+  --           filetypes = {
+  --             "javascript",
+  --             "typescript",
+  --             "vue",
+  --           },
+  --         })
+  --         return true
+  --       end,
+  --     },
+  --   },
+  -- },
 }
