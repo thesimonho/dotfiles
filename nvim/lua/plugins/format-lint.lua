@@ -47,10 +47,12 @@ M = {
     "mfussenegger/nvim-lint",
     opts = {
       linters_by_ft = {
-        javascript = { "eslint_d" },
         go = { "golangcilint" },
+        javascript = { "eslint_d" },
         markdown = { "markdownlint" },
         python = { "ruff" },
+        typescript = { "eslint_d" },
+        vue = { "eslint_d" },
       },
     },
   },

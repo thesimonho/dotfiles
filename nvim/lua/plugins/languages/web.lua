@@ -15,6 +15,24 @@
 --   end
 -- end
 
+local util = require("lspconfig.util")
+local function get_typescript_server_path(root_dir)
+  local global_ts = vim.fn.expand("$LOCALAPPDATA")
+    .. "\\nvim-data\\mason\\packages\\typescript-language-server\\node_modules\\typescript\\lib"
+  local found_ts = ""
+  local function check_dir(path)
+    found_ts = util.path.join(path, "node_modules", "typescript", "lib")
+    if util.path.exists(found_ts) then
+      return path
+    end
+  end
+  if util.search_ancestors(root_dir, check_dir) then
+    return found_ts
+  else
+    return global_ts
+  end
+end
+
 return {
   {
     "folke/which-key.nvim",
@@ -46,34 +64,29 @@ return {
       package_manager = "npm",
     },
   },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     servers = {
-  --       tsserver = {},
-  --     },
-  --     setup = {
-  --       -- 'npm install -g @vue/typescript-plugin' for vue support. Mason doesnt currently install this
-  --       tsserver = function(_, opts)
-  --         require("lspconfig").tsserver.setup({
-  --           init_options = {
-  --             plugins = {
-  --               {
-  --                 name = "@vue/typescript-plugin",
-  --                 location = get_typescript_plugin_path(vim.fn.getcwd()),
-  --                 languages = { "javascript", "typescript", "vue" },
-  --               },
-  --             },
-  --           },
-  --           filetypes = {
-  --             "javascript",
-  --             "typescript",
-  --             "vue",
-  --           },
-  --         })
-  --         return true
-  --       end,
-  --     },
-  --   },
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        volar = {},
+      },
+      setup = {
+        volar = function(_, opts)
+          require("lspconfig").volar.setup({
+            filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+            root_dir = util.root_pattern("package.json"),
+            init_options = {
+              vue = {
+                hybridMode = false, -- fix the chaos of volar v2.0.x
+              },
+              typescript = {
+                tsdk = get_typescript_server_path(vim.fn.getcwd()),
+              },
+            },
+          })
+          return true
+        end,
+      },
+    },
+  },
 }
