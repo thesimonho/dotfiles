@@ -11,10 +11,8 @@ local function get_typescript_server_path(root_dir)
     end
   end
   if util.search_ancestors(root_dir, check_dir) then
-    print("Found typescript at " .. found_ts)
     return found_ts
   else
-    print("Found typescript at " .. global_ts)
     return global_ts
   end
 end

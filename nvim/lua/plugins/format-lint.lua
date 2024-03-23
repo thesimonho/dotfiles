@@ -71,4 +71,5 @@ markdownlint.args = {
   "spelling",
   "--", -- Required
 }
+
 return M

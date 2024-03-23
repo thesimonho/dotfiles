@@ -15,6 +15,7 @@ return {
   },
   {
     "echasnovski/mini.animate",
+    enabled = vim.g.neovide == nil,
     event = "VeryLazy",
     opts = function()
       local mouse_scrolled = false

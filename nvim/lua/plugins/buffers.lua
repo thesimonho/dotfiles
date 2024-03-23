@@ -69,7 +69,7 @@ return {
           },
           {
             filetype = "neo-tree",
-            text = "Neotree",
+            text = "",
             padding = 1,
             text_align = "left",
             separator = false,
