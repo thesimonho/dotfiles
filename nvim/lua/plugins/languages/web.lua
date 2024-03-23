@@ -1,21 +1,5 @@
--- local util = require("lspconfig.util")
--- local function get_typescript_plugin_path(root_dir)
---   local global_ts = "~\\AppData\\Roaming\\npm\\node_modules\\@vue\\typescript-plugin"
---   local found_ts = ""
---   local function check_dir(path)
---     found_ts = util.path.join(path, "node_modules", "@vue", "typescript-plugin")
---     if util.path.exists(found_ts) then
---       return path
---     end
---   end
---   if util.search_ancestors(root_dir, check_dir) then
---     return found_ts
---   else
---     return global_ts
---   end
--- end
-
 local util = require("lspconfig.util")
+
 local function get_typescript_server_path(root_dir)
   local global_ts = vim.fn.expand("$LOCALAPPDATA")
     .. "\\nvim-data\\mason\\packages\\typescript-language-server\\node_modules\\typescript\\lib"
@@ -27,8 +11,10 @@ local function get_typescript_server_path(root_dir)
     end
   end
   if util.search_ancestors(root_dir, check_dir) then
+    print("Found typescript at " .. found_ts)
     return found_ts
   else
+    print("Found typescript at " .. global_ts)
     return global_ts
   end
 end
@@ -68,16 +54,33 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        tsserver = {},
         volar = {},
       },
       setup = {
+        tsserver = function(_, opts)
+          require("lspconfig").tsserver.setup({
+            init_options = {
+              plugins = {
+                {
+                  name = "@vue/typescript-plugin",
+                  location = vim.fn.expand("$LOCALAPPDATA")
+                    .. "\\nvim-data\\mason\\packages\\vue-language-server\\node_modules\\@vue\\language-server",
+                  languages = { "vue" },
+                },
+              },
+            },
+            filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+          })
+          return true
+        end,
         volar = function(_, opts)
           require("lspconfig").volar.setup({
-            filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+            filetypes = { "vue" },
             root_dir = util.root_pattern("package.json"),
             init_options = {
               vue = {
-                hybridMode = false, -- fix the chaos of volar v2.0.x
+                hybridMode = true, -- hybrid mode uses volar for html/css sections, and tsserver for js/ts
               },
               typescript = {
                 tsdk = get_typescript_server_path(vim.fn.getcwd()),
