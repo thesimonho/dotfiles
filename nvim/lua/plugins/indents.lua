@@ -23,7 +23,7 @@ return {
       exclude_filetypes = { neotest_summary = true },
     },
     indent = {
-      enable = false,
+      enable = true,
       use_treesitter = true,
       chars = {
         "│",
@@ -37,6 +37,11 @@ return {
     },
     blank = {
       enable = false,
+      chars = { " " },
+      style = {
+        { bg = "#2A2A37" },
+        { bg = "", fg = "" },
+      },
     },
   },
 }
