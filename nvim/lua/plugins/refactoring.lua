@@ -71,7 +71,7 @@ return {
       },
       printf_statements = {},
       print_var_statements = {},
-      show_success_message = true,
+      show_success_message = false,
     },
   },
 }
