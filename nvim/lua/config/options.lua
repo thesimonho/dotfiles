@@ -4,6 +4,8 @@ vim.g.maplocalleader = ","
 
 vim.opt.list = false
 vim.opt.cursorline = true
+vim.opt.shortmess:append("astWIF")
+
 vim.o.foldenable = true
 
 -- GUI options

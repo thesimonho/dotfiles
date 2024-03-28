@@ -263,6 +263,8 @@ function M.config()
         IlluminatedWordRead = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
         IlluminatedWordText = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
         IlluminatedWordWrite = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
+
+        SpectreFaint = { fg = colors.palette.fujiGray, italic = false },
       }
     end,
     background = { -- set theme based on background color
