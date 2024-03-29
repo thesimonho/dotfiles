@@ -215,12 +215,12 @@ function M.config()
         InclineNormal = { bg = colors.palette.fujiWhite, fg = colors.theme.ui.bg_dim },
         InclineNormalNC = { bg = colors.theme.ui.bg_p2, fg = colors.palette.fujiWhite },
 
-        RainbowDelimiterRed = { fg = colors.theme.ui.fg },
-        RainbowDelimiterYellow = { fg = colors.palette.dragonRed },
+        RainbowDelimiterRed = { fg = colors.palette.dragonRed },
+        RainbowDelimiterYellow = { fg = colors.palette.dragonYellow },
         RainbowDelimiterBlue = { fg = colors.palette.dragonBlue },
-        RainbowDelimiterOrange = { fg = colors.palette.dragonOrange },
+        RainbowDelimiterOrange = { fg = colors.palette.dragonOrange2 },
         RainbowDelimiterGreen = { fg = colors.palette.dragonGreen },
-        RainbowDelimiterViolet = { fg = colors.theme.ui.fg },
+        RainbowDelimiterViolet = { fg = colors.palette.dragonAsh },
         RainbowDelimiterCyan = { fg = colors.palette.dragonTeal },
 
         NvimTreeRootFolder = { fg = colors.palette.autumnRed },
