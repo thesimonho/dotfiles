@@ -21,6 +21,7 @@ return {
     },
     opts = {
       autochdir = true,
+      auto_scroll = true,
       direction = "vertical",
       shell = "nu",
       start_in_insert = true,
