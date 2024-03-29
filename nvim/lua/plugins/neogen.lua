@@ -1,6 +1,6 @@
 return {
   "danymat/neogen",
-  event = "LazyFile",
+  cmd = "Neogen",
   config = true,
   version = "*",
   keys = {

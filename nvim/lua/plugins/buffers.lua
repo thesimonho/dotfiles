@@ -83,15 +83,4 @@ return {
       },
     },
   },
-  {
-    "chrisgrieser/nvim-early-retirement",
-    config = true,
-    event = "LazyFile",
-    opts = {
-      retirementAgeMins = 30,
-      ignoreAltFile = true,
-      minimumBufferNum = 3,
-      notificationOnAutoClose = true,
-    },
-  },
 }
