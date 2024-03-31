@@ -45,7 +45,8 @@ return {
           }),
         },
         cursor = {
-          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
+          enable = false,
+          timing = animate.gen_timing.linear({ duration = 30, unit = "total" }),
           path = animate.gen_path.line({
             predicate = function()
               return true
