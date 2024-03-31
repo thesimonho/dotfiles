@@ -56,12 +56,6 @@ return {
         sort_by = "extension",
         offsets = {
           {
-            filetype = "Outline",
-            text = "Outline",
-            text_align = "center",
-            separator = false,
-          },
-          {
             filetype = "OverseerList",
             text = "Tasks",
             text_align = "center",
