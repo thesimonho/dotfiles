@@ -83,7 +83,7 @@ local M = {
           "thumbs.db",
           "node_modules",
         },
-        use_libuv_file_watcher = true,
+        use_libuv_file_watcher = false,
       },
       buffers = {
         follow_current_file = {
