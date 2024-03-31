@@ -7,7 +7,7 @@ local function set_theme_colours()
   C.normal = theme_colors.roninYellow
   C.insert = theme_colors.autumnRed
   C.insertBG = theme_colors.winterRed
-  C.visual = theme_colors.autumnGreen
+  C.visual = theme_colors.dragonBlue
   C.replace = theme_colors.autumnRed
   C.yank = theme_colors.dragonOrange
   C.comment = theme_colors.fujiGray

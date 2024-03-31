@@ -204,6 +204,7 @@ function M.config()
         DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
         WinSeparator = { fg = colors.palette.dragonBlue },
         IblIndent = { fg = IndentLine },
+        Visual = { bg = colors.palette.waveBlue2, fg = colors.palette.fujiWhite },
 
         BufferlineIndicatorSelected = { fg = colors.palette.dragonBlue },
         BufferlineModified = { fg = Modified },
