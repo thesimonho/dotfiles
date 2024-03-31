@@ -5,6 +5,9 @@ vim.g.maplocalleader = ","
 vim.opt.list = false
 vim.opt.cursorline = true
 vim.opt.shortmess:append("astWIF")
+vim.opt.title = true
+vim.opt.titlelen = 0 -- do not shorten title
+vim.opt.titlestring = 'neovim -- %{expand("%:p:t")}'
 
 vim.o.foldenable = true
 
