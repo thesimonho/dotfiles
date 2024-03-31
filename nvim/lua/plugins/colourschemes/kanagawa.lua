@@ -261,9 +261,9 @@ function M.config()
         Headline5 = { bg = colors.palette.dragonRed, fg = colors.palette.fujiWhite, bold = true },
         Headline6 = { bg = colors.palette.dragonGray, fg = colors.palette.fujiWhite, bold = true },
 
-        IlluminatedWordRead = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
-        IlluminatedWordText = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
-        IlluminatedWordWrite = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite },
+        IlluminatedWordRead = { bg = colors.palette.dragonBlue, fg = colors.palette.dragonBlack4, bold = true },
+        IlluminatedWordText = { bg = colors.palette.dragonBlue, fg = colors.palette.dragonBlack4, bold = true },
+        IlluminatedWordWrite = { bg = colors.palette.dragonBlue, fg = colors.palette.dragonBlack4, bold = true },
 
         SpectreFaint = { fg = colors.palette.fujiGray, italic = false },
       }
