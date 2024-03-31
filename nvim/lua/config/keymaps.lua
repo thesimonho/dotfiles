@@ -15,7 +15,10 @@ vim.api.nvim_del_keymap("n", "<leader>fT")
 vim.api.nvim_del_keymap("n", "<leader>gG")
 
 -- General
-vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
+vim.keymap.set("v", "<C-c>", '"+y') -- Copy
+vim.keymap.set("i", "<C-v>", "<c-r>+") -- Paste insert mode
+-- vim.keymap.set("v", "<C-v>", '"+P') -- Paste visual mode: conflicts with v-block bind
+vim.keymap.set("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
 vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
 vim.keymap.set({ "n", "x" }, "gg", "mggg")
 vim.keymap.set({ "n", "x" }, "G", "mgG")
@@ -35,11 +38,3 @@ vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], { buffer = 0 })
-
--- GUI
-if vim.g.neovide or vim.g.nvy then
-  vim.keymap.set("v", "<C-c>", '"+y') -- Copy
-  vim.keymap.set("n", "<C-v>", '"+P') -- Paste normal mode
-  vim.keymap.set("v", "<C-v>", '"+P') -- Paste visual mode
-  vim.keymap.set("i", "<C-v>", "<c-r>+") -- Paste insert mode
-end

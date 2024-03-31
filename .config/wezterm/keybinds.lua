@@ -16,7 +16,6 @@ M.basic_binds = {
 			end
 		end),
 	},
-	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
 	{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
