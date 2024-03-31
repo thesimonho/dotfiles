@@ -61,7 +61,7 @@ return {
 		"JetBrains Mono",
 	}),
 	front_end = "OpenGL",
-	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08" },
+	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" },
 	hide_tab_bar_if_only_one_tab = true,
 	inactive_pane_hsb = {
 		saturation = 0.9,
