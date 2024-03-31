@@ -33,7 +33,12 @@ local M = {
           },
         },
         lualine_b = {
-          "branch",
+          {
+            "branch",
+            on_click = function()
+              LazyVim.lazygit({ cwd = LazyVim.root.git() })
+            end,
+          },
           {
             "diff",
             symbols = {
@@ -120,6 +125,9 @@ local M = {
               info = icons.diagnostics.Info,
               hint = icons.diagnostics.Hint,
             },
+            on_click = function()
+              require("trouble").toggle("workspace_diagnostics")
+            end,
           },
         },
         lualine_z = {
@@ -127,7 +135,7 @@ local M = {
           { "progress", separator = " ", padding = { left = 1, right = 2 } },
         },
       },
-      extensions = { "neo-tree", "lazy", "aerial" },
+      extensions = { "neo-tree", "lazy", "mason", "overseer", "toggleterm", "trouble" },
     }
   end,
 }
