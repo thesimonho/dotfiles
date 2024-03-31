@@ -198,13 +198,15 @@ function M.config()
       return {
         LazyNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
         MasonNormal = { bg = HoverBG, fg = colors.theme.ui.fg_dim },
+        WinSeparator = { fg = colors.palette.dragonBlue },
+        Visual = { bg = colors.palette.waveBlue2, fg = colors.palette.fujiWhite },
+
+        IblIndent = { fg = IndentLine },
+
         DiagnosticVirtualTextError = { fg = colors.palette.samuraiRed },
         DiagnosticVirtualTextWarn = { fg = colors.palette.roninYellow },
         DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
         DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
-        WinSeparator = { fg = colors.palette.dragonBlue },
-        IblIndent = { fg = IndentLine },
-        Visual = { bg = colors.palette.waveBlue2, fg = colors.palette.fujiWhite },
 
         BufferlineIndicatorSelected = { fg = colors.palette.dragonBlue },
         BufferlineModified = { fg = Modified },

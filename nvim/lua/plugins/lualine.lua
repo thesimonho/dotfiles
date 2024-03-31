@@ -19,17 +19,20 @@ local M = {
     return {
       options = {
         theme = custom,
+        component_separators = { left = "│", right = "│" },
+        section_separators = { left = "", right = "" },
         globalstatus = true,
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
       },
       sections = {
         lualine_a = {
+          -- stylua: ignore
+          { function() return [[🐼]] end, separator = { left = "" }, padding = 0},
           {
             "mode",
             fmt = function(str)
               return str:lower()
             end,
-            padding = 2,
           },
         },
         lualine_b = {
@@ -131,8 +134,8 @@ local M = {
           },
         },
         lualine_z = {
-          { "location", padding = { left = 1, right = 1 } },
-          { "progress", separator = " ", padding = { left = 1, right = 2 } },
+          { "location", padding = { left = 0, right = 1 } },
+          { "progress", separator = { right = "" } },
         },
       },
       extensions = { "neo-tree", "lazy", "mason", "overseer", "toggleterm", "trouble" },
