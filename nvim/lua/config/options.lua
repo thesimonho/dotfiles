@@ -8,6 +8,8 @@ vim.opt.shortmess:append("astWIF")
 vim.opt.title = true
 vim.opt.titlelen = 0 -- do not shorten title
 vim.opt.titlestring = 'neovim -- %{expand("%:p:t")}'
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
 
 vim.o.foldenable = true
 
