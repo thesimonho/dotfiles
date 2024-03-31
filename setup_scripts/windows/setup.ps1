@@ -6,7 +6,7 @@
 ######################################################
 # Get system tools
 ######################################################
-& $PSScriptRoot\install_tools.ps1
+& $PSScriptRoot\install_scoop.ps1
 
 ######################################################
 # Set config options
