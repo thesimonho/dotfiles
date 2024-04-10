@@ -43,7 +43,7 @@ return {
         left_trunc_marker = "",
         right_trunc_marker = "",
         truncate_names = true, -- whether or not tab names should be truncated
-        color_icons = true, -- whether or not to add the filetype icon highlights
+        color_icons = true,
         show_buffer_icons = true, -- disable filetype icons for buffers
         show_buffer_close_icons = true,
         show_close_icon = true,

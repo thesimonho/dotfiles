@@ -201,22 +201,18 @@ function M.config()
         WinSeparator = { fg = colors.palette.dragonBlue },
         Visual = { bg = colors.palette.waveBlue2, fg = colors.palette.fujiWhite },
 
-        IblIndent = { fg = IndentLine },
-
         DiagnosticVirtualTextError = { fg = colors.palette.samuraiRed },
         DiagnosticVirtualTextWarn = { fg = colors.palette.roninYellow },
         DiagnosticVirtualTextInfo = { fg = colors.palette.waveAqua1 },
         DiagnosticVirtualTextHint = { fg = colors.palette.dragonBlue },
 
+        BufferlineBufferSelected = { fg = colors.palette.dragonWhite, bold = true },
         BufferlineIndicatorSelected = { fg = colors.palette.dragonBlue },
         BufferlineModified = { fg = Modified },
         BufferlineModifiedSelected = { fg = Modified },
-        BufferlineTabSelected = { bg = colors.theme.ui.bg_p1, fg = colors.palette.fujiWhite },
+        BufferlineTabSelected = { bg = colors.theme.ui.bg_p1, fg = colors.palette.dragonWhite },
         BufferlineTabClose = { fg = colors.palette.dragonRed },
         BufferlineCloseButtonSelected = { fg = colors.palette.dragonRed },
-
-        InclineNormal = { bg = colors.palette.fujiWhite, fg = colors.theme.ui.bg_dim },
-        InclineNormalNC = { bg = colors.theme.ui.bg_p2, fg = colors.palette.fujiWhite },
 
         RainbowDelimiterRed = { fg = colors.palette.dragonRed },
         RainbowDelimiterYellow = { fg = colors.palette.dragonYellow },
