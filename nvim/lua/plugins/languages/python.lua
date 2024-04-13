@@ -6,6 +6,15 @@ local function set_env_hook(venv_path, venv_python)
   vim.env.PYTHONPATH = venv_python
 end
 
+local utils = require("config.utils")
+local function get_poetry_path()
+  if utils.is_windows() then
+    return os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs"
+  else
+    return "~/.cache/pypoetry/virtualenvs"
+  end
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -31,7 +40,7 @@ return {
       { "<localleader>V", "<cmd>VenvSelect<cr>", ft = "python", desc = "virtualenv (select)" },
     },
     opts = {
-      poetry_path = os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs",
+      poetry_path = get_poetry_path(),
       notify_user_on_activate = false,
       changed_venv_hooks = {
         -- set_env_hook,
