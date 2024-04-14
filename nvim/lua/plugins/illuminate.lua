@@ -7,6 +7,8 @@ return {
       "neo-tree",
       "Trouble",
       "spectre_panel",
+      "DiffviewFiles",
+      "DiffviewFileHistory",
     },
   },
 }

@@ -13,6 +13,7 @@ vim.api.nvim_del_keymap("n", "<leader>l")
 vim.api.nvim_del_keymap("n", "<leader>ft")
 vim.api.nvim_del_keymap("n", "<leader>fT")
 vim.api.nvim_del_keymap("n", "<leader>gG")
+vim.api.nvim_del_keymap("n", "<leader>gf")
 
 -- General
 vim.keymap.set("v", "<C-c>", '"+y') -- Copy
@@ -38,3 +39,7 @@ vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]], { buffer = 0 })
+
+vim.keymap.set("n", "<leader>gg", function()
+  LazyVim.lazygit({ cwd = LazyVim.root.git() })
+end, { desc = "Lazygit" })
