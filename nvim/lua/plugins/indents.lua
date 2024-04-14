@@ -1,8 +1,7 @@
 return {
-  { "echasnovski/mini.indentscope", enabled = true },
   {
     "shellRaining/hlchunk.nvim",
-    enabled = false,
+    enabled = true,
     event = "LazyFile",
     opts = {
       chunk = {
