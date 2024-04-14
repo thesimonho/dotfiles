@@ -248,6 +248,9 @@ function M.config()
         YankyYanked = { bg = colors.palette.winterYellow },
         YankyPut = { bg = colors.palette.winterRed },
 
+        InclineNormal = { bg = colors.palette.fujiWhite, fg = colors.theme.ui.bg_dim },
+        InclineNormalNC = { bg = colors.theme.ui.bg_p2, fg = colors.palette.fujiWhite },
+
         ScrollView = { bg = colors.palette.sumiInk5 },
         ScrollViewCursor = { fg = colors.palette.dragonOrange },
         ScrollViewMarks = { fg = colors.palette.dragonGreen },
