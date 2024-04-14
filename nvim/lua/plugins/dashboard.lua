@@ -135,7 +135,6 @@ function M.config()
     }
 
     local success, project_list = pcall(require("telescope._extensions.project.utils").get_projects)
-    print(success)
     if not success then
       return { type = "text", val = "No projects found", opts = { hl = "SpecialComment", position = "center" } }
     end

@@ -193,4 +193,13 @@ M.create_gradient = function(start, finish, steps)
   return gradient
 end
 
+M.is_darwin = function()
+  return vim.loop.os_uname().sysname == "Darwin"
+end
+
+M.is_windows = function()
+  -- return vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
+  return vim.loop.os_uname().sysname == "Windows_NT"
+end
+
 return M
