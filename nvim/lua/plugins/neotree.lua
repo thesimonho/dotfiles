@@ -53,7 +53,7 @@ local M = {
         },
       },
       window = {
-        position = "left",
+        position = "right",
         width = 35,
         mappings = {
           ["<tab>"] = {
