@@ -33,9 +33,7 @@ return {
           style = "icon",
         },
         hover = {
-          enabled = true,
-          delay = 200,
-          reveal = { "close" },
+          enabled = false,
         },
         buffer_close_icon = "",
         modified_icon = "●",

@@ -63,7 +63,6 @@ local M = {
         },
         lualine_c = {
           Util.lualine.root_dir({ cwd = true }),
-          { "filename" },
         },
         lualine_x = {
           -- stylua: ignore
