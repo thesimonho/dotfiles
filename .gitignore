@@ -1,5 +1,6 @@
 # ConEmu config file
 [cC]on[eE]mu.xml
+.DS_store
 
 # Ignore emacs custom.el
 emacs/custom.el

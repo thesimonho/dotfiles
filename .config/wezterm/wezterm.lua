@@ -15,7 +15,6 @@ local default_prog
 local launch_menu
 
 if is_windows then
-	default_prog = { "nu.exe" }
 	launch_menu = {
 		{
 			label = "nushell",
