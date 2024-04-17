@@ -2,6 +2,8 @@ local utils = require("config.utils")
 local function get_poetry_path()
   if utils.is_windows() then
     return os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs"
+  elseif utils.is_darwin() then
+    return os.getenv("HOME") .. "/Library/Caches/pypoetry/virtualenvs"
   else
     return "~/.cache/pypoetry/virtualenvs"
   end
