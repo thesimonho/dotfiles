@@ -103,7 +103,7 @@ customCommands:
     prompts:
       - type: "menuFromCommand"
         title: "Which remote repository to push to?"
-        command: nu -c "git remote --verbose | rg '.*\s\(push\)'"
+        command: bash -c "git remote --verbose | rg '.* (push)'"
         filter: '(?P<remote>.*)\s+(?P<url>.*) \(push\)'
         key: "Remote"
         valueFormat: "{{ .remote }}"
@@ -184,4 +184,3 @@ keybinding:
   commits:
     moveDownCommit: 'J' # move commit down one
     moveUpCommit: 'K' # move commit up one
-
