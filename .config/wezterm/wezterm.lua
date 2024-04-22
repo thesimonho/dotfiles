@@ -14,36 +14,7 @@ end
 local default_prog
 local launch_menu
 
-if is_windows then
-	launch_menu = {
-		{
-			label = "nushell",
-			args = { "nu.exe" },
-		},
-		{
-			label = "PowerShell",
-			args = { "pwsh.exe" },
-		},
-		{
-			label = "cmd",
-			args = { "cmd.exe" },
-		},
-	}
-else
-	default_prog = { "nu" }
-	launch_menu = {
-		{
-			label = "nu",
-			args = { "nu" },
-		},
-		{
-			label = "bash",
-			args = { "bash" },
-		},
-	}
-end
-
-return {
+local c = {
 	adjust_window_size_when_changing_font_size = false,
 	animation_fps = 60,
 	automatically_reload_config = true,
@@ -53,7 +24,6 @@ return {
 	disable_default_key_bindings = true,
 	enable_scroll_bar = false,
 	enable_wayland = true,
-	font_size = 11,
 	font = wezterm.font_with_fallback({
 		{ family = "FiraCode Nerd Font", weight = "Regular" },
 		"Source_Code_Pro",
@@ -85,6 +55,36 @@ return {
 	leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 },
 	keys = keybinds.basic_binds,
 	key_tables = keybinds.key_tables,
-	default_prog = default_prog,
-	launch_menu = launch_menu,
 }
+
+if is_windows() then
+	c.font_size = 11
+	c.launch_menu = {
+		{
+			label = "nushell",
+			args = { "nu.exe" },
+		},
+		{
+			label = "PowerShell",
+			args = { "pwsh.exe" },
+		},
+		{
+			label = "cmd",
+			args = { "cmd.exe" },
+		},
+	}
+else
+	c.font_size = 16
+	c.launch_menu = {
+		{
+			label = "zsh",
+			args = { "zsh" },
+		},
+		{
+			label = "bash",
+			args = { "bash" },
+		},
+	}
+end
+
+return c

@@ -1,4 +1,6 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+local utils = require("config.utils")
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 
@@ -14,8 +16,11 @@ vim.opt.incsearch = true
 vim.o.foldenable = true
 
 -- GUI options
-
-vim.o.guifont = "FiraCode Nerd Font:h11"
+if utils.is_darwin() then
+  vim.o.guifont = "FiraCode Nerd Font:h14"
+else
+  vim.o.guifont = "FiraCode Nerd Font:h11"
+end
 
 if vim.g.neovide then
   vim.g.neovide_transparency = 0.95
