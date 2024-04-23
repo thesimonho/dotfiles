@@ -103,7 +103,7 @@ customCommands:
     prompts:
       - type: "menuFromCommand"
         title: "Which remote repository to push to?"
-        command: bash -c "git remote --verbose | rg '.* (push)'"
+        command: bash -c "git remote --verbose | rg '(push)'"
         filter: '(?P<remote>.*)\s+(?P<url>.*) \(push\)'
         key: "Remote"
         valueFormat: "{{ .remote }}"
