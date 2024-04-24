@@ -90,7 +90,7 @@ local M = {
           "~",
           "D:\\",
         },
-        hidden_files = false,
+        hidden_files = true,
         theme = "dropdown",
         order_by = "recent",
         search_by = "title",
