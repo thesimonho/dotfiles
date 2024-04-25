@@ -1,3 +1,5 @@
+local utils = require("config.utils")
+
 local M = {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -6,17 +8,18 @@ local M = {
       { "<leader>fe", vim.NIL },
       { "<leader>fE", vim.NIL },
       { "<leader>E", vim.NIL },
+      { "<leader>be", vim.NIL },
       {
         "<leader>e",
         function()
-          require("neo-tree.command").execute({ toggle = true, dir = vim.loop.cwd() })
+          require("neo-tree.command").execute({ position = "float", toggle = false, dir = vim.loop.cwd() })
         end,
         desc = "Explorer",
       },
     },
     opts = {
       close_if_last_window = true,
-      popup_border_style = "single",
+      popup_border_style = utils.border_chars_outer_thin,
       enable_git_status = true,
       enable_modified_markers = true,
       enable_diagnostics = false,

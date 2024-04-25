@@ -1,3 +1,5 @@
+local utils = require("config.utils")
+
 local M = {
   "nvim-telescope/telescope.nvim",
   dependencies = {
@@ -43,6 +45,8 @@ local M = {
       dynamic_preview_title = true,
       prompt_prefix = "  ",
       path_display = { "smart" },
+      borderchars = utils.border_chars_outer_thin_telescope,
+      border = true,
       file_ignore_patterns = {
         "node_modules/",
         ".terraform/",
@@ -74,8 +78,8 @@ local M = {
       buffers = {
         theme = "dropdown",
         previewer = false,
-        winblend = 5,
-        path_display = { "smart" },
+        path_display = { shorten = { 1, exclude = { -2, -1 } } },
+        borderchars = utils.border_chars_outer_thin_telescope,
       },
     },
     extensions = {

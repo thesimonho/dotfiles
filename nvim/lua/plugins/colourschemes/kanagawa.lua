@@ -224,6 +224,8 @@ function M.config()
 
         NvimTreeRootFolder = { fg = colors.palette.autumnRed },
         NvimTreeOpenedFolderName = { fg = colors.palette.dragonBlue },
+        NeoTreeFloatTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonGray3, bold = true },
+        NeoTreeFloatBorder = { bg = colors.theme.ui.bg, fg = colors.theme.ui.bg_p2 },
         NeoTreeGitConflict = { italic = false, fg = colors.palette.roninYellow },
         NeoTreeGitUntracked = { link = "NeoTreeGitConflict" },
         NeoTreeIndentMarker = { fg = IndentLine },
@@ -231,14 +233,14 @@ function M.config()
         NeoTreeWinSeparator = { fg = colors.theme.ui.bg_dim, bg = colors.theme.ui.bg_dim },
 
         TelescopeTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonBlue, bold = true },
-        TelescopeSelection = { bg = colors.palette.winterYellow },
         TelescopePromptNormal = { bg = colors.theme.ui.bg_p2 },
         TelescopePromptBorder = { fg = colors.theme.ui.bg_p2, bg = colors.theme.ui.bg_p2 },
+        TeleScopeResultsTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.dragonOrange, bold = true },
         TelescopeResultsNormal = { fg = colors.palette.fujiWhite, bg = HoverBG },
-        TelescopeResultsBorder = { fg = HoverBG, bg = HoverBG },
+        TelescopeResultsBorder = { fg = colors.theme.ui.bg_p2, bg = HoverBG },
         TeleScopePreviewTitle = { fg = colors.palette.sumiInk0, bg = colors.palette.waveAqua1, bold = true },
         TelescopePreviewNormal = { bg = colors.theme.ui.bg },
-        TelescopePreviewBorder = { bg = colors.theme.ui.bg, fg = colors.theme.ui.bg },
+        TelescopePreviewBorder = { bg = colors.theme.ui.bg, fg = colors.theme.ui.bg_p2 },
 
         WhichKey = { fg = colors.palette.peachRed },
         WhichKeySeparater = { fg = colors.palette.dragonGray2, italic = false },
