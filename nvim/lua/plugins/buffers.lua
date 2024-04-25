@@ -12,13 +12,14 @@ return {
     keys = {
       { "<leader>bl", vim.NIL },
       { "<leader>br", vim.NIL },
-      { "<leader>bo", vim.NIL },
+      { "<leader><space>", "<Cmd>lua require('telescope.builtin').buffers()<CR>", desc = "Buffer list" },
+      { "<leader>bb", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
+      { "<leader>bo", "<cmd>e #<cr>", desc = "Other buffer" },
       { "<leader>bD", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
       { "<leader>b1", "<Cmd>BufferLineGoToBuffer 1<CR>", desc = "Buffer 1" },
       { "<leader>b2", "<Cmd>BufferLineGoToBuffer 2<CR>", desc = "Buffer 2" },
       { "<leader>b3", "<Cmd>BufferLineGoToBuffer 3<CR>", desc = "Buffer 3" },
       { "<leader>b4", "<Cmd>BufferLineGoToBuffer 4<CR>", desc = "Buffer 4" },
-      { "<leader><space>", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
     },
     opts = {
       options = {
