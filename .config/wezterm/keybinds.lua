@@ -26,6 +26,7 @@ M.basic_binds = {
 	{ key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) },
 	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
 	{ key = "r", mods = "CMD", action = act.SendKey({ key = "r", mods = "CTRL" }) },
+	{ key = "h", mods = "CMD", action = act.SendKey({ key = "h", mods = "CTRL" }) },
 	{ key = "j", mods = "CMD", action = act.SendKey({ key = "j", mods = "CTRL" }) },
 	{ key = "k", mods = "CMD", action = act.SendKey({ key = "k", mods = "CTRL" }) },
 	{ key = "l", mods = "CMD", action = act.SendKey({ key = "l", mods = "CTRL" }) },
