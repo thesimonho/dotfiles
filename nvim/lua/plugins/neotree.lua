@@ -12,7 +12,7 @@ local M = {
       {
         "<leader>e",
         function()
-          require("neo-tree.command").execute({ position = "float", toggle = false, dir = vim.loop.cwd() })
+          require("neo-tree.command").execute({ position = "float", toggle = false, reveal = true, dir = vim.loop.cwd() })
         end,
         desc = "Explorer",
       },
