@@ -16,7 +16,7 @@ M.basic_binds = {
 			end
 		end),
 	},
-	{ key = "p", mods = "CTRL|CMD", action = act.ActivateCommandPalette },
+	{ key = "F1", action = act.ActivateCommandPalette },
 	{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
 	{ key = "j", mods = "LEADER", action = act.ShowTabNavigator },
