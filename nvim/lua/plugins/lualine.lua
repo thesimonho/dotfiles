@@ -27,9 +27,10 @@ local M = {
       sections = {
         lualine_a = {
           -- stylua: ignore
-          { function() return [[🐼]] end, separator = { left = "" }, padding = 0},
           {
             "mode",
+            separator = { left = "" , right = ""},
+            padding = 1,
             fmt = function(str)
               return str:lower()
             end,
