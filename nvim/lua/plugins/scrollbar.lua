@@ -1,7 +1,15 @@
 return {
-  { -- checkout satellite.nvim when nvim 0.10
-    "dstein64/nvim-scrollview",
+  {
+    "lewis6991/satellite.nvim",
     enabled = true,
+    opts = {
+      current_only = true,
+      width = 1,
+    },
+  },
+  {
+    "dstein64/nvim-scrollview",
+    enabled = false,
     dependencies = { "lewis6991/gitsigns.nvim" },
     event = "LazyFile",
     config = function(_, opts)
