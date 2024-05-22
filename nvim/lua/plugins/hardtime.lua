@@ -5,5 +5,7 @@ return {
   opts = {
     disabled_filetypes = { "qf", "netrw", "neo-tree", "lazy", "mason", "oil" },
     disable_mouse = false,
+    allow_different_key = true,
+    max_count = 4,
   },
 }
