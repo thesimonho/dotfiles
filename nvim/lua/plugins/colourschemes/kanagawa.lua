@@ -46,11 +46,9 @@ local M = {
     springBlue = "#7FB4CA",
     lightBlue = "#A3D4D5", -- unused yet
     waveAqua2 = "#7AA89F", -- improve lightness: desaturated greenish Aqua
-
-    -- waveAqua2  = "#68AD99",
-    -- waveAqua4  = "#7AA880",
-    -- waveAqua5  = "#6CAF95",
-    -- waveAqua3  = "#68AD99",
+    waveAqua3 = "#68AD99",
+    waveAqua4 = "#7AA880",
+    waveAqua5 = "#6CAF95",
 
     springGreen = "#98BB6C",
     boatYellow1 = "#938056",
@@ -256,7 +254,7 @@ function M.config()
         ScrollView = { bg = colors.palette.sumiInk5 },
         ScrollViewCursor = { fg = colors.palette.dragonOrange },
         ScrollViewMarks = { fg = colors.palette.dragonGreen },
-        SatelliteBar = { bg = colors.palette.dragonBlue, fg = colors.palette.dragonWhite },
+        SatelliteBar = { bg = "#3e4a5b", fg = colors.palette.dragonWhite },
 
         Headline1 = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite, bold = true },
         Headline2 = { bg = colors.palette.winterRed, fg = colors.palette.fujiWhite, bold = true },
@@ -265,6 +263,7 @@ function M.config()
         Headline5 = { bg = colors.palette.dragonRed, fg = colors.palette.fujiWhite, bold = true },
         Headline6 = { bg = colors.palette.dragonGray, fg = colors.palette.fujiWhite, bold = true },
 
+        LspInlayHint = { fg = colors.palette.fujiGray, bg = colors.palette.sumiInk1, italic = false },
         LspReferenceText = { bg = colors.palette.dragonBlue, fg = colors.palette.dragonBlack4, bold = true },
         LspReferenceWrite = { link = "LspReferenceText" },
 
