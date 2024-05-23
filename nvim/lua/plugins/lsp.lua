@@ -37,16 +37,9 @@ return {
           prefix = "icons",
         },
       },
-      servers = {
-        gopls = {
-          keys = {
-            { "<leader>td", vim.NIL },
-          },
-        },
-      },
     },
     inlay_hints = {
-      enabled = false,
+      enabled = true,
     },
     codelens = {
       enabled = true,
