@@ -32,6 +32,8 @@ vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
 vim.keymap.set("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
 vim.keymap.set("n", "<leader>zh", "<cmd>LazyHealth<cr>", { desc = "Health" })
 vim.keymap.set("n", "<leader>zs", "<cmd>StartupTime<cr>", { desc = "StartupTime" })
+vim.keymap.set("n", "<leader>zL", "<cmd>LspInfo<cr>", { desc = "LspInfo" })
+vim.keymap.set("n", "<leader>zi", "<cmd>Inspect<cr>", { desc = "Inspect" })
 
 -- Terminal
 vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { buffer = 0 })
