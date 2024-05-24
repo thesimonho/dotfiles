@@ -7,7 +7,7 @@ return {
       chunk = {
         enable = true,
         notify = true,
-        use_treesitter = false,
+        use_treesitter = true,
         chars = {
           horizontal_line = "─",
           vertical_line = "│",
@@ -26,7 +26,7 @@ return {
       },
       indent = {
         enable = false,
-        use_treesitter = false,
+        use_treesitter = true,
         chars = {
           "│",
         },
