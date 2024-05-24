@@ -24,6 +24,9 @@ vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- D
 vim.keymap.set({ "n", "x" }, "gg", "mggg")
 vim.keymap.set({ "n", "x" }, "G", "mgG")
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
+vim.keymap.set("n", "<leader>uR", "<cmd>set cursorcolumn!<cr>", { desc = "Toggle column ruler" })
+
+-- Windows
 vim.keymap.set("n", "<leader>w\\", "<C-W>v", { desc = "Split window right" })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 

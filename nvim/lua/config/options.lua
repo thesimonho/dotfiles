@@ -15,6 +15,7 @@ vim.opt.incsearch = true
 vim.opt.pumblend = 5
 
 vim.o.foldenable = true
+vim.o.cursorcolumn = false
 
 -- GUI options
 if utils.is_darwin() then
