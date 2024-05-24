@@ -7,7 +7,7 @@ return {
     { "b", "<cmd>lua require('spider').motion('b')<CR>", mode = { "n", "o", "x" } },
   },
   opts = {
-    skipInsignificantPunctuation = true,
+    skipInsignificantPunctuation = false,
     subwordMovement = true,
     customPatterns = {},
   },
