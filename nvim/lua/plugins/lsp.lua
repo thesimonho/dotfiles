@@ -37,20 +37,20 @@ return {
           prefix = "icons",
         },
       },
-    },
-    inlay_hints = {
-      enabled = true,
-    },
-    codelens = {
-      enabled = true,
-    },
-    capabilities = {
-      textDocument = {
-        foldingRange = {
-          dynamicRegistration = false,
-          lineFoldingOnly = true,
-        },
+      inlay_hints = {
+        enabled = true,
       },
+      codelens = {
+        enabled = true,
+      },
+      -- capabilities = {
+      --   textDocument = {
+      --     foldingRange = {
+      --       dynamicRegistration = false,
+      --       lineFoldingOnly = true,
+      --     },
+      --   },
+      -- },
     },
   },
   {
