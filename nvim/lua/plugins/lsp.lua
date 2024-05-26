@@ -40,14 +40,6 @@ return {
       inlay_hints = {
         enabled = true,
       },
-      -- capabilities = {
-      --   textDocument = {
-      --     foldingRange = {
-      --       dynamicRegistration = false,
-      --       lineFoldingOnly = true,
-      --     },
-      --   },
-      -- },
     },
   },
   {
