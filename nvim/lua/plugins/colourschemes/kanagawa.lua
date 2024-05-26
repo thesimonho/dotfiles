@@ -264,7 +264,7 @@ function M.config()
         Headline6 = { bg = colors.palette.dragonGray, fg = colors.palette.fujiWhite, bold = true },
 
         LspInlayHint = { fg = colors.palette.fujiGray, bg = colors.palette.sumiInk1, italic = false },
-        LspReferenceText = { bg = colors.palette.dragonBlue, fg = colors.palette.dragonBlack4, bold = true },
+        LspReferenceText = { bg = "None", fg = colors.palette.fujiWhite, bold = true },
         LspReferenceWrite = { link = "LspReferenceText" },
 
         SpectreFaint = { fg = colors.palette.fujiGray, italic = false },
