@@ -18,4 +18,8 @@ M.fear = {
   [[that brings total obliteration.]],
 }
 
+M.gd = {
+  [["Life is like gradient descent..."]],
+}
+
 return M

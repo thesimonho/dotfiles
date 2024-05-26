@@ -44,14 +44,14 @@ function M.config()
     }
   end
 
-  local function get_header(headers)
-    local header_text = headers[math.random(#headers)]
+  local function get_header(header_list)
+    local header_text = header_list[math.random(#header_list)]
     return apply_gradient_hl(header_text)
   end
 
   -- Footer
-  local function get_footer(quotes, width)
-    local quote_text = quotes[math.random(#quotes)]
+  local function get_footer(quote_list, width)
+    local quote_text = quote_list[math.random(#quote_list)]
 
     local max_width = width or 35
 
@@ -69,19 +69,6 @@ function M.config()
   end
 
   -- Info section
-  local function get_updates()
-    local checker = require("lazy.manage.checker")
-    checker.fast_check({ report = false })
-
-    local updates
-    if require("lazy.status").has_updates() then
-      updates = " (󰁝 " .. #checker.updated .. ")"
-    else
-      updates = ""
-    end
-    return updates
-  end
-
   local function get_info()
     local lazy_stats = require("lazy").stats()
     local total_plugins = " " .. lazy_stats.loaded .. "/" .. lazy_stats.count
@@ -208,7 +195,7 @@ function M.config()
     { type = "padding", val = 2 },
     get_mru(7),
     { type = "padding", val = 3 },
-    get_footer({ quotes.roar, quotes.path, quotes.fear }, 50),
+    get_footer({ quotes.roar, quotes.path, quotes.fear, quotes.gd }, 50),
   }
   require("alpha").setup(theme.config)
 end
