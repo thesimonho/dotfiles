@@ -251,7 +251,9 @@ function M.config()
         InclineNormal = { bg = colors.palette.fujiWhite, fg = colors.theme.ui.bg_dim },
         InclineNormalNC = { bg = colors.theme.ui.bg_p2, fg = colors.palette.fujiWhite },
 
-        SatelliteBar = { bg = "#3e4a5b", fg = colors.palette.dragonWhite },
+        SatelliteBar = { bg = "#3e4a5b" },
+        SatelliteCursor = { fg = colors.palette.dragonGray },
+        SatelliteMark = { fg = colors.palette.dragonGreen },
 
         Headline1 = { bg = colors.palette.waveBlue1, fg = colors.palette.fujiWhite, bold = true },
         Headline2 = { bg = colors.palette.winterRed, fg = colors.palette.fujiWhite, bold = true },
