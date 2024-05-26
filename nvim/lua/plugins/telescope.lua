@@ -77,7 +77,7 @@ return {
       },
       buffers = {
         theme = "dropdown",
-        previewer = false,
+        previewer = true,
         path_display = { shorten = { 1, exclude = { -2, -1 } } },
         borderchars = utils.border_chars_outer_thin_telescope,
       },

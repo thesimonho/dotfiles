@@ -12,8 +12,8 @@ return {
     keys = {
       { "<leader>bl", vim.NIL },
       { "<leader>br", vim.NIL },
-      { "<leader><space>", "<Cmd>lua require('telescope.builtin').buffers()<CR>", desc = "Buffer list" },
-      { "<leader>bb", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
+      { "<leader><space>", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
+      { "<leader>bb", "<Cmd>lua require('telescope.builtin').buffers()<CR>", desc = "Buffer list" },
       { "<leader>bo", "<cmd>e #<cr>", desc = "Other buffer" },
       { "<leader>bD", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
       { "<leader>b1", "<Cmd>BufferLineGoToBuffer 1<CR>", desc = "Buffer 1" },
@@ -27,11 +27,11 @@ return {
       close_command = function(n) require("mini.bufremove").delete(n, false) end,
       -- stylua: ignore
       right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
-        mode = "buffers", -- set to "tabs" to only show tabpages instead
+        mode = "buffers",
         numbers = "none",
         indicator = {
-          icon = "▎", -- this should be omitted if indicator style is not 'icon'
           style = "icon",
+          icon = "▎", -- this should be omitted if indicator style is not 'icon'
         },
         hover = {
           enabled = false,
