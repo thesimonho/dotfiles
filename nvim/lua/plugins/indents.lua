@@ -25,7 +25,7 @@ return {
         exclude_filetypes = { neotest_summary = true },
       },
       indent = {
-        enable = false,
+        enable = true,
         use_treesitter = true,
         chars = {
           "│",
