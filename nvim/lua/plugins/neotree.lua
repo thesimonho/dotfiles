@@ -1,5 +1,13 @@
 local utils = require("config.utils")
 
+local get_node_path = function(node)
+  local path = node.path
+  if node.type == "file" then
+    path = vim.loop.cwd()
+  end
+  return path
+end
+
 local M = {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -12,7 +20,12 @@ local M = {
       {
         "<leader>e",
         function()
-          require("neo-tree.command").execute({ position = "float", toggle = false, reveal = true, dir = vim.loop.cwd() })
+          require("neo-tree.command").execute({
+            position = "float",
+            toggle = false,
+            reveal = true,
+            dir = vim.loop.cwd(),
+          })
         end,
         desc = "Explorer",
       },
@@ -24,6 +37,18 @@ local M = {
       enable_modified_markers = true,
       enable_diagnostics = false,
       sort_case_insensitive = true,
+      commands = {
+        find_files_dir = function(state)
+          local node = state.tree:get_node()
+          require("telescope.builtin").find_files({ cwd = get_node_path(node) })
+          vim.cmd("Neotree close")
+        end,
+        grep_dir = function(state)
+          local node = state.tree:get_node()
+          require("telescope.builtin").live_grep({ cwd = get_node_path(node) })
+          vim.cmd("Neotree close")
+        end,
+      },
       default_component_configs = {
         indent = {
           with_markers = true,
@@ -59,9 +84,9 @@ local M = {
         position = "left",
         width = 35,
         mappings = {
-          ["<tab>"] = {
-            "toggle_node",
-          },
+          ["<tab>"] = { "toggle_node" },
+          ["f"] = "find_files_dir",
+          ["g"] = "grep_dir",
         },
       },
       filesystem = {
@@ -114,6 +139,13 @@ local M = {
             if args.position == "left" or args.position == "right" then
               vim.cmd("wincmd =")
             end
+          end,
+        },
+        {
+          event = "neo_tree_buffer_enter",
+          handler = function()
+            vim.opt_local.number = true
+            vim.opt_local.relativenumber = true
           end,
         },
       },
