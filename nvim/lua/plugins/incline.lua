@@ -40,7 +40,7 @@ return {
     },
     window = {
       margin = {
-        horizontal = 1,
+        horizontal = 2,
         vertical = 1,
       },
       padding = { left = 0, right = 1 },
