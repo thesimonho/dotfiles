@@ -59,6 +59,7 @@ local c = {
 
 if is_windows() then
 	c.font_size = 11
+	c.default_prog = { "nu.exe" }
 	c.launch_menu = {
 		{
 			label = "nushell",
@@ -75,6 +76,7 @@ if is_windows() then
 	}
 else
 	c.font_size = 16
+	c.default_prog = { "zsh" }
 	c.launch_menu = {
 		{
 			label = "zsh",
