@@ -193,7 +193,7 @@ function M.config()
     { type = "padding", val = 2 },
     get_projects(5),
     { type = "padding", val = 2 },
-    get_mru(7),
+    get_mru(5),
     { type = "padding", val = 3 },
     get_footer({ quotes.roar, quotes.path, quotes.fear, quotes.gd }, 50),
   }
