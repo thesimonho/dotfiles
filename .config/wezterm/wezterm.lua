@@ -76,7 +76,7 @@ if is_windows() then
 	}
 else
 	c.font_size = 16
-	c.default_prog = { "zsh" }
+	c.default_prog = { "zsh", "-l" }
 	c.launch_menu = {
 		{
 			label = "zsh",
