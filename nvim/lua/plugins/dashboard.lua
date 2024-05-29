@@ -184,7 +184,7 @@ function M.config()
 
   -- Layout
   theme.config.layout = {
-    { type = "padding", val = 4 },
+    { type = "padding", val = 2 },
     get_header({ headers.cool, headers.panda }),
     { type = "padding", val = 1 },
     get_info(),
@@ -194,7 +194,7 @@ function M.config()
     get_projects(5),
     { type = "padding", val = 2 },
     get_mru(5),
-    { type = "padding", val = 3 },
+    { type = "padding", val = 2 },
     get_footer({ quotes.roar, quotes.path, quotes.fear, quotes.gd }, 50),
   }
   require("alpha").setup(theme.config)
