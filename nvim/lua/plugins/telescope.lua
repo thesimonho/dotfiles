@@ -64,10 +64,10 @@ return {
           ["<C-H>"] = function()
             vim.api.nvim_input("<C-w>")
           end,
-          ["<c-q>"] = require("trouble.providers.telescope").open_selected_with_trouble,
+          ["<c-q>"] = require("trouble.sources.telescope").open,
         },
         n = {
-          ["<c-q>"] = require("trouble.providers.telescope").open_selected_with_trouble,
+          ["<c-q>"] = require("trouble.sources.telescope").open,
         },
       },
     },

@@ -1,15 +1,5 @@
 return {
   "nvim-pack/nvim-spectre",
-  keys = {
-    { "<leader>sr", vim.NIL },
-    {
-      "<leader>cS",
-      function()
-        require("spectre").open()
-      end,
-      desc = "Search and replace (cwd)",
-    },
-  },
   opts = {
     live_update = true,
     highlight = {

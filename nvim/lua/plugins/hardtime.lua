@@ -29,7 +29,7 @@ return {
       "notify",
       "prompt",
       "qf",
-      "Trouble",
+      "trouble",
     },
   },
 }
