@@ -1,12 +1,12 @@
-local utils = require("config.utils")
-local function get_poetry_path()
-  if utils.is_windows() then
-    return os.getenv("LOCALAPPDATA") .. "\\pypoetry\\Cache\\virtualenvs"
-  elseif utils.is_darwin() then
-    return os.getenv("HOME") .. "/Library/Caches/pypoetry/virtualenvs"
-  else
-    return "~/.cache/pypoetry/virtualenvs"
+local hooks = require("venv-selector.hooks")
+
+local function shorten_path(filename)
+  local parts = {}
+  for part in string.gmatch(filename, "[^\\]+") do
+    table.insert(parts, part)
   end
+  local last_parts = table.concat(parts, "\\", #parts - 3, #parts)
+  return last_parts
 end
 
 return {
@@ -26,19 +26,26 @@ return {
   },
   {
     "linux-cultist/venv-selector.nvim",
-    cmd = { "VenvSelect", "VenvSelectCached" },
+    branch = "regexp",
+    cmd = { "VenvSelect" },
     ft = "python",
     keys = {
       { "<leader>cv", vim.NIL },
-      { "<localleader>v", "<cmd>VenvSelectCached<cr>", ft = "python", desc = "virtualenv (cached)" },
-      { "<localleader>V", "<cmd>VenvSelect<cr>", ft = "python", desc = "virtualenv (select)" },
+      { "<localleader>v", "<cmd>VenvSelect<cr>", ft = "python", desc = "virtualenv" },
     },
     opts = {
-      poetry_path = get_poetry_path(),
-      notify_user_on_activate = false,
-      changed_venv_hooks = {
-        require("venv-selector").hooks.pyright,
-        require("venv-selector").hooks.pylsp,
+      settings = {
+        hooks = { hooks.pyright_hook },
+        options = {
+          enable_default_searches = true,
+          enable_cached_venvs = true,
+          activate_venv_in_terminal = true,
+          set_environment_variables = true,
+          show_telescope_search_type = true,
+          notify_user_on_venv_activation = false,
+          on_venv_activate_callback = nil,
+          on_telescope_result_callback = shorten_path, -- FIX: not working
+        },
       },
     },
   },
