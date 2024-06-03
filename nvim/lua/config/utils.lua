@@ -9,30 +9,6 @@ M.map = function(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, options)
 end
 
--- Get colour of the mode
-local colours = require("config/colours")
-M.get_mode_colour = function()
-  local mode = vim.api.nvim_get_mode()["mode"]
-
-  if mode == "n" then
-    return colours.normal
-  elseif mode == "i" then
-    return colours.insert
-  elseif mode == "v" then
-    return colours.visual
-  elseif mode == "V" then
-    return colours.visual
-  elseif mode == "s" then
-    return colours.visual
-  elseif mode == "R" then
-    return colours.replace
-  elseif mode == "c" then
-    return colours.command
-  else
-    return colours.textLight
-  end
-end
-
 -- when grepping, cd to the project root directory first
 M.live_grep_from_project_root = function()
   local function is_git_repo()

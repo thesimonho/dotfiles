@@ -9,7 +9,4 @@ M = {
   },
 }
 
--- set default Todo HL to same as Comment (plugins can use their own HL group for Todo:)
-vim.api.nvim_set_hl(0, "Todo", { link = "Comment" })
-
 return M
