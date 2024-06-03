@@ -1,14 +1,7 @@
 local M = {
   "nvim-lualine/lualine.nvim",
   opts = function()
-    local colours = require("config/colours")
-    local custom = require("lualine.themes.base16")
-    custom.normal.a.bg = colours.normal
-    custom.insert.a.bg = colours.insert
-    custom.visual.a.bg = colours.visual
-    custom.command.a.bg = colours.command
-    custom.replace.a.bg = colours.replace
-
+    local kanagawa_paper = require("lualine.themes.kanagawa-paper")
     local Util = require("lazyvim.util")
     local icons = require("lazyvim.config").icons
     local lualine_require = require("lualine_require")
@@ -18,7 +11,7 @@ local M = {
 
     return {
       options = {
-        theme = custom,
+        theme = kanagawa_paper,
         component_separators = { left = "│", right = "│" },
         section_separators = { left = "", right = "" },
         globalstatus = true,
@@ -107,7 +100,6 @@ local M = {
               return vim.api.nvim_call_function("codeium#GetStatusString", {})
             end,
             icon = "󱙺",
-            color = { fg = colours.bufVisible },
             on_click = function()
               return vim.fn["codeium#Chat"]()
             end,

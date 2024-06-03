@@ -1,7 +1,8 @@
 local C = {}
 
 local function set_theme_colours()
-  local theme_colors = require("plugins/colourschemes/kanagawa").palette
+  local theme_colors = require("kanagawa-paper.colors").palette
+
   C.palette = theme_colors
   C.command = theme_colors.roninYellow
   C.normal = theme_colors.roninYellow
@@ -26,6 +27,6 @@ local function set_theme_colours()
   C.bufClose = theme_colors.autumnRed
 end
 
-set_theme_colours()
+-- set_theme_colours()
 
 return C
