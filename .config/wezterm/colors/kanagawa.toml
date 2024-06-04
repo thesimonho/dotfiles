@@ -1,41 +1,41 @@
-# Kanagawa Wezterm Colors
-# Upstream: https://github.com/rebelot/kanagawa.nvim/
+# Kanagawa Paper Wezterm Colors
+# Upstream: https://github.com/sho-87/kanagawa-paper.nvim/blob/master/extras/wezterm.toml
 
 [colors]
 ansi = [
-  "#090618",
-  "#c34043",
-  "#87a987",
-  "#c0a36e",
+  "#0d0c0c",
+  "#c4746e",
+  "#8a9a7b",
+  "#c4b28a",
   "#8ba4b0",
-  "#957fb8",
-  "#6a9589",
-  "#c8c093",
+  "#a292a3",
+  "#8ea4a2",
+  "#C8C093",
 ]
 brights = [
-  "#727169",
-  "#e82424",
-  "#98bb6c",
-  "#e6c384",
-  "#7fb4ca",
-  "#938aa9",
-  "#7aa89f",
-  "#dcd7ba",
+  "#a6a69c",
+  "#E46876",
+  "#87a987",
+  "#E6C384",
+  "#7FB4CA",
+  "#938AA9",
+  "#7AA89F",
+  "#c5c9c5",
 ]
-background = '#363646'
-foreground = '#dcd7ba'
+background = '#1F1F28'
+foreground = '#DCD7BA'
 cursor_bg = '#c8c093'
 cursor_fg = '#1f1f28'
 cursor_border = '#c8c093'
-selection_bg = '#2d4f67'
+selection_bg = '#658594'
 selection_fg = '#c8c093'
-scrollbar_thumb = '#16161d'
-split = '#c8c093'
+scrollbar_thumb = '#393836'
+split = '#8992a7'
 
 [colors.indexed]
 16 = '#ffa066'
 17 = '#ff5d62'
 
 [metadata]
-name = 'kanagawa'
-origin_url = 'https://github.com/rebelot/kanagawa.nvim/blob/master/extras/wezterm.lua'
+name = 'kanagawa-paper'
+origin_url = 'https://github.com/sho-87/kanagawa-paper.nvim/blob/master/extras/wezterm.toml'

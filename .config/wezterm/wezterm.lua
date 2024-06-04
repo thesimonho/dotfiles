@@ -11,15 +11,12 @@ local is_windows = function()
 	return wezterm.target_triple == "x86_64-pc-windows-msvc"
 end
 
-local default_prog
-local launch_menu
-
 local c = {
 	adjust_window_size_when_changing_font_size = false,
 	animation_fps = 60,
 	automatically_reload_config = true,
 	color_scheme_dirs = { "~/.config/wezterm/colors" },
-	color_scheme = "kanagawa",
+	color_scheme = "kanagawa-paper",
 	default_cursor_style = "SteadyBar",
 	disable_default_key_bindings = true,
 	enable_scroll_bar = false,
