@@ -1,8 +1,16 @@
+local utils = require("config.utils")
 local hooks = require("venv-selector.hooks")
 
 local function shorten_path(filename)
+  local pattern
+  if utils.is_windows() then
+    pattern = "[^\\]+"
+  else
+    pattern = "[^/]+"
+  end
+
   local parts = {}
-  for part in string.gmatch(filename, "[^/]+") do
+  for part in string.gmatch(filename, pattern) do
     table.insert(parts, part)
   end
   local last_parts = table.concat(parts, "\\", #parts - 3, #parts)
