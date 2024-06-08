@@ -133,7 +133,7 @@ local M = {
               hint = icons.diagnostics.Hint,
             },
             on_click = function()
-              require("trouble").toggle("workspace_diagnostics")
+              vim.cmd("Trouble diagnostics toggle filter.buf=0")
             end,
           },
         },
