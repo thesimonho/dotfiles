@@ -114,7 +114,7 @@ local M = {
           },
           -- stylua: ignore
           {
-            function() return require("noice").api.status.mode.get() end,
+            function() return "🔴 " .. require("noice").api.status.mode.get() end,
             cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
             color = Util.ui.fg("Constant"),
           },
