@@ -15,6 +15,7 @@ return {
       { "<leader><space>", "<Cmd>BufferLinePick<CR>", desc = "Pick buffer" },
       { "<leader>bb", "<Cmd>lua require('telescope.builtin').buffers()<CR>", desc = "Buffer list" },
       { "<leader>bo", "<cmd>e #<cr>", desc = "Other buffer" },
+      { "<leader>bn", "<cmd>vnew<cr>", desc = "New buffer" },
       { "<leader>bD", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
       { "<leader>b1", "<Cmd>BufferLineGoToBuffer 1<CR>", desc = "Buffer 1" },
       { "<leader>b2", "<Cmd>BufferLineGoToBuffer 2<CR>", desc = "Buffer 2" },
