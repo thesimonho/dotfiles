@@ -32,30 +32,6 @@ M.live_grep_from_project_root = function()
   require("telescope.builtin").live_grep(opts)
 end
 
--- luasnip: insert visual selection into dynamic node
-M.get_visual = function(parent)
-  local ls = require("luasnip")
-  local sn = ls.snippet_node
-  local i = ls.insert_node
-
-  print("Creating snippet from visual selection...")
-  if #parent.snippet.env.SELECT_RAW > 0 then
-    return sn(nil, i(1, parent.snippet.env.SELECT_RAW))
-  else
-    return sn(nil, i(1, ""))
-  end
-end
-
--- luasnip: return the regex capture group for regex-based triggers
-M.get_capture_group = function(group)
-  local ls = require("luasnip")
-  local f = ls.function_node
-
-  return f(function(_, snip)
-    return snip.captures[group]
-  end)
-end
-
 -- check if string is in table
 M.is_string_in_table = function(str, tbl)
   for _, value in pairs(tbl) do
