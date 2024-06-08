@@ -29,6 +29,10 @@ vim.keymap.set("n", "<leader>uR", "<cmd>set cursorcolumn!<cr>", { desc = "Toggle
 -- Windows
 vim.keymap.set("n", "<leader>w\\", "<C-W>v", { desc = "Split window right" })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
+vim.keymap.set("n", "<leader><tab><tab>", function()
+  vim.cmd("tabnew")
+  require("telescope").extensions.project.project({})
+end, { desc = "New tab" })
 
 -- Tools
 vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
