@@ -55,21 +55,6 @@ return {
         enforce_regular_tabs = false,
         always_show_bufferline = true,
         sort_by = "extension",
-        offsets = {
-          {
-            filetype = "OverseerList",
-            text = "Tasks",
-            text_align = "center",
-            separator = false,
-          },
-          {
-            filetype = "neo-tree",
-            text = "",
-            padding = 1,
-            text_align = "left",
-            separator = false,
-          },
-        },
         diagnostics = false,
         style_preset = {
           require("bufferline").style_preset.no_italic,

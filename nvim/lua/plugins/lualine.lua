@@ -106,12 +106,6 @@ local M = {
           },
         },
         lualine_y = {
-          {
-            "overseer",
-            on_click = function()
-              require("overseer").toggle()
-            end,
-          },
           -- stylua: ignore
           {
             function() return "🔴 " .. require("noice").api.status.mode.get() end,
@@ -142,7 +136,7 @@ local M = {
           { "progress", separator = { right = "" } },
         },
       },
-      extensions = { "neo-tree", "lazy", "mason", "overseer", "toggleterm", "trouble" },
+      extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble" },
     }
   end,
 }
