@@ -145,6 +145,21 @@ M.create_gradient = function(start, finish, steps)
   return gradient
 end
 
+M.get_web_icon = function(fn)
+  local nwd = require("nvim-web-devicons")
+  local ext = M.get_file_extension(fn)
+  return nwd.get_icon(fn, ext, { default = true })
+end
+
+M.get_file_extension = function(fn)
+  local match = fn:match("^.+(%..+)$")
+  local ext = ""
+  if match ~= nil then
+    ext = match:sub(2)
+  end
+  return ext
+end
+
 M.is_darwin = function()
   return vim.loop.os_uname().sysname == "Darwin"
 end

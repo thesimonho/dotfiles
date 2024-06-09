@@ -1,13 +1,13 @@
 local M = {
   "goolord/alpha-nvim",
-  enabled = true,
   dependencies = { "nvim-tree/nvim-web-devicons" },
   event = "VimEnter",
 }
 
 function M.config()
-  local headers = require("config/headers")
-  local quotes = require("config/quotes")
+  local headers = require("config.headers")
+  local quotes = require("config.quotes")
+  local utils = require("config.utils")
   local theme = require("alpha.themes.theta")
   local path_ok, plenary_path = pcall(require, "plenary.path")
   if not path_ok then
@@ -18,7 +18,7 @@ function M.config()
 
   -- Header
   local function apply_gradient_hl(text)
-    local gradient = require("config/utils").create_gradient("#DCA561", "#658594", #text)
+    local gradient = utils.create_gradient("#DCA561", "#658594", #text)
 
     local lines = {}
     for i, line in ipairs(text) do
@@ -57,7 +57,7 @@ function M.config()
 
     local tbl = {}
     for _, text in ipairs(quote_text) do
-      local padded_text = require("config/utils").pad_string(text, max_width, "right")
+      local padded_text = utils.pad_string(text, max_width, "right")
       table.insert(tbl, { type = "text", val = padded_text, opts = { hl = "Comment", position = "center" } })
     end
 
@@ -100,17 +100,63 @@ function M.config()
   }
 
   -- MRU
-  local function get_mru(max_shown)
+  local function file_button(fn, sc, short_fn, autocd)
+    short_fn = short_fn or fn
+    local ico_txt
+    local fb_hl = {}
+
+    local ico, hl = utils.get_web_icon(fn)
+    table.insert(fb_hl, { hl, 0, #ico })
+    ico_txt = ico .. "  "
+
+    local cd_cmd = (autocd and " | cd %:p:h" or "")
+    local file_button_el =
+      dashboard.button(sc, ico_txt .. short_fn, "<cmd>e " .. vim.fn.fnameescape(fn) .. cd_cmd .. " <CR>")
+    local fn_start = short_fn:match(".*[/\\]")
+    if fn_start ~= nil then
+      table.insert(fb_hl, { "Comment", #ico_txt - 2, #fn_start + #ico_txt })
+    end
+    file_button_el.opts.hl = fb_hl
+    return file_button_el
+  end
+
+  local function get_mru(items_number, opts)
+    local oldfiles = {}
+    for _, v in pairs(vim.v.oldfiles) do
+      if #oldfiles == items_number then
+        break
+      end
+      if vim.fn.filereadable(v) == 1 then
+        oldfiles[#oldfiles + 1] = v
+      end
+    end
+
+    local target_width = 35
+
     local tbl = {
       { type = "text", val = "Recent Files", opts = { hl = "SpecialComment", position = "center" } },
     }
 
-    local mru_list = theme.mru(1, "", max_shown)
-    for _, file in ipairs(mru_list.val) do
-      table.insert(tbl, file)
+    for i, fn in ipairs(oldfiles) do
+      local short_fn
+      local parts = vim.split(fn, plenary_path.path.sep)
+      local max_parents = math.min(4, #parts - 1)
+
+      repeat
+        short_fn = table.concat(parts, plenary_path.path.sep, #parts - max_parents, #parts)
+        max_parents = max_parents - 1
+      until #short_fn < target_width or max_parents == 0 or #parts == max_parents
+
+      local shortcut = tostring(i)
+      local file_button_el = file_button(fn, shortcut, short_fn, opts.autocd)
+      tbl[i + 1] = file_button_el
     end
 
-    return { type = "group", val = tbl, opts = {} }
+    return {
+      type = "group",
+      val = tbl,
+      opts = {},
+    }
   end
 
   -- Projects
@@ -193,7 +239,7 @@ function M.config()
     { type = "padding", val = 2 },
     get_projects(5),
     { type = "padding", val = 2 },
-    get_mru(5),
+    get_mru(5, { autocd = false }),
     { type = "padding", val = 2 },
     get_footer({ quotes.roar, quotes.path, quotes.fear, quotes.gd }, 50),
   }
