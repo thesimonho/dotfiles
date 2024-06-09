@@ -71,12 +71,13 @@ function M.config()
   -- Info section
   local function get_info()
     local lazy_stats = require("lazy").stats()
-    local total_plugins = " " .. lazy_stats.loaded .. "/" .. lazy_stats.count
+    local total_plugins =
+      string.format(" %d/%d (%dms)", lazy_stats.loaded, lazy_stats.count, math.floor(lazy_stats.times.LazyDone))
     local datetime = os.date(" %a %B %d")
     local version = vim.version()
-    local nvim_version_info = " " .. version.major .. "." .. version.minor .. "." .. version.patch
+    local nvim_version_info = string.format(" %d.%d.%d", version.major, version.minor, version.patch)
 
-    local info_string = datetime .. "  |  " .. total_plugins .. "  |  " .. nvim_version_info
+    local info_string = string.format("%s  |  %s  |  %s", datetime, total_plugins, nvim_version_info)
 
     return {
       type = "text",
