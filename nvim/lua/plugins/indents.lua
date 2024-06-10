@@ -22,7 +22,7 @@ return {
         textobject = "",
         max_file_size = 1024 * 1024,
         error_sign = true,
-        exclude_filetypes = { neotest_summary = true },
+        exclude_filetypes = { neotest_summary = true, ["neo-tree"] = true },
       },
       indent = {
         enable = true,
