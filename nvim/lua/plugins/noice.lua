@@ -24,7 +24,7 @@ return {
       },
       mini = {
         win_options = {
-          winblend = 100,
+          winblend = 0,
         },
       },
     },
