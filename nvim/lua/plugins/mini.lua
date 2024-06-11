@@ -29,6 +29,8 @@ return {
 
       local animate = require("mini.animate")
       return {
+        open = { enable = false },
+        close = { enable = false },
         resize = {
           timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
         },
