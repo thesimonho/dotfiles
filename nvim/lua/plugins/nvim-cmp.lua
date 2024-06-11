@@ -14,6 +14,8 @@ return {
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
       }
+      opts.window.completion.winblend = 0
+      opts.window.documentation.winblend = 0
 
       opts.experimental.ghost_text = false
 
