@@ -21,7 +21,7 @@
   "headlines.nvim": { "branch": "master", "commit": "618ef1b2502c565c82254ef7d5b04402194d9ce3" },
   "hlchunk.nvim": { "branch": "main", "commit": "21fb838b4656b7829bf787f829e9d65b6c1410e8" },
   "incline.nvim": { "branch": "main", "commit": "16fc9c073e3ea4175b66ad94375df6d73fc114c0" },
-  "kanagawa-paper.nvim": { "branch": "master", "commit": "48b1ec21c5edfb99322f7dde18825f718eec219c" },
+  "kanagawa-paper.nvim": { "branch": "master", "commit": "aad605c1e28b35be7ffc19243cf59f4d1b5d9df2" },
   "lazy.nvim": { "branch": "main", "commit": "fafe1f7c640aed75e70a10e6649612cd96f39149" },
   "lazydev.nvim": { "branch": "main", "commit": "7cbb524c85f87017df9c1ea2377a1d840ad8ed51" },
   "lualine.nvim": { "branch": "master", "commit": "0a5a66803c7407767b799067986b4dc3036e1983" },
