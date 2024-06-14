@@ -22,19 +22,10 @@ return {
     { "<leader>sW", vim.NIL },
     { "<leader>sw", vim.NIL, mode = "v" },
     { "<leader>sW", vim.NIL, mode = "v" },
-    {
-      "<leader>fw",
-      require("lazyvim.util").telescope("grep_string", { cwd = false, word_match = "-w" }),
-      desc = "Find Word",
-    },
-    {
-      "<leader>fw",
-      require("lazyvim.util").telescope("grep_string", { cwd = false }),
-      mode = "v",
-      desc = "Find Selection",
-    },
+    { "<leader>fw", LazyVim.pick("grep_string", { root = false, word_match = "-w" }), desc = "Find Word" },
+    { "<leader>fw", LazyVim.pick("grep_string", { root = false }), mode = "v", desc = "Find Selection" },
     { "<leader>fb", "<cmd>Telescope current_buffer_fuzzy_find<cr><cr>", desc = "Find in Buffer" },
-    { "<leader>fg", require("lazyvim.util").telescope("live_grep"), desc = "Grep" },
+    { "<leader>fg", LazyVim.pick("live_grep"), desc = "Grep" },
     { "<leader>p", "<cmd>lua require('telescope').extensions.project.project({})<cr>", desc = "Projects" },
   },
   opts = {
