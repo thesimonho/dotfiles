@@ -61,20 +61,18 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- NC line numbers
-local augroup = vim.api.nvim_create_augroup("ToggleLineNumbers", { clear = true })
+local nc_group = vim.api.nvim_create_augroup("ToggleLineNC", { clear = true })
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-  group = augroup,
+  group = nc_group,
   callback = function()
-    vim.wo.relativenumber = true
     vim.wo.cursorline = true
   end,
 })
 
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-  group = augroup,
+  group = nc_group,
   callback = function()
-    vim.wo.relativenumber = false
     vim.wo.cursorline = false
   end,
 })
