@@ -14,7 +14,7 @@ local M = {
         theme = kanagawa_paper,
         component_separators = { left = "│", right = "│" },
         section_separators = { left = "", right = "" },
-        globalstatus = true,
+        globalstatus = false,
         disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
       },
       sections = {
@@ -23,7 +23,6 @@ local M = {
           {
             "mode",
             separator = { left = "" , right = ""},
-            padding = 1,
             fmt = function(str)
               return str:lower()
             end,
@@ -35,9 +34,11 @@ local M = {
             on_click = function()
               LazyVim.lazygit({ cwd = LazyVim.root.git() })
             end,
+            padding = { left = 1, right = 1 },
           },
           {
             "diff",
+            padding = { left = 1, right = 0 },
             symbols = {
               added = icons.git.added,
               modified = icons.git.modified,
@@ -56,17 +57,22 @@ local M = {
           },
         },
         lualine_c = {
-          { "filetype", icon_only = true, separator = { right = "" }, padding = { left = 1, right = 0 } },
+          {
+            "filetype",
+            icon_only = true,
+            separator = { right = "" },
+            padding = { left = 1, right = 0 },
+          },
           {
             "filename",
             file_status = true, -- Displays file status (readonly status, modified status)
-            shorting_target = 60, -- Shortens path to leave 40 spaces in the window
+            shorting_target = 40, -- Shortens path to leave 40 spaces in the window
             path = 1, -- 0: Just the filename
             -- 1: Relative path
             -- 2: Absolute path
             -- 3: Absolute path, with tilde as the home directory
             -- 4: Filename and parent dir, with tilde as the home directory
-            padding = { left = 0, right = 1 },
+            padding = 0,
           },
         },
         lualine_x = {
@@ -110,7 +116,8 @@ local M = {
           {
             function() return "🔴 " .. require("noice").api.status.mode.get() end,
             cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-            color = Util.ui.fg("Constant"),
+            color = Util.ui.fg("ErrorMsg"),
+            padding = {left = 0, right = 1}
           },
           -- stylua: ignore
           {
@@ -132,9 +139,35 @@ local M = {
           },
         },
         lualine_z = {
-          { "location", padding = { left = 1, right = 1 } },
-          { "progress", separator = { right = "" } },
+          { "progress", separator = { left = "", right = "" } },
         },
+      },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {
+          {
+            "filetype",
+            icon_only = true,
+            colored = false,
+            separator = { right = "" },
+            padding = { left = 1, right = 0 },
+          },
+          {
+            "filename",
+            file_status = true, -- Displays file status (readonly status, modified status)
+            padding = 0,
+            shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+            path = 1, -- 0: Just the filename
+            -- 1: Relative path
+            -- 2: Absolute path
+            -- 3: Absolute path, with tilde as the home directory
+            -- 4: Filename and parent dir, with tilde as the home directory
+          },
+        },
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {},
       },
       extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble" },
     }
