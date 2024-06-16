@@ -1,4 +1,4 @@
-local M = {
+return {
   "nvim-lualine/lualine.nvim",
   opts = function()
     local kanagawa_paper = require("lualine.themes.kanagawa-paper")
@@ -65,6 +65,7 @@ local M = {
           },
           {
             "filename",
+            padding = 0,
             file_status = true, -- Displays file status (readonly status, modified status)
             shorting_target = 40, -- Shortens path to leave 40 spaces in the window
             path = 1, -- 0: Just the filename
@@ -72,7 +73,6 @@ local M = {
             -- 2: Absolute path
             -- 3: Absolute path, with tilde as the home directory
             -- 4: Filename and parent dir, with tilde as the home directory
-            padding = 0,
           },
         },
         lualine_x = {
@@ -173,5 +173,3 @@ local M = {
     }
   end,
 }
-
-return M

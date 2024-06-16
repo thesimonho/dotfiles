@@ -50,7 +50,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   group = root_group,
   callback = function()
     local patterns = { ".git", "package.json", "setup.py" }
-    local root = require("config/utils").find_root(0, patterns)
+    local root = require("config.utils").find_root(0, patterns)
     if root == nil then
       return
     end

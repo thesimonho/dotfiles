@@ -1,4 +1,4 @@
-local utils = require("config/utils")
+local utils = require("config.utils")
 
 return {
   "folke/noice.nvim",
