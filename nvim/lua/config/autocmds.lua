@@ -59,3 +59,22 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
   desc = "Find root and change current directory",
 })
+
+-- NC line numbers
+local augroup = vim.api.nvim_create_augroup("ToggleLineNumbers", { clear = true })
+
+vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  group = augroup,
+  callback = function()
+    vim.wo.relativenumber = true
+    vim.wo.cursorline = true
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
+  group = augroup,
+  callback = function()
+    vim.wo.relativenumber = false
+    vim.wo.cursorline = false
+  end,
+})
