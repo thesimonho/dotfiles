@@ -162,7 +162,7 @@ function M.config()
 
   -- Projects
   local function get_projects(max_shown)
-    local alphabet = "abcdefghijknopqrstuvwxyz"
+    local alphabet = "abcdefghinopqrstuvwxyz"
 
     local tbl = {
       { type = "text", val = "Recent Projects", opts = { hl = "SpecialComment", position = "center" } },
