@@ -66,7 +66,11 @@ local nc_group = vim.api.nvim_create_augroup("ToggleLineNC", { clear = true })
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
   group = nc_group,
   callback = function()
-    vim.wo.cursorline = true
+    local bufnr = vim.api.nvim_get_current_buf()
+    local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+    if filetype ~= "alpha" then
+      vim.wo.cursorline = true
+    end
   end,
 })
 
