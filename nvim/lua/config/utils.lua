@@ -165,8 +165,15 @@ M.is_darwin = function()
 end
 
 M.is_windows = function()
-  -- return vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
   return vim.loop.os_uname().sysname == "Windows_NT"
+end
+
+M.get_path_sep = function()
+  if M.is_windows() then
+    return "\\"
+  else
+    return "/"
+  end
 end
 
 M.border_chars_none = { "", "", "", "", "", "", "", "" }

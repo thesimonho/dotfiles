@@ -2,18 +2,11 @@ local utils = require("config.utils")
 local hooks = require("venv-selector.hooks")
 
 local function shorten_path(filename)
-  local path_sep
-  if utils.is_windows() then
-    path_sep = "\\"
-  else
-    path_sep = "/"
-  end
-
   local parts = {}
-  for part in string.gmatch(filename, "[^" .. path_sep .. "]+") do
+  for part in string.gmatch(filename, "[^" .. utils.get_path_sep() .. "]+") do
     table.insert(parts, part)
   end
-  local last_parts = table.concat(parts, path_sep, #parts - 2, #parts)
+  local last_parts = table.concat(parts, utils.get_path_sep(), #parts - 2, #parts)
   return last_parts
 end
 
@@ -52,7 +45,7 @@ return {
           show_telescope_search_type = true,
           notify_user_on_venv_activation = false,
           on_venv_activate_callback = nil,
-          on_telescope_result_callback = shorten_path, -- FIX: not working
+          on_telescope_result_callback = shorten_path,
         },
       },
     },
