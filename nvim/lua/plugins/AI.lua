@@ -1,5 +1,7 @@
 M = {
   "Exafunction/codeium.vim", -- this is the .vim version of the plugin
+  enabled = true,
+  tag = "1.8.37",
   event = "InsertEnter",
   cmd = "Codeium",
   build = ":Codeium Auth",
