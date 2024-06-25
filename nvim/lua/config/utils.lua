@@ -176,6 +176,14 @@ M.get_path_sep = function()
   end
 end
 
+M.create_tempfile = function(filename)
+  if M.is_windows() then
+    return os.getenv("TEMP") .. "\\" .. filename
+  else
+    return "/tmp/" .. filename
+  end
+end
+
 M.border_chars_none = { "", "", "", "", "", "", "", "" }
 M.border_chars_empty = { " ", " ", " ", " ", " ", " ", " ", " " }
 M.border_chars_inner_thick = { " ", "▄", " ", "▌", " ", "▀", " ", "▐" }
