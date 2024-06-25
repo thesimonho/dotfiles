@@ -1,4 +1,12 @@
-return {
+local utils = require("config.utils")
+local shell
+if utils.is_windows() then
+  shell = "nu"
+else
+  shell = "zsh"
+end
+
+M = {
   {
     "folke/which-key.nvim",
     opts = {
@@ -23,7 +31,7 @@ return {
       autochdir = true,
       auto_scroll = true,
       direction = "vertical",
-      shell = "nu",
+      shell = shell,
       start_in_insert = true,
       shade_terminals = false,
       size = function(term)
@@ -36,3 +44,5 @@ return {
     },
   },
 }
+
+return M
