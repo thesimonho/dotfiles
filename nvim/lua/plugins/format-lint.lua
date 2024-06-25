@@ -14,6 +14,8 @@ M = {
         "ruff",
 
         -- formatters
+        "jupytext",
+        "prettier",
         "prettierd",
         "stylua",
         "goimports",
@@ -26,6 +28,30 @@ M = {
   { -- formatters
     "stevearc/conform.nvim",
     opts = {
+      formatters = {
+        injected = {
+          options = {
+            ignore_errors = false,
+            lang_to_ext = {
+              bash = "sh",
+              javascript = "js",
+              julia = "jl",
+              latex = "tex",
+              markdown = "md",
+              python = "py",
+              r = "r",
+              typescript = "ts",
+            },
+          },
+        },
+        prettier = {
+          options = {
+            ext_parsers = {
+              qmd = "markdown",
+            },
+          },
+        },
+      },
       formatters_by_ft = {
         css = { { "prettierd", "prettier" } },
         html = { { "prettierd", "prettier" } },
@@ -36,6 +62,7 @@ M = {
         lua = { "stylua" },
         markdown = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc" },
         python = { "ruff_fix", "ruff_format" },
+        quarto = { "prettier" },
         terraform = { "terraform_fmt" },
         typescript = { { "prettierd", "prettier" } },
         vue = { { "prettierd", "prettier" } },
@@ -51,6 +78,7 @@ M = {
         javascript = { "eslint_d" },
         markdown = { "markdownlint" },
         python = { "ruff" },
+        quarto = { "markdownlint" },
         typescript = { "eslint_d" },
         vue = { "eslint_d" },
       },
