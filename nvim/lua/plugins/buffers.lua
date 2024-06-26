@@ -32,6 +32,7 @@ return {
         end,
         mode = "buffers",
         numbers = "none",
+        themable = true,
         indicator = {
           style = "icon",
           icon = "▎", -- this should be omitted if indicator style is not 'icon'
