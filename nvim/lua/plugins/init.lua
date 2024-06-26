@@ -3,14 +3,6 @@ return {
     "LazyVim/LazyVim",
     opts = {
       colorscheme = "kanagawa-paper",
-      icons = {
-        ft = {
-          quarto = "📓",
-        },
-        kinds = {
-          otter = "🦦 ",
-        },
-      },
     },
   },
   -- submodules

@@ -19,8 +19,6 @@ return {
 
       opts.experimental.ghost_text = false
 
-      opts.sources = vim.list_extend({ { name = "otter" } }, opts.sources)
-
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then

@@ -1,3 +1,8 @@
+local enabled = true
+if not enabled then
+  return {}
+end
+
 local utils = require("config.utils")
 
 local function StartREPL(repl)
@@ -31,6 +36,36 @@ local insert_code_chunk = function(lang)
 end
 
 M = {
+  {
+    "lukas-reineke/headlines.nvim",
+    opts = function(_, opts)
+      opts.quarto = {
+        query = vim.treesitter.query.parse(
+          "markdown",
+          [[
+          (thematic_break) @dash
+
+          (fenced_code_block) @codeblock
+
+          (block_quote_marker) @quote
+          (block_quote (paragraph (inline (block_continuation) @quote)))
+          ]]
+        ),
+        treesitter_language = "markdown",
+        codeblock_highlight = "CodeBlock",
+        headline_highlights = { "Headline1", "Headline2", "Headline3" },
+        fat_headlines = true,
+        fat_headline_upper_string = "▄",
+        fat_headline_lower_string = "▀",
+      }
+    end,
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      table.insert(opts.sources, { name = "otter", group_index = 0 })
+    end,
+  },
   {
     "quarto-dev/quarto-nvim",
     dependencies = {
