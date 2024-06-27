@@ -25,26 +25,6 @@ local c = {
 		{ family = "FiraCode Nerd Font", weight = "Regular" },
 		"JetBrains Mono",
 	}),
-	font_rules = {
-		{
-			italic = true,
-			intensity = "Bold",
-			font = wezterm.font({
-				family = "VictorMono Nerd Font",
-				weight = "Bold",
-				style = "Italic",
-			}),
-		},
-		{
-			italic = true,
-			intensity = "Normal",
-			font = wezterm.font({
-				family = "VictorMono Nerd Font",
-				weight = "DemiBold",
-				style = "Italic",
-			}),
-		},
-	},
 	front_end = "OpenGL",
 	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" },
 	hide_tab_bar_if_only_one_tab = true,
