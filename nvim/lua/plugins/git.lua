@@ -9,6 +9,12 @@ return {
     },
   },
   {
+    "pwntester/octo.nvim",
+    opts = {
+      ssh_aliases = { ["personal-github.com"] = "github.com" },
+    },
+  },
+  {
     "sindrets/diffview.nvim",
     event = "LazyFile",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },

@@ -81,7 +81,7 @@ local M = {
         },
       },
       window = {
-        position = "left",
+        position = "float",
         width = 35,
         mappings = {
           ["<tab>"] = { "toggle_node" },
