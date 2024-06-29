@@ -31,7 +31,9 @@ return {
           require("mini.bufremove").delete(n, false)
         end,
         mode = "buffers",
-        numbers = "none",
+        numbers = function(opts)
+          return string.format("%s", opts.ordinal)
+        end,
         themable = true,
         indicator = {
           style = "icon",
