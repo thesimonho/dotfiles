@@ -232,7 +232,7 @@ function M.config()
   -- Layout
   theme.config.layout = {
     { type = "padding", val = 2 },
-    get_header({ headers.cool, headers.panda }),
+    get_header({ headers.cool, headers.vim, headers.panda, headers.snorlax, headers.undertale }),
     { type = "padding", val = 1 },
     get_info(),
     { type = "padding", val = 1 },
