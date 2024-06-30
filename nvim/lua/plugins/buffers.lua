@@ -13,13 +13,15 @@ return {
       },
     },
   },
+  { -- restore buffers on session restore
+    "folke/persistence.nvim",
+    pre_save = function()
+      vim.api.nvim_exec_autocmds("User", { pattern = "SessionSavePre" })
+    end,
+  },
   {
     "romgrk/barbar.nvim",
     event = "LazyFile",
-    dependencies = {
-      "lewis6991/gitsigns.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
     keys = {
       { "<leader><space>", "<Cmd>BufferPick<CR>", desc = "Pick buffer" },
       { "<leader>bb", "<Cmd>lua require('telescope.builtin').buffers()<CR>", desc = "Buffer list" },
