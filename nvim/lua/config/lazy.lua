@@ -41,6 +41,15 @@ require("lazy").setup({
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
   checker = { enabled = true, frequency = 9000 }, -- automatically check for plugin updates
+  change_detection = {
+    -- automatically check for config file changes and reload the ui
+    enabled = false,
+  },
+  dev = {
+    path = "D:\\Projects",
+    patterns = { "kanagawa-paper.nvim" }, -- For example {"folke"}
+    fallback = true, -- Fallback to git when local plugin doesn't exist
+  },
   performance = {
     rtp = {
       -- disable some rtp plugins
