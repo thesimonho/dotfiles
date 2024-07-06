@@ -61,10 +61,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- NC line numbers
-local nc_group = vim.api.nvim_create_augroup("ToggleLineNC", { clear = true })
+local alpha_group = vim.api.nvim_create_augroup("Dashboard", { clear = true })
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-  group = nc_group,
+  group = alpha_group,
   callback = function()
     local bufnr = vim.api.nvim_get_current_buf()
     local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
@@ -75,7 +75,7 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
 })
 
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-  group = nc_group,
+  group = alpha_group,
   callback = function()
     vim.wo.cursorline = false
   end,
