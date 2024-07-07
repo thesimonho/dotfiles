@@ -1,9 +1,10 @@
-local utils = require("config.utils")
-local shell
-if utils.is_windows() then
-  shell = "nu"
-else
-  shell = "zsh"
+local preferred_shells = { "nu", "zsh", "bash", "cmd" }
+local function set_shell()
+  for _, shell in ipairs(preferred_shells) do
+    if vim.fn.executable(shell) == 1 then
+      return shell
+    end
+  end
 end
 
 M = {
@@ -31,7 +32,7 @@ M = {
       autochdir = true,
       auto_scroll = true,
       direction = "vertical",
-      shell = shell,
+      shell = set_shell(),
       start_in_insert = true,
       shade_terminals = false,
       size = function(term)

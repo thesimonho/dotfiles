@@ -45,6 +45,7 @@ return {
   {
     "dnlhc/glance.nvim",
     event = "LazyFile",
+    cmd = { "Glance" },
     opts = {
       preview_win_opts = {
         cursorline = true,
