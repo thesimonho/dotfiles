@@ -184,6 +184,18 @@ M.create_tempfile = function(filename)
   end
 end
 
+M.color_num_to_hex = function(num)
+  return ("#%06x"):format(num)
+end
+
+M.nvim_get_hl_hex = function(ns_id, opts)
+  local hl = vim.api.nvim_get_hl(ns_id, opts)
+  for _, key in ipairs({ "fg", "bg", "sp" }) do
+    hl[key] = hl[key] and M.color_num_to_hex(hl[key])
+  end
+  return hl
+end
+
 M.border_chars_none = { "", "", "", "", "", "", "", "" }
 M.border_chars_empty = { " ", " ", " ", " ", " ", " ", " ", " " }
 M.border_chars_inner_thick = { " ", "▄", " ", "▌", " ", "▀", " ", "▐" }
