@@ -78,10 +78,12 @@ return {
         open = { enable = false },
         close = { enable = false },
         resize = {
-          timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+          enable = true,
+          timing = animate.gen_timing.linear({ duration = 10, unit = "total" }),
         },
         scroll = {
-          timing = animate.gen_timing.linear({ duration = 150, unit = "total" }),
+          enable = true,
+          timing = animate.gen_timing.linear({ duration = 50, unit = "total" }),
           subscroll = animate.gen_subscroll.equal({
             predicate = function(total_scroll)
               if mouse_scrolled then
