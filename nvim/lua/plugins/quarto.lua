@@ -77,7 +77,26 @@ M = {
     ft = "quarto",
     cmd = { "QuartoPreview" },
     keys = {
-      { "<localleader>p", "<cmd>lua require('quarto').quartoPreview()<cr>", ft = "quarto", desc = "Preview (Quarto)" },
+      {
+        "<localleader>p",
+        "<cmd>lua require('quarto').quartoPreview()<cr>",
+        ft = "quarto",
+        desc = "Preview (Quarto)",
+      },
+      {
+        "<localleader>o",
+        "<cmd>lua require('otter').activate()<cr>",
+        ft = { "quarto" },
+        desc = "Activate otter",
+      },
+      {
+        "<localleader>i",
+        function()
+          insert_code_chunk("python")
+        end,
+        ft = { "quarto" },
+        desc = "Insert code block",
+      },
     },
     opts = {
       lspFeatures = {
@@ -158,14 +177,6 @@ M = {
         ft = { "python", "quarto" },
         mode = "v",
         desc = "Run selection",
-      },
-      {
-        "<localleader>i",
-        function()
-          insert_code_chunk("python")
-        end,
-        ft = { "python", "quarto" },
-        desc = "Insert code block",
       },
     },
     init = function()
