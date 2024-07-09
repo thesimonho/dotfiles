@@ -23,6 +23,7 @@ M.basic_binds = {
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "manage_pane" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false }) },
 
+	{ key = "p", mods = "CMD", action = act.SendKey({ key = "p", mods = "CTRL" }) },
 	{ key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) },
 	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
 	{ key = "r", mods = "CMD", action = act.SendKey({ key = "r", mods = "CTRL" }) },

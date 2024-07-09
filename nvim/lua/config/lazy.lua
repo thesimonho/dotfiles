@@ -43,7 +43,7 @@ require("lazy").setup({
   checker = { enabled = true, frequency = 9000 }, -- automatically check for plugin updates
   change_detection = {
     -- automatically check for config file changes and reload the ui
-    enabled = true,
+    enabled = false,
     notify = true,
   },
   dev = {

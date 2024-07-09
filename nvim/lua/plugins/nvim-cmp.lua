@@ -20,6 +20,12 @@ return {
       opts.experimental.ghost_text = false
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
+        ["<C-n>"] = cmp.mapping({
+          i = cmp.config.disable,
+        }),
+        ["<C-p>"] = cmp.mapping({
+          i = cmp.config.disable,
+        }),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })

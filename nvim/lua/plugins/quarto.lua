@@ -148,6 +148,13 @@ M = {
         desc = "Run cell",
       },
       {
+        "<localleader>xx",
+        "<cmd>lua require('quarto.runner').run_range()<cr>",
+        ft = { "python", "quarto" },
+        mode = "v",
+        desc = "Run selection",
+      },
+      {
         "<localleader>xf",
         "<cmd>lua require('quarto.runner').run_all()<cr>",
         ft = { "python", "quarto" },
@@ -170,13 +177,6 @@ M = {
         "<cmd>lua require('quarto.runner').run_line()<cr>",
         ft = { "python", "quarto" },
         desc = "Run line",
-      },
-      {
-        "<localleader>xx",
-        "<cmd>lua require('quarto.runner').run_range()<cr>",
-        ft = { "python", "quarto" },
-        mode = "v",
-        desc = "Run selection",
       },
     },
     init = function()
