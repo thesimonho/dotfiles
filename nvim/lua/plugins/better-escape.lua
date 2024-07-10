@@ -3,43 +3,29 @@ return {
   event = "LazyFile",
   opts = {
     timeout = vim.o.timeoutlen,
+    default_mappings = false,
     mappings = {
       i = {
-        j = {
-          j = false,
-        },
         k = {
           j = "<Esc>",
         },
       },
       v = {
-        j = {
-          j = false,
-        },
         k = {
           j = "<Esc>",
         },
       },
       c = {
-        j = {
-          j = false,
-        },
         k = {
           j = "<Esc>",
         },
       },
       s = {
-        j = {
-          j = false,
-        },
         k = {
           j = "<Esc>",
         },
       },
       t = {
-        j = {
-          j = false,
-        },
         k = {
           j = "<Esc>",
         },
