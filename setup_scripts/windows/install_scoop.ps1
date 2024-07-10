@@ -14,6 +14,7 @@ scoop install main/ripgrep
 scoop install main/ffmpeg
 scoop install main/mingw-winlibs
 scoop install main/pandoc
+scoop install main/go
 scoop install extras/lazygit
 scoop install fzf
 scoop install sed
