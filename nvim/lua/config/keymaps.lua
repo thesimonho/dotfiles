@@ -17,6 +17,13 @@ vim.api.nvim_del_keymap("n", "<leader>gG")
 vim.api.nvim_del_keymap("n", "<leader>gf")
 
 -- General
+vim.keymap.set(
+  "n",
+  "<leader>qq",
+  "<cmd>lua require('confirm-quit').confirm_quit_all({bang = false})<cr>",
+  { desc = "Quit all" }
+)
+vim.keymap.set("n", "<leader>qQ", "<cmd>qa<cr>", { desc = "Quit All" })
 vim.keymap.set("v", "<C-c>", '"+y') -- Copy
 vim.keymap.set("i", "<C-v>", "<C-r>+") -- Paste
 vim.keymap.set("i", "<C-p>", "<C-r>0") -- Paste the last yank
