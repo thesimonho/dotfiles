@@ -2,8 +2,11 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
-      defaults = {
-        ["<localleader>n"] = { name = "  npm" },
+      spec = {
+        {
+          mode = { "n", "v" },
+          { "<localleader>n", group = "  npm" },
+        },
       },
     },
   },

@@ -1,7 +1,7 @@
 return {
   "folke/which-key.nvim",
   opts = {
-    defaults = {
+    spec = {
       mode = { "n", "v" },
       ["<leader><tab>"] = { name = "  tabs" },
       ["<leader>b"] = { name = "  buffer" },
@@ -24,5 +24,6 @@ return {
     icons = {
       group = "",
     },
+    preset = "classic",
   },
 }

@@ -2,7 +2,7 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
-      defaults = {
+      spec = {
         ["<leader>r"] = { name = "  refactor" },
         ["<leader>rp"] = { name = " 󱞆 print" },
       },

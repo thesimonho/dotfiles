@@ -11,7 +11,7 @@ M = {
   {
     "folke/which-key.nvim",
     opts = {
-      defaults = {
+      spec = {
         ["<leader>`"] = { name = "  terminal" },
       },
     },

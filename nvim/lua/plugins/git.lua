@@ -2,7 +2,7 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
-      defaults = {
+      spec = {
         ["<leader>gh"] = { name = "Hunks" },
         ["<leader>gm"] = { name = "Merge conflict" },
       },
