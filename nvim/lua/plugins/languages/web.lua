@@ -1,19 +1,12 @@
 return {
   {
-    "folke/which-key.nvim",
-    opts = {
-      spec = {
-        {
-          mode = { "n", "v" },
-          { "<localleader>n", group = "  npm" },
-        },
-      },
-    },
-  },
-  {
     "vuki656/package-info.nvim",
     dependencies = { "MunifTanjim/nui.nvim" },
     ft = { "json" },
+    init = function()
+      local wk = require("which-key")
+      wk.add({ "<localleader>n", group = "  npm" })
+    end,
     keys = {
       { "<localleader>nh", ":lua require('package-info').toggle()<CR>", ft = "json", desc = "Hide dependencies" },
       { "<localleader>nd", ":lua require('package-info').delete()<CR>", ft = "json", desc = "Delete dependency" },

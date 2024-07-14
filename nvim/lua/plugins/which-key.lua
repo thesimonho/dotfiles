@@ -1,29 +1,26 @@
+local utils = require("config.utils")
+
 return {
   "folke/which-key.nvim",
   opts = {
-    spec = {
-      mode = { "n", "v" },
-      ["<leader><tab>"] = { name = "  tabs" },
-      ["<leader>b"] = { name = "  buffer" },
-      ["<leader>c"] = { name = "  code" },
-      ["<leader>f"] = { name = "  file" },
-      ["<leader>g"] = { name = " 󰊢 git" },
-      ["<leader>q"] = { name = " 󰩈 quit" },
-      ["<leader>s"] = { name = "  search" },
-      ["<leader>t"] = { name = "  tests" },
-      ["<leader>u"] = { name = " 󰨙 ui" },
-      ["<leader>w"] = { name = "  windows" },
-      ["<leader>x"] = { name = "  diagnostics" },
-      ["<leader>z"] = { name = "  tools" },
-    },
-    key_labels = {
-      ["<space>"] = "SPC",
-      ["<cr>"] = "RET",
-      ["<tab>"] = "TAB",
-    },
+    show_help = false,
     icons = {
       group = "",
     },
-    preset = "classic",
+    preset = "helix",
+    win = {
+      title = false,
+      border = utils.border_chars_outer_thin,
+      padding = { 0, 0 },
+    },
+    layout = {
+      align = "left",
+    },
+    spec = {
+      { "<leader>?", name = "Buffer keymaps" },
+      { "<leader>q", name = "quit" },
+      { "<leader>x", name = "diagnostics" },
+      { "<leader>f", name = "find" },
+    },
   },
 }

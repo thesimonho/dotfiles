@@ -220,8 +220,8 @@ M = {
       local function set_terminal()
         vim.fn.call("slime#config", {})
       end
-      vim.keymap.set("n", "<localleader>tm", mark_terminal, { desc = "mark terminal" })
-      vim.keymap.set("n", "<localleader>ts", set_terminal, { desc = "set terminal" })
+      vim.keymap.set("n", "<localleader>tm", mark_terminal, { ft = { "python", "quarto" }, desc = "mark terminal" })
+      vim.keymap.set("n", "<localleader>ts", set_terminal, { ft = { "python", "quarto" }, desc = "set terminal" })
     end,
   },
 }

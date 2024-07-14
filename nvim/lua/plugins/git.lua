@@ -1,14 +1,5 @@
 return {
   {
-    "folke/which-key.nvim",
-    opts = {
-      spec = {
-        ["<leader>gh"] = { name = "Hunks" },
-        ["<leader>gm"] = { name = "Merge conflict" },
-      },
-    },
-  },
-  {
     "pwntester/octo.nvim",
     opts = {
       ssh_aliases = { ["personal-github.com"] = "github.com" },
@@ -18,6 +9,12 @@ return {
     "sindrets/diffview.nvim",
     event = "LazyFile",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    init = function(_)
+      local wk = require("which-key")
+      wk.add({
+        { "<leader>gd", name = "Diffview", icon = "" },
+      })
+    end,
     keys = {
       { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview" },
       { "<leader>gf", "<cmd>DiffviewFileHistory %<cr>", desc = "File History" },
