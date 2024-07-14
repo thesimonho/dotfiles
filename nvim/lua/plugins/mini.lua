@@ -42,23 +42,25 @@ return {
       opts.custom_textobjects = vim.tbl_extend("force", opts.custom_textobjects, new_textobjects)
 
       -- Register new textobjects with which-key
-      local i = {}
-      for k, v in pairs(mappings) do
-        i[k] = v.desc
+      local ret = { mode = { "o", "x" } }
+      for prefix, name in pairs({
+        i = "inside",
+        a = "around",
+        il = "last",
+        ["in"] = "next",
+        al = "last",
+        an = "next",
+      }) do
+        ret[#ret + 1] = { prefix, group = name }
+        for key, obj in pairs(mappings) do
+          local desc = obj.desc
+          if prefix:sub(1, 1) == "i" then
+            desc = desc:gsub(" with ws", "")
+          end
+          ret[#ret + 1] = { prefix .. key, desc = obj.desc }
+        end
       end
-
-      local a = vim.deepcopy(i)
-      local root = vim.deepcopy(i)
-      for key, name in pairs({ n = "Next", l = "Last" }) do
-        i[key] = vim.tbl_extend("force", { name = "Inside " .. name .. " textobject" }, root)
-        a[key] = vim.tbl_extend("force", { name = "Around " .. name .. " textobject" }, root)
-      end
-
-      require("which-key").register({
-        mode = { "o", "x" },
-        i = i,
-        a = a,
-      })
+      require("which-key").add(ret, { notify = false })
 
       return opts
     end,
