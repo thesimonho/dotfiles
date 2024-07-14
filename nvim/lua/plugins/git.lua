@@ -1,6 +1,8 @@
 return {
   {
     "pwntester/octo.nvim",
+    event = "LazyFile",
+    cmd = "Octo",
     opts = {
       ssh_aliases = { ["personal-github.com"] = "github.com" },
     },
