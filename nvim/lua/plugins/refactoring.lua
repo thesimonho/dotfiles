@@ -1,51 +1,47 @@
 return {
   {
-    "folke/which-key.nvim",
-    opts = {
-      spec = {
-        ["<leader>r"] = { name = "  refactor" },
-        ["<leader>rp"] = { name = " 󱞆 print" },
-      },
-    },
-  },
-  {
     "ThePrimeagen/refactoring.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
     },
     event = "LazyFile",
+    init = function(_)
+      local wk = require("which-key")
+      wk.add({
+        { "<leader>r", group = "refactor", icon = "" },
+        { "<leader>rp", group = "print", icon = "󱞆" },
+      })
+    end,
     keys = {
       { "<leader>rF", ":Refactor extract ", mode = "v", desc = "Extract to function" },
-      -- { "<leader>rf", ":Refactor extract_to_file ", mode = "v", desc = "Extract function to file" },
       { "<leader>rf", ":Refactor inline_func", mode = "n", desc = "Inline function" },
       { "<leader>rV", ":Refactor extract_var ", mode = "v", desc = "Extract to variable" },
       { "<leader>rv", ":Refactor inline_var", mode = { "n", "v" }, desc = "Inline variable" },
       { "<leader>rb", ":Refactor extract_block", mode = "n", desc = "Extract to block" },
-      -- { "<leader>rbf", ":Refactor extract_block_to_file", mode = "n", desc = "Extract block to file" },
       {
         "<leader>rpf",
         function()
-          require("refactoring").debug.printf({ below = true })
+          require("refactoring").debug.printf({ below = true, show_success_message = false })
         end,
         mode = "n",
-        desc = "Print function",
+        desc = "function",
       },
       {
         "<leader>rpv",
         function()
-          require("refactoring").debug.print_var({ below = true })
+          require("refactoring").debug.print_var({ below = true, show_success_message = false })
         end,
         mode = { "n", "v" },
-        desc = "Print variable",
+        desc = "variable",
       },
       {
         "<leader>rpc",
         function()
-          require("refactoring").debug.cleanup({})
+          require("refactoring").debug.cleanup({ show_success_message = false })
         end,
         mode = "n",
-        desc = "Print cleanup",
+        desc = "cleanup",
       },
     },
     opts = {
