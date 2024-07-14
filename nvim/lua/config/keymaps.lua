@@ -3,6 +3,7 @@
 local wk = require("which-key")
 
 -- Delete some default keymaps
+vim.api.nvim_del_keymap("n", "<leader>K")
 vim.api.nvim_del_keymap("n", "<leader>L")
 vim.api.nvim_del_keymap("n", "<leader>-")
 vim.api.nvim_del_keymap("n", "<leader>|")
@@ -10,7 +11,6 @@ vim.api.nvim_del_keymap("n", "<leader>w|")
 vim.api.nvim_del_keymap("n", "<leader>ww")
 vim.api.nvim_del_keymap("n", "<leader>xl")
 vim.api.nvim_del_keymap("n", "<leader>xq")
-vim.api.nvim_del_keymap("n", "<leader>`")
 vim.api.nvim_del_keymap("n", "<leader>l")
 vim.api.nvim_del_keymap("n", "<leader>ft")
 vim.api.nvim_del_keymap("n", "<leader>fT")

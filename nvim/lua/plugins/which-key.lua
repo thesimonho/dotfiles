@@ -4,14 +4,15 @@ return {
   "folke/which-key.nvim",
   opts = {
     show_help = false,
+    show_keys = false,
     icons = {
       group = "",
     },
     preset = "helix",
     win = {
-      title = false,
+      title = true,
       border = utils.border_chars_outer_thin,
-      padding = { 0, 0 },
+      padding = { 1, 0 },
     },
     layout = {
       align = "left",
