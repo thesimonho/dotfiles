@@ -87,9 +87,13 @@ M = {
 }
 
 local ruff = require("lint").linters.ruff
-table.insert(ruff.args, 1, "--select=E,F,N,D,I,UP,ANN,S,B,A,PT,Q,SIM,PTH,PD,NPY,PERF,RUF")
-table.insert(ruff.args, 1, "--ignore=ANN101,D100,D101,D102,D103,D104,D105,D106,D107,D401,D417,E722,E999,F821,F401,S101")
 table.insert(ruff.args, 1, "--line-length=88")
+table.insert(ruff.args, 1, "--select=E,F,N,I,UP,ANN,S,B,A,PT,Q,SIM,PTH,PD,NPY,PERF,RUF")
+table.insert(
+  ruff.args,
+  1,
+  "--ignore=ANN101,D100,D101,D102,D103,D104,D105,D106,D107,D401,D407,D417,E722,E999,F821,F401,S101"
+)
 
 local markdownlint = require("lint").linters.markdownlint
 markdownlint.args = {
