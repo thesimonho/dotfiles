@@ -29,10 +29,10 @@ return {
     "linux-cultist/venv-selector.nvim",
     branch = "regexp",
     cmd = { "VenvSelect" },
-    ft = { "python", "quarto" },
+    ft = { "python" },
     keys = {
       { "<leader>cv", vim.NIL },
-      { "<localleader>v", "<cmd>VenvSelect<cr>", ft = { "python", "quarto" }, desc = "virtualenv" },
+      { "<localleader>v", "<cmd>VenvSelect<cr>", ft = { "python" }, desc = "virtualenv" },
     },
     opts = {
       settings = {

@@ -14,8 +14,6 @@ M = {
         "ruff",
 
         -- formatters
-        "jupytext",
-        "prettier",
         "prettierd",
         "stylua",
         "goimports",
@@ -62,7 +60,6 @@ M = {
         lua = { "stylua" },
         markdown = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc" },
         python = { "ruff_fix", "ruff_format" },
-        quarto = { "prettier" },
         terraform = { "terraform_fmt" },
         typescript = { { "prettierd", "prettier" } },
         vue = { { "prettierd", "prettier" } },
@@ -78,7 +75,6 @@ M = {
         javascript = { "eslint_d" },
         markdown = { "markdownlint" },
         python = { "ruff" },
-        quarto = { "markdownlint" },
         typescript = { "eslint_d" },
         vue = { "eslint_d" },
       },

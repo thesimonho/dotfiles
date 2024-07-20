@@ -9,7 +9,7 @@ return {
   },
   {
     "lukas-reineke/headlines.nvim",
-    ft = { "markdown", "quarto" },
+    ft = { "markdown" },
     opts = {
       markdown = {
         headline_highlights = { "Headline1", "Headline2", "Headline3" },
