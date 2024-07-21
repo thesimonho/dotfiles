@@ -188,12 +188,6 @@ return {
               actions.select_entry,
               { desc = "Open the diff for the selected entry" },
             },
-            {
-              "n",
-              "<space>",
-              actions.toggle_stage_entry,
-              { desc = "Stage / unstage the selected entry" },
-            },
             { "n", "za", actions.toggle_fold, { desc = "Toggle fold" } },
             { "n", "zR", actions.open_all_folds, { desc = "Expand all folds" } },
             { "n", "zM", actions.close_all_folds, { desc = "Collapse all folds" } },
