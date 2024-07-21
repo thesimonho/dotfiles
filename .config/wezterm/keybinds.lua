@@ -45,8 +45,8 @@ M.key_tables = {
 		{ key = "l", action = act.ActivatePaneDirection("Right") },
 		{ key = "k", action = act.ActivatePaneDirection("Up") },
 		{ key = "j", action = act.ActivatePaneDirection("Down") },
-		{ key = "\\", action = act.SplitPane({ direction = "Right" }) },
-		{ key = "-", action = act.SplitPane({ direction = "Down" }) },
+		{ key = "v", action = act.SplitPane({ direction = "Right" }) },
+		{ key = "s", action = act.SplitPane({ direction = "Down" }) },
 	},
 	resize_pane = {
 		{ key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 1 }) },
