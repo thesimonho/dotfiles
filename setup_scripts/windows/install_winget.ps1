@@ -25,7 +25,6 @@ winget install -e --id Parsec.Parsec --accept-source-agreements
 winget install -e --id Microsoft.PowerShell --accept-source-agreements
 winget install -e --id Microsoft.PowerToys --accept-source-agreements
 winget install -i -e --id Python.Python.3.11 --accept-source-agreements
-winget install -e --id Posit.Quarto --accept-source-agreements
 winget install -e --id SQLite.SQLite --accept-source-agreements
 winget install -e --id Starship.Starship --accept-source-agreements
 winget install -e --id Valve.Steam --accept-source-agreements
