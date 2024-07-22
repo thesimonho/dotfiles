@@ -27,6 +27,9 @@ return {
           winblend = 0,
         },
       },
+      confirm = {
+        position = "50%",
+      },
     },
   },
 }
