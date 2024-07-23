@@ -87,6 +87,13 @@ local M = {
           ["<tab>"] = { "toggle_node" },
           ["f"] = "find_files_dir",
           ["g"] = "grep_dir",
+          ["v"] = "open_vsplit",
+          ["s"] = {
+            function()
+              require("flash").jump()
+            end,
+            config = { title = "flash" },
+          },
         },
       },
       filesystem = {
