@@ -25,7 +25,7 @@ vim.keymap.set(
 )
 vim.keymap.set("n", "<leader>qQ", "<cmd>qa<cr>", { desc = "Quit" })
 vim.keymap.set("v", "<C-c>", '"+y') -- Copy
-vim.keymap.set("i", "<C-v>", "<C-r>+") -- Paste
+vim.keymap.set("i", "<C-v>", '<esc>"+pi') -- Paste
 vim.keymap.set("i", "<C-p>", "<C-r>0") -- Paste the last yank
 vim.keymap.set("n", "<C-p>", '"0p') -- Paste the last yank
 vim.keymap.set("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
