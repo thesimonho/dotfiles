@@ -8,14 +8,14 @@ return {
     },
   },
   {
-    "lukas-reineke/headlines.nvim",
-    ft = { "markdown" },
+    "MeanderingProgrammer/markdown.nvim",
     opts = {
-      markdown = {
-        headline_highlights = { "Headline1", "Headline2", "Headline3" },
-        fat_headlines = true,
-        fat_headline_upper_string = "▄",
-        fat_headline_lower_string = "▀",
+      heading = {
+        width = "full",
+      },
+      code = {
+        width = "full",
+        left_pad = 2,
       },
     },
   },
