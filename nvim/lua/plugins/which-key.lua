@@ -5,9 +5,6 @@ return {
   opts = {
     show_help = false,
     show_keys = false,
-    icons = {
-      group = "",
-    },
     preset = "helix",
     win = {
       title = true,
@@ -16,6 +13,15 @@ return {
     },
     layout = {
       align = "left",
+    },
+    icons = {
+      group = "",
+      keys = {
+        C = "ᴄᴛʀʟ ",
+        M = "ᴀʟᴛ ",
+        D = "ᴄᴏᴍᴍᴀɴᴅ ",
+        S = "󰘶 ",
+      },
     },
     spec = {
       { "<leader>?", name = "Buffer keymaps" },
