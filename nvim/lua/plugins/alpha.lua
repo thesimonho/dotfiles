@@ -92,9 +92,9 @@ function M.config()
   -- Links / tools
   local dashboard = require("alpha.themes.dashboard")
   local lazy = dashboard.button("l", "💤 Lazy", "<cmd>Lazy<CR>")
-  lazy.opts.hl_shortcut = "NvimTreeWindowPicker"
+  lazy.opts.hl_shortcut = "WindowPickerStatusLine"
   local mason = dashboard.button("m", "🧱 Mason", "<cmd>Mason<CR>")
-  mason.opts.hl_shortcut = "NvimTreeWindowPicker"
+  mason.opts.hl_shortcut = "WindowPickerStatusLine"
 
   local links = {
     type = "group",
@@ -155,7 +155,7 @@ function M.config()
 
       local shortcut = tostring(i)
       local file_button_el = file_button(fn, shortcut, short_fn, opts.autocd)
-      file_button_el.opts.hl_shortcut = "NvimTreeWindowPicker"
+      file_button_el.opts.hl_shortcut = "WindowPickerStatusLine"
       tbl[i + 1] = file_button_el
     end
 
@@ -219,7 +219,7 @@ function M.config()
         icon .. display_path,
         "<cmd>lua require('telescope.builtin').find_files( { cwd = '" .. project.path:gsub("\\", "/") .. "' }) <cr>"
       )
-      file_button_el.opts.hl_shortcut = "NvimTreeWindowPicker"
+      file_button_el.opts.hl_shortcut = "WindowPickerStatusLine"
 
       -- create hl group for the start of the path
       local fb_hl = {}
