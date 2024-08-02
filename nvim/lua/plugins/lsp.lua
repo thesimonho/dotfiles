@@ -31,7 +31,22 @@ return {
         },
       },
       inlay_hints = {
-        enabled = false,
+        enabled = true,
+        exclude = {},
+      },
+      codelens = {
+        enabled = true,
+      },
+      document_highlight = {
+        enabled = true,
+      },
+      capabilities = {
+        textDocument = {
+          foldingRange = {
+            dynamicRegistration = false,
+            lineFoldingOnly = true,
+          },
+        },
       },
     },
   },

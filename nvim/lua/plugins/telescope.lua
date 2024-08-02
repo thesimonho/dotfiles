@@ -42,6 +42,7 @@ return {
         "node_modules/",
         ".terraform/",
         ".git/",
+        "*.webp",
         "$RECYCLE.BIN",
       },
       preview = {

@@ -14,8 +14,11 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 vim.opt.pumblend = 10
 
-vim.o.foldenable = true
 vim.o.cursorcolumn = false
+vim.o.foldenable = true
+vim.o.foldcolumn = "1"
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
 
 -- GUI options
 if utils.is_darwin() then
