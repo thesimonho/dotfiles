@@ -22,13 +22,6 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    init = function()
-      local keys = require("lazyvim.plugins.lsp.keymaps").get()
-      keys[#keys + 1] = { "gd", "<cmd>Glance definitions<cr>" }
-      keys[#keys + 1] = { "gr", "<cmd>Glance references<cr>" }
-      keys[#keys + 1] = { "gy", "<cmd>Glance type_definitions<cr>" }
-      keys[#keys + 1] = { "gI", "<cmd>Glance implementations<cr>" }
-    end,
     opts = {
       diagnostics = {
         virtual_text = {
@@ -39,23 +32,6 @@ return {
       },
       inlay_hints = {
         enabled = false,
-      },
-    },
-  },
-  {
-    "dnlhc/glance.nvim",
-    event = "LazyFile",
-    cmd = { "Glance" },
-    opts = {
-      preview_win_opts = {
-        cursorline = true,
-        number = false,
-        wrap = true,
-      },
-      border = {
-        enable = true,
-        top_char = "―",
-        bottom_char = "―",
       },
     },
   },
