@@ -9,16 +9,13 @@ M = {
       vim.list_extend(opts.ensure_installed, {
         -- linters
         "eslint_d",
-        "markdownlint",
         "golangci-lint",
         "ruff",
 
         -- formatters
         "prettierd",
         "stylua",
-        "goimports",
         "golines",
-        "gofumpt",
         "yamlfmt",
       })
     end,
@@ -58,7 +55,7 @@ M = {
         javascript = { "prettierd", "prettier", stop_after_first = true },
         json = { "prettierd", "prettier", stop_after_first = true },
         lua = { "stylua" },
-        markdown = { "prettierd", "markdownlint", "markdown-toc" },
+        markdown = { "prettierd", "markdownlint-cli2", "markdown-toc" },
         python = { "ruff_fix", "ruff_format" },
         terraform = { "terraform_fmt" },
         typescript = { "prettierd", "prettier", stop_after_first = true },

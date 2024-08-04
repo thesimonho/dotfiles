@@ -7,7 +7,6 @@ return {
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, {
         "graphql-language-service-cli",
-        "gopls",
         "marksman",
         "lua-language-server",
         "pyright",
