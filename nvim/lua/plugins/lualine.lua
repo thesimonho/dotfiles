@@ -158,15 +158,18 @@ return {
             padding = { left = 1, right = 0 },
           },
           {
-            "filename",
-            file_status = true, -- Displays file status (readonly status, modified status)
+            function()
+              return vim.fn.expand("%:h") .. utils.get_path_sep()
+            end,
+            separator = "",
             padding = 0,
-            shorting_target = 40, -- Shortens path to leave 40 spaces in the window
-            path = 1, -- 0: Just the filename
-            -- 1: Relative path
-            -- 2: Absolute path
-            -- 3: Absolute path, with tilde as the home directory
-            -- 4: Filename and parent dir, with tilde as the home directory
+          },
+          {
+            "filename",
+            file_status = true,
+            path = 0,
+            padding = 0,
+            color = Util.ui.fg("Statement"),
           },
         },
         lualine_x = {},
