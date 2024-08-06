@@ -42,9 +42,8 @@ local c = {
 	use_resize_increments = true,
 	warn_about_missing_glyphs = false,
 	webgpu_power_preference = "HighPerformance",
-	window_background_opacity = 0,
 	win32_system_backdrop = "Mica",
-	macos_window_background_blur = 30,
+	macos_window_background_blur = 60,
 	window_close_confirmation = "NeverPrompt",
 	window_decorations = "TITLE|RESIZE",
 	window_padding = {
@@ -60,6 +59,7 @@ local c = {
 
 if is_windows() then
 	c.font_size = 11
+	c.window_background_opacity = 0
 	c.default_prog = { "nu.exe" }
 	c.launch_menu = {
 		{
@@ -77,6 +77,7 @@ if is_windows() then
 	}
 else
 	c.font_size = 16
+	c.window_background_opacity = 0.8
 	c.default_prog = { "zsh", "-l" }
 	c.launch_menu = {
 		{
