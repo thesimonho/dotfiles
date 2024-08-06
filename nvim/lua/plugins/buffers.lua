@@ -47,7 +47,7 @@ return {
         pinned = { button = "", filename = true },
         alternate = { filetype = { custom_colors = true } },
         diagnostics = {
-          [vim.diagnostic.severity.ERROR] = { enabled = false },
+          [vim.diagnostic.severity.ERROR] = { enabled = true },
           [vim.diagnostic.severity.WARN] = { enabled = false },
           [vim.diagnostic.severity.INFO] = { enabled = false },
           [vim.diagnostic.severity.HINT] = { enabled = false },
