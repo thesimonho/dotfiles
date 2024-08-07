@@ -30,7 +30,7 @@ return {
         },
       },
       inlay_hints = {
-        enabled = true,
+        enabled = false,
         exclude = {},
       },
       codelens = {

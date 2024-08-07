@@ -77,7 +77,7 @@ if is_windows() then
 else
 	c.font_size = 16
 	c.macos_window_background_blur = 60
-	c.window_background_opacity = 0.8
+	c.window_background_opacity = 0.9
 	c.default_prog = { "zsh", "-l" }
 	c.launch_menu = {
 		{
