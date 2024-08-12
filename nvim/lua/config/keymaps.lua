@@ -50,7 +50,8 @@ vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
 vim.keymap.set("n", "<leader>zm", "<cmd>Mason<cr>", { desc = "Mason" })
 vim.keymap.set("n", "<leader>zh", "<cmd>LazyHealth<cr>", { desc = "Health" })
 vim.keymap.set("n", "<leader>zL", "<cmd>LspInfo<cr>", { desc = "LspInfo" })
-vim.keymap.set("n", "<leader>zi", "<cmd>Inspect<cr>", { desc = "Inspect" })
+vim.keymap.set("n", "<leader>zt", "<cmd>Inspect<cr>", { desc = "Treesitter Inspect" })
+vim.keymap.set("n", "<leader>zr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
 
 -- Terminal
 wk.add({ "<leader>`", group = "terminal", icon = "" })
