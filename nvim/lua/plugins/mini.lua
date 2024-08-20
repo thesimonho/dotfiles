@@ -26,6 +26,7 @@ return {
       local mappings = {
         ["/"] = { query = { a = "@comment.outer", i = "@comment.inner" }, desc = "Comment" },
         ["v"] = { query = { a = "@assignment.outer", i = "@assignment.rhs" }, desc = "Variable" },
+        ["A"] = { query = { a = "@attribute.outer", i = "@attribute.inner" }, desc = "Attribute" },
         ["k"] = { pattern = "([%w_]+)%s*[:=]", desc = "Key" },
         ["L"] = { pattern = "%l%l%l-://[A-Za-z0-9_%-/.#%%=?&'@+*]+", desc = "Link" },
       }
