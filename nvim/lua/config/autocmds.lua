@@ -80,3 +80,21 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     vim.wo.cursorline = false
   end,
 })
+
+-- detect GoHtmlTmpl filetype
+local function detect_go_html_tmpl()
+  local file_ext = vim.fn.expand("%:e")
+  if file_ext == "html" and vim.fn.search("{{", "nw") ~= 0 then
+    vim.bo.filetype = "gohtmltmpl"
+  end
+end
+
+-- Create an augroup for file type detection
+local hugo_group = vim.api.nvim_create_augroup("Hugo", { clear = true })
+
+-- Define an autocmd to trigger the function on reading or creating HTML files
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = hugo_group,
+  pattern = "*.html",
+  callback = detect_go_html_tmpl
+})
