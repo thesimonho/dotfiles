@@ -40,7 +40,7 @@ gui:
       - default
   commitLength:
     show: true
-  mouseEvents: true
+  mouseEvents: false
   skipDiscardChangeWarning: false
   skipStashWarning: false
   showFileTree: true # for rendering changes files in a tree format
