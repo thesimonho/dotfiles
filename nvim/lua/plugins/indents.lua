@@ -12,7 +12,7 @@ return {
           vertical_line = "│",
           left_top = "╭",
           left_bottom = "╰",
-          right_arrow = ">",
+          right_arrow = "─",
         },
         style = {
           { fg = "#a292a3" },
@@ -29,7 +29,7 @@ return {
         },
       },
       indent = {
-        enable = true,
+        enable = false,
         use_treesitter = true,
         chars = {
           "│",
