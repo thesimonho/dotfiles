@@ -1,5 +1,35 @@
 return {
   {
+    "uga-rosa/ccc.nvim",
+    event = "LazyFile",
+    opts = function()
+      local ccc = require("ccc")
+      return {
+        default_color = "#408080",
+        auto_close = true,
+        preserve = true,
+        save_on_quit = true,
+        highlight_mode = "virtual",
+        virtual_symbol = "■ ",
+        virtual_pos = "inline-left",
+        lsp = true,
+        highlighter = {
+          auto_enable = true,
+          lsp = true,
+        },
+        recognize = {
+          input = true,
+          output = true,
+        },
+        outputs = {
+          ccc.output.hex,
+          ccc.output.css_rgb,
+        },
+      }
+    end,
+  },
+  {
+    enabled = false,
     "brenoprata10/nvim-highlight-colors",
     event = "LazyFile",
     opts = {

@@ -35,7 +35,7 @@ M = {
       mode = { "i" },
     },
     {
-      "<leader>zc",
+      "<leader>zC",
       function()
         return vim.fn["codeium#Chat"]()
       end,

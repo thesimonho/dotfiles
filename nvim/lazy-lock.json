@@ -5,6 +5,7 @@
   "barbar.nvim": { "branch": "master", "commit": "31b6951c53a59bccfa91bf3984ed1510a940c836" },
   "better-escape.nvim": { "branch": "master", "commit": "bb197e51a91a635deb88630813c3bfc284413697" },
   "catppuccin": { "branch": "main", "commit": "4fd72a9ab64b393c2c22b168508fd244877fec96" },
+  "ccc.nvim": { "branch": "main", "commit": "790aa881d7f47bc7cc07ad03f1216bb7caf9ef67" },
   "cmp-buffer": { "branch": "main", "commit": "3022dbc9166796b644a841a02de8dd1cc1d311fa" },
   "cmp-git": { "branch": "main", "commit": "50d526dff0f6bc441b51fc269d9fdc99a50c76af" },
   "cmp-nvim-lsp": { "branch": "main", "commit": "39e2eda76828d88b773cc27a3f61d2ad782c922d" },

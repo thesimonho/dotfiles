@@ -46,6 +46,7 @@ vim.keymap.set("n", "<leader>zh", "<cmd>LazyHealth<cr>", { desc = "Health" })
 vim.keymap.set("n", "<leader>zL", "<cmd>LspInfo<cr>", { desc = "LspInfo" })
 vim.keymap.set("n", "<leader>zt", "<cmd>Inspect<cr>", { desc = "Treesitter Inspect" })
 vim.keymap.set("n", "<leader>zr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
+vim.keymap.set("n", "<leader>zc", "<cmd>CccPick<cr>", { desc = "Color Picker" })
 
 -- Terminal
 wk.add({ "<leader>`", group = "terminal", icon = "" })
