@@ -9,13 +9,8 @@ return {
         auto_close = true,
         preserve = true,
         save_on_quit = true,
-        highlight_mode = "virtual",
-        virtual_symbol = "■ ",
-        virtual_pos = "inline-left",
-        lsp = true,
         highlighter = {
-          auto_enable = true,
-          lsp = true,
+          auto_enable = false, --- use just for color picker, no highlighting
         },
         recognize = {
           input = true,
@@ -29,7 +24,6 @@ return {
     end,
   },
   {
-    enabled = false,
     "brenoprata10/nvim-highlight-colors",
     event = "LazyFile",
     opts = {
