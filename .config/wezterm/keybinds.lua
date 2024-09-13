@@ -19,7 +19,6 @@ M.basic_binds = {
 	{ key = "F1", action = act.ActivateCommandPalette },
 	{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
-	{ key = "j", mods = "LEADER", action = act.ShowTabNavigator },
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "manage_pane" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false }) },
 
@@ -40,6 +39,8 @@ M.key_tables = {
 	manage_pane = {
 		{ key = "w", action = act.PaneSelect },
 		{ key = "n", action = act.SpawnWindow },
+		{ key = "[", action = act.ActivateWindowRelative(-1) },
+		{ key = "]", action = act.ActivateWindowRelative(1) },
 		{ key = "d", action = act.CloseCurrentPane({ confirm = true }) },
 		{ key = "h", action = act.ActivatePaneDirection("Left") },
 		{ key = "l", action = act.ActivatePaneDirection("Right") },
