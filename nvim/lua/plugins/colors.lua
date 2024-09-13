@@ -67,7 +67,7 @@ return {
       enable_tailwind = true,
 
       -- Exclude filetypes or buftypes from highlighting e.g. 'exclude_buftypes = {'text'}'
-      exclude_filetypes = {},
+      exclude_filetypes = { "lazy" },
       exclude_buftypes = { "text" },
     },
   },
