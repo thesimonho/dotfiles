@@ -11,8 +11,4 @@ return {
       },
     },
   },
-  {
-    "fatih/vim-go", -- for hugo template suntax highlighting
-    ft = { "gohtmltmpl" },
-  },
 }
