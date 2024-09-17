@@ -57,6 +57,7 @@ M = {
         json = { "prettierd", "prettier", stop_after_first = true },
         lua = { "stylua" },
         markdown = { "prettierd", "markdownlint-cli2", "markdown-toc" },
+        ["markdown.mdx"] = { "prettierd", "markdownlint-cli2", "markdown-toc" },
         python = { "ruff_fix", "ruff_format" },
         terraform = { "terraform_fmt" },
         typescript = { "prettierd", "prettier", stop_after_first = true },

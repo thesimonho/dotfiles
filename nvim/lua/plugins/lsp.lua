@@ -8,6 +8,7 @@ return {
       vim.list_extend(opts.ensure_installed, {
         "graphql-language-service-cli",
         "marksman",
+        "mdx-analyzer",
         "lua-language-server",
         "pyright",
         "ruff-lsp",
