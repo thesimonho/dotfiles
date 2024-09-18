@@ -13,7 +13,6 @@ return {
         "pyright",
         "ruff-lsp",
         "terraform-ls",
-        "typescript-language-server",
         "vim-language-server",
         "yaml-language-server",
         "vue-language-server",
