@@ -3,6 +3,7 @@ local utils = require("config.utils")
 return {
   {
     "b0o/incline.nvim",
+    enabled = false,
     dependencies = "echasnovski/mini.icons",
     event = "LazyFile",
     opts = {
