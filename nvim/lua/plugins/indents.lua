@@ -25,6 +25,7 @@ return {
           ["neotest-summary"] = true,
           ["neo-tree-popup"] = true,
           ["ccc-ui"] = true,
+          ["octo-panel"] = true,
           lazyterm = true,
         },
       },

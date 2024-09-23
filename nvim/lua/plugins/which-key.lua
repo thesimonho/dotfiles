@@ -30,6 +30,7 @@ return {
       spelling = { enabled = false },
     },
     spec = {
+      { "<localleader>", name = "Local" },
       { "<leader>?", name = "Buffer keymaps" },
       { "<leader>q", name = "quit" },
       { "<leader>x", name = "diagnostics" },
