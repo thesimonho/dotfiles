@@ -175,6 +175,10 @@ customCommands:
         body: "Are you sure you want to commit?"
     command: 'git commit -m "{{.Form.Type}}{{if .Form.Scope}}({{.Form.Scope}}){{end}}: {{.Form.Summary}}"{{if .Form.Description}} -m "{{.Form.Description}}"{{end}}'
     loadingText: "Creating conventional commit..."
+  - key: 'f'
+    command: 'git fetch --prune'
+    context: 'remoteBranches'
+    stream: true
 keybinding:
   universal:
     prevBlock-alt: '<c-k>' # goto the previous block / panel
