@@ -11,7 +11,7 @@ return {
     modes = {
       symbols = {
         focus = true,
-        win = { position = "right" },
+        win = { position = "right", size = 40 },
       },
     },
   },
