@@ -23,7 +23,7 @@ local M = {
           require("neo-tree.command").execute({
             position = "float",
             toggle = false,
-            reveal = true,
+            reveal_force_cwd = true,
             dir = vim.loop.cwd(),
           })
         end,
