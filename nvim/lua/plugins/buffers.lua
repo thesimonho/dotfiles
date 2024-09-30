@@ -40,12 +40,13 @@ return {
       highlight_inactive_file_icons = false,
       highlight_visible = false,
       separator_at_end = false,
-      maximum_length = 20,
+      maximum_length = 30,
       icons = {
         buffer_index = true,
         buffer_number = false,
         pinned = { button = "", filename = true },
         alternate = { filetype = { custom_colors = true } },
+        separator = { left = "▎", right = "▎" },
         diagnostics = {
           [vim.diagnostic.severity.ERROR] = { enabled = true },
           [vim.diagnostic.severity.WARN] = { enabled = false },
