@@ -35,7 +35,7 @@ local M = {
       popup_border_style = utils.border_chars_outer_thin,
       enable_git_status = true,
       enable_modified_markers = true,
-      enable_diagnostics = false,
+      enable_diagnostics = true,
       sort_case_insensitive = true,
       commands = {
         find_files_dir = function(state)
@@ -64,6 +64,14 @@ local M = {
           folder_empty = "",
           folder_empty_open = "",
         },
+        diagnostics = {
+          symbols = {
+            -- disable certain diagnostic levels
+            hint = "",
+            info = "",
+            warn = "",
+          },
+        },
         git_status = {
           symbols = {
             -- Change type
@@ -72,11 +80,11 @@ local M = {
             modified = "",
             renamed = "󰛂",
             -- Status type
-            untracked = "󰅘",
+            untracked = "",
             ignored = "",
-            unstaged = "󱗝",
+            unstaged = "󰄱",
             staged = "",
-            conflict = "",
+            conflict = "",
           },
         },
       },
