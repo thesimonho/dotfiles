@@ -68,7 +68,13 @@ Write-Host "Configuring Git global configs..."
 
 git config --global user.name "Simon Ho"
 git config --global user.email simonho.ubc@gmail.com
-git config --global rerere.enabled true
-git config --global column.ui auto
+git config --global core.packedGitLimit 512m
+git config --global core.packedGitWindowSize 512m
 git config --global branch.sort -committerdate
+git config --global column.ui auto
 git config --global fetch.writeCommitGraph true
+git config --global rerere.enabled true
+git config --global pack.deltaCacheSize = 2047m
+git config --global pack.packSizeLimit = 2047m
+git config --global pack.windowMemory = 2047m
+
