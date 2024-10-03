@@ -7,6 +7,7 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-project.nvim",
       "debugloop/telescope-undo.nvim",
+      "piersolenski/telescope-import.nvim",
     },
     cmd = "Telescope",
     keys = {
@@ -31,6 +32,7 @@ return {
       { "<leader>fg", LazyVim.pick("live_grep"), desc = "Grep" },
       { "<leader>p", "<cmd>lua require('telescope').extensions.project.project({})<cr>", desc = "Projects" },
       { "<leader>U", "<cmd>Telescope undo<cr>", desc = "undo tree" },
+      { "<leader>ci", "<cmd>Telescope import<cr>", desc = "Import" },
     },
     config = function()
       require("telescope").setup({
@@ -102,9 +104,13 @@ return {
           undo = {
             use_delta = false,
           },
+          import = {
+            insert_at_top = false,
+          },
         },
       })
       require("telescope").load_extension("undo")
+      require("telescope").load_extension("import")
     end,
   },
 }

@@ -6,6 +6,7 @@ return {
     "pwntester/octo.nvim",
     event = "LazyFile",
     cmd = "Octo",
+    ft = "octo",
     keys = {
       { "<leader>a", false, ft = "octo" },
       { "<leader>c", false, ft = "octo" },
