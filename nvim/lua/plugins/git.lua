@@ -1,3 +1,6 @@
+local utils = require("config.utils")
+vim.keymap.set("n", "<leader>gw", utils.switch_git_worktree, { desc = "Worktrees" })
+
 return {
   {
     "pwntester/octo.nvim",

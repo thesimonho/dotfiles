@@ -39,6 +39,7 @@ return {
             end,
             padding = { left = 1, right = 0 },
             separator = { right = "" },
+            on_click = utils.switch_git_worktree,
           },
           {
             "branch",
