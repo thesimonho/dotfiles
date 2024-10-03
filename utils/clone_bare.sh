@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
+set -Euo pipefail
 trap cleanup SIGINT SIGTERM ERR EXIT
 
 usage() {
@@ -56,7 +56,6 @@ parse_params() {
   args=("$@")
 
   # check required params and arguments
-  # [[ -z "${param-}" ]] && die "Missing required parameter: param"
   [[ ${#args[@]} -eq 0 ]] && die "Missing script arguments"
 
   return 0
@@ -83,13 +82,13 @@ msg "Create initial worktree..."
 git show-ref --verify --quiet refs/heads/main
 if [ $? -eq 0 ]; then
   # 'main' branch exists, add worktree for 'main'
-  git worktree add main main
+  git worktree add work main
 else
   # 'main' branch does not exist, check for 'master'
   git show-ref --verify --quiet refs/heads/master
   if [ $? -eq 0 ]; then
     # 'master' branch exists, add worktree for 'master'
-    git worktree add main master
+    git worktree add work master
   else
     # Neither 'main' nor 'master' branch exists
     echo "Neither 'main' nor 'master' branch exists."
