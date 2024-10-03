@@ -31,6 +31,16 @@ return {
         },
         lualine_b = {
           {
+            function()
+              return " " .. vim.g.git_worktree_root
+            end,
+            cond = function()
+              return vim.g.git_worktree ~= nil
+            end,
+            padding = { left = 1, right = 0 },
+            separator = { right = "" },
+          },
+          {
             "branch",
             on_click = function()
               LazyVim.lazygit({ cwd = LazyVim.root.git() })

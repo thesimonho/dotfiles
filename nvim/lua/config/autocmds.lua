@@ -80,3 +80,23 @@ vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
     vim.wo.cursorline = false
   end,
 })
+
+-- git statuses
+local git_group = vim.api.nvim_create_augroup("GitStatus", { clear = true })
+
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+  group = git_group,
+  callback = function()
+    local git_dir = vim.fn.trim(vim.fn.system("git rev-parse --git-dir"))
+    local git_common_dir = vim.fn.trim(vim.fn.system("git rev-parse --git-common-dir"))
+
+    -- Compare if they are different (indicating a worktree)
+    if git_dir ~= git_common_dir then
+      vim.g.git_worktree = 1
+      vim.g.git_worktree_root = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+    else
+      vim.g.git_worktree = nil
+      vim.g.git_worktree_root = nil
+    end
+  end,
+})
