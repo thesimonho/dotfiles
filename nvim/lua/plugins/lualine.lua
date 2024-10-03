@@ -32,13 +32,14 @@ return {
         lualine_b = {
           {
             function()
-              return " " .. vim.g.git_worktree_root
+              return vim.g.git_worktree_root
             end,
             cond = function()
               return vim.g.git_worktree ~= nil
             end,
-            padding = { left = 1, right = 0 },
-            separator = { right = "" },
+            icon = "",
+            padding = { left = 1, right = 1 },
+            separator = "󰧟",
             on_click = utils.switch_git_worktree,
           },
           {
@@ -154,7 +155,13 @@ return {
           },
         },
         lualine_z = {
-          { "progress", separator = { left = "", right = "" } },
+          {
+            "progress",
+            separator = { left = "", right = "" },
+            on_click = function()
+              vim.api.nvim_command(vim.fn.input(":"))
+            end,
+          },
         },
       },
       inactive_sections = {
