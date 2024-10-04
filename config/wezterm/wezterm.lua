@@ -114,4 +114,35 @@ else
 	}
 end
 
+-- workspace_switcher
+local workspace_switcher = wezterm.plugin.require("http://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+
+workspace_switcher.workspace_formatter = function(label)
+	return wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = "#8ea4a2" } },
+		{ Text = "󱂬: " .. label },
+	})
+end
+
+wezterm.on("smart_workspace_switcher.workspace_switcher.chosen", function(window, workspace)
+	local gui_win = window:gui_window()
+	local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
+	gui_win:set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = "#8ea4a2" } },
+		{ Text = "󱂬: " .. base_path .. " " },
+	}))
+end)
+
+wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, workspace)
+	local gui_win = window:gui_window()
+	local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
+	gui_win:set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = "#8ea4a2" } },
+		{ Text = "󱂬: " .. base_path .. " " },
+	}))
+end)
+
 return config

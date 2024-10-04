@@ -1,8 +1,10 @@
 local wezterm = require("wezterm")
+local workspace_switcher = wezterm.plugin.require("http://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local act = wezterm.action
 local M = {}
 
 M.basic_binds = {
+	{ key = "F1", action = act.ActivateCommandPalette },
 	{
 		key = "c",
 		mods = "CTRL|CMD",
@@ -16,11 +18,11 @@ M.basic_binds = {
 			end
 		end),
 	},
-	{ key = "F1", action = act.ActivateCommandPalette },
 	{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "manage_pane" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false }) },
+	{ key = "w", mods = "ALT", action = workspace_switcher.switch_workspace() },
 
 	{ key = "p", mods = "CMD", action = act.SendKey({ key = "p", mods = "CTRL" }) },
 	{ key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) },
