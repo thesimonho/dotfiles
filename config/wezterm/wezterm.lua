@@ -1,9 +1,32 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 
-wezterm.on("gui-startup", function(cmd)
-	local _, _, window = wezterm.mux.spawn_window(cmd or {})
-	-- window:gui_window():maximize()
+wezterm.on("gui-startup", function()
+	-- main workspace
+	local tab, pane, window = wezterm.mux.spawn_window({
+		workspace = "main",
+	})
+
+	-- terminals workspace
+	local tab_terms, pane_terms, window_terms = wezterm.mux.spawn_window({
+		workspace = "terminals",
+	})
+
+	local pane_top = pane_terms:split({
+		direction = "Top",
+		size = 0.5,
+	})
+
+	local pane_right = pane_terms:split({
+		direction = "Left",
+		size = 0.5,
+	})
+
+	local pane_left = pane_top:split({
+		direction = "Left",
+		size = 0.5,
+	})
+
 	window:gui_window():set_inner_size(1080, 600)
 end)
 
@@ -19,6 +42,7 @@ config.automatically_reload_config = true
 config.color_scheme_dirs = { "~/.config/wezterm/colors" }
 config.color_scheme = "kanagawa-paper"
 config.default_cursor_style = "SteadyBar"
+config.default_workspace = "main"
 config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
@@ -34,7 +58,6 @@ config.inactive_pane_hsb = {
 	brightness = 0.7,
 }
 config.scrollback_lines = 7500
-config.show_update_window = true
 config.tab_and_split_indices_are_zero_based = true
 config.ui_key_cap_rendering = "WindowsSymbols"
 config.underline_position = -2

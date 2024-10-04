@@ -41,7 +41,7 @@ M.key_tables = {
 		{ key = "n", action = act.SpawnWindow },
 		{ key = "[", action = act.ActivateWindowRelative(-1) },
 		{ key = "]", action = act.ActivateWindowRelative(1) },
-		{ key = "d", action = act.CloseCurrentPane({ confirm = true }) },
+		{ key = "d", action = act.CloseCurrentTab({ confirm = true }) },
 		{ key = "h", action = act.ActivatePaneDirection("Left") },
 		{ key = "l", action = act.ActivatePaneDirection("Right") },
 		{ key = "k", action = act.ActivatePaneDirection("Up") },
