@@ -21,6 +21,16 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    opts = function()
+      local keys = require("lazyvim.plugins.lsp.keymaps").get()
+      vim.list_extend(keys, {
+        { "<leader>ca", false },
+        { "<leader>cA", false },
+      })
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
     opts = {
       diagnostics = {
         virtual_text = {
@@ -46,6 +56,26 @@ return {
             lineFoldingOnly = true,
           },
         },
+      },
+    },
+  },
+  {
+    "rachartier/tiny-code-action.nvim",
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-telescope/telescope.nvim" },
+    },
+    event = "LspAttach",
+    config = function()
+      require("tiny-code-action").setup()
+    end,
+    keys = {
+      {
+        "<leader>ca",
+        function()
+          require("tiny-code-action").code_action()
+        end,
+        desc = "Code Action",
       },
     },
   },
