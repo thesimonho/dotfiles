@@ -11,56 +11,56 @@ local is_windows = function()
 	return wezterm.target_triple == "x86_64-pc-windows-msvc"
 end
 
-local c = {
-	adjust_window_size_when_changing_font_size = false,
-	animation_fps = 60,
-	automatically_reload_config = true,
-	color_scheme_dirs = { "~/.config/wezterm/colors" },
-	color_scheme = "kanagawa-paper",
-	default_cursor_style = "SteadyBar",
-	disable_default_key_bindings = true,
-	enable_scroll_bar = false,
-	enable_wayland = true,
-	font = wezterm.font_with_fallback({
-		{ family = "FiraCode Nerd Font", weight = "Regular" },
-		"JetBrains Mono",
-	}),
-	front_end = "OpenGL",
-	harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" },
-	hide_tab_bar_if_only_one_tab = true,
-	inactive_pane_hsb = {
-		saturation = 0.9,
-		brightness = 0.7,
-	},
-	scrollback_lines = 7500,
-	show_update_window = true,
-	tab_and_split_indices_are_zero_based = true,
-	ui_key_cap_rendering = "WindowsSymbols",
-	underline_position = -2,
-	unicode_version = 14,
-	use_fancy_tab_bar = true,
-	use_resize_increments = true,
-	warn_about_missing_glyphs = false,
-	webgpu_power_preference = "HighPerformance",
-	window_close_confirmation = "NeverPrompt",
-	window_decorations = "TITLE|RESIZE",
-	window_padding = {
-		left = 0,
-		right = 0,
-		top = 0,
-		bottom = 0,
-	},
-	leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 },
-	keys = keybinds.basic_binds,
-	key_tables = keybinds.key_tables,
+local config = wezterm.config_builder()
+
+config.adjust_window_size_when_changing_font_size = false
+config.animation_fps = 60
+config.automatically_reload_config = true
+config.color_scheme_dirs = { "~/.config/wezterm/colors" }
+config.color_scheme = "kanagawa-paper"
+config.default_cursor_style = "SteadyBar"
+config.disable_default_key_bindings = true
+config.enable_scroll_bar = false
+config.enable_wayland = true
+config.font = wezterm.font_with_fallback({
+	{ family = "FiraCode Nerd Font", weight = "Regular" },
+	"JetBrains Mono",
+})
+config.front_end = "OpenGL"
+config.harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" }
+config.hide_tab_bar_if_only_one_tab = false
+config.inactive_pane_hsb = {
+	saturation = 0.9,
+	brightness = 0.7,
 }
+config.scrollback_lines = 7500
+config.show_update_window = true
+config.tab_and_split_indices_are_zero_based = true
+config.ui_key_cap_rendering = "WindowsSymbols"
+config.underline_position = -2
+config.unicode_version = 14
+config.use_fancy_tab_bar = false
+config.use_resize_increments = true
+config.warn_about_missing_glyphs = false
+config.webgpu_power_preference = "HighPerformance"
+config.window_close_confirmation = "NeverPrompt"
+config.window_decorations = "TITLE|RESIZE"
+config.window_padding = {
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
+}
+config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
+config.keys = keybinds.basic_binds
+config.key_tables = keybinds.key_tables
 
 if is_windows() then
-	c.font_size = 11
-	c.win32_system_backdrop = "Mica"
-	c.window_background_opacity = 0
-	c.default_prog = { "nu.exe" }
-	c.launch_menu = {
+	config.font_size = 11
+	config.win32_system_backdrop = "Mica"
+	config.window_background_opacity = 0
+	config.default_prog = { "nu.exe" }
+	config.launch_menu = {
 		{
 			label = "nushell",
 			args = { "nu.exe" },
@@ -70,16 +70,16 @@ if is_windows() then
 			args = { "pwsh.exe" },
 		},
 		{
-			label = "cmd",
-			args = { "cmd.exe" },
+			label = "config.d",
+			args = { "config.d.exe" },
 		},
 	}
 else
-	c.font_size = 16
-	c.macos_window_background_blur = 60
-	c.window_background_opacity = 0.9
-	c.default_prog = { "zsh", "-l" }
-	c.launch_menu = {
+	config.font_size = 16
+	config.macos_window_background_blur = 60
+	config.window_background_opacity = 0.9
+	config.default_prog = { "zsh", "-l" }
+	config.launch_menu = {
 		{
 			label = "zsh",
 			args = { "zsh" },
@@ -91,4 +91,4 @@ else
 	}
 end
 
-return c
+return config
