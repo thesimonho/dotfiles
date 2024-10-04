@@ -106,6 +106,7 @@ return {
               else
                 -- regular directory
                 require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
+                vim.cmd("tabnew")
               end
             end,
           },

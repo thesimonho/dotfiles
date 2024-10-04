@@ -34,7 +34,6 @@ wk.add({ "<C-w>m", name = "Maximize", icon = "󰁌" })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 vim.keymap.set("n", "<leader><tab><tab>", function()
-  vim.cmd("tabnew")
   require("telescope").extensions.project.project({})
 end, { desc = "New tab" })
 
