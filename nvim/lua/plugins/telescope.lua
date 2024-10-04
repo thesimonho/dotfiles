@@ -98,7 +98,15 @@ return {
             order_by = "recent",
             search_by = "title",
             on_project_selected = function(prompt_bufnr)
-              require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
+              local selected = require("telescope._extensions.project.actions").get_selected_path()
+              local stat = vim.loop.fs_stat(selected .. "/.bare")
+              if stat and stat.type == "directory" then
+                -- contains git worktrees (sibling .bare directory)
+                utils.switch_git_worktree(selected)
+              else
+                -- regular directory
+                require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
+              end
             end,
           },
           undo = {

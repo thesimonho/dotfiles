@@ -39,9 +39,13 @@ M.live_grep_from_project_root = function()
   require("telescope.builtin").live_grep(opts)
 end
 
--- get git worktrees for this project
-M.get_git_worktrees = function()
-  local bare_dir = vim.fn.finddir(".bare", ".;")
+-- get git worktrees for a project directory
+M.get_git_worktrees = function(dir)
+  if dir == nil then
+    dir = "."
+  end
+
+  local bare_dir = vim.fn.finddir(".bare", dir .. ";")
 
   if bare_dir == nil or bare_dir == "" then
     return {} -- Return empty if no `.bare` directory is found
@@ -63,8 +67,9 @@ M.get_git_worktrees = function()
   return worktrees
 end
 
-M.switch_git_worktree = function()
-  local worktrees = M.get_git_worktrees()
+-- switch to a worktree in a given directory
+M.switch_git_worktree = function(dir)
+  local worktrees = M.get_git_worktrees(dir)
   if vim.tbl_isempty(worktrees) then
     print("No worktrees found")
     return
