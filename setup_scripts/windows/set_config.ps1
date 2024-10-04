@@ -74,7 +74,3 @@ git config --global branch.sort -committerdate
 git config --global column.ui auto
 git config --global fetch.writeCommitGraph true
 git config --global rerere.enabled true
-git config --global pack.deltaCacheSize = 2047m
-git config --global pack.packSizeLimit = 2047m
-git config --global pack.windowMemory = 2047m
-
