@@ -28,12 +28,12 @@ if (!(Test-Path $env:USERPROFILE\.config)) {
 
 if (!(Test-Path $env:USERPROFILE\.config\wezterm)) {
     Write-Host "Symlinking wezterm config..."
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $DOTFILES\.config\wezterm
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $DOTFILES\config\wezterm
 }
 
 if (!(Test-Path $env:USERPROFILE\.config\starship.toml)) {
     Write-Host "Symlinking starship config..."
-    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $DOTFILES\.config\starship.toml
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $DOTFILES\config\starship.toml
 }
 
 Write-Host "Symlinking nushell config..."
