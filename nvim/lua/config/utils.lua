@@ -101,6 +101,7 @@ M.switch_git_worktree = function()
           actions.select_default:replace(function()
             local selection = action_state.get_selected_entry()
             actions.close(prompt_bufnr)
+            vim.cmd("tabnew")
             require("neo-tree.command").execute({
               position = "float",
               dir = selection.value,
