@@ -60,6 +60,15 @@ return {
     },
   },
   {
+    "zeioth/garbage-day.nvim",
+    dependencies = "neovim/nvim-lspconfig",
+    event = "VeryLazy",
+    opts = {
+      grace_period = 60 * 15, --seconds
+      wakeup_delay = 2000, --milliseconds
+    },
+  },
+  {
     "rachartier/tiny-code-action.nvim",
     dependencies = {
       { "nvim-lua/plenary.nvim" },
