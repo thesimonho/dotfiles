@@ -44,7 +44,7 @@ return {
         exclude = {},
       },
       codelens = {
-        enabled = true,
+        enabled = false,
       },
       document_highlight = {
         enabled = true,
