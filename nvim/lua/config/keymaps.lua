@@ -48,7 +48,7 @@ vim.keymap.set("n", "<leader>zr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" 
 vim.keymap.set("n", "<leader>zc", "<cmd>CccPick<cr>", { desc = "Color Picker" })
 
 -- Terminal
-wk.add({ "<leader>`", group = "terminal", icon = "" })
+wk.add({ "<leader>\\", group = "terminal", icon = "" })
 vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { buffer = 0 })
 vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], { buffer = 0 })
 vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], { buffer = 0 })

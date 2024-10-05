@@ -12,7 +12,7 @@ M = {
     "folke/which-key.nvim",
     opts = {
       spec = {
-        ["<leader>`"] = { name = "  terminal" },
+        ["<leader>\\"] = { name = "  terminal" },
       },
     },
   },
@@ -21,12 +21,12 @@ M = {
     version = "*",
     cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
     keys = {
-      { "<leader>``", "<cmd>ToggleTermToggleAll<CR>", desc = "Toggle all" },
-      { "<leader>`1", "<cmd>1ToggleTerm<CR>", desc = "Terminal 1" },
-      { "<leader>`2", "<cmd>2ToggleTerm<CR>", desc = "Terminal 2" },
-      { "<leader>`3", "<cmd>3ToggleTerm<CR>", desc = "Terminal 3" },
-      { "<leader>`4", "<cmd>4ToggleTerm<CR>", desc = "Terminal 4" },
-      { "<leader>`s", "<cmd>TermSelect<CR>", desc = "Select" },
+      { "<leader>\\\\", "<cmd>ToggleTermToggleAll<CR>", desc = "Toggle all" },
+      { "<leader>\\1", "<cmd>1ToggleTerm<CR>", desc = "Terminal 1" },
+      { "<leader>\\2", "<cmd>2ToggleTerm<CR>", desc = "Terminal 2" },
+      { "<leader>\\3", "<cmd>3ToggleTerm<CR>", desc = "Terminal 3" },
+      { "<leader>\\4", "<cmd>4ToggleTerm<CR>", desc = "Terminal 4" },
+      { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
     opts = {
       autochdir = true,
