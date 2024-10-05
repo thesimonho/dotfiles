@@ -2,30 +2,29 @@ local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 
 wezterm.on("gui-startup", function()
-	-- main workspace
 	local tab, pane, window = wezterm.mux.spawn_window({
 		workspace = "main",
 	})
 
 	-- terminals workspace
-	local tab_terms, pane_terms, window_terms = wezterm.mux.spawn_window({
-		workspace = "terminals",
-	})
-
-	local pane_top = pane_terms:split({
-		direction = "Top",
-		size = 0.5,
-	})
-
-	local pane_right = pane_terms:split({
-		direction = "Left",
-		size = 0.5,
-	})
-
-	local pane_left = pane_top:split({
-		direction = "Left",
-		size = 0.5,
-	})
+	-- local tab_terms, pane_terms, window_terms = wezterm.mux.spawn_window({
+	-- 	workspace = "terminals",
+	-- })
+	--
+	-- local pane_top = pane_terms:split({
+	-- 	direction = "Top",
+	-- 	size = 0.5,
+	-- })
+	--
+	-- local pane_right = pane_terms:split({
+	-- 	direction = "Left",
+	-- 	size = 0.5,
+	-- })
+	--
+	-- local pane_left = pane_top:split({
+	-- 	direction = "Left",
+	-- 	size = 0.5,
+	-- })
 
 	window:gui_window():set_inner_size(1080, 600)
 end)
@@ -44,6 +43,7 @@ config.color_scheme = "kanagawa-paper"
 config.default_cursor_style = "SteadyBar"
 config.default_workspace = "main"
 config.disable_default_key_bindings = true
+config.enable_kitty_keyboard = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
