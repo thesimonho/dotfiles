@@ -25,7 +25,6 @@ return {
     keys = {
       { "<leader><space>", "<Cmd>BufferPick<CR>", desc = "Pick buffer" },
       { "<leader>bb", "<Cmd>lua require('telescope.builtin').buffers()<CR>", desc = "Buffer list" },
-      { "<leader>bo", "<cmd>e #<cr>", desc = "Other buffer" },
       { "<leader>bn", "<cmd>vnew<cr>", desc = "New buffer" },
       { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin buffer" },
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete other buffers" },
