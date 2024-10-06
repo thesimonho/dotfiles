@@ -22,7 +22,7 @@ M.basic_binds = {
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "manage_pane" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false }) },
-	{ key = "w", mods = "ALT", action = workspace_switcher.switch_workspace() },
+	{ key = "p", mods = "ALT", action = workspace_switcher.switch_workspace() },
 
 	-- rebind macos cmd to crtl
 	{ key = "p", mods = "CMD", action = act.SendKey({ key = "p", mods = "CTRL" }) },

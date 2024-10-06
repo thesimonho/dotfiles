@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
+local act = wezterm.action
 
 wezterm.on("gui-startup", function()
 	local tab, pane, window = wezterm.mux.spawn_window({
@@ -121,7 +122,7 @@ workspace_switcher.workspace_formatter = function(label)
 	return wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
 		{ Foreground = { Color = "#8ea4a2" } },
-		{ Text = "󱂬: " .. label },
+		{ Text = "󱂬 : " .. label },
 	})
 end
 
@@ -131,7 +132,7 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.chosen", function(window
 	gui_win:set_right_status(wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
 		{ Foreground = { Color = "#8ea4a2" } },
-		{ Text = "󱂬: " .. base_path .. " " },
+		{ Text = "󱂬 : " .. base_path .. " " },
 	}))
 end)
 
@@ -141,8 +142,15 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(windo
 	gui_win:set_right_status(wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
 		{ Foreground = { Color = "#8ea4a2" } },
-		{ Text = "󱂬: " .. base_path .. " " },
+		{ Text = "󱂬 : " .. base_path .. " " },
 	}))
+
+	gui_win:perform_action(act.SendString("nvim ."), gui_win:active_pane())
+	gui_win:perform_action(act.SendKey({ key = "Enter" }), gui_win:active_pane())
 end)
+
+-- tabline
+-- local tabline = wezterm.plugin.require("http://github.com/michaelbrusegard/tabline.wez")
+-- tabline.setup()
 
 return config
