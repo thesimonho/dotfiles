@@ -76,7 +76,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   desc = "Find root and change current directory",
 })
 
--- NC line numbers
+-- dashboard
 local alpha_group = vim.api.nvim_create_augroup("Dashboard", { clear = true })
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {

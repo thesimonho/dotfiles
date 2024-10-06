@@ -60,6 +60,7 @@ config.inactive_pane_hsb = {
 }
 config.scrollback_lines = 7500
 config.tab_and_split_indices_are_zero_based = true
+config.tab_max_width = 32
 config.ui_key_cap_rendering = "WindowsSymbols"
 config.underline_position = -2
 config.unicode_version = 14
