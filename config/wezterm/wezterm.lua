@@ -57,6 +57,20 @@ config.window_padding = {
 	bottom = 0,
 }
 config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
+config.colors = {
+	tab_bar = {
+		background = "#282834",
+		new_tab = {
+			bg_color = "#282834",
+			fg_color = "#808080",
+		},
+		new_tab_hover = {
+			bg_color = "#363646",
+			fg_color = "#ddd8bb",
+		},
+	},
+}
+
 config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
 
