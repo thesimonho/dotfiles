@@ -44,22 +44,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
--- lazygit mousemoveevent
-vim.api.nvim_create_autocmd("TermOpen", {
-  pattern = "term://*lazygit*",
-  callback = function()
-    vim.opt.mousemoveevent = false
-  end,
-})
-
--- Toggle mousemoveevents back on when LazyGit/Toggleterm is closed
-vim.api.nvim_create_autocmd("TermClose", {
-  pattern = "term://*lazygit*",
-  callback = function()
-    vim.opt.mousemoveevent = true
-  end,
-})
-
 -- auto root
 local root_group = vim.api.nvim_create_augroup("AutoRoot", {})
 vim.api.nvim_create_autocmd("BufEnter", {
