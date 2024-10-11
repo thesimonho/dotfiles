@@ -16,6 +16,7 @@ end
 
 local config = wezterm.config_builder()
 
+config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
 config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
@@ -44,7 +45,7 @@ config.tab_max_width = 32
 config.ui_key_cap_rendering = "WindowsSymbols"
 config.underline_position = -2
 config.unicode_version = 14
-config.use_fancy_tab_bar = true
+config.use_fancy_tab_bar = false
 config.use_resize_increments = true
 config.warn_about_missing_glyphs = false
 config.webgpu_power_preference = "HighPerformance"
@@ -56,7 +57,6 @@ config.window_padding = {
 	top = 0,
 	bottom = 0,
 }
-config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
 config.colors = {
 	tab_bar = {
 		background = "#282834",
@@ -111,7 +111,7 @@ else
 end
 
 -- workspace_switcher
-local workspace_switcher = wezterm.plugin.require("http://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 
 workspace_switcher.workspace_formatter = function(label)
 	return wezterm.format({
@@ -145,7 +145,74 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(windo
 end)
 
 -- tabline
--- local tabline = wezterm.plugin.require("http://github.com/michaelbrusegard/tabline.wez")
--- tabline.setup()
+local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+print(tabline.get_colors())
+tabline.setup({
+	options = {
+		icons_enabled = true,
+		theme = "kanagawabones",
+		color_overrides = {
+			normal_mode = {
+				a = { fg = "#282834", bg = "#7eb3c9" },
+				b = { fg = "#7eb3c9", bg = "#353545" },
+				c = { fg = "#696861", bg = "#282834" },
+			},
+			copy_mode = {
+				a = { fg = "#282834", bg = "#98bc6d" },
+				b = { fg = "#98bc6d", bg = "#353545" },
+				c = { fg = "#696861", bg = "#282834" },
+			},
+			search_mode = {
+				a = { fg = "#282834", bg = "#957fb8" },
+				b = { fg = "#957fb8", bg = "#353545" },
+				c = { fg = "#696861", bg = "#282834" },
+			},
+			window_mode = {
+				a = { fg = "#282834", bg = "#e5c283" },
+				b = { fg = "#e5c283", bg = "#353545" },
+				c = { fg = "#696861", bg = "#282834" },
+			},
+			resize_mode = {
+				a = { fg = "#282834", bg = "#e46a78" },
+				b = { fg = "#e46a78", bg = "#353545" },
+				c = { fg = "#696861", bg = "#282834" },
+			},
+			tab = {
+				active = { fg = "#7eb3c9", bg = "#353545" },
+				inactive = { fg = "#696861", bg = "#282834" },
+				inactive_hover = { fg = "#7eb3c9", bg = "#353545" },
+			},
+		},
+		section_separators = {
+			left = wezterm.nerdfonts.ple_right_half_circle_thick,
+			right = wezterm.nerdfonts.ple_left_half_circle_thick,
+		},
+		component_separators = {
+			left = wezterm.nerdfonts.ple_right_half_circle_thin,
+			right = wezterm.nerdfonts.ple_left_half_circle_thin,
+		},
+		tab_separators = {
+			left = wezterm.nerdfonts.ple_right_half_circle_thick,
+			right = wezterm.nerdfonts.ple_left_half_circle_thick,
+		},
+	},
+	sections = {
+		tabline_a = { "mode" },
+		tabline_b = { "workspace" },
+		tabline_c = { "  " },
+		tabline_x = { { "cpu" }, { "ram" } },
+		tabline_y = { "datetime" },
+		tabline_z = { "hostname" },
+		tab_active = {
+			" ",
+			{ "cwd", padding = { left = 0, right = 1 } },
+		},
+		tab_inactive = {
+			" ",
+			{ "cwd", padding = { left = 0, right = 1 } },
+		},
+	},
+	extensions = { "smart_workspace_switcher" },
+})
 
 return config
