@@ -30,8 +30,8 @@ M.basic_binds = {
 	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
 	{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
-	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "manage_pane" }) },
-	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_pane", one_shot = false }) },
+	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
+	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false }) },
 	{ key = "p", mods = "ALT", action = workspace_switcher.switch_workspace() },
 }
 
@@ -50,7 +50,7 @@ if not wezterm.target_triple == "x86_64-pc-windows-msvc" then
 end
 
 M.key_tables = {
-	manage_pane = {
+	window_mode = {
 		{ key = "w", action = act.PaneSelect },
 		{ key = "n", action = act.SpawnWindow },
 		{ key = "[", action = act.ActivateWindowRelative(-1) },
@@ -63,7 +63,7 @@ M.key_tables = {
 		{ key = "v", action = act.SplitPane({ direction = "Right" }) },
 		{ key = "s", action = act.SplitPane({ direction = "Down" }) },
 	},
-	resize_pane = {
+	resize_mode = {
 		{ key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 1 }) },
 		{ key = "RightArrow", action = act.AdjustPaneSize({ "Right", 1 }) },
 		{ key = "UpArrow", action = act.AdjustPaneSize({ "Up", 1 }) },
