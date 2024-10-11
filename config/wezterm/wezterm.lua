@@ -3,29 +3,9 @@ local keybinds = require("keybinds")
 local act = wezterm.action
 
 wezterm.on("gui-startup", function()
-	local tab, pane, window = wezterm.mux.spawn_window({
+	local _, _, window = wezterm.mux.spawn_window({
 		workspace = "main",
 	})
-
-	-- terminals workspace
-	-- local tab_terms, pane_terms, window_terms = wezterm.mux.spawn_window({
-	-- 	workspace = "terminals",
-	-- })
-	--
-	-- local pane_top = pane_terms:split({
-	-- 	direction = "Top",
-	-- 	size = 0.5,
-	-- })
-	--
-	-- local pane_right = pane_terms:split({
-	-- 	direction = "Left",
-	-- 	size = 0.5,
-	-- })
-	--
-	-- local pane_left = pane_top:split({
-	-- 	direction = "Left",
-	-- 	size = 0.5,
-	-- })
 
 	window:gui_window():set_inner_size(1080, 600)
 end)
@@ -64,7 +44,7 @@ config.tab_max_width = 32
 config.ui_key_cap_rendering = "WindowsSymbols"
 config.underline_position = -2
 config.unicode_version = 14
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = true
 config.use_resize_increments = true
 config.warn_about_missing_glyphs = false
 config.webgpu_power_preference = "HighPerformance"
