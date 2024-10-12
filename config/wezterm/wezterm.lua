@@ -146,41 +146,40 @@ end)
 
 -- tabline
 local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-print(tabline.get_colors())
 tabline.setup({
 	options = {
 		icons_enabled = true,
 		theme = "kanagawabones",
 		color_overrides = {
 			normal_mode = {
-				a = { fg = "#282834", bg = "#7eb3c9" },
-				b = { fg = "#7eb3c9", bg = "#353545" },
+				a = { fg = "#282834", bg = "#c4b28a" },
+				b = { fg = "#c4b28a", bg = "#353545" },
 				c = { fg = "#696861", bg = "#282834" },
 			},
 			copy_mode = {
-				a = { fg = "#282834", bg = "#98bc6d" },
-				b = { fg = "#98bc6d", bg = "#353545" },
+				a = { fg = "#282834", bg = "#87a987" },
+				b = { fg = "#87a987", bg = "#353545" },
 				c = { fg = "#696861", bg = "#282834" },
 			},
 			search_mode = {
-				a = { fg = "#282834", bg = "#957fb8" },
-				b = { fg = "#957fb8", bg = "#353545" },
+				a = { fg = "#282834", bg = "#938AA9" },
+				b = { fg = "#938AA9", bg = "#353545" },
 				c = { fg = "#696861", bg = "#282834" },
 			},
 			window_mode = {
-				a = { fg = "#282834", bg = "#e5c283" },
-				b = { fg = "#e5c283", bg = "#353545" },
+				a = { fg = "#282834", bg = "#658594" },
+				b = { fg = "#658594", bg = "#353545" },
 				c = { fg = "#696861", bg = "#282834" },
 			},
 			resize_mode = {
-				a = { fg = "#282834", bg = "#e46a78" },
-				b = { fg = "#e46a78", bg = "#353545" },
+				a = { fg = "#282834", bg = "#c4746e" },
+				b = { fg = "#c4746e", bg = "#353545" },
 				c = { fg = "#696861", bg = "#282834" },
 			},
 			tab = {
-				active = { fg = "#7eb3c9", bg = "#353545" },
+				active = { fg = "#c4b28a", bg = "#353545" },
 				inactive = { fg = "#696861", bg = "#282834" },
-				inactive_hover = { fg = "#7eb3c9", bg = "#353545" },
+				inactive_hover = { fg = "#c4b28a", bg = "#353545" },
 			},
 		},
 		section_separators = {
@@ -197,19 +196,34 @@ tabline.setup({
 		},
 	},
 	sections = {
-		tabline_a = { "mode" },
+		tabline_a = {
+			{
+				"mode",
+				icon = "🐼",
+				fmt = function(text)
+					return string.lower(text)
+				end,
+			},
+		},
 		tabline_b = { "workspace" },
-		tabline_c = { "  " },
+		tabline_c = { " " },
 		tabline_x = { { "cpu" }, { "ram" } },
-		tabline_y = { "datetime" },
+		tabline_y = {
+			{
+				"datetime",
+				style = "%A %b %d",
+				icon = "",
+				hour_to_icon = false,
+			},
+		},
 		tabline_z = { "hostname" },
 		tab_active = {
 			" ",
-			{ "cwd", padding = { left = 0, right = 1 } },
+			{ "cwd", max_length = 32, padding = { left = 0, right = 1 } },
 		},
 		tab_inactive = {
 			" ",
-			{ "cwd", padding = { left = 0, right = 1 } },
+			{ "cwd", max_length = 32, padding = { left = 0, right = 1 } },
 		},
 	},
 	extensions = { "smart_workspace_switcher" },
