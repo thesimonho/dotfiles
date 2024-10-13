@@ -235,10 +235,15 @@ M.create_gradient = function(start, finish, steps)
   return gradient
 end
 
-M.get_web_icon = function(fn)
-  local nwd = require("nvim-web-devicons")
-  local ext = M.get_file_extension(fn)
-  return nwd.get_icon(fn, ext, { default = true })
+M.get_web_icon = function(filename, library)
+  if library == "mini" then
+    local mini = require("mini.icons")
+    return mini.get("file", filename)
+  else
+    local ext = M.get_file_extension(filename)
+    local nwd = require("nvim-web-devicons")
+    return nwd.get_icon(filename, ext, { default = true })
+  end
 end
 
 M.get_file_extension = function(fn)

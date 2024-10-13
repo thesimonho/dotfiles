@@ -1,6 +1,45 @@
 local utils = require("config.utils")
+local finders = require("telescope.finders")
+local entry_display = require("telescope.pickers.entry_display")
 
-return {
+local create_entry = function(entry, max_len)
+  local full_path = vim.fn.fnamemodify(entry, ":p")
+  local file_name = vim.fn.fnamemodify(full_path, ":t") -- Extract just the file name
+  local dir_name = vim.fn.fnamemodify(full_path, ":h") -- Extract the directory path
+  local icon, icon_hl = utils.get_web_icon(file_name, "mini")
+
+  local displayer = entry_display.create({
+    separator = " ",
+    items = {
+      { width = 1 },
+      { width = 1 },
+      { width = max_len + 10 },
+      { remaining = true },
+    },
+  })
+
+  local make_display = function(item)
+    return displayer({
+      { item.icon, item.icon_hl },
+      { " " },
+      { item.filename, "TelescopeResultsNormal" },
+      { item.dir, "TelescopeResultsComment" },
+    })
+  end
+
+  return {
+    value = full_path, -- Full path as the value
+    path = full_path,
+    display = make_display,
+    ordinal = full_path, -- Use the full path for sorting and filtering
+    icon = icon,
+    icon_hl = icon_hl,
+    filename = file_name,
+    dir = dir_name,
+  }
+end
+
+local M = {
   {
     "nvim-telescope/telescope.nvim",
     dependencies = {
@@ -67,12 +106,22 @@ return {
             },
             n = {
               ["<c-q>"] = require("trouble.sources.telescope").open,
+              ["q"] = require("telescope.actions").close,
             },
           },
         },
         pickers = {
           find_files = {
             hidden = true,
+            finder = finders.new_oneshot_job({ "rg", "--files", "--hidden" }, {
+              entry_maker = function(entry)
+                return create_entry(entry, 30)
+              end,
+            }),
+            layout_config = {
+              width = 0.8,
+              preview_width = 0.4,
+            },
           },
           buffers = {
             theme = "dropdown",
@@ -123,3 +172,5 @@ return {
     end,
   },
 }
+
+return M
