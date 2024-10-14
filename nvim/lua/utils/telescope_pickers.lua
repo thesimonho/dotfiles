@@ -7,14 +7,13 @@ local telescopePickers = {}
 local telescopeUtilities = require("telescope.utils")
 local telescopeMakeEntryModule = require("telescope.make_entry")
 local plenaryStrings = require("plenary.strings")
-local devIcons = require("nvim-web-devicons")
 local telescopeEntryDisplayModule = require("telescope.pickers.entry_display")
 local utils = require("utils.general")
 
 -- Obtain Filename icon width
 -- --------------------------
 -- INSIGHT: This width applies to all icons that represent a file type
-local fileTypeIconWidth = plenaryStrings.strdisplaywidth(devIcons.get_icon("fname", { default = true }))
+local fileTypeIconWidth = plenaryStrings.strdisplaywidth(utils.get_web_icon("fname", "mini")) + 1
 
 ---- Helper functions ----
 
@@ -111,7 +110,7 @@ function telescopePickers.prettyFilesPicker(pickerAndOptions)
       local tailForDisplay = utils.pad_string_align(tail, 30)
 
       -- Get the Icon with its corresponding Highlight information
-      local icon, iconHighlight = telescopeUtilities.get_devicons(tail)
+      local icon, iconHighlight = utils.get_web_icon(tail, "mini")
 
       -- INSIGHT: This return value should be a tuple of 2, where the first value is the actual value
       --          and the second one is the highlight information, this will be done by the displayer
@@ -214,7 +213,7 @@ function telescopePickers.prettyGrepPicker(pickerAndOptions)
       local tail, pathToDisplay = telescopePickers.getPathAndTail(entry.filename)
 
       -- Get the Icon with its corresponding Highlight information
-      local icon, iconHighlight = telescopeUtilities.get_devicons(tail)
+      local icon, iconHighlight = utils.get_web_icon(tail, "mini")
 
       ---- Format Text for display ----
       ---------------------------------
@@ -381,7 +380,7 @@ function telescopePickers.prettyBuffersPicker(localOptions)
 
     originalEntryTable.display = function(entry)
       local tail, path = telescopePickers.getPathAndTail(entry.filename)
-      local icon, iconHighlight = telescopeUtilities.get_devicons(tail)
+      local icon, iconHighlight = utils.get_web_icon(tail, "mini")
 
       return displayer({
         { icon, iconHighlight },
