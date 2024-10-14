@@ -274,40 +274,6 @@ function telescopePickers.prettyGrepPicker(pickerAndOptions)
   end
 end
 
-local kind_icons = {
-  Text = "",
-  String = "",
-  Array = "",
-  Object = "󰅩",
-  Namespace = "",
-  Method = "m",
-  Function = "󰊕",
-  Constructor = "",
-  Field = "",
-  Variable = "󰫧",
-  Class = "",
-  Interface = "",
-  Module = "",
-  Property = "",
-  Unit = "",
-  Value = "",
-  Enum = "",
-  Keyword = "",
-  Snippet = "",
-  Color = "",
-  File = "",
-  Reference = "",
-  Folder = "",
-  EnumMember = "",
-  Constant = "",
-  Struct = "",
-  Event = "",
-  Operator = "",
-  TypeParameter = "",
-  Copilot = "🤖",
-  Boolean = "",
-}
-
 function telescopePickers.prettyDocumentSymbols(localOptions)
   if localOptions ~= nil and type(localOptions) ~= "table" then
     print("Options must be a table.")
@@ -332,7 +298,7 @@ function telescopePickers.prettyDocumentSymbols(localOptions)
 
     originalEntryTable.display = function(entry)
       return displayer({
-        string.format("%s", kind_icons[(entry.symbol_type:lower():gsub("^%l", string.upper))]),
+        string.format("%s", LazyVim.config.icons.kinds[(entry.symbol_type:lower():gsub("^%l", string.upper))]),
         { entry.symbol_type:lower(), "TelescopeResultsVariable" },
         { entry.symbol_name, "TelescopeResultsConstant" },
       })
@@ -376,7 +342,7 @@ function telescopePickers.prettyWorkspaceSymbols(localOptions)
       }, entry.value.filename)
 
       return displayer({
-        string.format("%s", kind_icons[(entry.symbol_type:lower():gsub("^%l", string.upper))]),
+        string.format("%s", LazyVim.config.icons.kinds[(entry.symbol_type:lower():gsub("^%l", string.upper))]),
         { entry.symbol_type:lower(), "TelescopeResultsVariable" },
         { entry.symbol_name, "TelescopeResultsConstant" },
         tailForDisplay,
