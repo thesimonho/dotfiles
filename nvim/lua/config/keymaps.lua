@@ -13,7 +13,10 @@ vim.api.nvim_del_keymap("n", "<leader>xq")
 vim.api.nvim_del_keymap("n", "<leader>l")
 vim.api.nvim_del_keymap("n", "<leader>ft")
 vim.api.nvim_del_keymap("n", "<leader>fT")
+vim.api.nvim_del_keymap("n", "<leader>fF")
+vim.api.nvim_del_keymap("n", "<leader>fR")
 vim.api.nvim_del_keymap("n", "<leader>gG")
+vim.api.nvim_del_keymap("n", "<leader>gL")
 vim.api.nvim_del_keymap("n", "<leader>gf")
 vim.api.nvim_del_keymap("n", "<leader><tab>o")
 
@@ -31,7 +34,6 @@ vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>uR", "<cmd>set cursorcolumn!<cr>", { desc = "Toggle column ruler" })
 
 -- Windows
-wk.add({ "<C-w>m", name = "Maximize", icon = "󰁌" })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 vim.keymap.set("n", "<leader><tab><tab>", function()

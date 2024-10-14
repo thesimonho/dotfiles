@@ -78,7 +78,7 @@ local M = {
       },
       { "<leader>fb", "<cmd>Telescope current_buffer_fuzzy_find<cr><cr>", desc = "Find in Buffer" },
       { "<leader>p", "<cmd>lua require('telescope').extensions.project.project({})<cr>", desc = "Projects" },
-      { "<leader>U", "<cmd>Telescope undo<cr>", desc = "undo tree" },
+      { "<leader>U", "<cmd>Telescope undo<cr>", desc = "Undo tree" },
       { "<leader>ci", "<cmd>Telescope import<cr>", desc = "Import" },
     },
     config = function()
