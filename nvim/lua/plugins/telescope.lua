@@ -1,6 +1,7 @@
 local git = require("utils.git")
 local style = require("utils.style")
 local pickers = require("utils.telescope_pickers")
+local actions = require("telescope.actions")
 
 local M = {
   {
@@ -144,16 +145,26 @@ local M = {
             theme = "dropdown",
             order_by = "recent",
             search_by = "title",
-            on_project_selected = function(prompt_bufnr)
+            on_project_selected = function()
               local selected = require("telescope._extensions.project.actions").get_selected_path()
               local stat = vim.loop.fs_stat(selected .. "/.bare")
               if stat and stat.type == "directory" then
                 -- contains git worktrees (sibling .bare directory)
                 git.switch_git_worktree(selected)
               else
-                -- regular directory
-                require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)
-                vim.cmd("tabnew")
+                -- regular project directory
+                pickers.prettyFilesPicker({
+                  picker = "find_files",
+                  options = {
+                    cwd = selected,
+                    attach_mappings = function(bufnr)
+                      actions.select_default:replace(function()
+                        actions.select_tab(bufnr)
+                      end)
+                      return true
+                    end,
+                  },
+                })
               end
             end,
           },
