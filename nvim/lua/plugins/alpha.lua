@@ -218,7 +218,7 @@ function M.config()
       local file_button_el = dashboard.button(
         letter,
         icon .. display_path,
-        "<cmd>lua require('config.telescope_pickers').prettyFilesPicker({picker = 'find_files', options = {cwd = '"
+        "<cmd>lua require('utils.telescope_pickers').prettyFilesPicker({picker = 'find_files', options = {cwd = '"
           .. project.path:gsub("\\", "/")
           .. "'}})<cr>"
       )
