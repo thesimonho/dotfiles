@@ -1,5 +1,6 @@
-local utils = require("config.utils")
-local pickers = require("config.telescope_pickers")
+local utils = require("utils.general")
+local style = require("utils.style")
+local pickers = require("utils.telescope_pickers")
 
 local get_node_path = function(node)
   local path = node.path
@@ -33,7 +34,7 @@ local M = {
     },
     opts = {
       close_if_last_window = true,
-      popup_border_style = utils.border_chars_outer_thin,
+      popup_border_style = style.border_chars_outer_thin,
       enable_git_status = true,
       enable_modified_markers = true,
       enable_diagnostics = true,

@@ -1,5 +1,5 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-local utils = require("config.utils")
+local utils = require("utils.general")
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","

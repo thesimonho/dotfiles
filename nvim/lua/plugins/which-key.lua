@@ -1,4 +1,4 @@
-local utils = require("config.utils")
+local style = require("utils.style")
 
 return {
   "folke/which-key.nvim",
@@ -9,7 +9,7 @@ return {
     delay = 100,
     win = {
       title = true,
-      border = utils.border_chars_outer_thin,
+      border = style.border_chars_outer_thin,
       padding = { 1, 0 },
     },
     layout = {

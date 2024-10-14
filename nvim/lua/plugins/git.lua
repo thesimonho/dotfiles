@@ -1,5 +1,6 @@
-local utils = require("config.utils")
-vim.keymap.set("n", "<leader>gw", utils.switch_git_worktree, { desc = "Worktrees" })
+local git = require("utils.git")
+
+vim.keymap.set("n", "<leader>gw", git.switch_git_worktree, { desc = "Worktrees" })
 
 return {
   {

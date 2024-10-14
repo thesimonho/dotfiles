@@ -1,4 +1,4 @@
-local utils = require("config.utils")
+local utils = require("utils.general")
 local hooks = require("venv-selector.hooks")
 
 local function shorten_path(filename)

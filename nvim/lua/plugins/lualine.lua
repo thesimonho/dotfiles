@@ -2,7 +2,8 @@ return {
   "nvim-lualine/lualine.nvim",
   opts = function()
     local kanagawa_paper = require("lualine.themes.kanagawa-paper")
-    local utils = require("config.utils")
+    local utils = require("utils.general")
+    local git = require("utils.git")
     local Util = require("lazyvim.util")
     local icons = require("lazyvim.config").icons
     local lualine_require = require("lualine_require")
@@ -40,7 +41,7 @@ return {
             icon = "",
             padding = { left = 1, right = 1 },
             separator = "󰧟",
-            on_click = utils.switch_git_worktree,
+            on_click = git.switch_git_worktree,
           },
           {
             "branch",

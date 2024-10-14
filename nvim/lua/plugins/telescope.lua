@@ -1,5 +1,6 @@
-local utils = require("config.utils")
-local pickers = require("config/telescope_pickers")
+local git = require("utils.git")
+local style = require("utils.style")
+local pickers = require("utils.telescope_pickers")
 
 local M = {
   {
@@ -88,7 +89,7 @@ local M = {
           dynamic_preview_title = true,
           prompt_prefix = "  ",
           path_display = { "smart" },
-          borderchars = utils.border_chars_outer_thin_telescope,
+          borderchars = style.border_chars_outer_thin_telescope,
           border = true,
           file_ignore_patterns = {
             "node_modules/",
@@ -124,7 +125,7 @@ local M = {
             theme = "dropdown",
             previewer = true,
             path_display = { shorten = { 1, exclude = { -2, -1 } } },
-            borderchars = utils.border_chars_outer_thin_telescope,
+            borderchars = style.border_chars_outer_thin_telescope,
           },
         },
         extensions = {
@@ -148,7 +149,7 @@ local M = {
               local stat = vim.loop.fs_stat(selected .. "/.bare")
               if stat and stat.type == "directory" then
                 -- contains git worktrees (sibling .bare directory)
-                utils.switch_git_worktree(selected)
+                git.switch_git_worktree(selected)
               else
                 -- regular directory
                 require("telescope._extensions.project.actions").find_project_files(prompt_bufnr, false)

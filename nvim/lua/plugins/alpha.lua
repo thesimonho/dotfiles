@@ -7,8 +7,8 @@ local M = {
 function M.config()
   local headers = require("config.headers")
   local quotes = require("config.quotes")
-  local utils = require("config.utils")
-  local pickers = require("config/telescope_pickers")
+  local utils = require("utils.general")
+  local color = require("utils.color")
   local theme = require("alpha.themes.theta")
   local path_ok, plenary_path = pcall(require, "plenary.path")
   if not path_ok then
@@ -19,7 +19,7 @@ function M.config()
 
   -- Header
   local function apply_gradient_hl(text)
-    local gradient = utils.create_gradient("#DCA561", "#658594", #text)
+    local gradient = color.create_gradient("#DCA561", "#658594", #text)
 
     local lines = {}
     for i, line in ipairs(text) do

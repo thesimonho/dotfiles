@@ -1,4 +1,4 @@
-local pickers = require("config/telescope_pickers")
+local pickers = require("utils.telescope_pickers")
 
 return {
   {
