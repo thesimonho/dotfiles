@@ -15,6 +15,7 @@ vim.api.nvim_del_keymap("n", "<leader>ft")
 vim.api.nvim_del_keymap("n", "<leader>fT")
 vim.api.nvim_del_keymap("n", "<leader>gG")
 vim.api.nvim_del_keymap("n", "<leader>gf")
+vim.api.nvim_del_keymap("n", "<leader><tab>o")
 
 -- General
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit" })
@@ -36,6 +37,7 @@ vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 vim.keymap.set("n", "<leader><tab><tab>", function()
   require("telescope").extensions.project.project({})
 end, { desc = "New tab" })
+vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- Tools
 wk.add({ "<leader>z", group = "tools", icon = "" })
