@@ -42,6 +42,17 @@ local M = {
     incremental_selection = {
       enable = false, -- use flash treesitter mode instead
     },
+    textobjects = {
+      swap = {
+        enable = true,
+        swap_next = {
+          ["<leader>cx"] = "@parameter.inner",
+        },
+        swap_previous = {
+          ["<leader>cX"] = "@parameter.inner",
+        },
+      },
+    },
   },
 }
 
