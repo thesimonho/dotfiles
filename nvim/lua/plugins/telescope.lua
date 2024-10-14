@@ -1,43 +1,5 @@
 local utils = require("config.utils")
-local finders = require("telescope.finders")
-local entry_display = require("telescope.pickers.entry_display")
-
-local create_entry = function(entry, max_len)
-  local full_path = vim.fn.fnamemodify(entry, ":p")
-  local file_name = vim.fn.fnamemodify(full_path, ":t") -- Extract just the file name
-  local dir_name = vim.fn.fnamemodify(full_path, ":h") -- Extract the directory path
-  local icon, icon_hl = utils.get_web_icon(file_name, "mini")
-
-  local displayer = entry_display.create({
-    separator = " ",
-    items = {
-      { width = 1 },
-      { width = 1 },
-      { width = max_len + 10 },
-      { remaining = true },
-    },
-  })
-
-  local make_display = function(item)
-    return displayer({
-      { item.icon, item.icon_hl },
-      { " " },
-      { item.filename, "TelescopeResultsNormal" },
-      { item.dir, "TelescopeResultsComment" },
-    })
-  end
-
-  return {
-    value = full_path, -- Full path as the value
-    path = full_path,
-    display = make_display,
-    ordinal = full_path, -- Use the full path for sorting and filtering
-    icon = icon,
-    icon_hl = icon_hl,
-    filename = file_name,
-    dir = dir_name,
-  }
-end
+local pickers = require("config/telescope_pickers")
 
 local M = {
   {
@@ -65,10 +27,54 @@ local M = {
       { "<leader>sW", vim.NIL },
       { "<leader>sw", vim.NIL, mode = "v" },
       { "<leader>sW", vim.NIL, mode = "v" },
-      { "<leader>fw", LazyVim.pick("grep_string", { root = false, word_match = "-w" }), desc = "Find Word" },
-      { "<leader>fw", LazyVim.pick("grep_string", { root = false }), mode = "v", desc = "Find Selection" },
+      {
+        "<leader>ff",
+        function()
+          pickers.prettyFilesPicker({ picker = "find_files" })
+        end,
+        desc = "Find Files",
+      },
+      {
+        "<leader>fr",
+        function()
+          pickers.prettyFilesPicker({ picker = "oldfiles" })
+        end,
+        desc = "Recent Files",
+      },
+      {
+        "<leader>fw",
+        function()
+          pickers.prettyGrepPicker({
+            picker = "grep_string",
+            options = {
+              root = true,
+              word_match = "-w",
+            },
+          })
+        end,
+        desc = "Find Word",
+      },
+      {
+        "<leader>fw",
+        function()
+          pickers.prettyGrepPicker({
+            picker = "grep_string",
+            options = { root = true },
+          })
+        end,
+        mode = "v",
+        desc = "Find Selection",
+      },
+      {
+        "<leader>fg",
+        function()
+          pickers.prettyGrepPicker({
+            picker = "live_grep",
+          })
+        end,
+        desc = "Grep",
+      },
       { "<leader>fb", "<cmd>Telescope current_buffer_fuzzy_find<cr><cr>", desc = "Find in Buffer" },
-      { "<leader>fg", LazyVim.pick("live_grep"), desc = "Grep" },
       { "<leader>p", "<cmd>lua require('telescope').extensions.project.project({})<cr>", desc = "Projects" },
       { "<leader>U", "<cmd>Telescope undo<cr>", desc = "undo tree" },
       { "<leader>ci", "<cmd>Telescope import<cr>", desc = "Import" },
@@ -113,15 +119,6 @@ local M = {
         pickers = {
           find_files = {
             hidden = true,
-            finder = finders.new_oneshot_job({ "rg", "--files", "--hidden" }, {
-              entry_maker = function(entry)
-                return create_entry(entry, 30)
-              end,
-            }),
-            layout_config = {
-              width = 0.8,
-              preview_width = 0.4,
-            },
           },
           buffers = {
             theme = "dropdown",

@@ -8,6 +8,7 @@ function M.config()
   local headers = require("config.headers")
   local quotes = require("config.quotes")
   local utils = require("config.utils")
+  local pickers = require("config/telescope_pickers")
   local theme = require("alpha.themes.theta")
   local path_ok, plenary_path = pcall(require, "plenary.path")
   if not path_ok then
@@ -217,7 +218,9 @@ function M.config()
       local file_button_el = dashboard.button(
         letter,
         icon .. display_path,
-        "<cmd>lua require('telescope.builtin').find_files( { cwd = '" .. project.path:gsub("\\", "/") .. "' }) <cr>"
+        "<cmd>lua require('config.telescope_pickers').prettyFilesPicker({picker = 'find_files', options = {cwd = '"
+          .. project.path:gsub("\\", "/")
+          .. "'}})<cr>"
       )
       file_button_el.opts.hl_shortcut = "WindowPickerStatusLine"
 

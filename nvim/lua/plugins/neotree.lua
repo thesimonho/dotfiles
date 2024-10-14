@@ -1,4 +1,5 @@
 local utils = require("config.utils")
+local pickers = require("config.telescope_pickers")
 
 local get_node_path = function(node)
   local path = node.path
@@ -40,12 +41,15 @@ local M = {
       commands = {
         find_files_dir = function(state)
           local node = state.tree:get_node()
-          require("telescope.builtin").find_files({ cwd = get_node_path(node) })
+          pickers.prettyFilesPicker({ picker = "find_files", options = { cwd = get_node_path(node) } })
           vim.cmd("Neotree close")
         end,
         grep_dir = function(state)
           local node = state.tree:get_node()
-          require("telescope.builtin").live_grep({ cwd = get_node_path(node) })
+          pickers.prettyGrepPicker({
+            picker = "live_grep",
+            options = { cwd = get_node_path(node) },
+          })
           vim.cmd("Neotree close")
         end,
       },
@@ -156,13 +160,13 @@ local M = {
             end
           end,
         },
-        {
-          event = "neo_tree_buffer_enter",
-          handler = function()
-            -- vim.opt_local.number = true
-            -- vim.opt_local.relativenumber = true
-          end,
-        },
+        -- {
+        --   event = "neo_tree_buffer_enter",
+        --   handler = function()
+        --     vim.opt_local.number = true
+        --     vim.opt_local.relativenumber = true
+        --   end,
+        -- },
       },
     },
   },
