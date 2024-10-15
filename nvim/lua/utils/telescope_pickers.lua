@@ -13,7 +13,8 @@ local utils = require("utils.general")
 -- Obtain Filename icon width
 -- --------------------------
 -- INSIGHT: This width applies to all icons that represent a file type
-local fileTypeIconWidth = plenaryStrings.strdisplaywidth(utils.get_web_icon("fname", "mini")) + 1
+local icon, _ = utils.get_web_icon("fname", "mini")
+local fileTypeIconWidth = plenaryStrings.strdisplaywidth(icon) + 1
 
 ---- Helper functions ----
 
