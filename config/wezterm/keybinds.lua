@@ -33,21 +33,19 @@ M.basic_binds = {
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false }) },
 	{ key = "p", mods = "ALT", action = workspace_switcher.switch_workspace() },
+	-- MacOS rebinds
+	{ key = "p", mods = "CMD", action = act.SendKey({ key = "p", mods = "CTRL" }) },
+	{ key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) },
+	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
+	{ key = "r", mods = "CMD", action = act.SendKey({ key = "r", mods = "CTRL" }) },
+	{ key = "h", mods = "CMD", action = act.SendKey({ key = "h", mods = "CTRL" }) },
+	{ key = "j", mods = "CMD", action = act.SendKey({ key = "j", mods = "CTRL" }) },
+	{ key = "k", mods = "CMD", action = act.SendKey({ key = "k", mods = "CTRL" }) },
+	{ key = "l", mods = "CMD", action = act.SendKey({ key = "l", mods = "CTRL" }) },
+	{ key = "d", mods = "CMD", action = act.SendKey({ key = "d", mods = "CTRL" }) },
+	{ key = "u", mods = "CMD", action = act.SendKey({ key = "u", mods = "CTRL" }) },
+	{ key = "e", mods = "CMD", action = act.SendKey({ key = "e", mods = "CTRL" }) },
 }
-
-if not wezterm.target_triple == "x86_64-pc-windows-msvc" then
-	M.basic_binds[#M.basic_binds + 1] = { key = "p", mods = "CMD", action = act.SendKey({ key = "p", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "r", mods = "CMD", action = act.SendKey({ key = "r", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "h", mods = "CMD", action = act.SendKey({ key = "h", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "j", mods = "CMD", action = act.SendKey({ key = "j", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "k", mods = "CMD", action = act.SendKey({ key = "k", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "l", mods = "CMD", action = act.SendKey({ key = "l", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "d", mods = "CMD", action = act.SendKey({ key = "d", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "u", mods = "CMD", action = act.SendKey({ key = "u", mods = "CTRL" }) }
-	M.basic_binds[#M.basic_binds + 1] = { key = "e", mods = "CMD", action = act.SendKey({ key = "e", mods = "CTRL" }) }
-end
 
 M.key_tables = {
 	window_mode = {
