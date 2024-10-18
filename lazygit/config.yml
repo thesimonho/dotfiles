@@ -40,7 +40,7 @@ gui:
       - default
   commitLength:
     show: true
-  mouseEvents: false
+  mouseEvents: true
   skipDiscardChangeWarning: false
   skipStashWarning: false
   showFileTree: true # for rendering changes files in a tree format
@@ -88,7 +88,7 @@ git:
   parseEmoji: true
 os:
   copyToClipboardCmd: "" # See 'Custom Command for Copying to Clipboard' section
-  editPreset: "" # see 'Configuring File Editing' section
+  editPreset: "nvim" # see 'Configuring File Editing' section
   edit: ""
   editAtLine: ""
   editAtLineAndWait: ""
@@ -177,7 +177,9 @@ customCommands:
     loadingText: "Creating conventional commit..."
   - key: 'f'
     command: 'git fetch --prune'
-    context: 'remoteBranches'
+    context: 'remotes, remoteBranches'
+    description: 'Fetch and prune remote branches'
+    loadingText: 'Fetching and pruning...'
     stream: true
 keybinding:
   universal:
