@@ -13,12 +13,17 @@ return {
           auto_enable = false, --- use just for color picker, no highlighting
         },
         recognize = {
-          input = true,
+          input = false,
           output = true,
+        },
+        inputs = {
+          ccc.input.hsl,
+          ccc.input.rgb,
         },
         outputs = {
           ccc.output.hex,
           ccc.output.css_rgb,
+          ccc.output.css_hsl,
         },
       }
     end,
