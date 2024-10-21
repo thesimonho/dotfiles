@@ -170,6 +170,18 @@ local M = {
           },
           undo = {
             use_delta = false,
+            mappings = {
+              i = {
+                ["<cr>"] = require("telescope-undo.actions").yank_additions,
+                ["<C-y>"] = require("telescope-undo.actions").yank_deletions,
+                ["<C-r>"] = require("telescope-undo.actions").restore,
+              },
+              n = {
+                ["<cr>"] = require("telescope-undo.actions").yank_additions,
+                ["<C-y>"] = require("telescope-undo.actions").yank_deletions,
+                ["<C-r>"] = require("telescope-undo.actions").restore,
+              },
+            },
           },
           import = {
             insert_at_top = false,
