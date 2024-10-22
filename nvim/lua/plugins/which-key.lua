@@ -5,6 +5,7 @@ return {
   opts = {
     show_help = false,
     show_keys = false,
+    sort = { "group", "alphanum" },
     preset = "helix",
     delay = 100,
     win = {
