@@ -26,6 +26,15 @@ return {
       vim.list_extend(keys, {
         { "<leader>ca", false },
         { "<leader>cA", false },
+        { "<leader>cR", false },
+        { "<leader>cr", vim.lsp.buf.rename, desc = "Rename symbol", has = "rename" },
+        {
+          "<leader>fR",
+          LazyVim.lsp.rename_file,
+          desc = "Rename File",
+          mode = { "n" },
+          has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
+        },
       })
     end,
   },
