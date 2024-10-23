@@ -177,7 +177,7 @@ customCommands:
     loadingText: "Creating conventional commit..."
   - key: 'f'
     command: 'git fetch --prune'
-    context: 'remotes, remoteBranches'
+    context: 'remotes'
     description: 'Fetch and prune remote branches'
     loadingText: 'Fetching and pruning...'
     stream: true
