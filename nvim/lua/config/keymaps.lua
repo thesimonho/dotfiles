@@ -27,7 +27,16 @@ vim.keymap.set("i", "<C-v>", '<esc>"+pi') -- Paste
 vim.keymap.set("i", "<C-p>", "<C-r>0") -- Paste the last yank
 vim.keymap.set("n", "<C-p>", '"0p') -- Paste the last yank
 vim.keymap.set("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
-vim.keymap.set("i", "<C-Del>", "<C-o>dw", { desc = "Delete word forward" }) -- Delete word forwards
+vim.keymap.set("i", "<C-Del>", function()
+  local col = vim.fn.col(".")
+  local line = vim.fn.getline(".")
+  -- If at the end of the line, delete to the start of the next line
+  if col > #line then
+    return vim.api.nvim_replace_termcodes("<C-o>J", true, true, true)
+  else
+    return vim.api.nvim_replace_termcodes("<C-o>dw", true, true, true)
+  end
+end, { expr = true, desc = "Delete word forward" })
 vim.keymap.set({ "n", "x" }, "gg", "mggg", { desc = "Go to top of file" })
 vim.keymap.set({ "n", "x" }, "G", "mgG", { desc = "Go to bottom of file" })
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
