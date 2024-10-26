@@ -25,7 +25,6 @@ config.color_scheme = "kanagawa-paper"
 config.default_cursor_style = "SteadyBar"
 config.default_workspace = "main"
 config.disable_default_key_bindings = true
-config.enable_kitty_keyboard = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
