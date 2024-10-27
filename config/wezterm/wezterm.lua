@@ -2,8 +2,8 @@ local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 local act = wezterm.action
 
-wezterm.on("gui-startup", function()
-	local _, _, window = wezterm.mux.spawn_window({
+wezterm.on("gui-startup", function(cmd)
+	local _, _, window = wezterm.mux.spawn_window(cmd or {
 		workspace = "main",
 	})
 
