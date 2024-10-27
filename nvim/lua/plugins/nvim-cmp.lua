@@ -10,14 +10,23 @@ return {
 
       local cmp = require("cmp")
 
-      opts.window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-      }
-      opts.window.completion.winblend = 0
-      opts.window.documentation.winblend = 0
+      opts.window = vim.tbl_extend("force", opts.window or {}, {
+        completion = vim.tbl_extend("force", cmp.config.window.bordered(), { winblend = 0 }),
+        documentation = vim.tbl_extend("force", cmp.config.window.bordered(), { winblend = 0 }),
+      })
 
-      opts.experimental.ghost_text = false
+      opts.view = vim.tbl_extend("force", opts.view or {}, {
+        docs = {
+          auto_open = true,
+        },
+        entries = {
+          follow_cursor = true,
+        },
+      })
+
+      opts.experimental = vim.tbl_extend("force", opts.experimental or {}, {
+        ghost_text = true,
+      })
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<C-n>"] = cmp.mapping({
