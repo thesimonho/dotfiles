@@ -35,6 +35,9 @@ return {
         ["<C-p>"] = cmp.mapping({
           i = cmp.config.disable,
         }),
+        ["<C-e>"] = cmp.mapping.close(),
+        ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-d>"] = cmp.mapping.scroll_docs(4),
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
