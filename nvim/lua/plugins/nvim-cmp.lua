@@ -25,7 +25,7 @@ return {
       })
 
       opts.experimental = vim.tbl_extend("force", opts.experimental or {}, {
-        ghost_text = true,
+        ghost_text = false,
       })
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
