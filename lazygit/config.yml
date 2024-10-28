@@ -77,7 +77,7 @@ git:
   skipHookPrefix: WIP
   # The main branches. We colour commits green if they belong to one of these branches,
   # so that you can easily see which commits are unique to your branch (coloured in yellow)
-  mainBranches: [master, main]
+  mainBranches: [main, master]
   autoFetch: true
   autoRefresh: true
   fetchAll: true # Pass --all flag when running git fetch. Set to false to fetch only origin (or the current branch's upstream remote if there is one)
