@@ -7,7 +7,7 @@ M.basic_binds = {
 	{ key = "F1", action = act.ActivateCommandPalette },
 	{
 		key = "c",
-		mods = "CTRL|CMD",
+		mods = "CTRL|SHIFT",
 		action = wezterm.action_callback(function(window, pane)
 			local selection_text = window:get_selection_text_for_pane(pane)
 			local is_selection_active = string.len(selection_text) ~= 0
