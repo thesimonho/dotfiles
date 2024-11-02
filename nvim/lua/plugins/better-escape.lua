@@ -1,6 +1,6 @@
 return {
   "max397574/better-escape.nvim",
-  event = "LazyFile",
+  event = "VeryLazy",
   opts = {
     timeout = vim.o.timeoutlen,
     default_mappings = false,
