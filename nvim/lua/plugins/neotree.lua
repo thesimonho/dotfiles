@@ -1,4 +1,3 @@
-local utils = require("utils.general")
 local style = require("utils.style")
 local pickers = require("utils.telescope_pickers")
 
@@ -98,6 +97,7 @@ local M = {
         width = 35,
         mappings = {
           ["<tab>"] = { "toggle_node" },
+          ["/"] = "filter_on_submit",
           ["f"] = "find_files_dir",
           ["g"] = "grep_dir",
           ["v"] = "open_vsplit",
