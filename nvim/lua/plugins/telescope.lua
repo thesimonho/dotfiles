@@ -3,6 +3,8 @@ local style = require("utils.style")
 local pickers = require("utils.telescope_pickers")
 local actions = require("telescope.actions")
 
+local Project = {}
+
 local M = {
   {
     "nvim-telescope/telescope.nvim",
@@ -77,7 +79,16 @@ local M = {
         desc = "Grep",
       },
       { "<leader>fb", "<cmd>Telescope current_buffer_fuzzy_find<cr><cr>", desc = "Find in Buffer" },
-      { "<leader>p", "<cmd>lua require('telescope').extensions.project.project({})<cr>", desc = "Projects" },
+      {
+        "<leader>p",
+        function()
+          -- get the filetype to check whether we started in alpha dashboard
+          local bufnr = vim.api.nvim_get_current_buf()
+          Project.prev_filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+          require("telescope").extensions.project.project({})
+        end,
+        desc = "Projects",
+      },
       { "<leader>U", "<cmd>Telescope undo<cr>", desc = "Undo tree" },
       { "<leader>ci", "<cmd>Telescope import<cr>", desc = "Import" },
     },
@@ -148,22 +159,26 @@ local M = {
             on_project_selected = function()
               local selected = require("telescope._extensions.project.actions").get_selected_path()
               local stat = vim.loop.fs_stat(selected .. "/.bare")
+
               if stat and stat.type == "directory" then
-                -- contains git worktrees (sibling .bare directory)
                 git.switch_git_worktree(selected)
               else
-                -- regular project directory
+                local opts = {
+                  cwd = selected,
+                }
+
+                if Project.prev_filetype ~= "alpha" then
+                  opts.attach_mappings = function(bufnr)
+                    actions.select_default:replace(function()
+                      actions.select_tab(bufnr)
+                    end)
+                    return true
+                  end
+                end
+
                 pickers.prettyFilesPicker({
                   picker = "find_files",
-                  options = {
-                    cwd = selected,
-                    attach_mappings = function(bufnr)
-                      actions.select_default:replace(function()
-                        actions.select_tab(bufnr)
-                      end)
-                      return true
-                    end,
-                  },
+                  options = opts,
                 })
               end
             end,
