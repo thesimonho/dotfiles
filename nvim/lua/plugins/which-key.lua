@@ -26,9 +26,9 @@ return {
       },
     },
     plugins = {
-      marks = false,
-      registers = false,
-      spelling = { enabled = false },
+      marks = true,
+      registers = true,
+      spelling = { enabled = true },
     },
     spec = {
       { "<localleader>", name = "Local" },
