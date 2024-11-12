@@ -30,7 +30,7 @@ return {
         { "<leader>cr", vim.lsp.buf.rename, desc = "Rename symbol", has = "rename" },
         {
           "<leader>fR",
-          LazyVim.lsp.rename_file,
+          Snacks.rename.rename_file,
           desc = "Rename File",
           mode = { "n" },
           has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
