@@ -131,7 +131,7 @@ local M = {
         },
         pickers = {
           find_files = {
-            hidden = true,
+            hidden = false,
           },
           buffers = {
             theme = "dropdown",
