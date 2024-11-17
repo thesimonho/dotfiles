@@ -148,7 +148,6 @@ local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabl
 tabline.setup({
 	options = {
 		icons_enabled = true,
-		theme = "kanagawabones",
 		color_overrides = {
 			normal_mode = {
 				a = { fg = "#282834", bg = "#c4b28a" },
@@ -190,8 +189,8 @@ tabline.setup({
 			right = wezterm.nerdfonts.ple_left_half_circle_thin,
 		},
 		tab_separators = {
-			left = wezterm.nerdfonts.ple_right_half_circle_thick,
-			right = wezterm.nerdfonts.ple_left_half_circle_thick,
+			left = "",
+			right = "",
 		},
 	},
 	sections = {
