@@ -15,7 +15,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.dial" },
     { import = "lazyvim.plugins.extras.ui.alpha" },
     { import = "lazyvim.plugins.extras.ui.mini-animate" },
-    { import = "lazyvim.plugins.extras.util.octo" },
     { import = "lazyvim.plugins.extras.vscode" },
     -- languages
     { import = "lazyvim.plugins.extras.lang.docker" },
