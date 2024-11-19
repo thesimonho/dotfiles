@@ -1,4 +1,14 @@
-return {
+local function get_lsp_clients()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ buffer = bufnr })
+  local client_names = {}
+  for _, client in ipairs(clients) do
+    table.insert(client_names, client.name)
+  end
+  return table.concat(client_names, ", ")
+end
+
+local M = {
   "nvim-lualine/lualine.nvim",
   opts = function()
     local kanagawa_paper = require("lualine.themes.kanagawa-paper")
@@ -127,6 +137,17 @@ return {
               return vim.fn["codeium#Chat"]()
             end,
           },
+          {
+            get_lsp_clients,
+            cond = function()
+              return vim.bo.filetype ~= "lspinfo"
+            end,
+            on_click = function()
+              vim.cmd("LspInfo")
+            end,
+            icon = "󰌘",
+            color = Util.ui.fg("Character"),
+          },
         },
         lualine_y = {
           -- stylua: ignore
@@ -199,3 +220,5 @@ return {
     }
   end,
 }
+
+return M
