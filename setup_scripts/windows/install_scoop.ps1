@@ -22,3 +22,4 @@ scoop install fd
 scoop install pipx
 scoop install FiraCode-NF
 scoop install FiraCode-NF-Mono
+scoop install chafa
