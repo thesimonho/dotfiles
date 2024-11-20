@@ -189,7 +189,7 @@ tabline.setup({
 			right = wezterm.nerdfonts.ple_left_half_circle_thin,
 		},
 		tab_separators = {
-			left = "",
+			left = " ",
 			right = "",
 		},
 	},
