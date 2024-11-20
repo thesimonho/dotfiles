@@ -1,6 +1,6 @@
 local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.get_clients({ buffer = bufnr })
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
   local client_names = {}
   for _, client in ipairs(clients) do
     table.insert(client_names, client.name)
