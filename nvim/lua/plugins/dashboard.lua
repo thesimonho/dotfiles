@@ -53,10 +53,10 @@ local M = {
             title = "Files",
             section = "recent_files",
             limit = 10,
-            indent = 3,
+            indent = 2,
             padding = 2,
           },
-          { pane = 2, icon = " ", title = "Projects", section = "projects", limit = 10, indent = 3, padding = 2 },
+          { pane = 2, icon = " ", title = "Projects", section = "projects", limit = 10, indent = 2, padding = 2 },
         },
         formats = {
           key = function(item)
