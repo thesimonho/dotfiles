@@ -1,7 +1,6 @@
 {
-  "LazyVim": { "branch": "main", "commit": "2786fdb6e2eb0a8e640042fd1cfe8b2febdf7e40" },
   "SchemaStore.nvim": { "branch": "main", "commit": "a7ad1f6205500d1369382e2e43df4e60eeae7cb6" },
-  "alpha-nvim": { "branch": "main", "commit": "de72250e054e5e691b9736ee30db72c65d560771" },
+  "LazyVim": { "branch": "main", "commit": "4d596cf4b4dcb369b2aef7e4d09635416b6c5a3f" },
   "barbar.nvim": { "branch": "master", "commit": "20f26c940991c528c5e3c6d0d82a6dc1a82b9d4c" },
   "better-escape.nvim": { "branch": "master", "commit": "199dcc2643dec5d8dbdab4ec672cf405224dcb3b" },
   "catppuccin": { "branch": "main", "commit": "637d99e638bc6f1efedac582f6ccab08badac0c6" },
@@ -56,7 +55,7 @@
   "render-markdown.nvim": { "branch": "main", "commit": "430a671655ac84a63f41cd3e940caebdd0a99434" },
   "satellite.nvim": { "branch": "main", "commit": "ea0a2e92bbb57981043fca334f5b274c0f279238" },
   "scope.nvim": { "branch": "main", "commit": "932102696ead2b7ab9ff65017767b57e2722fdde" },
-  "snacks.nvim": { "branch": "main", "commit": "1acea8b94005620dad70dfde6a6344c130a57c59" },
+  "snacks.nvim": { "branch": "main", "commit": "7c9e65c5c9445b09baecd1932b35dd57dd28b2ff" },
   "tailwindcss-colorizer-cmp.nvim": { "branch": "main", "commit": "3d3cd95e4a4135c250faf83dd5ed61b8e5502b86" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "cf48d4dfce44e0b9a2e19a008d6ec6ea6f01a83b" },
   "telescope-import.nvim": { "branch": "main", "commit": "6ccc0ad05b2906e04c5ba415a7f973229efc6dbc" },

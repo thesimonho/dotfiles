@@ -82,7 +82,7 @@ local M = {
       {
         "<leader>p",
         function()
-          -- get the filetype to check whether we started in alpha dashboard
+          -- get the filetype to check whether we started in dashboard
           local bufnr = vim.api.nvim_get_current_buf()
           Project.prev_filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
           require("telescope").extensions.project.project({})
@@ -167,7 +167,7 @@ local M = {
                   cwd = selected,
                 }
 
-                if Project.prev_filetype ~= "alpha" then
+                if Project.prev_filetype ~= "snacks_dashboard" then
                   opts.attach_mappings = function(bufnr)
                     actions.select_default:replace(function()
                       actions.select_tab(bufnr)

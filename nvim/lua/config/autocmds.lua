@@ -36,7 +36,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
         vim.api.nvim_set_option_value("number", false, { scope = "local" })
         vim.api.nvim_set_option_value("relativenumber", false, { scope = "local" })
         vim.api.nvim_command("startinsert")
-      elseif filetype ~= "TelescopePrompt" and filetype ~= "alpha" then
+      elseif filetype ~= "TelescopePrompt" then
         -- without this^, telescope will exit insert when no matches are found
         vim.api.nvim_command("stopinsert")
       end
@@ -58,27 +58,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.cmd("tcd " .. root)
   end,
   desc = "Find root and change current directory",
-})
-
--- dashboard
-local alpha_group = vim.api.nvim_create_augroup("Dashboard", { clear = true })
-
-vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-  group = alpha_group,
-  callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-    if filetype ~= "alpha" then
-      vim.wo.cursorline = true
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-  group = alpha_group,
-  callback = function()
-    vim.wo.cursorline = false
-  end,
 })
 
 -- git statuses

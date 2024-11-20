@@ -27,7 +27,7 @@ local M = {
         component_separators = { left = "│", right = "│" },
         section_separators = { left = "", right = "" },
         globalstatus = false,
-        disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
+        disabled_filetypes = { statusline = { "dashboard", "snacks_dashboard", "starter" } },
       },
       sections = {
         lualine_a = {
