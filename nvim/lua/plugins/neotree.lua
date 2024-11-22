@@ -161,13 +161,18 @@ local M = {
             end
           end,
         },
-        -- {
-        --   event = "neo_tree_buffer_enter",
-        --   handler = function()
-        --     vim.opt_local.number = true
-        --     vim.opt_local.relativenumber = true
-        --   end,
-        -- },
+        {
+          event = "file_moved",
+          handler = function(args)
+            Snacks.rename.on_rename_file(args.source, args.destination)
+          end,
+        },
+        {
+          event = "file_renamed",
+          handler = function(args)
+            Snacks.rename.on_rename_file(args.source, args.destination)
+          end,
+        },
       },
     },
   },
