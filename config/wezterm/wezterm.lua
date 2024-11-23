@@ -38,6 +38,8 @@ config.inactive_pane_hsb = {
 	saturation = 0.9,
 	brightness = 0.7,
 }
+config.keys = keybinds.basic_binds
+config.key_tables = keybinds.key_tables
 config.scrollback_lines = 7500
 config.tab_and_split_indices_are_zero_based = true
 config.tab_max_width = 32
@@ -59,6 +61,20 @@ config.window_padding = {
 config.colors = {
 	tab_bar = {
 		background = "#282834",
+		active_tab = {
+			fg_color = "#c4b28a",
+			bg_color = "#353545",
+			intensity = "Bold",
+		},
+		inactive_tab = {
+			fg_color = "#696861",
+			bg_color = "#282834",
+		},
+		inactive_tab_hover = {
+			fg_color = "#c4b28a",
+			bg_color = "#353545",
+			italic = true,
+		},
 		new_tab = {
 			bg_color = "#282834",
 			fg_color = "#808080",
@@ -69,9 +85,6 @@ config.colors = {
 		},
 	},
 }
-
-config.keys = keybinds.basic_binds
-config.key_tables = keybinds.key_tables
 
 if is_windows() then
 	config.font_size = 11
@@ -86,10 +99,6 @@ if is_windows() then
 		{
 			label = "PowerShell",
 			args = { "pwsh.exe" },
-		},
-		{
-			label = "config.d",
-			args = { "config.d.exe" },
 		},
 	}
 else
@@ -144,6 +153,7 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(windo
 end)
 
 -- tabline
+
 local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
 tabline.setup({
 	options = {
@@ -173,11 +183,6 @@ tabline.setup({
 				a = { fg = "#282834", bg = "#c4746e" },
 				b = { fg = "#c4746e", bg = "#353545" },
 				c = { fg = "#696861", bg = "#282834" },
-			},
-			tab = {
-				active = { fg = "#c4b28a", bg = "#353545" },
-				inactive = { fg = "#696861", bg = "#282834" },
-				inactive_hover = { fg = "#c4b28a", bg = "#353545" },
 			},
 		},
 		section_separators = {
