@@ -118,6 +118,34 @@ else
 	}
 end
 
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	local cwd = tab.active_pane.current_working_dir.file_path
+	local separator = cwd:find("\\") and "\\" or "/"
+
+	-- Split the path into components
+	local components = {}
+	for part in cwd:gmatch("[^" .. separator .. "]+") do
+		table.insert(components, part)
+	end
+
+	-- Get the last few path components
+	local num_elements = 2
+	local start_index = math.max(#components - num_elements + 1, 1)
+	local last_dirs = {}
+	for i = start_index, #components do
+		table.insert(last_dirs, components[i])
+	end
+
+	local title = table.concat(last_dirs, separator)
+	local padding = string.rep(" ", 2)
+	local max_width_with_pad = max_width - (#padding * 2)
+	if #title > max_width_with_pad then
+		title = "…" .. title:sub(#title - max_width_with_pad + 2)
+	end
+
+	return { { Text = padding .. title .. padding } }
+end)
+
 -- workspace_switcher
 local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 
