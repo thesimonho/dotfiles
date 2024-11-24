@@ -21,6 +21,7 @@ local M = {
         },
       },
       dashboard = {
+        width = 65,
         pane_gap = 20,
         preset = {
           keys = {
