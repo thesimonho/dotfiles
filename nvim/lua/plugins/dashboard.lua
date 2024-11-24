@@ -1,12 +1,59 @@
 local headers = require("config.headers")
 local quotes = require("config.quotes")
-local header_list = { headers.cool, headers.vim, headers.panda, headers.snorlax, headers.undertale }
-local quote_list = { quotes.roar, quotes.path, quotes.fear, quotes.gd }
 
 math.randomseed(os.time())
 
 local function format_tbl_text(text)
   return table.concat(text, "\n")
+end
+
+local function list_image_files(directory)
+  local image_extensions = { ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp" }
+  local files = {}
+
+  local handle = vim.loop.fs_scandir(directory)
+  if not handle then
+    return files
+  end
+
+  while true do
+    local name, type = vim.loop.fs_scandir_next(handle)
+    if not name then
+      break
+    end
+
+    if type == "file" then
+      for _, ext in ipairs(image_extensions) do
+        if name:sub(-#ext):lower() == ext then
+          table.insert(files, name)
+        end
+      end
+    end
+  end
+  return files
+end
+
+local function choose_header()
+  local use_image = true
+
+  if use_image then
+    local path_wallpapers = vim.fn.stdpath("config") .. "/wallpapers"
+    local images = list_image_files(path_wallpapers)
+    local image_path = path_wallpapers .. "/" .. images[math.random(#images)]
+
+    return {
+      section = "terminal",
+      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size 65x17",
+      height = 17,
+      padding = 2,
+    }
+  end
+
+  return {
+    text = { format_tbl_text(headers[math.random(#headers)]), hl = "String" },
+    align = "center",
+    padding = 2,
+  }
 end
 
 local M = {
@@ -36,15 +83,11 @@ local M = {
           },
         },
         sections = {
-          {
-            text = { format_tbl_text(header_list[math.random(#header_list)]), hl = "String" },
-            align = "center",
-            padding = 2,
-          },
+          choose_header(),
           { section = "startup", padding = 1 },
           { section = "keys", padding = 4 },
           {
-            text = { "  " .. format_tbl_text(quote_list[math.random(#quote_list)]), hl = "Comment" },
+            text = { "  " .. format_tbl_text(quotes[math.random(#quotes)]), hl = "Comment" },
             align = "right",
           },
           { pane = 2, header = "Recent", padding = 2 },

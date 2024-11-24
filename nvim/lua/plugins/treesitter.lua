@@ -8,7 +8,6 @@ local M = {
       "cpp",
       "css",
       "gitignore",
-      "gotmpl",
       "graphql",
       "html",
       "javascript",
