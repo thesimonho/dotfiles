@@ -9,7 +9,7 @@ local get_node_path = function(node)
   return path
 end
 
-local M = {
+return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
@@ -36,6 +36,7 @@ local M = {
       popup_border_style = style.border_chars_outer_thin,
       enable_git_status = true,
       enable_modified_markers = true,
+      enable_opened_markers = true,
       enable_diagnostics = true,
       sort_case_insensitive = true,
       commands = {
@@ -61,6 +62,24 @@ local M = {
         modified = {
           symbol = " ",
           highlight = "NeoTreeModified",
+        },
+        name = {
+          trailing_slash = false,
+          use_git_status_colors = true,
+          highlight_opened_files = true,
+          highlight = "NeoTreeFileName",
+        },
+        file_size = {
+          enabled = true,
+          required_width = 64, -- min width of window required to show this column
+        },
+        type = {
+          enabled = true,
+          required_width = 64, -- min width of window required to show this column
+        },
+        last_modified = {
+          enabled = true,
+          required_width = 64, -- min width of window required to show this column
         },
         icon = {
           folder_closed = "",
@@ -94,7 +113,14 @@ local M = {
       },
       window = {
         position = "float",
-        width = 35,
+        popup = { -- settings that apply to float position only
+          size = {
+            height = "80%",
+            width = "50%",
+          },
+          position = "50%", -- 50% means center it
+          title = "Neo-tree",
+        },
         mappings = {
           ["<tab>"] = { "toggle_node" },
           ["/"] = "filter_on_submit",
@@ -177,5 +203,3 @@ local M = {
     },
   },
 }
-
-return M
