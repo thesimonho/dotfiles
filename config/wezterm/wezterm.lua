@@ -28,8 +28,8 @@ config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
-	{ family = "DepartureMono Nerd Font Mono", weight = "Regular" },
-	"FiraCode Nerd Font Mono",
+	{ family = "FiraCode Nerd Font Mono", weight = "Regular" },
+	"Liberation Mono",
 })
 config.front_end = "OpenGL"
 config.harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" }
