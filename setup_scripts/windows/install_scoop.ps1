@@ -8,6 +8,7 @@ if (!(Test-Path $env:USERPROFILE\scoop)) {
 }
 
 scoop bucket add extras
+scoop bucket add nerd-fonts
 
 Write-Host "Installing scoop packages..."
 scoop install main/ripgrep
@@ -20,6 +21,6 @@ scoop install fzf
 scoop install sed
 scoop install fd 
 scoop install pipx
-scoop install FiraCode-NF
-scoop install FiraCode-NF-Mono
+scoop install nerd-fonts/FiraCode-NF-Mono
+scoop install nerd-fonts/DepartureMono-NF-Mono
 scoop install chafa
