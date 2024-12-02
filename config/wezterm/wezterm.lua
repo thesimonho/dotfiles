@@ -28,7 +28,7 @@ config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
-	{ family = "FiraCode Nerd Font Mono", weight = "Regular" },
+	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
 })
 config.front_end = "OpenGL"

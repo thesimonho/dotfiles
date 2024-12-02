@@ -21,5 +21,5 @@ scoop install fzf
 scoop install sed
 scoop install fd 
 scoop install pipx
-scoop install nerd-fonts/FiraCode-NF-Mono
+scoop install nerd-fonts/FiraCode-NF
 scoop install chafa
