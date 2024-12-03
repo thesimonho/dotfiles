@@ -9,6 +9,8 @@ local get_node_path = function(node)
   return path
 end
 
+-- TODO: hide columns on smaller screens
+
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",

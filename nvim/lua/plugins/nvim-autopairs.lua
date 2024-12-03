@@ -1,3 +1,5 @@
+-- NOTE: mid sentence inserts before a space autocloses brackets - useful? annoying?
+
 return {
   "windwp/nvim-autopairs",
   event = "InsertEnter",

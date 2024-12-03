@@ -8,6 +8,8 @@ local function get_lsp_clients()
   return table.concat(client_names, ", ")
 end
 
+-- TODO: hide less important components if window split
+
 local M = {
   "nvim-lualine/lualine.nvim",
   opts = function()

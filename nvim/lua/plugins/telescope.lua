@@ -5,6 +5,7 @@ local actions = require("telescope.actions")
 
 local Project = {}
 
+-- TODO: show relevant hidden files like .github/workflows, but not .git
 local M = {
   {
     "nvim-telescope/telescope.nvim",
