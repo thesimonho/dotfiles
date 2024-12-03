@@ -101,6 +101,21 @@ M.find_root = function(buf_id, patterns)
   return res
 end
 
+-- Recursive function to find a directory containing the target
+M.find_parent_with_directory = function(start_path, target_dir)
+  local target_path = vim.fn.fnamemodify(start_path, ":p") .. target_dir
+  if vim.loop.fs_stat(target_path) then
+    return start_path
+  end
+
+  local parent = vim.fn.fnamemodify(start_path, ":h")
+  if parent == start_path then
+    return nil -- Reached the root directory
+  end
+
+  return M.find_parent_with_directory(parent, target_dir)
+end
+
 M.get_file_extension = function(fn)
   local match = fn:match("^.+(%..+)$")
   local ext = ""

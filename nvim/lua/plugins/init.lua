@@ -12,4 +12,5 @@ return {
   { "lukas-reineke/indent-blankline.nvim", enabled = false },
   { "echasnovski/mini.pairs", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
+  { "cappyzawa/telescope-terraform.nvim", enabled = false },
 }
