@@ -36,6 +36,14 @@ if (!(Test-Path $env:USERPROFILE\.config\starship.toml)) {
     New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $DOTFILES\config\starship.toml
 }
 
+if (!(Test-Path $env:USERPROFILE\.config\fzf.rc)) {
+    Write-Host "Symlinking fzf config..."
+    New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\fzf.rc -Target $DOTFILES\config\fzf.rc
+
+    Write-Host "Setting user environment variable $envVarName..."
+    [System.Environment]::SetEnvironmentVariable("FZF_DEFAULT_OPTS_FILE", "$($env:USERPROFILE)\.config\fzf.rc", [System.EnvironmentVariableTarget]::User)
+}
+
 Write-Host "Symlinking nushell config..."
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Roaming\nushell\config.nu -Target $DOTFILES\nushell\config.nu -Force
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\AppData\Roaming\nushell\alias.nu -Target $DOTFILES\nushell\alias.nu -Force
