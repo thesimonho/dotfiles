@@ -28,7 +28,7 @@ M.basic_binds = {
 		key = "f",
 		mods = "CTRL",
 		action = act.SendString(
-			"fzf --bind 'enter:become(nvim {})' --preview 'bat --color=always --style=numbers --line-range=:500 {}'\r"
+			"fzf --bind 'enter:become(nvim {})' --preview 'bat --color=always --style=header,grid --line-range=:500 {}'\r"
 		),
 	},
 	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
