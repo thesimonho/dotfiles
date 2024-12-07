@@ -61,6 +61,9 @@ New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\init.el -Target 
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\early-init.el -Target $DOTFILES\emacs\early-init.el -Force
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\themes -Target $DOTFILES\emacs\themes -Force
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.emacs.d\images -Target $DOTFILES\emacs\images -Force
+    
+Write-Host "Setting up yazi..."
+[System.Environment]::SetEnvironmentVariable("YAZI_FILE_ONE", "C:\Program Files\Git\usr\bin\file.exe", [System.EnvironmentVariableTarget]::User)
 
 #-----------------------------------------------------
 # Set default shell

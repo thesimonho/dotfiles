@@ -24,3 +24,8 @@ scoop install pipx
 scoop install main/bat
 scoop install nerd-fonts/FiraCode-NF
 scoop install chafa
+scoop install yazi
+scoop install jq
+scoop install poppler
+scool install imagemagick
+scoop install ghostscript

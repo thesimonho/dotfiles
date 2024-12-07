@@ -31,6 +31,11 @@ M.basic_binds = {
 			"fzf --bind 'enter:become(nvim {})' --preview 'bat --color=always --style=header,grid --line-range=:500 {}'\r"
 		),
 	},
+	{
+		key = "e",
+		mods = "CTRL",
+		action = act.SendString("yazi\r"),
+	},
 	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
 	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
