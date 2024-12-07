@@ -40,7 +40,7 @@ end, { expr = true, desc = "Delete word forward" })
 vim.keymap.set({ "n", "x" }, "gg", "mggg", { desc = "Go to top of file" })
 vim.keymap.set({ "n", "x" }, "G", "mgG", { desc = "Go to bottom of file" })
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save file" })
-vim.keymap.set("n", "<leader>uR", "<cmd>set cursorcolumn!<cr>", { desc = "Toggle column ruler" })
+Snacks.toggle.option("cursorcolumn", { name = "column ruler" }):map("<leader>uR")
 
 -- Windows
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
