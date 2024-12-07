@@ -24,7 +24,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 })
 
 -- insert mode when switching to terminal
--- BUG: not working when switching into toggleterm buffers
 vim.api.nvim_create_autocmd("BufEnter", {
   pattern = "*",
   callback = function()
@@ -34,9 +33,9 @@ vim.api.nvim_create_autocmd("BufEnter", {
       local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
 
       if buftype == "terminal" then
-        vim.api.nvim_set_option_value("number", false, { scope = "local" })
-        vim.api.nvim_set_option_value("relativenumber", false, { scope = "local" })
-        vim.cmd("startinsert")
+        vim.defer_fn(function()
+          vim.cmd("startinsert")
+        end, 10)
       elseif filetype ~= "TelescopePrompt" then
         -- without this^, telescope will exit insert when no matches are found
         vim.cmd("stopinsert")
