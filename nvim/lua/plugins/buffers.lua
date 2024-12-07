@@ -36,10 +36,6 @@ return {
       { "<leader>bn", "<cmd>vnew<cr>", desc = "New buffer" },
       { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin buffer" },
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete other buffers" },
-      { "<leader>1", "<Cmd>BufferGoto 1<CR>", desc = "Buffer 1" },
-      { "<leader>2", "<Cmd>BufferGoto 2<CR>", desc = "Buffer 2" },
-      { "<leader>3", "<Cmd>BufferGoto 3<CR>", desc = "Buffer 3" },
-      { "<leader>4", "<Cmd>BufferGoto 4<CR>", desc = "Buffer 4" },
     },
     opts = {
       focus_on_close = "previous",
