@@ -1,4 +1,6 @@
+local wk = require("which-key")
 local preferred_shells = { "nu", "zsh", "bash", "cmd" }
+
 local function set_shell()
   for _, shell in ipairs(preferred_shells) do
     if vim.fn.executable(shell) == 1 then
@@ -8,14 +10,6 @@ local function set_shell()
 end
 
 M = {
-  {
-    "folke/which-key.nvim",
-    opts = {
-      spec = {
-        ["<leader>\\"] = { name = "  terminal" },
-      },
-    },
-  },
   {
     "akinsho/toggleterm.nvim",
     version = "*",
@@ -28,13 +22,25 @@ M = {
       { "<leader>\\4", "<cmd>4ToggleTerm<CR>", desc = "Terminal 4" },
       { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
+    init = function()
+      wk.add({ "<leader>\\", group = "terminal", icon = "" })
+    end,
     opts = {
       autochdir = true,
       auto_scroll = true,
       direction = "vertical",
       shell = set_shell(),
       start_in_insert = true,
+      hide_numbers = true,
       shade_terminals = false,
+      on_create = function(term)
+        vim.wo.cursorline = false
+        vim.keymap.set("t", "<esc>", "<C-\\><C-n>", { silent = true, buffer = term.bufnr })
+        vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { silent = true, buffer = term.bufnr })
+        vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j", { silent = true, buffer = term.bufnr })
+        vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k", { silent = true, buffer = term.bufnr })
+        vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l", { silent = true, buffer = term.bufnr })
+      end,
       size = function(term)
         if term.direction == "horizontal" then
           return 15
