@@ -1,6 +1,15 @@
 return {
   {
     "folke/snacks.nvim",
+    init = function()
+      _G.dd = function(...)
+        Snacks.debug.inspect(...)
+      end
+      _G.bt = function()
+        Snacks.debug.backtrace()
+      end
+      vim.print = _G.dd
+    end,
     opts = {
       gitbrowse = {
         notify = true,
@@ -21,8 +30,8 @@ return {
         },
       },
       notifier = {
-        margin = { top = 0, right = 1, bottom = 1 },
-        style = "fancy",
+        margin = { top = 1, right = 1, bottom = 1 },
+        style = "compact",
       },
       quickfile = {
         enabled = true,
