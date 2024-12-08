@@ -1,6 +1,11 @@
 local utils = require("utils.general")
 
--- FIX: creating a new blank .tf file does not set the filetype correctly
+vim.filetype.add({
+  extension = {
+    tf = "terraform",
+    tfvars = "terraform",
+  },
+})
 
 return {
   {
