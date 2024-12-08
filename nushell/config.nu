@@ -360,7 +360,7 @@ $env.config = {
             modifier: none
             keycode: escape
             mode: [emacs, vi_normal, vi_insert]
-            event: { send: esc }    # NOTE: does not appear to work
+            event: { send: esc }    
         }
         {
             name: cancel_command
