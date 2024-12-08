@@ -9,8 +9,6 @@ local get_node_path = function(node)
   return path
 end
 
--- TODO: hide columns on smaller screens
-
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -71,17 +69,17 @@ return {
           highlight_opened_files = true,
           highlight = "NeoTreeFileName",
         },
-        file_size = {
-          enabled = true,
-          required_width = 64, -- min width of window required to show this column
-        },
         type = {
           enabled = true,
-          required_width = 64, -- min width of window required to show this column
+          required_width = 20, -- min width of window required to show this column
+        },
+        file_size = {
+          enabled = true,
+          required_width = 60, -- min width of window required to show this column
         },
         last_modified = {
           enabled = true,
-          required_width = 64, -- min width of window required to show this column
+          required_width = 100, -- min width of window required to show this column
         },
         icon = {
           folder_closed = "",
