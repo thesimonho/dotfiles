@@ -101,7 +101,12 @@ local M = {
             file_status = true,
             path = 0,
             padding = 0,
-            color = Util.ui.fg("Statement"),
+            color = function()
+              if vim.bo.modified then
+                return { fg = kanagawa_paper.insert.a.bg }
+              end
+              return Util.ui.fg("Statement")
+            end,
           },
         },
         lualine_x = {
