@@ -8,7 +8,20 @@ local function get_lsp_clients()
   return table.concat(client_names, ", ")
 end
 
--- TODO: hide less important components if window split
+--- A function to conditionally hide content based on number of window splits.
+-- @param n_split number: The number of horizontal splits to divide the screen into. Defaults to half the screen if nil.
+-- @return function: A function that returns `true` if the window width exceeds the size of the split, otherwise `false`.
+local function hide_on_split(n_split)
+  n_split = n_split or 2
+
+  return function()
+    local width = vim.fn.winwidth(0)
+    if width > vim.o.columns / n_split then
+      return true
+    end
+    return false
+  end
+end
 
 local M = {
   "nvim-lualine/lualine.nvim",
@@ -33,10 +46,9 @@ local M = {
       },
       sections = {
         lualine_a = {
-          -- stylua: ignore
           {
             "mode",
-            separator = { left = "" , right = ""},
+            separator = { left = "", right = "" },
             fmt = function(str)
               return str:lower()
             end,
@@ -48,7 +60,7 @@ local M = {
               return vim.g.git_worktree_root
             end,
             cond = function()
-              return vim.g.git_worktree ~= nil
+              return vim.g.git_worktree ~= nil and hide_on_split(3)()
             end,
             icon = "",
             padding = { left = 1, right = 1 },
@@ -93,6 +105,7 @@ local M = {
             function()
               return vim.fn.expand("%:h") .. utils.get_path_sep()
             end,
+            cond = hide_on_split(3),
             separator = "",
             padding = 0,
           },
@@ -110,11 +123,23 @@ local M = {
           },
         },
         lualine_x = {
-          -- stylua: ignore
+          { "encoding", cond = hide_on_split(2) },
           {
-            function() return require("package-info").get_status() end,
+            function()
+              return vim.api.nvim_call_function("codeium#GetStatusString", {})
+            end,
+            cond = hide_on_split(2),
+            icon = "󱙺",
+            on_click = function()
+              return vim.fn["codeium#Chat"]()
+            end,
           },
-          -- stylua: ignore
+          {
+            function()
+              return require("package-info").get_status()
+            end,
+            cond = hide_on_split(3),
+          },
           {
             function()
               local venv_name = require("venv-selector").venv()
@@ -131,44 +156,35 @@ local M = {
                 return "env: none"
               end
             end,
-            cond = function() return vim.bo.filetype == "python" end,
-            on_click = function() require("venv-selector").open() end,
-            color = Util.ui.fg("Statement"),
+            cond = function()
+              return vim.bo.filetype == "python" and hide_on_split(3)()
+            end,
+            on_click = function()
+              require("venv-selector").open()
+            end,
           },
+        },
+        lualine_y = {
           {
             function()
-              return vim.api.nvim_call_function("codeium#GetStatusString", {})
+              return "🔴 " .. require("noice").api.status.mode.get()
             end,
-            icon = "󱙺",
-            on_click = function()
-              return vim.fn["codeium#Chat"]()
+            cond = function()
+              return package.loaded["noice"] and require("noice").api.status.mode.has()
             end,
+            color = Util.ui.fg("ErrorMsg"),
+            padding = { left = 0, right = 1 },
           },
           {
             get_lsp_clients,
             cond = function()
-              return vim.bo.filetype ~= "lspinfo"
+              return vim.bo.filetype ~= "lspinfo" and hide_on_split(3)()
             end,
             on_click = function()
               vim.cmd("LspInfo")
             end,
             icon = "󰌘",
             color = Util.ui.fg("Character"),
-          },
-        },
-        lualine_y = {
-          -- stylua: ignore
-          {
-            function() return "🔴 " .. require("noice").api.status.mode.get() end,
-            cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-            color = Util.ui.fg("ErrorMsg"),
-            padding = {left = 0, right = 1}
-          },
-          -- stylua: ignore
-          {
-            function() return "  " .. require("dap").status() end,
-            cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
-            color = Util.ui.fg("Debug"),
           },
           {
             "diagnostics",
@@ -185,11 +201,20 @@ local M = {
         },
         lualine_z = {
           {
+            "location",
+            cond = hide_on_split(3),
+            separator = { left = "", right = "" },
+          },
+          {
+            function()
+              return "(" .. vim.fn.line("$") .. ")"
+            end,
+            cond = hide_on_split(2),
+            padding = 0,
+          },
+          {
             "progress",
             separator = { left = "", right = "" },
-            on_click = function()
-              vim.api.nvim_command(vim.fn.input(":"))
-            end,
           },
         },
       },
