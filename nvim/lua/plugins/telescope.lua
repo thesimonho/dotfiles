@@ -5,7 +5,6 @@ local actions = require("telescope.actions")
 
 local Project = {}
 
--- TODO: show relevant hidden files like .github/workflows, but not .git
 local M = {
   {
     "nvim-telescope/telescope.nvim",
@@ -102,18 +101,18 @@ local M = {
           dynamic_preview_title = true,
           prompt_prefix = "  ",
           path_display = { "smart" },
-          borderchars = style.border_chars_outer_thin_telescope,
           border = true,
-          file_ignore_patterns = {
-            "node_modules/",
-            ".terraform/",
-            ".git/",
-            "*.webp",
-            "$RECYCLE.BIN",
-          },
+          borderchars = style.border_chars_outer_thin_telescope,
           preview = {
             filesize_limit = 2,
             timeout = 200,
+          },
+          file_ignore_patterns = {
+            "node_modules[\\/]",
+            ".terraform[\\/]",
+            ".git[\\/]",
+            "*.lock",
+            "$RECYCLE.BIN",
           },
           mappings = {
             i = {
@@ -132,7 +131,7 @@ local M = {
         },
         pickers = {
           find_files = {
-            hidden = false,
+            hidden = true,
           },
           buffers = {
             theme = "dropdown",
