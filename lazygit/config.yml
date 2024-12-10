@@ -181,6 +181,14 @@ customCommands:
     description: 'Fetch and prune remote branches'
     loadingText: 'Fetching and pruning...'
     stream: true
+  - key: 'S'
+    context: 'remoteBranches'
+    description: 'Sync branch with upstream'
+    loadingText: 'Syncing with upstream...'
+    stream: true
+    command: |
+      git fetch {{.SelectedRemote.Name}}
+      git push origin {{.SelectedRemote.Name}}/{{.SelectedRemoteBranch.Name}}:{{.SelectedRemoteBranch.Name}}
 keybinding:
   universal:
     prevBlock-alt: '<c-k>' # goto the previous block / panel
