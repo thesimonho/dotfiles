@@ -43,8 +43,8 @@ local function choose_header()
 
     return {
       section = "terminal",
-      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size 65x17",
-      height = 17,
+      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size 60x15",
+      height = 15,
       padding = 2,
     }
   end
@@ -68,8 +68,8 @@ local M = {
         },
       },
       dashboard = {
-        width = 65,
-        pane_gap = 20,
+        width = 60,
+        pane_gap = 15,
         preset = {
           keys = {
             {
