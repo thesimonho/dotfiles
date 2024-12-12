@@ -26,7 +26,7 @@ config.default_cursor_style = "SteadyBar"
 config.default_workspace = "main"
 config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
-config.enable_wayland = true
+config.enable_wayland = false
 config.font = wezterm.font_with_fallback({
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
