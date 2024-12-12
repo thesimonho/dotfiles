@@ -100,12 +100,16 @@ if is_windows() then
 			label = "PowerShell",
 			args = { "pwsh.exe" },
 		},
+		{
+			label = "Command Prompt",
+			args = { "cmd.exe" },
+		},
 	}
 else
 	config.font_size = 16
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 0.9
-	config.default_prog = { "zsh", "-l" }
+	config.default_prog = { "/opt/homebrew/bin/nu" }
 	config.launch_menu = {
 		{
 			label = "zsh",
