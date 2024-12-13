@@ -52,6 +52,7 @@
   "scope.nvim": { "branch": "main", "commit": "932102696ead2b7ab9ff65017767b57e2722fdde" },
   "tailwindcss-colorizer-cmp.nvim": { "branch": "main", "commit": "3d3cd95e4a4135c250faf83dd5ed61b8e5502b86" },
   "snacks.nvim": { "branch": "main", "commit": "4ef74f09ff62d06f2e9ac88fac9919b6b3210507" },
+  "supermaven-nvim": { "branch": "main", "commit": "07d20fce48a5629686aefb0a7cd4b25e33947d50" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "dae2eac9d91464448b584c7949a31df8faefec56" },
   "telescope-import.nvim": { "branch": "main", "commit": "6ccc0ad05b2906e04c5ba415a7f973229efc6dbc" },
   "telescope-project.nvim": { "branch": "master", "commit": "1d7920e799fc5001dffc7bd10909a86e0358eaf4" },
