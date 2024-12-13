@@ -203,13 +203,7 @@ local M = {
             "location",
             cond = hide_on_split(3),
             separator = { left = "", right = "" },
-          },
-          {
-            function()
-              return "(" .. vim.fn.line("$") .. ")"
-            end,
-            cond = hide_on_split(2),
-            padding = 0,
+            padding = { left = 1, right = 0 },
           },
           {
             "progress",
