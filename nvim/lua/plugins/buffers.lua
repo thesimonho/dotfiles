@@ -33,7 +33,6 @@ return {
         end,
         desc = "Buffer list",
       },
-      { "<leader>bn", "<cmd>vnew<cr>", desc = "New buffer" },
       { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin buffer" },
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete other buffers" },
     },
