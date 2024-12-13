@@ -759,6 +759,6 @@ $env.config = {
     ]
 }
 
-source ./alias.nu
+source $"($nu.default-config-dir)/alias.nu"
 source ~/.zoxide.nu
 use ~/.cache/starship/init.nu
