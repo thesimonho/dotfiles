@@ -69,7 +69,7 @@ local M = {
           {
             "branch",
             on_click = function()
-              LazyVim.lazygit({ cwd = LazyVim.root.git() })
+              Snacks.lazygit({ cwd = LazyVim.root.git() })
             end,
             padding = { left = 1, right = 1 },
           },
