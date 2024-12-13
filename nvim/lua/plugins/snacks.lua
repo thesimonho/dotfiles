@@ -36,6 +36,32 @@ return {
       quickfile = {
         enabled = true,
       },
+      indent = {
+        indent = {
+          enabled = true, -- enable indent guides
+          char = "│",
+          only_scope = true, -- only show indent guides of the scope
+          only_current = true, -- only show indent guides in the current window
+          hl = "SnacksIndent",
+        },
+        scope = {
+          enabled = false, -- enable highlighting the current scope
+          hl = "SnacksIndentScope",
+        },
+        chunk = {
+          enabled = true,
+          only_current = true,
+          hl = "SnacksIndentChunk",
+          char = {
+            corner_top = "╭",
+            corner_bottom = "╰",
+            horizontal = "─",
+            vertical = "│",
+            arrow = ">",
+          },
+        },
+        priority = 200,
+      },
     },
   },
 }
