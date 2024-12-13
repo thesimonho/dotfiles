@@ -29,7 +29,6 @@ local M = {
     local kanagawa_paper = require("lualine.themes.kanagawa-paper")
     local utils = require("utils.general")
     local git = require("utils.git")
-    local Util = require("lazyvim.util")
     local icons = require("lazyvim.config").icons
     local lualine_require = require("lualine_require")
     lualine_require.require = require
@@ -118,7 +117,7 @@ local M = {
               if vim.bo.modified then
                 return { fg = kanagawa_paper.insert.a.bg }
               end
-              return Util.ui.fg("Statement")
+              return { fg = Snacks.util.color("Statement") }
             end,
           },
         },
@@ -172,7 +171,7 @@ local M = {
             cond = function()
               return package.loaded["noice"] and require("noice").api.status.mode.has()
             end,
-            color = Util.ui.fg("ErrorMsg"),
+            color = { fg = Snacks.util.color("ErrorMsg") },
             padding = { left = 0, right = 1 },
           },
           {
@@ -184,7 +183,7 @@ local M = {
               vim.cmd("LspInfo")
             end,
             icon = "󰌘",
-            color = Util.ui.fg("Character"),
+            color = { fg = Snacks.util.color("Character") },
           },
           {
             "diagnostics",
@@ -241,7 +240,7 @@ local M = {
             file_status = true,
             path = 0,
             padding = 0,
-            color = Util.ui.fg("Statement"),
+            color = { fg = Snacks.util.color("Statement") },
           },
         },
         lualine_x = {},
