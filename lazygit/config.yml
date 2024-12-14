@@ -188,7 +188,9 @@ customCommands:
     stream: true
     command: |
       git fetch {{.SelectedRemote.Name}}
-      git push origin {{.SelectedRemote.Name}}/{{.SelectedRemoteBranch.Name}}:{{.SelectedRemoteBranch.Name}}
+      git checkout {{ .SelectedRemoteBranch.Name }}
+      git merge {{ .SelectedRemote.Name }}/{{ .SelectedRemoteBranch.Name }}
+      git push origin {{.SelectedRemoteBranch.Name}}
 keybinding:
   universal:
     prevBlock-alt: '<c-k>' # goto the previous block / panel
