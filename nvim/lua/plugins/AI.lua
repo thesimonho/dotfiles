@@ -12,7 +12,6 @@ M = {
         suggestion_color = "#666666",
         cterm = 244,
       },
-      disable_keymaps = true,
       disable_inline_completion = false,
     },
   },
