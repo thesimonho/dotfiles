@@ -47,6 +47,25 @@ vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
+vim.keymap.set("n", "<leader>p", function()
+  local projects = Snacks.dashboard.sections.projects()
+  require("fzf-lua").fzf_exec(function(fzf_cb)
+    for _, project in ipairs(projects) do
+      fzf_cb(project.file)
+    end
+    fzf_cb() -- EOF
+  end, {
+    prompt = "Projects > ",
+    preview = "ls -a {}",
+    actions = {
+      ["default"] = function(selected)
+        vim.cmd("tabnew")
+        vim.cmd("Neotree position=float dir=" .. selected[1])
+      end,
+    },
+  })
+end, { desc = "Projects" })
+
 -- Tools
 wk.add({ "<leader>z", group = "tools", icon = "" })
 vim.keymap.set("n", "<leader>zl", "<cmd>Lazy<cr>", { desc = "Lazy" })
