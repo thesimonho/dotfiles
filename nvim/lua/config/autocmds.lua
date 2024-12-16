@@ -30,15 +30,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
     vim.schedule(function()
       local bufnr = vim.api.nvim_get_current_buf()
       local buftype = vim.api.nvim_get_option_value("buftype", { buf = bufnr })
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
 
       if buftype == "terminal" then
         vim.defer_fn(function()
           vim.cmd("startinsert")
         end, 10)
-      elseif filetype ~= "TelescopePrompt" then
-        -- without this^, telescope will exit insert when no matches are found
-        vim.cmd("stopinsert")
       end
     end)
   end,

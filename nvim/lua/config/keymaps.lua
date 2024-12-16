@@ -45,9 +45,6 @@ Snacks.toggle.option("cursorcolumn", { name = "column ruler" }):map("<leader>uR"
 -- Windows
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
-vim.keymap.set("n", "<leader><tab><tab>", function()
-  require("telescope").extensions.project.project({})
-end, { desc = "New tab" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- Tools
