@@ -1,10 +1,3 @@
-local builtin = require("telescope.builtin")
-local pickers = require("telescope.pickers")
-local finders = require("telescope.finders")
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-local conf = require("telescope.config").values
-
 local M = {}
 
 M.is_git_repo = function()
@@ -15,19 +8,6 @@ end
 M.get_git_root = function()
   local dot_git_path = vim.fn.finddir(".git", ".;")
   return vim.fn.fnamemodify(dot_git_path, ":h")
-end
-
--- when grepping, cd to the project root directory first
-M.live_grep_from_project_root = function()
-  local opts = {}
-
-  if M.is_git_repo() then
-    opts = {
-      cwd = M.get_git_root(),
-    }
-  end
-
-  require("telescope.builtin").live_grep(opts)
 end
 
 -- get git worktrees for a project directory
