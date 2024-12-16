@@ -30,11 +30,6 @@ M.basic_binds = {
 		action = act.SendString("fzf\r"),
 	},
 	{
-		key = "g",
-		mods = "CTRL",
-		action = act.SendString("rg "),
-	},
-	{
 		key = "e",
 		mods = "CTRL",
 		action = act.SendString("yazi\r"),
