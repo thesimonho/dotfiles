@@ -1,5 +1,3 @@
-local pickers = require("utils.telescope_pickers")
-
 return {
   {
     "tiagovla/scope.nvim",
@@ -26,13 +24,6 @@ return {
     event = "LazyFile",
     keys = {
       { "<leader><space>", "<Cmd>BufferPick<CR>", desc = "Pick buffer" },
-      {
-        "<leader>bb",
-        function()
-          pickers.prettyBuffersPicker()
-        end,
-        desc = "Buffer list",
-      },
       { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin buffer" },
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete other buffers" },
     },
