@@ -55,18 +55,6 @@ local M = {
         },
         lualine_b = {
           {
-            function()
-              return vim.g.git_worktree_root
-            end,
-            cond = function()
-              return vim.g.git_worktree ~= nil and hide_on_split(3)()
-            end,
-            icon = "",
-            padding = { left = 1, right = 1 },
-            separator = "󰧟",
-            on_click = git.switch_git_worktree,
-          },
-          {
             "branch",
             on_click = function()
               Snacks.lazygit({ cwd = LazyVim.root.git() })

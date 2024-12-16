@@ -1,7 +1,3 @@
-local git = require("utils.git")
-
-vim.keymap.set("n", "<leader>gw", git.switch_git_worktree, { desc = "Worktrees" })
-
 return {
   {
     "sindrets/diffview.nvim",
