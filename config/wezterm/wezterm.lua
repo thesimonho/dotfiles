@@ -14,6 +14,10 @@ local is_windows = function()
 	return wezterm.target_triple == "x86_64-pc-windows-msvc"
 end
 
+local is_mac = function()
+	return wezterm.target_triple == "aarch64-apple-darwin"
+end
+
 local config = wezterm.config_builder()
 
 config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
@@ -105,11 +109,25 @@ if is_windows() then
 			args = { "cmd.exe" },
 		},
 	}
-else
+elseif is_mac() then
 	config.font_size = 16
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 0.9
 	config.default_prog = { "/opt/homebrew/bin/nu" }
+	config.launch_menu = {
+		{
+			label = "zsh",
+			args = { "zsh" },
+		},
+		{
+			label = "bash",
+			args = { "bash" },
+		},
+	}
+else
+	config.font_size = 14
+	config.window_background_opacity = 0.96
+	config.default_prog = { "/home/linuxbrew/.linuxbrew/bin/nu" }
 	config.launch_menu = {
 		{
 			label = "zsh",

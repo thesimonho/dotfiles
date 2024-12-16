@@ -1,4 +1,5 @@
-$env.PATH = ($env.Path | split row (char esep) | prepend '/opt/homebrew/bin')
+$env.PATH = ($env.PATH | split row (char esep) | prepend '/opt/homebrew/bin')
+$env.PATH = ($env.PATH | split row (char esep) | prepend '/home/linuxbrew/.linuxbrew/bin')
 
 zoxide init nushell | save -f ~/.zoxide.nu
 
