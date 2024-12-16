@@ -1,13 +1,4 @@
 local style = require("utils.style")
-local pickers = require("utils.telescope_pickers")
-
-local get_node_path = function(node)
-  local path = node.path
-  if node.type == "file" then
-    path = vim.loop.cwd()
-  end
-  return path
-end
 
 return {
   {
@@ -39,21 +30,6 @@ return {
       enable_opened_markers = true,
       enable_diagnostics = true,
       sort_case_insensitive = true,
-      commands = {
-        find_files_dir = function(state)
-          local node = state.tree:get_node()
-          pickers.prettyFilesPicker({ picker = "find_files", options = { cwd = get_node_path(node) } })
-          vim.cmd("Neotree close")
-        end,
-        grep_dir = function(state)
-          local node = state.tree:get_node()
-          pickers.prettyGrepPicker({
-            picker = "live_grep",
-            options = { cwd = get_node_path(node) },
-          })
-          vim.cmd("Neotree close")
-        end,
-      },
       default_component_configs = {
         indent = {
           with_markers = true,
@@ -124,8 +100,6 @@ return {
         mappings = {
           ["<tab>"] = { "toggle_node" },
           ["/"] = "filter_on_submit",
-          ["f"] = "find_files_dir",
-          ["g"] = "grep_dir",
           ["v"] = "open_vsplit",
           ["s"] = {
             function()
