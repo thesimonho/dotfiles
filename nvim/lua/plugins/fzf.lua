@@ -1,26 +1,22 @@
 local actions = require("fzf-lua.actions")
+
 return {
-  require("fzf-lua").setup({
+  "ibhagwan/fzf-lua",
+  opts = {
     winopts = {
       height = 0.85, -- window height
       width = 0.80, -- window width
       row = 0.35, -- window row position (0=top, 1=bottom)
       col = 0.50, -- window col position (0=left, 1=right)
       backdrop = 60,
-      fullscreen = false, -- start fullscreen?
       preview = {
-        default = "bat", -- override the default previewer?
         wrap = "wrap", -- wrap|nowrap
-        hidden = "hidden", -- hidden|nohidden
+        hidden = "nohidden", -- hidden|nohidden
         vertical = "down:45%", -- up|down:size
-        horizontal = "right:60%", -- right|left:size
+        horizontal = "right:45%", -- right|left:size
         layout = "flex", -- horizontal|vertical|flex
-        flip_columns = 100, -- #cols to switch to horizontal on flex
         title = true, -- preview border title (file/buf)?
-        title_pos = "center", -- left|center|right, title alignment
         scrollbar = "border", -- `false` or string:'float|border'
-        scrolloff = "-2", -- float scrollbar offset from right
-        delay = 100, -- delay(ms) displaying the preview
         winopts = { -- builtin previewer window options
           number = false,
           relativenumber = false,
@@ -32,13 +28,6 @@ return {
           foldenable = false,
         },
       },
-      on_create = function()
-        -- called once upon creation of the fzf main window
-        -- can be used to add custom fzf-lua mappings, e.g:
-        --   vim.keymap.set("t", "<C-j>", "<Down>", { silent = true, buffer = true })
-      end,
-      -- called once _after_ the fzf interface is closed
-      on_close = function() end,
     },
     keymap = {
       builtin = {
@@ -69,32 +58,10 @@ return {
       ["--border"] = "none",
       ["--highlight-line"] = true, -- fzf >= v0.53
     },
-    previewers = {
-      cat = {
-        cmd = "cat",
-        args = "-n",
-      },
-      bat = {
-        cmd = "bat",
-        args = "--color=always --style=numbers,changes",
-      },
-      head = {
-        cmd = "head",
-        args = nil,
-      },
-      git_diff = {
-        cmd_deleted = "git diff --color HEAD --",
-        cmd_modified = "git diff --color HEAD",
-        cmd_untracked = "git diff --color --no-index /dev/null",
-      },
-      man = {
-        -- replace with `man -P cat %s | col -bx` on OSX
-        cmd = "man -c %s | col -bx",
-      },
-    },
     defaults = {
       file_icons = "mini",
       copen = "topleft copen",
+      header = false,
     },
     files = {
       formatter = "path.filename_first",
@@ -112,5 +79,9 @@ return {
         ["ctrl-r"] = { actions.toggle_ignore },
       },
     },
-  }),
+    lsp = {
+      includeDeclaration = false,
+      ignore_current_line = true,
+    },
+  },
 }
