@@ -9,6 +9,5 @@ return {
   { import = "plugins.colourschemes" },
   { import = "plugins.languages" },
   -- disabled
-  { "echasnovski/mini.pairs", enabled = false },
   { "akinsho/bufferline.nvim", enabled = false },
 }
