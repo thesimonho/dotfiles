@@ -33,6 +33,24 @@ return {
       ghost_text = {
         enabled = false,
       },
+      menu = {
+        enabled = true,
+        min_width = 30,
+        max_height = 15,
+        border = "rounded",
+        winblend = 0,
+      },
+      documentation = {
+        auto_show = true,
+        treesitter_highlighting = true,
+        window = {
+          min_width = 10,
+          max_width = 60,
+          max_height = 20,
+          border = "rounded",
+          winblend = 0,
+        },
+      },
     },
   },
 }
