@@ -47,6 +47,7 @@ vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
+-- fzf
 vim.keymap.set("n", "<leader>p", function()
   local projects = Snacks.dashboard.sections.projects()
   require("fzf-lua").fzf_exec(function(fzf_cb)
@@ -56,7 +57,7 @@ vim.keymap.set("n", "<leader>p", function()
     fzf_cb() -- EOF
   end, {
     prompt = "Projects > ",
-    preview = "ls -a {}",
+    preview = "ls -vA --group-directories-first --color=always {}",
     actions = {
       ["default"] = function(selected)
         vim.cmd("tabnew")
