@@ -59,15 +59,19 @@ return {
       ["--highlight-line"] = true, -- fzf >= v0.53
     },
     defaults = {
+      formatter = "path.filename_first",
       file_icons = "mini",
       copen = "topleft copen",
       header = false,
     },
     files = {
-      formatter = "path.filename_first",
       find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
       rg_opts = [[--color=never --files --hidden --follow -g "!.git"]],
       fd_opts = [[--color=never --type f --hidden --follow --exclude .git]],
+    },
+    buffers = {
+      current_tab_only = true,
+      no_term_buffers = true,
     },
     grep = {
       grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp -e",

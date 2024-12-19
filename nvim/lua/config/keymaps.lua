@@ -1,5 +1,6 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+local utils = require("utils.general")
 local wk = require("which-key")
 
 -- Delete some default keymaps
@@ -49,20 +50,26 @@ vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other 
 
 -- fzf
 vim.keymap.set("n", "<leader>p", function()
-  local projects = Snacks.dashboard.sections.projects()
+  local projects = Snacks.dashboard.sections.projects({ limit = 50 })
   require("fzf-lua").fzf_exec(function(fzf_cb)
     for _, project in ipairs(projects) do
-      fzf_cb(project.file)
+      local parts = vim.split(project.file, utils.get_path_sep())
+      fzf_cb(project.file .. "!!" .. parts[#parts])
     end
     fzf_cb() -- EOF
   end, {
     prompt = "Projects > ",
-    preview = "ls -vA --group-directories-first --color=always {}",
+    preview = "ls -vA --group-directories-first --color=always {1}",
     actions = {
       ["default"] = function(selected)
+        local path = vim.split(selected[1], "!!")[1]
         vim.cmd("tabnew")
-        vim.cmd("Neotree position=float dir=" .. selected[1])
+        vim.cmd(":FzfLua files cwd=" .. path)
       end,
+    },
+    fzf_opts = {
+      ["--delimiter"] = "!!",
+      ["--with-nth"] = "2..",
     },
   })
 end, { desc = "Projects" })
