@@ -5,7 +5,7 @@ M = {
     { "<leader>sT", vim.NIL },
     { "<leader>xt", vim.NIL },
     { "<leader>xT", vim.NIL },
-    { "<leader>ct", "<cmd>TodoTrouble<cr>", desc = "TODO" },
+    { "<leader>st", "<cmd>TodoTrouble<cr>", desc = "TODO" },
   },
 }
 

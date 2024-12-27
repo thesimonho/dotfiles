@@ -35,7 +35,7 @@ return {
       { "<leader>?", name = "Buffer keymaps" },
       { "<leader>q", name = "quit" },
       { "<leader>x", name = "diagnostics" },
-      { "<leader>f", name = "find" },
+      { "<leader>f", name = "file" },
     },
   },
 }
