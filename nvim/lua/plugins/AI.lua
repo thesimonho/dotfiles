@@ -17,4 +17,16 @@ M = {
   },
 }
 
+require("snacks").toggle
+  .new({
+    name = "AI",
+    get = function()
+      return require("supermaven-nvim.api").is_running()
+    end,
+    set = function()
+      require("supermaven-nvim.api").toggle()
+    end,
+  })
+  :map("<leader>ux")
+
 return M
