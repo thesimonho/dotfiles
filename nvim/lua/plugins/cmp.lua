@@ -3,9 +3,6 @@ local style = require("utils.style")
 return {
   "saghen/blink.cmp",
   opts = {
-    menu = {
-      border = style.border_chars_outer_thin,
-    },
     keymap = {
       ["<CR>"] = { "accept", "fallback" },
       ["<C-k>"] = { "show", "show_documentation", "hide_documentation" },
@@ -37,8 +34,8 @@ return {
         enabled = true,
         min_width = 30,
         max_height = 15,
-        border = "rounded",
         winblend = 0,
+        border = "rounded",
       },
       documentation = {
         auto_show = true,
