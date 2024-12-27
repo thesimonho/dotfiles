@@ -6,7 +6,7 @@ M = {
       keymaps = {
         accept_suggestion = "<M-l>",
         clear_suggestion = "<M-e>",
-        accept_word = nil,
+        accept_word = "<M-h>",
       },
       color = {
         suggestion_color = "#666666",
