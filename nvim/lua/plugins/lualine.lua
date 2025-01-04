@@ -90,7 +90,7 @@ local M = {
           },
           {
             function()
-              return vim.fn.expand("%:h") .. utils.get_path_sep()
+              return vim.fn.expand("%:h"):gsub("/", "\\") .. "\\"
             end,
             cond = hide_on_split(3),
             separator = "",
