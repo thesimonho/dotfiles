@@ -5,7 +5,7 @@ return {
     dev = true,
     priority = 1000,
     opts = {
-      transparent = true,
+      transparent = false,
     },
   },
 }
