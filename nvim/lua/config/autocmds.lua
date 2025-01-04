@@ -61,3 +61,22 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "text" },
   command = "setlocal spell",
 })
+
+-- cursorline
+local cursorline_group = vim.api.nvim_create_augroup("CursorLineGroup", { clear = true })
+
+vim.api.nvim_create_autocmd("WinEnter", {
+  group = cursorline_group,
+  callback = function()
+    if vim.bo.filetype ~= "snacks_dashboard" then
+      vim.wo.cursorline = true
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("WinLeave", {
+  group = cursorline_group,
+  callback = function()
+    vim.wo.cursorline = false
+  end,
+})
