@@ -1,6 +1,11 @@
-if (sys | get host | get name) != 'Windows' {
-  $env.PATH = ($env.PATH | split row (char esep) | prepend '/opt/homebrew/bin')
+let OS = sys host | get long_os_version
+
+if ($OS | str contains 'Linux') {
   $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/linuxbrew/.linuxbrew/bin')
+}
+
+if ($OS | str contains 'Darwin') {
+  $env.PATH = ($env.PATH | split row (char esep) | prepend '/opt/homebrew/bin')
 }
 
 zoxide init nushell | save -f ~/.zoxide.nu
