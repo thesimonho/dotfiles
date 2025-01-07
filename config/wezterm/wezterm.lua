@@ -208,7 +208,7 @@ local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabl
 tabline.setup({
 	options = {
 		icons_enabled = true,
-		color_overrides = {
+		theme_overrides = {
 			normal_mode = {
 				a = { fg = "#282834", bg = "#c4b28a" },
 				b = { fg = "#c4b28a", bg = "#353545" },
