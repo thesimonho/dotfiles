@@ -4,7 +4,7 @@ if ($OS | str contains 'Linux') {
   $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/linuxbrew/.linuxbrew/bin')
 }
 
-if ($OS | str contains 'Darwin') {
+if ($OS | str contains 'MacOS') {
   $env.PATH = ($env.PATH | split row (char esep) | prepend '/opt/homebrew/bin')
 }
 
