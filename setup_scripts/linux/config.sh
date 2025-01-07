@@ -20,3 +20,7 @@ ln -sf "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
 ln -sf "$DOTFILES/nushell" "$CONFIG_HOME"
 ln -sf "$DOTFILES/lazygit" "$CONFIG_HOME"
 ln -sf "$DOTFILES/nvim" "$CONFIG_HOME"
+
+# ssh
+chmod 600 "$HOME/.ssh/id_*"
+
