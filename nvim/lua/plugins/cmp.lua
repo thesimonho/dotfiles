@@ -25,7 +25,9 @@ return {
         show_in_snippet = false,
       },
       list = {
-        selection = "preselect",
+        selection = {
+          preselect = true,
+        },
       },
       ghost_text = {
         enabled = false,
