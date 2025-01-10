@@ -116,6 +116,10 @@ elseif is_mac() then
 	config.default_prog = { "/opt/homebrew/bin/nu" }
 	config.launch_menu = {
 		{
+			label = "nu",
+			args = { "/opt/homebrew/bin/nu" },
+		},
+		{
 			label = "zsh",
 			args = { "zsh" },
 		},
@@ -125,10 +129,14 @@ elseif is_mac() then
 		},
 	}
 else
-	config.font_size = 14
-	config.window_background_opacity = 0.96
+	config.font_size = 12
+	config.window_background_opacity = 0.95
 	config.default_prog = { "/home/linuxbrew/.linuxbrew/bin/nu" }
 	config.launch_menu = {
+		{
+			label = "nu",
+			args = { "/home/linuxbrew/.linuxbrew/bin/nu" },
+		},
 		{
 			label = "zsh",
 			args = { "zsh" },
