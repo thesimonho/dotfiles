@@ -28,7 +28,6 @@ local M = {
   opts = function()
     local kanagawa_paper = require("lualine.themes.kanagawa-paper")
     local utils = require("utils.general")
-    local git = require("utils.git")
     local icons = require("lazyvim.config").icons
     local lualine_require = require("lualine_require")
     lualine_require.require = require
@@ -113,42 +112,9 @@ local M = {
           { "encoding", cond = hide_on_split(2) },
           {
             function()
-              return vim.api.nvim_call_function("codeium#GetStatusString", {})
-            end,
-            cond = hide_on_split(2),
-            icon = "󱙺",
-            on_click = function()
-              return vim.fn["codeium#Chat"]()
-            end,
-          },
-          {
-            function()
               return require("package-info").get_status()
             end,
             cond = hide_on_split(3),
-          },
-          {
-            function()
-              local venv_name = require("venv-selector").venv()
-              if venv_name ~= nil then
-                local venv = vim.fn.fnamemodify(venv_name, ":t")
-                local parts = {}
-                for part in venv:gmatch("[^%-]+") do
-                  table.insert(parts, part)
-                end
-                table.remove(parts, #parts)
-                table.remove(parts, #parts)
-                return "env: " .. table.concat(parts, "-")
-              else
-                return "env: none"
-              end
-            end,
-            cond = function()
-              return vim.bo.filetype == "python" and hide_on_split(3)()
-            end,
-            on_click = function()
-              require("venv-selector").open()
-            end,
           },
         },
         lualine_y = {
@@ -165,7 +131,7 @@ local M = {
           {
             get_lsp_clients,
             cond = function()
-              return vim.bo.filetype ~= "lspinfo" and hide_on_split(3)()
+              return vim.bo.filetype ~= "lspinfo" and hide_on_split(2)()
             end,
             on_click = function()
               vim.cmd("LspInfo")
@@ -189,7 +155,7 @@ local M = {
         lualine_z = {
           {
             "location",
-            cond = hide_on_split(3),
+            cond = hide_on_split(2),
             separator = { left = "", right = "" },
             padding = { left = 1, right = 0 },
           },
