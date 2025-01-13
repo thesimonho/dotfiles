@@ -22,5 +22,8 @@ ln -sf "$DOTFILES/lazygit" "$CONFIG_HOME"
 ln -sf "$DOTFILES/nvim" "$CONFIG_HOME"
 
 # ssh
-chmod 600 "$HOME/.ssh/id_*"
+for key in "$HOME/.ssh/id_"*; do
+  chmod 600 "$key"
+done
+
 
