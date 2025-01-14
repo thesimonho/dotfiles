@@ -8,6 +8,7 @@ git config --global branch.sort -committerdate
 git config --global column.ui auto
 git config --global fetch.writeCommitGraph true
 git config --global rerere.enabled true
+git config --global url."git@github.com:".insteadOf "https://github.com/"
 
 # symlinks
 CONFIG_HOME="$HOME/.config"
@@ -25,5 +26,3 @@ ln -sf "$DOTFILES/nvim" "$CONFIG_HOME"
 for key in "$HOME/.ssh/id_"*; do
   chmod 600 "$key"
 done
-
-

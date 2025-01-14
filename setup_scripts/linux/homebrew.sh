@@ -5,6 +5,7 @@ brew install bat
 brew install fd
 brew install ffmpeg
 brew install fzf
+brew install gh
 brew install go
 brew install lazygit
 brew install neovim
