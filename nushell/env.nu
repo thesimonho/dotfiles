@@ -5,7 +5,7 @@ if ($OS | str contains 'Linux') {
 
   # https://forums.opensuse.org/t/guide-ssh-agent-kwallet-to-store-ssh-private-key-passphrases/173401
   # https://kcore.org/2022/05/18/ssh-passphrases-kde/
-  $env.SSH_ASKPASS = '/usr/libexec/ssh/ksshaskpass'
+  $env.SSH_ASKPASS = '/usr/bin/ksshaskpass'
   $env.SSH_ASKPASS_REQUIRE = 'prefer'
 }
 
