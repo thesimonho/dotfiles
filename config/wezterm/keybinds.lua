@@ -4,7 +4,7 @@ local act = wezterm.action
 local M = {}
 
 M.basic_binds = {
-	{ key = "F1", action = act.ActivateCommandPalette },
+	{ key = "F1", mods = "LEADER", action = act.ActivateCommandPalette },
 	{
 		key = "c",
 		mods = "CTRL|SHIFT",
@@ -42,9 +42,16 @@ M.basic_binds = {
 	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
 	{ key = "v", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
+	{ key = "p", mods = "LEADER", action = workspace_switcher.switch_workspace() },
+	{ key = "`", mods = "LEADER", action = act.ActivateLastTab },
+	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
 	{ key = "r", mods = "LEADER", action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false }) },
-	{ key = "p", mods = "ALT", action = workspace_switcher.switch_workspace() },
+
 	-- MacOS rebinds
 	{ key = "p", mods = "CMD", action = act.SendKey({ key = "p", mods = "CTRL" }) },
 	{ key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) },
@@ -63,13 +70,7 @@ M.key_tables = {
 	window_mode = {
 		{ key = "w", action = act.PaneSelect },
 		{ key = "n", action = act.SpawnWindow },
-		{ key = "[", action = act.ActivateWindowRelative(-1) },
-		{ key = "]", action = act.ActivateWindowRelative(1) },
-		{ key = "d", action = act.CloseCurrentTab({ confirm = true }) },
-		{ key = "h", action = act.ActivatePaneDirection("Left") },
-		{ key = "l", action = act.ActivatePaneDirection("Right") },
-		{ key = "k", action = act.ActivatePaneDirection("Up") },
-		{ key = "j", action = act.ActivatePaneDirection("Down") },
+		{ key = "d", action = act.CloseCurrentPane({ confirm = true }) },
 		{ key = "v", action = act.SplitPane({ direction = "Right" }) },
 		{ key = "s", action = act.SplitPane({ direction = "Down" }) },
 	},

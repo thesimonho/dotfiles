@@ -20,7 +20,7 @@ end
 
 local config = wezterm.config_builder()
 
-config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
+config.leader = { key = "Super", timeout_milliseconds = 1500 }
 config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
