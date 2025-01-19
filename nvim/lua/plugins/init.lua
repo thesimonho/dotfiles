@@ -10,4 +10,5 @@ return {
   { import = "plugins.languages" },
   -- disabled
   { "akinsho/bufferline.nvim", enabled = false },
+  { "echasnovski/mini.pairs", enabled = false },
 }
