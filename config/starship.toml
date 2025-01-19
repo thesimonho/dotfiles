@@ -3,7 +3,7 @@
 
 add_newline = true
 format = """
-╭$directory$git_branch$git_status$python$conda
+╭$directory$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
 ╰$character
 """
 
@@ -12,6 +12,9 @@ symbol = " "
 format = '@ [$symbol(\($region\) $duration)]($style)'
 disabled = true
 
+[character]
+error_symbol = '[✗](bold red) '
+
 [conda]
 symbol = " "
 format = 'via [$symbol$environment]($style) '
@@ -19,16 +22,17 @@ ignore_base = false
 
 [directory]
 read_only = " 󰌾"
+truncation_length = 3
 format = '[$read_only]($read_only_style) [$path]($style) '
 truncate_to_repo = false
-
-[directory.substitutions]
-'~' = 'Home'
-'/mnt/Projects' = 'Projects'
-'/mnt/Games' = 'Games'
+repo_root_style = "bold cyan"
+before_repo_root_style = "dimmed bright-black"
 
 [docker_context]
 symbol = " "
+
+[fill]
+symbol = ' '
 
 [git_branch]
 symbol = " "
@@ -51,6 +55,6 @@ python_binary = ['./venv/bin/python', 'python3']
 [sudo]
 disabled = true
 
-[terraform]
-format = 'via [$symbol$workspace]($style) '
-disabled = true
+[time]
+disabled = false
+time_format = '%T'
