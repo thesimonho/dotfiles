@@ -14,7 +14,10 @@ if ($OS | str contains 'MacOS') {
   $env.PATH = ($env.PATH | split row (char esep) | prepend '~/.local/pipx/venvs/poetry/bin')
 }
 
-zoxide init nushell | save -f ~/.zoxide.nu
+# add SSH keys to ssh-agent
+ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
 
+# init shell apps
 mkdir ~/.cache/starship
 starship init nu | save -f ~/.cache/starship/init.nu
+zoxide init nushell | save -f ~/.zoxide.nu
