@@ -89,6 +89,7 @@ local M = {
           {
             text = { "  " .. format_tbl_text(quotes[math.random(#quotes)]), hl = "Comment" },
             align = "right",
+            padding = 2,
           },
           { pane = 2, header = "Recent", padding = 2 },
           {
