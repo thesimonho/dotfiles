@@ -136,10 +136,21 @@ let light_theme = {
     shape_vardecl: purple
 }
 
-# External completer example
-# let carapace_completer = {|spans|
-#     carapace $spans.0 nushell $spans | from json
-# }
+# External completers
+let carapace_completer = {|spans|
+    carapace $spans.0 nushell ...$spans | from json
+}
+
+let zoxide_completer = {|spans|
+    $spans | skip 1 | zoxide query -l ...$in | lines | where {|x| $x != $env.PWD}
+}
+
+let multiple_completer = {|spans|
+    match $spans.0 {
+        z | zi => $zoxide_completer
+        _ => $carapace_completer
+    } | do $in $spans
+}
 
 # The default config record. This is where much of your global configuration is setup.
 $env.config = {
@@ -206,11 +217,11 @@ $env.config = {
         case_sensitive: false # set to true to enable case-sensitive completions
         quick: true    # set this to false to prevent auto-selecting completions when only one remains
         partial: true    # set this to false to prevent partial filling of the prompt
-        algorithm: "fuzzy"    # prefix or fuzzy
+        algorithm: "prefix"    # prefix or fuzzy
         external: {
             enable: true # set to false to prevent nushell looking into $env.PATH to find more suggestions, `false` recommended for WSL users as this look up may be very slow
             max_results: 100 # setting it lower can improve completion performance at the cost of omitting some options
-            completer: null # check 'carapace_completer' above as an example
+            completer: $multiple_completer
         }
     }
 
@@ -252,7 +263,7 @@ $env.config = {
         {
             name: completion_menu
             only_buffer_difference: false
-            marker: "| "
+            marker: ""
             type: {
                 layout: columnar
                 columns: 4
@@ -758,6 +769,15 @@ $env.config = {
         }
     ]
 }
+
+# completions
+source $"($nu.default-config-dir)/completions/docker.nu"
+source $"($nu.default-config-dir)/completions/git.nu"
+source $"($nu.default-config-dir)/completions/github.nu"
+source $"($nu.default-config-dir)/completions/npm.nu"
+source $"($nu.default-config-dir)/completions/poetry.nu"
+source $"($nu.default-config-dir)/completions/rg.nu"
+source $"($nu.default-config-dir)/completions/tar.nu"
 
 source $"($nu.default-config-dir)/alias.nu"
 source ~/.zoxide.nu
