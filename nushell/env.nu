@@ -15,6 +15,7 @@ if ($OS | str contains 'MacOS') {
 }
 
 # add SSH keys to ssh-agent
+ssh-agent | ignore
 ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
 
 # init shell apps
