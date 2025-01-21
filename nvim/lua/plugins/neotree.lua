@@ -1,4 +1,5 @@
 local style = require("utils.style")
+local icons = require("lazyvim.config").icons
 
 return {
   {
@@ -58,10 +59,10 @@ return {
           required_width = 100, -- min width of window required to show this column
         },
         icon = {
-          folder_closed = "",
-          folder_open = "",
-          folder_empty = "",
-          folder_empty_open = "",
+          folder_closed = "",
+          folder_open = "",
+          folder_empty = "",
+          folder_empty_open = "",
         },
         diagnostics = {
           symbols = {
@@ -74,16 +75,16 @@ return {
         git_status = {
           symbols = {
             -- Change type
-            added = "",
-            deleted = "",
-            modified = "",
-            renamed = "󰛂",
+            added = icons.git.added,
+            deleted = icons.git.removed,
+            modified = icons.git.modified,
+            renamed = " ",
             -- Status type
-            untracked = "",
-            ignored = "",
-            unstaged = "󰄱",
-            staged = "",
-            conflict = "",
+            untracked = " ",
+            ignored = " ",
+            unstaged = " ",
+            staged = " ",
+            conflict = " ",
           },
         },
       },
