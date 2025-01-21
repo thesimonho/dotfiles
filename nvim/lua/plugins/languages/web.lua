@@ -25,4 +25,21 @@ return {
       package_manager = "npm",
     },
   },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "marilari88/neotest-vitest",
+    },
+    opts = {
+      adapters = {
+        ["neotest-vitest"] = {},
+      },
+      summary = {
+        follow = true,
+      },
+      output = {
+        open_on_run = false,
+      },
+    },
+  },
 }
