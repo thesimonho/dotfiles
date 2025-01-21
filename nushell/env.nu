@@ -15,8 +15,6 @@ if ($OS | str contains 'MacOS') {
 }
 
 # add SSH keys to ssh-agent
-ssh-agent
-ssh-add -l
 ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
 
 # environment variables
