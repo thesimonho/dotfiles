@@ -48,7 +48,7 @@ require("lazy").setup({
     notify = true,
   },
   dev = {
-    path = "D:\\",
+    path = "~/Projects",
     patterns = { "kanagawa-paper.nvim" },
     fallback = true, -- Fallback to git when local plugin doesn't exist
   },
