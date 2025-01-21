@@ -15,7 +15,9 @@ if ($OS | str contains 'MacOS') {
 }
 
 # add SSH keys to ssh-agent
-ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
+if (ssh-add -l | str contains 'The agent has no identities') {
+  ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
+}
 
 # environment variables
 $env.VIRTUAL_ENV_DISABLE_PROMPT = '1'
