@@ -4,6 +4,13 @@ return {
     opts = {
       colorscheme = "kanagawa-paper",
       icons = {
+        dap = {
+          Stopped = { " ", "DapUIPlayPause", "DapStoppedLine" },
+          Breakpoint = { " ", "DapUIBreakpointsCurrentLine" },
+          BreakpointCondition = { " ", "DapUIBreakpointsWarn" },
+          BreakpointRejected = { " ", "DapUIBreakpointsWarn" },
+          LogPoint = { " ", "DapUIBreakpointsInfo" },
+        },
         diagnostics = {
           Error = " ",
           Warn = " ",

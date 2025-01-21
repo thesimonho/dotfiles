@@ -195,7 +195,7 @@ local M = {
         lualine_y = {},
         lualine_z = {},
       },
-      extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble" },
+      extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "fzf", "nvim-dap-ui", "quickfix" },
     }
   end,
 }
