@@ -10,6 +10,7 @@ if ($OS | str contains 'Linux') {
 }
 
 if ($OS | str contains 'MacOS') {
+  $env.PATH = ($env.PATH | split row (char esep) | prepend '/usr/local/bin')
   $env.PATH = ($env.PATH | split row (char esep) | prepend '/opt/homebrew/bin')
   $env.PATH = ($env.PATH | split row (char esep) | prepend '~/.local/pipx/venvs/poetry/bin')
 }
