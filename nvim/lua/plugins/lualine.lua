@@ -54,10 +54,18 @@ local M = {
         },
         lualine_b = {
           {
+            function()
+              return Snacks.git.get_root():match("([^/\\]+)$")
+            end,
+            separator = "",
+            padding = { left = 1, right = 0 },
+          },
+          {
             "branch",
             on_click = function()
               Snacks.lazygit({ cwd = LazyVim.root.git() })
             end,
+            icon = "󰘬",
             padding = { left = 1, right = 1 },
           },
           {
