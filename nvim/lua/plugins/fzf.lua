@@ -39,11 +39,12 @@ return {
       files = {
         -- `file_edit_or_qf` opens a single selection or sends multiple selection to quickfix
         ["enter"] = actions.file_edit_or_qf,
+        ["ctrl-h"] = actions.toggle_hidden,
         ["ctrl-s"] = actions.file_split,
         ["ctrl-v"] = actions.file_vsplit,
         ["ctrl-t"] = actions.file_tabedit,
-        ["alt-q"] = actions.file_sel_to_qf,
-        ["alt-Q"] = actions.file_sel_to_ll,
+        ["ctrl-q"] = actions.file_sel_to_qf,
+        ["ctrl-Q"] = actions.file_sel_to_ll,
       },
     },
     fzf_opts = {
