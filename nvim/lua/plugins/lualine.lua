@@ -82,16 +82,27 @@ local M = {
         },
         lualine_c = {
           {
-            "filetype",
-            icon_only = true,
-            separator = "",
-            padding = { left = 1, right = 0 },
-          },
-          {
             function()
-              return vim.fn.expand("%:h"):gsub("/", "\\") .. "\\"
+              local max_components = 2
+              local custom_sep = " > "
+
+              local path = vim.fn.expand("%:h"):gsub(utils.get_path_sep(), custom_sep)
+              local components = {}
+              for part in path:gmatch("[^" .. custom_sep .. "]+") do
+                table.insert(components, part:match("^%s*(.-)%s*$"))
+              end
+              if #components > max_components then
+                components = { components[#components - 1], components[#components] }
+              end
+              return table.concat(components, custom_sep) .. custom_sep
             end,
             cond = hide_on_split(3),
+            padding = { left = 1, right = 0 },
+            separator = "",
+          },
+          {
+            "filetype",
+            icon_only = true,
             separator = "",
             padding = 0,
           },
