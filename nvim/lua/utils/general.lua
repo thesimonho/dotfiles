@@ -8,6 +8,11 @@ M.is_windows = function()
   return vim.loop.os_uname().sysname == "Windows_NT"
 end
 
+--- Get the number of splits in the current application window
+M.get_split_count = function()
+  return vim.o.columns / vim.fn.winwidth(0)
+end
+
 -- Functional wrapper for mapping custom keybindings
 M.map = function(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }

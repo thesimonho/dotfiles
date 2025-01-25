@@ -1,3 +1,5 @@
+local utils = require("utils.general")
+
 local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
@@ -15,11 +17,7 @@ local function hide_on_split(n_split)
   n_split = n_split or 2
 
   return function()
-    local width = vim.fn.winwidth(0)
-    if width > vim.o.columns / n_split then
-      return true
-    end
-    return false
+    return utils.get_split_count() < n_split
   end
 end
 
@@ -59,6 +57,7 @@ local M = {
             end,
             separator = "",
             padding = { left = 1, right = 0 },
+            cond = hide_on_split(3),
           },
           {
             "branch",
@@ -76,6 +75,7 @@ local M = {
               modified = icons.git.modified,
               removed = icons.git.removed,
             },
+            cond = hide_on_split(3),
             source = function()
               local gitsigns = vim.b.gitsigns_status_dict
               if gitsigns then
@@ -91,18 +91,25 @@ local M = {
         lualine_c = {
           {
             function()
-              local max_components = 2
-              local custom_sep = " > "
+              local component_limit = 2
+              local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
+              local custom_sep = " >"
 
               local path = vim.fn.expand("%:h"):gsub(utils.get_path_sep(), custom_sep)
-              local components = {}
+              local all_components = {}
               for part in path:gmatch("[^" .. custom_sep .. "]+") do
-                table.insert(components, part:match("^%s*(.-)%s*$"))
+                table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
               end
-              if #components > max_components then
-                components = { components[#components - 1], components[#components] }
+
+              local components = {}
+              for i = 1, #all_components do
+                if #components >= num_components then
+                  break
+                end
+                table.insert(components, 1, all_components[i])
               end
-              return table.concat(components, custom_sep) .. custom_sep
+
+              return table.concat(components, custom_sep .. " ") .. custom_sep
             end,
             cond = hide_on_split(3),
             padding = { left = 1, right = 0 },
@@ -112,7 +119,7 @@ local M = {
             "filetype",
             icon_only = true,
             separator = "",
-            padding = 0,
+            padding = { left = 1, right = 0 },
           },
           {
             "filename",
@@ -166,6 +173,7 @@ local M = {
               info = icons.diagnostics.Info,
               hint = icons.diagnostics.Hint,
             },
+            cond = hide_on_split(4),
             on_click = function()
               vim.cmd("Trouble diagnostics toggle filter.buf=0")
             end,
