@@ -193,7 +193,11 @@ local M = {
         },
       },
       inactive_sections = {
-        lualine_a = {},
+        lualine_a = {
+          function()
+            return "▌"
+          end,
+        },
         lualine_b = {},
         lualine_c = {
           {
