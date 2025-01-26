@@ -2,6 +2,7 @@ return {
   "gbprod/yanky.nvim",
   keys = {
     { "<leader>p", vim.NIL },
+    { "<leader>y", "<cmd>YankyRingHistory<cr>", desc = "Yank History" },
     { "p", "<Plug>(YankyPutAfter)", desc = "Put after" },
     { "P", "<Plug>(YankyPutBeforeLinewise)", desc = "Put before" },
   },
