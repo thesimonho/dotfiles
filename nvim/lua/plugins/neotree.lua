@@ -48,7 +48,7 @@ return {
         },
         type = {
           enabled = true,
-          required_width = 20, -- min width of window required to show this column
+          required_width = 50, -- min width of window required to show this column
         },
         file_size = {
           enabled = true,
