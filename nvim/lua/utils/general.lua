@@ -249,6 +249,7 @@ M.show_options_table = function(separator)
     end)()
   end, {
     prompt = "Vim Options > ",
+    preview = "echo {2}",
     actions = {
       ["default"] = {
         function(selected)
