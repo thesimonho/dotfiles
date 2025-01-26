@@ -43,9 +43,8 @@ local function choose_header()
 
     return {
       section = "terminal",
-      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size 60x15",
-      height = 15,
-      padding = 2,
+      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size=60x20; sleep .1",
+      height = 20,
     }
   end
 
