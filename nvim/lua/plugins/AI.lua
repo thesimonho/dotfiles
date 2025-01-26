@@ -3,6 +3,7 @@ M = {
     "supermaven-inc/supermaven-nvim",
     lazy = false, -- required otherwise color setting wont work
     opts = {
+      ignore_filetypes = { "neo-tree" },
       keymaps = {
         accept_suggestion = "<M-l>",
         clear_suggestion = "<M-e>",
