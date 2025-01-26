@@ -66,13 +66,13 @@ return {
       header = false,
     },
     files = {
+      git_icons = true,
       find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
       rg_opts = [[--color=never --files --hidden --follow -g "!.git"]],
       fd_opts = [[--color=never --type f --hidden --follow --exclude .git]],
     },
     buffers = {
-      current_tab_only = true,
-      no_term_buffers = true,
+      show_unloaded = true,
     },
     grep = {
       grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp -e",
@@ -86,7 +86,6 @@ return {
     },
     lsp = {
       includeDeclaration = false,
-      ignore_current_line = true,
     },
   },
 }
