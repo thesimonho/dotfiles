@@ -52,6 +52,10 @@ Snacks.toggle.option("cursorcolumn", { name = "column ruler" }):map("<leader>uR"
 -- Windows
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
+
+-- Tabs
+vim.keymap.set("n", "<leader><tab><tab>", "<cmd>FzfLua tabs<cr>", { desc = "Switch Tab" })
+vim.keymap.set("n", "<leader><tab>n", "<cmd>tabedit<cr>", { desc = "New Tab" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- fzf
