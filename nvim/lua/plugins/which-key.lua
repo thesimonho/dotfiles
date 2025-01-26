@@ -32,7 +32,7 @@ return {
     },
     spec = {
       { "<localleader>", name = "Local" },
-      { "<leader>?", name = "Buffer keymaps" },
+      { "<leader>?", name = "Buffer Keymaps" },
       { "<leader>q", name = "quit" },
       { "<leader>x", name = "diagnostics" },
       { "<leader>f", name = "file" },
