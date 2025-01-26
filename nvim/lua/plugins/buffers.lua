@@ -23,9 +23,9 @@ return {
     "romgrk/barbar.nvim",
     event = "LazyFile",
     keys = {
-      { "<leader><space>", "<Cmd>BufferPick<CR>", desc = "Pick buffer" },
-      { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin buffer" },
-      { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete other buffers" },
+      { "<leader><space>", "<Cmd>BufferPick<CR>", desc = "Pick Buffer" },
+      { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin Buffer" },
+      { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete Other Buffers" },
     },
     opts = {
       focus_on_close = "previous",

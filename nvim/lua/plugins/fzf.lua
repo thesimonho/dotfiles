@@ -53,11 +53,11 @@ return {
       -- set to `true` for a no-value flag
       -- for raw args use `fzf_args` instead
       ["--ansi"] = true,
-      ["--info"] = "inline-right", -- fzf < v0.42 = "inline"
+      ["--info"] = "inline-right",
       ["--height"] = "100%",
       ["--layout"] = "reverse",
       ["--border"] = "none",
-      ["--highlight-line"] = true, -- fzf >= v0.53
+      ["--highlight-line"] = true,
     },
     defaults = {
       formatter = "path.filename_first",

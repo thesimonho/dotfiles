@@ -24,10 +24,7 @@ return {
     opts = function()
       local keys = require("lazyvim.plugins.lsp.keymaps").get()
       vim.list_extend(keys, {
-        { "<leader>ca", false },
-        { "<leader>cA", false },
         { "<leader>cR", false },
-        { "<leader>cr", vim.lsp.buf.rename, desc = "Rename symbol", has = "rename" },
         {
           "<leader>fR",
           Snacks.rename.rename_file,
