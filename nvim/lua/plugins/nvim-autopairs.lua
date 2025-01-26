@@ -3,7 +3,7 @@ return {
   event = "InsertEnter",
   opts = {
     disable_filetype = { "TelescopePrompt", "spectre_panel" },
-    ignored_next_char = [=[[%w%%%'%[%"%.%`%$]]=],
+    ignored_next_char = [=[[%w%%%'%[%"%.%`%$%,]]=],
     enable_afterquote = true, -- add bracket pairs after quote
     enable_check_bracket_line = true, --- check bracket in same line
     enable_bracket_in_quote = true, --
