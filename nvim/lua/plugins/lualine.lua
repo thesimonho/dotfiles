@@ -10,7 +10,7 @@ local function get_lsp_clients()
   return table.concat(client_names, ", ")
 end
 
---- A function to conditionally hide content based on number of window splits.
+--- Conditionally hide content based on number of window splits.
 -- @param n_split number: The number of horizontal splits to divide the screen into. Defaults to half the screen if nil.
 -- @return function: A function that returns `true` if the window width exceeds the size of the split, otherwise `false`.
 local function hide_on_split(n_split)
