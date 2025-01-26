@@ -157,6 +157,7 @@ M.get_web_icon = function(filename, library)
   end
 end
 
+-- Get projects and open fzf picker
 M.get_projects = function()
   local projects = Snacks.dashboard.sections.projects({ limit = 50 })
   require("fzf-lua").fzf_exec(function(fzf_cb)
@@ -178,6 +179,126 @@ M.get_projects = function()
     fzf_opts = {
       ["--delimiter"] = "!!",
       ["--with-nth"] = "2..",
+    },
+  })
+end
+
+-- Get vim options and their values
+M.get_vim_options = function(sep)
+  local fields = { "option", "value" }
+  local field_fmt = { option = "%-20s", value = "%s" }
+  local raw_options = {}
+  for _, v in pairs(vim.api.nvim_get_all_options_info()) do
+    local ok, value = pcall(vim.api.nvim_get_option_value, v.name, {})
+    if ok then
+      table.insert(raw_options, { name = v.name, value = value })
+    end
+  end
+
+  local options = {}
+
+  local format = function(info)
+    local ret
+    for _, f in ipairs(fields) do
+      if field_fmt[f] then
+        ret = string.format("%s%s" .. field_fmt[f], ret or "", ret and string.format(" %s ", sep) or "", info[f] or "")
+      end
+    end
+    return ret
+  end
+
+  local make_entry = function(raw)
+    raw.str = format({ option = raw.name, value = tostring(raw.value) })
+    local o = string.format("[%s:%s]", raw.name, raw.value)
+    options[o] = raw
+  end
+
+  --PERF: these loops can be combined
+  for _, raw in pairs(raw_options) do
+    make_entry(raw)
+  end
+
+  local entries = {}
+  for _, option in pairs(options) do
+    table.insert(entries, option.str)
+  end
+  table.sort(entries)
+  local header_str = format({ option = "option", value = "value" })
+  table.insert(entries, 1, header_str)
+
+  return entries
+end
+
+-- Display a table in fzf with the current vim options, along with actions to change their values
+M.show_options_table = function(separator)
+  local sep = separator or "│"
+
+  require("fzf-lua").fzf_exec(function(fzf_cb)
+    coroutine.wrap(function()
+      local co = coroutine.running()
+      local entries = M.get_vim_options(sep)
+      for _, entry in pairs(entries) do
+        vim.schedule(function()
+          fzf_cb(entry, function()
+            coroutine.resume(co)
+          end)
+        end)
+        coroutine.yield()
+      end
+      fzf_cb()
+    end)()
+  end, {
+    prompt = "Vim Options > ",
+    actions = {
+      ["default"] = {
+        function(selected)
+          local parts = vim.split(selected[1], sep)
+          local option = vim.trim(parts[1])
+          local old = vim.trim(parts[2])
+          local info = vim.api.nvim_get_option_info2(option, {})
+
+          if info.type == "boolean" then
+            local ok, err = pcall(vim.cmd, string.format("set %s!", option))
+            if not ok then
+              vim.notify(err, vim.log.levels.ERROR)
+            end
+          elseif info.type == "number" then
+            vim.schedule(function()
+              vim.ui.input({ prompt = option, default = old }, function(updated)
+                if not updated or updated == "" or updated == old then
+                  return
+                end
+
+                local ok, err = pcall(vim.cmd, string.format("set %s=%s", option, tonumber(updated)))
+                if not ok then
+                  vim.notify(err, vim.log.levels.ERROR)
+                end
+                require("fzf-lua").actions.resume()
+              end)
+            end)
+          else
+            vim.schedule(function()
+              vim.ui.input({ prompt = option, default = old }, function(updated)
+                if not updated or updated == "" or updated == old then
+                  return
+                end
+
+                local ok, err = pcall(vim.cmd, string.format("set %s=%s", option, updated))
+                if not ok then
+                  vim.notify(err, vim.log.levels.ERROR)
+                end
+                require("fzf-lua").actions.resume()
+              end)
+            end)
+          end
+        end,
+        require("fzf-lua").actions.resume,
+      },
+    },
+    fzf_opts = {
+      ["--header-lines"] = "1",
+      ["--nth"] = 1,
+      ["--delimiter"] = sep,
     },
   })
 end
