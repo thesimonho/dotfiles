@@ -71,13 +71,17 @@ return {
       rg_opts = [[--color=never --files --hidden --follow -g "!.git"]],
       fd_opts = [[--color=never --type f --hidden --follow --exclude .git]],
     },
+    oldfiles = {
+      include_current_session = true,
+    },
     buffers = {
       show_unloaded = true,
     },
     grep = {
       grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp -e",
       rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
-      rg_glob = false, -- default to glob parsing?
+      rg_glob = true, -- enable glob parsing
+      glob_flag = "--iglob",
       glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
       actions = {
         ["ctrl-g"] = { actions.grep_lgrep },
