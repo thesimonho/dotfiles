@@ -157,4 +157,29 @@ M.get_web_icon = function(filename, library)
   end
 end
 
+M.get_projects = function()
+  local projects = Snacks.dashboard.sections.projects({ limit = 50 })
+  require("fzf-lua").fzf_exec(function(fzf_cb)
+    for _, project in ipairs(projects) do
+      local parts = vim.split(project.file, M.get_path_sep())
+      fzf_cb(project.file .. "!!" .. parts[#parts])
+    end
+    fzf_cb()
+  end, {
+    prompt = "Projects > ",
+    preview = "ls -vA --group-directories-first --color=always {1}",
+    actions = {
+      ["default"] = function(selected)
+        local path = vim.split(selected[1], "!!")[1]
+        vim.cmd("tabnew")
+        vim.cmd("FzfLua files cwd=" .. path)
+      end,
+    },
+    fzf_opts = {
+      ["--delimiter"] = "!!",
+      ["--with-nth"] = "2..",
+    },
+  })
+end
+
 return M
