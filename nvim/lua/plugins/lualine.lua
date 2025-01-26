@@ -58,14 +58,23 @@ local M = {
             separator = "",
             padding = { left = 1, right = 0 },
             cond = hide_on_split(3),
+            on_click = function()
+              utils.get_projects()
+              vim.defer_fn(function()
+                vim.cmd("startinsert")
+              end, 100)
+            end,
           },
           {
             "branch",
-            on_click = function()
-              Snacks.lazygit({ cwd = LazyVim.root.git() })
-            end,
             icon = "󰘬",
             padding = { left = 1, right = 1 },
+            on_click = function()
+              vim.cmd("FzfLua git_branches")
+              vim.defer_fn(function()
+                vim.cmd("startinsert")
+              end, 100)
+            end,
           },
           {
             "diff",
@@ -85,6 +94,12 @@ local M = {
                   removed = gitsigns.removed,
                 }
               end
+            end,
+            on_click = function()
+              Snacks.lazygit()
+              vim.defer_fn(function()
+                vim.cmd("startinsert")
+              end, 100)
             end,
           },
         },
@@ -114,6 +129,9 @@ local M = {
             cond = hide_on_split(3),
             padding = { left = 1, right = 0 },
             separator = "",
+            on_click = function()
+              vim.cmd("Neotree position=float")
+            end,
           },
           {
             "filetype",
@@ -131,6 +149,9 @@ local M = {
                 return { fg = kanagawa_paper.insert.a.bg }
               end
               return { fg = Snacks.util.color("Statement") }
+            end,
+            on_click = function()
+              vim.cmd("Neotree position=float")
             end,
           },
         },
