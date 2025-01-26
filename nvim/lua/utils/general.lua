@@ -265,7 +265,7 @@ M.show_options_table = function(separator)
             end
           elseif info.type == "number" then
             vim.schedule(function()
-              vim.ui.input({ prompt = option, default = old }, function(updated)
+              vim.ui.input({ prompt = option, default = old, expand = true }, function(updated)
                 if not updated or updated == "" or updated == old then
                   return
                 end
@@ -279,7 +279,7 @@ M.show_options_table = function(separator)
             end)
           else
             vim.schedule(function()
-              vim.ui.input({ prompt = option, default = old }, function(updated)
+              vim.ui.input({ prompt = option, default = old, expand = true }, function(updated)
                 if not updated or updated == "" or updated == old then
                   return
                 end
