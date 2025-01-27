@@ -59,6 +59,7 @@ vim.keymap.set("n", "<leader><tab>n", "<cmd>tabedit<cr>", { desc = "New Tab" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- fzf
+wk.add({ "<leader>p", icon = "󰉋" })
 vim.keymap.set("n", "<leader>p", ui.get_projects, { desc = "Projects" })
 vim.keymap.set("n", "<leader>so", ui.show_options_table, { desc = "Vim Options" })
 
