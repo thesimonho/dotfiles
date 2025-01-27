@@ -204,19 +204,12 @@ local M = {
         },
         lualine_z = {
           {
-            "location",
-            cond = function()
-              return utils.get_split_count() < 2
+            function()
+              return utils.get_progress_char()
             end,
-            separator = { left = "", right = "" },
-            padding = { left = 1, right = 0 },
-          },
-          {
-            "progress",
-            cond = function()
-              return utils.get_split_count() >= 2
-            end,
-            separator = { left = "", right = "" },
+            color = { fg = Snacks.util.color("Cursor") },
+            separator = { left = "" },
+            padding = { left = 0, right = 0 },
           },
         },
       },
@@ -252,7 +245,13 @@ local M = {
         },
         lualine_x = {},
         lualine_y = {},
-        lualine_z = {},
+        lualine_z = {
+          {
+            function()
+              return utils.get_progress_char()
+            end,
+          },
+        },
       },
       extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "fzf", "nvim-dap-ui", "quickfix" },
     }

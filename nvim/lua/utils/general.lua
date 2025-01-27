@@ -1,3 +1,5 @@
+local style = require("utils.style")
+
 local M = {}
 
 M.is_darwin = function()
@@ -314,6 +316,15 @@ M.show_options_table = function(separator)
       ["--delimiter"] = sep,
     },
   })
+end
+
+-- Get buffer progress character
+M.get_progress_char = function()
+  local current_line = vim.fn.line(".")
+  local total_lines = vim.fn.line("$")
+  local line_ratio = current_line / total_lines
+  local index = math.ceil(line_ratio * #style.progress)
+  return style.progress[index]
 end
 
 return M
