@@ -1,6 +1,8 @@
 -- Autocmds are automatically loaded on the VeryLazy event
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 
+local fs = require("utils.fs")
+
 -- Stop newline comment continuation
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "*",
@@ -46,7 +48,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
   group = root_group,
   callback = function()
     local patterns = { ".git", "package.json", "setup.py" }
-    local root = require("utils.general").find_root(0, patterns)
+    local root = fs.find_root(0, patterns)
     if root == nil then
       return
     end

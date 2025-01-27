@@ -1,5 +1,5 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-local utils = require("utils.general")
+local os = require("utils.os")
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
@@ -24,7 +24,7 @@ vim.opt.foldlevelstart = 99
 vim.opt.mousemoveevent = true
 
 -- GUI options
-if utils.is_darwin() then
+if os.is_darwin() then
   vim.o.guifont = "FiraCode Nerd Font:h14"
 else
   vim.o.guifont = "FiraCode Nerd Font:h11"

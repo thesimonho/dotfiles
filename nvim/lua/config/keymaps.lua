@@ -1,6 +1,6 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
-local utils = require("utils.general")
+local ui = require("utils.ui")
 local wk = require("which-key")
 
 -- Delete some default keymaps
@@ -59,8 +59,8 @@ vim.keymap.set("n", "<leader><tab>n", "<cmd>tabedit<cr>", { desc = "New Tab" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- fzf
-vim.keymap.set("n", "<leader>p", utils.get_projects, { desc = "Projects" })
-vim.keymap.set("n", "<leader>so", utils.show_options_table, { desc = "Vim Options" })
+vim.keymap.set("n", "<leader>p", ui.get_projects, { desc = "Projects" })
+vim.keymap.set("n", "<leader>so", ui.show_options_table, { desc = "Vim Options" })
 
 -- Tools
 wk.add({ "<leader>z", group = "tools", icon = "" })

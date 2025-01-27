@@ -1,5 +1,7 @@
 local kanagawa_paper = require("lualine.themes.kanagawa-paper")
 local utils = require("utils.general")
+local ui = require("utils.ui")
+local fs = require("utils.fs")
 local icons = require("lazyvim.config").icons
 local lualine_require = require("lualine_require")
 lualine_require.require = require
@@ -48,7 +50,7 @@ local M = {
               return utils.get_split_count() < 3
             end,
             on_click = function()
-              utils.get_projects()
+              ui.get_projects()
               vim.defer_fn(function()
                 vim.cmd("startinsert")
               end, 100)
@@ -101,7 +103,7 @@ local M = {
               local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
               local custom_sep = " >"
 
-              local path = vim.fn.expand("%:h"):gsub(utils.get_path_sep(), custom_sep)
+              local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
               local all_components = {}
               for part in path:gmatch("[^" .. custom_sep .. "]+") do
                 table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
@@ -230,7 +232,7 @@ local M = {
           },
           {
             function()
-              return vim.fn.expand("%:h") .. utils.get_path_sep()
+              return vim.fn.expand("%:h") .. fs.get_path_sep()
             end,
             separator = "",
             padding = 0,
