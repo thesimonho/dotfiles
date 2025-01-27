@@ -51,6 +51,13 @@ return {
         max_height = 15,
         winblend = 6,
         border = "rounded",
+        draw = {
+          columns = {
+            { "kind_icon" },
+            { "label", "label_description", gap = 1 },
+            { "source_name" },
+          },
+        },
       },
       documentation = {
         auto_show = true,
