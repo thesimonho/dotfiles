@@ -156,6 +156,20 @@ local M = {
             cond = function()
               return utils.get_split_count() < 2
             end,
+            on_click = function()
+              local encoding = vim.api.nvim_get_option_value("fileencoding", { scope = "local" })
+              vim.api.nvim_feedkeys(":set fileencoding=" .. encoding, "n", true)
+            end,
+          },
+          {
+            "fileformat",
+            cond = function()
+              return utils.get_split_count() < 3
+            end,
+            on_click = function()
+              local fileformat = vim.api.nvim_get_option_value("fileformat", { scope = "local" })
+              vim.api.nvim_feedkeys(":set fileformat=" .. fileformat, "n", true)
+            end,
           },
           {
             function()
