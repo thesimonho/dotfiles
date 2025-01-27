@@ -1,5 +1,8 @@
 return {
   "saghen/blink.cmp",
+  dependencies = {
+    "mikavilpas/blink-ripgrep.nvim",
+  },
   opts = {
     keymap = {
       ["<CR>"] = { "accept", "fallback" },
@@ -14,6 +17,17 @@ return {
 
       ["<C-u>"] = { "scroll_documentation_up", "fallback" },
       ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+    },
+    sources = {
+      default = {
+        "ripgrep",
+      },
+      providers = {
+        ripgrep = {
+          module = "blink-ripgrep",
+          name = "ripgrep",
+        },
+      },
     },
     completion = {
       keyword = {
