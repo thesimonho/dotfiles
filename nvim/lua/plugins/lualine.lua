@@ -101,7 +101,7 @@ local M = {
             function()
               local component_limit = 2
               local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
-              local custom_sep = " >"
+              local custom_sep = " ›"
 
               local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
               local all_components = {}
@@ -230,11 +230,7 @@ local M = {
         },
       },
       inactive_sections = {
-        lualine_a = {
-          function()
-            return "▌"
-          end,
-        },
+        lualine_a = {},
         lualine_b = {},
         lualine_c = {
           {
