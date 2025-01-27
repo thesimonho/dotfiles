@@ -1,4 +1,8 @@
+local kanagawa_paper = require("lualine.themes.kanagawa-paper")
 local utils = require("utils.general")
+local icons = require("lazyvim.config").icons
+local lualine_require = require("lualine_require")
+lualine_require.require = require
 
 local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -10,26 +14,9 @@ local function get_lsp_clients()
   return table.concat(client_names, ", ")
 end
 
---- Conditionally hide content based on number of window splits.
--- @param n_split number: The number of horizontal splits to divide the screen into. Defaults to half the screen if nil.
--- @return function: A function that returns `true` if the window width exceeds the size of the split, otherwise `false`.
-local function hide_on_split(n_split)
-  n_split = n_split or 2
-
-  return function()
-    return utils.get_split_count() < n_split
-  end
-end
-
 local M = {
   "nvim-lualine/lualine.nvim",
   opts = function()
-    local kanagawa_paper = require("lualine.themes.kanagawa-paper")
-    local utils = require("utils.general")
-    local icons = require("lazyvim.config").icons
-    local lualine_require = require("lualine_require")
-    lualine_require.require = require
-
     vim.o.laststatus = vim.g.lualine_laststatus
 
     return {
@@ -57,7 +44,9 @@ local M = {
             end,
             separator = "",
             padding = { left = 1, right = 0 },
-            cond = hide_on_split(3),
+            cond = function()
+              return utils.get_split_count() < 3
+            end,
             on_click = function()
               utils.get_projects()
               vim.defer_fn(function()
@@ -84,7 +73,9 @@ local M = {
               modified = icons.git.modified,
               removed = icons.git.removed,
             },
-            cond = hide_on_split(3),
+            cond = function()
+              return utils.get_split_count() < 3
+            end,
             source = function()
               local gitsigns = vim.b.gitsigns_status_dict
               if gitsigns then
@@ -126,7 +117,9 @@ local M = {
 
               return table.concat(components, custom_sep .. " ") .. custom_sep
             end,
-            cond = hide_on_split(3),
+            cond = function()
+              return utils.get_split_count() < 3
+            end,
             padding = { left = 1, right = 0 },
             separator = "",
             on_click = function()
@@ -156,12 +149,19 @@ local M = {
           },
         },
         lualine_x = {
-          { "encoding", cond = hide_on_split(2) },
+          {
+            "encoding",
+            cond = function()
+              return utils.get_split_count() < 2
+            end,
+          },
           {
             function()
               return require("package-info").get_status()
             end,
-            cond = hide_on_split(3),
+            cond = function()
+              return utils.get_split_count() < 3
+            end,
           },
         },
         lualine_y = {
@@ -178,7 +178,7 @@ local M = {
           {
             get_lsp_clients,
             cond = function()
-              return vim.bo.filetype ~= "lspinfo" and hide_on_split(2)()
+              return vim.bo.filetype ~= "lspinfo" and utils.get_split_count() < 2
             end,
             on_click = function()
               vim.cmd("LspInfo")
@@ -194,7 +194,9 @@ local M = {
               info = icons.diagnostics.Info,
               hint = icons.diagnostics.Hint,
             },
-            cond = hide_on_split(4),
+            cond = function()
+              return utils.get_split_count() < 4
+            end,
             on_click = function()
               vim.cmd("Trouble diagnostics toggle filter.buf=0")
             end,
@@ -203,12 +205,17 @@ local M = {
         lualine_z = {
           {
             "location",
-            cond = hide_on_split(2),
+            cond = function()
+              return utils.get_split_count() < 2
+            end,
             separator = { left = "", right = "" },
             padding = { left = 1, right = 0 },
           },
           {
             "progress",
+            cond = function()
+              return utils.get_split_count() >= 2
+            end,
             separator = { left = "", right = "" },
           },
         },
