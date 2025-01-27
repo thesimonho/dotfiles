@@ -22,6 +22,8 @@ vim.opt.foldcolumn = "1"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.mousemoveevent = true
+vim.opt.wrap = true
+vim.opt.showbreak = "↪ "
 
 -- GUI options
 if os.is_darwin() then
