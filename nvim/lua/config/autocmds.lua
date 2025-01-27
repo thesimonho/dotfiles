@@ -52,7 +52,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
     if root == nil then
       return
     end
-    -- vim.fn.chdir(root)
     vim.cmd("tcd " .. root)
   end,
   desc = "Find root and change current directory",
@@ -64,21 +63,26 @@ vim.api.nvim_create_autocmd("FileType", {
   command = "setlocal spell",
 })
 
--- cursorline
-local cursorline_group = vim.api.nvim_create_augroup("CursorLineGroup", { clear = true })
+-- dashboard
+local dashboard_group = vim.api.nvim_create_augroup("DashboardGroup", { clear = true })
 
 vim.api.nvim_create_autocmd("WinEnter", {
-  group = cursorline_group,
+  group = dashboard_group,
   callback = function()
-    if vim.bo.filetype ~= "snacks_dashboard" then
-      vim.wo.cursorline = true
+    if vim.bo.filetype == "snacks_dashboard" then
+      vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
+      vim.api.nvim_set_option_value("winblend", 0, { win = vim.api.nvim_get_current_win() })
+    elseif vim.bo.filetype == "neo-tree" then
+      vim.api.nvim_set_option_value("winblend", 0, { win = vim.api.nvim_get_current_win() })
+    else
+      vim.api.nvim_set_option_value("cursorline", true, { win = vim.api.nvim_get_current_win() })
+      vim.api.nvim_set_option_value("winblend", 6, { win = vim.api.nvim_get_current_win() })
     end
   end,
 })
 
 vim.api.nvim_create_autocmd("WinLeave", {
-  group = cursorline_group,
   callback = function()
-    vim.wo.cursorline = false
+    vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
   end,
 })

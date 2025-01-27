@@ -1,5 +1,3 @@
-local style = require("utils.style")
-
 return {
   "saghen/blink.cmp",
   opts = {
@@ -34,9 +32,9 @@ return {
       },
       menu = {
         enabled = true,
-        min_width = 30,
+        min_width = 40,
         max_height = 15,
-        winblend = 0,
+        winblend = 6,
         border = "rounded",
       },
       documentation = {
@@ -47,7 +45,7 @@ return {
           max_width = 60,
           max_height = 20,
           border = "rounded",
-          winblend = 0,
+          winblend = 6,
         },
       },
     },
