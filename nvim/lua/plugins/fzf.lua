@@ -85,7 +85,7 @@ return {
       glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
       actions = {
         ["ctrl-g"] = { actions.grep_lgrep },
-        ["ctrl-r"] = { actions.toggle_ignore },
+        ["ctrl-i"] = { actions.toggle_ignore },
       },
     },
     lsp = {
