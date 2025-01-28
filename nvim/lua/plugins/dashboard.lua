@@ -1,3 +1,4 @@
+local fs = require("utils.fs")
 local headers = require("config.headers")
 local quotes = require("config.quotes")
 
@@ -33,13 +34,11 @@ local function list_image_files(directory)
   return files
 end
 
-local function choose_header()
-  local use_image = true
-
+local function choose_header(use_image)
   if use_image then
-    local path_wallpapers = vim.fn.stdpath("config") .. "/wallpapers"
+    local path_wallpapers = vim.fn.stdpath("config") .. fs.get_path_sep() .. "wallpapers"
     local images = list_image_files(path_wallpapers)
-    local image_path = path_wallpapers .. "/" .. images[math.random(#images)]
+    local image_path = path_wallpapers .. fs.get_path_sep() .. images[math.random(#images)]
 
     return {
       section = "terminal",
@@ -82,7 +81,7 @@ local M = {
           },
         },
         sections = {
-          choose_header(),
+          choose_header(({ true, false })[math.random(2)]), -- randomize between image and text header
           { section = "startup", padding = 1 },
           { section = "keys", padding = 4 },
           {
