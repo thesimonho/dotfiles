@@ -1,7 +1,7 @@
 local wk = require("which-key")
-local preferred_shells = { "nu", "zsh", "bash", "cmd" }
 
 local function set_shell()
+  local preferred_shells = { "nu", "zsh", "bash", "cmd" }
   for _, shell in ipairs(preferred_shells) do
     if vim.fn.executable(shell) == 1 then
       return shell
