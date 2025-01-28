@@ -1,3 +1,4 @@
+local Path = require("plenary.path")
 local os = require("utils.os")
 
 M = {}
@@ -62,9 +63,23 @@ M.get_path_sep = function()
   end
 end
 
+-- Shorten a path to a given number of directories
+M.shorten_path = function(path, max_parts)
+  local components = Path:new(path):_split()
+  local count = #components
+  if count > max_parts then
+    local shortened = {}
+    for i = count - max_parts + 1, count do
+      table.insert(shortened, components[i])
+    end
+    return table.concat(shortened, "/")
+  end
+  return path
+end
+
 M.create_tempfile = function(filename)
   if os.is_windows() then
-    return os.getenv("TEMP") .. "\\" .. filename
+    return os.getenv("TEMP") .. "/" .. filename
   else
     return "/tmp/" .. filename
   end

@@ -1,3 +1,5 @@
+local fs = require("utils.fs")
+
 return {
   "folke/trouble.nvim",
   init = function()
@@ -11,8 +13,17 @@ return {
     modes = {
       symbols = {
         focus = true,
-        win = { position = "right", size = 40 },
+        groups = {
+          { "filename", format = "{file_icon}{short_filename} {count}" },
+        },
+        format = "{kind_icon}{symbol.name} {pos}",
+        win = { position = "right", size = 35 },
       },
+    },
+    formatters = {
+      short_filename = function(ctx)
+        return { text = fs.shorten_path(ctx.item.dirname, 2) .. fs.get_path_sep() .. ctx.item.basename }
+      end,
     },
   },
 }
