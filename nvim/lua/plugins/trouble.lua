@@ -26,4 +26,11 @@ return {
       end,
     },
   },
+  {
+    "folke/todo-comments.nvim",
+    keys = {
+      { "<leader>sT", vim.NIL },
+      { "<leader>xT", vim.NIL },
+    },
+  },
 }
