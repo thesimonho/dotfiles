@@ -16,10 +16,8 @@ if ($OS | str contains 'MacOS') {
 }
 
 # add SSH keys to ssh-agent
-try {
+if (ssh-add -l | str length) > 0 {
   ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
-} catch {
-  echo "Error adding SSH keys to ssh-agent"
 }
 
 # environment variables
