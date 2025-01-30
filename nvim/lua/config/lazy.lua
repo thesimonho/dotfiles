@@ -19,7 +19,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.fzf" },
     { import = "lazyvim.plugins.extras.editor.inc-rename" },
     { import = "lazyvim.plugins.extras.test.core" },
-    { import = "lazyvim.plugins.extras.util.rest" },
     { import = "lazyvim.plugins.extras.vscode" },
     -- languages
     { import = "lazyvim.plugins.extras.lang.docker" },
