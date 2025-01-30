@@ -4,9 +4,8 @@ M = {
     keys = {
       { "<leader>cm", vim.NIL },
     },
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
+    opts = {
+      ensure_installed = {
         -- linters
         "eslint_d",
         "golangci-lint",
@@ -17,8 +16,8 @@ M = {
         "stylua",
         "golines",
         "yamlfmt",
-      })
-    end,
+      },
+    },
   },
   { -- formatters
     "stevearc/conform.nvim",

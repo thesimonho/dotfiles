@@ -3,9 +3,8 @@ vim.lsp.set_log_level("ERROR")
 return {
   {
     "williamboman/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
+    opts = {
+      ensure_installed = {
         "graphql-language-service-cli",
         "marksman",
         "mdx-analyzer",
@@ -16,8 +15,8 @@ return {
         "vim-language-server",
         "yaml-language-server",
         "vue-language-server",
-      })
-    end,
+      },
+    },
   },
   {
     "neovim/nvim-lspconfig",
