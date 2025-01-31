@@ -1,3 +1,11 @@
+local source_priority = {
+  lsp = 1,
+  path = 2,
+  buffer = 3,
+  ripgrep = 4,
+  snippets = 5,
+}
+
 return {
   "saghen/blink.cmp",
   dependencies = {
@@ -27,6 +35,15 @@ return {
           module = "blink-ripgrep",
           name = "ripgrep",
         },
+      },
+    },
+    fuzzy = {
+      sorts = {
+        function(a, b)
+          return source_priority[a.source_id] > source_priority[b.source_id]
+        end,
+        "score",
+        "sort_text",
       },
     },
     completion = {
