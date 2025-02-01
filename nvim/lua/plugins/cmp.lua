@@ -40,7 +40,7 @@ return {
     fuzzy = {
       sorts = {
         function(a, b)
-          return source_priority[a.source_id] > source_priority[b.source_id]
+          return source_priority[a.source_id] < source_priority[b.source_id]
         end,
         "score",
         "sort_text",
