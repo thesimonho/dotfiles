@@ -7,6 +7,7 @@ if ($OS | str contains 'Linux') {
   # https://kcore.org/2022/05/18/ssh-passphrases-kde/
   $env.SSH_ASKPASS = '/usr/bin/ksshaskpass'
   $env.SSH_ASKPASS_REQUIRE = 'prefer'
+  $env.SSH_AUTH_SOCK = '/run/user/1000/ssh-agent.socket'
 }
 
 if ($OS | str contains 'MacOS') {
@@ -16,9 +17,7 @@ if ($OS | str contains 'MacOS') {
 }
 
 # add SSH keys to ssh-agent
-if (ssh-add -l | str length) > 0 {
-  ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
-}
+ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
 
 # environment variables
 $env.VIRTUAL_ENV_DISABLE_PROMPT = '1'
