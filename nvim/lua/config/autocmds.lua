@@ -63,11 +63,11 @@ vim.api.nvim_create_autocmd("FileType", {
   command = "setlocal spell",
 })
 
--- dashboard
-local dashboard_group = vim.api.nvim_create_augroup("DashboardGroup", { clear = true })
+--  cursor
+local cursor_group = vim.api.nvim_create_augroup("CursorGroup", { clear = true })
 
 vim.api.nvim_create_autocmd("WinEnter", {
-  group = dashboard_group,
+  group = cursor_group,
   callback = function()
     if vim.bo.filetype == "snacks_dashboard" then
       vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
@@ -82,6 +82,7 @@ vim.api.nvim_create_autocmd("WinEnter", {
 })
 
 vim.api.nvim_create_autocmd("WinLeave", {
+  group = cursor_group,
   callback = function()
     vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
   end,
