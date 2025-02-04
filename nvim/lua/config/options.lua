@@ -3,7 +3,7 @@ local os = require("utils.os")
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-vim.g.ai_cmp = false -- show suggestions in cmp
+vim.g.ai_cmp = false -- show AI suggestions in cmp
 
 vim.opt.list = false
 vim.opt.cursorline = true

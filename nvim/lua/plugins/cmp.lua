@@ -16,15 +16,14 @@ return {
       ["<CR>"] = { "accept", "fallback" },
       ["<C-k>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide", "fallback" },
-
       ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
       ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
 
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },
 
-      ["<C-u>"] = { "scroll_documentation_up", "fallback" },
-      ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+      ["<C-p>"] = { "scroll_documentation_up", "fallback" },
+      ["<C-n>"] = { "scroll_documentation_down", "fallback" },
     },
     sources = {
       default = {
@@ -34,6 +33,11 @@ return {
         ripgrep = {
           module = "blink-ripgrep",
           name = "ripgrep",
+          opts = {
+            prefix_min_len = 5,
+            context_size = 3,
+            search_casing = "--smart-case",
+          },
         },
       },
     },
@@ -60,7 +64,7 @@ return {
         },
       },
       ghost_text = {
-        enabled = false,
+        enabled = vim.g.ai_cmp,
       },
       menu = {
         enabled = true,
