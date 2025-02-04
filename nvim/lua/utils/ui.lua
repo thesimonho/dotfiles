@@ -16,6 +16,7 @@ M.UI_select = function(item_map)
 end
 
 -- Get projects and open fzf picker
+-- TODO: open session if one exists
 M.get_projects = function()
   local projects = Snacks.dashboard.sections.projects({ limit = 50 })
   require("fzf-lua").fzf_exec(function(fzf_cb)

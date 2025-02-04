@@ -223,7 +223,7 @@ local M = {
             function()
               return utils.get_progress_char()
             end,
-            color = { fg = Snacks.util.color("Cursor") },
+            color = { fg = "#363646" },
             separator = { left = "" },
             padding = { left = 0, right = 0 },
           },
