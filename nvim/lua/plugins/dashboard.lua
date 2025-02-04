@@ -42,8 +42,8 @@ local function choose_header(use_image)
 
     return {
       section = "terminal",
-      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size=60x20; sleep .1",
-      height = 20,
+      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size=70x20; sleep .1",
+      height = 22,
     }
   end
 
@@ -66,8 +66,8 @@ local M = {
         },
       },
       dashboard = {
-        width = 60,
-        pane_gap = 20,
+        width = 70,
+        pane_gap = 15,
         preset = {
           keys = {
             {
