@@ -9,6 +9,7 @@
   "ccc.nvim": { "branch": "main", "commit": "b57cbaf8db3ac43c56c9e2c7f3812944638260ed" },
   "comfy-line-numbers.nvim": { "branch": "main", "commit": "b37c501c8ffb7ec2cb16c0d31866fa20c0d41b28" },
   "conform.nvim": { "branch": "master", "commit": "363243c03102a531a8203311d4f2ae704c620d9b" },
+  "deadcolumn.nvim": { "branch": "master", "commit": "897c905aef1a268ce4cc507d5cce048ed808fa7a" },
   "dial.nvim": { "branch": "master", "commit": "34bbd9c387c358190e61ce71017faad3dffa7a74" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "flash.nvim": { "branch": "main", "commit": "f899265876ecdcf7352dbc9f0adf87068cedefbb" },
