@@ -16,7 +16,6 @@ M.UI_select = function(item_map)
 end
 
 -- Get projects and open fzf picker
--- TODO: open session if one exists
 M.get_projects = function()
   local projects = Snacks.dashboard.sections.projects({ limit = 50 })
   require("fzf-lua").fzf_exec(function(fzf_cb)
@@ -31,8 +30,24 @@ M.get_projects = function()
     actions = {
       ["default"] = function(selected)
         local path = vim.split(selected[1], "!!")[1]
+
+        -- try to load a session, fallback to picker
         vim.cmd("tabnew")
-        vim.cmd("FzfLua files cwd=" .. path)
+        vim.fn.chdir(path)
+        local session_loaded = false
+        vim.api.nvim_create_autocmd("SessionLoadPost", {
+          once = true,
+          callback = function()
+            session_loaded = true
+          end,
+        })
+
+        vim.defer_fn(function()
+          if not session_loaded then
+            vim.cmd("FzfLua files cwd=" .. path)
+          end
+        end, 100)
+        vim.cmd("lua require('persistence').load()")
       end,
     },
     fzf_opts = {
