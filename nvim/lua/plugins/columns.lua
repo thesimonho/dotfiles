@@ -1,13 +1,5 @@
 return {
   {
-    "mluders/comfy-line-numbers.nvim",
-    enabled = false,
-    event = "BufRead",
-    opts = {
-      enable_in_terminal = false,
-    },
-  },
-  {
     "Bekaboo/deadcolumn.nvim",
     event = "LazyFile",
     opts = {
@@ -25,5 +17,40 @@ return {
         hlgroup = { "lualine_a_insert", "bg" },
       },
     },
+  },
+  {
+    "luukvbaal/statuscol.nvim",
+    event = "LazyFile",
+    config = function()
+      local builtin = require("statuscol.builtin")
+      require("statuscol").setup({
+        relculright = true,
+        segments = {
+          {
+            sign = {
+              namespace = { "diagnostic/signs" },
+              name = { ".*" },
+              maxwidth = 2,
+              colwidth = 1,
+              auto = true,
+              wrap = true,
+            },
+            click = "v:lua.ScSa",
+          },
+          { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
+          {
+            sign = {
+              namespace = { "gitsigns" },
+              name = { ".*" },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+            },
+            click = "v:lua.ScSa",
+          },
+          { text = { builtin.foldfunc, " " }, auto = false, click = "v:lua.ScFa" },
+        },
+      })
+    end,
   },
 }
