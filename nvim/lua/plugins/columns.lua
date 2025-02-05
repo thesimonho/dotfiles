@@ -42,6 +42,10 @@ return {
           {
             text = {
               function(args)
+                if not args.nu or not args.rnu then
+                  return ""
+                end
+
                 local hl
                 if args.relnum == 0 then -- current line
                   local mode = vim.api.nvim_get_mode().mode
@@ -68,6 +72,10 @@ return {
           {
             text = {
               function(args)
+                if not args.nu or not args.rnu then
+                  return ""
+                end
+
                 local hl = git.get_git_sign_hl(vim.api.nvim_get_current_buf(), args.lnum)
 
                 if hl then
