@@ -69,14 +69,16 @@ local cursor_group = vim.api.nvim_create_augroup("CursorGroup", { clear = true }
 vim.api.nvim_create_autocmd("WinEnter", {
   group = cursor_group,
   callback = function()
+    local win = vim.api.nvim_get_current_win()
+
     if vim.bo.filetype == "snacks_dashboard" then
-      vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
-      vim.api.nvim_set_option_value("winblend", 0, { win = vim.api.nvim_get_current_win() })
+      vim.api.nvim_set_option_value("cursorline", false, { win = win })
+      vim.api.nvim_set_option_value("winblend", 0, { win = win })
     elseif vim.bo.filetype == "neo-tree" then
-      vim.api.nvim_set_option_value("winblend", 0, { win = vim.api.nvim_get_current_win() })
+      vim.api.nvim_set_option_value("winblend", 0, { win = win })
     else
-      vim.api.nvim_set_option_value("cursorline", true, { win = vim.api.nvim_get_current_win() })
-      vim.api.nvim_set_option_value("winblend", 6, { win = vim.api.nvim_get_current_win() })
+      vim.api.nvim_set_option_value("cursorline", true, { win = win })
+      vim.api.nvim_set_option_value("winblend", 6, { win = win })
     end
   end,
 })
