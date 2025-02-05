@@ -89,3 +89,21 @@ vim.api.nvim_create_autocmd("WinLeave", {
     vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
   end,
 })
+
+-- line numbers
+vim.api.nvim_create_autocmd("WinEnter", {
+  callback = function()
+    local ignore_ft = { "toggleterm", "help" }
+    local ignore_buftype = { "quickfix", "nofile", "prompt", "terminal" }
+    local win = vim.api.nvim_get_current_win()
+
+    if vim.tbl_contains(ignore_ft, vim.bo.filetype) or vim.tbl_contains(ignore_buftype, vim.bo.buftype) then
+      vim.api.nvim_set_option_value("number", false, { win = win })
+      vim.api.nvim_set_option_value("relativenumber", false, { win = win })
+    else
+      vim.api.nvim_set_option_value("number", true, { win = win })
+      vim.api.nvim_set_option_value("relativenumber", true, { win = win })
+    end
+  end,
+  desc = "Toggle line numbers",
+})
