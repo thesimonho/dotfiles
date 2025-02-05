@@ -38,4 +38,29 @@ M.get_git_worktrees = function(dir)
   return worktrees
 end
 
+-- Use the 'gitsigns' extmark to check the Git status HL at a line
+M.get_git_sign_hl = function(buf, lnum)
+  local extmarks = vim.api.nvim_buf_get_extmarks(
+    buf,
+    -1,
+    { lnum - 1, 0 },
+    { lnum - 1, -1 },
+    { details = true, type = "sign" }
+  )
+
+  for _, extmark in pairs(extmarks) do
+    local name = extmark[4].sign_hl_group or extmark[4].sign_name or ""
+    if name then
+      if name:find("GitSignsAdd") then
+        return "GitSignsAddNr"
+      elseif name:find("GitSignsChange") then
+        return "GitSignsChangeNr"
+      elseif name:find("GitSignsDelete") then
+        return "GitSignsDeleteNr"
+      end
+    end
+  end
+  return nil
+end
+
 return M

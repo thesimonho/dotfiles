@@ -1,3 +1,5 @@
+local git = require("utils.git")
+
 return {
   {
     "Bekaboo/deadcolumn.nvim",
@@ -28,27 +30,59 @@ return {
         segments = {
           {
             sign = {
-              namespace = { "diagnostic/signs" },
               name = { ".*" },
+              namespace = { "diagnostic/signs" },
               maxwidth = 2,
               colwidth = 1,
-              auto = true,
+              auto = false,
               wrap = true,
             },
             click = "v:lua.ScSa",
           },
-          { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
           {
-            sign = {
-              namespace = { "gitsigns" },
-              name = { ".*" },
-              maxwidth = 1,
-              colwidth = 1,
-              auto = false,
+            text = {
+              function(args)
+                local hl
+                if args.relnum == 0 then -- current line
+                  local mode = vim.api.nvim_get_mode().mode
+                  if mode == "i" or mode == "R" then
+                    hl = "@operator"
+                  elseif mode == "v" or mode == "V" or mode == "\22" then
+                    hl = "@markup"
+                  else
+                    hl = "@property"
+                  end
+                elseif args.relnum % 5 == 0 then -- every 5th line
+                  hl = "CursorLineSign"
+                else
+                  hl = "LineNr"
+                end
+
+                local lnum = args.rnu and (args.relnum > 0 and args.relnum or (args.nu and args.lnum or 0)) or args.lnum
+                local pad = (" "):rep(args.nuw - #tostring(lnum))
+                return "%#" .. hl .. "#%=" .. pad .. tostring(lnum)
+              end,
             },
-            click = "v:lua.ScSa",
+            click = "v:lua.ScLa",
           },
-          { text = { builtin.foldfunc, " " }, auto = false, click = "v:lua.ScFa" },
+          {
+            text = {
+              function(args)
+                local hl = git.get_git_sign_hl(vim.api.nvim_get_current_buf(), args.lnum)
+
+                if hl then
+                  return "%#" .. hl .. "#%=" .. " ┃"
+                else
+                  return "%#LineNr#%=" .. " │"
+                end
+              end,
+            },
+          },
+          {
+            text = { builtin.foldfunc, " " },
+            auto = false,
+            click = "v:lua.ScFa",
+          },
         },
       })
     end,
