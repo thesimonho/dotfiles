@@ -1,9 +1,8 @@
 let OS = sys host | get long_os_version
 
 if ($OS | str contains 'Linux') {
-  $env.path ++= [
-    "/home/linuxbrew/.linuxbrew/bin"
-  ]
+  $env.PATH = ($env.PATH | split row (char esep) | append '/home/linuxbrew/.linuxbrew/bin')
+  
 
   # https://forums.opensuse.org/t/guide-ssh-agent-kwallet-to-store-ssh-private-key-passphrases/173401
   # https://kcore.org/2022/05/18/ssh-passphrases-kde/
@@ -11,11 +10,9 @@ if ($OS | str contains 'Linux') {
   $env.SSH_ASKPASS_REQUIRE = 'prefer'
   $env.SSH_AUTH_SOCK = '/run/user/1000/ssh-agent.socket'
 } else if ($OS | str contains 'MacOS') {
-  $env.path ++= [
-    '/usr/local/bin',
-    '/opt/homebrew/bin',
-    '~/.local/pipx/venvs/poetry/bin'
-  ]
+  $env.PATH = ($env.PATH | split row (char esep) | append '/usr/local/bin')
+  $env.PATH = ($env.PATH | split row (char esep) | append '/opt/homebrew/bin')
+  $env.PATH = ($env.PATH | split row (char esep) | append '~/.local/pipx/venvs/poetry/bin')
 }
 
 # add SSH keys to ssh-agent
