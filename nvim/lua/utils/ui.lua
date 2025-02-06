@@ -126,7 +126,9 @@ M.show_options_table = function(separator)
           local info = vim.api.nvim_get_option_info2(option, {})
 
           if info.type == "boolean" then
-            local ok, err = pcall(vim.cmd, string.format("set %s!", option))
+            local ok, err = pcall(function()
+              vim.cmd(string.format("set %s!", option))
+            end)
             if not ok then
               vim.notify(err, vim.log.levels.ERROR)
             end
@@ -137,7 +139,9 @@ M.show_options_table = function(separator)
                   return
                 end
 
-                local ok, err = pcall(vim.cmd, string.format("set %s=%s", option, tonumber(updated)))
+                local ok, err = pcall(function()
+                  vim.cmd(string.format("set %s=%s", option, tonumber(updated)))
+                end)
                 if not ok then
                   vim.notify(err, vim.log.levels.ERROR)
                 end
@@ -151,7 +155,9 @@ M.show_options_table = function(separator)
                   return
                 end
 
-                local ok, err = pcall(vim.cmd, string.format("set %s=%s", option, updated))
+                local ok, err = pcall(function()
+                  vim.cmd(string.format("set %s=%s", option, updated))
+                end)
                 if not ok then
                   vim.notify(err, vim.log.levels.ERROR)
                 end
@@ -170,4 +176,5 @@ M.show_options_table = function(separator)
     },
   })
 end
+
 return M
