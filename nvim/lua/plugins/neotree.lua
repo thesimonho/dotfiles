@@ -132,7 +132,7 @@ return {
           "thumbs.db",
           "node_modules",
         },
-        use_libuv_file_watcher = false,
+        use_libuv_file_watcher = true,
       },
       buffers = {
         follow_current_file = {
