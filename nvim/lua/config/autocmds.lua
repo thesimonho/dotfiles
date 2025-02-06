@@ -93,8 +93,9 @@ vim.api.nvim_create_autocmd("WinLeave", {
 -- line numbers
 vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
-    local ignore_ft = { "toggleterm", "help" }
-    local ignore_buftype = { "quickfix", "nofile", "prompt", "terminal" }
+    -- BUG: snacks history still shows numbers
+    local ignore_ft = { "toggleterm", "checkhealth", "snacks_notif_history" }
+    local ignore_buftype = { "quickfix", "nofile", "prompt", "terminal", "help" }
     local win = vim.api.nvim_get_current_win()
 
     if vim.tbl_contains(ignore_ft, vim.bo.filetype) or vim.tbl_contains(ignore_buftype, vim.bo.buftype) then
