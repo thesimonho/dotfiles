@@ -6,7 +6,7 @@ local M = {}
 -- UI select menu
 M.UI_select = function(item_map)
   local options = general.get_table_keys(item_map)
-  return vim.ui.select(options, { prompt = "Select option" }, function(item, idx)
+  return vim.ui.select(options, { prompt = "Select option" }, function(item)
     for option, cmd in pairs(item_map) do
       if option == item then
         load(cmd)()
@@ -16,7 +16,7 @@ M.UI_select = function(item_map)
 end
 
 -- Get projects and open fzf picker
-M.get_projects = function()
+M.show_projects_table = function()
   local projects = Snacks.dashboard.sections.projects({ limit = 50 })
   require("fzf-lua").fzf_exec(function(fzf_cb)
     for _, project in ipairs(projects) do
@@ -57,10 +57,8 @@ M.get_projects = function()
   })
 end
 
--- Display a table in fzf with the current vim options, along with actions to change their values
-M.show_options_table = function(separator)
-  local sep = separator or "│"
-
+-- Format vim options and their values for fzf
+M.format_option_entries = function(separator)
   local format = function(info)
     local fields = { "option", "value" }
     local field_fmt = { option = "%-20s", value = "%s" }
@@ -71,7 +69,7 @@ M.show_options_table = function(separator)
         ret = string.format(
           "%s%s" .. field_fmt[f],
           ret or "",
-          ret and string.format(" %s ", require("fzf-lua").utils.ansi_from_hl("@punctuation", sep)) or "",
+          ret and string.format(" %s ", require("fzf-lua").utils.ansi_from_hl("@punctuation", separator)) or "",
           info[f] or ""
         )
       end
@@ -79,31 +77,57 @@ M.show_options_table = function(separator)
     return ret
   end
 
-  local make_entries = function()
-    local raw_options = general.get_vim_options()
-    local options = {}
+  local entries = {}
+  for _, v in pairs(vim.api.nvim_get_all_options_info()) do
+    local ok, value = pcall(vim.api.nvim_get_option_value, v.name, {})
 
-    --PERF: these loops can be combined
-    for _, raw in pairs(raw_options) do
-      raw.str = format({ option = raw.name, value = tostring(raw.value) })
-      local o = string.format("[%s:%s]", raw.name, raw.value)
-      options[o] = raw
-    end
+    if ok then
+      local color_value = require("fzf-lua").utils.ansi_from_hl("@punctuation", value)
+      if value == true then
+        color_value = require("fzf-lua").utils.ansi_from_hl("@character", tostring(value))
+      elseif value == false then
+        color_value = require("fzf-lua").utils.ansi_from_hl("@operator", tostring(value))
+      end
 
-    local entries = {}
-    for _, option in pairs(options) do
-      table.insert(entries, option.str)
+      local str = format({ option = v.name, value = tostring(color_value) })
+      table.insert(entries, str)
     end
-    table.sort(entries)
-    local header_str = format({ option = "option", value = "value" })
-    table.insert(entries, 1, header_str)
-    return entries
   end
+
+  table.sort(entries)
+  local header = format({ option = "Option", value = "Value" })
+  table.insert(entries, 1, header)
+  return entries
+end
+
+-- show input for new option value
+M.show_option_value_input = function(option, old, transform)
+  vim.ui.input({ prompt = option, default = old, expand = true }, function(updated)
+    if not updated or updated == "" or updated == old then
+      return
+    end
+
+    local transformed_value = transform and transform(updated) or updated
+
+    local ok, err = pcall(function()
+      vim.cmd(string.format("set %s=%s", option, transformed_value))
+    end)
+    if not ok and err then
+      local relevant_error = err:match("Vim%([^%)]+%):%s*(.-)$") or err
+      vim.notify(relevant_error, vim.log.levels.ERROR)
+    end
+    require("fzf-lua").actions.resume()
+  end)
+end
+
+-- Display an fzf table with the current vim options, along with actions to change their values
+M.show_options_table = function(separator)
+  local sep = separator or "│"
 
   require("fzf-lua").fzf_exec(function(fzf_cb)
     coroutine.wrap(function()
       local co = coroutine.running()
-      local entries = make_entries()
+      local entries = M.format_option_entries(sep)
       for _, entry in pairs(entries) do
         vim.schedule(function()
           fzf_cb(entry, function()
@@ -115,7 +139,7 @@ M.show_options_table = function(separator)
       fzf_cb()
     end)()
   end, {
-    prompt = "Vim Options > ",
+    prompt = "Options > ",
     preview = "echo {2}",
     actions = {
       ["default"] = {
@@ -129,40 +153,17 @@ M.show_options_table = function(separator)
             local ok, err = pcall(function()
               vim.cmd(string.format("set %s!", option))
             end)
-            if not ok then
-              vim.notify(err, vim.log.levels.ERROR)
+            if not ok and err then
+              local relevant_error = err:match("Vim%([^%)]+%):%s*(.-)$") or err
+              vim.notify(relevant_error, vim.log.levels.ERROR)
             end
           elseif info.type == "number" then
             vim.schedule(function()
-              vim.ui.input({ prompt = option, default = old, expand = true }, function(updated)
-                if not updated or updated == "" or updated == old then
-                  return
-                end
-
-                local ok, err = pcall(function()
-                  vim.cmd(string.format("set %s=%s", option, tonumber(updated)))
-                end)
-                if not ok then
-                  vim.notify(err, vim.log.levels.ERROR)
-                end
-                require("fzf-lua").actions.resume()
-              end)
+              M.show_option_value_input(option, old, tonumber)
             end)
           else
             vim.schedule(function()
-              vim.ui.input({ prompt = option, default = old, expand = true }, function(updated)
-                if not updated or updated == "" or updated == old then
-                  return
-                end
-
-                local ok, err = pcall(function()
-                  vim.cmd(string.format("set %s=%s", option, updated))
-                end)
-                if not ok then
-                  vim.notify(err, vim.log.levels.ERROR)
-                end
-                require("fzf-lua").actions.resume()
-              end)
+              M.show_option_value_input(option, old, nil)
             end)
           end
         end,

@@ -73,25 +73,6 @@ M.get_web_icon = function(filename, library)
   end
 end
 
--- Get vim options and their values
-M.get_vim_options = function()
-  local raw_options = {}
-  for _, v in pairs(vim.api.nvim_get_all_options_info()) do
-    local ok, value = pcall(vim.api.nvim_get_option_value, v.name, {})
-
-    if ok then
-      local color_value = require("fzf-lua").utils.ansi_from_hl("@punctuation", value)
-      if value == true then
-        color_value = require("fzf-lua").utils.ansi_from_hl("@character", tostring(value))
-      elseif value == false then
-        color_value = require("fzf-lua").utils.ansi_from_hl("@operator", tostring(value))
-      end
-      table.insert(raw_options, { name = v.name, value = color_value })
-    end
-  end
-  return raw_options
-end
-
 -- Get buffer progress character
 M.get_progress_char = function()
   local current_line = vim.fn.line(".")

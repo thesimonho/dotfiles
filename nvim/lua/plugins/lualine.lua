@@ -50,7 +50,7 @@ return {
               return utils.get_split_count() < 3
             end,
             on_click = function()
-              ui.get_projects()
+              ui.show_projects_table()
               vim.defer_fn(function()
                 vim.cmd("startinsert")
               end, 100)
