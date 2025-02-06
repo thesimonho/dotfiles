@@ -9,7 +9,7 @@ local function set_shell()
   end
 end
 
-M = {
+return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
@@ -50,5 +50,3 @@ M = {
     },
   },
 }
-
-return M

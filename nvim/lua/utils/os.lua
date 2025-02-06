@@ -1,4 +1,4 @@
-M = {}
+local M = {}
 
 M.is_darwin = function()
   return vim.loop.os_uname().sysname == "Darwin"

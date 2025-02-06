@@ -1,4 +1,4 @@
-M = {
+local M = {
   {
     "supermaven-inc/supermaven-nvim",
     lazy = false, -- required otherwise color setting wont work

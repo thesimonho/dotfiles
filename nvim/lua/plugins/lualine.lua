@@ -16,7 +16,7 @@ local function get_lsp_clients()
   return table.concat(client_names, ", ")
 end
 
-local M = {
+return {
   "nvim-lualine/lualine.nvim",
   opts = function()
     vim.o.laststatus = vim.g.lualine_laststatus
@@ -269,5 +269,3 @@ local M = {
     }
   end,
 }
-
-return M

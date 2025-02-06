@@ -1,7 +1,7 @@
 local general = require("utils.general")
 local fs = require("utils.fs")
 
-M = {}
+local M = {}
 
 -- UI select menu
 M.UI_select = function(item_map)

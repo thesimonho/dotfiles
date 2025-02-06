@@ -1,7 +1,7 @@
 local Path = require("plenary.path")
 local os = require("utils.os")
 
-M = {}
+local M = {}
 
 -- find file's root directory based on a list of patterns
 Root_cache = {}

@@ -1,4 +1,4 @@
-M = {
+local M = {
   {
     "williamboman/mason.nvim",
     keys = {
