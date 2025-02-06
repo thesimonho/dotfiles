@@ -31,7 +31,7 @@ M.show_projects_table = function()
       ["default"] = function(selected)
         local path = vim.split(selected[1], "!!")[1]
 
-        -- try to load a session, fallback to picker
+        -- try to load a session
         vim.cmd("tabnew")
         vim.fn.chdir(path)
         local session_loaded = false
@@ -42,6 +42,7 @@ M.show_projects_table = function()
           end,
         })
 
+        -- fallback to picker
         vim.defer_fn(function()
           if not session_loaded then
             vim.cmd("FzfLua files cwd=" .. path)
@@ -69,7 +70,7 @@ M.format_option_entries = function(separator)
         ret = string.format(
           "%s%s" .. field_fmt[f],
           ret or "",
-          ret and string.format(" %s ", require("fzf-lua").utils.ansi_from_hl("@punctuation", separator)) or "",
+          ret and string.format(" %s ", require("fzf-lua").utils.ansi_codes["grey"](separator)) or " ",
           info[f] or ""
         )
       end
@@ -82,14 +83,14 @@ M.format_option_entries = function(separator)
     local ok, value = pcall(vim.api.nvim_get_option_value, v.name, {})
 
     if ok then
-      local color_value = require("fzf-lua").utils.ansi_from_hl("@punctuation", value)
+      local color_value = require("fzf-lua").utils.ansi_codes["grey"](tostring(value))
       if value == true then
-        color_value = require("fzf-lua").utils.ansi_from_hl("@character", tostring(value))
+        color_value = require("fzf-lua").utils.ansi_codes["green"](tostring(value))
       elseif value == false then
-        color_value = require("fzf-lua").utils.ansi_from_hl("@operator", tostring(value))
+        color_value = require("fzf-lua").utils.ansi_codes["red"](tostring(value))
       end
 
-      local str = format({ option = v.name, value = tostring(color_value) })
+      local str = format({ option = v.name, value = color_value })
       table.insert(entries, str)
     end
   end
@@ -113,8 +114,8 @@ M.show_option_value_input = function(option, old, transform)
       vim.cmd(string.format("set %s=%s", option, transformed_value))
     end)
     if not ok and err then
-      local relevant_error = err:match("Vim%([^%)]+%):%s*(.-)$") or err
-      vim.notify(relevant_error, vim.log.levels.ERROR)
+      local extracted_error = err:match("Vim%([^%)]+%):%s*(.-)$") or err
+      vim.notify(extracted_error, vim.log.levels.ERROR)
     end
     require("fzf-lua").actions.resume()
   end)
@@ -140,7 +141,7 @@ M.show_options_table = function(separator)
     end)()
   end, {
     prompt = "Options > ",
-    preview = "echo {2}",
+    preview = "echo {2}", -- some values can get really long, so we preview them
     actions = {
       ["default"] = {
         function(selected)
@@ -154,8 +155,8 @@ M.show_options_table = function(separator)
               vim.cmd(string.format("set %s!", option))
             end)
             if not ok and err then
-              local relevant_error = err:match("Vim%([^%)]+%):%s*(.-)$") or err
-              vim.notify(relevant_error, vim.log.levels.ERROR)
+              local extracted_error = err:match("Vim%([^%)]+%):%s*(.-)$") or err
+              vim.notify(extracted_error, vim.log.levels.ERROR)
             end
           elseif info.type == "number" then
             vim.schedule(function()
