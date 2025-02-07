@@ -18,254 +18,257 @@ end
 
 return {
   "nvim-lualine/lualine.nvim",
-  opts = function()
-    vim.o.laststatus = vim.g.lualine_laststatus
-
-    return {
-      options = {
-        theme = kanagawa_paper,
-        component_separators = { left = "│", right = "│" },
-        section_separators = { left = "", right = "" },
-        globalstatus = false,
-        disabled_filetypes = { statusline = { "dashboard", "snacks_dashboard", "starter" } },
-      },
-      sections = {
-        lualine_a = {
-          {
-            "mode",
-            separator = { left = "", right = "" },
-            fmt = function(str)
-              return str:lower()
-            end,
-          },
-        },
-        lualine_b = {
-          {
-            function()
-              return Snacks.git.get_root():match("([^/\\]+)$")
-            end,
-            separator = "",
-            padding = { left = 1, right = 0 },
-            cond = function()
-              return utils.get_split_count() < 3
-            end,
-            on_click = function()
-              ui.show_projects_table()
-              vim.defer_fn(function()
-                vim.cmd("startinsert")
-              end, 100)
-            end,
-          },
-          {
-            "branch",
-            icon = "󰘬",
-            padding = { left = 1, right = 1 },
-            on_click = function()
-              vim.cmd("FzfLua git_branches")
-              vim.defer_fn(function()
-                vim.cmd("startinsert")
-              end, 100)
-            end,
-          },
-          {
-            "diff",
-            padding = { left = 1, right = 0 },
-            symbols = {
-              added = icons.git.added,
-              modified = icons.git.modified,
-              removed = icons.git.removed,
-            },
-            cond = function()
-              return utils.get_split_count() < 3
-            end,
-            source = function()
-              local gitsigns = vim.b.gitsigns_status_dict
-              if gitsigns then
-                return {
-                  added = gitsigns.added,
-                  modified = gitsigns.changed,
-                  removed = gitsigns.removed,
-                }
-              end
-            end,
-            on_click = function()
-              Snacks.lazygit()
-              vim.defer_fn(function()
-                vim.cmd("startinsert")
-              end, 100)
-            end,
-          },
-        },
-        lualine_c = {
-          {
-            function()
-              local component_limit = 2
-              local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
-              local custom_sep = " ›"
-
-              local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
-              local all_components = {}
-              for part in path:gmatch("[^" .. custom_sep .. "]+") do
-                table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
-              end
-
-              local components = {}
-              for i = 1, #all_components do
-                if #components >= num_components then
-                  break
-                end
-                table.insert(components, 1, all_components[i])
-              end
-
-              return table.concat(components, custom_sep .. " ") .. custom_sep
-            end,
-            cond = function()
-              return utils.get_split_count() < 3
-            end,
-            padding = { left = 1, right = 0 },
-            separator = "",
-            on_click = function()
-              vim.cmd("Neotree position=float")
-            end,
-          },
-          {
-            "filetype",
-            icon_only = true,
-            separator = "",
-            padding = { left = 1, right = 0 },
-          },
-          {
-            "filename",
-            file_status = true,
-            path = 0,
-            padding = 0,
-            color = function()
-              if vim.bo.modified then
-                return { fg = kanagawa_paper.insert.a.bg }
-              end
-              return { fg = Snacks.util.color("Statement") }
-            end,
-            on_click = function()
-              vim.cmd("Neotree position=float")
-            end,
-          },
-        },
-        lualine_x = {
-          {
-            "encoding",
-            cond = function()
-              return utils.get_split_count() < 2
-            end,
-            on_click = function()
-              local encoding = vim.api.nvim_get_option_value("fileencoding", { scope = "local" })
-              vim.api.nvim_feedkeys(":set fileencoding=" .. encoding, "n", true)
-            end,
-          },
-          {
-            "fileformat",
-            cond = function()
-              return utils.get_split_count() < 3
-            end,
-            on_click = function()
-              local fileformat = vim.api.nvim_get_option_value("fileformat", { scope = "local" })
-              vim.api.nvim_feedkeys(":set fileformat=" .. fileformat, "n", true)
-            end,
-          },
-          {
-            function()
-              return require("package-info").get_status()
-            end,
-            cond = function()
-              return utils.get_split_count() < 3
-            end,
-          },
-        },
-        lualine_y = {
-          {
-            function()
-              return "󰑋 " .. require("noice").api.status.mode.get()
-            end,
-            cond = function()
-              return package.loaded["noice"] and require("noice").api.status.mode.has()
-            end,
-            color = { fg = Snacks.util.color("ErrorMsg") },
-            padding = { left = 0, right = 1 },
-          },
-          {
-            get_lsp_clients,
-            cond = function()
-              return vim.bo.filetype ~= "lspinfo" and utils.get_split_count() < 2
-            end,
-            on_click = function()
-              vim.cmd("LspInfo")
-            end,
-            icon = "󰌘",
-            color = { fg = Snacks.util.color("Character") },
-          },
-          {
-            "diagnostics",
-            symbols = {
-              error = icons.diagnostics.Error,
-              warn = icons.diagnostics.Warn,
-              info = icons.diagnostics.Info,
-              hint = icons.diagnostics.Hint,
-            },
-            cond = function()
-              return utils.get_split_count() < 4
-            end,
-            on_click = function()
-              vim.cmd("Trouble diagnostics toggle filter.buf=0")
-            end,
-          },
-        },
-        lualine_z = {
-          {
-            function()
-              return utils.get_progress_char()
-            end,
-            color = { fg = "#363646" },
-            separator = { left = "" },
-            padding = { left = 0, right = 0 },
-          },
+  event = "VeryLazy",
+  opts = {
+    options = {
+      theme = kanagawa_paper,
+      component_separators = { left = "│", right = "│" },
+      section_separators = { left = "", right = "" },
+      globalstatus = false,
+      disabled_filetypes = { statusline = { "dashboard", "snacks_dashboard", "starter" } },
+    },
+    sections = {
+      lualine_a = {
+        {
+          "mode",
+          separator = { left = "", right = "" },
+          fmt = function(str)
+            return str:lower()
+          end,
         },
       },
-      inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = {
-          {
-            "filetype",
-            icon_only = true,
-            colored = false,
-            separator = { right = "" },
-            padding = { left = 1, right = 0 },
-          },
-          {
-            function()
-              return vim.fn.expand("%:h") .. fs.get_path_sep()
-            end,
-            separator = "",
-            padding = 0,
-          },
-          {
-            "filename",
-            file_status = true,
-            path = 0,
-            padding = 0,
-            color = { fg = Snacks.util.color("Statement") },
-          },
+      lualine_b = {
+        {
+          function()
+            return Snacks.git.get_root():match("([^/\\]+)$")
+          end,
+          separator = "",
+          padding = { left = 1, right = 0 },
+          cond = function()
+            return utils.get_split_count() < 3
+          end,
+          on_click = function()
+            ui.show_projects_table()
+            vim.defer_fn(function()
+              vim.cmd("startinsert")
+            end, 100)
+          end,
         },
-        lualine_x = {},
-        lualine_y = {},
-        lualine_z = {
-          {
-            function()
-              return utils.get_progress_char()
-            end,
+        {
+          "branch",
+          icon = "󰘬",
+          padding = { left = 1, right = 1 },
+          on_click = function()
+            vim.cmd("FzfLua git_branches")
+            vim.defer_fn(function()
+              vim.cmd("startinsert")
+            end, 100)
+          end,
+        },
+        {
+          "diff",
+          padding = { left = 1, right = 0 },
+          symbols = {
+            added = icons.git.added,
+            modified = icons.git.modified,
+            removed = icons.git.removed,
           },
+          cond = function()
+            return utils.get_split_count() < 3
+          end,
+          source = function()
+            local gitsigns = vim.b.gitsigns_status_dict
+            if gitsigns then
+              return {
+                added = gitsigns.added,
+                modified = gitsigns.changed,
+                removed = gitsigns.removed,
+              }
+            end
+          end,
+          on_click = function()
+            Snacks.lazygit()
+            vim.defer_fn(function()
+              vim.cmd("startinsert")
+            end, 100)
+          end,
         },
       },
-      extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "fzf", "nvim-dap-ui", "quickfix" },
-    }
-  end,
+      lualine_c = {
+        {
+          function()
+            local component_limit = 2
+            local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
+            local custom_sep = " ›"
+
+            local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
+            local all_components = {}
+            for part in path:gmatch("[^" .. custom_sep .. "]+") do
+              table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
+            end
+
+            local components = {}
+            for i = 1, #all_components do
+              if #components >= num_components then
+                break
+              end
+              table.insert(components, 1, all_components[i])
+            end
+
+            return table.concat(components, custom_sep .. " ") .. custom_sep
+          end,
+          cond = function()
+            return utils.get_split_count() < 3
+          end,
+          padding = { left = 1, right = 0 },
+          separator = "",
+          on_click = function()
+            vim.cmd("Neotree position=float")
+          end,
+        },
+        {
+          "filetype",
+          icon_only = true,
+          separator = "",
+          padding = { left = 1, right = 0 },
+        },
+        {
+          "filename",
+          file_status = true,
+          path = 0,
+          padding = 0,
+          color = function()
+            if vim.bo.modified then
+              return { fg = kanagawa_paper.insert.a.bg }
+            end
+            return { fg = Snacks.util.color("Statement") }
+          end,
+          on_click = function()
+            vim.cmd("Neotree position=float")
+          end,
+        },
+      },
+      lualine_x = {
+        {
+          "encoding",
+          cond = function()
+            return utils.get_split_count() < 2
+          end,
+          on_click = function()
+            local encoding = vim.api.nvim_get_option_value("fileencoding", { scope = "local" })
+            vim.api.nvim_feedkeys(":set fileencoding=" .. encoding, "n", true)
+          end,
+        },
+        {
+          "fileformat",
+          cond = function()
+            return utils.get_split_count() < 3
+          end,
+          on_click = function()
+            local fileformat = vim.api.nvim_get_option_value("fileformat", { scope = "local" })
+            vim.api.nvim_feedkeys(":set fileformat=" .. fileformat, "n", true)
+          end,
+        },
+        {
+          function()
+            return require("package-info").get_status()
+          end,
+          cond = function()
+            return utils.get_split_count() < 3
+          end,
+        },
+      },
+      lualine_y = {
+        {
+          function()
+            return "󰑋 " .. require("noice").api.status.mode.get()
+          end,
+          cond = function()
+            return package.loaded["noice"] and require("noice").api.status.mode.has()
+          end,
+          color = function()
+            return { fg = Snacks.util.color("ErrorMsg") }
+          end,
+          padding = { left = 0, right = 1 },
+        },
+        {
+          get_lsp_clients,
+          cond = function()
+            return vim.bo.filetype ~= "lspinfo" and utils.get_split_count() < 2
+          end,
+          on_click = function()
+            vim.cmd("LspInfo")
+          end,
+          icon = "󰌘",
+          color = function()
+            return { fg = Snacks.util.color("Character") }
+          end,
+        },
+        {
+          "diagnostics",
+          symbols = {
+            error = icons.diagnostics.Error,
+            warn = icons.diagnostics.Warn,
+            info = icons.diagnostics.Info,
+            hint = icons.diagnostics.Hint,
+          },
+          cond = function()
+            return utils.get_split_count() < 4
+          end,
+          on_click = function()
+            vim.cmd("Trouble diagnostics toggle filter.buf=0")
+          end,
+        },
+      },
+      lualine_z = {
+        {
+          function()
+            return utils.get_progress_char()
+          end,
+          color = { fg = "#363646" },
+          separator = { left = "" },
+          padding = { left = 0, right = 0 },
+        },
+      },
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = {
+        {
+          "filetype",
+          icon_only = true,
+          colored = false,
+          separator = { right = "" },
+          padding = { left = 1, right = 0 },
+        },
+        {
+          function()
+            return vim.fn.expand("%:h") .. fs.get_path_sep()
+          end,
+          separator = "",
+          padding = 0,
+        },
+        {
+          "filename",
+          file_status = true,
+          path = 0,
+          padding = 0,
+          color = function()
+            return { fg = Snacks.util.color("Statement") }
+          end,
+        },
+      },
+      lualine_x = {},
+      lualine_y = {},
+      lualine_z = {
+        {
+          function()
+            return utils.get_progress_char()
+          end,
+        },
+      },
+    },
+    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "fzf", "nvim-dap-ui", "quickfix" },
+  },
 }
