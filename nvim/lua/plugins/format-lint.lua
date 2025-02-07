@@ -73,7 +73,7 @@ local M = {
         go = { "golangcilint" },
         javascript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
-        markdown = { "markdownlint" },
+        markdown = { "markdownlint-cli2" },
         python = { "ruff" },
         typescript = { "eslint_d" },
         typescriptreact = { "eslint_d" },
@@ -91,14 +91,5 @@ table.insert(
   1,
   "--ignore=ANN101,D100,D101,D102,D103,D104,D105,D106,D107,D401,D407,D417,E722,E999,F821,F401,S101"
 )
-
-local markdownlint = require("lint").linters.markdownlint
-markdownlint.args = {
-  "--disable",
-  "html",
-  "line_length",
-  "spelling",
-  "--", -- Required
-}
 
 return M
