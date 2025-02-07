@@ -22,6 +22,12 @@ if (ssh-add -l | str contains 'The agent has no identities') {
 # environment variables
 $env.VIRTUAL_ENV_DISABLE_PROMPT = '1'
 
+$env.ENV_CONVERSIONS = {
+    __zoxide_hooked: {
+        from_string: { |s| $s | into bool }
+    }
+}
+
 # remove duplicate paths
 $env.PATH = ($env.PATH | uniq)
 
