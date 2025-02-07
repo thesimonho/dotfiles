@@ -25,7 +25,6 @@ M.show_projects_table = function()
     end
     fzf_cb()
   end, {
-    prompt = "Projects > ",
     preview = "ls -vA --group-directories-first --color=always {1}",
     actions = {
       ["default"] = function(selected)
@@ -54,6 +53,19 @@ M.show_projects_table = function()
     fzf_opts = {
       ["--delimiter"] = "!!",
       ["--with-nth"] = "2..",
+    },
+    winopts = {
+      height = 0.45,
+      width = 0.40,
+      row = 0.50,
+      col = 0.50,
+      title = " Projects ",
+      title_pos = "center",
+      preview = {
+        default = "bat",
+        wrap = false,
+        layout = "horizontal",
+      },
     },
   })
 end
@@ -140,7 +152,6 @@ M.show_options_table = function(separator)
       fzf_cb()
     end)()
   end, {
-    prompt = "Options > ",
     preview = "echo {2}", -- some values can get really long, so we preview them
     actions = {
       ["default"] = {
@@ -175,6 +186,13 @@ M.show_options_table = function(separator)
       ["--header-lines"] = "1",
       ["--nth"] = 1,
       ["--delimiter"] = sep,
+    },
+    winopts = {
+      width = 0.60,
+      title = " Options ",
+      preview = {
+        wrap = true,
+      },
     },
   })
 end
