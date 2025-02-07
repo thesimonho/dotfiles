@@ -227,9 +227,11 @@ return {
           function()
             return utils.get_progress_char()
           end,
-          color = { fg = "#363646" },
+          color = function()
+            return { fg = Snacks.util.color("lualine_b_normal", "bg") }
+          end,
           separator = { left = "" },
-          padding = { left = 0, right = 0 },
+          padding = 0,
         },
       },
     },
