@@ -91,9 +91,8 @@ vim.api.nvim_create_autocmd("WinLeave", {
 })
 
 -- line numbers
-vim.api.nvim_create_autocmd("WinEnter", {
+vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
-    -- BUG: snacks history still shows numbers
     local ignore_ft = { "toggleterm", "checkhealth", "snacks_notif_history" }
     local ignore_buftype = { "quickfix", "nofile", "prompt", "terminal", "help" }
     local win = vim.api.nvim_get_current_win()
