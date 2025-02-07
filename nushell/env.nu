@@ -2,7 +2,6 @@ let OS = sys host | get long_os_version
 
 if ($OS | str contains 'Linux') {
   $env.PATH = ($env.PATH | split row (char esep) | append '/home/linuxbrew/.linuxbrew/bin')
-  
 
   # https://forums.opensuse.org/t/guide-ssh-agent-kwallet-to-store-ssh-private-key-passphrases/173401
   # https://kcore.org/2022/05/18/ssh-passphrases-kde/
@@ -22,6 +21,9 @@ if (ssh-add -l | str contains 'The agent has no identities') {
 
 # environment variables
 $env.VIRTUAL_ENV_DISABLE_PROMPT = '1'
+
+# remove duplicate paths
+$env.PATH = ($env.PATH | uniq)
 
 # init shell apps
 mkdir ~/.cache/starship
