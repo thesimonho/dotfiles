@@ -270,6 +270,9 @@ return {
           function()
             return utils.get_progress_char()
           end,
+          color = { bg = kanagawa_paper.visual.b.fg, fg = kanagawa_paper.inactive.c.bg },
+          separator = { left = "" },
+          padding = 0,
         },
       },
     },
