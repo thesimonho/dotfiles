@@ -14,6 +14,28 @@ local function get_lsp_clients()
   return table.concat(client_names, ", ")
 end
 
+local function short_path(component_limit)
+  component_limit = component_limit or 2
+  local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
+  local custom_sep = " ›"
+
+  local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
+  local all_components = {}
+  for part in path:gmatch("[^" .. custom_sep .. "]+") do
+    table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
+  end
+
+  local components = {}
+  for i = 1, #all_components do
+    if #components >= num_components then
+      break
+    end
+    table.insert(components, 1, all_components[i])
+  end
+
+  return table.concat(components, custom_sep .. " ") .. custom_sep
+end
+
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
@@ -95,25 +117,7 @@ return {
       lualine_c = {
         {
           function()
-            local component_limit = 2
-            local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
-            local custom_sep = " ›"
-
-            local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
-            local all_components = {}
-            for part in path:gmatch("[^" .. custom_sep .. "]+") do
-              table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
-            end
-
-            local components = {}
-            for i = 1, #all_components do
-              if #components >= num_components then
-                break
-              end
-              table.insert(components, 1, all_components[i])
-            end
-
-            return table.concat(components, custom_sep .. " ") .. custom_sep
+            return short_path(2)
           end,
           cond = function()
             return utils.get_split_count() < 3
