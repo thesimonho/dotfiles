@@ -24,6 +24,12 @@ $env.config.rm.always_trash = true
 $env.config.show_banner = false
 $env.config.use_kitty_protocol = true
 
+$env.ENV_CONVERSIONS = {
+    __zoxide_hooked: {
+        from_string: { |s| $s | into bool }
+    }
+}
+
 # completions
 source $"($nu.default-config-dir)/completions/docker.nu"
 source $"($nu.default-config-dir)/completions/git.nu"
