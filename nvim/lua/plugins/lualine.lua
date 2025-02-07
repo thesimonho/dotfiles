@@ -3,8 +3,6 @@ local utils = require("utils.general")
 local ui = require("utils.ui")
 local fs = require("utils.fs")
 local icons = require("lazyvim.config").icons
-local lualine_require = require("lualine_require")
-lualine_require.require = require
 
 local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
