@@ -17,7 +17,6 @@ vim.opt.pumblend = 10
 vim.opt.sessionoptions = { "buffers", "folds", "winsize" }
 
 vim.opt.cursorcolumn = false
-vim.opt.colorcolumn = "120"
 vim.opt.foldenable = true
 vim.opt.foldcolumn = "1"
 vim.opt.foldlevel = 99
