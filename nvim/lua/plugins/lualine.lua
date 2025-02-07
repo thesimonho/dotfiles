@@ -240,27 +240,25 @@ return {
       lualine_b = {},
       lualine_c = {
         {
+          function()
+            return short_path(4)
+          end,
+          padding = { left = 1, right = 0 },
+          separator = "",
+        },
+        {
           "filetype",
           icon_only = true,
           colored = false,
-          separator = { right = "" },
-          padding = { left = 1, right = 0 },
-        },
-        {
-          function()
-            return vim.fn.expand("%:h") .. fs.get_path_sep()
-          end,
           separator = "",
-          padding = 0,
+          padding = { left = 1, right = 0 },
         },
         {
           "filename",
           file_status = true,
           path = 0,
           padding = 0,
-          color = function()
-            return { fg = Snacks.util.color("Statement") }
-          end,
+          color = { fg = kanagawa_paper.visual.b.fg },
         },
       },
       lualine_x = {},
