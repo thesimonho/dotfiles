@@ -70,6 +70,17 @@ $env.config.keybindings = [
       ]
     }
   },
+  {
+    name: "history-complete"
+    modifier: ALT
+    keycode: char_l
+    mode: [emacs, vi_normal, vi_insert]
+    event: {
+      until: [
+        { send: HistoryHintComplete }
+      ]
+    }
+  },
 ]
 
 # completion sources
