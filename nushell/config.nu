@@ -28,6 +28,7 @@ let multiple_completer = {|spans|
 }
 
 $env.config.buffer_editor = "nvim"
+$env.config.edit_mode = 'emacs'
 $env.config.bracketed_paste = true
 $env.config.completions.algorithm = "prefix"
 $env.config.completions.quick = true
@@ -74,13 +75,22 @@ $env.config.keybindings = [
     name: "history-complete"
     modifier: ALT
     keycode: char_l
-    mode: [emacs, vi_normal, vi_insert]
+    mode: [emacs, vi_insert]
     event: {
       until: [
         { send: HistoryHintComplete }
       ]
     }
   },
+{
+    name: "backwards-word"
+    modifier: CONTROL
+    keycode: char_H
+    mode: [emacs, vi_insert]
+    event: {
+      edit: BackspaceWord
+    }
+  }
 ]
 
 # completion sources
