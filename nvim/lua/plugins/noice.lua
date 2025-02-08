@@ -31,5 +31,18 @@ return {
         position = "50%",
       },
     },
+    routes = {
+      { -- @recording message
+        filter = { event = "msg_showmode" },
+        view = "notify",
+      },
+      { -- supermaven large file
+        filter = {
+          warning = true,
+          find = "File is too large to send to server",
+        },
+        opts = { skip = true },
+      },
+    },
   },
 }
