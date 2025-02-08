@@ -69,16 +69,13 @@ local cursor_group = vim.api.nvim_create_augroup("CursorGroup", { clear = true }
 vim.api.nvim_create_autocmd("WinEnter", {
   group = cursor_group,
   callback = function()
+    local ignore_ft = { "snacks_dashboard" }
     local win = vim.api.nvim_get_current_win()
 
-    if vim.bo.filetype == "snacks_dashboard" then
+    if vim.tbl_contains(ignore_ft, vim.bo.filetype) then
       vim.api.nvim_set_option_value("cursorline", false, { win = win })
-      vim.api.nvim_set_option_value("winblend", 0, { win = win })
-    elseif vim.bo.filetype == "neo-tree" then
-      vim.api.nvim_set_option_value("winblend", 0, { win = win })
     else
       vim.api.nvim_set_option_value("cursorline", true, { win = win })
-      vim.api.nvim_set_option_value("winblend", 6, { win = win })
     end
   end,
 })
@@ -87,6 +84,32 @@ vim.api.nvim_create_autocmd("WinLeave", {
   group = cursor_group,
   callback = function()
     vim.api.nvim_set_option_value("cursorline", false, { win = vim.api.nvim_get_current_win() })
+  end,
+})
+
+-- winblend
+local winblend_group = vim.api.nvim_create_augroup("WinblendGroup", { clear = true })
+
+vim.api.nvim_create_autocmd("WinEnter", {
+  group = winblend_group,
+  callback = function()
+    local ignore_ft = { "snacks_dashboard", "neo-tree" }
+    local win = vim.api.nvim_get_current_win()
+
+    if vim.tbl_contains(ignore_ft, vim.bo.filetype) then
+      vim.api.nvim_set_option_value("winblend", 0, { win = win })
+    else
+      vim.api.nvim_set_option_value("winblend", 6, { win = win })
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("CmdlineEnter", {
+  group = winblend_group,
+  pattern = { "/", "?" },
+  callback = function()
+    local win = vim.api.nvim_get_current_win()
+    vim.api.nvim_set_option_value("winblend", 0, { win = win })
   end,
 })
 
