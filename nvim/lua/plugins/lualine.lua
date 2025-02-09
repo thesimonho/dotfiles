@@ -146,7 +146,7 @@ return {
             return { fg = Snacks.util.color("Statement") }
           end,
           on_click = function()
-            vim.cmd("Neotree position=float")
+            vim.cmd("Neotree position=float reveal=true")
           end,
         },
       },
