@@ -42,7 +42,6 @@ return {
         ["ctrl-v"] = actions.file_vsplit,
         ["ctrl-t"] = actions.file_tabedit,
         ["ctrl-q"] = actions.file_sel_to_qf,
-        ["ctrl-l"] = actions.file_sel_to_ll,
       },
     },
     fzf_opts = {
@@ -60,7 +59,7 @@ return {
     defaults = {
       formatter = "path.filename_first",
       file_icons = "mini",
-      copen = "topleft copen",
+      copen = "Trouble qflist focus=true",
       header = false,
     },
     files = {
