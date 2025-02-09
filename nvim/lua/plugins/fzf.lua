@@ -38,8 +38,6 @@ return {
       files = {
         -- `file_edit_or_qf` opens a single selection or sends multiple selection to quickfix
         ["enter"] = actions.file_edit_or_qf,
-        ["ctrl-h"] = actions.toggle_hidden,
-        -- ["ctrl-i"] = actions.toggle_ignore, -- this overrides tab select
         ["ctrl-s"] = actions.file_split,
         ["ctrl-v"] = actions.file_vsplit,
         ["ctrl-t"] = actions.file_tabedit,
@@ -85,8 +83,6 @@ return {
       glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
       actions = {
         ["ctrl-g"] = { actions.grep_lgrep },
-        ["ctrl-h"] = { actions.toggle_hidden },
-        -- ["ctrl-i"] = { actions.toggle_ignore }, -- this overrides tab select
       },
     },
     lsp = {
