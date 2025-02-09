@@ -57,7 +57,7 @@ return {
             corner_bottom = "╰",
             horizontal = "─",
             vertical = "│",
-            arrow = ">",
+            arrow = "›",
           },
         },
         priority = 200,
