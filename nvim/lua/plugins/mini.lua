@@ -1,12 +1,5 @@
 return {
   {
-    "echasnovski/mini.bufremove",
-    event = "LazyFile",
-    keys = {
-      { "<leader>bD", vim.NIL },
-    },
-  },
-  {
     "echasnovski/mini.splitjoin",
     event = "LazyFile",
     init = function()
