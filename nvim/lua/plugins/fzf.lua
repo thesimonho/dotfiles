@@ -20,8 +20,7 @@ return {
         winopts = { -- builtin previewer window options
           number = false,
           relativenumber = false,
-          cursorline = true,
-          cursorlineopt = "both",
+          cursorline = false,
           cursorcolumn = false,
           signcolumn = "no",
           list = false,
