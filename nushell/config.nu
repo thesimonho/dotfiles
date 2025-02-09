@@ -82,7 +82,7 @@ $env.config.keybindings = [
       ]
     }
   },
-{
+  {
     name: "backwards-word"
     modifier: CONTROL
     keycode: char_H
@@ -90,7 +90,7 @@ $env.config.keybindings = [
     event: {
       edit: BackspaceWord
     }
-  }
+  },
 ]
 
 # completion sources

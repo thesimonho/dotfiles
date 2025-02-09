@@ -100,7 +100,6 @@ return {
         },
         mappings = {
           ["<tab>"] = { "toggle_node" },
-          ["/"] = "filter_on_submit",
           ["v"] = "open_vsplit",
           ["s"] = {
             function()
@@ -133,6 +132,15 @@ return {
           "node_modules",
         },
         use_libuv_file_watcher = true,
+        window = {
+          mappings = {
+            ["<A-h>"] = "toggle_hidden",
+          },
+          fuzzy_finder_mappings = {
+            ["<C-j>"] = "move_cursor_down",
+            ["<C-k>"] = "move_cursor_up",
+          },
+        },
       },
       buffers = {
         follow_current_file = {
