@@ -130,3 +130,13 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
   desc = "Toggle line numbers",
 })
+
+-- for debugging: notify when loading a session that has permanent file args
+vim.api.nvim_create_autocmd("SessionLoadPost", {
+  callback = function()
+    local arglist = vim.fn.argv()
+    if #arglist > 0 then
+      vim.notify("Buffers loaded via args:\n" .. table.concat(arglist, "\n"), vim.log.levels.WARN)
+    end
+  end,
+})
