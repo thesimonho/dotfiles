@@ -28,7 +28,7 @@ return {
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete Other Buffers" },
     },
     opts = {
-      focus_on_close = "previous",
+      focus_on_close = "left",
       highlight_alternate = true,
       highlight_inactive_file_icons = false,
       highlight_visible = false,
