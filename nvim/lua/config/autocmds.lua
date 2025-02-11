@@ -99,7 +99,7 @@ vim.api.nvim_create_autocmd("WinEnter", {
     if vim.tbl_contains(ignore_ft, vim.bo.filetype) then
       vim.api.nvim_set_option_value("winblend", 0, { win = win })
     else
-      vim.api.nvim_set_option_value("winblend", 6, { win = win })
+      vim.api.nvim_set_option_value("winblend", 3, { win = win })
     end
   end,
 })
