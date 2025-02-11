@@ -140,3 +140,53 @@ vim.api.nvim_create_autocmd("SessionLoadPost", {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd("SessionWritePost", {
+  callback = function()
+    local arglist = vim.fn.argv()
+    if #arglist > 0 then
+      -- Get the last command executed
+      local last_cmd = vim.fn.getcmdline() ~= "" and vim.fn.getcmdline() or "Unknown command"
+
+      -- Get whether this was triggered via an autocommand
+      local event_source = vim.v.event.name or "Manual command"
+
+      -- Get the current mode
+      local mode = vim.api.nvim_get_mode().mode
+
+      -- Log file path
+      local log_file = vim.fn.stdpath("data") .. "/session_args.log"
+      local file = io.open(log_file, "a")
+      if file then
+        file:write("Session saved at " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n")
+        file:write("Trigger: " .. event_source .. "\n")
+        file:write("Command: " .. last_cmd .. "\n")
+        file:write("Mode: " .. mode .. "\n")
+        file:write("Buffers saved via args:\n" .. table.concat(arglist, "\n") .. "\n\n")
+        file:close()
+      end
+
+      -- Also show a Neovim notification
+      vim.notify(
+        "Session saved (args detected)!\nTrigger: " .. event_source .. "\nBuffers: " .. table.concat(arglist, ", "),
+        vim.log.levels.WARN
+      )
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufAdd", {
+  callback = function()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    local is_argbuf = vim.tbl_contains(vim.fn.argv(), bufname)
+    if is_argbuf then
+      local log_file = vim.fn.stdpath("data") .. "/session_args.log"
+      local file = io.open(log_file, "a")
+      if file then
+        file:write("Buffer added via args: " .. bufname .. " at " .. os.date("%Y-%m-%d %H:%M:%S") .. "\n")
+        file:close()
+      end
+      vim.notify("Buffer added via args: " .. bufname, vim.log.levels.WARN)
+    end
+  end,
+})
