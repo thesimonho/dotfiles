@@ -72,7 +72,7 @@ $env.config.keybindings = [
     }
   },
   {
-    name: "history-complete"
+    name: "inline-complete"
     modifier: ALT
     keycode: char_l
     mode: [emacs, vi_insert]
@@ -94,10 +94,12 @@ $env.config.keybindings = [
 ]
 
 # completion sources
+source $"($nu.default-config-dir)/completions/curl.nu"
 source $"($nu.default-config-dir)/completions/docker.nu"
 source $"($nu.default-config-dir)/completions/git.nu"
 source $"($nu.default-config-dir)/completions/github.nu"
 source $"($nu.default-config-dir)/completions/npm.nu"
+source $"($nu.default-config-dir)/completions/less.nu"
 source $"($nu.default-config-dir)/completions/poetry.nu"
 source $"($nu.default-config-dir)/completions/rg.nu"
 source $"($nu.default-config-dir)/completions/tar.nu"
