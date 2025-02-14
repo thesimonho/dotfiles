@@ -61,7 +61,6 @@ vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other 
 -- fzf
 wk.add({ "<leader>p", icon = "󰉋" })
 vim.keymap.set("n", "<leader>p", ui.show_projects_table, { desc = "Projects" })
-vim.keymap.set("n", "<leader>so", ui.show_options_table, { desc = "Options" })
 
 -- Tools
 wk.add({ "<leader>z", group = "tools", icon = "" })

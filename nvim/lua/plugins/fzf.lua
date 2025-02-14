@@ -2,6 +2,9 @@ local actions = require("fzf-lua.actions")
 
 return {
   "ibhagwan/fzf-lua",
+  keys = {
+    { "<leader>so", "<cmd>FzfLua nvim_options<cr>", desc = "Nvim Options" },
+  },
   opts = {
     winopts = {
       height = 0.85, -- window height
