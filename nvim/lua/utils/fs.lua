@@ -34,7 +34,7 @@ end
 -- Recursive function to find a directory containing the target
 M.find_parent_with_directory = function(start_path, target_dir)
   local target_path = vim.fn.fnamemodify(start_path, ":p") .. target_dir
-  if vim.loop.fs_stat(target_path) then
+  if vim.uv.fs_stat(target_path) then
     return start_path
   end
 

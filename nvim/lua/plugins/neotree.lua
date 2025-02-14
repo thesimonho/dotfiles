@@ -17,7 +17,7 @@ return {
             position = "float",
             toggle = false,
             reveal_force_cwd = true,
-            dir = vim.loop.cwd(),
+            dir = vim.uv.cwd(),
           })
         end,
         desc = "Explorer",
