@@ -1,4 +1,4 @@
-local kanagawa_paper = require("lualine.themes.kanagawa-paper")
+local kanagawa_paper = require("lualine.themes.kanagawa-paper-ink")
 local utils = require("utils.general")
 local ui = require("utils.ui")
 local fs = require("utils.fs")
