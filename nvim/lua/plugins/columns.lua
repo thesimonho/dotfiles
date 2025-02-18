@@ -31,11 +31,11 @@ return {
                 if args.relnum == 0 then -- current line
                   local mode = vim.api.nvim_get_mode().mode
                   if mode == "i" or mode == "R" then
-                    hl = "@operator"
+                    hl = "Special2"
                   elseif mode == "v" or mode == "V" or mode == "\22" then
-                    hl = "@markup"
+                    hl = "Special3"
                   else
-                    hl = "@property"
+                    hl = "Special1"
                   end
                 elseif args.relnum % 5 == 0 then -- every 5th line
                   hl = "CursorLineSign"

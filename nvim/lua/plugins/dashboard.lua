@@ -103,7 +103,7 @@ local M = {
         },
         formats = {
           key = function(item)
-            return { { "[", hl = "Special" }, { item.key, hl = "WindowPickerStatusLine" }, { "]", hl = "Special" } }
+            return { { "[", hl = "Special2" }, { item.key, hl = "WindowPickerStatusLine" }, { "]", hl = "Special2" } }
           end,
         },
       },
