@@ -6,7 +6,7 @@ return {
     branch = "v2",
     priority = 1000,
     opts = {
-      theme = "canvas",
+      theme = "ink",
       plugins = {
         aerial = false,
         bufferline = false,
