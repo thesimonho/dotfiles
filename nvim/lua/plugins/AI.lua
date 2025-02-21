@@ -1,3 +1,9 @@
+local get_comment_color = function()
+  local hl = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
+  local hex_color = string.format("#%06x", hl.fg)
+  return hex_color
+end
+
 local M = {
   {
     "supermaven-inc/supermaven-nvim",
@@ -10,7 +16,7 @@ local M = {
         accept_word = "<M-h>",
       },
       color = {
-        suggestion_color = "#666666",
+        suggestion_color = get_comment_color(),
         cterm = 244,
       },
       disable_inline_completion = false,
