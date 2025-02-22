@@ -1,4 +1,3 @@
-local kanagawa_paper = require("lualine.themes.kanagawa-paper")
 local utils = require("utils.general")
 local ui = require("utils.ui")
 local fs = require("utils.fs")
@@ -41,7 +40,9 @@ return {
   event = "VeryLazy",
   opts = {
     options = {
-      theme = kanagawa_paper,
+      theme = function()
+        return require("lualine.themes." .. vim.g.colors_name)
+      end,
       component_separators = { left = "│", right = "│" },
       section_separators = { left = "", right = "" },
       globalstatus = false,
@@ -141,7 +142,7 @@ return {
           padding = 0,
           color = function()
             if vim.bo.modified then
-              return { fg = kanagawa_paper.insert.a.bg }
+              return { fg = require("lualine.themes." .. vim.g.colors_name).insert.a.bg }
             end
             return { fg = Snacks.util.color("Statement") }
           end,
@@ -258,7 +259,9 @@ return {
           file_status = true,
           path = 0,
           padding = 0,
-          color = { fg = kanagawa_paper.visual.b.fg },
+          color = function()
+            return { fg = require("lualine.themes." .. vim.g.colors_name).visual.b.fg }
+          end,
         },
       },
       lualine_x = {},
@@ -268,7 +271,12 @@ return {
           function()
             return utils.get_progress_char()
           end,
-          color = { bg = kanagawa_paper.visual.b.fg, fg = kanagawa_paper.inactive.c.bg },
+          color = function()
+            return {
+              bg = require("lualine.themes." .. vim.g.colors_name).visual.b.fg,
+              fg = require("lualine.themes." .. vim.g.colors_name).inactive.c.bg,
+            }
+          end,
           separator = { left = "" },
           padding = 0,
         },
