@@ -2,6 +2,8 @@ local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 local act = wezterm.action
 
+local color_scheme = "kanagawa-paper-canvas"
+
 wezterm.on("gui-startup", function(cmd)
 	local _, _, window = wezterm.mux.spawn_window(cmd or {
 		workspace = "main",
@@ -25,7 +27,7 @@ config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
 config.color_scheme_dirs = { "~/.config/wezterm/colors" }
-config.color_scheme = "kanagawa-paper"
+config.color_scheme = color_scheme
 config.default_cursor_style = "SteadyBar"
 config.default_workspace = "main"
 config.disable_default_key_bindings = true
@@ -61,33 +63,6 @@ config.window_padding = {
 	right = 0,
 	top = 0,
 	bottom = 0,
-}
-config.colors = {
-	tab_bar = {
-		background = "#282834",
-		active_tab = {
-			fg_color = "#c4b28a",
-			bg_color = "#353545",
-			intensity = "Bold",
-		},
-		inactive_tab = {
-			fg_color = "#696861",
-			bg_color = "#282834",
-		},
-		inactive_tab_hover = {
-			fg_color = "#c4b28a",
-			bg_color = "#353545",
-			italic = true,
-		},
-		new_tab = {
-			bg_color = "#282834",
-			fg_color = "#808080",
-		},
-		new_tab_hover = {
-			bg_color = "#363646",
-			fg_color = "#ddd8bb",
-		},
-	},
 }
 
 if is_windows() then
@@ -216,33 +191,7 @@ local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabl
 tabline.setup({
 	options = {
 		icons_enabled = true,
-		theme_overrides = {
-			normal_mode = {
-				a = { fg = "#282834", bg = "#c4b28a" },
-				b = { fg = "#c4b28a", bg = "#353545" },
-				c = { fg = "#696861", bg = "#282834" },
-			},
-			copy_mode = {
-				a = { fg = "#282834", bg = "#87a987" },
-				b = { fg = "#87a987", bg = "#353545" },
-				c = { fg = "#696861", bg = "#282834" },
-			},
-			search_mode = {
-				a = { fg = "#282834", bg = "#938AA9" },
-				b = { fg = "#938AA9", bg = "#353545" },
-				c = { fg = "#696861", bg = "#282834" },
-			},
-			window_mode = {
-				a = { fg = "#282834", bg = "#658594" },
-				b = { fg = "#658594", bg = "#353545" },
-				c = { fg = "#696861", bg = "#282834" },
-			},
-			resize_mode = {
-				a = { fg = "#282834", bg = "#c4746e" },
-				b = { fg = "#c4746e", bg = "#353545" },
-				c = { fg = "#696861", bg = "#282834" },
-			},
-		},
+		theme_overrides = require("colors.wezterm_tabline." .. color_scheme).theme_overrides,
 		section_separators = {
 			left = wezterm.nerdfonts.ple_right_half_circle_thick,
 			right = wezterm.nerdfonts.ple_left_half_circle_thick,
