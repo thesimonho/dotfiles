@@ -45,8 +45,7 @@ return {
         },
       },
       inlay_hints = {
-        enabled = false,
-        exclude = {},
+        enabled = true,
       },
       codelens = {
         enabled = false,
