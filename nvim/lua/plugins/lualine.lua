@@ -144,7 +144,7 @@ return {
             if vim.bo.modified then
               return { fg = require("lualine.themes." .. vim.g.colors_name).insert.a.bg }
             end
-            return { fg = Snacks.util.color("Statement") }
+            return { fg = Snacks.util.color("Function") }
           end,
           on_click = function()
             vim.cmd("Neotree position=float reveal=true")
@@ -260,7 +260,10 @@ return {
           path = 0,
           padding = 0,
           color = function()
-            return { fg = require("lualine.themes." .. vim.g.colors_name).visual.b.fg }
+            return {
+              fg = Snacks.util.color("Function"),
+              bg = require("lualine.themes." .. vim.g.colors_name).inactive.c.bg,
+            }
           end,
         },
       },
