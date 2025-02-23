@@ -5,6 +5,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.ai_cmp = false -- show AI suggestions in cmp
 
+vim.opt.termguicolors = true
 vim.opt.list = false
 vim.opt.cursorline = true
 vim.opt.shortmess:append("astWIF")

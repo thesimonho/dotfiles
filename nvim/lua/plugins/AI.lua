@@ -1,13 +1,8 @@
-local get_comment_color = function()
-  local hl = vim.api.nvim_get_hl(0, { name = "Comment", link = false })
-  local hex_color = string.format("#%06x", hl.fg)
-  return hex_color
-end
-
 local M = {
   {
-    "supermaven-inc/supermaven-nvim",
+    "AlejandroSuero/supermaven-nvim", -- TODO: fork until PR is merged
     lazy = false, -- required otherwise color setting wont work
+    branch = "feature/exposing-suggestion-group",
     opts = {
       ignore_filetypes = { "neo-tree" },
       keymaps = {
@@ -16,8 +11,7 @@ local M = {
         accept_word = "<M-h>",
       },
       color = {
-        suggestion_color = get_comment_color(),
-        cterm = 244,
+        suggestion_group = "Comment",
       },
       disable_inline_completion = false,
     },
