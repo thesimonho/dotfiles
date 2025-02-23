@@ -9,6 +9,7 @@ flatpak install flathub com.google.Chrome -y
 flatpak install flathub io.dbeaver.DBeaverCommunity
 flatpak install flathub com.discordapp.Discord -y
 flatpak install flathub com.dropbox.Client -y
+flatpak install flathub it.mijorus.gearlever -y
 flatpak install flathub org.gimp.GIMP -y
 flatpak install flathub org.libreoffice.LibreOffice -y
 flatpak install flathub io.github.berarma.Oversteer
