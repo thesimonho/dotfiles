@@ -3,6 +3,7 @@ local actions = require("fzf-lua.actions")
 return {
   "ibhagwan/fzf-lua",
   keys = {
+    { "<leader>ff", LazyVim.pick("files", { root = false }), desc = "Find Files" },
     { "<leader>so", "<cmd>FzfLua nvim_options<cr>", desc = "Nvim Options" },
   },
   opts = {
