@@ -43,6 +43,13 @@ return {
         },
         opts = { skip = true },
       },
+      { -- supermaven free tier
+        filter = {
+          event = "msg_show",
+          find = "Supermaven Free Tier is running.",
+        },
+        opts = { skip = true },
+      },
     },
   },
 }
