@@ -8,6 +8,7 @@ local M = {
       ensure_installed = {
         -- linters
         "eslint_d",
+        "markdownlint",
         "golangci-lint",
         "ruff",
 
@@ -55,8 +56,8 @@ local M = {
         javascriptreact = { "prettierd", "prettier", stop_after_first = true },
         json = { "prettierd", "prettier", stop_after_first = true },
         lua = { "stylua" },
-        markdown = { "prettierd", "markdownlint-cli2", "markdown-toc" },
-        ["markdown.mdx"] = { "prettierd", "markdownlint-cli2", "markdown-toc" },
+        markdown = { "prettierd", "markdownlint", "markdown-toc" },
+        ["markdown.mdx"] = { "prettierd", "markdownlint", "markdown-toc" },
         python = { "ruff_fix", "ruff_format" },
         terraform = { "terraform_fmt" },
         typescript = { "prettierd", "prettier", stop_after_first = true },
@@ -73,7 +74,7 @@ local M = {
         -- go = { "golangcilint" }, -- BUG: linter doesnt run, and takes LSP out when it tries
         javascript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
-        markdown = { "markdownlint-cli2" },
+        markdown = { "markdownlint" },
         python = { "ruff" },
         typescript = { "eslint_d" },
         typescriptreact = { "eslint_d" },
@@ -91,5 +92,14 @@ table.insert(
   1,
   "--ignore=ANN101,D100,D101,D102,D103,D104,D105,D106,D107,D401,D407,D417,E722,E999,F821,F401,S101"
 )
+
+local markdownlint = require("lint").linters.markdownlint
+markdownlint.args = {
+  "--disable",
+  "html",
+  "line_length",
+  "spelling",
+  "--", -- Required
+}
 
 return M
