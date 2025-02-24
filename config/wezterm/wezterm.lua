@@ -2,7 +2,8 @@ local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 local act = wezterm.action
 
-local color_scheme = "kanagawa-paper-canvas"
+local hour = os.date("*t").hour
+local color_scheme = (hour >= 6 and hour < 18) and "kanagawa-paper-canvas" or "kanagawa-paper-ink"
 
 wezterm.on("gui-startup", function(cmd)
 	local _, _, window = wezterm.mux.spawn_window(cmd or {

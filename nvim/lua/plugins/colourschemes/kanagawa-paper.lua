@@ -1,3 +1,6 @@
+local hour = os.date("*t").hour
+local theme = (hour >= 6 and hour < 18) and "canvas" or "ink"
+
 return {
   {
     "thesimonho/kanagawa-paper.nvim",
@@ -6,7 +9,7 @@ return {
     branch = "v2",
     priority = 1000,
     opts = {
-      theme = "ink",
+      theme = theme,
       plugins = {
         aerial = false,
         bufferline = false,
