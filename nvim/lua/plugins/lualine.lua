@@ -2,6 +2,7 @@ local utils = require("utils.general")
 local ui = require("utils.ui")
 local fs = require("utils.fs")
 local icons = require("lazyvim.config").icons
+local theme = nil
 
 local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -41,7 +42,14 @@ return {
   opts = {
     options = {
       theme = function()
-        return require("lualine.themes." .. vim.g.colors_name)
+        -- pcall and default theme is to handle the case of theme switching/previewing
+        local ok, t = pcall(require, "lualine.themes." .. vim.g.colors_name)
+        if ok then
+          theme = t
+        else
+          theme = require("lualine.themes.kanagawa-paper")
+        end
+        return theme
       end,
       component_separators = { left = "│", right = "│" },
       section_separators = { left = "", right = "" },
@@ -142,9 +150,8 @@ return {
           padding = 0,
           color = function()
             if vim.bo.modified then
-              return { fg = require("lualine.themes." .. vim.g.colors_name).insert.a.bg }
+              return { fg = theme.insert.a.bg }
             end
-            return { fg = Snacks.util.color("Function") }
           end,
           on_click = function()
             vim.cmd("Neotree position=float reveal=true")
@@ -262,7 +269,7 @@ return {
           color = function()
             return {
               fg = Snacks.util.color("Function"),
-              bg = require("lualine.themes." .. vim.g.colors_name).inactive.c.bg,
+              bg = theme.inactive.c.bg,
             }
           end,
         },
@@ -276,8 +283,8 @@ return {
           end,
           color = function()
             return {
-              bg = require("lualine.themes." .. vim.g.colors_name).visual.b.fg,
-              fg = require("lualine.themes." .. vim.g.colors_name).inactive.c.bg,
+              bg = theme.visual.b.fg,
+              fg = theme.inactive.c.bg,
             }
           end,
           separator = { left = "" },
