@@ -66,7 +66,7 @@ vim.api.nvim_create_autocmd("FileType", {
 --  cursor
 local cursor_group = vim.api.nvim_create_augroup("CursorGroup", { clear = true })
 
-vim.api.nvim_create_autocmd("WinEnter", {
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermLeave" }, {
   group = cursor_group,
   callback = function()
     local ignore_ft = { "snacks_dashboard" }
