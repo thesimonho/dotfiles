@@ -18,13 +18,13 @@ M.theme_overrides = {
     c = { fg = "#858479", bg = "#cbc8bc" },
   },
   search_mode = {
-    a = { fg = "#ecece8", bg = "#5e56a1" },
-    b = { fg = "#5e56a1", bg = "#ecece8" },
+    a = { fg = "#ecece8", bg = "#a398bf" },
+    b = { fg = "#a398bf", bg = "#ecece8" },
     c = { fg = "#858479", bg = "#cbc8bc" },
   },
   window_mode = {
-    a = { fg = "#ecece8", bg = "#96b7d1" },
-    b = { fg = "#96b7d1", bg = "#ecece8" },
+    a = { fg = "#ecece8", bg = "#526994" },
+    b = { fg = "#526994", bg = "#ecece8" },
     c = { fg = "#858479", bg = "#cbc8bc" },
   },
   resize_mode = {

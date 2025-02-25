@@ -152,6 +152,7 @@ return {
             if vim.bo.modified then
               return { fg = theme.insert.a.bg }
             end
+            return { fg = theme.normal.a.bg }
           end,
           on_click = function()
             vim.cmd("Neotree position=float reveal=true")
@@ -268,7 +269,7 @@ return {
           padding = 0,
           color = function()
             return {
-              fg = Snacks.util.color("Function"),
+              fg = theme.normal.a.bg,
               bg = theme.inactive.c.bg,
             }
           end,
@@ -283,7 +284,7 @@ return {
           end,
           color = function()
             return {
-              bg = theme.visual.b.fg,
+              bg = theme.normal.a.bg,
               fg = theme.inactive.c.bg,
             }
           end,
