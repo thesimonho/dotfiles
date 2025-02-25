@@ -11,31 +11,6 @@ gui:
   language: "en"
   timeFormat: "02 Jan 06" # https://pkg.go.dev/time#Time.Format
   shortTimeFormat: "3:04PM"
-  authorColors:
-    "*": "#b6927b"
-  theme:
-    activeBorderColor:
-      - "#c4746e"
-      - bold
-    inactiveBorderColor:
-      - "#DCD7BA"
-    searchingActiveBorderColor:
-      - "#a292a3"
-      - bold
-    optionsTextColor:
-      - "#658594"
-    selectedLineBgColor:
-      - "#2A2A37"
-    selectedRangeBgColor:
-      - "#4e6773"
-    cherryPickedCommitBgColor:
-      - "#8ea4a2"
-    cherryPickedCommitFgColor:
-      - "#658594"
-    unstagedChangesColor:
-      - "#b98d7b"
-    defaultFgColor:
-      - default
   commitLength:
     show: true
   mouseEvents: true
