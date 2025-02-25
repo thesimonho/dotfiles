@@ -1,19 +1,20 @@
 gui:
   screenMode: "normal" # one of 'normal' | 'half' | 'full' default is 'normal'
   scrollHeight: 2 # how many lines you scroll by
-  scrollPastBottom: true # enable scrolling past the bottom
+  scrollPastBottom: false # enable scrolling past the bottom
   scrollOffMargin: 2 # how many lines to keep before/after the cursor when it reaches the top/bottom of the view; see 'Scroll-off Margin' section below
   scrollOffBehavior: "margin" # one of 'margin' | 'jump'; see 'Scroll-off Margin' section below
   sidePanelWidth: 0.4 # number from 0 to 1
-  expandFocusedSidePanel: false
+  enlargedSideViewLocation: "top" # one of 'left' | 'top'
+  expandFocusedSidePanel: true
   mainPanelSplitMode: "flexible" # one of 'horizontal' | 'flexible' | 'vertical'
-  enlargedSideViewLocation: "left" # one of 'left' | 'top'
   language: "en"
   timeFormat: "02 Jan 06" # https://pkg.go.dev/time#Time.Format
   shortTimeFormat: "3:04PM"
   commitLength:
     show: true
   mouseEvents: true
+  filterMode: "substring"
   skipDiscardChangeWarning: false
   skipStashWarning: false
   showFileTree: true # for rendering changes files in a tree format
@@ -21,6 +22,7 @@ gui:
   showRandomTip: false
   showBranchCommitHash: true # show commit hashes alongside branch names
   showBottomLine: false # for hiding the bottom information line (unless it has important information to tell you)
+  showDivergenceFromBaseBranch: arrowAndNumber
   showPanelJumps: true # for showing the jump-to-panel keybindings as panel subtitles
   showCommandLog: true
   nerdFontsVersion: "3" # nerd fonts version to use ("2" or "3"); empty means don't show nerd font icons
@@ -49,7 +51,6 @@ git:
     # this determines whether the git graph is rendered in the commits panel
     showGraph: "always"
     # displays the whole git graph by default in the commits panel (equivalent to passing the `--all` argument to `git log`)
-
     showWholeGraph: true
   skipHookPrefix: WIP
   # The main branches. We colour commits green if they belong to one of these branches,
