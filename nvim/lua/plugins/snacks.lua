@@ -62,6 +62,20 @@ return {
         },
         priority = 200,
       },
+      lazygit = {
+        configure = true,
+        theme = {
+          activeBorderColor = { fg = "lualine_b_normal", bold = true },
+          inactiveBorderColor = { fg = "Comment" },
+          cherryPickedCommitBgColor = { fg = "lualine_b_normal" },
+          cherryPickedCommitFgColor = { fg = "Function" },
+          defaultFgColor = { fg = "Normal" },
+          optionsTextColor = { fg = "Statement" },
+          searchingActiveBorderColor = { fg = "Search", bold = true },
+          selectedLineBgColor = { bg = "CursorLine" },
+          unstagedChangesColor = { fg = "DiagnosticError" },
+        },
+      },
     },
   },
 }
