@@ -6,6 +6,11 @@ return {
     show_help = false,
     show_keys = false,
     sort = { "group", "alphanum" },
+    triggers = {
+      { "<auto>", mode = "nixsotc" },
+      { "<leader>", mode = { "n", "x", "v" } },
+      { "<localleader>", mode = { "n", "x", "v" } },
+    },
     preset = "helix",
     delay = 100,
     win = {
