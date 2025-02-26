@@ -1,5 +1,5 @@
 local hour = os.date("*t").hour
-local theme = (hour >= 6 and hour < 18) and "canvas" or "ink"
+local theme = (hour >= 7 and hour < 19) and "canvas" or "ink"
 
 return {
   {
