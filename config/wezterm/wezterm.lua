@@ -88,7 +88,7 @@ if is_windows() then
 elseif is_mac() then
 	config.font_size = 16
 	config.macos_window_background_blur = 60
-	config.window_background_opacity = 0.9
+	config.window_background_opacity = 1.0
 	config.default_prog = { "/opt/homebrew/bin/nu" }
 	config.launch_menu = {
 		{
