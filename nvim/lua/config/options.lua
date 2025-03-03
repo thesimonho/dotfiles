@@ -1,10 +1,12 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-local os = require("utils.os")
+local util_os = require("utils.os")
+local hour = os.date("*t").hour
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.ai_cmp = false -- show AI suggestions in cmp
 
+vim.opt.background = (hour >= 7 and hour < 19) and "light" or "dark"
 vim.opt.termguicolors = true
 vim.opt.list = false
 vim.opt.cursorline = true
@@ -29,7 +31,7 @@ vim.opt.wrap = false
 vim.opt.showbreak = "↪ "
 
 -- GUI options
-if os.is_darwin() then
+if util_os.is_darwin() then
   vim.o.guifont = "FiraCode Nerd Font:h14"
 else
   vim.o.guifont = "FiraCode Nerd Font:h11"
