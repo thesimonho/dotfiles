@@ -8,6 +8,7 @@ brew install fzf
 brew install gh
 brew install go
 brew install lazygit
+brew install luarocks
 brew install neovim
 brew install node
 brew install nushell
