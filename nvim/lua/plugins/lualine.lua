@@ -2,7 +2,7 @@ local utils = require("utils.general")
 local ui = require("utils.ui")
 local fs = require("utils.fs")
 local icons = require("lazyvim.config").icons
-local theme = require("lualine.themes.kanagawa-paper")
+local theme = nil
 
 local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -43,11 +43,16 @@ return {
     options = {
       theme = function()
         -- pcall and default theme is to handle the case of theme switching/previewing
-        if vim.g.colors_name then
-          local ok, t = pcall(require, "lualine.themes." .. vim.g.colors_name)
-          if ok then
-            theme = t
-          end
+        local ok, t = pcall(
+          require,
+          "lualine.themes."
+            .. (
+              vim.g.colors_name == "kanagawa-paper" and vim.o.background == "light" and "kanagawa-paper-canvas"
+              or "kanagawa-paper-ink"
+            )
+        )
+        if ok then
+          theme = t
         end
         return theme
       end,
