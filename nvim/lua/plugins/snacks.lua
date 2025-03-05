@@ -45,9 +45,8 @@ return {
         margin = { top = 1, right = 1, bottom = 1 },
         style = "compact",
       },
-      quickfile = {
-        enabled = true,
-      },
+      bigfile = { enabled = true },
+      quickfile = { enabled = true },
       indent = {
         indent = {
           enabled = true, -- enable indent guides
@@ -72,7 +71,18 @@ return {
             arrow = "›",
           },
         },
+        filter = function(buf)
+          return vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and vim.bo[buf].buftype ~= "bigfile"
+        end,
         priority = 200,
+      },
+      scroll = {
+        filter = function(buf)
+          return vim.g.snacks_scroll ~= false
+            and vim.b[buf].snacks_scroll ~= false
+            and vim.bo[buf].buftype ~= "terminal"
+            and vim.bo[buf].filetype ~= "bigfile"
+        end,
       },
       lazygit = {
         configure = true,
