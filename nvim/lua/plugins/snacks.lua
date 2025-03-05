@@ -1,6 +1,18 @@
 return {
   {
     "folke/snacks.nvim",
+    keys = {
+      { "<leader>dpt", "<cmd>lua Snacks.profiler.pick()<cr>", desc = "Toggle" },
+      {
+        "<leader>qp",
+        function()
+          local flag_file = vim.fn.stdpath("state") .. "/startup_profiler"
+          vim.fn.writefile({}, flag_file)
+          vim.notify("Profiler will run on next startup")
+        end,
+        desc = "Profile Next Startup",
+      },
+    },
     init = function()
       _G.dd = function(...)
         Snacks.debug.inspect(...)
