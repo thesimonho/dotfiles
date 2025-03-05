@@ -116,7 +116,7 @@ vim.api.nvim_create_autocmd("CmdlineEnter", {
 -- line numbers
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
-    local ignore_ft = { "toggleterm", "checkhealth", "snacks_notif_history" }
+    local ignore_ft = { "toggleterm", "checkhealth", "snacks_notif_history", "bigfile" }
     local ignore_buftype = { "quickfix", "nofile", "prompt", "terminal", "help" }
     local win = vim.api.nvim_get_current_win()
 

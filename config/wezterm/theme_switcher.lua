@@ -8,7 +8,7 @@ local theme_default = M.color_scheme
 
 -- this should match the path set in the neovim config
 -- it's best to use a temporary directory for this
-local theme_file = "/tmp/nvim-theme"
+local theme_file = (os.getenv("TEMP") or "/tmp") .. "/nvim-theme"
 
 -- relative path to the directory containing the tabline themes
 -- e.g. if I have placed the tabline extra themes in ./colors/wezterm_tabline then this would be "colors.wezterm_tabline"
