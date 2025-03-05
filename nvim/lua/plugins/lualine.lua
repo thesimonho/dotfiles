@@ -45,11 +45,7 @@ return {
         -- pcall and default theme is to handle the case of theme switching/previewing
         local ok, t = pcall(
           require,
-          "lualine.themes."
-            .. (
-              vim.g.colors_name == "kanagawa-paper" and vim.o.background == "light" and "kanagawa-paper-canvas"
-              or "kanagawa-paper-ink"
-            )
+          "lualine.themes." .. (vim.o.background == "light" and "kanagawa-paper-canvas" or "kanagawa-paper-ink")
         )
         if ok then
           theme = t

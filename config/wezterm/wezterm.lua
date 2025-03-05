@@ -1,9 +1,7 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
+local theme = require("theme_switcher")
 local act = wezterm.action
-
-local hour = os.date("*t").hour
-local color_scheme = (hour >= 7 and hour < 19) and "kanagawa-paper-canvas" or "kanagawa-paper-ink"
 
 wezterm.on("gui-startup", function(cmd)
 	local _, _, window = wezterm.mux.spawn_window(cmd or {
@@ -28,7 +26,7 @@ config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
 config.color_scheme_dirs = { "~/.config/wezterm/colors" }
-config.color_scheme = color_scheme
+config.color_scheme = theme.color_scheme
 config.default_cursor_style = "SteadyBar"
 config.default_workspace = "main"
 config.disable_default_key_bindings = true
@@ -163,7 +161,7 @@ local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabl
 tabline.setup({
 	options = {
 		icons_enabled = true,
-		theme_overrides = require("colors.wezterm_tabline." .. color_scheme).theme_overrides,
+		theme_overrides = require("colors.wezterm_tabline." .. theme.color_scheme).theme_overrides,
 		section_separators = {
 			left = wezterm.nerdfonts.ple_right_half_circle_thick,
 			right = wezterm.nerdfonts.ple_left_half_circle_thick,
