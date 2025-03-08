@@ -35,7 +35,7 @@ M.basic_binds = {
 		action = act.SendString("yazi\r"),
 	},
 	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
-  -- BUG: conflicts with neovim bind
+	-- BUG: conflicts with neovim bind
 	-- { key = "u", mods = "CTRL", action = act.ScrollByPage(-0.3) },
 	-- { key = "d", mods = "CTRL", action = act.ScrollByPage(0.3) },
 	{ key = "PageUp", action = act.ScrollByPage(-0.3) },
