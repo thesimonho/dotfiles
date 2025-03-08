@@ -3,9 +3,9 @@ return {
     "thesimonho/kanagawa-paper.nvim",
     lazy = false,
     dev = true,
-    branch = "v2",
     priority = 1000,
     opts = {
+      cache = false,
       auto_plugins = true,
       integrations = {
         wezterm = {
