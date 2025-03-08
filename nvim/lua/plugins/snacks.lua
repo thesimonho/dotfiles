@@ -94,7 +94,7 @@ return {
           defaultFgColor = { fg = "Normal" },
           optionsTextColor = { fg = "Statement" },
           searchingActiveBorderColor = { fg = "Search", bold = true },
-          selectedLineBgColor = { bg = "CursorLine" },
+          selectedLineBgColor = { bg = "CursorLineAlt" },
           unstagedChangesColor = { fg = "DiagnosticError" },
         },
       },
