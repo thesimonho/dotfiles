@@ -1,6 +1,5 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
-local ui = require("utils.ui")
 local wk = require("which-key")
 
 -- Delete some default keymaps
@@ -15,11 +14,12 @@ vim.api.nvim_del_keymap("n", "<leader>xq")
 vim.api.nvim_del_keymap("n", "<leader>bb")
 vim.api.nvim_del_keymap("n", "<leader>bo")
 vim.api.nvim_del_keymap("n", "<leader>l")
+vim.api.nvim_del_keymap("n", "<leader>fb")
+vim.api.nvim_del_keymap("n", "<leader>fB")
 vim.api.nvim_del_keymap("n", "<leader>ft")
 vim.api.nvim_del_keymap("n", "<leader>fT")
 vim.api.nvim_del_keymap("n", "<leader>fg")
 vim.api.nvim_del_keymap("n", "<leader>fF")
-vim.api.nvim_del_keymap("n", "<leader>fR")
 vim.api.nvim_del_keymap("n", "<leader>gf")
 vim.api.nvim_del_keymap("n", "<leader>gG")
 vim.api.nvim_del_keymap("n", "<leader>gL")
@@ -55,13 +55,8 @@ vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 
 -- Tabs
-vim.keymap.set("n", "<leader><tab><tab>", "<cmd>FzfLua tabs<cr>", { desc = "Switch Tab" })
 vim.keymap.set("n", "<leader><tab>n", "<cmd>tabedit<cr>", { desc = "New Tab" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
-
--- fzf
-wk.add({ "<leader>p", icon = "󰉋" })
-vim.keymap.set("n", "<leader>p", ui.show_projects_table, { desc = "Projects" })
 
 -- Tools
 wk.add({ "<leader>z", group = "tools", icon = "" })
