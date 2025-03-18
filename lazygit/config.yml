@@ -71,9 +71,9 @@ os:
   open: "code {{filename}}"
 notARepository: "skip" # one of: 'prompt' | 'create' | 'skip' | 'quit'
 customCommands:
-  - key: "<c-e>"
+  - key: "<c-p>"
     description: "Push to a specific remote repository"
-    context: localBranches
+    context: remotes
     loadingText: "Pushing ..."
     prompts:
       - type: "menuFromCommand"
@@ -91,8 +91,8 @@ customCommands:
           - value: "push --force-with-lease"
           - value: "push --force"
     command: "git {{ .Form.PushType | quote }} {{ .Form.Remote }}"
-  - key: "<c-C>"
-    context: "global"
+  - key: "C"
+    context: 'files,localBranches'
     description: "Create new conventional commit"
     prompts:
       - type: "menu"
@@ -151,20 +151,20 @@ customCommands:
     command: 'git commit -m "{{.Form.Type}}{{if .Form.Scope}}({{.Form.Scope}}){{end}}: {{.Form.Summary}}"{{if .Form.Description}} -m "{{.Form.Description}}"{{end}}'
     loadingText: "Creating conventional commit..."
   - key: 'f'
-    command: 'git fetch --prune'
+    command: 'git fetch --prune {{.SelectedRemote.Name}}'
     context: 'remotes'
     description: 'Fetch and prune remote branches'
-    loadingText: 'Fetching and pruning...'
+    loadingText: 'Fetching and pruning remote...'
     stream: true
   - key: 'S'
     context: 'remoteBranches'
-    description: 'Sync branch with upstream'
+    description: 'Sync branch with selected upstream'
     loadingText: 'Syncing with upstream...'
     stream: true
     command: |
       git fetch {{.SelectedRemote.Name}}
       git checkout {{ .SelectedRemoteBranch.Name }}
-      git merge {{ .SelectedRemote.Name }}/{{ .SelectedRemoteBranch.Name }}
+      git merge --ff-only {{ .SelectedRemote.Name }}/{{ .SelectedRemoteBranch.Name }}
       git push origin {{.SelectedRemoteBranch.Name}}
 keybinding:
   universal:
