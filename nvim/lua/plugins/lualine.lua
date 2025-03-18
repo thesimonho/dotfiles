@@ -78,10 +78,7 @@ return {
             return utils.get_split_count() < 3
           end,
           on_click = function()
-            ui.show_projects_table()
-            vim.defer_fn(function()
-              vim.cmd("startinsert")
-            end, 100)
+            Snacks.picker.projects()
           end,
         },
         {
@@ -89,10 +86,7 @@ return {
           icon = "󰘬",
           padding = { left = 1, right = 1 },
           on_click = function()
-            vim.cmd("FzfLua git_branches")
-            vim.defer_fn(function()
-              vim.cmd("startinsert")
-            end, 100)
+            Snacks.picker.git_branches()
           end,
         },
         {
@@ -294,6 +288,6 @@ return {
         },
       },
     },
-    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "fzf", "nvim-dap-ui", "quickfix" },
+    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix" },
   },
 }

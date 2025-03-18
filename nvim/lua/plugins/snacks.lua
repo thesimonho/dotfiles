@@ -98,6 +98,36 @@ return {
           unstagedChangesColor = { fg = "DiagnosticError" },
         },
       },
+      picker = {
+        enabled = true,
+        matcher = {
+          fuzzy = true, -- use fuzzy matching
+          smartcase = true, -- use smartcase
+          ignorecase = true, -- use ignorecase
+          sort_empty = true, -- sort results when the search string is empty
+          filename_bonus = true, -- give bonus for matching file names (last part of the path)
+          file_pos = true, -- support patterns like `file:line:col` and `file:line`
+          cwd_bonus = true, -- give bonus for matching files in the cwd
+          frecency = true, -- frecency bonus
+          history_bonus = true, -- give more weight to chronological order
+        },
+        formatters = {
+          file = {
+            filename_first = false, -- display filename before the file path
+            filename_only = false, -- only show the filename
+            truncate = 40, -- truncate the file path to (roughly) this length
+            icon_width = 2, -- width of the icon (in characters)
+            git_status_hl = true, -- use the git status highlight group for the filename
+          },
+          selected = {
+            show_always = false, -- only show the selected column when there are multiple selections
+            unselected = true, -- use the unselected icon for unselected items
+          },
+          severity = {
+            icons = false, -- show severity icons
+          },
+        },
+      },
     },
   },
 }
