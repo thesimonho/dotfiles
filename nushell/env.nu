@@ -7,7 +7,7 @@ if ($OS | str contains 'Linux') {
   $env.SSH_ASKPASS_REQUIRE = 'prefer'
   $env.SSH_AUTH_SOCK = '/run/user/1000/ssh-agent.socket'
   $env.PATH = ($env.PATH | split row (char esep) | append '/home/linuxbrew/.linuxbrew/bin')
-} else if ($OS | str contains 'MacOS') {
+} else if ($OS | str contains 'macOS') {
   $env.PATH = ($env.PATH | split row (char esep) | append '/usr/local/bin')
   $env.PATH = ($env.PATH | split row (char esep) | append '/opt/homebrew/bin')
   $env.PATH = ($env.PATH | split row (char esep) | append '~/.local/pipx/venvs/poetry/bin')
