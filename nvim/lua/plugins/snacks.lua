@@ -164,6 +164,18 @@ return {
             icons = false, -- show severity icons
           },
         },
+        win = {
+          preview = {
+            wo = {
+              number = false,
+              relativenumber = false,
+              wrap = true,
+              foldenable = false,
+              foldcolumn = "0",
+              signcolumn = "no",
+            },
+          },
+        },
       },
     },
   },
