@@ -5,6 +5,7 @@ return {
     dev = true,
     priority = 1000,
     opts = {
+      dim_inactive = true,
       cache = false,
       auto_plugins = true,
       integrations = {
