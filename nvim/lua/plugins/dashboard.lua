@@ -70,12 +70,6 @@ local M = {
         pane_gap = 15,
         preset = {
           keys = {
-            {
-              icon = " ",
-              key = "c",
-              desc = "Config",
-              action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})",
-            },
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = "󰟾 ", key = "m", desc = "Mason", action = ":Mason" },
           },
@@ -99,7 +93,15 @@ local M = {
             indent = 2,
             padding = 2,
           },
-          { pane = 2, icon = " ", title = "Projects", section = "projects", limit = 10, indent = 2, padding = 2 },
+          {
+            pane = 2,
+            icon = " ",
+            title = "Projects",
+            section = "projects",
+            limit = 10,
+            indent = 2,
+            padding = 2,
+          },
         },
         formats = {
           key = function(item)
