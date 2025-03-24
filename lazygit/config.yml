@@ -164,7 +164,7 @@ customCommands:
     command: |
       git fetch {{.SelectedRemote.Name}}
       git checkout {{ .SelectedRemoteBranch.Name }}
-      git merge --ff-only {{ .SelectedRemote.Name }}/{{ .SelectedRemoteBranch.Name }}
+      git merge {{ .SelectedRemote.Name }}/{{ .SelectedRemoteBranch.Name }}
       git push origin {{.SelectedRemoteBranch.Name}}
 keybinding:
   universal:
