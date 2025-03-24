@@ -17,6 +17,7 @@ local tabline_theme_dir = "colors.wezterm_tabline"
 --- CONFIG END ---
 
 local wezterm = require("wezterm")
+local tabline
 
 -- NOTE: file must exist for watch list reloading to work
 local f = io.open(theme_file, "r") ~= nil
@@ -25,9 +26,8 @@ if not f then
 end
 wezterm.add_to_config_reload_watch_list(theme_file)
 
-M.plugins = wezterm.plugin.list()
-
 function M.is_plugin_installed(url)
+	M.plugins = wezterm.plugin.list()
 	for _, p in ipairs(M.plugins) do
 		if p.url and string.find(p.url, url, 1, true) then
 			return true
@@ -56,15 +56,22 @@ function M.apply_theme(window, theme)
 end
 
 function M.apply_tabline_theme(theme)
-	local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-	local ok, theme_module = pcall(require, tabline_theme_dir .. "." .. theme)
-	if ok and theme_module.theme_overrides then
-		tabline.setup({
-			options = {
-				theme_overrides = theme_module.theme_overrides,
-			},
-		})
+	if tabline and theme == "kanagawa-paper-ink" then
+		tabline.set_theme(M.ink.theme_overrides)
+	elseif tabline and theme == "kanagawa-paper-canvas" then
+		tabline.set_theme(M.canvas.theme_overrides)
 	end
+end
+
+if M.is_plugin_installed("michaelbrusegard/tabline.wez") then
+	tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+	local ok_ink, ink = pcall(require, tabline_theme_dir .. ".kanagawa-paper-ink")
+	local ok_canvas, canvas = pcall(require, tabline_theme_dir .. ".kanagawa-paper-canvas")
+	if not ok_ink or not ok_canvas then
+		print("Error loading tabline themes")
+	end
+	M.ink = ink
+	M.canvas = canvas
 end
 
 wezterm.on("window-config-reloaded", function(window, _)
