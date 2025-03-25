@@ -1,5 +1,4 @@
 local utils = require("utils.general")
-local ui = require("utils.ui")
 local fs = require("utils.fs")
 local icons = require("lazyvim.config").icons
 local theme = nil
