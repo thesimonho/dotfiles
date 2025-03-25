@@ -1,4 +1,5 @@
 local fs = require("utils.fs")
+local ui = require("utils.ui")
 local headers = require("config.headers")
 local quotes = require("config.quotes")
 
@@ -54,6 +55,47 @@ local function choose_header(use_image)
   }
 end
 
+local function get_projects()
+  local limit = 10
+  local dirs = {}
+
+  local iter = Snacks.dashboard.oldfiles()
+  while true do
+    local file = iter()
+    if not file then
+      break
+    end
+
+    local dir = Snacks.git.get_root(file)
+    if dir and not vim.tbl_contains(dirs, dir) then
+      table.insert(dirs, dir)
+      if #dirs >= limit then
+        break
+      end
+    end
+  end
+
+  local ret = {} ---@type snacks.dashboard.Item[]
+  for _, dir in ipairs(dirs) do
+    ret[#ret + 1] = {
+      file = dir,
+      icon = "󰊢",
+      autokey = true,
+      action = function()
+        ui.load_project_session(dir)
+      end,
+    }
+  end
+
+  return vim.tbl_map(function(item)
+    return vim.tbl_extend("force", {
+      pane = 2,
+      padding = 0,
+      indent = 2,
+    }, item)
+  end, ret)
+end
+
 local M = {
   {
     "folke/snacks.nvim",
@@ -93,15 +135,8 @@ local M = {
             indent = 2,
             padding = 2,
           },
-          {
-            pane = 2,
-            icon = " ",
-            title = "Projects",
-            section = "projects",
-            limit = 10,
-            indent = 2,
-            padding = 2,
-          },
+          { pane = 2, title = "Projects", icon = "" },
+          get_projects,
         },
         formats = {
           key = function(item)

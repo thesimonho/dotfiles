@@ -1,3 +1,5 @@
+local ui = require("utils.ui")
+
 return {
   {
     "folke/snacks.nvim",
@@ -20,29 +22,13 @@ return {
             confirm = function(picker)
               picker:close()
               vim.cmd("tabnew")
-              vim.fn.chdir(picker:dir())
-              local session_loaded = false
-              vim.api.nvim_create_autocmd("SessionLoadPost", {
-                once = true,
-                callback = function()
-                  session_loaded = true
-                end,
-              })
-
-              -- fallback to picker
-              vim.defer_fn(function()
-                if not session_loaded then
-                  Snacks.picker.files({ dirs = { vim.fn.getcwd() } })
-                end
-              end, 100)
-              vim.cmd("lua require('persistence').load()")
+              ui.load_project_session(picker:dir())
             end,
-            patterns = { ".git", "package.json", "Makefile" },
+            patterns = { ".git", "package.json" },
             recent = true,
             matcher = {
               frecency = true, -- use frecency boosting
               sort_empty = true, -- sort even when the filter is empty
-              cwd_bonus = false,
             },
             sort = { fields = { "score:desc", "idx" } },
           })
