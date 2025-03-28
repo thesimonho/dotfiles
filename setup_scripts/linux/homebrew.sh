@@ -18,3 +18,15 @@ brew install sqlite
 brew install starship
 brew install yazi sevenzip jq poppler imagemagick
 brew install zoxide
+
+# Fonts
+fonts_list=(
+  font-monofur-nerd-font
+  font-fira-code-nerd-font
+  font-jetbrains-mono-nerd-font
+  font-departure-mono-nerd-font
+)
+
+for font in "${fonts_list[@]}"; do
+  brew install --cask "$font"
+done

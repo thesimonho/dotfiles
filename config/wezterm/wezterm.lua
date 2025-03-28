@@ -37,6 +37,8 @@ config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
+	{ family = "Monofur Nerd Font", weight = "Regular" },
+	{ family = "Departure Mono Nerd Font", weight = "Regular" },
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
 })
@@ -69,7 +71,7 @@ config.window_padding = {
 }
 
 if is_windows() then
-	config.font_size = 11
+	config.font_size = 13
 	config.win32_system_backdrop = "Mica"
 	config.window_background_opacity = 0
 	config.default_prog = { "nu.exe" }
@@ -88,7 +90,7 @@ if is_windows() then
 		},
 	}
 elseif is_mac() then
-	config.font_size = 16
+	config.font_size = 18
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 1.0
 	config.default_prog = { "/opt/homebrew/bin/nu" }
@@ -107,7 +109,7 @@ elseif is_mac() then
 		},
 	}
 else
-	config.font_size = 12
+	config.font_size = 14
 	config.window_background_opacity = 0.95
 	config.default_prog = { "/home/linuxbrew/.linuxbrew/bin/nu" }
 	config.launch_menu = {
