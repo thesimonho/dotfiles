@@ -37,8 +37,6 @@ return {
                   else
                     hl = "Special1"
                   end
-                elseif args.relnum % 5 == 0 then -- every 5th line
-                  hl = "CursorLineSign"
                 else
                   hl = "LineNr"
                 end
