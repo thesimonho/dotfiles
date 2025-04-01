@@ -69,9 +69,9 @@ return {
     },
     opts = {
       multiwindow = false, -- Enable multiwindow support.
-      max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+      max_lines = 5, -- How many lines the window should span. Values <= 0 mean no limit.
       line_numbers = true,
-      multiline_threshold = 5, -- Maximum number of lines to show for a single context
+      multiline_threshold = 3, -- Maximum number of lines to show for a single context
       trim_scope = "outer", -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
       mode = "topline", -- Line used to calculate context. Choices: 'cursor', 'topline'
     },
