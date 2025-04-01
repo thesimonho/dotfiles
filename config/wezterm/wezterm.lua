@@ -31,18 +31,24 @@ config.animation_fps = 60
 config.automatically_reload_config = true
 config.color_scheme_dirs = { "~/.config/wezterm/colors" }
 config.color_scheme = theme.color_scheme
+config.cursor_blink_rate = 0
 config.default_cursor_style = "SteadyBar"
 config.default_workspace = "main"
 config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
-	{ family = "Departure Mono Nerd Font", weight = "Regular" },
+	{ family = "MonaspiceRn Nerd Font", weight = "Book" },
+	{ family = "MonaspiceNe Nerd Font", weight = "Regular" },
+	{ family = "MonaspiceAr Nerd Font", weight = "Regular" },
+	{ family = "MonaspiceKr Nerd Font", weight = "Regular" },
+	{ family = "MonaspiceXe Nerd Font", weight = "Regular" },
+	{ family = "Monofur Nerd Font", weight = "Regular" },
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
 })
 config.front_end = "OpenGL"
-config.harfbuzz_features = { "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" }
+config.harfbuzz_features = { "zero", "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt", "clig=0", "liga=0" }
 config.hide_tab_bar_if_only_one_tab = false
 config.inactive_pane_hsb = {
 	saturation = 0.9,
@@ -70,7 +76,7 @@ config.window_padding = {
 }
 
 if is_windows() then
-	config.font_size = 11
+	config.font_size = 12
 	config.win32_system_backdrop = "Mica"
 	config.window_background_opacity = 0
 	config.default_prog = { "nu.exe" }
@@ -108,7 +114,7 @@ elseif is_mac() then
 		},
 	}
 else
-	config.font_size = 11
+	config.font_size = 12
 	config.window_background_opacity = 0.95
 	config.default_prog = { "/home/linuxbrew/.linuxbrew/bin/nu" }
 	config.launch_menu = {
