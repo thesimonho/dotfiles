@@ -11,8 +11,9 @@ return {
     },
     label = {
       uppercase = false,
-      before = true,
-      after = false,
+      before = false,
+      after = true,
+      style = "overlay",
       rainbow = {
         enabled = true,
         shade = 5,
@@ -23,7 +24,7 @@ return {
         enabled = true,
       },
       char = {
-        enabled = true,
+        enabled = false, -- nice, but operator pending mode doesnt work like normal vim
         jump_labels = true,
         multi_line = false,
       },
