@@ -47,6 +47,7 @@ vim.keymap.set("i", "<C-Del>", function()
 end, { expr = true, desc = "Delete word forward" })
 vim.keymap.set({ "n", "x" }, "gg", "mggg", { desc = "Go to top of file" })
 vim.keymap.set({ "n", "x" }, "G", "mgG", { desc = "Go to bottom of file" })
+vim.keymap.set("v", "A", "<Esc>ggVG$", { desc = "Select all" })
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save File" })
 Snacks.toggle.option("cursorcolumn", { name = "Column Ruler" }):map("<leader>uR")
 
