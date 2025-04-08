@@ -95,11 +95,13 @@ return {
       window = {
         position = "float",
         popup = { -- settings that apply to float position only
-          size = {
-            height = "80%",
-            width = "40%",
-          },
-          position = "50%", -- 50% means center it
+          position = { col = "99%", row = "3" },
+          size = function()
+            return {
+              width = "40%",
+              height = vim.o.lines - 6,
+            }
+          end,
           title = "Neo-tree",
         },
         mappings = {
