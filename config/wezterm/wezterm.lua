@@ -38,11 +38,11 @@ config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
-	{ family = "MonaspiceRn Nerd Font", weight = "Book" },
+	-- { family = "MonaspiceRn Nerd Font", weight = "Book" },
+	-- { family = "MonaspiceXe Nerd Font", weight = "Regular" },
+	-- { family = "MonaspiceAr Nerd Font", weight = "Regular" },
+	-- { family = "MonaspiceKr Nerd Font", weight = "Regular" },
 	{ family = "MonaspiceNe Nerd Font", weight = "Regular" },
-	{ family = "MonaspiceAr Nerd Font", weight = "Regular" },
-	{ family = "MonaspiceKr Nerd Font", weight = "Regular" },
-	{ family = "MonaspiceXe Nerd Font", weight = "Regular" },
 	{ family = "Monofur Nerd Font", weight = "Regular" },
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
