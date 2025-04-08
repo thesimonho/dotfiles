@@ -36,6 +36,9 @@ return {
           with_markers = true,
           with_expanders = true,
         },
+        created = {
+          format = "relative",
+        },
         modified = {
           symbol = " ",
           highlight = "NeoTreeModified",
@@ -56,7 +59,8 @@ return {
         },
         last_modified = {
           enabled = true,
-          required_width = 100, -- min width of window required to show this column
+          format = "relative",
+          required_width = 90, -- min width of window required to show this column
         },
         icon = {
           folder_closed = "",
