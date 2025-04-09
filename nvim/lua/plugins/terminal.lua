@@ -9,13 +9,33 @@ local function set_shell()
   end
 end
 
+local function init_or_toggle()
+  vim.cmd([[ ToggleTermToggleAll ]])
+
+  local buffers = vim.api.nvim_list_bufs()
+
+  -- check if toggleterm buffer exists. If not then create one by vim.cmd [[ exe 1 . "ToggleTerm" ]]
+  local toggleterm_exists = false
+  for _, buf in ipairs(buffers) do
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if buf_name:find("toggleterm#") then
+      toggleterm_exists = true
+      break
+    end
+  end
+
+  if not toggleterm_exists then
+    vim.cmd([[ exe 1 . "ToggleTerm" ]])
+  end
+end
+
 return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
     cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
     keys = {
-      { "<leader>\\\\", "<cmd>ToggleTermToggleAll<CR>", desc = "Toggle all" },
+      { "<leader>\\\\", init_or_toggle, desc = "Toggle all" },
       { "<leader>\\1", "<cmd>1ToggleTerm<CR>", desc = "Terminal 1" },
       { "<leader>\\2", "<cmd>2ToggleTerm<CR>", desc = "Terminal 2" },
       { "<leader>\\3", "<cmd>3ToggleTerm<CR>", desc = "Terminal 3" },
