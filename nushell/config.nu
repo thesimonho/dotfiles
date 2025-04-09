@@ -104,6 +104,7 @@ source $"($nu.default-config-dir)/completions/poetry.nu"
 source $"($nu.default-config-dir)/completions/rg.nu"
 source $"($nu.default-config-dir)/completions/tar.nu"
 
+source $"($nu.default-config-dir)/external.nu"
 source $"($nu.default-config-dir)/alias.nu"
 source ~/.zoxide.nu
 use ~/.cache/starship/init.nu

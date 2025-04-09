@@ -1,0 +1,5 @@
+extern "nvim" [file?: path]
+extern "code" [file?: path]
+extern "bat" [file?: path]
+extern "less" [file?: path]
+extern "xdg-open" [file?: path]
