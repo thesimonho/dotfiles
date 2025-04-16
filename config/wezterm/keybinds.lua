@@ -5,6 +5,7 @@ local M = {}
 
 M.basic_binds = {
 	{ key = "F1", mods = "LEADER", action = act.ActivateCommandPalette },
+	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
 	{
 		key = "c",
 		mods = "CTRL|SHIFT",
