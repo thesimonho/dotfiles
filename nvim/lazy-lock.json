@@ -63,6 +63,7 @@
   "render-markdown.nvim": { "branch": "main", "commit": "8bb0d4725cc4909a603158d44ff28b6158ad9278" },
   "satellite.nvim": { "branch": "main", "commit": "3379561c794a93c546c5c45f9d60e78a01a31d31" },
   "scope.nvim": { "branch": "main", "commit": "3fc963e75f88990a9467ff72b8eea667a69c30a2" },
+  "smart-splits.nvim": { "branch": "master", "commit": "26db22d9b09b7c82e1ff03affd64da3f5441febd" },
   "snacks.nvim": { "branch": "main", "commit": "bc0630e43be5699bb94dadc302c0d21615421d93" },
   "statuscol.nvim": { "branch": "main", "commit": "c399884e8f64019ec9bb581251f9710915b7f996" },
   "supermaven-nvim": { "branch": "feature/exposing-suggestion-group", "commit": "741e9a0b0866fc8be173b6ed60b16078474256e7" },
