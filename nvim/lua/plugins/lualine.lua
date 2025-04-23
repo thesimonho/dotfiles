@@ -53,7 +53,7 @@ return {
       end,
       component_separators = { left = "│", right = "│" },
       section_separators = { left = "", right = "" },
-      globalstatus = false,
+      globalstatus = true,
       disabled_filetypes = { statusline = { "dashboard", "snacks_dashboard", "starter" } },
     },
     sections = {

@@ -69,7 +69,7 @@ local cursor_group = vim.api.nvim_create_augroup("CursorGroup", { clear = true }
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermLeave" }, {
   group = cursor_group,
   callback = function()
-    local ignore_ft = { "snacks_dashboard" }
+    local ignore_ft = { "snacks_dashboard", "Avante", "AvanteInput", "AvantePromptInput", "AvanteSelectedFiles" }
     local win = vim.api.nvim_get_current_win()
 
     if vim.tbl_contains(ignore_ft, vim.bo.filetype) then
@@ -116,7 +116,16 @@ vim.api.nvim_create_autocmd("CmdlineEnter", {
 -- line numbers
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
-    local ignore_ft = { "toggleterm", "checkhealth", "snacks_notif_history", "bigfile" }
+    local ignore_ft = {
+      "toggleterm",
+      "checkhealth",
+      "snacks_notif_history",
+      "bigfile",
+      "Avante",
+      "AvanteInput",
+      "AvantePromptInput",
+      "AvanteSelectedFiles",
+    }
     local ignore_buftype = { "quickfix", "nofile", "prompt", "terminal", "help" }
     local win = vim.api.nvim_get_current_win()
 

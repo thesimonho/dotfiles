@@ -10,6 +10,7 @@ return {
   "saghen/blink.cmp",
   dependencies = {
     "mikavilpas/blink-ripgrep.nvim",
+    "Kaiser-Yang/blink-cmp-avante",
   },
   opts = {
     keymap = {

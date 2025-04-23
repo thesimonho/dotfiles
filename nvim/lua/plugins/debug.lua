@@ -77,7 +77,7 @@ return {
       local wk = require("which-key")
       wk.add({
         mode = { "n", "v" },
-        { "<leader>dd", group = "Debug Print" },
+        { "<leader>dd", group = "debug print" },
       })
     end,
     opts = {
