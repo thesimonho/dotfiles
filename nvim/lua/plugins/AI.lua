@@ -94,6 +94,9 @@ local M = {
       wk.add({
         mode = { "n", "v" },
         { "<leader>a", group = "AI" },
+      }, {
+        mode = "n",
+        { "<leader>ac", group = "Choose change" },
       })
     end,
     opts = {
@@ -118,6 +121,7 @@ local M = {
         },
         ask = {
           border = "rounded",
+          start_insert = false,
         },
       },
       openai = {
@@ -129,6 +133,16 @@ local M = {
         reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
       },
       mappings = {
+        files = {
+          add_current = "<leader>ab", -- Add current buffer to selected files
+          add_all_buffers = "<leader>aB", -- Add all buffer files to selected files
+        },
+        diff = {
+          ours = "<leader>aco",
+          theirs = "<leader>act",
+          both = "<leader>acb",
+          cursor = "<leader>acc",
+        },
         suggestion = {
           accept = "<M-l>",
           next = "<M-]>",
