@@ -87,14 +87,6 @@ M.basic_binds = {
 		end),
 	},
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
-
-	-- MacOS rebinds
-	{ key = "q", mods = "CMD", action = act.SendKey({ key = "q", mods = "CTRL" }) },
-	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
-	{ key = "r", mods = "CMD", action = act.SendKey({ key = "r", mods = "CTRL" }) },
-	{ key = "d", mods = "CMD", action = act.SendKey({ key = "d", mods = "CTRL" }) },
-	{ key = "u", mods = "CMD", action = act.SendKey({ key = "u", mods = "CTRL" }) },
-	{ key = "e", mods = "CMD", action = act.SendKey({ key = "e", mods = "CTRL" }) },
 }
 
 M.key_tables = {
