@@ -23,7 +23,7 @@ return {
           vim.notify("Entering resize mode")
         end,
         on_leave = function()
-          vim.notify("Exiting resize mode ")
+          vim.notify("Exiting resize mode")
         end,
       },
     },

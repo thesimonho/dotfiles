@@ -9,7 +9,9 @@ return {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown", "Avante" },
     opts = {
+      file_types = { "markdown", "Avante" },
       heading = {
         position = "inline",
         sign = true,
