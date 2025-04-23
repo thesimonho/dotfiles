@@ -2,6 +2,7 @@
 # https://flathub.org
 
 flatpak install flathub com.jeffser.Alpaca -y
+flatpak install com.jeffser.Alpaca.Plugins.Ollama -y
 flatpak install flathub eu.betterbird.Betterbird -y
 flatpak install flathub com.usebruno.Bruno
 flatpak install flathub com.calibre_ebook.calibre
