@@ -16,3 +16,4 @@ kanagawa-paper-dev.lua
 
 # nushell
 nushell/**/history*
+nushell/api.env

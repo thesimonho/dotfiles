@@ -14,6 +14,7 @@ if ($OS | str contains 'Linux') {
   $env.PATH = ($env.PATH | split row (char esep) | append '~/.local/pipx/venvs/poetry/bin')
 }
 
+
 # add SSH keys to ssh-agent
 if (ssh-add -l | str contains 'The agent has no identities') {
   ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }
@@ -21,6 +22,17 @@ if (ssh-add -l | str contains 'The agent has no identities') {
 
 # environment variables
 $env.VIRTUAL_ENV_DISABLE_PROMPT = '1'
+
+# add secret env variables
+let env_path = $nu.default-config-dir | path join api.env
+if ((open $env_path | lines | length) > 0) {
+  let parsed = (open $env_path
+    | lines
+    | parse "{key}={value}"
+    | reduce -f {} {|it, acc| $acc | insert $it.key $it.value })
+
+  load-env $parsed
+}
 
 $env.ENV_CONVERSIONS = {
     __zoxide_hooked: {
