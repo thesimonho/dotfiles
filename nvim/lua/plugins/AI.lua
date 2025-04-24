@@ -124,6 +124,15 @@ local M = {
           start_insert = false,
         },
       },
+      web_search_engine = {
+        provider = "tavily",
+        proxy = nil,
+        providers = {
+          tavily = {
+            api_key_name = os.getenv("TAVILY_API_KEY"),
+          },
+        },
+      },
       openai = {
         endpoint = "https://api.openai.com/v1",
         model = "gpt-4.1",
