@@ -10,11 +10,11 @@ local function set_shell()
 end
 
 local function init_or_toggle()
-  vim.cmd([[ ToggleTermToggleAll ]])
+  vim.cmd("ToggleTermToggleAll")
 
   local buffers = vim.api.nvim_list_bufs()
 
-  -- check if toggleterm buffer exists. If not then create one by vim.cmd [[ exe 1 . "ToggleTerm" ]]
+  -- check if toggleterm buffer exists. If not then create one
   local toggleterm_exists = false
   for _, buf in ipairs(buffers) do
     local buf_name = vim.api.nvim_buf_get_name(buf)
@@ -43,7 +43,7 @@ return {
       { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
     init = function()
-      wk.add({ "<leader>\\", group = "terminal", icon = "" })
+      wk.add({ "<leader>\\", group = "terminal" })
     end,
     opts = {
       autochdir = true,
