@@ -37,12 +37,32 @@ return {
                   else
                     hl = "Special1"
                   end
+                elseif args.virtnum > 0 then
+                  hl = "SnacksIndent"
                 else
                   hl = "LineNr"
                 end
 
-                local lnum = args.rnu and (args.relnum > 0 and args.relnum or (args.nu and args.lnum or 0)) or args.lnum
-                local pad = (" "):rep(args.nuw - #tostring(lnum))
+                local lnum
+                local pad
+                if args.virtnum > 0 then
+                  lnum = "↪"
+                  pad = (" "):rep(args.nuw - 1)
+                else
+                  if args.rnu then
+                    if args.relnum > 0 then
+                      lnum = args.relnum
+                    elseif args.nu then
+                      lnum = args.lnum
+                    else
+                      lnum = 0
+                    end
+                  else
+                    lnum = args.lnum
+                  end
+                  pad = (" "):rep(args.nuw - #tostring(lnum))
+                end
+
                 return "%#" .. hl .. "#%=" .. pad .. tostring(lnum)
               end,
             },
