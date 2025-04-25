@@ -24,22 +24,11 @@ local M = {
     dependencies = {
       "nvim-lua/plenary.nvim",
       {
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            use_absolute_path = true,
-          },
-        },
-      },
-      {
         "saghen/blink.cmp",
         opts = {
+          enabled = function()
+            return not vim.tbl_contains({ "AvanteInput", "AvantePromptInput" }, vim.bo.filetype)
+          end,
           sources = {
             default = {
               "avante",
@@ -99,6 +88,9 @@ local M = {
         { "<leader>ac", group = "Choose change" },
       })
     end,
+    keys = {
+      { "<leader>aC", "<cmd>AvanteClear<cr>", desc = "avante: clear session" },
+    },
     opts = {
       provider = "openai",
       auto_suggestions_provider = "openai",
@@ -107,12 +99,18 @@ local M = {
       selector = {
         provider = "snacks",
       },
+      file_selector = {
+        provider = "snacks",
+      },
       behaviour = {
         auto_focus_sidebar = true,
         auto_suggestions = false, -- Experimental stage
-        support_paste_from_clipboard = true,
         use_cwd_as_project_root = true,
         enable_cursor_planning_mode = true,
+        enable_claude_text_editor_tool_mode = true,
+      },
+      hints = {
+        enabled = false,
       },
       windows = {
         wrap = true,
@@ -140,6 +138,7 @@ local M = {
         temperature = 0.1,
         max_completion_tokens = 16384, -- Increase this to include reasoning tokens (for reasoning models)
         reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+        disable_tools = true,
       },
       mappings = {
         files = {
