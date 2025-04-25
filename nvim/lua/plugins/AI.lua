@@ -148,6 +148,7 @@ local M = {
         diff = {
           ours = "<leader>aco",
           theirs = "<leader>act",
+          all_theirs = "<leader>acT",
           both = "<leader>acb",
           cursor = "<leader>acc",
         },
