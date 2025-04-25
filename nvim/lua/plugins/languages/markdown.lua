@@ -12,6 +12,9 @@ return {
     ft = { "markdown", "Avante" },
     opts = {
       file_types = { "markdown", "Avante" },
+      completions = {
+        blink = { enabled = true },
+      },
       heading = {
         position = "inline",
         sign = true,
@@ -30,6 +33,7 @@ return {
       },
       pipe_table = {
         preset = "round",
+        alignment_indicator = "┅",
       },
       sign = {
         enabled = true,
