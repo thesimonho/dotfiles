@@ -15,6 +15,7 @@ return {
         "jsdoc",
         "json",
         "jsonc",
+        "latex",
         "lua",
         "markdown",
         "markdown_inline",
@@ -58,6 +59,22 @@ return {
   {
     "nvim-treesitter/nvim-treesitter-context",
     event = "LazyFile",
+    init = function()
+      vim.api.nvim_create_autocmd("BufEnter", {
+        pattern = "*.md",
+        callback = function()
+          require("treesitter-context").disable()
+        end,
+      })
+      vim.api.nvim_create_autocmd("BufEnter", {
+        pattern = "*",
+        callback = function()
+          if not vim.fn.expand("%:e"):match("^md$") then
+            require("treesitter-context").enable()
+          end
+        end,
+      })
+    end,
     keys = {
       {
         "gC",
