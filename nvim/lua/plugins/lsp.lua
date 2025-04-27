@@ -10,7 +10,6 @@ return {
         "mdx-analyzer",
         "lua-language-server",
         "pyright",
-        "ruff-lsp",
         "terraform-ls",
         "vim-language-server",
         "yaml-language-server",
