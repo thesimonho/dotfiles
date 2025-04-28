@@ -15,8 +15,7 @@ return {
       after = true,
       style = "overlay",
       rainbow = {
-        enabled = true,
-        shade = 5,
+        enabled = false,
       },
     },
     modes = {
