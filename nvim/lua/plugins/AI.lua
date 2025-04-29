@@ -25,6 +25,9 @@ local M = {
       "nvim-lua/plenary.nvim",
       {
         "saghen/blink.cmp",
+        dependencies = {
+          "Kaiser-Yang/blink-cmp-avante",
+        },
         opts = {
           enabled = function()
             return not vim.tbl_contains({ "AvanteInput", "AvantePromptInput" }, vim.bo.filetype)
