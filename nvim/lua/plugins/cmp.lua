@@ -1,16 +1,16 @@
 local source_priority = {
   lsp = 1,
   path = 2,
-  buffer = 3,
-  ripgrep = 4,
-  snippets = 5,
+  avante = 3,
+  buffer = 4,
+  ripgrep = 5,
+  snippets = 6,
 }
 
 return {
   "saghen/blink.cmp",
   dependencies = {
     "mikavilpas/blink-ripgrep.nvim",
-    "Kaiser-Yang/blink-cmp-avante",
   },
   opts = {
     keymap = {
