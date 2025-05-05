@@ -108,6 +108,8 @@ local M = {
       behaviour = {
         auto_focus_sidebar = true,
         auto_suggestions = false, -- Experimental stage
+        auto_suggestions_respect_ignore = true,
+        auto_apply_diff_after_generation = false,
         use_cwd_as_project_root = true,
         enable_cursor_planning_mode = true,
         enable_claude_text_editor_tool_mode = true,
@@ -134,6 +136,14 @@ local M = {
           },
         },
       },
+      rag_service = {
+        enabled = false,
+        host_mount = os.getenv("HOME"),
+        provider = "ollama", -- The provider to use for RAG service (e.g. openai or ollama)
+        llm_model = "granite3.1-dense:8b", -- The LLM model to use for RAG service
+        embed_model = "granite-embedding:30m", -- The embedding model to use for RAG service
+        endpoint = "http://localhost:11435",
+      },
       openai = {
         endpoint = "https://api.openai.com/v1",
         model = "gpt-4.1",
@@ -141,7 +151,16 @@ local M = {
         temperature = 0.1,
         max_completion_tokens = 16384, -- Increase this to include reasoning tokens (for reasoning models)
         reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-        disable_tools = true,
+        -- disable_tools = true,
+      },
+      ollama = {
+        endpoint = "http://127.0.0.1:11435",
+        timeout = 30000, -- Timeout in milliseconds
+        options = {
+          temperature = 0.1,
+          num_ctx = 20480,
+          keep_alive = "5m",
+        },
       },
       mappings = {
         files = {
