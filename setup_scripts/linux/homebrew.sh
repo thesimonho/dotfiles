@@ -2,6 +2,7 @@
 # https://brew.sh
 
 brew install bat
+brew install carapace
 brew install chafa
 brew install fd
 brew install ffmpeg
