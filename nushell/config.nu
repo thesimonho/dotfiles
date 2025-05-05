@@ -95,10 +95,6 @@ $env.config.keybindings = [
 
 # completion sources
 source $"($nu.default-config-dir)/completions/curl.nu"
-source $"($nu.default-config-dir)/completions/docker.nu"
-source $"($nu.default-config-dir)/completions/git.nu"
-source $"($nu.default-config-dir)/completions/github.nu"
-source $"($nu.default-config-dir)/completions/npm.nu"
 source $"($nu.default-config-dir)/completions/less.nu"
 source $"($nu.default-config-dir)/completions/poetry.nu"
 source $"($nu.default-config-dir)/completions/rg.nu"
@@ -106,5 +102,7 @@ source $"($nu.default-config-dir)/completions/tar.nu"
 
 source $"($nu.default-config-dir)/external.nu"
 source $"($nu.default-config-dir)/alias.nu"
+
 source ~/.zoxide.nu
+source ~/.cache/carapace/init.nu
 use ~/.cache/starship/init.nu
