@@ -9,45 +9,7 @@ local function format_tbl_text(text)
   return table.concat(text, "\n")
 end
 
-local function list_image_files(directory)
-  local image_extensions = { ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp" }
-  local files = {}
-
-  local handle = vim.uv.fs_scandir(directory)
-  if not handle then
-    return files
-  end
-
-  while true do
-    local name, type = vim.uv.fs_scandir_next(handle)
-    if not name then
-      break
-    end
-
-    if type == "file" then
-      for _, ext in ipairs(image_extensions) do
-        if name:sub(-#ext):lower() == ext then
-          table.insert(files, name)
-        end
-      end
-    end
-  end
-  return files
-end
-
-local function choose_header(use_image)
-  if use_image then
-    local path_wallpapers = vim.fn.stdpath("config") .. fs.get_path_sep() .. "wallpapers"
-    local images = list_image_files(path_wallpapers)
-    local image_path = path_wallpapers .. fs.get_path_sep() .. images[math.random(#images)]
-
-    return {
-      section = "terminal",
-      cmd = "chafa " .. image_path .. " --format symbols --align center --symbols vhalf --size=70x20; sleep .1",
-      height = 22,
-    }
-  end
-
+local function choose_header()
   return {
     text = { format_tbl_text(headers[math.random(#headers)]), hl = "String" },
     align = "center",
@@ -118,7 +80,7 @@ local M = {
           },
         },
         sections = {
-          choose_header(({ true, false })[math.random(2)]), -- randomize between image and text header
+          choose_header(),
           { section = "startup", padding = 1 },
           { section = "keys", padding = 4 },
           {
