@@ -110,6 +110,7 @@ local M = {
       dashboard = {
         width = 70,
         pane_gap = 15,
+        autokeys = "1234567890abcdefghijklmnopqrstuvwxyz",
         preset = {
           keys = {
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
