@@ -4,11 +4,12 @@
 brew install bat
 brew install carapace
 brew install chafa
+brew install distrobox
+# brew install docker
 brew install fd
 brew install ffmpeg
-brew install fzf
+# brew install fzf
 brew install gh
-brew install go
 brew install lazygit
 brew install luarocks
 brew install neovim
