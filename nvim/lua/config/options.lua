@@ -28,6 +28,7 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldnestmax = 5
 vim.opt.conceallevel = 0
 vim.opt.mousemoveevent = true
+vim.opt.wrap = true
 
 -- GUI options
 if util_os.is_darwin() then
