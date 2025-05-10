@@ -53,7 +53,7 @@ return {
       end,
       component_separators = { left = "│", right = "│" },
       section_separators = { left = "", right = "" },
-      globalstatus = true,
+      globalstatus = false,
       disabled_filetypes = { statusline = { "dashboard", "snacks_dashboard", "starter" } },
     },
     sections = {
@@ -287,6 +287,6 @@ return {
         },
       },
     },
-    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix" },
+    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix", "avante" },
   },
 }
