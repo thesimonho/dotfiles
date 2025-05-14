@@ -1,10 +1,38 @@
 return {
   "folke/flash.nvim",
   event = "VeryLazy",
+  keys = {
+    {
+      "s",
+      mode = { "n", "x", "o" },
+      function()
+        require("flash").jump({ search = { forward = true } })
+      end,
+      desc = "Flash forward",
+    },
+    {
+      "S",
+      mode = { "n", "x", "o" },
+      function()
+        require("flash").jump({ search = { forward = false } })
+      end,
+      desc = "Flash backward",
+    },
+    {
+      "<M-s>",
+      mode = { "n", "x", "o" },
+      function()
+        require("flash").treesitter()
+      end,
+      desc = "Flash Treesitter",
+    },
+  },
   opts = {
     search = {
       multi_window = false,
       incremental = true,
+      forward = true,
+      wrap = false,
     },
     jump = {
       nohlsearch = false,
