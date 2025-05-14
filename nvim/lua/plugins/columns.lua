@@ -1,5 +1,23 @@
 local git = require("utils.git")
 
+local function get_marks_on_current_line(lineNr, bufNr)
+  local marks = {}
+  local ignored = { '"', "^", "[", "]", "<", ">" }
+  for _, mark in ipairs(vim.fn.getmarklist(bufNr)) do
+    local pos = mark.pos
+    local name = mark.mark
+    if
+      pos[1] == bufNr
+      and pos[2] == lineNr
+      and not name:match("%d")
+      and not vim.tbl_contains(ignored, name:sub(2, 2))
+    then
+      table.insert(marks, string.sub(name, -1))
+    end
+  end
+  return marks
+end
+
 return {
   {
     "luukvbaal/statuscol.nvim",
@@ -27,6 +45,7 @@ return {
                   return ""
                 end
 
+                local marks = get_marks_on_current_line(args.lnum, vim.api.nvim_get_current_buf())
                 local hl
                 if args.relnum == 0 then -- current line
                   local mode = vim.api.nvim_get_mode().mode
@@ -39,13 +58,18 @@ return {
                   end
                 elseif args.virtnum > 0 then
                   hl = "SnacksIndent"
+                elseif #marks > 0 then
+                  hl = "Mark"
                 else
                   hl = "LineNr"
                 end
 
                 local lnum
                 local pad
-                if args.virtnum > 0 then
+                if #marks > 0 and args.relnum ~= 0 then
+                  lnum = marks[1]
+                  pad = (" "):rep(args.nuw - #tostring(lnum))
+                elseif args.virtnum > 0 then
                   lnum = "↪"
                   pad = (" "):rep(args.nuw - 1)
                 else
@@ -62,7 +86,6 @@ return {
                   end
                   pad = (" "):rep(args.nuw - #tostring(lnum))
                 end
-
                 return "%#" .. hl .. "#%=" .. pad .. tostring(lnum)
               end,
             },
