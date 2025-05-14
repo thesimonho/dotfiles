@@ -14,7 +14,6 @@ if ($OS | str contains 'Linux') {
   $env.PATH = ($env.PATH | split row (char esep) | append '~/.local/pipx/venvs/poetry/bin')
 }
 
-
 # add SSH keys to ssh-agent
 if (ssh-add -l | str contains 'The agent has no identities') {
   ls ~/.ssh/id_*[!.pub] | each {|e| ssh-add -q $e.name }

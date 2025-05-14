@@ -151,7 +151,7 @@ local M = {
         temperature = 0.1,
         max_completion_tokens = 16384, -- Increase this to include reasoning tokens (for reasoning models)
         reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-        -- disable_tools = true,
+        disable_tools = true,
       },
       ollama = {
         endpoint = "http://127.0.0.1:11435",
