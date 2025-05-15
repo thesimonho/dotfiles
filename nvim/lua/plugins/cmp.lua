@@ -1,12 +1,3 @@
-local source_priority = {
-  lsp = 1,
-  path = 2,
-  avante = 3,
-  buffer = 4,
-  ripgrep = 5,
-  snippets = 6,
-}
-
 return {
   "saghen/blink.cmp",
   dependencies = {
@@ -40,16 +31,6 @@ return {
             search_casing = "--smart-case",
           },
         },
-      },
-    },
-    fuzzy = {
-      sorts = {
-        "exact",
-        function(a, b)
-          return source_priority[a.source_id] < source_priority[b.source_id]
-        end,
-        "score",
-        "sort_text",
       },
     },
     completion = {
