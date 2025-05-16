@@ -140,7 +140,7 @@ local M = {
         },
       },
       rag_service = {
-        enabled = false,
+        enabled = true,
         host_mount = os.getenv("HOME"),
         provider = "ollama", -- The provider to use for RAG service (e.g. openai or ollama)
         llm_model = "granite3.1-dense:8b", -- The LLM model to use for RAG service
@@ -154,7 +154,7 @@ local M = {
         temperature = 0.1,
         max_completion_tokens = 16384, -- Increase this to include reasoning tokens (for reasoning models)
         reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-        disable_tools = true,
+        disable_tools = false,
       },
       ollama = {
         endpoint = "http://127.0.0.1:11435",
