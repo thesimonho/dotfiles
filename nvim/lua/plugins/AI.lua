@@ -1,6 +1,7 @@
 local M = {
   {
     "AlejandroSuero/supermaven-nvim", -- TODO: fork until PR is merged
+    enabled = false,
     lazy = false, -- required otherwise color setting wont work
     branch = "feature/exposing-suggestion-group",
     opts = {
@@ -98,7 +99,7 @@ local M = {
       -- mode = "agentic",
       mode = "legacy",
       provider = "openai",
-      auto_suggestions_provider = "openai",
+      auto_suggestions_provider = "qwen_coder_2.5",
       cursor_applying_provider = "openai",
       memory_summary_provider = "openai",
       selector = {
@@ -109,7 +110,7 @@ local M = {
       },
       behaviour = {
         auto_focus_sidebar = true,
-        auto_suggestions = false, -- Experimental stage
+        auto_suggestions = true, -- Experimental stage
         auto_suggestions_respect_ignore = true,
         auto_apply_diff_after_generation = false,
         use_cwd_as_project_root = true,
@@ -162,6 +163,14 @@ local M = {
           temperature = 0.1,
           num_ctx = 20480,
           keep_alive = "5m",
+        },
+      },
+      vendors = {
+        ["qwen_coder_2.5"] = {
+          __inherited_from = "ollama",
+          model = "qwen2.5-coder:3b",
+          temperature = 0.1,
+          max_tokens = 8192,
         },
       },
       mappings = {
