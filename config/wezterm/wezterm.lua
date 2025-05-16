@@ -117,7 +117,7 @@ config.window_padding = {
 	bottom = 0,
 }
 
-local additional_shells
+local additional_shells = {}
 if is_windows() then
 	config.font_size = 12
 	config.win32_system_backdrop = "Mica"
@@ -142,7 +142,7 @@ elseif is_mac() then
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 1.0
 	config.default_prog = { "/opt/homebrew/bin/nu" }
-	additional_shells({
+	additional_shells = {
 		{
 			label = "nu",
 			args = { "/opt/homebrew/bin/nu" },
@@ -155,7 +155,7 @@ elseif is_mac() then
 			label = "bash",
 			args = { "bash" },
 		},
-	})
+	}
 else
 	config.font_size = 12
 	config.window_background_opacity = 0.95
@@ -175,7 +175,7 @@ else
 		},
 	}
 end
-config.launch_menu = create_distrobox_launchers()
+config.launch_menu = create_distrobox_launchers() or {}
 for _, shell in ipairs(additional_shells) do
 	table.insert(config.launch_menu, shell)
 end
