@@ -1,7 +1,6 @@
 local M = {
   {
     "AlejandroSuero/supermaven-nvim", -- TODO: fork until PR is merged
-    enabled = false,
     lazy = false, -- required otherwise color setting wont work
     branch = "feature/exposing-suggestion-group",
     opts = {
@@ -110,7 +109,7 @@ local M = {
       },
       behaviour = {
         auto_focus_sidebar = true,
-        auto_suggestions = true, -- Experimental stage
+        auto_suggestions = false, -- Experimental stage
         auto_suggestions_respect_ignore = true,
         auto_apply_diff_after_generation = false,
         use_cwd_as_project_root = true,
