@@ -23,6 +23,54 @@ local is_mac = function()
 	return wezterm.target_triple == "aarch64-apple-darwin"
 end
 
+local function string_split(inputstr, sep)
+	if sep == nil then
+		sep = ","
+	end
+	local t = {}
+	for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+		local trimmed = str:gsub("^%s*(.-)%s*$", "%1")
+		table.insert(t, trimmed)
+	end
+	return t
+end
+
+local function get_distrobox_images()
+	local images = {}
+	local handle = io.popen("distrobox ls")
+	if not handle then
+		return images
+	end
+
+	local i = 0
+	for line in handle:lines() do
+		if i ~= 0 then
+			local cols = string_split(line, "|")
+			if cols then
+				table.insert(images, cols[2])
+			end
+		end
+		i = i + 1
+	end
+	handle:close()
+	return images
+end
+
+local function create_distrobox_launchers()
+	local boxes = get_distrobox_images()
+	if #boxes == 0 then
+		return
+	end
+	local launchers = {}
+	for _, box in ipairs(boxes) do
+		table.insert(launchers, {
+			label = "distrobox: " .. box,
+			args = { "distrobox", "enter", "--root", box },
+		})
+	end
+	return launchers
+end
+
 local config = wezterm.config_builder()
 
 config.leader = { key = "Space", mods = "SUPER", timeout_milliseconds = 1500 }
@@ -69,12 +117,13 @@ config.window_padding = {
 	bottom = 0,
 }
 
+local additional_shells
 if is_windows() then
 	config.font_size = 12
 	config.win32_system_backdrop = "Mica"
 	config.window_background_opacity = 0
 	config.default_prog = { "nu.exe" }
-	config.launch_menu = {
+	additional_shells = {
 		{
 			label = "nushell",
 			args = { "nu.exe" },
@@ -93,7 +142,7 @@ elseif is_mac() then
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 1.0
 	config.default_prog = { "/opt/homebrew/bin/nu" }
-	config.launch_menu = {
+	additional_shells({
 		{
 			label = "nu",
 			args = { "/opt/homebrew/bin/nu" },
@@ -106,12 +155,12 @@ elseif is_mac() then
 			label = "bash",
 			args = { "bash" },
 		},
-	}
+	})
 else
 	config.font_size = 12
 	config.window_background_opacity = 0.95
 	config.default_prog = { "/home/linuxbrew/.linuxbrew/bin/nu" }
-	config.launch_menu = {
+	additional_shells = {
 		{
 			label = "nu",
 			args = { "/home/linuxbrew/.linuxbrew/bin/nu" },
@@ -125,6 +174,10 @@ else
 			args = { "bash" },
 		},
 	}
+end
+config.launch_menu = create_distrobox_launchers()
+for _, shell in ipairs(additional_shells) do
+	table.insert(config.launch_menu, shell)
 end
 
 -- workspace_switcher
