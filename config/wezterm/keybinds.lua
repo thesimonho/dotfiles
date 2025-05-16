@@ -46,7 +46,8 @@ M.basic_binds = {
 		mods = "CTRL",
 		action = act.SendString("yazi\r"),
 	},
-	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "t", mods = "CTRL", action = "ShowLauncher" },
+
 	-- BUG: conflicts with neovim bind. should only activate in wezterm pane
 	-- { key = "u", mods = "CTRL", action = act.ScrollByPage(-0.3) },
 	-- { key = "d", mods = "CTRL", action = act.ScrollByPage(0.3) },
