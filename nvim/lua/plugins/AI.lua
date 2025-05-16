@@ -95,6 +95,8 @@ local M = {
       { "<leader>aC", "<cmd>AvanteClear<cr>", desc = "avante: clear session" },
     },
     opts = {
+      -- mode = "agentic",
+      mode = "legacy",
       provider = "openai",
       auto_suggestions_provider = "openai",
       cursor_applying_provider = "openai",
