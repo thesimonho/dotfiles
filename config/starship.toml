@@ -3,7 +3,7 @@
 
 add_newline = true
 format = """
-╭$directory$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
+╭$directory$direnv$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
 ╰$character
 """
 
@@ -27,6 +27,14 @@ format = '[$read_only]($read_only_style) [$path]($style) '
 truncate_to_repo = false
 repo_root_style = "bold cyan"
 before_repo_root_style = "dimmed bright-black"
+
+[direnv]
+disabled = false
+detect_files = [".envrc"]
+symbol = "󱃷 "
+allowed_msg = "allowed"
+denied_msg = "denied"
+format = '[\($symbol$allowed\)]($style) '
 
 [docker_context]
 symbol = " "
