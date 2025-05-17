@@ -40,6 +40,13 @@ $env.config.completions.external = {
 }
 $env.config.history.file_format = "sqlite"
 $env.config.history.isolation = false
+$env.config.hooks = {
+    pre_prompt: []
+    pre_execution: []
+    env_change: {
+        PWD: [(source $"($nu.default-config-dir)/hooks/direnv.nu")]
+    }
+}
 $env.config.rm.always_trash = true
 $env.config.show_banner = false
 $env.config.use_kitty_protocol = true
