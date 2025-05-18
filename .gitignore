@@ -1,11 +1,36 @@
-# ConEmu config file
-[cC]on[eE]mu.xml
+# OS
 .DS_store
+Thumbs.db
 
-# Ignore emacs custom.el
+# Ignore backup and swap files
+*~
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+
+# Logs, caches
+*.log
+.cache/
+*.pid
+
+# Secrets
+*.key
+*.pem
+*.crt
+*.p12
+*.gpg
+*.asc
+*.secrets
+*.kdbx
+*.db
+auth.json
+id_rsa*
+id_ed25519*
+
+# emacs
 emacs/custom.el
-
-# Ignore some emacs directories
 emacs/.cache
 emacs/elpa
 \.directory
