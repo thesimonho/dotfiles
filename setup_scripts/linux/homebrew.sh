@@ -59,7 +59,6 @@ fi
 fonts_list=(
   font-fira-code-nerd-font
   font-monaspace-nerd-font
-  font-monofur-nerd-font
   font-departure-mono-nerd-font
   font-jetbrains-mono-nerd-font
 )
