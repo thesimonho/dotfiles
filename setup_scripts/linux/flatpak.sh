@@ -14,5 +14,6 @@ flatpak install flathub org.gimp.GIMP -y
 flatpak install flathub org.kde.kolourpaint -y
 flatpak install flathub org.libreoffice.LibreOffice -y
 flatpak install flathub io.github.berarma.Oversteer -y
-flatpak install flathub io.podman_desktop.PodmanDesktop -y
-flatpak install flathub com.visualstudio.code -y
+# flatpak install flathub com.valvesoftware.Steam -y
+# flatpak install flathub io.podman_desktop.PodmanDesktop -y
+# flatpak install flathub com.visualstudio.code -y
