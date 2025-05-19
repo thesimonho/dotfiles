@@ -1,4 +1,3 @@
-local Path = require("plenary.path")
 local os = require("utils.os")
 
 local M = {}
@@ -65,7 +64,11 @@ end
 
 -- Shorten a path to a given number of directories
 M.shorten_path = function(path, max_parts)
-  local components = Path:new(path):_split()
+  local components = {}
+  for part in string.gmatch(path, "[^/]+") do
+    table.insert(components, part)
+  end
+
   local count = #components
   if count > max_parts then
     local shortened = {}
@@ -83,6 +86,63 @@ M.create_tempfile = function(filename)
   else
     return "/tmp/" .. filename
   end
+end
+
+--- Check if a file exists in a directory or subdirectories
+--- @param filename string filename to search for
+--- @param directory string | nil (default "~/Projects") directory to search in
+--- @param depth number | nil (default 1) max levels to search down. 0 means only search in the provided directory and not subdirectories
+M.has_in_project = function(filename, directory, depth)
+  local ignore = {
+    ["node_modules"] = true,
+    ["__pycache__"] = true,
+    ["logs"] = true,
+    ["cache"] = true,
+    ["config"] = true,
+    ["assets"] = true,
+    ["images"] = true,
+    ["docs"] = true,
+    ["examples"] = true,
+    ["lost+found"] = true,
+  }
+
+  directory = vim.fn.expand(directory or "~/Projects")
+  depth = depth or 1 -- Default to searching one level deep
+
+  if vim.fn.isdirectory(directory) == 0 then
+    return false
+  end
+
+  local function is_ignored(name)
+    return name:sub(1, 1) == "." or ignore[name]
+  end
+
+  local function search_dir(dir, remaining_depth)
+    if remaining_depth < 0 then
+      return false
+    end
+
+    local entries = vim.fn.readdir(dir)
+    for _, name in ipairs(entries) do
+      if not is_ignored(name) then
+        local path = dir .. "/" .. name
+        if vim.fn.isdirectory(path) == 1 then
+          -- Check for target file
+          if vim.fn.filereadable(path .. "/" .. filename) == 1 then
+            return true
+          end
+          -- Recurse into subdirectory
+          if remaining_depth > 0 and search_dir(path, remaining_depth - 1) then
+            return true
+          end
+        end
+      end
+    end
+
+    return false
+  end
+
+  return search_dir(directory, depth)
 end
 
 return M
