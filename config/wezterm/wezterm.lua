@@ -71,6 +71,42 @@ local function create_distrobox_launchers()
 	return launchers
 end
 
+local function get_devpod_containers()
+	local images = {}
+	local handle = io.popen("devpod list")
+	if not handle then
+		return images
+	end
+
+	local i = 0
+	for line in handle:lines() do
+		if i > 2 and i < #line then
+			local cols = string_split(line, "|")
+			if cols then
+				table.insert(images, cols[1])
+			end
+		end
+		i = i + 1
+	end
+	handle:close()
+	return images
+end
+
+local function create_devpod_launchers()
+	local boxes = get_devpod_containers()
+	if #boxes == 0 then
+		return
+	end
+	local launchers = {}
+	for _, pod in ipairs(boxes) do
+		table.insert(launchers, {
+			label = "devpod: " .. pod,
+			args = { "ssh", pod .. ".devpod" },
+		})
+	end
+	return launchers
+end
+
 local config = wezterm.config_builder()
 
 config.leader = { key = "Space", mods = "SUPER", timeout_milliseconds = 1500 }
@@ -175,7 +211,23 @@ else
 		},
 	}
 end
-config.launch_menu = create_distrobox_launchers() or {}
+
+config.launch_menu = {}
+
+local devpod_launchers = create_devpod_launchers()
+if devpod_launchers and #devpod_launchers > 0 then
+	for _, box in ipairs(devpod_launchers) do
+		table.insert(config.launch_menu, box)
+	end
+end
+local distrobox_launchers = create_distrobox_launchers()
+
+if distrobox_launchers and #distrobox_launchers > 0 then
+	for _, pod in ipairs(distrobox_launchers) do
+		table.insert(config.launch_menu, pod)
+	end
+end
+
 for _, shell in ipairs(additional_shells) do
 	table.insert(config.launch_menu, shell)
 end
