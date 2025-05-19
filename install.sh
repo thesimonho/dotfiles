@@ -1,0 +1,49 @@
+#!/bin/bash
+set -euo pipefail
+
+# Absolute paths
+CONFIG_HOME="$HOME/.config"
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Symlink helper: $1 = source relative to repo, $2 = destination absolute path
+link_file() {
+  local src="$DOTFILES/$1"
+  local dest="$2"
+
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+    echo "✔ Already linked: $dest"
+  elif [ -e "$dest" ]; then
+    echo "✖ Skipping: $dest exists and is not a symlink"
+  else
+    mkdir -p "$(dirname "$dest")"
+    ln -s "$src" "$dest"
+    echo "➕ Linked: $dest → $src"
+  fi
+}
+
+echo "Installing dotfiles..."
+link_file "$DOTFILES/config/wezterm" "$CONFIG_HOME/wezterm"
+link_file "$DOTFILES/config/yazi" "$CONFIG_HOME/yazi"
+link_file "$DOTFILES/config/fzf.rc" "$CONFIG_HOME/fzf.rc"
+link_file "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
+link_file "$DOTFILES/nushell" "$CONFIG_HOME"
+link_file "$DOTFILES/lazygit" "$CONFIG_HOME"
+link_file "$DOTFILES/nvim" "$CONFIG_HOME"
+echo "✅ Config symlinks created."
+
+# git
+git config --global core.autocrlf input
+git config --global user.name "Simon Ho"
+git config --global user.email "simonho.ubc@gmail.com"
+git config --global branch.sort -committerdate
+git config --global column.ui auto
+git config --global fetch.writeCommitGraph true
+git config --global rerere.enabled true
+git config --global url."git@github.com:".insteadOf "https://github.com/"
+echo "✅ Git config created."
+
+# ssh
+for key in "$HOME/.ssh/id_"*; do
+  chmod 600 "$key"
+done
+echo "✅ SSH keys set."
