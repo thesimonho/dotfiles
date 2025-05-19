@@ -1,3 +1,6 @@
+local fs = require("utils.fs")
+local os_utils = require("utils.os")
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
@@ -26,18 +29,17 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.snacks_picker" },
     { import = "lazyvim.plugins.extras.test.core" },
     { import = "lazyvim.plugins.extras.ui.treesitter-context" },
-    { import = "lazyvim.plugins.extras.vscode" },
+    { import = "lazyvim.plugins.extras.vscode", enabled = os_utils.has_executable("code") },
     -- languages
-    { import = "lazyvim.plugins.extras.lang.docker" },
-    { import = "lazyvim.plugins.extras.lang.go" },
+    { import = "lazyvim.plugins.extras.lang.go", enabled = os_utils.has_executable("go") },
+    { import = "lazyvim.plugins.extras.lang.docker", enabled = os_utils.has_executable("docker") },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.markdown" },
-    { import = "lazyvim.plugins.extras.lang.python" },
-    { import = "lazyvim.plugins.extras.lang.tailwind" },
-    { import = "lazyvim.plugins.extras.lang.terraform" },
-    { import = "lazyvim.plugins.extras.lang.toml" },
-    { import = "lazyvim.plugins.extras.lang.typescript" },
-    { import = "lazyvim.plugins.extras.lang.vue" },
+    { import = "lazyvim.plugins.extras.lang.python", enabled = os_utils.has_executable("python") },
+    { import = "lazyvim.plugins.extras.lang.tailwind", enabled = fs.has_in_project("tailwind.config.ts") },
+    { import = "lazyvim.plugins.extras.lang.terraform", enabled = os_utils.has_executable("terraform") },
+    { import = "lazyvim.plugins.extras.lang.typescript", enabled = fs.has_in_project("tsconfig.json") },
+    { import = "lazyvim.plugins.extras.lang.vue", enabled = fs.has_in_project("vue.config.ts") },
     { import = "lazyvim.plugins.extras.lang.yaml" },
     -- import/override with your plugins
     { import = "plugins" },

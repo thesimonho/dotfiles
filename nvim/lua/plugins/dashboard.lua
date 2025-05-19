@@ -1,4 +1,3 @@
-local fs = require("utils.fs")
 local ui = require("utils.ui")
 local headers = require("config.headers")
 local quotes = require("config.quotes")

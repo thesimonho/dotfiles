@@ -1,8 +1,10 @@
+local fs = require("utils.fs")
 local wk = require("which-key")
 
 return {
   {
     "vuki656/package-info.nvim",
+    enabled = fs.has_in_project("package.json"),
     dependencies = { "MunifTanjim/nui.nvim" },
     ft = { "json" },
     init = function()
@@ -48,6 +50,7 @@ return {
   },
   {
     "nvim-neotest/neotest",
+    enabled = fs.has_in_project("vite.config.ts"),
     dependencies = {
       "marilari88/neotest-vitest",
     },
