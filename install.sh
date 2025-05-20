@@ -7,7 +7,7 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Symlink helper: $1 = source relative to repo, $2 = destination absolute path
 link_file() {
-  local src="$DOTFILES/$1"
+  local src="$1"
   local dest="$2"
 
   if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
@@ -49,3 +49,7 @@ for key in "$HOME/.ssh/id_"*; do
   fi
 done
 echo "✅ SSH keys set."
+
+# homebrew apps
+./setup/linux/homebrew.sh
+echo "✅ Homebrew apps installed."
