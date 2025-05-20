@@ -4,7 +4,6 @@ local hour = os.date("*t").hour
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
-vim.g.ai_cmp = false -- show AI suggestions in cmp
 
 vim.opt.shada = [['500,<50,s10,h]]
 vim.opt.background = (hour >= 7 and hour < 19) and "light" or "dark"
