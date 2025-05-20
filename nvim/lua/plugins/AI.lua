@@ -1,6 +1,141 @@
+vim.g.ai_cmp = false -- show AI suggestions in cmp
+
 local M = {
   {
+    "zbirenbaum/copilot.lua",
+    dependencies = {
+      "AndreM222/copilot-lualine",
+    },
+    keys = {
+      { "<leader>a.", "<cmd>Copilot panel<cr>", desc = "Copilot suggestion panel" },
+    },
+    opts = {
+      suggestion = {
+        enabled = true,
+        auto_trigger = true,
+        trigger_on_accept = true,
+        keymap = {
+          accept = "<M-l>",
+          accept_word = "<M-h>",
+          accept_line = false,
+          next = "<M-]>",
+          prev = "<M-[>",
+          dismiss = "<C-e>",
+        },
+      },
+      panel = {
+        enabled = true,
+        auto_refresh = true,
+        keymap = {
+          jump_prev = "[[",
+          jump_next = "]]",
+          accept = "<CR>",
+          refresh = "gr",
+          open = "<M-CR>",
+        },
+        layout = {
+          position = "right",
+        },
+      },
+    },
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    dependencies = {
+      { "zbirenbaum/copilot.lua" },
+      { "nvim-lua/plenary.nvim" },
+    },
+    build = "make tiktoken",
+    init = function()
+      local wk = require("which-key")
+      wk.add({
+        { "<leader>ah", group = "History" },
+      })
+    end,
+    keys = {
+      { "<leader>aq", false },
+      { "<leader>aa", "<cmd>CopilotChatToggle<cr>", mode = { "n", "v" }, desc = "CopilotChat toggle" },
+      { "<leader>ax", "<cmd>CopilotChatStop<cr>", desc = "CopilotChat stop" },
+      {
+        "<leader>ahs",
+        function()
+          vim.ui.input({ prompt = "Save chat as: " }, function(input)
+            if input then
+              vim.cmd("CopilotChatSave " .. input)
+            end
+          end)
+        end,
+        desc = "CopilotChat save",
+      },
+      {
+        "<leader>ahl",
+        function()
+          vim.ui.input({ prompt = "Load chat: " }, function(input)
+            if input then
+              vim.cmd("CopilotChatLoad " .. input)
+            end
+          end)
+        end,
+        desc = "CopilotChat load",
+      },
+      { "<leader>ap", "<cmd>CopilotChatPrompts<cr>", mode = { "n", "v" }, desc = "CopilotChat prompts" },
+      { "<leader>aM", "<cmd>CopilotChatModels<cr>", desc = "CopilotChat select model" },
+      { "<leader>a@", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat select agent" },
+    },
+    opts = {
+      model = "gpt-4.1",
+      agent = "copilot",
+      temperature = 0.1,
+      auto_insert_mode = false,
+      insert_at_end = true,
+      highlight_selection = true,
+      highlight_headers = false, -- use rendermarkdown
+      separator = "---",
+      question_header = "🐼 Simon ",
+      answer_header = "  Copilot ",
+      error_header = "❌ [!ERROR] Error",
+      selection = function(source)
+        local select = require("CopilotChat.select")
+        return select.visual(source) or select.buffer(source)
+      end,
+      mappings = {
+        reset = {
+          normal = "<leader>aR",
+          insert = "<C-C>",
+        },
+        toggle_sticky = {
+          normal = "<leader>as",
+        },
+        clear_stickies = {
+          normal = "<leader>aS",
+        },
+        accept_diff = {
+          normal = "<leader>ad",
+          insert = "<C-y>",
+        },
+        jump_to_diff = {
+          normal = "gd",
+        },
+        quickfix_answers = {
+          normal = "<leader>aq",
+        },
+        quickfix_diffs = {
+          normal = "<leader>aQ",
+        },
+        yank_diff = {
+          normal = "gy",
+          register = '"', -- Default register to use for yanking
+        },
+        show_diff = {
+          normal = "<leader>aD",
+          full_diff = true, -- Show full diff instead of unified diff when showing diff window
+        },
+      },
+    },
+  },
+  {
     "AlejandroSuero/supermaven-nvim", -- TODO: fork until PR is merged
+    enabled = false,
     lazy = false, -- required otherwise color setting wont work
     branch = "feature/exposing-suggestion-group",
     init = function()
@@ -31,6 +166,7 @@ local M = {
   },
   {
     "yetone/avante.nvim",
+    enabled = false,
     build = "make",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!

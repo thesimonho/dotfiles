@@ -4,13 +4,16 @@ local icons = require("lazyvim.config").icons
 local theme = nil
 
 local function get_lsp_clients()
+  local ignore = { "copilot" }
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
   local client_names = {}
   for _, client in ipairs(clients) do
-    table.insert(client_names, client.name)
+    if not vim.tbl_contains(ignore, client.name) then
+      table.insert(client_names, client.name)
+    end
   end
-  return table.concat(client_names, ", ")
+  return table.concat(client_names, ",")
 end
 
 local function short_path(component_limit)
@@ -180,6 +183,17 @@ return {
           end,
           cond = function()
             return utils.get_split_count() < 3
+          end,
+        },
+        {
+          "copilot",
+          symbols = {
+            spinners = "dots",
+          },
+          show_colors = true,
+          show_loading = true,
+          on_click = function()
+            vim.cmd("Copilot panel")
           end,
         },
       },
