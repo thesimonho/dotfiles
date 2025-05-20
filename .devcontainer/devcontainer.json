@@ -1,0 +1,10 @@
+{
+  "name": "devcontainer-prebuild",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {}
+  },
+  "postCreateCommand": "git clone https://github.com/thesimonho/dotfiles ~/dotfiles && eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\" && bash ~/dotfiles/install.sh",
+  "postStartCommand": "ln -sf /workspaces ~/Projects"
+}
+
