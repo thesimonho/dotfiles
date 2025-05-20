@@ -29,6 +29,9 @@ auth.json
 id_rsa*
 id_ed25519*
 
+# devcontainers
+.devcontainer/.devpod-internal
+
 # emacs
 emacs/custom.el
 emacs/.cache
