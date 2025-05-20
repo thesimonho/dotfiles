@@ -45,7 +45,7 @@ echo "✅ Git config created."
 # ssh
 for key in "$HOME/.ssh/id_"*; do
   if ! chmod 600 "$key"; then
-    echo "⚠ Failed to set permissions for $key"
+    echo "⚠ No keys found at $key"
   fi
 done
 echo "✅ SSH keys set."

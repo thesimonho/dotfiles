@@ -1,6 +1,8 @@
 #!/bin/bash
 # https://brew.sh
 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
 # Map of brew package name to CLI entrypoint
 declare -A packages=(
   [bat]="bat"
