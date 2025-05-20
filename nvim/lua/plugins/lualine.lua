@@ -301,6 +301,6 @@ return {
         },
       },
     },
-    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix" },
+    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix", "avante" },
   },
 }
