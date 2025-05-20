@@ -7,7 +7,14 @@ local M = {
       "AndreM222/copilot-lualine",
     },
     keys = {
-      { "<leader>a.", "<cmd>Copilot panel<cr>", desc = "Copilot suggestion panel" },
+      {
+        "<leader>a.",
+        function()
+          vim.cmd("Copilot panel")
+          vim.cmd("wincmd =")
+        end,
+        desc = "Copilot suggestion panel",
+      },
     },
     opts = {
       suggestion = {
@@ -54,7 +61,15 @@ local M = {
     end,
     keys = {
       { "<leader>aq", false },
-      { "<leader>aa", "<cmd>CopilotChatToggle<cr>", mode = { "n", "v" }, desc = "CopilotChat toggle" },
+      {
+        "<leader>aa",
+        function()
+          vim.cmd("CopilotChatToggle")
+          vim.cmd("wincmd =")
+        end,
+        mode = { "n", "v" },
+        desc = "CopilotChat toggle",
+      },
       { "<leader>ax", "<cmd>CopilotChatStop<cr>", desc = "CopilotChat stop" },
       {
         "<leader>ahs",
