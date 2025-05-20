@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 local theme = require("theme_switcher")
+local utils = require("utils")
 local act = wezterm.action
 
 wezterm.on("gui-startup", function(cmd)
@@ -15,100 +16,7 @@ wezterm.on("gui-startup", function(cmd)
 	window:gui_window():set_inner_size(width, height)
 end)
 
-local is_windows = function()
-	return wezterm.target_triple == "x86_64-pc-windows-msvc"
-end
-
-local is_mac = function()
-	return wezterm.target_triple == "aarch64-apple-darwin"
-end
-
-local function string_split(inputstr, sep)
-	if sep == nil then
-		sep = ","
-	end
-	local t = {}
-	for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-		local trimmed = str:gsub("^%s*(.-)%s*$", "%1")
-		table.insert(t, trimmed)
-	end
-	return t
-end
-
-local function get_distrobox_images()
-	local images = {}
-	local handle = io.popen("distrobox ls")
-	if not handle then
-		return images
-	end
-
-	local i = 0
-	for line in handle:lines() do
-		if i ~= 0 then
-			local cols = string_split(line, "|")
-			if cols then
-				table.insert(images, cols[2])
-			end
-		end
-		i = i + 1
-	end
-	handle:close()
-	return images
-end
-
-local function create_distrobox_launchers()
-	local boxes = get_distrobox_images()
-	if #boxes == 0 then
-		return
-	end
-	local launchers = {}
-	for _, box in ipairs(boxes) do
-		table.insert(launchers, {
-			label = "distrobox: " .. box,
-			args = { "distrobox", "enter", "--root", box },
-		})
-	end
-	return launchers
-end
-
-local function get_devpod_containers()
-	local images = {}
-	local handle = io.popen("devpod list")
-	if not handle then
-		return images
-	end
-
-	local i = 0
-	for line in handle:lines() do
-		if i > 2 and i < #line then
-			local cols = string_split(line, "|")
-			if cols then
-				table.insert(images, cols[1])
-			end
-		end
-		i = i + 1
-	end
-	handle:close()
-	return images
-end
-
-local function create_devpod_launchers()
-	local boxes = get_devpod_containers()
-	if #boxes == 0 then
-		return
-	end
-	local launchers = {}
-	for _, pod in ipairs(boxes) do
-		table.insert(launchers, {
-			label = "devpod: " .. pod,
-			args = { "ssh", pod .. ".devpod" },
-		})
-	end
-	return launchers
-end
-
 local config = wezterm.config_builder()
-
 config.leader = { key = "Space", mods = "SUPER", timeout_milliseconds = 1500 }
 config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
@@ -154,7 +62,7 @@ config.window_padding = {
 }
 
 local additional_shells = {}
-if is_windows() then
+if utils.is_windows() then
 	config.font_size = 12
 	config.win32_system_backdrop = "Mica"
 	config.window_background_opacity = 0
@@ -173,39 +81,27 @@ if is_windows() then
 			args = { "cmd.exe" },
 		},
 	}
-elseif is_mac() then
+elseif utils.is_mac() then
 	config.font_size = 16
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 1.0
 	config.default_prog = { "zsh" }
-	additional_shells = {
-		{
-			label = "zsh",
-			args = { "zsh" },
-		},
-	}
 else
 	config.font_size = 12
 	config.window_background_opacity = 0.95
 	config.default_prog = { "zsh" }
-	additional_shells = {
-		{
-			label = "zsh",
-			args = { "zsh" },
-		},
-	}
 end
 
 config.launch_menu = {}
 
-local devpod_launchers = create_devpod_launchers()
+local devpod_launchers = utils.create_devpod_launchers()
 if devpod_launchers and #devpod_launchers > 0 then
 	for _, box in ipairs(devpod_launchers) do
 		table.insert(config.launch_menu, box)
 	end
 end
-local distrobox_launchers = create_distrobox_launchers()
 
+local distrobox_launchers = utils.create_distrobox_launchers()
 if distrobox_launchers and #distrobox_launchers > 0 then
 	for _, pod in ipairs(distrobox_launchers) do
 		table.insert(config.launch_menu, pod)

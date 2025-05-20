@@ -1,15 +1,7 @@
 local wezterm = require("wezterm")
 local workspace_switcher = wezterm.plugin.require("http://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local act = wezterm.action
-
-local function move_or_split(win, pane, direction)
-	local tab = pane:tab()
-	if tab:get_pane_direction(direction) ~= nil then
-		win:perform_action(act.ActivatePaneDirection(direction), pane)
-		return
-	end
-	win:perform_action(act.SplitPane({ direction = direction }), pane)
-end
+local utils = require("utils")
 
 local M = {}
 
@@ -46,7 +38,57 @@ M.basic_binds = {
 		mods = "CTRL",
 		action = act.SendString("yazi\r"),
 	},
-	{ key = "t", mods = "CTRL", action = "ShowLauncher" },
+	{
+		key = "t",
+		mods = "CTRL",
+		action = wezterm.action_callback(function(window, pane)
+			-- PERF: preconstruct these
+			local choices = {}
+			local devcontainers = utils.devcontainers
+			for _, box in ipairs(devcontainers) do
+				table.insert(choices, { label = "devcontainer: " .. box, id = "devcontainer" })
+			end
+			local distroboxes = utils.distroboxes
+			for _, box in ipairs(distroboxes) do
+				table.insert(choices, { label = "distrobox: " .. box, id = "distrobox" })
+			end
+
+			window:perform_action(
+				act.InputSelector({
+					action = wezterm.action_callback(function(win, pan, id, label)
+						if id and label then
+							if id == "devcontainer" then
+								win:perform_action(
+									act.SpawnCommandInNewTab({
+										args = { "ssh", label .. ".devpod" },
+									}),
+									pan
+								)
+							elseif id == "distrobox" then
+								win:perform_action(
+									act.SpawnCommandInNewTab({
+										args = { "distrobox", "enter", "--root", label },
+									}),
+									pan
+								)
+							else
+								win:perform_action(
+									act.SpawnCommandInNewTab({
+										args = { label },
+									}),
+									pan
+								)
+							end
+						end
+					end),
+					choices = choices,
+					alphabet = "1234qwer",
+					description = "Launch in new tab:",
+				}),
+				pane
+			)
+		end),
+	},
 
 	-- BUG: conflicts with neovim bind. should only activate in wezterm pane
 	-- { key = "u", mods = "CTRL", action = act.ScrollByPage(-0.3) },
@@ -63,28 +105,28 @@ M.basic_binds = {
 		key = "h",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(win, pane)
-			move_or_split(win, pane, "Left")
+			utils.move_or_split(win, pane, "Left")
 		end),
 	},
 	{
 		key = "j",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(win, pane)
-			move_or_split(win, pane, "Down")
+			utils.move_or_split(win, pane, "Down")
 		end),
 	},
 	{
 		key = "k",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(win, pane)
-			move_or_split(win, pane, "Up")
+			utils.move_or_split(win, pane, "Up")
 		end),
 	},
 	{
 		key = "l",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(win, pane)
-			move_or_split(win, pane, "Right")
+			utils.move_or_split(win, pane, "Right")
 		end),
 	},
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
