@@ -177,37 +177,21 @@ elseif is_mac() then
 	config.font_size = 16
 	config.macos_window_background_blur = 60
 	config.window_background_opacity = 1.0
-	config.default_prog = { "/opt/homebrew/bin/nu" }
+	config.default_prog = { "zsh" }
 	additional_shells = {
-		{
-			label = "nu",
-			args = { "/opt/homebrew/bin/nu" },
-		},
 		{
 			label = "zsh",
 			args = { "zsh" },
-		},
-		{
-			label = "bash",
-			args = { "bash" },
 		},
 	}
 else
 	config.font_size = 12
 	config.window_background_opacity = 0.95
-	config.default_prog = { "/home/linuxbrew/.linuxbrew/bin/nu" }
+	config.default_prog = { "zsh" }
 	additional_shells = {
-		{
-			label = "nu",
-			args = { "/home/linuxbrew/.linuxbrew/bin/nu" },
-		},
 		{
 			label = "zsh",
 			args = { "zsh" },
-		},
-		{
-			label = "bash",
-			args = { "bash" },
 		},
 	}
 end
