@@ -3,6 +3,19 @@ local M = {
     "AlejandroSuero/supermaven-nvim", -- TODO: fork until PR is merged
     lazy = false, -- required otherwise color setting wont work
     branch = "feature/exposing-suggestion-group",
+    init = function()
+      require("snacks").toggle
+        .new({
+          name = "Supermaven",
+          get = function()
+            return require("supermaven-nvim.api").is_running()
+          end,
+          set = function()
+            require("supermaven-nvim.api").toggle()
+          end,
+        })
+        :map("<leader>ux")
+    end,
     opts = {
       ignore_filetypes = { "neo-tree", "neo-tree-popup", "AvanteInput", "AvantePromptInput" },
       keymaps = {
@@ -194,17 +207,5 @@ local M = {
     },
   },
 }
-
-require("snacks").toggle
-  .new({
-    name = "AI Copilot",
-    get = function()
-      return require("supermaven-nvim.api").is_running()
-    end,
-    set = function()
-      require("supermaven-nvim.api").toggle()
-    end,
-  })
-  :map("<leader>ux")
 
 return M
