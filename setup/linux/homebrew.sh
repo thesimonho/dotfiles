@@ -9,7 +9,6 @@ declare -A packages=(
   [distrobox]="distrobox"
   [direnv]="direnv"
   [fd]="fd"
-  [ffmpeg]="ffmpeg"
   [fzf]="fzf"
   [gh]="gh"
   [lazygit]="lazygit"
@@ -17,16 +16,10 @@ declare -A packages=(
   [neovim]="nvim"
   [node]="node"
   [nushell]="nu"
-  [pandoc]="pandoc"
   [ripgrep]="rg"
   [sqlite]="sqlite3"
   [starship]="starship"
   [tealdeer]="tldr"
-  [yazi]="yazi"
-  [sevenzip]="7zz"
-  [jq]="jq"
-  [poppler]="pdftotext"
-  [imagemagick]="magick"
   ['uutils-coreutils']="uutils"
   [zoxide]="zoxide z"
 )
@@ -58,8 +51,6 @@ fi
 # Fonts
 fonts_list=(
   font-fira-code-nerd-font
-  font-monaspace-nerd-font
-  font-departure-mono-nerd-font
   font-jetbrains-mono-nerd-font
 )
 
