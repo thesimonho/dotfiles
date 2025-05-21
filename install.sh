@@ -1,6 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
+# early zsh setup
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  echo "Installing Oh My Zsh..."
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+if [[ "$SHELL" != "$(which zsh)" ]]; then
+  echo "Changing default shell to zsh..."
+  sudo usermod --shell "$(which zsh)" ${USER}
+fi
+
+./setup/linux/zsh_plugins.sh
+
 # Absolute paths
 CONFIG_HOME="$HOME/.config"
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -16,7 +29,7 @@ link_file() {
     echo "✖ Skipping: $dest exists and is not a symlink"
   else
     mkdir -p "$(dirname "$dest")"
-    ln -s "$src" "$dest"
+    ln -sf "$src" "$dest"
     echo "➕ Linked: $dest → $src"
   fi
 }
@@ -25,6 +38,8 @@ echo "Installing dotfiles..."
 link_file "$DOTFILES/config/wezterm" "$CONFIG_HOME/wezterm"
 link_file "$DOTFILES/config/fzf.rc" "$CONFIG_HOME/fzf.rc"
 link_file "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
+link_file "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+link_file "$DOTFILES/zsh/.zprofile" "$HOME/.zprofile"
 link_file "$DOTFILES/nushell" "$CONFIG_HOME/nushell"
 link_file "$DOTFILES/lazygit" "$CONFIG_HOME/lazygit"
 link_file "$DOTFILES/nvim" "$CONFIG_HOME/nvim"
