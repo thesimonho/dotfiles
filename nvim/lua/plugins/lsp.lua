@@ -67,6 +67,7 @@ return {
     dependencies = "neovim/nvim-lspconfig",
     event = "VeryLazy",
     opts = {
+      excluded_lsp_clients = { "copilot" },
       grace_period = 60 * 15, --seconds
       wakeup_delay = 2000, --milliseconds
     },
