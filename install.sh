@@ -36,7 +36,7 @@ link_file() {
 
 echo "Installing dotfiles..."
 link_file "$DOTFILES/config/wezterm" "$CONFIG_HOME/wezterm"
-link_file "$DOTFILES/config/fzf.rc" "$CONFIG_HOME/fzf.rc"
+link_file "$DOTFILES/config/fzf" "$CONFIG_HOME/fzf"
 link_file "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
 link_file "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 link_file "$DOTFILES/zsh/.zprofile" "$HOME/.zprofile"
