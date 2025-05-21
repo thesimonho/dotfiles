@@ -42,46 +42,36 @@ M.basic_binds = {
 		key = "t",
 		mods = "CTRL",
 		action = wezterm.action_callback(function(window, pane)
-			-- PERF: preconstruct these
-			local choices = {}
-			local devcontainers = utils.devcontainers
-			for _, box in ipairs(devcontainers) do
-				table.insert(choices, { label = "devcontainer: " .. box, id = "devcontainer" })
-			end
-			local distroboxes = utils.distroboxes
-			for _, box in ipairs(distroboxes) do
-				table.insert(choices, { label = "distrobox: " .. box, id = "distrobox" })
-			end
-
 			window:perform_action(
 				act.InputSelector({
-					action = wezterm.action_callback(function(win, pan, id, label)
-						if id and label then
-							if id == "devcontainer" then
+					action = wezterm.action_callback(function(win, pan, _, label)
+						if label then
+							local kind, name = label:match("^(.*): (.*)$")
+							if kind == "devcontainer" then
 								win:perform_action(
 									act.SpawnCommandInNewTab({
-										args = { "ssh", label .. ".devpod" },
+										args = { "ssh", name .. ".devpod" },
 									}),
 									pan
 								)
-							elseif id == "distrobox" then
+							elseif kind == "distrobox" then
 								win:perform_action(
 									act.SpawnCommandInNewTab({
-										args = { "distrobox", "enter", "--root", label },
+										args = { "distrobox", "enter", "--root", name },
 									}),
 									pan
 								)
 							else
 								win:perform_action(
 									act.SpawnCommandInNewTab({
-										args = { label },
+										args = { name },
 									}),
 									pan
 								)
 							end
 						end
 					end),
-					choices = choices,
+					choices = utils.tab_choices,
 					alphabet = "1234qwer",
 					description = "Launch in new tab:",
 				}),
