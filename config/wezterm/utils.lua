@@ -97,14 +97,40 @@ M.create_devpod_launchers = function()
 	local launchers = {}
 	for _, pod in ipairs(boxes) do
 		table.insert(launchers, {
-			label = "devpod: " .. pod,
+			label = "devcontainer: " .. pod,
 			args = { "ssh", pod .. ".devpod" },
 		})
 	end
 	return launchers
 end
 
+M.create_tab_choices = function()
+	local choices = {}
+	for _, box in ipairs(M.devcontainers) do
+		table.insert(choices, {
+			label = wezterm.format({
+				{ Foreground = { AnsiColor = "Blue" } },
+				{ Text = "devcontainer: " },
+				"ResetAttributes",
+				{ Text = box },
+			}),
+		})
+	end
+	for _, box in ipairs(M.distroboxes) do
+		table.insert(choices, {
+			label = wezterm.format({
+				{ Foreground = { AnsiColor = "Green" } },
+				{ Text = "distrobox: " },
+				"ResetAttributes",
+				{ Text = box },
+			}),
+		})
+	end
+	return choices
+end
+
 M.distroboxes = M.get_distrobox_images()
 M.devcontainers = M.get_devpod_containers()
+M.tab_choices = M.create_tab_choices()
 
 return M
