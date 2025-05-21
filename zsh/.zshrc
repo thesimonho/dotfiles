@@ -1,3 +1,7 @@
+if [[ -z "$ZPROFILE_SOURCED" ]]; then
+  source "$HOME/.zprofile"
+fi
+
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -68,7 +72,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
 # preview directory's content with ls when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -vA --color --group-directories-first $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'gls -vA --color --group-directories-first $realpath'
 # To make fzf-tab follow FZF_DEFAULT_OPTS.
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
@@ -123,6 +127,7 @@ fi
 alias cat='bat --style='header,grid''
 alias la='ls -la'
 alias ll='ls -l'
+alias ls='gls -vA --color --group-directories-first'
 alias lg='lazygit'
 alias tf='terraform'
 
