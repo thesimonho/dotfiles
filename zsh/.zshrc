@@ -74,6 +74,10 @@ zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 
+typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_PATTERNS
+ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets pattern)
+ZSH_HIGHLIGHT_STYLES[path]='fg=magenta'
+ZSH_HIGHLIGHT_PATTERNS+=('rm *' 'fg=red,bold')
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
 
 # Dynamically discover private key filenames
