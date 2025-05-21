@@ -4,8 +4,8 @@ return {
   {
     "folke/snacks.nvim",
     keys = {
-      { "<leader><space>", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
-      { "<leader>sg", LazyVim.pick("live_grep", { root = false }), desc = "Grep (cwd)" },
+      { "<leader><space>", LazyVim.pick("files", { root = false, hidden = true }), desc = "Find Files (cwd)" },
+      { "<leader>sg", LazyVim.pick("live_grep", { root = false, hidden = true }), desc = "Grep (cwd)" },
       {
         "<leader>sw",
         LazyVim.pick("grep_word", { root = false }),
@@ -13,7 +13,7 @@ return {
         mode = { "n", "x" },
       },
 
-      { "<leader>ff", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
+      { "<leader>ff", LazyVim.pick("files", { root = false, hidden = true }), desc = "Find Files (cwd)" },
       {
         "<leader>fp",
         function()
