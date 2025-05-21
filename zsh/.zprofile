@@ -1,3 +1,5 @@
+export ZPROFILE_SOURCED=true
+
 # prepend to $PATH unless it is already there
 if ! [[ "$PATH" =~ "$HOME/bin" ]]
 then
