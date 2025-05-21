@@ -6,6 +6,7 @@ declare -A packages=(
   [bat]="bat"
   [carapace]="carapace"
   [chafa]="chafa"
+  [coreutils]="gls"
   [distrobox]="distrobox"
   [direnv]="direnv"
   [fd]="fd"
@@ -20,7 +21,6 @@ declare -A packages=(
   [sqlite]="sqlite3"
   [starship]="starship"
   [tealdeer]="tldr"
-  ['uutils-coreutils']="uutils"
   [zoxide]="zoxide z"
 )
 
