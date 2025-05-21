@@ -25,9 +25,11 @@ link_file() {
 
   if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
     echo "✔ Already linked: $dest"
-  elif [ -e "$dest" ]; then
-    echo "✖ Skipping: $dest exists and is not a symlink"
   else
+    if [ -e "$dest" ]; then
+      echo "Removing existing: $dest"
+      rm -rf "$dest"
+    fi
     mkdir -p "$(dirname "$dest")"
     ln -sf "$src" "$dest"
     echo "➕ Linked: $dest → $src"
