@@ -1,6 +1,5 @@
 #!/bin/bash
 set -euo pipefail
-
 # early zsh setup
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   echo "Installing Oh My Zsh..."
@@ -9,7 +8,11 @@ fi
 
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   echo "Changing default shell to zsh..."
-  sudo usermod --shell "$(which zsh)" ${USER}
+  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      sudo usermod --shell "$(which zsh)" ${USER}
+  else
+      chsh -s "$(which zsh)"
+  fi
 fi
 
 ./setup/linux/zsh_plugins.sh
