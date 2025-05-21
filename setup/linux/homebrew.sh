@@ -10,7 +10,6 @@ declare -A packages=(
   [direnv]="direnv"
   [fd]="fd"
   [fzf]="fzf"
-  [thefuck]="fuck"
   [gh]="gh"
   [lazygit]="lazygit"
   [luarocks]="luarocks"
