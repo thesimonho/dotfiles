@@ -123,14 +123,14 @@ fi
 # - $ZSH_CUSTOM/aliases.zsh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
-alias cat='bat --style='header,grid''
+alias ls='gls -vA --color=auto --group-directories-first'
 alias la='ls -la'
 alias ll='ls -l'
-alias ls='gls -vA --color --group-directories-first'
-alias lg='lazygit'
+alias cat='bat --style='header,grid''
 alias tf='terraform'
+alias lg='lazygit'
 
-bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion
+bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion. do this at the end
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
