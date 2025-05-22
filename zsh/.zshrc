@@ -84,8 +84,11 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
 typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_PATTERNS
 ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets pattern)
 ZSH_HIGHLIGHT_STYLES[path]='fg=magenta'
+ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[precommand]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[autodirectory]='fg=green,bold'
 ZSH_HIGHLIGHT_PATTERNS+=('rm *' 'fg=red,bold')
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
 
 source $ZSH/oh-my-zsh.sh
 
