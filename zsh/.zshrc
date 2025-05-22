@@ -130,8 +130,12 @@ alias cat='bat --style='header,grid''
 alias tf='terraform'
 alias lg='lazygit'
 
+# keybinds
 bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion. do this at the end
+bindkey '^H' backward-kill-word # ctrl backspace
+bindkey '^[[3;5~' kill-word # ctrl delete
 
+# applications
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
