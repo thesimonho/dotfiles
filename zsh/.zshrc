@@ -59,10 +59,13 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(autoupdate cd-ls colored-man-pages direnv fzf-tab git jsontools safe-paste ssh-agent zsh-autosuggestions zsh-dot-up zsh-syntax-highlighting)
 
+# reference the dynamically discovered identities from zprofile
+zstyle :omz:plugins:ssh-agent identities ${ssh_identities[@]}
 zstyle :omz:plugins:ssh-agent agent-forwarding yes
 zstyle :omz:plugins:ssh-agent helper ksshaskpass
+
+plugins=(autoupdate cd-ls colored-man-pages direnv fzf-tab git jsontools safe-paste ssh-agent zsh-autosuggestions zsh-dot-up zsh-syntax-highlighting)
 
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
@@ -83,13 +86,6 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets pattern)
 ZSH_HIGHLIGHT_STYLES[path]='fg=magenta'
 ZSH_HIGHLIGHT_PATTERNS+=('rm *' 'fg=red,bold')
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
-
-# Dynamically discover private key filenames
-ssh_identities=()
-for key in ~/.ssh/id_*[!.pub]; do
-  ssh_identities+=("${key/#$HOME\/.ssh\//}")
-done
-zstyle :omz:plugins:ssh-agent identities ${ssh_identities[@]}
 
 source $ZSH/oh-my-zsh.sh
 

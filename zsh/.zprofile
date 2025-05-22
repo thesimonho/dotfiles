@@ -29,5 +29,12 @@ fi
 
 export PATH
 
+# Dynamically discover private key filenames
+ssh_identities=()
+for key in ~/.ssh/id_*[!.pub]; do
+  ssh_identities+=("${key/#$HOME\/.ssh\//}")
+done
+typeset -g ssh_identities
+
 # set env vars
 export VIRTUAL_ENV_DISABLE_PROMPT=1
