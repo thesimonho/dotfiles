@@ -53,3 +53,6 @@ else
   echo "➕ Cloning fzf-tab"
   git clone https://github.com/Aloxaf/fzf-tab $DIR
 fi
+
+
+echo "✅ Zsh plugins installed."

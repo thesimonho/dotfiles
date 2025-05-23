@@ -7,7 +7,6 @@ declare -A packages=(
   [carapace]="carapace"
   [chafa]="chafa"
   [coreutils]="gls"
-  [distrobox]="distrobox"
   [direnv]="direnv"
   [fd]="fd"
   [fzf]="fzf"
@@ -16,7 +15,6 @@ declare -A packages=(
   [luarocks]="luarocks"
   [neovim]="nvim"
   [node]="node"
-  [nushell]="nu"
   [ripgrep]="rg"
   [sqlite]="sqlite3"
   [starship]="starship"
@@ -57,3 +55,5 @@ fonts_list=(
 for font in "${fonts_list[@]}"; do
   brew install --cask "$font"
 done
+
+echo "✅ Homebrew apps installed."
