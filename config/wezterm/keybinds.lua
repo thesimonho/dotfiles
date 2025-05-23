@@ -45,30 +45,28 @@ M.basic_binds = {
 			window:perform_action(
 				act.InputSelector({
 					action = wezterm.action_callback(function(win, pan, _, label)
-						if label then
-							local kind, name = label:match("^(.*): (.*)$")
-							if kind == "devcontainer" then
-								win:perform_action(
-									act.SpawnCommandInNewTab({
-										args = { "ssh", name .. ".devpod" },
-									}),
-									pan
-								)
-							elseif kind == "distrobox" then
-								win:perform_action(
-									act.SpawnCommandInNewTab({
-										args = { "distrobox", "enter", "--root", name },
-									}),
-									pan
-								)
-							else
-								win:perform_action(
-									act.SpawnCommandInNewTab({
-										args = { name },
-									}),
-									pan
-								)
-							end
+						local kind, name = label:match("^(.-): (.+)$")
+						if kind == "devcontainer" then
+							win:perform_action(
+								act.SpawnCommandInNewTab({
+									args = { "ssh", name .. ".devpod" },
+								}),
+								pan
+							)
+						elseif kind == "distrobox" then
+							win:perform_action(
+								act.SpawnCommandInNewTab({
+									args = { "distrobox", "enter", "--root", name },
+								}),
+								pan
+							)
+						else
+							win:perform_action(
+								act.SpawnCommandInNewTab({
+									args = { name },
+								}),
+								pan
+							)
 						end
 					end),
 					choices = utils.tab_choices,

@@ -108,22 +108,12 @@ M.create_tab_choices = function()
 	local choices = {}
 	for _, box in ipairs(M.devcontainers) do
 		table.insert(choices, {
-			label = wezterm.format({
-				{ Foreground = { AnsiColor = "Blue" } },
-				{ Text = "devcontainer: " },
-				"ResetAttributes",
-				{ Text = box },
-			}),
+			label = "devcontainer: " .. box,
 		})
 	end
 	for _, box in ipairs(M.distroboxes) do
 		table.insert(choices, {
-			label = wezterm.format({
-				{ Foreground = { AnsiColor = "Green" } },
-				{ Text = "distrobox: " },
-				"ResetAttributes",
-				{ Text = box },
-			}),
+			label = "distrobox: " .. box,
 		})
 	end
 	return choices
