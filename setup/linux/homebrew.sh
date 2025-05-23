@@ -5,7 +5,6 @@
 declare -A packages=(
   [bat]="bat"
   [carapace]="carapace"
-  [chafa]="chafa"
   [coreutils]="gls"
   [direnv]="direnv"
   [fd]="fd"
@@ -14,9 +13,7 @@ declare -A packages=(
   [lazygit]="lazygit"
   [luarocks]="luarocks"
   [neovim]="nvim"
-  [node]="node"
   [ripgrep]="rg"
-  [sqlite]="sqlite3"
   [starship]="starship"
   [tealdeer]="tldr"
   [zoxide]="zoxide z"
