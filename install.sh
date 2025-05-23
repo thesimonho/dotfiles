@@ -1,17 +1,31 @@
 #!/bin/bash
 set -euo pipefail
+
 # early zsh setup
+if ! command -v zsh >/dev/null 2>&1; then
+  echo "🔍 zsh not found. Attempting to install..."
+  if command -v apt-get >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install -y zsh
+  elif command -v dnf >/dev/null 2>&1; then
+    sudo dnf install -y zsh
+  else
+    echo "❌ No supported package manager found. Please install zsh manually."
+    exit 1
+  fi
+fi
+
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-  echo "Installing Oh My Zsh..."
+  echo "📦 Installing Oh My Zsh..."
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
 if [[ "$SHELL" != "$(which zsh)" ]]; then
-  echo "Changing default shell to zsh..."
+  echo "🔧 Changing default shell to zsh..."
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-      sudo usermod --shell "$(which zsh)" ${USER}
+    sudo usermod --shell "$(which zsh)" ${USER}
   else
-      chsh -s "$(which zsh)"
+    chsh -s "$(which zsh)"
   fi
 fi
 
@@ -27,7 +41,7 @@ link_file() {
   local dest="$2"
 
   if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
-    echo "✔ Already linked: $dest"
+    echo "✅ Already linked: $dest"
   else
     if [ -e "$dest" ]; then
       echo "Removing existing: $dest"
@@ -71,4 +85,3 @@ echo "✅ SSH keys set."
 
 # homebrew apps
 ./setup/linux/homebrew.sh
-echo "✅ Homebrew apps installed."
