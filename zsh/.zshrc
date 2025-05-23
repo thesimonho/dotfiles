@@ -90,10 +90,15 @@ zstyle :omz:plugins:ssh-agent agent-forwarding yes
 zstyle :omz:plugins:ssh-agent helper ksshaskpass
 
 # Dynamically discover private key filenames
-ssh_identities=()
-for key in ~/.ssh/id_*[!.pub]; do
-  ssh_identities+=("${key/#$HOME\/.ssh\//}")
-done
+setopt nullglob
+private_keys=($HOME/.ssh/id_*~*.pub)
+
+if (( ${#private_keys[@]} > 0 )); then
+  ssh_identities=()
+  for key in "${private_keys[@]}"; do
+    [[ -f "$key" ]] && ssh_identities+=("${key/#$HOME\/.ssh\//}")
+  done
+fi
 
 # Wait until SSH_AUTH_SOCK is ready
 if [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
