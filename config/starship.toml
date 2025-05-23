@@ -32,7 +32,7 @@ before_repo_root_style = "dimmed bright-black"
 disabled = false
 detect_files = [".envrc"]
 symbol = "󱃷 "
-allowed_msg = "allowed"
+allowed_msg = "loaded"
 denied_msg = "denied"
 format = '[\($symbol$allowed\)]($style) '
 
