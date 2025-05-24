@@ -83,5 +83,9 @@ for key in "$HOME/.ssh/id_"*; do
 done
 echo "✅ SSH keys set."
 
+# pass x11 display to containers for xclip/clipboard support
+# https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
+xhost +SI:localuser:$(whoami)
+
 # homebrew apps
 ./setup/linux/homebrew.sh

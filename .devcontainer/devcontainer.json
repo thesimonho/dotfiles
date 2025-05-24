@@ -6,5 +6,8 @@
   },
   "postCreateCommand": "git clone https://github.com/thesimonho/dotfiles ~/dotfiles && eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\" && bash ~/dotfiles/install.sh",
   "postStartCommand": "ln -sf /workspaces ~/Projects"
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
+  ],
 }
 
