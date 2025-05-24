@@ -48,7 +48,7 @@ format = 'on [$symbol$branch(:$remote_branch)]($style) '
 
 [custom.hostname]
 command = 'hostname -s'
-when = '[ "$(hostname)" = "Simon-WS" ]'
+when = '[ "$(hostname)" != "Simon-WS" ]'
 style = "dimmed blue"
 format = '[\($output\) ]($style)'
 
