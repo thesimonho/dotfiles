@@ -34,11 +34,6 @@ M.basic_binds = {
 		action = act.SendString("fzf\r"),
 	},
 	{
-		key = "e",
-		mods = "CTRL",
-		action = act.SendString("yazi\r"),
-	},
-	{
 		key = "t",
 		mods = "CTRL",
 		action = wezterm.action_callback(function(window, pane)

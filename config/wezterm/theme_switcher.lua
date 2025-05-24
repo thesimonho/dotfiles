@@ -36,6 +36,7 @@ function M.is_plugin_installed(url)
 	return false
 end
 
+-- FIX: take a look at https://wezterm.org/config/lua/wezterm.color/load_scheme.html
 function M.read_theme()
 	local file = io.open(theme_file, "r")
 	if file then
