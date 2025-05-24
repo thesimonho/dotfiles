@@ -106,6 +106,17 @@ end
 
 M.create_tab_choices = function()
 	local choices = {}
+
+	if M.is_windows() then
+		table.insert(choices, {
+			label = "nushell",
+		})
+	else
+		table.insert(choices, {
+			label = "zsh",
+		})
+	end
+
 	for _, box in ipairs(M.devcontainers) do
 		table.insert(choices, {
 			label = "devcontainer: " .. box,

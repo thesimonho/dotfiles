@@ -1,5 +1,4 @@
 local wezterm = require("wezterm")
-local act = wezterm.action
 local theme = require("theme_switcher")
 
 -- workspace_switcher
@@ -32,8 +31,9 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(windo
 		{ Text = "󱂬 : " .. base_path .. " " },
 	}))
 
-	gui_win:perform_action(act.SendString("nvim ."), gui_win:active_pane())
-	gui_win:perform_action(act.SendKey({ key = "Enter" }), gui_win:active_pane())
+	-- TODO: auto launch container if there is one
+	-- gui_win:perform_action(act.SendString("nvim ."), gui_win:active_pane())
+	-- gui_win:perform_action(act.SendKey({ key = "Enter" }), gui_win:active_pane())
 end)
 
 -- tabline

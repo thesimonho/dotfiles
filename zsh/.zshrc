@@ -68,7 +68,7 @@ ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[precommand]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[autodirectory]='fg=green,bold'
 ZSH_HIGHLIGHT_PATTERNS+=('rm *' 'fg=red,bold')
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 
 zstyle ':completion:*:git-checkout:*' sort false
 # set descriptions format to enable group support
