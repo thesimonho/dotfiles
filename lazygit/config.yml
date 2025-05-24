@@ -61,10 +61,11 @@ git:
   autoRefresh: true
   fetchAll: true # Pass --all flag when running git fetch. Set to false to fetch only origin (or the current branch's upstream remote if there is one)
   branchLogCmd: "git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --"
-  allBranchesLogCmd: "git log --graph --all --color=always --abbrev-commit --decorate --date=relative --pretty=medium"
   overrideGpg: false # prevents lazygit from spawning a separate process when using GPG
   disableForcePushing: false
   parseEmoji: true
+  allBranchesLogCmds:
+    - git log --graph --all --color=always --abbrev-commit --decorate --date=relative --pretty=medium
 os:
   copyToClipboardCmd: "" # See 'Custom Command for Copying to Clipboard' section
   editPreset: "nvim" # see 'Configuring File Editing' section
@@ -155,17 +156,17 @@ customCommands:
     context: 'remotes'
     description: 'Fetch and prune remote branches'
     loadingText: 'Fetching and pruning remote...'
-    stream: true
+    output: log
   - key: 'S'
     context: 'remoteBranches'
     description: 'Sync branch with selected upstream'
     loadingText: 'Syncing with upstream...'
-    stream: true
     command: |
       git fetch {{.SelectedRemote.Name}}
       git checkout {{ .SelectedRemoteBranch.Name }}
       git merge {{ .SelectedRemote.Name }}/{{ .SelectedRemoteBranch.Name }}
       git push origin {{.SelectedRemoteBranch.Name}}
+    output: log
 keybinding:
   universal:
     prevBlock-alt: '<c-k>' # goto the previous block / panel
