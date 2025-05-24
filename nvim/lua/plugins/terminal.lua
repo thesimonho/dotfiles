@@ -1,3 +1,4 @@
+local fs = require("utils.fs")
 local wk = require("which-key")
 
 local function set_shell()
@@ -7,6 +8,18 @@ local function set_shell()
       return shell
     end
   end
+end
+
+local function term_or_exec(term_num)
+  term_num = term_num or 1
+  if fs.has_container() and not fs.in_container() then
+    local path = fs.get_path_components(vim.fn.getcwd())
+    local container_name = path[#path]:lower():gsub("[ _]", "-")
+    local cmd = "ssh " .. container_name .. ".devpod"
+    vim.notify_once("Launching devcontainer: " .. container_name, vim.log.levels.INFO)
+    return term_num .. "TermExec cmd='" .. cmd .. "' go_back=0"
+  end
+  return term_num .. "ToggleTerm"
 end
 
 local function init_or_toggle()
@@ -25,7 +38,7 @@ local function init_or_toggle()
   end
 
   if not toggleterm_exists then
-    vim.cmd([[ exe 1 . "ToggleTerm" ]])
+    vim.cmd(term_or_exec(1))
   end
 end
 
@@ -36,10 +49,34 @@ return {
     cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
     keys = {
       { "<leader>\\\\", init_or_toggle, desc = "Toggle all" },
-      { "<leader>\\1", "<cmd>1ToggleTerm<CR>", desc = "Terminal 1" },
-      { "<leader>\\2", "<cmd>2ToggleTerm<CR>", desc = "Terminal 2" },
-      { "<leader>\\3", "<cmd>3ToggleTerm<CR>", desc = "Terminal 3" },
-      { "<leader>\\4", "<cmd>4ToggleTerm<CR>", desc = "Terminal 4" },
+      {
+        "<leader>\\1",
+        function()
+          vim.cmd(term_or_exec(1))
+        end,
+        desc = "Terminal 1",
+      },
+      {
+        "<leader>\\2",
+        function()
+          vim.cmd(term_or_exec(2))
+        end,
+        desc = "Terminal 2",
+      },
+      {
+        "<leader>\\3",
+        function()
+          vim.cmd(term_or_exec(3))
+        end,
+        desc = "Terminal 3",
+      },
+      {
+        "<leader>\\4",
+        function()
+          vim.cmd(term_or_exec(4))
+        end,
+        desc = "Terminal 4",
+      },
       { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
     init = function()
