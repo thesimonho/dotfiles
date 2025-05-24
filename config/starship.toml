@@ -1,11 +1,11 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
-add_newline = true
 format = """
-╭$directory$direnv$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
+╭ ${custom.hostname}$directory$direnv$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
 ╰$character
 """
+add_newline = true
 
 [aws]
 symbol = " "
@@ -21,9 +21,9 @@ format = 'via [$symbol$environment]($style) '
 ignore_base = false
 
 [directory]
-read_only = " 󰌾"
+read_only = "󰌾 "
 truncation_length = 3
-format = '[$read_only]($read_only_style) [$path]($style) '
+format = '[$read_only]($read_only_style)[$path]($style) '
 truncate_to_repo = false
 repo_root_style = "bold cyan"
 before_repo_root_style = "dimmed bright-black"
@@ -45,6 +45,12 @@ symbol = ' '
 [git_branch]
 symbol = " "
 format = 'on [$symbol$branch(:$remote_branch)]($style) '
+
+[custom.hostname]
+command = 'hostname -s'
+when = '[ "$(hostname)" = "Simon-WS" ]'
+style = "dimmed blue"
+format = '[\($output\) ]($style)'
 
 [line_break]
 disabled = false
