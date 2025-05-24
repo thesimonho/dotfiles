@@ -80,12 +80,39 @@ M.shorten_path = function(path, max_parts)
   return path
 end
 
+M.get_path_components = function(path)
+  local components = {}
+  for part in string.gmatch(path, "[^/]+") do
+    table.insert(components, part)
+  end
+  return components
+end
+
 M.create_tempfile = function(filename)
   if os.is_windows() then
     return os.getenv("TEMP") .. "/" .. filename
   else
     return "/tmp/" .. filename
   end
+end
+
+--- check if path has a devcontainer
+M.has_container = function(path)
+  path = vim.fn.expand(path or vim.fn.getcwd())
+  local devcontainer_path = path .. "/.devcontainer.json"
+  if vim.fn.filereadable(devcontainer_path) == 1 then
+    return true
+  end
+
+  return false
+end
+
+M.in_container = function()
+  local docker_env = "/.dockerenv"
+  if vim.fn.filereadable(docker_env) == 1 then
+    return true
+  end
+  return false
 end
 
 --- Check if a file exists in a directory or subdirectories
