@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+# Absolute paths
+CONFIG_HOME="$HOME/.config"
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # early zsh setup
 if ! command -v zsh >/dev/null 2>&1; then
   echo "🔍 zsh not found. Attempting to install..."
@@ -30,11 +34,7 @@ if [[ "$SHELL" != "$(which zsh)" ]]; then
   fi
 fi
 
-./setup/linux/zsh_plugins.sh
-
-# Absolute paths
-CONFIG_HOME="$HOME/.config"
-DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bash "$DOTFILES/setup/linux/zsh_plugins.sh"
 
 # Symlink helper: $1 = source relative to repo, $2 = destination absolute path
 link_file() {
@@ -88,4 +88,4 @@ echo "✅ SSH keys set."
 xhost +SI:localuser:$(whoami)
 
 # homebrew apps
-./setup/linux/homebrew.sh
+bash "$DOTFILES/setup/linux/homebrew.sh"
