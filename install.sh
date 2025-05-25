@@ -85,7 +85,12 @@ echo "✅ SSH keys set."
 
 # pass x11 display to containers for xclip/clipboard support
 # https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
-xhost +SI:localuser:$(whoami)
+if { [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup; }; then
+  echo "Granting X11 access for local user"
+  xhost +SI:localuser:$(whoami)
+else
+  echo "Skipping xhost (in container)"
+fi
 
 # homebrew apps
 bash "$DOTFILES/setup/linux/homebrew.sh"
