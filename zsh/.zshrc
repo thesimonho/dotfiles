@@ -61,13 +61,13 @@ HIST_STAMPS="yyyy-mm-dd"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(autoupdate cd-ls colored-man-pages direnv fzf-tab git jsontools safe-paste ssh-agent zsh-autosuggestions zsh-dot-up zsh-syntax-highlighting)
 
-typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_PATTERNS
-ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets pattern)
+typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_REGEXP
+ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets regexp)
+ZSH_HIGHLIGHT_REGEXP+=('^rm .*' fg=red,bold)
 ZSH_HIGHLIGHT_STYLES[path]='fg=magenta'
 ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[precommand]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[autodirectory]='fg=green,bold'
-ZSH_HIGHLIGHT_PATTERNS+=('rm *' 'fg=red,bold')
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 
 zstyle ':completion:*:git-checkout:*' sort false
