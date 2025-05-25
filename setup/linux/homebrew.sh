@@ -6,6 +6,7 @@ declare -A packages=(
   [bat]="bat"
   [carapace]="carapace"
   [coreutils]="gls"
+  [devcontainer]="devcontainer"
   [direnv]="direnv"
   [fd]="fd"
   [fzf]="fzf"
