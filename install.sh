@@ -23,7 +23,8 @@ fi
 if [[ "$SHELL" != "$(which zsh)" ]]; then
   echo "🔧 Changing default shell to zsh..."
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sudo usermod --shell "$(which zsh)" ${USER}
+    USER_NAME=$(whoami)
+    sudo usermod --shell "$(which zsh)" "$USER_NAME"
   else
     chsh -s "$(which zsh)"
   fi

@@ -31,3 +31,5 @@ export PATH
 
 # set env vars
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+export SSH_ASKPASS_REQUIRE=prefer
+export SSH_ASKPASS="/usr/bin/ksshaskpass"
