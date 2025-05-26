@@ -153,7 +153,6 @@ bindkey '^H' backward-kill-word # ctrl backspace
 bindkey '^[[3;5~' kill-word # ctrl delete
 
 # applications
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'

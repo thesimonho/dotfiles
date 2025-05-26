@@ -34,7 +34,7 @@ if [[ "$SHELL" != "$(which zsh)" ]]; then
   fi
 fi
 
-bash "$DOTFILES/setup/linux/zsh_plugins.sh"
+"$DOTFILES/setup/linux/zsh_plugins.sh"
 
 # Symlink helper: $1 = source relative to repo, $2 = destination absolute path
 link_file() {
@@ -93,4 +93,4 @@ else
 fi
 
 # homebrew apps
-bash "$DOTFILES/setup/linux/homebrew.sh"
+"$DOTFILES/setup/linux/homebrew.sh"
