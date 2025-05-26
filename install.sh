@@ -24,13 +24,19 @@ if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
-if [[ "$SHELL" != "$(which zsh)" ]]; then
+if [[ "$(getent passwd "$USER_NAME" | cut -d: -f7)" != "$(which zsh)" ]]; then
   echo "🔧 Changing default shell to zsh..."
+  USER_NAME=$(whoami)
+  ZSH_PATH=$(which zsh)
+
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    USER_NAME=$(whoami)
-    sudo usermod --shell "$(which zsh)" "$USER_NAME"
+    if command -v usermod >/dev/null 2>&1; then
+      sudo usermod --shell "$ZSH_PATH" "$USER_NAME"
+    else
+      echo "⚠️ 'usermod' not found. Skipping shell change."
+    fi
   else
-    chsh -s "$(which zsh)"
+    chsh -s "$ZSH_PATH"
   fi
 fi
 
