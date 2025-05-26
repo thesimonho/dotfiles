@@ -78,7 +78,7 @@ git config --global branch.sort -committerdate
 git config --global column.ui auto
 git config --global fetch.writeCommitGraph true
 git config --global rerere.enabled true
-# git config --global url."git@github.com:".insteadOf "https://github.com/"
+git config --global url."git@github.com:".insteadOf "https://github.com/"
 echo "✅ Git config created."
 
 # ssh
