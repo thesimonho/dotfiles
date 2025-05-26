@@ -93,7 +93,7 @@ echo "✅ SSH keys set."
 # https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
 if { [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup; }; then
   echo "Granting X11 access for local user"
-  xhost +SI:localuser:$(whoami)
+  xhost +SI:localuser:docker
 else
   echo "Skipping xhost (in container)"
 fi
