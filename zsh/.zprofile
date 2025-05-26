@@ -17,19 +17,22 @@ then
 fi
 
 # add homebrew path depending on osx or linux
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    # Linux
-    HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew/bin"
-    PATH="$HOMEBREW_PREFIX:$PATH"
+if command -v brew >/dev/null 2>&1; then
+  BREW_PREFIX="brew"
 else
-    # macOS
-    HOMEBREW_PREFIX="/opt/homebrew/bin"
-    PATH="$HOMEBREW_PREFIX:$PATH"
+  if [ -f /opt/homebrew/bin/brew ]; then
+    BREW_PREFIX="/opt/homebrew/bin/brew"  # macOS ARM
+  elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    BREW_PREFIX="/home/linuxbrew/.linuxbrew/bin/brew"  # Linux
+  else
+    echo "❌ Homebrew not found. Please install it first." >&2
+    exit 1
+  fi
+  eval "$($BREW_PREFIX shellenv)"
 fi
 
-export PATH
-
 # set env vars
+export PATH
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export SSH_ASKPASS_REQUIRE=prefer
 export SSH_ASKPASS="/usr/bin/ksshaskpass"

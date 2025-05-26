@@ -1,6 +1,20 @@
 #!/bin/bash
 # https://brew.sh
 
+# Ensure brew is available in PATH and env vars are set
+if command -v brew >/dev/null 2>&1; then
+  eval "$(brew shellenv)"
+else
+  if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)" # macOS ARM
+  elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" # Linux
+  else
+    echo "❌ Homebrew not found. Please install it first." >&2
+    exit 1
+  fi
+fi
+
 # Map of brew package name to CLI entrypoint
 declare -A packages=(
   [bat]="bat"
