@@ -1,13 +1,12 @@
 {
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/refs/heads/main/schemas/devContainer.base.schema.json",
   "name": "devcontainer-prebuild",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-  "features": {
-    "ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {}
-  },
-  "postCreateCommand": "git clone https://github.com/thesimonho/dotfiles ~/dotfiles && eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\" && bash ~/dotfiles/install.sh",
-  "postStartCommand": "ln -sf /workspaces ~/Projects"
-  "mounts": [
-    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
-  ],
+  "build": {
+    "dockerfile": "./Dockerfile",
+    "context": "..",
+    "args": {
+      "network": "host",
+      "DOTFILES_REPO": "https://github.com/thesimonho/dotfiles"
+    }
+  }
 }
-
