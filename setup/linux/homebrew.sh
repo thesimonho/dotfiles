@@ -68,4 +68,8 @@ for font in "${fonts_list[@]}"; do
   brew install --cask "$font"
 done
 
+brew autoremove
+brew cleanup -s
+rm -rf "$(brew --cache)"
+
 echo "✅ Homebrew apps installed."
