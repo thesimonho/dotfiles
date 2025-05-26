@@ -47,8 +47,13 @@ symbol = " "
 format = 'on [$symbol$branch(:$remote_branch)]($style) '
 
 [custom.hostname]
-command = 'hostname -s'
-when = '[ "$(hostname)" != "Simon-WS" ]'
+command = 'echo "${CONTAINER_NAME:-container}"'
+when = '''
+test -f /run/.containerenv ||
+test -f /.dockerenv ||
+grep -qE "(docker|containerd|kubepods)" /proc/1/cgroup ||
+test -f /run/systemd/container
+'''
 style = "dimmed blue"
 format = '[\($output\) ]($style)'
 
