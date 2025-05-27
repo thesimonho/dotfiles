@@ -1,9 +1,21 @@
-if [[ -z "$ZPROFILE_SOURCED" ]]; then
-  source "$HOME/.zprofile"
-fi
-
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+
+# ssh
+export SSH_ASKPASS_REQUIRE=prefer
+export SSH_ASKPASS="/usr/bin/ksshaskpass"
+
+## Dynamically discover SSH private key filenames
+setopt extended_glob
+private_keys=($HOME/.ssh/id_*~*.pub)
+if (( ${#private_keys[@]} > 0 )); then
+  # Only add keys if the agent is empty or missing keys
+  if ! ssh-add -l 2>/dev/null | grep -q 'SHA256'; then
+    for key in "${private_keys[@]}"; do
+      ssh-add "$key"
+    done
+  fi
+fi
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -59,7 +71,7 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(autoupdate cd-ls colored-man-pages direnv fzf-tab git jsontools safe-paste ssh-agent zsh-autosuggestions zsh-dot-up zsh-syntax-highlighting)
+plugins=(autoupdate cd-ls colored-man-pages direnv fzf-tab git jsontools safe-paste zsh-autosuggestions zsh-dot-up zsh-syntax-highlighting)
 
 typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_REGEXP
 ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets regexp)
@@ -83,29 +95,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'gls -vA --color --group-directories
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
-
-# Set lazy so plugin doesn't try to auto-add
-zstyle :omz:plugins:ssh-agent lazy yes
-zstyle :omz:plugins:ssh-agent agent-forwarding yes
-zstyle :omz:plugins:ssh-agent helper ksshaskpass
-
-# Dynamically discover private key filenames
-setopt nullglob
-private_keys=($HOME/.ssh/id_*~*.pub)
-
-if (( ${#private_keys[@]} > 0 )); then
-  ssh_identities=()
-  for key in "${private_keys[@]}"; do
-    [[ -f "$key" ]] && ssh_identities+=("${key/#$HOME\/.ssh\//}")
-  done
-fi
-
-# Wait until SSH_AUTH_SOCK is ready
-if [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
-  for key in "${ssh_identities[@]}"; do
-    ssh-add "$key" 2>/dev/null
-  done
-fi
 
 source $ZSH/oh-my-zsh.sh
 

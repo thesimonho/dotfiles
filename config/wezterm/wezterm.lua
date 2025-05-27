@@ -42,6 +42,7 @@ config.inactive_pane_hsb = {
 }
 config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
+config.mux_enable_ssh_agent = false -- fixes so many dumb SSH race issues with key adding
 config.scrollback_lines = 7500
 config.tab_and_split_indices_are_zero_based = true
 config.tab_max_width = 32
