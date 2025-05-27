@@ -2,8 +2,10 @@
 export ZSH="$HOME/.oh-my-zsh"
 
 # ssh
-export SSH_ASKPASS_REQUIRE=prefer
-export SSH_ASKPASS="/usr/bin/ksshaskpass"
+if [[ "$XDG_SESSION_DESKTOP" == "KDE" ]] && [[ -x /usr/bin/ksshaskpass ]]; then
+  export SSH_ASKPASS_REQUIRE=prefer
+  export SSH_ASKPASS="/usr/bin/ksshaskpass"
+fi
 
 ## Dynamically discover SSH private key filenames
 if [[ -d "$HOME/.ssh" ]]; then
