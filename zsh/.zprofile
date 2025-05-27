@@ -1,5 +1,3 @@
-export ZPROFILE_SOURCED=true
-
 # prepend to $PATH unless it is already there
 if ! [[ "$PATH" =~ "$HOME/bin" ]]
 then
@@ -34,5 +32,3 @@ fi
 # set env vars
 export PATH
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-export SSH_ASKPASS_REQUIRE=prefer
-export SSH_ASKPASS="/usr/bin/ksshaskpass"
