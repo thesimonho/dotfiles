@@ -94,7 +94,7 @@ echo "✅ SSH keys set."
 
 # pass x11 display to containers for xclip/clipboard support
 # https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
-if { [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup; }; then
+if { [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup && command -v xhost >/dev/null 2>&1; }; then
   echo "Granting X11 access for local user"
   xhost +SI:localuser:docker
 else
