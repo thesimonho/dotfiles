@@ -133,7 +133,7 @@ fi
 # - $ZSH_CUSTOM/aliases.zsh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
-alias ls='gls -vA --color=auto --group-directories-first'
+#alias ls='gls -vA --color=auto --group-directories-first'
 alias la='ls -la'
 alias ll='ls -l'
 alias cat='bat --style='header,grid''
@@ -146,6 +146,21 @@ bindkey '^H' backward-kill-word # ctrl backspace
 bindkey '^[[3;5~' kill-word # ctrl delete
 
 # applications
+# add homebrew path depending on osx or linux
+if command -v brew >/dev/null 2>&1; then
+  BREW_PREFIX="brew"
+else
+  if [ -f /opt/homebrew/bin/brew ]; then
+    BREW_PREFIX="/opt/homebrew/bin/brew"  # macOS ARM
+  elif [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    BREW_PREFIX="/home/linuxbrew/.linuxbrew/bin/brew"  # Linux
+  else
+    echo "❌ Homebrew not found. Please install it first." >&2
+    exit 1
+  fi
+  eval "$($BREW_PREFIX shellenv)"
+fi
+
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
