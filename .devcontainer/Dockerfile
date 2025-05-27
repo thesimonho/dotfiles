@@ -3,8 +3,10 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu
 LABEL org.opencontainers.image.source=https://github.com/thesimonho/dotfiles
 LABEL org.opencontainers.image.description="Prebuilt base image for devcontainers."
 
-# Optional arg to specify a different dotfiles repo
+# Optional args
 ARG DOTFILES_REPO=https://github.com/thesimonho/dotfiles
+ARG GIT_SSH_REWRITE=off
+ENV GIT_SSH_REWRITE=${GIT_SSH_REWRITE}
 
 # Install things
 RUN apt-get update && apt-get install -y --no-install-recommends \

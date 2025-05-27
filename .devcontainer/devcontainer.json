@@ -6,7 +6,8 @@
     "context": "..",
     "args": {
       "network": "host",
-      "DOTFILES_REPO": "https://github.com/thesimonho/dotfiles"
+      "DOTFILES_REPO": "https://github.com/thesimonho/dotfiles",
+      "GIT_SSH_REWRITE": "off"
     }
   }
 }

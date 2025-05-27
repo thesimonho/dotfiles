@@ -6,14 +6,16 @@ export SSH_ASKPASS_REQUIRE=prefer
 export SSH_ASKPASS="/usr/bin/ksshaskpass"
 
 ## Dynamically discover SSH private key filenames
-setopt extended_glob
-private_keys=($HOME/.ssh/id_*~*.pub)
-if (( ${#private_keys[@]} > 0 )); then
-  # Only add keys if the agent is empty or missing keys
-  if ! ssh-add -l 2>/dev/null | grep -q 'SHA256'; then
-    for key in "${private_keys[@]}"; do
-      ssh-add "$key"
-    done
+if [[ -d "$HOME/.ssh" ]]; then
+  setopt extended_glob
+  private_keys=($HOME/.ssh/id_*~*.pub(N))
+  if (( ${#private_keys[@]} > 0 )); then
+    # Only add keys if the agent is empty or missing keys
+    if ! ssh-add -l 2>/dev/null | grep -q 'SHA256'; then
+      for key in "${private_keys[@]}"; do
+        ssh-add "$key" 2>/dev/null
+      done
+    fi
   fi
 fi
 
