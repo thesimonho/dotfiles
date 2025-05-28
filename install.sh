@@ -94,11 +94,23 @@ echo "✅ SSH keys set."
 
 # pass x11 display to containers for xclip/clipboard support
 # https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
-if { [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup && command -v xhost >/dev/null 2>&1; }; then
-  echo "Granting X11 access for local user"
-  xhost +SI:localuser:docker
+xprofile_snippet='
+# Enable Docker containers to access X11 clipboard (for devcontainers, xclip, etc)
+if [ "$(uname)" = "Linux" ] && command -v xhost >/dev/null 2>&1; then
+  if [ ! -f /.dockerenv ] && ! grep -qE "(docker|lxc|containerd)" /proc/1/cgroup 2>/dev/null; then
+    if [ -n "$DISPLAY" ]; then
+      xhost +SI:localuser:docker
+    fi
+  fi
+fi
+'
+
+if ! grep -q 'xhost +SI:localuser:docker' ~/.xprofile 2>/dev/null; then
+  echo "Adding Docker X11 clipboard access to ~/.xprofile"
+  printf "%s\n" "$xprofile_snippet" >>~/.xprofile
+  chmod +x ~/.xprofile
 else
-  echo "Skipping xhost (in container)"
+  echo "xhost config already present in ~/.xprofile"
 fi
 
 # homebrew apps
