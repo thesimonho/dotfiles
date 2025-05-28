@@ -54,7 +54,7 @@ test -f /.dockerenv ||
 grep -qE "(docker|containerd|kubepods)" /proc/1/cgroup ||
 test -f /run/systemd/container
 '''
-style = "dimmed blue"
+style = "red"
 format = '[\($output\) ]($style)'
 
 [line_break]
