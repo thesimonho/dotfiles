@@ -92,25 +92,39 @@ for key in "$HOME/.ssh/id_"*; do
 done
 echo "✅ SSH keys set."
 
-# pass x11 display to containers for xclip/clipboard support
+# 🖥️ Set up X11 clipboard access for Docker containers in KDE Plasma
 # https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
-xprofile_snippet='
+
+xhost_script_contents='#!/bin/bash
+# >>> DOCKER X11 CLIPBOARD SETUP >>>
 # Enable Docker containers to access X11 clipboard (for devcontainers, xclip, etc)
 if [ "$(uname)" = "Linux" ] && command -v xhost >/dev/null 2>&1; then
-  if [ ! -f /.dockerenv ] && ! grep -qE "(docker|lxc|containerd)" /proc/1/cgroup 2>/dev/null; then
-    if [ -n "$DISPLAY" ]; then
-      xhost +SI:localuser:docker
-    fi
+  if [ -n "$DISPLAY" ]; then
+    xhost +SI:localuser:docker
   fi
 fi
+# <<< DOCKER X11 CLIPBOARD SETUP <<<
 '
 
-if ! grep -q 'xhost +SI:localuser:docker' ~/.xprofile 2>/dev/null; then
-  echo "Adding Docker X11 clipboard access to ~/.xprofile"
-  printf "%s\n" "$xprofile_snippet" >>~/.xprofile
-  chmod +x ~/.xprofile
+if [[ "$XDG_CURRENT_DESKTOP" == "KDE" || "$XDG_CURRENT_DESKTOP" == *KDE* ]]; then
+  if [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup 2>/dev/null; then
+    env_dir="$HOME/.config/plasma-workspace/env"
+    script_path="$env_dir/xhost-docker.sh"
+
+    mkdir -p "$env_dir"
+
+    if [ ! -f "$script_path" ]; then
+      echo "🔧 Adding Docker X11 clipboard access script for KDE Plasma..."
+      printf "%s\n" "$xhost_script_contents" >"$script_path"
+      chmod +x "$script_path"
+    else
+      echo "✅ xhost-docker.sh already exists — skipping"
+    fi
+  else
+    echo "⚠️  Detected container environment — skipping Docker X11 clipboard config"
+  fi
 else
-  echo "xhost config already present in ~/.xprofile"
+  echo "🧂 KDE not detected — skipping X11 clipboard config"
 fi
 
 # homebrew apps
