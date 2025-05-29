@@ -106,7 +106,7 @@ fi
 # <<< DOCKER X11 CLIPBOARD SETUP <<<
 '
 
-if [[ "$XDG_CURRENT_DESKTOP" == "KDE" || "$XDG_CURRENT_DESKTOP" == *KDE* ]]; then
+if [[ "${XDG_CURRENT_DESKTOP:-}" == "KDE" || "${XDG_CURRENT_DESKTOP:-}" == *KDE* ]]; then
   if [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup 2>/dev/null; then
     env_dir="$HOME/.config/plasma-workspace/env"
     script_path="$env_dir/xhost-docker.sh"
