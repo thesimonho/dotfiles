@@ -34,6 +34,7 @@ M.basic_binds = {
 		mods = "CTRL",
 		action = act.SendString("fzf\r"),
 	},
+
 	{
 		key = "t",
 		mods = "CTRL",
@@ -73,7 +74,6 @@ M.basic_binds = {
 			)
 		end),
 	},
-
 	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },
 	{ key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) },
 	{
@@ -132,6 +132,13 @@ M.basic_binds = {
 			utils.move_or_split(win, pane, "Right")
 		end),
 	},
+	{
+		key = "`",
+		mods = "LEADER",
+		action = wezterm.action.ActivateLastTab,
+	},
+	{ key = "h", mods = "LEADER", action = act.ActivateTabRelative(-1) },
+	{ key = "l", mods = "LEADER", action = act.ActivateTabRelative(1) },
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
 
 	-- MacOS rebinds
