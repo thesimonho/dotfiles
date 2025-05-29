@@ -94,7 +94,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # force zsh not to show completion menu, which allows fzf-tab to capture the unambiguous prefix
 zstyle ':completion:*' menu no
 # preview directory's content with ls when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'gls -vA --color --group-directories-first $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --icons=always --group-directories-first --color=always $realpath'
 # To make fzf-tab follow FZF_DEFAULT_OPTS.
 zstyle ':fzf-tab:*' use-fzf-default-opts yes
 # switch group using `<` and `>`
@@ -133,10 +133,16 @@ fi
 # - $ZSH_CUSTOM/aliases.zsh
 # - $ZSH_CUSTOM/macos.zsh
 # For a full list of active aliases, run `alias`.
-#alias ls='gls -vA --color=auto --group-directories-first'
+maybe_alias() {
+  if command -v "$1" >/dev/null 2>&1; then
+    alias "$2"
+  fi
+}
+
+maybe_alias bat "cat=bat --style='header,grid'"
+maybe_alias eza "ls=eza --icons=always --hyperlink --group-directories-first --color=always --header"
 alias la='ls -la'
 alias ll='ls -l'
-alias cat='bat --style='header,grid''
 alias tf='terraform'
 alias lg='lazygit'
 
