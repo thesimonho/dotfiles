@@ -65,7 +65,18 @@ tabline.setup({
 				end,
 			},
 		},
-		tabline_b = { "workspace" },
+		tabline_b = {
+			{
+				"workspace",
+				fmt = function(str, _)
+					local workspaces = wezterm.mux.get_workspace_names()
+					if #workspaces == 1 then
+						return str
+					end
+					return str .. " (" .. #workspaces .. ")"
+				end,
+			},
+		},
 		tabline_c = { " " },
 		tabline_x = { { "cpu" }, { "ram" } },
 		tabline_y = {
