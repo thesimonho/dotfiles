@@ -32,6 +32,11 @@ M.move_or_split = function(win, pane, direction)
 	win:perform_action(act.SplitPane({ direction = direction }), pane)
 end
 
+M.is_not_nvim = function(pane)
+	local info = pane:get_foreground_process_name()
+	return not (info and info:match("n?vim"))
+end
+
 M.get_distrobox_images = function()
 	local images = {}
 	local handle = io.popen("distrobox ls")
