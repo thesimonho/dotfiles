@@ -25,6 +25,8 @@ return {
     keys = {
       { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin Buffer" },
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete Other Buffers" },
+      { "<S-h>", "<cmd>BufferPrevious<cr>", desc = "Previous Buffer" },
+      { "<S-l>", "<cmd>BufferNext<cr>", desc = "Next Buffer" },
     },
     opts = {
       focus_on_close = "left",
