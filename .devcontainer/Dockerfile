@@ -11,9 +11,7 @@ ENV GIT_SSH_REWRITE=${GIT_SSH_REWRITE}
 # Install things
 RUN apt-get update && apt-get install -y --no-install-recommends \
   curl \
-  wl-clipboard \
-  ncurses-term \
-  libvterm0 && \
+  wl-clipboard && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* && \
   touch /.dockerenv
