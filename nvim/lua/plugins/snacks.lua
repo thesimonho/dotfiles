@@ -38,7 +38,21 @@ return {
   {
     "folke/snacks.nvim",
     keys = {
-      { "<leader><space>", LazyVim.pick("files", { root = false, hidden = true }), desc = "Find Files (cwd)" },
+      {
+        "<leader><space>",
+        LazyVim.pick("smart", {
+          root = false,
+          hidden = true,
+          multi = { "buffers", "files" },
+          matcher = {
+            cwd_bonus = true,
+            frecency = true,
+            sort_empty = true,
+          },
+          transform = "unique_file",
+        }),
+        desc = "Smart Picker",
+      },
       { "<leader>sg", LazyVim.pick("live_grep", { root = false, hidden = true }), desc = "Grep (cwd)" },
       {
         "<leader>sw",
