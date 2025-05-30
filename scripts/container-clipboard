@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if command -v wl-copy >/dev/null 2>&1 && command -v wl-paste >/dev/null 2>&1; then
+  # Wayland
+  if [ "$1" = "copy" ]; then
+    wl-copy
+  elif [ "$1" = "paste" ]; then
+    wl-paste
+  fi
+elif command -v pbcopy >/dev/null 2>&1 && command -v pbpaste >/dev/null 2>&1; then
+  # macOS
+  if [ "$1" = "copy" ]; then
+    pbcopy
+  elif [ "$1" = "paste" ]; then
+    pbpaste
+  fi
+else
+  echo "No clipboard tool found" >&2
+  exit 1
+fi

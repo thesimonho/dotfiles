@@ -4,6 +4,7 @@ set -euo pipefail
 # Absolute paths
 CONFIG_HOME="$HOME/.config"
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+USER_NAME=$(whoami)
 
 # early zsh setup
 if ! command -v zsh >/dev/null 2>&1; then
@@ -26,7 +27,6 @@ fi
 
 if [[ "$(getent passwd "$USER_NAME" | cut -d: -f7)" != "$(which zsh)" ]]; then
   echo "🔧 Changing default shell to zsh..."
-  USER_NAME=$(whoami)
   ZSH_PATH=$(which zsh)
 
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -61,6 +61,7 @@ link_file() {
 }
 
 echo "Installing dotfiles..."
+link_file "$DOTFILES/scripts/container-clipboard" "$HOME/.local/bin/container-clipboard"
 link_file "$DOTFILES/config/wezterm" "$CONFIG_HOME/wezterm"
 link_file "$DOTFILES/config/fzf" "$CONFIG_HOME/fzf"
 link_file "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
@@ -91,41 +92,6 @@ for key in "$HOME/.ssh/id_"*; do
   fi
 done
 echo "✅ SSH keys set."
-
-# 🖥️ Set up X11 clipboard access for Docker containers in KDE Plasma
-# https://gist.github.com/abmantis/dd372ec41eb654f2e79114ff3e2a49eb
-
-xhost_script_contents='#!/bin/bash
-# >>> DOCKER X11 CLIPBOARD SETUP >>>
-# Enable Docker containers to access X11 clipboard (for devcontainers, xclip, etc)
-if [ "$(uname)" = "Linux" ] && command -v xhost >/dev/null 2>&1; then
-  if [ -n "$DISPLAY" ]; then
-    xhost +SI:localuser:docker
-  fi
-fi
-# <<< DOCKER X11 CLIPBOARD SETUP <<<
-'
-
-if [[ "${XDG_CURRENT_DESKTOP:-}" == "KDE" || "${XDG_CURRENT_DESKTOP:-}" == *KDE* ]]; then
-  if [ ! -f /.dockerenv ] && ! grep -qE '(docker|lxc|containerd)' /proc/1/cgroup 2>/dev/null; then
-    env_dir="$HOME/.config/plasma-workspace/env"
-    script_path="$env_dir/xhost-docker.sh"
-
-    mkdir -p "$env_dir"
-
-    if [ ! -f "$script_path" ]; then
-      echo "🔧 Adding Docker X11 clipboard access script for KDE Plasma..."
-      printf "%s\n" "$xhost_script_contents" >"$script_path"
-      chmod +x "$script_path"
-    else
-      echo "✅ xhost-docker.sh already exists — skipping"
-    fi
-  else
-    echo "⚠️  Detected container environment — skipping Docker X11 clipboard config"
-  fi
-else
-  echo "🧂 KDE not detected — skipping X11 clipboard config"
-fi
 
 # homebrew apps
 "$DOTFILES/setup/linux/homebrew.sh"
