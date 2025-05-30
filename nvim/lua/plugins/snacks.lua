@@ -1,4 +1,38 @@
 local ui = require("utils.ui")
+local paths = vim.fn.globpath(vim.o.rtp, "doc/options.txt", false, true)
+local help = vim.fn.readfile(paths[1])
+
+local function get_help_text(tag)
+  local tag_pattern = "%*'" .. tag .. "'%*"
+
+  local start_index
+  for i, line in ipairs(help) do
+    if line:match(tag_pattern) then
+      start_index = i
+      break
+    end
+  end
+  if not start_index then
+    return nil, nil
+  end
+
+  local heading_pattern = "%*'[^']*'%*"
+  local end_index = #help
+  for j = start_index + 1, #help do
+    if help[j]:match(heading_pattern) then
+      end_index = j - 1
+      break
+    end
+  end
+
+  -- get lines between start and end
+  local output = {}
+  for i = start_index, end_index do
+    output[#output + 1] = help[i]
+  end
+
+  return table.concat(output, "\n")
+end
 
 return {
   {
@@ -12,7 +46,7 @@ return {
         desc = "Visual selection or word (cwd)",
         mode = { "n", "x" },
       },
-
+      { "<leader>so", "<cmd>lua Snacks.picker.pick('options')<cr>", desc = "Options" },
       { "<leader>ff", LazyVim.pick("files", { root = false, hidden = true }), desc = "Find Files (cwd)" },
       {
         "<leader>fp",
@@ -35,6 +69,7 @@ return {
         end,
         desc = "Projects",
       },
+      { "<leader>fi", "<cmd>lua Snacks.picker.pick('icons')<cr>", desc = "Icons" },
       { "<leader>dpt", "<cmd>lua Snacks.profiler.pick()<cr>", desc = "Toggle" },
       {
         "<leader>qp",
@@ -170,6 +205,43 @@ return {
               foldcolumn = "0",
               signcolumn = "no",
             },
+          },
+        },
+        sources = {
+          options = {
+            title = "Options",
+            preview = "preview",
+            supports_live = true,
+            finder = function()
+              local items = {}
+              for _, o in pairs(vim.api.nvim_get_all_options_info()) do
+                local ok, v = pcall(vim.api.nvim_get_option_value, o.name, {})
+                if ok then
+                  items[#items + 1] = {
+                    text = o.name,
+                    value = tostring(v),
+                    preview = {
+                      ft = "help",
+                      text = get_help_text(o.name) or "No help available for this option.",
+                    },
+                  }
+                end
+              end
+              return items
+            end,
+            format = function(item, _)
+              local ret = {}
+              local a = Snacks.picker.util.align
+              ret[#ret + 1] = { a(item.text, 20), "Statement" }
+              ret[#ret + 1] = { "▏", "SnacksIndent" }
+              ret[#ret + 1] = { a(item.value, 20) }
+              return ret
+            end,
+            sort = { fields = { "text" } },
+            confirm = function(picker, item)
+              -- TODO: https://github.com/ibhagwan/fzf-lua/blob/main/lua/fzf-lua/actions.lua#L599
+              print(item.text .. " = " .. item.value)
+            end,
           },
         },
       },
