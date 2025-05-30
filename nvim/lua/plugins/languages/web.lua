@@ -3,6 +3,44 @@ local wk = require("which-key")
 
 return {
   {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        -- linters
+        "eslint_d",
+        -- formatters
+        "prettierd",
+        "prettier",
+      },
+    },
+  },
+  { -- formatters
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        css = { "prettierd", "prettier", stop_after_first = true },
+        html = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+        typescript = { "prettierd", "prettier", stop_after_first = true },
+        typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+        vue = { "prettierd", "prettier", stop_after_first = true },
+      },
+    },
+  },
+  { -- linters
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        javascript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescript = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+        vue = { "eslint_d" },
+      },
+    },
+  },
+  {
     "vuki656/package-info.nvim",
     enabled = fs.has_in_project("package.json"),
     dependencies = { "MunifTanjim/nui.nvim" },
