@@ -27,7 +27,7 @@ M.load_project_session = function(dir)
   -- fallback to picker
   vim.defer_fn(function()
     if not session_loaded then
-      Snacks.picker.files({ dirs = { dir } })
+      Snacks.picker.files({ root = false, hidden = true, dirs = { dir } })
     end
   end, 100)
   vim.cmd("lua require('persistence').load()")
