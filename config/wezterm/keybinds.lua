@@ -7,6 +7,10 @@ local SCROLL_SPEED = 0.4
 local M = {}
 
 M.basic_binds = {
+	-- MacOS rebinds
+	{ key = "c", mods = "CMD", action = act.SendKey({ key = "c", mods = "CTRL" }) },
+	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
+
 	{ key = "F1", mods = "SUPER", action = act.ActivateCommandPalette },
 	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
 	{ key = "p", mods = "SUPER", action = plugins.workspace_switcher.switch_workspace() },
@@ -140,14 +144,14 @@ M.basic_binds = {
 	{ key = "h", mods = "LEADER", action = act.ActivateTabRelative(-1) },
 	{ key = "l", mods = "LEADER", action = act.ActivateTabRelative(1) },
 	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
-
-	-- MacOS rebinds
-	{ key = "c", mods = "CMD", action = act.SendKey({ key = "c", mods = "CTRL" }) },
-	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
+	{ key = "b", mods = "LEADER", action = act.ActivateKeyTable({ name = "buffer_mode" }) },
 }
 
 M.key_tables = {
-	window_mode = {
+	buffer_mode = { -- wezterm tabs
+		{ key = "d", action = act.CloseCurrentTab({ confirm = true }) },
+	},
+	window_mode = { -- wezterm panes
 		{ key = "r", action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false }) },
 		{ key = "w", action = act.PaneSelect },
 		{ key = "n", action = act.SpawnWindow },
