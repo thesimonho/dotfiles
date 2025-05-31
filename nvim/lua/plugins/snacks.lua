@@ -60,7 +60,7 @@ return {
         desc = "Visual selection or word (cwd)",
         mode = { "n", "x" },
       },
-      { "<leader>so", "<cmd>lua Snacks.picker.pick('options')<cr>", desc = "Options" },
+      { "<leader>so", LazyVim.pick("options"), desc = "Options" },
       { "<leader>ff", LazyVim.pick("files", { root = false, hidden = true }), desc = "Find Files (cwd)" },
       {
         "<leader>fp",
@@ -83,7 +83,7 @@ return {
         end,
         desc = "Projects",
       },
-      { "<leader>fi", "<cmd>lua Snacks.picker.pick('icons')<cr>", desc = "Icons" },
+      { "<leader>fi", LazyVim.pick("icons", { matcher = { fuzzy = false } }), desc = "Icons" },
       { "<leader>dpt", "<cmd>lua Snacks.profiler.pick()<cr>", desc = "Toggle" },
       {
         "<leader>qp",
