@@ -72,6 +72,19 @@ return {
       lualine_b = {
         {
           function()
+            return "(" .. vim.env.CONTAINER_NAME .. ")"
+          end,
+          cond = function()
+            return vim.env.CONTAINER_NAME ~= nil and vim.env.CONTAINER_NAME ~= ""
+          end,
+          separator = "",
+          padding = { left = 1, right = 0 },
+          color = function()
+            return { fg = Snacks.util.color("Error") }
+          end,
+        },
+        {
+          function()
             return Snacks.git.get_root():match("([^/\\]+)$")
           end,
           separator = "",
