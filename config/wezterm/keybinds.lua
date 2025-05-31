@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
-local workspace_switcher = wezterm.plugin.require("http://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 local act = wezterm.action
+local plugins = require("plugins")
 local utils = require("utils")
 local SCROLL_SPEED = 0.4
 
@@ -9,7 +9,7 @@ local M = {}
 M.basic_binds = {
 	{ key = "F1", mods = "SUPER", action = act.ActivateCommandPalette },
 	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
-	{ key = "p", mods = "SUPER", action = workspace_switcher.switch_workspace() },
+	{ key = "p", mods = "SUPER", action = plugins.workspace_switcher.switch_workspace() },
 	{
 		key = "c",
 		mods = "CTRL|SHIFT",
