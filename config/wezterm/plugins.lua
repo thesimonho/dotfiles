@@ -1,10 +1,12 @@
 local wezterm = require("wezterm")
 local theme = require("theme_switcher")
 
--- workspace_switcher
-local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+M = {}
 
-workspace_switcher.workspace_formatter = function(label)
+-- workspace_switcher
+M.workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+
+M.workspace_switcher.workspace_formatter = function(label)
 	return wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
 		{ Foreground = { Color = "#8ea4a2" } },
@@ -37,8 +39,8 @@ wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(windo
 end)
 
 -- tabline
-local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-tabline.setup({
+M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+M.tabline.setup({
 	options = {
 		icons_enabled = true,
 		theme_overrides = require("colors.wezterm_tabline." .. theme.color_scheme).theme_overrides,
@@ -103,3 +105,5 @@ tabline.setup({
 	},
 	extensions = { "smart_workspace_switcher" },
 })
+
+return M
