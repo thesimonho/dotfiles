@@ -76,28 +76,28 @@ M.basic_binds = {
 	},
 	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },
 	{ key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) },
-	{
-		key = "u",
-		mods = "CTRL",
-		action = wezterm.action_callback(function(window, pane)
-			if utils.is_not_nvim(pane) then
-				window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
-			else
-				window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
-			end
-		end),
-	},
-	{
-		key = "d",
-		mods = "CTRL",
-		action = wezterm.action_callback(function(window, pane)
-			if utils.is_not_nvim(pane) then
-				window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
-			else
-				window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
-			end
-		end),
-	},
+	-- {
+	-- 	key = "u",
+	-- 	mods = "CTRL",
+	-- 	action = wezterm.action_callback(function(window, pane)
+	-- 		if utils.is_not_nvim(pane) then
+	-- 			window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
+	-- 		else
+	-- 			window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
+	-- 		end
+	-- 	end),
+	-- },
+	-- {
+	-- 	key = "d",
+	-- 	mods = "CTRL",
+	-- 	action = wezterm.action_callback(function(window, pane)
+	-- 		if utils.is_not_nvim(pane) then
+	-- 			window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
+	-- 		else
+	-- 			window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
+	-- 		end
+	-- 	end),
+	-- },
 	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
 	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
 	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
