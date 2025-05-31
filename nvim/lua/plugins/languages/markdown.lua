@@ -7,6 +7,8 @@ M = {
         "markdownlint",
         -- formatters
         "prettierd",
+        -- lsp
+        "mdx-analyzer",
       },
     },
   },

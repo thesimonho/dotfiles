@@ -6,14 +6,8 @@ return {
     opts = {
       ensure_installed = {
         "graphql-language-service-cli",
-        "marksman",
-        "mdx-analyzer",
-        "lua-language-server",
-        "pyright",
-        "terraform-ls",
         "vim-language-server",
         "yaml-language-server",
-        "vue-language-server",
       },
     },
   },
