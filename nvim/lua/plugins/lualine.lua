@@ -72,7 +72,7 @@ return {
       lualine_b = {
         {
           function()
-            return "(" .. vim.env.CONTAINER_NAME .. ")"
+            return "🍱"
           end,
           cond = function()
             return vim.env.CONTAINER_NAME ~= nil and vim.env.CONTAINER_NAME ~= ""

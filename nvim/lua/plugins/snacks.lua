@@ -13,19 +13,18 @@ local function get_help_text(tag)
     end
   end
   if not start_index then
-    return nil, nil
+    return nil
   end
 
   local heading_pattern = "%*'[^']*'%*"
   local end_index = #help
-  for j = start_index + 1, #help do
-    if help[j]:match(heading_pattern) then
-      end_index = j - 1
+  for i = start_index + 1, #help do
+    if help[i]:match(heading_pattern) then
+      end_index = i - 1
       break
     end
   end
 
-  -- get lines between start and end
   local output = {}
   for i = start_index, end_index do
     output[#output + 1] = help[i]
