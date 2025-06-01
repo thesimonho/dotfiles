@@ -95,20 +95,6 @@ end
 
 config.launch_menu = {}
 
-local devpod_launchers = utils.create_devpod_launchers()
-if devpod_launchers and #devpod_launchers > 0 then
-	for _, box in ipairs(devpod_launchers) do
-		table.insert(config.launch_menu, box)
-	end
-end
-
-local distrobox_launchers = utils.create_distrobox_launchers()
-if distrobox_launchers and #distrobox_launchers > 0 then
-	for _, pod in ipairs(distrobox_launchers) do
-		table.insert(config.launch_menu, pod)
-	end
-end
-
 for _, shell in ipairs(additional_shells) do
 	table.insert(config.launch_menu, shell)
 end
