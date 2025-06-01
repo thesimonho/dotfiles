@@ -17,7 +17,6 @@ if [[ -d "$HOME/.ssh" ]]; then
   if (( ${#private_keys[@]} > 0 && loaded_keys_count != ${#private_keys[@]})); then
     for key in "${private_keys[@]}"; do
       ssh-add "$key" 2>/dev/null
-      echo "Added SSH key: $key"
     done
   fi
 fi
