@@ -13,7 +13,7 @@ M.basic_binds = {
 
 	{ key = "F1", mods = "SUPER", action = act.ActivateCommandPalette },
 	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
-	{ key = "p", mods = "SUPER", action = plugins.workspace_switcher.switch_workspace() },
+	-- { key = "p", mods = "SUPER", action = plugins.workspace_switcher.switch_workspace() },
 	{
 		key = "c",
 		mods = "CTRL|SHIFT",
