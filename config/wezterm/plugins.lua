@@ -77,6 +77,7 @@ M.tabline.setup({
 					end
 					return str .. " (" .. #workspaces .. ")"
 				end,
+				padding = { left = 1, right = 0 },
 			},
 		},
 		tabline_c = { " " },
@@ -89,7 +90,7 @@ M.tabline.setup({
 				hour_to_icon = false,
 			},
 		},
-		tabline_z = { "hostname" },
+		tabline_z = { "domain" },
 		tab_active = {
 			{ "process", icons_only = true, padding = { left = 2, right = 0 } },
 			{ "parent", max_length = 10, padding = 0 },
