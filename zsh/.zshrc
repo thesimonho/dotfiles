@@ -11,13 +11,14 @@ fi
 if [[ -d "$HOME/.ssh" ]]; then
   setopt extended_glob
   private_keys=($HOME/.ssh/id_*~*.pub(N))
-  if (( ${#private_keys[@]} > 0 )); then
-    # Only add keys if the agent is empty or missing keys
-    if ! ssh-add -l 2>/dev/null | grep -q 'SHA256'; then
-      for key in "${private_keys[@]}"; do
-        ssh-add "$key" 2>/dev/null
-      done
-    fi
+  loaded_keys_count=$(ssh-add -l 2>/dev/null | grep -c '^')
+
+  # Only add keys if the agent is empty or missing keys
+  if (( ${#private_keys[@]} > 0 && loaded_keys_count != ${#private_keys[@]})); then
+    for key in "${private_keys[@]}"; do
+      ssh-add "$key" 2>/dev/null
+      echo "Added SSH key: $key"
+    done
   fi
 fi
 
