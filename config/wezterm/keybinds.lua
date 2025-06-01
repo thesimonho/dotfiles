@@ -5,6 +5,11 @@ local utils = require("utils")
 local SCROLL_SPEED = 0.4
 
 local function handle_selection(window, pane, _, label)
+	if not label then
+		-- no selection
+		return
+	end
+
 	local kind, name = label:match("^(.-): (.+)$")
 	if kind == "devpod" then
 		window:perform_action(
