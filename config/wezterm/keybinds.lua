@@ -1,8 +1,55 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
-local plugins = require("plugins")
+local containers = require("containers")
 local utils = require("utils")
 local SCROLL_SPEED = 0.4
+
+local function handle_selection(window, pane, _, label)
+	local kind, name = label:match("^(.-): (.+)$")
+	if kind == "devpod" then
+		window:perform_action(
+			act.SwitchToWorkspace({
+				name = name,
+				spawn = {
+					domain = { DomainName = name },
+				},
+			}),
+			pane
+		)
+	elseif kind == "distrobox" then
+		window:perform_action(
+			act.SpawnCommandInNewTab({
+				args = { "distrobox", "enter", "--root", name },
+			}),
+			pane
+		)
+	else
+		window:perform_action(
+			act.SwitchToWorkspace({
+				name = label,
+				spawn = {
+					domain = { DomainName = label },
+				},
+			}),
+			pane
+		)
+	end
+end
+
+-- Creates the input selector action
+local function show_domain_selector()
+	local choices = containers.container_choices
+	if #choices == 0 then
+		choices = containers.create_container_choices()
+	end
+
+	return act.InputSelector({
+		action = wezterm.action_callback(handle_selection),
+		choices = choices,
+		alphabet = "1234qwer",
+		description = "Attach domain:",
+	})
+end
 
 local M = {}
 
@@ -45,45 +92,10 @@ M.basic_binds = {
 		action = act.SpawnTab("CurrentPaneDomain"),
 	},
 	{
-		key = "n",
+		key = "p",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(window, pane)
-			window:perform_action(
-				act.InputSelector({
-					action = wezterm.action_callback(function(win, pan, _, label)
-						local kind, name = label:match("^(.-): (.+)$")
-						if kind == "devcontainer" then
-							win:perform_action(
-								act.SwitchToWorkspace({
-									name = name,
-									spawn = {
-										args = { "ssh", name .. ".devpod" },
-									},
-								}),
-								pan
-							)
-						elseif kind == "distrobox" then
-							win:perform_action(
-								act.SpawnCommandInNewTab({
-									args = { "distrobox", "enter", "--root", name },
-								}),
-								pan
-							)
-						else
-							win:perform_action(
-								act.SpawnCommandInNewTab({
-									args = { name },
-								}),
-								pan
-							)
-						end
-					end),
-					choices = utils.tab_choices,
-					alphabet = "1234qwer",
-					description = "Launch in new tab:",
-				}),
-				pane
-			)
+			window:perform_action(show_domain_selector(), pane)
 		end),
 	},
 	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },

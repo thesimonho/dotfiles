@@ -1,12 +1,13 @@
 local wezterm = require("wezterm")
 local keybinds = require("keybinds")
 local theme = require("theme_switcher")
+local containers = require("containers")
 local utils = require("utils")
 require("plugins")
 
 wezterm.on("gui-startup", function(cmd)
 	local _, _, window = wezterm.mux.spawn_window(cmd or {
-		workspace = "main",
+		workspace = "local",
 	})
 	window:gui_window()
 	local screens = wezterm.gui.screens()
@@ -25,7 +26,8 @@ config.color_scheme_dirs = { "~/.config/wezterm/colors" }
 config.color_scheme = theme.color_scheme
 config.cursor_blink_rate = 0
 config.default_cursor_style = "SteadyBar"
-config.default_workspace = "main"
+config.default_domain = "local"
+config.default_workspace = "local"
 config.disable_default_key_bindings = true
 config.enable_scroll_bar = false
 config.enable_wayland = true
@@ -44,6 +46,7 @@ config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
 config.mux_enable_ssh_agent = false -- fixes so many dumb SSH race issues with key adding
 config.scrollback_lines = 7500
+config.ssh_domains = containers.create_ssh_domains()
 config.tab_and_split_indices_are_zero_based = true
 config.tab_max_width = 32
 config.ui_key_cap_rendering = "WindowsSymbols"
