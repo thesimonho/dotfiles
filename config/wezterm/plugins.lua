@@ -1,42 +1,42 @@
 local wezterm = require("wezterm")
 local theme = require("theme_switcher")
 
-M = {}
+local M = {}
 
 -- workspace_switcher
-M.workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
-
-M.workspace_switcher.workspace_formatter = function(label)
-	return wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Foreground = { Color = "#8ea4a2" } },
-		{ Text = "󱂬 : " .. label },
-	})
-end
-
-wezterm.on("smart_workspace_switcher.workspace_switcher.chosen", function(window, workspace)
-	local gui_win = window:gui_window()
-	local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
-	gui_win:set_right_status(wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Foreground = { Color = "#8ea4a2" } },
-		{ Text = "󱂬 : " .. base_path .. " " },
-	}))
-end)
-
-wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, workspace)
-	local gui_win = window:gui_window()
-	local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
-	gui_win:set_right_status(wezterm.format({
-		{ Attribute = { Intensity = "Bold" } },
-		{ Foreground = { Color = "#8ea4a2" } },
-		{ Text = "󱂬 : " .. base_path .. " " },
-	}))
-
-	-- TODO: auto launch container if there is one
-	-- gui_win:perform_action(act.SendString("nvim ."), gui_win:active_pane())
-	-- gui_win:perform_action(act.SendKey({ key = "Enter" }), gui_win:active_pane())
-end)
+-- M.workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+--
+-- M.workspace_switcher.workspace_formatter = function(label)
+-- 	return wezterm.format({
+-- 		{ Attribute = { Intensity = "Bold" } },
+-- 		{ Foreground = { Color = "#8ea4a2" } },
+-- 		{ Text = "󱂬 : " .. label },
+-- 	})
+-- end
+--
+-- wezterm.on("smart_workspace_switcher.workspace_switcher.chosen", function(window, workspace)
+-- 	local gui_win = window:gui_window()
+-- 	local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
+-- 	gui_win:set_right_status(wezterm.format({
+-- 		{ Attribute = { Intensity = "Bold" } },
+-- 		{ Foreground = { Color = "#8ea4a2" } },
+-- 		{ Text = "󱂬 : " .. base_path .. " " },
+-- 	}))
+-- end)
+--
+-- wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, workspace)
+-- 	local gui_win = window:gui_window()
+-- 	local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
+-- 	gui_win:set_right_status(wezterm.format({
+-- 		{ Attribute = { Intensity = "Bold" } },
+-- 		{ Foreground = { Color = "#8ea4a2" } },
+-- 		{ Text = "󱂬 : " .. base_path .. " " },
+-- 	}))
+--
+-- 	-- TODO: auto launch container if there is one
+-- 	-- gui_win:perform_action(act.SendString("nvim ."), gui_win:active_pane())
+-- 	-- gui_win:perform_action(act.SendKey({ key = "Enter" }), gui_win:active_pane())
+-- end)
 
 -- tabline
 M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
@@ -68,17 +68,7 @@ M.tabline.setup({
 			},
 		},
 		tabline_b = {
-			{
-				"workspace",
-				fmt = function(str, _)
-					local workspaces = wezterm.mux.get_workspace_names()
-					if #workspaces == 1 then
-						return str
-					end
-					return str .. " (" .. #workspaces .. ")"
-				end,
-				padding = { left = 1, right = 0 },
-			},
+			{ "domain", padding = { left = 1, right = 0 } },
 		},
 		tabline_c = { " " },
 		tabline_x = { { "cpu" }, { "ram" } },
@@ -90,7 +80,7 @@ M.tabline.setup({
 				hour_to_icon = false,
 			},
 		},
-		tabline_z = { "domain" },
+		tabline_z = { "hostname" },
 		tab_active = {
 			{ "process", icons_only = true, padding = { left = 2, right = 0 } },
 			{ "parent", max_length = 10, padding = 0 },
@@ -104,7 +94,7 @@ M.tabline.setup({
 			{ "cwd", max_length = 15, padding = { left = 0, right = 2 } },
 		},
 	},
-	extensions = { "smart_workspace_switcher" },
+	-- extensions = { "smart_workspace_switcher" },
 })
 
 return M
