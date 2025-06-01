@@ -82,4 +82,54 @@ M.get_progress_char = function()
   return style.progress[index]
 end
 
+M.load_help_file = function()
+  if M.help then
+    return M.help
+  end
+
+  local paths = vim.fn.globpath(vim.o.rtp, "doc/options.txt", false, true)
+  if #paths == 0 then
+    vim.notify("No help file found in runtime path.", vim.log.levels.ERROR)
+    return
+  end
+
+  M.help = vim.fn.readfile(paths[1])
+  return M.help
+end
+
+M.get_help_text = function(tag)
+  if not M.help then
+    M.load_help_file()
+  end
+
+  local tag_pattern = "%*'" .. tag .. "'%*"
+
+  local start_index
+  for i, line in ipairs(M.help) do
+    if line:match(tag_pattern) then
+      start_index = i
+      break
+    end
+  end
+  if not start_index then
+    return nil
+  end
+
+  local heading_pattern = "%*'[^']*'%*"
+  local end_index = #M.help
+  for i = start_index + 1, #M.help do
+    if M.help[i]:match(heading_pattern) then
+      end_index = i - 1
+      break
+    end
+  end
+
+  local output = {}
+  for i = start_index, end_index do
+    output[#output + 1] = M.help[i]
+  end
+
+  return table.concat(output, "\n")
+end
+
 return M

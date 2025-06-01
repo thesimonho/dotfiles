@@ -1,36 +1,67 @@
 local ui = require("utils.ui")
-local paths = vim.fn.globpath(vim.o.rtp, "doc/options.txt", false, true)
-local help = vim.fn.readfile(paths[1])
+local utils = require("utils.general")
 
-local function get_help_text(tag)
-  local tag_pattern = "%*'" .. tag .. "'%*"
+local function show_scope_error(opt_global, info)
+  local current_scope = opt_global and "global" or "local"
+  vim.notify(
+    "Cannot set " .. info.scope .. " option (" .. info.name .. ") in " .. current_scope .. " scope",
+    vim.log.levels.ERROR,
+    { title = "Option Scope Error" }
+  )
+end
 
-  local start_index
-  for i, line in ipairs(help) do
-    if line:match(tag_pattern) then
-      start_index = i
-      break
+local function is_settable(opt_global, info)
+  if opt_global then
+    if (info.scope == "win" or info.scope == "buf") and info.global_local ~= true then
+      show_scope_error(opt_global, info)
+      return false
+    end
+  else
+    if info.scope == "global" then
+      show_scope_error(opt_global, info)
+      return false
     end
   end
-  if not start_index then
-    return nil
+  return true
+end
+
+local function nvim_set_option(picker, opt, val, item)
+  local set_opts = {}
+  if item.info.scope == "win" then
+    set_opts.win = picker:current_win().id
+  elseif item.info.scope == "buf" then
+    set_opts.buf = vim.api.nvim_get_current_buf()
   end
 
-  local heading_pattern = "%*'[^']*'%*"
-  local end_index = #help
-  for i = start_index + 1, #help do
-    if help[i]:match(heading_pattern) then
-      end_index = i - 1
-      break
+  local ok, err = pcall(vim.api.nvim_set_option_value, opt, val, set_opts)
+  if not ok and err then
+    vim.notify(err, vim.log.levels.ERROR)
+  end
+
+  picker:find({
+    on_done = function()
+      -- BUG: jumps to the wrong item index
+      -- picker.list:view(item.idx)
+      picker.list:view(1)
+    end,
+  })
+end
+
+local function show_option_value_input(picker, item, old)
+  pcall(vim.ui.input, { prompt = item.text, default = item.value }, function(input)
+    if not input or input == old then
+      return
     end
-  end
 
-  local output = {}
-  for i = start_index, end_index do
-    output[#output + 1] = help[i]
-  end
+    local updated
+    if item.info.type == "number" then
+      updated = tonumber(input)
+    else
+      updated = input
+    end
 
-  return table.concat(output, "\n")
+    nvim_set_option(picker, item.text, updated, item)
+  end)
 end
 
 return {
@@ -82,7 +113,6 @@ return {
         end,
         desc = "Projects",
       },
-      { "<leader>fi", LazyVim.pick("icons", { matcher = { fuzzy = false } }), desc = "Icons" },
       { "<leader>dpt", "<cmd>lua Snacks.profiler.pick()<cr>", desc = "Toggle" },
       {
         "<leader>qp",
@@ -224,18 +254,23 @@ return {
           options = {
             title = "Options",
             preview = "preview",
-            supports_live = true,
+            global = false,
+            toggles = {
+              global = "g",
+            },
             finder = function()
               local items = {}
-              for _, o in pairs(vim.api.nvim_get_all_options_info()) do
+              for _, o in ipairs(vim.tbl_values(vim.api.nvim_get_all_options_info())) do
                 local ok, v = pcall(vim.api.nvim_get_option_value, o.name, {})
-                if ok then
+                local info = vim.api.nvim_get_option_info2(o.name, {})
+                if ok and info then
                   items[#items + 1] = {
                     text = o.name,
                     value = tostring(v),
+                    info = info,
                     preview = {
                       ft = "help",
-                      text = get_help_text(o.name) or "No help available for this option.",
+                      text = utils.get_help_text(o.name) or "No help available for this option.",
                     },
                   }
                 end
@@ -243,18 +278,57 @@ return {
               return items
             end,
             format = function(item, _)
+              local hl = ""
+              if item.value == "true" then
+                hl = "Added"
+              elseif item.value == "false" then
+                hl = "Removed"
+              end
+
+              local hl_scope
+              if item.info.scope == "global" then
+                hl_scope = "Identifier"
+              else
+                hl_scope = "Float"
+              end
+
               local ret = {}
               local a = Snacks.picker.util.align
-              ret[#ret + 1] = { a(item.text, 20), "Statement" }
+              ret[#ret + 1] = { a(item.text, 20), "Keyword" }
               ret[#ret + 1] = { "▏", "SnacksIndent" }
-              ret[#ret + 1] = { a(item.value, 20) }
+              ret[#ret + 1] = { a(item.info.scope, 8), hl_scope }
+              ret[#ret + 1] = { "▏", "SnacksIndent" }
+              ret[#ret + 1] = { item.value, hl }
               return ret
             end,
             sort = { fields = { "text" } },
-            confirm = function(picker, item)
-              -- TODO: https://github.com/ibhagwan/fzf-lua/blob/main/lua/fzf-lua/actions.lua#L599
-              print(item.text .. " = " .. item.value)
-            end,
+            actions = {
+              toggle_global = function(picker)
+                picker.opts.global = not picker.opts.global
+                picker:find()
+              end,
+              confirm = function(picker, item)
+                if not is_settable(picker.opts.global, item.info) then
+                  return
+                end
+
+                if item.info.type == "boolean" then
+                  local str2bool = { ["true"] = true, ["false"] = false }
+                  nvim_set_option(picker, item.text, not str2bool[item.value], item)
+                elseif item.info.type == "number" then
+                  show_option_value_input(picker, item, tonumber(item.value))
+                else
+                  show_option_value_input(picker, item, item.value)
+                end
+              end,
+            },
+            win = {
+              input = {
+                keys = {
+                  ["<M-g>"] = { "toggle_global", mode = { "i", "n" } },
+                },
+              },
+            },
           },
         },
       },
