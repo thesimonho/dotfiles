@@ -42,6 +42,11 @@ M.basic_binds = {
 	{
 		key = "t",
 		mods = "CTRL",
+		action = act.SpawnTab("CurrentPaneDomain"),
+	},
+	{
+		key = "n",
+		mods = "SUPER",
 		action = wezterm.action_callback(function(window, pane)
 			window:perform_action(
 				act.InputSelector({
@@ -49,8 +54,11 @@ M.basic_binds = {
 						local kind, name = label:match("^(.-): (.+)$")
 						if kind == "devcontainer" then
 							win:perform_action(
-								act.SpawnCommandInNewTab({
-									args = { "ssh", name .. ".devpod" },
+								act.SwitchToWorkspace({
+									name = name,
+									spawn = {
+										args = { "ssh", name .. ".devpod" },
+									},
 								}),
 								pan
 							)
