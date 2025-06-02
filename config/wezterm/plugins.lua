@@ -71,7 +71,36 @@ M.tabline.setup({
 			{ "domain", padding = { left = 1, right = 0 } },
 		},
 		tabline_c = { " " },
-		tabline_x = { { "cpu" }, { "ram" } },
+		tabline_x = {
+			function(window)
+				local metadata = window:active_pane():get_metadata()
+				local latency = metadata.since_last_response_ms
+				if not latency then
+					return ""
+				end
+
+				local color
+				local icon
+				local red = "\27[31m"
+				local yellow = "\27[33m"
+				local green = "\27[32m"
+				if metadata.is_tardy then
+					if latency > 10000 then
+						color = red
+						icon = "󰢼"
+						latency = ">999"
+					else
+						color = yellow
+						icon = "󰢽"
+					end
+				else
+					color = green
+					icon = "󰢾"
+					latency = "<1"
+				end
+				return string.format(color .. icon .. " %sms ", latency)
+			end,
+		},
 		tabline_y = {
 			{
 				"datetime",
