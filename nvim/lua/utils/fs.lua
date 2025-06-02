@@ -107,14 +107,6 @@ M.has_container = function(path)
   return false
 end
 
-M.in_container = function()
-  local docker_env = "/.dockerenv"
-  if vim.fn.filereadable(docker_env) == 1 then
-    return true
-  end
-  return false
-end
-
 --- Check if a file exists in a directory or subdirectories
 --- @param filename string filename to search for
 --- @param directory string | nil (default "~/Projects") directory to search in
