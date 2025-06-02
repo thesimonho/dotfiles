@@ -71,7 +71,7 @@ M.get_devpod_info = function()
 end
 
 M.create_ssh_domains = function()
-	if #M.devpods == 0 then
+	if next(M.devpods) == nil then
 		M.devpods = M.get_devpod_info()
 	end
 
@@ -168,10 +168,10 @@ M.distroboxes = {}
 M.container_choices = {}
 
 M.create_container_choices = function()
-	if #M.distroboxes == 0 then
+	if next(M.distroboxes) == nil then
 		M.distroboxes = M.get_distrobox_images()
 	end
-	if #M.devpods == 0 then
+	if next(M.devpods) == nil then
 		M.devpods = M.get_devpod_info()
 	end
 
@@ -189,6 +189,11 @@ M.create_container_choices = function()
 			label = "distrobox: " .. box,
 		})
 	end
+
+	table.insert(M.container_choices, {
+		label = "󰑓 reload domains",
+	})
+
 	return M.container_choices
 end
 
