@@ -91,6 +91,7 @@ M.create_ssh_domains = function()
 			remote_wezterm_path = "/usr/bin/wezterm",
 			ssh_option = {
 				identityfile = "~/.ssh/id_devcontainer",
+				forwardagent = "yes",
 			},
 		})
 	end
