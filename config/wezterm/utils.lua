@@ -37,4 +37,15 @@ M.move_or_split = function(win, pane, direction)
 	win:perform_action(act.SplitPane({ direction = direction }), pane)
 end
 
+-- Poll until a predicate function returns true, then stop polling.
+M.poll_until_ready = function(interval, predicate)
+	local function step()
+		local done = predicate()
+		if not done then
+			wezterm.time.call_after(interval, step)
+		end
+	end
+	wezterm.time.call_after(0.1, step)
+end
+
 return M
