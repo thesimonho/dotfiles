@@ -11,8 +11,7 @@ ENV GIT_SSH_REWRITE=${GIT_SSH_REWRITE}
 # Install things
 RUN apt-get update && apt-get install -y --no-install-recommends \
   curl \
-  gnupg \
-  wl-clipboard
+  gnupg
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fsSL https://apt.fury.io/wez/gpg.key | gpg --yes --dearmor -o /usr/share/keyrings/wezterm-fury.gpg && \
