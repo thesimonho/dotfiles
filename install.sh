@@ -61,7 +61,6 @@ link_file() {
 }
 
 echo "Installing dotfiles..."
-link_file "$DOTFILES/scripts/container-clipboard" "$HOME/.local/bin/container-clipboard"
 link_file "$DOTFILES/config/wezterm" "$CONFIG_HOME/wezterm"
 link_file "$DOTFILES/config/fzf" "$CONFIG_HOME/fzf"
 link_file "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
