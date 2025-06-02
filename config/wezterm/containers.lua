@@ -113,60 +113,7 @@ M.get_distrobox_images = function()
 	return images
 end
 
--- M.create_distrobox_launchers = function()
--- 	local boxes = M.distroboxes
--- 	if #boxes == 0 then
--- 		return
--- 	end
--- 	local launchers = {}
--- 	for _, box in ipairs(boxes) do
--- 		table.insert(launchers, {
--- 			label = "distrobox: " .. box,
--- 			args = { "distrobox", "enter", "--root", box },
--- 		})
--- 	end
--- 	return launchers
--- end
-
--- M.get_devpod_containers = function()
--- 	local images = {}
--- 	local handle = io.popen("devpod list")
--- 	if not handle then
--- 		return images
--- 	end
---
--- 	local i = 0
--- 	for line in handle:lines() do
--- 		if i > 2 and i < #line then
--- 			local cols = utils.string_split(line, "|")
--- 			if cols then
--- 				table.insert(images, cols[1])
--- 			end
--- 		end
--- 		i = i + 1
--- 	end
--- 	handle:close()
--- 	return images
--- end
-
--- M.create_devpod_launchers = function()
--- 	local boxes = M.devpod
--- 	if #boxes == 0 then
--- 		return
--- 	end
--- 	local launchers = {}
--- 	for _, pod in ipairs(boxes) do
--- 		table.insert(launchers, {
--- 			label = "devpod: " .. pod,
--- 			args = { "ssh", pod .. ".devpod" },
--- 		})
--- 	end
--- 	return launchers
--- end
-
-M.distroboxes = {}
 M.container_choices = {}
-
 M.create_container_choices = function()
 	if next(M.distroboxes) == nil then
 		M.distroboxes = M.get_distrobox_images()
