@@ -30,7 +30,7 @@ RUN usermod --shell "$(which zsh)" vscode
 USER vscode
 WORKDIR /home/vscode
 ENV HOME=/home/vscode
-RUN mkdir -p ~/.ssh && mkdir -p ~/.aws
+RUN mkdir -p ~/.ssh ~/.aws ~/.local/state/nvim ~/.local/share/nvim
 
 # Homebrew
 RUN NONINTERACTIVE=1 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
