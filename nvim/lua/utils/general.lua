@@ -8,7 +8,7 @@ M.get_split_count = function()
   return vim.o.columns / vim.fn.winwidth(0)
 end
 
--- Functional wrapper for mapping custom keybindings
+--- Functional wrapper for mapping custom keybindings
 M.map = function(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
   if opts then
@@ -17,7 +17,7 @@ M.map = function(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, options)
 end
 
--- string padding
+--- string padding
 M.pad_string_align = function(str, spacing)
   return str .. string.rep(" ", spacing - #str)
 end
@@ -42,7 +42,7 @@ M.pad_string = function(str, len, align)
   end
 end
 
--- check if string is in table
+--- check if string is in table
 M.is_string_in_table = function(str, tbl)
   for _, value in pairs(tbl) do
     if value == str then
@@ -52,7 +52,7 @@ M.is_string_in_table = function(str, tbl)
   return false
 end
 
--- get all keys from a table
+--- get all keys from a table
 M.get_table_keys = function(tab)
   local keyset = {}
   for k, _ in pairs(tab) do
@@ -61,7 +61,7 @@ M.get_table_keys = function(tab)
   return keyset
 end
 
--- get mini icon or web devicon
+--- get mini icon or web devicon
 M.get_web_icon = function(filename, library)
   if library == "mini" then
     local mini = require("mini.icons")
@@ -73,7 +73,7 @@ M.get_web_icon = function(filename, library)
   end
 end
 
--- Get buffer progress character
+--- Get buffer progress character
 M.get_progress_char = function()
   local current_line = vim.fn.line(".")
   local total_lines = vim.fn.line("$")
@@ -130,6 +130,28 @@ M.get_help_text = function(tag)
   end
 
   return table.concat(output, "\n")
+end
+
+--- copy to system clipboard using OSC52
+M.set_osc52_clipboard = function()
+  -- paste from clipboard does not work
+  -- set to regular nvim paste
+  local function paste()
+    local content = vim.fn.getreg('"')
+    return vim.split(content, "\n")
+  end
+
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      ["+"] = paste,
+      ["*"] = paste,
+    },
+  }
 end
 
 return M
