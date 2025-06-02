@@ -1,3 +1,4 @@
+local wezterm = require("wezterm")
 local utils = require("utils")
 
 local M = {}
@@ -70,14 +71,18 @@ M.get_devpod_info = function()
 	return devpods
 end
 
+M.ssh_domains = {}
 M.create_ssh_domains = function()
+	if next(M.ssh_domains) ~= nil then
+		return M.ssh_domains
+	end
+
 	if next(M.devpods) == nil then
 		M.devpods = M.get_devpod_info()
 	end
 
-	local ssh_domains = {}
 	for name, data in pairs(M.devpods) do
-		table.insert(ssh_domains, {
+		table.insert(M.ssh_domains, {
 			name = data.workspace or name,
 			remote_address = string.format("127.0.0.1:%s", data.ports["2222/tcp"]),
 			username = data.user or "vscode",
@@ -89,9 +94,10 @@ M.create_ssh_domains = function()
 			},
 		})
 	end
-	return ssh_domains
+	return M.ssh_domains
 end
 
+M.distroboxes = {}
 M.get_distrobox_images = function()
 	local images = {}
 	local handle = io.popen("distrobox ls")
@@ -143,5 +149,22 @@ M.create_container_choices = function()
 
 	return M.container_choices
 end
+
+utils.poll_until_ready(3, function()
+	local loaded
+	if next(M.ssh_domains) == nil then
+		M.create_ssh_domains()
+		if next(M.ssh_domains) == nil then
+			loaded = false
+		else
+			loaded = true
+			wezterm.reload_configuration()
+		end
+	else
+		return true
+	end
+
+	return loaded
+end)
 
 return M
