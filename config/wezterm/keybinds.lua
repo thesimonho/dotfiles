@@ -12,6 +12,7 @@ local function handle_selection(window, pane, _, label)
 
 	if label == "󰑓 reload domains" then
 		window:perform_action(act.ReloadConfiguration, pane)
+		return
 	end
 
 	local kind, name = label:match("^(.-): (.+)$")
