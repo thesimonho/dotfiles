@@ -18,11 +18,12 @@ RUN curl -fsSL https://apt.fury.io/wez/gpg.key | gpg --yes --dearmor -o /usr/sha
   echo 'deb [signed-by=/usr/share/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | tee /etc/apt/sources.list.d/wezterm.list && \
   chmod 644 /usr/share/keyrings/wezterm-fury.gpg 
 
-RUN apt-get update && apt-get install -y --no-install-recommends wezterm-nightly
+RUN apt-get update && apt-get install -y --no-install-recommends wezterm-nightly && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
-RUN apt-get clean && \
-  rm -rf /var/lib/apt/lists/* && \
-  touch /.dockerenv
+RUN touch /.dockerenv && \
+  echo "export PATH=\"\$HOME/go/bin:/usr/local/go/bin:\$PATH\"" >> /etc/profile.d/go-path.sh
 
 # Switch to non-root user
 RUN usermod --shell "$(which zsh)" vscode
