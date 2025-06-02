@@ -10,6 +10,10 @@ local function handle_selection(window, pane, _, label)
 		return
 	end
 
+	if label == "󰑓 reload domains" then
+		window:perform_action(act.ReloadConfiguration, pane)
+	end
+
 	local kind, name = label:match("^(.-): (.+)$")
 	if kind == "devpod" then
 		window:perform_action(
