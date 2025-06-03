@@ -20,10 +20,8 @@ RUN curl -fsSL https://apt.fury.io/wez/gpg.key | gpg --yes --dearmor -o /usr/sha
 
 RUN apt-get update && apt-get install -y --no-install-recommends wezterm-nightly && \
   apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
-RUN touch /.dockerenv && \
-  echo "export PATH=\"\$HOME/go/bin:/usr/local/go/bin:\$PATH\"" >> /etc/profile.d/go-path.sh
+  rm -rf /var/lib/apt/lists/* && \
+  touch /.dockerenv
 
 # Switch to non-root user
 RUN usermod --shell "$(which zsh)" vscode
