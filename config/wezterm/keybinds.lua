@@ -1,7 +1,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 local containers = require("containers")
-local utils = require("utils")
 local SCROLL_SPEED = 0.4
 
 local function handle_selection(window, pane, _, label)
@@ -23,7 +22,7 @@ local function handle_selection(window, pane, _, label)
 		return
 	end
 
-	local kind, name = label:match("^(.-): (.+)$")
+	local kind, name = label:match("^(.-): (.-)%s*%*?$")
 	if kind == "devpod" then
 		window:perform_action(
 			act.SwitchToWorkspace({
@@ -56,10 +55,8 @@ end
 
 -- Creates the input selector action
 local function show_domain_selector()
-	local choices = containers.container_choices
-	if #choices == 0 then
-		choices = containers.create_container_choices()
-	end
+	-- create choices every time so we can update the * indicator
+	local choices = containers.create_container_choices()
 
 	return act.InputSelector({
 		action = wezterm.action_callback(handle_selection),
