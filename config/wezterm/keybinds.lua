@@ -10,7 +10,15 @@ local function handle_selection(window, pane, _, label)
 		return
 	end
 
-	if label == "󰑓 reload domains" then
+	if label == "󰌙 detach domains" then
+		local domains = wezterm.mux.all_domains()
+		for _, domain in ipairs(domains) do
+			if domain:state() == "Attached" and domain:name() ~= "local" and domain:is_spawnable() then
+				domain:detach()
+			end
+		end
+		return
+	elseif label == "󰑓 reload domains" then
 		window:perform_action(act.ReloadConfiguration, pane)
 		return
 	end
