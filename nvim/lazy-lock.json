@@ -9,7 +9,6 @@
   "catppuccin": { "branch": "main", "commit": "56a9dfd1e05868cf3189369aad87242941396563" },
   "ccc.nvim": { "branch": "main", "commit": "9d1a256e006decc574789dfc7d628ca11644d4c2" },
   "conform.nvim": { "branch": "master", "commit": "6feb2f28f9a9385e401857b21eeac3c1b66dd628" },
-  "copilot-lualine": { "branch": "main", "commit": "6bc29ba1fcf8f0f9ba1f0eacec2f178d9be49333" },
   "copilot.lua": { "branch": "master", "commit": "a620a5a97b73faba009a8160bab2885316e1451c" },
   "csvview.nvim": { "branch": "main", "commit": "c44d9ed0664de67f3ac333fe83cb187ab241f82a" },
   "debugprint.nvim": { "branch": "main", "commit": "bc3008074c6fafce2f3bef8062cff424239ec4f8" },
