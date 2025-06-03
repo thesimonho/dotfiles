@@ -44,7 +44,7 @@ config.inactive_pane_hsb = {
 }
 config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
-config.mux_enable_ssh_agent = true
+config.mux_enable_ssh_agent = false
 config.scrollback_lines = 7500
 config.ssh_domains = containers.create_ssh_domains()
 config.tab_and_split_indices_are_zero_based = true
