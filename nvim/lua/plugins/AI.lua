@@ -3,9 +3,7 @@ vim.g.ai_cmp = false -- show AI suggestions in cmp
 local M = {
   {
     "zbirenbaum/copilot.lua",
-    dependencies = {
-      "AndreM222/copilot-lualine",
-    },
+    enabled = false,
     keys = {
       {
         "<leader>a.",
@@ -48,6 +46,7 @@ local M = {
   },
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    enabled = false,
     dependencies = {
       { "zbirenbaum/copilot.lua" },
       { "nvim-lua/plenary.nvim" },
@@ -150,7 +149,7 @@ local M = {
   },
   {
     "AlejandroSuero/supermaven-nvim", -- TODO: fork until PR is merged
-    enabled = false,
+    enabled = true,
     lazy = false, -- required otherwise color setting wont work
     branch = "feature/exposing-suggestion-group",
     init = function()

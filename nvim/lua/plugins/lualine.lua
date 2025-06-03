@@ -198,17 +198,6 @@ return {
             return utils.get_split_count() < 3
           end,
         },
-        {
-          "copilot",
-          symbols = {
-            spinners = "dots",
-          },
-          show_colors = true,
-          show_loading = true,
-          on_click = function()
-            vim.cmd("Copilot panel")
-          end,
-        },
       },
       lualine_y = {
         {
