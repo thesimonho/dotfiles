@@ -1,3 +1,4 @@
+local os_utils = require("utils.os")
 local fs = require("utils.fs")
 local wk = require("which-key")
 
@@ -12,7 +13,7 @@ end
 
 local function term_or_exec(term_num)
   term_num = term_num or 1
-  if fs.has_container() and not fs.in_container() then
+  if fs.has_container() and not os_utils.is_container() then
     local path = fs.get_path_components(vim.fn.getcwd())
     local container_name = path[#path]:lower():gsub("[ _]", "-")
     local cmd = "ssh " .. container_name .. ".devpod"
