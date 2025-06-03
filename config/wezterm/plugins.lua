@@ -74,6 +74,10 @@ M.tabline.setup({
 		tabline_x = {
 			function(window)
 				local metadata = window:active_pane():get_metadata()
+				if not metadata then
+					return ""
+				end
+
 				local latency = metadata.since_last_response_ms
 				if not latency then
 					return ""
