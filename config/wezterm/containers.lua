@@ -144,7 +144,11 @@ M.create_container_choices = function()
 		})
 	end
 
-	table.insert(M.container_choices, {
+	table.insert(container_choices, {
+		label = "󰌙 detach domains",
+	})
+
+	table.insert(container_choices, {
 		label = "󰑓 reload domains",
 	})
 
