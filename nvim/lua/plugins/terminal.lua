@@ -43,6 +43,26 @@ local function init_or_toggle()
   end
 end
 
+local function create_terminal_keys(count)
+  count = count or 4
+  local keys = {}
+  for i = 1, count do
+    keys[#keys + 1] = {
+      "",
+      function()
+        vim.cmd(term_or_exec(i))
+      end,
+      desc = "Terminal " .. i,
+    }
+  end
+
+  keys = vim.list_slice(keys, 1, 10)
+  for i, v in ipairs(keys) do
+    v[1] = tostring(i)
+  end
+  return keys
+end
+
 return {
   {
     "akinsho/toggleterm.nvim",
@@ -50,38 +70,16 @@ return {
     cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
     keys = {
       { "<leader>\\\\", init_or_toggle, desc = "Toggle all" },
-      {
-        "<leader>\\1",
-        function()
-          vim.cmd(term_or_exec(1))
-        end,
-        desc = "Terminal 1",
-      },
-      {
-        "<leader>\\2",
-        function()
-          vim.cmd(term_or_exec(2))
-        end,
-        desc = "Terminal 2",
-      },
-      {
-        "<leader>\\3",
-        function()
-          vim.cmd(term_or_exec(3))
-        end,
-        desc = "Terminal 3",
-      },
-      {
-        "<leader>\\4",
-        function()
-          vim.cmd(term_or_exec(4))
-        end,
-        desc = "Terminal 4",
-      },
       { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
     init = function()
-      wk.add({ "<leader>\\", group = "terminal" })
+      wk.add({
+        "<leader>\\",
+        group = "terminals",
+        expand = function()
+          return create_terminal_keys(4)
+        end,
+      })
     end,
     opts = {
       autochdir = true,
