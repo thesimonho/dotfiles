@@ -120,8 +120,9 @@ M.get_distrobox_images = function()
 	return images
 end
 
-M.container_choices = {}
 M.create_container_choices = function()
+	local container_choices = {}
+
 	if next(M.distroboxes) == nil then
 		M.distroboxes = M.get_distrobox_images()
 	end
@@ -129,17 +130,23 @@ M.create_container_choices = function()
 		M.devpods = M.get_devpod_info()
 	end
 
-	table.insert(M.container_choices, {
+	table.insert(container_choices, {
 		label = "local",
 	})
 
 	for _, pod in pairs(M.devpods) do
-		table.insert(M.container_choices, {
-			label = "devpod: " .. pod.workspace,
+		local domain = wezterm.mux.get_domain(pod.workspace)
+		local label = "devpod: " .. pod.workspace
+		if domain:state() == "Attached" then
+			label = label .. " *"
+		end
+
+		table.insert(container_choices, {
+			label = label,
 		})
 	end
 	for _, box in ipairs(M.distroboxes) do
-		table.insert(M.container_choices, {
+		table.insert(container_choices, {
 			label = "distrobox: " .. box,
 		})
 	end
@@ -152,7 +159,7 @@ M.create_container_choices = function()
 		label = "󰑓 reload domains",
 	})
 
-	return M.container_choices
+	return container_choices
 end
 
 utils.poll_until_ready(3, function()
