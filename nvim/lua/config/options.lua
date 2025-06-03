@@ -9,7 +9,6 @@ vim.g.maplocalleader = ","
 -- set clipboard for local and terminal (via OSC52)
 vim.schedule(function()
   vim.opt.clipboard:append("unnamedplus")
-  -- Standard SSH session handling
   if vim.uv.os_getenv("SSH_CLIENT") ~= nil or vim.uv.os_getenv("SSH_TTY") ~= nil then
     utils.set_osc52_clipboard()
   else

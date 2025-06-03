@@ -68,9 +68,21 @@ M.basic_binds = {
 	{ key = "c", mods = "CMD", action = act.SendKey({ key = "c", mods = "CTRL" }) },
 	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
 
+	-- wezterm
 	{ key = "F1", mods = "SUPER", action = act.ActivateCommandPalette },
 	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
-	-- { key = "p", mods = "SUPER", action = plugins.workspace_switcher.switch_workspace() },
+	{ key = "/", mods = "CTRL", action = act.Search({ CaseInSensitiveString = "" }) },
+	{ key = "y", mods = "LEADER", action = act.ActivateCopyMode },
+	{ key = "q", mods = "LEADER", action = act.QuitApplication },
+	{
+		key = "p",
+		mods = "SUPER",
+		action = wezterm.action_callback(function(window, pane)
+			window:perform_action(show_domain_selector(), pane)
+		end),
+	},
+
+	-- copy paste
 	{
 		key = "c",
 		mods = "CTRL|SHIFT",
@@ -84,30 +96,26 @@ M.basic_binds = {
 			end
 		end),
 	},
-	{
-		key = "v",
-		mods = "CTRL|SHIFT",
-		action = act.PasteFrom("Clipboard"),
-	},
-	{ key = "/", mods = "CTRL", action = act.Search({ CaseInSensitiveString = "" }) },
-	{
-		key = "f",
-		mods = "CTRL",
-		action = act.SendString("fzf\r"),
-	},
+	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 
-	{
-		key = "t",
-		mods = "CTRL",
-		action = act.SpawnTab("CurrentPaneDomain"),
-	},
-	{
-		key = "p",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(window, pane)
-			window:perform_action(show_domain_selector(), pane)
-		end),
-	},
+	-- font size
+	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
+	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
+	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
+
+	-- panes / windows
+	{ key = "h", mods = "SUPER", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
+
+	-- tabs / buffers
+	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "`", mods = "LEADER", action = act.ActivateLastTab },
+	{ key = "h", mods = "LEADER", action = act.ActivateTabRelative(-1) },
+	{ key = "l", mods = "LEADER", action = act.ActivateTabRelative(1) },
+
+	-- scrolling
 	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },
 	{ key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) },
 	-- {
@@ -132,49 +140,18 @@ M.basic_binds = {
 	-- 		end
 	-- 	end),
 	-- },
-	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
-	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
-	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
-	{ key = "y", mods = "LEADER", action = act.ActivateCopyMode },
-	{ key = "q", mods = "LEADER", action = act.QuitApplication },
-	{ key = "`", mods = "LEADER", action = act.ActivateLastTab },
+
+	-- key tables
 	{
-		key = "h",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(win, pane)
-			utils.move_or_split(win, pane, "Left")
-		end),
-	},
-	{
-		key = "j",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(win, pane)
-			utils.move_or_split(win, pane, "Down")
-		end),
-	},
-	{
-		key = "k",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(win, pane)
-			utils.move_or_split(win, pane, "Up")
-		end),
-	},
-	{
-		key = "l",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(win, pane)
-			utils.move_or_split(win, pane, "Right")
-		end),
-	},
-	{
-		key = "`",
+		key = "w",
 		mods = "LEADER",
-		action = wezterm.action.ActivateLastTab,
+		action = act.ActivateKeyTable({ name = "window_mode" }),
 	},
-	{ key = "h", mods = "LEADER", action = act.ActivateTabRelative(-1) },
-	{ key = "l", mods = "LEADER", action = act.ActivateTabRelative(1) },
-	{ key = "w", mods = "LEADER", action = act.ActivateKeyTable({ name = "window_mode" }) },
-	{ key = "b", mods = "LEADER", action = act.ActivateKeyTable({ name = "buffer_mode" }) },
+	{
+		key = "b",
+		mods = "LEADER",
+		action = act.ActivateKeyTable({ name = "buffer_mode" }),
+	},
 }
 
 M.key_tables = {
