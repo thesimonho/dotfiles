@@ -180,7 +180,7 @@ local M = {
   },
   {
     "yetone/avante.nvim",
-    enabled = false,
+    enabled = true,
     build = "make",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
@@ -292,6 +292,14 @@ local M = {
           start_insert = false,
         },
       },
+      rag_service = {
+        enabled = false,
+        host_mount = os.getenv("HOME"),
+        provider = "ollama", -- The provider to use for RAG service (e.g. openai or ollama)
+        llm_model = "granite3.1-dense:8b", -- The LLM model to use for RAG service
+        embed_model = "granite-embedding:30m", -- The embedding model to use for RAG service
+        endpoint = "http://localhost:11435",
+      },
       web_search_engine = {
         provider = "tavily",
         proxy = nil,
@@ -301,33 +309,29 @@ local M = {
           },
         },
       },
-      rag_service = {
-        enabled = true,
-        host_mount = os.getenv("HOME"),
-        provider = "ollama", -- The provider to use for RAG service (e.g. openai or ollama)
-        llm_model = "granite3.1-dense:8b", -- The LLM model to use for RAG service
-        embed_model = "granite-embedding:30m", -- The embedding model to use for RAG service
-        endpoint = "http://localhost:11435",
-      },
-      openai = {
-        endpoint = "https://api.openai.com/v1",
-        model = "gpt-4.1",
-        timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-        temperature = 0.1,
-        max_completion_tokens = 16384, -- Increase this to include reasoning tokens (for reasoning models)
-        reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-        disable_tools = false,
-      },
-      ollama = {
-        endpoint = "http://127.0.0.1:11435",
-        timeout = 30000, -- Timeout in milliseconds
-        options = {
-          temperature = 0.1,
-          num_ctx = 20480,
-          keep_alive = "5m",
+      providers = {
+        openai = {
+          endpoint = "https://api.openai.com/v1",
+          model = "gpt-4.1",
+          timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+          extra_request_body = {
+            temperature = 0.1,
+            max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+            reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+            disable_tools = false,
+          },
         },
-      },
-      vendors = {
+        ollama = {
+          endpoint = "http://127.0.0.1:11435",
+          timeout = 30000, -- Timeout in milliseconds
+          extra_request_body = {
+            options = {
+              temperature = 0.1,
+              num_ctx = 20480,
+              keep_alive = "5m",
+            },
+          },
+        },
         ["qwen_coder_2.5"] = {
           __inherited_from = "ollama",
           model = "qwen2.5-coder:3b",
