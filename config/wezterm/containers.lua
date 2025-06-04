@@ -162,7 +162,7 @@ M.create_container_choices = function()
 	return container_choices
 end
 
-utils.poll_until_ready(3, function()
+utils.poll_until_ready(60, function()
 	local loaded
 	if next(M.ssh_domains) == nil then
 		M.create_ssh_domains()
