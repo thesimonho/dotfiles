@@ -69,8 +69,8 @@ local M = {
         },
       },
       dashboard = {
-        width = 70,
-        pane_gap = 15,
+        width = 60,
+        pane_gap = 10,
         autokeys = "1234567890abcdefghijklmnopqrstuvwxyz",
         preset = {
           keys = {
