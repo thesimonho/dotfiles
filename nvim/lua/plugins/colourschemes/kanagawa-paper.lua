@@ -5,8 +5,9 @@ return {
     dev = true,
     priority = 1000,
     opts = {
-      dim_inactive = true,
       cache = false,
+      dim_inactive = true,
+      diag_background = true,
       auto_plugins = true,
       integrations = {
         wezterm = {
