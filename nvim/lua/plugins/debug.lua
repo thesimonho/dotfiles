@@ -1,5 +1,73 @@
 return {
   {
+    "mfussenegger/nvim-dap",
+    config = function()
+      local dap = require("dap")
+      for _, adapterType in ipairs({ "node", "chrome" }) do
+        local pwaType = "pwa-" .. adapterType
+        if not dap.adapters[pwaType] then
+          dap.adapters[pwaType] = {
+            type = "server",
+            host = "localhost",
+            port = "${port}",
+            executable = {
+              command = "node",
+              args = {
+                require("mason-registry").get_package("js-debug-adapter"):get_install_path()
+                  .. "/js-debug/src/dapDebugServer.js",
+                "${port}",
+              },
+            },
+          }
+
+          -- this allow us to handle launch.json configurations
+          -- which specify type as "node" or "chrome" or "msedge"
+          dap.adapters[adapterType] = function(cb, config)
+            local nativeAdapter = dap.adapters[pwaType]
+
+            config.type = pwaType
+
+            if type(nativeAdapter) == "function" then
+              nativeAdapter(cb, config)
+            else
+              cb(nativeAdapter)
+            end
+          end
+        end
+      end
+
+      for _, language in ipairs({ "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" }) do
+        dap.configurations[language] = {
+          {
+            type = "pwa-node",
+            request = "launch",
+            name = "Launch file using Node.js (nvim-dap)",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+          },
+          {
+            type = "pwa-node",
+            request = "attach",
+            name = "Attach to process using Node.js (nvim-dap)",
+            processId = require("dap.utils").pick_process,
+            cwd = "${workspaceFolder}",
+          },
+          {
+            type = "pwa-chrome",
+            request = "attach",
+            name = "Attach to Chrome (pwa-chrome = { port: 9222 })",
+            program = "${file}",
+            cwd = vim.fn.getcwd(),
+            sourceMaps = true,
+            protocol = "inspector",
+            port = 9222,
+            webRoot = "${workspaceFolder}",
+          },
+        }
+      end
+    end,
+  },
+  {
     "rcarriga/nvim-dap-ui",
     opts = {
       icons = {
