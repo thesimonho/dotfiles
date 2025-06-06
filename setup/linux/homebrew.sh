@@ -26,6 +26,7 @@ declare -A packages=(
   [fzf]="fzf"
   [gh]="gh"
   [lazygit]="lazygit"
+  [luarocks]="luarocks"
   [neovim]="nvim"
   [ripgrep]="rg"
   [starship]="starship"
