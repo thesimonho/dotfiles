@@ -47,7 +47,7 @@ symbol = " "
 format = 'on [$symbol$branch(:$remote_branch)]($style) '
 
 [custom.hostname]
-command = 'echo "${CONTAINER_NAME:-container}"'
+command = 'echo "${CONTAINER_NAME:-📦}"'
 when = '''
 test -f /run/.containerenv ||
 test -f /.dockerenv ||
@@ -55,7 +55,7 @@ grep -qE "(docker|containerd|kubepods)" /proc/1/cgroup ||
 test -f /run/systemd/container
 '''
 style = "red"
-format = '[\($output\) ]($style)'
+format = '[$output ]($style)'
 
 [line_break]
 disabled = false
