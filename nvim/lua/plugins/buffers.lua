@@ -1,4 +1,5 @@
 return {
+  { "akinsho/bufferline.nvim", enabled = false },
   {
     "tiagovla/scope.nvim",
     event = "LazyFile",

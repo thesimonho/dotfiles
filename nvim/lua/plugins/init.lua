@@ -5,11 +5,11 @@ return {
       colorscheme = "kanagawa-paper",
       icons = {
         dap = {
-          Stopped = { " ", "DapUIPlayPause", "DapStoppedLine" },
-          Breakpoint = { " ", "DapUIBreakpointsCurrentLine" },
-          BreakpointCondition = { " ", "DapUIBreakpointsWarn" },
-          BreakpointRejected = { " ", "DapUIBreakpointsWarn" },
-          LogPoint = { " ", "DapUIBreakpointsInfo" },
+          Stopped = { " ", "DapStoppedLine" },
+          Breakpoint = { " ", "DiagnosticError" },
+          BreakpointCondition = { " ", "DiagnosticHint" },
+          BreakpointRejected = { " ", "DiagnosticWarn" },
+          LogPoint = { " ", "DiagnosticInfo" },
         },
         diagnostics = {
           Error = " ",
@@ -29,8 +29,4 @@ return {
   -- submodules
   { import = "plugins.colourschemes" },
   { import = "plugins.languages" },
-
-  -- disabled
-  { "akinsho/bufferline.nvim", enabled = false },
-  { "echasnovski/mini.pairs", enabled = false },
 }
