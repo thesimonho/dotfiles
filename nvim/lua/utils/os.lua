@@ -35,4 +35,11 @@ M.has_executable = function(cmd)
   return vim.fn.executable(cmd) == 1
 end
 
+--- Check if a flatpak app is installed
+--- @param app_id string
+M.has_flatpak_app = function(app_id)
+  local out = vim.fn.system({ "flatpak", "info", app_id })
+  return vim.v.shell_error == 0 and out ~= nil and out ~= ""
+end
+
 return M
