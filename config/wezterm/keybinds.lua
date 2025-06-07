@@ -74,14 +74,13 @@ M.basic_binds = {
 	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
 
 	-- wezterm
-	{ key = "F1", mods = "SUPER", action = act.ActivateCommandPalette },
 	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
 	{ key = "/", mods = "CTRL", action = act.Search({ CaseInSensitiveString = "" }) },
 	{ key = "y", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
 	{
-		key = "p",
-		mods = "SUPER",
+		key = "Space",
+		mods = "CTRL",
 		action = wezterm.action_callback(function(window, pane)
 			window:perform_action(show_domain_selector(), pane)
 		end),
