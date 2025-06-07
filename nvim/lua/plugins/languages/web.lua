@@ -1,5 +1,52 @@
+local os_utils = require("utils.os")
 local fs = require("utils.fs")
 local wk = require("which-key")
+
+local function launch_chrome_debug(port)
+  port = port or "9222"
+  local args = {
+    "--remote-debugging-port=" .. port,
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--user-data-dir=/tmp/chrome-dap-profile",
+    "> /dev/null 2>&1 &",
+  }
+  local arg_string = table.concat(args, " ")
+
+  local launchers = {
+    ["google-chrome"] = {
+      check = os_utils.has_executable,
+    },
+    ["google-chrome-stable"] = {
+      check = os_utils.has_executable,
+    },
+    ["chromium"] = {
+      check = os_utils.has_executable,
+    },
+    ["com.google.Chrome"] = {
+      check = os_utils.has_flatpak_app,
+      is_flatpak = true,
+    },
+    ["org.chromium.Chromium"] = {
+      check = os_utils.has_flatpak_app,
+      is_flatpak = true,
+    },
+  }
+
+  for cmd, opts in pairs(launchers) do
+    if opts.check(cmd) then
+      if opts.is_flatpak then
+        os.execute("flatpak run " .. cmd .. " " .. arg_string)
+      else
+        os.execute(cmd .. " " .. arg_string)
+      end
+      vim.notify("Launched Chrome with remote debugging on port " .. port, vim.log.levels.INFO)
+      return true
+    end
+  end
+  vim.notify("Failed to launch Chrome. Please ensure it is installed.", vim.log.levels.ERROR)
+  return false
+end
 
 return {
   {
@@ -107,9 +154,17 @@ return {
   {
     "mfussenegger/nvim-dap",
     optional = true,
+    keys = {
+      {
+        "<localleader>c",
+        launch_chrome_debug,
+        ft = { "javascriptreact", "typescriptreact", "vue" },
+        desc = "Launch Chrome Remote Debugging",
+      },
+    },
     opts = function()
       local dap = require("dap")
-      for _, adapterType in ipairs({ "node", "chrome" }) do
+      for _, adapterType in ipairs({ "node", "chrome", "msedge" }) do
         local pwaType = "pwa-" .. adapterType
         if not dap.adapters[pwaType] then
           dap.adapters[pwaType] = {
