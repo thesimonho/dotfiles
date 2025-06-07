@@ -1,21 +1,13 @@
-local fs = require("utils.fs")
 local os_utils = require("utils.os")
-
+local fs = require("utils.fs")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
+
+if not vim.loop.fs_stat(lazypath) then
+  -- bootstrap lazy.nvim
+  -- stylua: ignore
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
 end
-vim.opt.rtp:prepend(lazypath)
+vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
 require("lazy").setup({
   spec = {
@@ -30,6 +22,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.snacks_picker" },
     { import = "lazyvim.plugins.extras.test.core" },
     { import = "lazyvim.plugins.extras.ui.treesitter-context" },
+    { import = "lazyvim.plugins.extras.util.octo" },
     { import = "lazyvim.plugins.extras.vscode", enabled = os_utils.has_executable("code") },
     -- languages
     { import = "lazyvim.plugins.extras.lang.go", enabled = os_utils.has_executable("go") },
@@ -61,7 +54,8 @@ require("lazy").setup({
     notify = true,
   },
   dev = {
-    path = "~/Projects",
+    path = "D:\\",
+    patterns = { "kanagawa-paper.nvim" },
     fallback = true, -- Fallback to git when local plugin doesn't exist
   },
   performance = {

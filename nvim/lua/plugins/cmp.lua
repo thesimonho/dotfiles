@@ -2,6 +2,7 @@ return {
   "saghen/blink.cmp",
   dependencies = {
     "mikavilpas/blink-ripgrep.nvim",
+    "Kaiser-Yang/blink-cmp-git",
   },
   opts = {
     keymap = {
@@ -20,6 +21,7 @@ return {
     sources = {
       default = {
         "ripgrep",
+        "git",
       },
       providers = {
         ripgrep = {
@@ -30,6 +32,13 @@ return {
             context_size = 3,
             search_casing = "--smart-case",
           },
+        },
+        git = {
+          module = "blink-cmp-git",
+          name = "git",
+          enabled = function()
+            return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
+          end,
         },
       },
     },
