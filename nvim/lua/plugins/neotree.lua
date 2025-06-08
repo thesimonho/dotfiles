@@ -1,6 +1,37 @@
 local style = require("utils.style")
 local icons = require("lazyvim.config").icons
 
+local diff_files = function(state)
+  local node = state.tree:get_node()
+
+  state.clipboard = state.clipboard or {}
+  state.diff_node = state.diff_node or nil
+  state.diff_name = state.diff_name or nil
+
+  if state.diff_node and state.diff_node ~= tostring(node.id) then
+    local current_diff = node.id
+    require("neo-tree.utils").open_file(state, state.diff_node, "tabnew")
+    vim.cmd("vert diffs " .. current_diff)
+    state.diff_node = nil
+    state.diff_name = nil
+    state.clipboard = {}
+    require("neo-tree.ui.renderer").redraw(state)
+  else
+    local existing = state.clipboard[node.id]
+    if existing and existing.action == "diff" then
+      state.clipboard[node.id] = nil
+      state.diff_node = nil
+      state.diff_name = nil
+      require("neo-tree.ui.renderer").redraw(state)
+    else
+      state.clipboard[node.id] = { action = "diff", node = node }
+      state.diff_name = node.name
+      state.diff_node = tostring(node.id)
+      require("neo-tree.ui.renderer").redraw(state)
+    end
+  end
+end
+
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -111,7 +142,7 @@ return {
             function()
               require("flash").jump()
             end,
-            config = { title = "flash" },
+            desc = "flash",
           },
         },
       },
@@ -141,6 +172,15 @@ return {
         window = {
           mappings = {
             ["<A-h>"] = "toggle_hidden",
+            ["D"] = {
+              function(state)
+                diff_files(state)
+              end,
+              desc = "diff_files",
+            },
+            ["f"] = "fuzzy_finder",
+            ["F"] = "fuzzy_finder_directory",
+            ["/"] = "",
           },
           fuzzy_finder_mappings = {
             ["<C-j>"] = "move_cursor_down",
