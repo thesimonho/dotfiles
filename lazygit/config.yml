@@ -173,6 +173,8 @@ keybinding:
     nextBlock-alt: '<c-j>' # goto the next block / panel
     nextTab: 'l'
     prevTab: 'h'
+    copyToClipboard: <c-y>
   commits:
     moveDownCommit: 'J' # move commit down one
     moveUpCommit: 'K' # move commit up one
+    copyCommitAttributeToClipboard: <c-y>
