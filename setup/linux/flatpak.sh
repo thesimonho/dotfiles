@@ -6,7 +6,6 @@ flatpak install com.jeffser.Alpaca.Plugins.Ollama -y
 flatpak install flathub eu.betterbird.Betterbird -y
 flatpak install flathub com.calibre_ebook.calibre -y
 flatpak install flathub com.google.Chrome -y
-flatpak install flathub io.dbeaver.DBeaverCommunity -y
 flatpak install flathub com.discordapp.Discord -y
 flatpak install flathub com.dropbox.Client -y
 flatpak install flathub it.mijorus.gearlever -y
