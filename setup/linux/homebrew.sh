@@ -17,6 +17,7 @@ fi
 
 # Map of brew package name to CLI entrypoint
 declare -A packages=(
+  [awscli]="aws"
   [bat]="bat"
   [carapace]="carapace"
   [devcontainer]="devcontainer"
@@ -31,6 +32,7 @@ declare -A packages=(
   [ripgrep]="rg"
   [starship]="starship"
   [tealdeer]="tldr"
+  [yazi]="yazi"
   [zoxide]="zoxide z"
 )
 

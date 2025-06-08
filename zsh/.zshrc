@@ -148,6 +148,7 @@ alias ll='ls -l'
 alias tf='terraform'
 alias lg='lazygit'
 alias vim='nvim'
+alias yz='yazi'
 
 # keybinds
 bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion. do this at the end
