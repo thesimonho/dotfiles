@@ -66,6 +66,7 @@ return {
       -- dim all other characters if set to true (recommended!)
       dim = true,
       default_keymaps = true,
+      disabled_filetypes = { "neo-tree", "help" },
     },
   },
 }
