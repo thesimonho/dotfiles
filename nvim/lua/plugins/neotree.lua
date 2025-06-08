@@ -115,8 +115,8 @@ return {
             modified = icons.git.modified,
             renamed = "  ",
             -- Status type
-            untracked = "  ",
-            ignored = "  ",
+            untracked = "󰞋  ",
+            ignored = "󰿠  ",
             unstaged = "  ",
             staged = "  ",
             conflict = "  ",
