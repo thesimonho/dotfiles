@@ -61,13 +61,15 @@ link_file() {
 }
 
 echo "Installing dotfiles..."
-link_file "$DOTFILES/config/wezterm" "$CONFIG_HOME/wezterm"
-link_file "$DOTFILES/config/fzf" "$CONFIG_HOME/fzf"
-link_file "$DOTFILES/config/starship.toml" "$CONFIG_HOME/starship.toml"
-link_file "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
-link_file "$DOTFILES/zsh/.zprofile" "$HOME/.zprofile"
+link_file "$DOTFILES/fzf" "$CONFIG_HOME/fzf"
 link_file "$DOTFILES/lazygit" "$CONFIG_HOME/lazygit"
 link_file "$DOTFILES/nvim" "$CONFIG_HOME/nvim"
+link_file "$DOTFILES/wezterm" "$CONFIG_HOME/wezterm"
+
+link_file "$DOTFILES/starship.toml" "$CONFIG_HOME/starship.toml"
+
+link_file "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+link_file "$DOTFILES/zsh/.zprofile" "$HOME/.zprofile"
 echo "✅ Config symlinks created."
 
 # git
