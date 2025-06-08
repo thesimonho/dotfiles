@@ -36,7 +36,7 @@ config.font = wezterm.font_with_fallback({
 	"Liberation Mono",
 })
 config.front_end = "OpenGL"
-config.harfbuzz_features = { "zero", "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt", "clig=0", "liga=0" }
+config.harfbuzz_features = { "zero", "cv01", "cv02", "ss03", "ss05", "ss07", "ss08", "calt=0", "clig=0", "liga=0" }
 config.hide_tab_bar_if_only_one_tab = false
 config.inactive_pane_hsb = {
 	saturation = 0.9,
