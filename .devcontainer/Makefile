@@ -27,7 +27,7 @@ build: check
 # Push to GHCR
 push: 
 	@echo "🔐 Logging in to GHCR..."
-	echo "$$GITHUB_TOKEN" | docker login ghcr.io -u $(GITHUB_USER) --password-stdin
+	echo "$$GH_GHCR" | docker login ghcr.io -u $(GH_USER) --password-stdin
 	@echo "📦 Pushing images..."
 	docker push $(TAG_LATEST)
 	docker push $(TAG_COMMIT)
