@@ -98,6 +98,9 @@ return {
         },
         {
           "branch",
+          cond = function()
+            return utils.get_split_count() < 2
+          end,
           icon = "󰘬",
           padding = { left = 1, right = 1 },
           on_click = function()
@@ -136,6 +139,20 @@ return {
       lualine_c = {
         {
           function()
+            return require("direnv").statusline()
+          end,
+          cond = function()
+            return utils.get_split_count() < 2
+          end,
+          color = function()
+            return { fg = Snacks.util.color("Float") }
+          end,
+          on_click = function()
+            vim.cmd("Direnv edit")
+          end,
+        },
+        {
+          function()
             return short_path(2)
           end,
           cond = function()
@@ -171,13 +188,11 @@ return {
       },
       lualine_x = {
         {
-          "encoding",
-          cond = function()
-            return utils.get_split_count() < 2
+          function()
+            return require("package-info").get_status()
           end,
-          on_click = function()
-            local encoding = vim.api.nvim_get_option_value("fileencoding", { scope = "local" })
-            vim.api.nvim_feedkeys(":set fileencoding=" .. encoding, "n", true)
+          cond = function()
+            return utils.get_split_count() < 3
           end,
         },
         {
@@ -188,14 +203,6 @@ return {
           on_click = function()
             local fileformat = vim.api.nvim_get_option_value("fileformat", { scope = "local" })
             vim.api.nvim_feedkeys(":set fileformat=" .. fileformat, "n", true)
-          end,
-        },
-        {
-          function()
-            return require("package-info").get_status()
-          end,
-          cond = function()
-            return utils.get_split_count() < 3
           end,
         },
       },
