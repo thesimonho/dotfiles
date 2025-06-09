@@ -1,0 +1,25 @@
+name: Build Devcontainer
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * 2' # Every Tuesday at 12:00 UTC (4:00 AM PST/PDT)
+jobs:
+  build:
+    runs-on: self-hosted
+    permissions:
+      packages: write
+      contents: write
+    env:
+      GH_USER: ${{ github.actor }}
+      GH_GHCR: ${{ secrets.GH_GHCR }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install devcontainer CLI
+        run: npm install -g @devcontainers/cli
+      - name: Run Makefile to build and push prebuild image
+        run: make -C .devcontainer build push clean
