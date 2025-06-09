@@ -34,7 +34,7 @@ vim.keymap.set("v", "<C-c>", '"+y') -- Copy
 vim.keymap.set("i", "<C-v>", '<esc>"+pa') -- Paste
 vim.keymap.set("i", "<C-p>", "<C-r>0") -- Paste the last yank
 vim.keymap.set("n", "<C-p>", '"0p') -- Paste the last yank
-vim.keymap.set("i", "<C-H>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
+vim.keymap.set("i", "<C-BS>", "<C-W>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS
 vim.keymap.set("i", "<C-Del>", function()
   local col = vim.fn.col(".")
   local line = vim.fn.getline(".")
