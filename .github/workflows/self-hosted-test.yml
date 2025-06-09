@@ -1,0 +1,12 @@
+name: Self-hosted Runner Test
+on:
+  workflow_dispatch:
+jobs:
+  test-runner:
+    runs-on: self-hosted
+    steps:
+      - name: Print runner info
+        run: |
+          echo "Running on: $RUNNER_NAME"
+          echo "OS: $RUNNER_OS"
+          echo "Architecture: $RUNNER_ARCH"
