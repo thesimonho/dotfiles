@@ -56,7 +56,7 @@ return {
         },
       },
       ghost_text = {
-        enabled = vim.g.ai_cmp,
+        enabled = false,
       },
       menu = {
         enabled = true,
