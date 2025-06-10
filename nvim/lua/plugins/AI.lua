@@ -1,4 +1,4 @@
-vim.g.ai_cmp = false -- show AI suggestions in cmp
+vim.g.ai_cmp = true -- show AI suggestions in cmp
 
 local M = {
   {
@@ -175,7 +175,7 @@ local M = {
       color = {
         suggestion_group = "Comment",
       },
-      disable_inline_completion = false,
+      disable_inline_completion = vim.g.ai_cmp,
     },
   },
   {
