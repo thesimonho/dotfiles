@@ -65,6 +65,7 @@ link_file "$DOTFILES/fzf" "$CONFIG_HOME/fzf"
 link_file "$DOTFILES/lazygit" "$CONFIG_HOME/lazygit"
 link_file "$DOTFILES/nvim" "$CONFIG_HOME/nvim"
 link_file "$DOTFILES/wezterm" "$CONFIG_HOME/wezterm"
+link_file "$DOTFILES/yazi" "$CONFIG_HOME/yazi"
 
 link_file "$DOTFILES/starship.toml" "$CONFIG_HOME/starship.toml"
 

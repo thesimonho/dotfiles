@@ -1,0 +1,33 @@
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+[mgr]
+ratio = [1, 4, 3]
+sort_by = "natural"
+sort_dir_first = true
+sort_translit = true
+show_hidden = true
+show_symlink = true
+mouse_events = ["click", "scroll"]
+
+[preview]
+wrap = "no"
+
+[opener]
+edit = [
+  { run = '${EDITOR:-nvim} "$@"', desc = "$EDITOR", block = true, for = "unix" },
+  { run = 'nvim %*', desc = "nvim", block = true, for = "windows" },
+  { run = 'code "$@"', orphan = true, desc = "code", for = "unix" },
+  { run = 'code %*', orphan = true, desc = "code", for = "windows" },
+]
+
+[which]
+sort_by = "none"
+sort_sensitive = false
+sort_reverse = false
+sort_translit = true
+
+[plugin]
+prepend_fetchers = [
+  { id = "git", name = "*", run = "git" },
+  { id = "git", name = "*/", run = "git" },
+]

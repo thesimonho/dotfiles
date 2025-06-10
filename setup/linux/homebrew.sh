@@ -60,6 +60,20 @@ else
   echo "All CLI tools already installed."
 fi
 
+# Yazi plugins
+if command -v ya >/dev/null 2>&1; then
+  yazi_plugins=(
+    "yazi-rs/plugins:git"
+    "yazi-rs/plugins:smart-paste"
+    "yazi-rs/plugins:full-border"
+    "yazi-rs/plugins:chmod"
+  )
+
+  for plugin in "${yazi_plugins[@]}"; do
+    ya pkg add "$plugin"
+  done
+fi
+
 # Fonts
 fonts_list=(
   font-fira-code-nerd-font
