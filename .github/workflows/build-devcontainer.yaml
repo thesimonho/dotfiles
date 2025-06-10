@@ -23,3 +23,19 @@ jobs:
         run: npm install -g @devcontainers/cli
       - name: Run Makefile to build and push prebuild image
         run: make -C .devcontainer build push clean
+      - name: Delete old GHCR image versions
+        env:
+          GH_TOKEN: ${{ secrets.GH_GHCR }}
+        run: |
+          IMAGE="ghcr.io/${{ github.repository_owner }}/devcontainer-prebuild"
+          KEEP=5
+
+          # Get all version IDs sorted by date (newest first), then skip the newest $KEEP
+          versions=$(gh api -H "Accept: application/vnd.github+json" \
+            "/user/packages/container/devcontainer-prebuild/versions" |
+            jq 'sort_by(.created_at) | reverse | .[].id' | tail -n +$((KEEP + 1)))
+
+          for version_id in $versions; do
+            echo "Deleting image version ID: $version_id"
+            gh api --method DELETE "/user/packages/container/devcontainer-prebuild/versions/$version_id"
+          done
