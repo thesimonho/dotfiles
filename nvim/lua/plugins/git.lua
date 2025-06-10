@@ -14,7 +14,7 @@ return {
     opts = {
       ssh_aliases = { ["personal-github.com"] = "github.com" },
       use_local_fs = false,
-      default_to_projects_v2 = true,
+      default_to_projects_v2 = false,
       default_remote = { "origin", "upstream" },
       picker = "snacks",
     },
