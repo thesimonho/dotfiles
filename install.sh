@@ -4,6 +4,7 @@ set -euo pipefail
 # Absolute paths
 CONFIG_HOME="$HOME/.config"
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export DOTFILES=$DOTFILES
 USER_NAME=$(whoami)
 
 # early zsh setup
@@ -48,7 +49,7 @@ link_file() {
   local dest="$2"
 
   if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
-    echo "✅ Already linked: $dest"
+    echo "✔️ Already linked: $dest"
   else
     if [ -e "$dest" ]; then
       echo "Removing existing: $dest"
@@ -56,7 +57,7 @@ link_file() {
     fi
     mkdir -p "$(dirname "$dest")"
     ln -sf "$src" "$dest"
-    echo "➕ Linked: $dest → $src"
+    echo "🔗 Linked: $dest → $src"
   fi
 }
 
@@ -90,7 +91,7 @@ echo "✅ Git config created."
 # ssh
 for key in "$HOME/.ssh/id_"*; do
   if ! chmod 600 "$key"; then
-    echo "⚠ No keys found at $key"
+    echo "⚠️ No keys found at $key"
   fi
 done
 echo "✅ SSH keys set."

@@ -43,7 +43,7 @@ for pkg in "${!packages[@]}"; do
   found=0
   for entry in $entrypoints; do
     if command -v "$entry" >/dev/null 2>&1; then
-      echo "$pkg: found ($entry), skipping."
+      echo "✔️ $pkg: found ($entry), skipping."
       found=1
       break
     fi
@@ -54,24 +54,34 @@ for pkg in "${!packages[@]}"; do
 done
 
 if [ "${#to_install[@]}" -gt 0 ]; then
-  echo "Installing: ${to_install[*]}"
+  echo "📦 Installing: ${to_install[*]}"
   brew install "${to_install[@]}"
 else
-  echo "All CLI tools already installed."
+  echo "✅ All CLI tools installed."
 fi
 
 # Yazi plugins
 if command -v ya >/dev/null 2>&1; then
-  yazi_plugins=(
-    "yazi-rs/plugins:git"
-    "yazi-rs/plugins:smart-paste"
-    "yazi-rs/plugins:full-border"
-    "yazi-rs/plugins:chmod"
-  )
+  if [ -f "$DOTFILES/yazi/package.toml" ]; then
+    if find "$DOTFILES/yazi" -mindepth 2 -type d | read; then
+      echo "⬆️ Updating yazi packages..."
+      ya pkg upgrade
+    else
+      echo "📦 Installing yazi packages from lock file..."
+      ya pkg install
+    fi
+  else
+    yazi_plugins=(
+      "yazi-rs/plugins:git"
+      "yazi-rs/plugins:smart-paste"
+      "yazi-rs/plugins:full-border"
+      "yazi-rs/plugins:chmod"
+    )
 
-  for plugin in "${yazi_plugins[@]}"; do
-    ya pkg add "$plugin"
-  done
+    for plugin in "${yazi_plugins[@]}"; do
+      ya pkg add "$plugin"
+    done
+  fi
 fi
 
 # Fonts
@@ -81,9 +91,16 @@ fonts_list=(
 )
 
 for font in "${fonts_list[@]}"; do
-  brew install --cask "$font"
+  if brew list --cask "$font" &>/dev/null; then
+    echo "✔️ $font is already installed"
+  else
+    echo "📦 Installing $font..."
+    brew install --cask "$font"
+  fi
 done
 
+# Cleanup
+echo "🧹 Cleaning up..."
 brew autoremove
 brew cleanup -s
 rm -rf "$(brew --cache)"
