@@ -80,18 +80,22 @@ return {
           highlight_opened_files = true,
           highlight = "NeoTreeFileName",
         },
-        type = {
+        symlink_target = {
           enabled = true,
+          text_format = " ➛ %s", -- %s will be replaced with the symlink target's path.
+        },
+        type = {
+          enabled = false,
           required_width = 50, -- min width of window required to show this column
         },
         file_size = {
-          enabled = true,
+          enabled = false,
           required_width = 60, -- min width of window required to show this column
         },
         last_modified = {
           enabled = true,
           format = "relative",
-          required_width = 90, -- min width of window required to show this column
+          required_width = 60, -- min width of window required to show this column
         },
         icon = {
           folder_closed = "",
@@ -129,7 +133,7 @@ return {
           position = { col = "99%", row = "3" },
           size = function()
             return {
-              width = "40%",
+              width = "35%",
               height = vim.o.lines - 6,
             }
           end,
