@@ -3,16 +3,16 @@ return {
   event = "VeryLazy",
   opts = {
     keymaps = {
-      insert = "<C-g>s",
-      insert_line = "<C-g>S",
+      insert = "<C-g>sa",
+      insert_line = "<C-g>Sa",
 
-      normal = "gs",
-      normal_line = "gS",
-      normal_cur = "gss",
-      normal_cur_line = "gsS",
+      normal = "gsa",
+      normal_line = "gSa",
+      normal_cur = "gssa",
+      normal_cur_line = "gsSa",
 
-      visual = "gs",
-      visual_line = "gS",
+      visual = "gsa",
+      visual_line = "gSa",
 
       delete = "gsd",
       change = "gsc",
@@ -30,6 +30,7 @@ return {
             or language == "javascriptreact"
             or language == "typescript"
             or language == "typescriptreact"
+            or language == "vue"
           )
 
           if is_jsy and cur then
