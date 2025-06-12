@@ -79,6 +79,11 @@ M.basic_binds = {
 	{ key = "y", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
 	{
+		key = "Backspace",
+		mods = "CTRL",
+		action = wezterm.action.SendString("\x17"), -- Ctrl+W because C-BS can't be mapped in neovim
+	},
+	{
 		key = "p",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(window, pane)
