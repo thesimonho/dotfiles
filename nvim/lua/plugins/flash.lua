@@ -30,10 +30,10 @@ return {
     },
     opts = {
       search = {
-        multi_window = false,
-        incremental = true,
+        multi_window = true,
+        incremental = false, --this causes annoying buffer jumps
         forward = true,
-        wrap = false,
+        wrap = true,
       },
       jump = {
         nohlsearch = false,
