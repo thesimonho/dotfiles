@@ -36,7 +36,6 @@ function M.is_plugin_installed(url)
 	return false
 end
 
--- FIX: take a look at https://wezterm.org/config/lua/wezterm.color/load_scheme.html
 function M.read_theme()
 	local file = io.open(theme_file, "r")
 	if file then
@@ -58,9 +57,9 @@ end
 
 function M.apply_tabline_theme(theme)
 	if tabline and theme == "kanagawa-paper-ink" then
-		tabline.set_theme(M.ink.theme_overrides)
+		tabline.set_theme(M.ink)
 	elseif tabline and theme == "kanagawa-paper-canvas" then
-		tabline.set_theme(M.canvas.theme_overrides)
+		tabline.set_theme(M.canvas)
 	end
 end
 
