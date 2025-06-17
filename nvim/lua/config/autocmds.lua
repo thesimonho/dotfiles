@@ -59,7 +59,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 -- spell check
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "text" },
+  pattern = { "text" },
   command = "setlocal spell",
 })
 
