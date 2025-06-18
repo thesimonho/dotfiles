@@ -6,17 +6,22 @@ return {
   },
   opts = {
     keymap = {
-      ["<CR>"] = { "accept", "fallback" },
-      ["<C-k>"] = { "show", "show_documentation", "hide_documentation" },
+      ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide", "fallback" },
+      ["<CR>"] = { "accept", "fallback" },
+
       ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
       ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
 
       ["<Up>"] = { "select_prev", "fallback" },
       ["<Down>"] = { "select_next", "fallback" },
 
+      ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
       ["<C-p>"] = { "scroll_documentation_up", "fallback" },
       ["<C-n>"] = { "scroll_documentation_down", "fallback" },
+    },
+    appearance = {
+      nerd_font_variant = "normal",
     },
     sources = {
       default = {
@@ -47,7 +52,10 @@ return {
         range = "full",
       },
       trigger = {
+        show_on_insert = false,
         show_in_snippet = false,
+        show_on_backspace = true,
+        show_on_backspace_in_keyword = true,
       },
       list = {
         selection = {
@@ -65,6 +73,7 @@ return {
         winblend = 6,
         border = "rounded",
         draw = {
+          treesitter = { "lsp" },
           columns = {
             { "kind_icon" },
             { "label", "label_description", gap = 1 },
