@@ -74,7 +74,7 @@ M.basic_binds = {
 	{ key = "v", mods = "CMD", action = act.SendKey({ key = "v", mods = "CTRL" }) },
 
 	-- wezterm
-	{ key = "p", mods = "CTRL", action = act.ActivateCommandPalette },
+	{ key = "F1", action = act.ActivateCommandPalette },
 	{ key = "/", mods = "CTRL", action = act.Search({ CaseInSensitiveString = "" }) },
 	{ key = "y", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "q", mods = "LEADER", action = act.QuitApplication },
