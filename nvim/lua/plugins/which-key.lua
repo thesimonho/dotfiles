@@ -12,7 +12,7 @@ return {
       { "<localleader>", mode = { "n", "x", "v" } },
     },
     preset = "helix",
-    delay = 50,
+    delay = 100,
     win = {
       title = true,
       border = style.border_chars_outer_thin,

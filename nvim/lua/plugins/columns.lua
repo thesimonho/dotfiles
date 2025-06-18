@@ -46,6 +46,8 @@ return {
                 end
 
                 local marks = get_marks_on_current_line(args.lnum, vim.api.nvim_get_current_buf())
+
+                -- highlights
                 local hl
                 if args.relnum == 0 then -- current line
                   local mode = vim.api.nvim_get_mode().mode
@@ -56,22 +58,23 @@ return {
                   else
                     hl = "Special1"
                   end
-                elseif args.virtnum > 0 then
-                  hl = "SnacksIndent"
                 elseif #marks > 0 then
                   hl = "Mark"
+                elseif args.virtnum > 0 then
+                  hl = "SnacksIndent"
                 else
                   hl = "LineNr"
                 end
 
+                -- numbers
                 local lnum
                 local pad
-                if #marks > 0 and args.relnum ~= 0 then
-                  lnum = marks[1]
-                  pad = (" "):rep(args.nuw - #tostring(lnum))
-                elseif args.virtnum > 0 then
+                if args.virtnum > 0 then
                   lnum = "↪"
                   pad = (" "):rep(args.nuw - 1)
+                elseif #marks > 0 and args.relnum ~= 0 then
+                  lnum = marks[1]
+                  pad = (" "):rep(args.nuw - #tostring(lnum))
                 else
                   if args.rnu then
                     if args.relnum > 0 then
