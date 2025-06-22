@@ -76,6 +76,7 @@ local M = {
           keys = {
             { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = "󰟾 ", key = "m", desc = "Mason", action = ":Mason" },
+            { icon = "󰚩 ", key = "M", desc = "MCP Hub", action = ":MCPHub" },
           },
         },
         sections = {

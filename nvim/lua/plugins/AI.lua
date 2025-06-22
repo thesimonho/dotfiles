@@ -248,9 +248,6 @@ local M = {
     init = function()
       local wk = require("which-key")
       wk.add({
-        mode = { "n", "v" },
-        { "<leader>a", group = "AI" },
-      }, {
         mode = "n",
         { "<leader>ac", group = "Choose change" },
       })
@@ -359,6 +356,25 @@ local M = {
           dismiss = "<M-e>",
         },
       },
+    },
+  },
+  {
+    "ravitemer/mcphub.nvim",
+    build = "npm install -g mcp-hub@latest",
+    lazy = true,
+    cmd = "MCPHub",
+    keys = {
+      { "<leader>am", "<cmd>MCPHub<cr>", desc = "MCP Hub" },
+    },
+    init = function()
+      local wk = require("which-key")
+      wk.add({
+        mode = { "n", "v" },
+        { "<leader>a", group = "AI" },
+      })
+    end,
+    opts = {
+      auto_approve = true,
     },
   },
 }
