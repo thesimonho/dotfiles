@@ -17,8 +17,6 @@ return {
       ["<Down>"] = { "select_next", "fallback" },
 
       ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
-      ["<C-p>"] = { "scroll_documentation_up", "fallback" },
-      ["<C-n>"] = { "scroll_documentation_down", "fallback" },
     },
     appearance = {
       nerd_font_variant = "normal",
