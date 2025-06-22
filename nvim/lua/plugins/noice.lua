@@ -35,20 +35,6 @@ return {
         filter = { event = "msg_showmode" },
         view = "notify",
       },
-      { -- supermaven large file
-        filter = {
-          warning = true,
-          find = "File is too large to send to server",
-        },
-        opts = { skip = true },
-      },
-      { -- supermaven free tier
-        filter = {
-          event = "msg_show",
-          find = "Supermaven Free Tier is running.",
-        },
-        opts = { skip = true },
-      },
     },
   },
 }
