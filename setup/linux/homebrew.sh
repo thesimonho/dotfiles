@@ -32,6 +32,7 @@ declare -A packages=(
   [ripgrep]="rg"
   [starship]="starship"
   [tealdeer]="tldr"
+  [uv]="uv"
   [yazi]="yazi"
   [zoxide]="zoxide z"
 )
