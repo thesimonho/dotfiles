@@ -39,9 +39,9 @@ M = {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "Avante", "copilot-chat" },
+    ft = { "markdown", "codecompanion" },
     opts = {
-      file_types = { "markdown", "Avante", "copilot-chat" },
+      file_types = { "markdown", "codecompanion" },
       completions = {
         blink = { enabled = true },
       },
