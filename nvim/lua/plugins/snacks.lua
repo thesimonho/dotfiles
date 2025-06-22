@@ -134,6 +134,12 @@ return {
       vim.print = _G.dd
     end,
     opts = {
+      input = {
+        enabled = true,
+        win = {
+          style = "above_cursor",
+        },
+      },
       gitbrowse = {
         notify = true,
         remote_patterns = {
@@ -215,7 +221,7 @@ return {
           fuzzy = true, -- use fuzzy matching
           smartcase = true, -- use smartcase
           ignorecase = true, -- use ignorecase
-          sort_empty = true, -- sort results when the search string is empty
+          sort_empty = false, -- sort results when the search string is empty
           filename_bonus = true, -- give bonus for matching file names (last part of the path)
           file_pos = true, -- support patterns like `file:line:col` and `file:line`
           cwd_bonus = true, -- give bonus for matching files in the cwd
@@ -329,6 +335,40 @@ return {
                 },
               },
             },
+          },
+        },
+      },
+      styles = {
+        above_cursor = {
+          backdrop = false,
+          position = "float",
+          border = "rounded",
+          title_pos = "left",
+          height = 1,
+          noautocmd = true,
+          relative = "cursor",
+          row = -3,
+          col = 0,
+          wo = {
+            cursorline = false,
+          },
+          bo = {
+            filetype = "snacks_input",
+            buftype = "prompt",
+          },
+          --- buffer local variables
+          b = {
+            completion = true, -- enable/disable blink completions in input
+          },
+          keys = {
+            n_esc = { "<esc>", { "cmp_close", "cancel" }, mode = "n", expr = true },
+            i_esc = { "<esc>", { "cmp_close", "stopinsert" }, mode = "i", expr = true },
+            i_cr = { "<cr>", { "cmp_accept", "confirm" }, mode = "i", expr = true },
+            i_tab = { "<tab>", { "cmp_select_next", "cmp", "fallback" }, mode = "i", expr = true },
+            i_ctrl_w = { "<c-w>", "<c-s-w>", mode = "i", expr = true },
+            i_up = { "<up>", { "hist_up" }, mode = { "i", "n" } },
+            i_down = { "<down>", { "hist_down" }, mode = { "i", "n" } },
+            q = "cancel",
           },
         },
       },
