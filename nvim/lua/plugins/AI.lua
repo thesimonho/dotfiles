@@ -4,14 +4,15 @@ local M = {
   {
     "zbirenbaum/copilot.lua",
     enabled = false,
+    event = "InsertEnter",
     keys = {
       {
-        "<leader>a.",
+        "<leader>as",
         function()
           vim.cmd("Copilot panel")
           vim.cmd("wincmd =")
         end,
-        desc = "Copilot suggestion panel",
+        desc = "Suggestions Panel",
       },
     },
     opts = {
