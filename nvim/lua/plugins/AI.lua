@@ -1,3 +1,4 @@
+local style = require("utils.style")
 vim.g.ai_cmp = true -- show AI suggestions in cmp
 
 local M = {
@@ -46,12 +47,12 @@ local M = {
   },
   {
     "olimorris/codecompanion.nvim",
+    event = "LazyFile",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
     },
-    event = "LazyFile",
     keys = {
       { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Chat" },
       { "<leader>aa", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Chat" },
@@ -60,6 +61,46 @@ local M = {
       { "<leader>ap", "<cmd>CodeCompanionActions<cr>", desc = "Actions Palette" },
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
     },
+    init = function()
+      local ignored_events = {
+        CodeCompanionHistoryTitleSet = true,
+      }
+
+      local group = vim.api.nvim_create_augroup("CodeCompanionFidgetHooks", { clear = true })
+      vim.api.nvim_create_autocmd({ "User" }, {
+        pattern = "CodeCompanion*",
+        group = group,
+        callback = function(request)
+          if (request.match and request.match:find("Chat")) or ignored_events[request.match] then
+            return
+          end
+
+          local msg
+          msg = "[CodeCompanion] " .. request.match:gsub("CodeCompanion", "")
+
+          vim.notify(msg, vim.log.levels.INFO, {
+            timeout = 1000,
+            keep = function()
+              return not vim
+                .iter({ "Finished", "Opened", "Hidden", "Closed", "Cleared", "Created", "Set" })
+                :fold(false, function(acc, cond)
+                  return acc or vim.endswith(request.match, cond)
+                end)
+            end,
+            id = "code_companion_status",
+            title = "Code Companion Status",
+            opts = function(notif)
+              notif.icon = ""
+              if vim.endswith(request.match, "Started") then
+                notif.icon = style.spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #style.spinner + 1]
+              elseif vim.endswith(request.match, "Finished") then
+                notif.icon = " "
+              end
+            end,
+          })
+        end,
+      })
+    end,
     opts = {
       display = {
         chat = {
