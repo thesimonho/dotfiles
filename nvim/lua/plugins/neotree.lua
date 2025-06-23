@@ -32,6 +32,17 @@ local diff_files = function(state)
   end
 end
 
+local function open_in_prev_win(state)
+  local node = state.tree:get_node()
+  local path = node:get_id()
+  local prev_win = vim.g.neotree_prev_win
+  require("neo-tree.command").execute({ action = "close" })
+  if prev_win and vim.api.nvim_win_is_valid(prev_win) then
+    vim.api.nvim_set_current_win(prev_win)
+  end
+  vim.cmd.edit(path)
+end
+
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -44,6 +55,7 @@ return {
       {
         "<leader>e",
         function()
+          vim.g.neotree_prev_win = vim.api.nvim_get_current_win()
           require("neo-tree.command").execute({
             position = "float",
             toggle = false,
@@ -140,6 +152,8 @@ return {
           title = "Neo-tree",
         },
         mappings = {
+          ["<cr>"] = open_in_prev_win,
+          ["<2-LeftMouse>"] = open_in_prev_win,
           ["<tab>"] = { "toggle_node" },
           ["v"] = "open_vsplit",
           ["s"] = {
