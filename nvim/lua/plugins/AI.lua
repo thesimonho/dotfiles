@@ -62,15 +62,14 @@ local M = {
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
     },
     init = function()
-      local ignored_events = {
-        CodeCompanionHistoryTitleSet = true,
-      }
-
-      local group = vim.api.nvim_create_augroup("CodeCompanionFidgetHooks", { clear = true })
       vim.api.nvim_create_autocmd({ "User" }, {
+        group = vim.api.nvim_create_augroup("CodeCompanionFidgetHooks", { clear = true }),
         pattern = "CodeCompanion*",
-        group = group,
         callback = function(request)
+          local ignored_events = {
+            CodeCompanionHistoryTitleSet = true,
+          }
+
           if (request.match and request.match:find("Chat")) or ignored_events[request.match] then
             return
           end
@@ -98,6 +97,14 @@ local M = {
               end
             end,
           })
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("LimitCCUndoBuffer", { clear = true }),
+        pattern = { "codecompanion" },
+        callback = function()
+          vim.opt_local.undolevels = 3
         end,
       })
     end,
