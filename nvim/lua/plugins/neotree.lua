@@ -34,6 +34,10 @@ end
 
 local function open_in_prev_win(state)
   local node = state.tree:get_node()
+  if node.type == "directory" or node.type == "message" then
+    require("neo-tree.sources.filesystem.commands").toggle_node(state)
+    return
+  end
   local path = node:get_id()
   local prev_win = vim.g.neotree_prev_win
   require("neo-tree.command").execute({ action = "close" })
