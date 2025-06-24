@@ -25,7 +25,7 @@ return {
     "mfussenegger/nvim-lint",
     opts = {
       linters_by_ft = {
-        go = { "golangcilint" }, -- BUG: linter doesnt run, and takes LSP out when it tries
+        -- go = { "golangcilint" }, -- BUG: linter doesnt run, and takes LSP out when it tries
       },
     },
   },
