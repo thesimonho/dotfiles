@@ -130,10 +130,6 @@ local M = {
             opts = {
               auto_submit_errors = true,
               auto_submit_success = true,
-              default_tools = {
-                "mcp",
-                "web_search",
-              },
             },
           },
           opts = {
@@ -148,7 +144,6 @@ local M = {
           tools = {
             opts = {
               default_tools = {
-                "mcp",
                 "full_stack_dev",
               },
             },
