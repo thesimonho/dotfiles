@@ -99,14 +99,6 @@ local M = {
           })
         end,
       })
-
-      vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("LimitCCUndoBuffer", { clear = true }),
-        pattern = { "codecompanion" },
-        callback = function()
-          vim.bo.undolevels = 3
-        end,
-      })
     end,
     opts = {
       display = {
