@@ -104,7 +104,7 @@ local M = {
         group = vim.api.nvim_create_augroup("LimitCCUndoBuffer", { clear = true }),
         pattern = { "codecompanion" },
         callback = function()
-          vim.opt_local.undolevels = 3
+          vim.bo.undolevels = 3
         end,
       })
     end,
