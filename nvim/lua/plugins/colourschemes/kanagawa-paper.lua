@@ -15,6 +15,7 @@ return {
     "thesimonho/kanagawa-paper.nvim",
     lazy = false,
     dev = true,
+    branch = "canvas_import",
     priority = 1000,
     keys = {
       {
