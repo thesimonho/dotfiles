@@ -358,7 +358,7 @@ return {
           },
           --- buffer local variables
           b = {
-            completion = true, -- enable/disable blink completions in input
+            completion = false, -- enable/disable blink completions in input
           },
           keys = {
             n_esc = { "<esc>", { "cmp_close", "cancel" }, mode = "n", expr = true },

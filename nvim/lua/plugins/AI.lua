@@ -16,6 +16,7 @@ local M = {
       },
     },
     opts = {
+      copilot_model = "gpt-4o",
       suggestion = {
         enabled = true,
         auto_trigger = true,
@@ -116,7 +117,7 @@ local M = {
         chat = {
           adapter = {
             name = "copilot",
-            model = "gpt-4.1",
+            model = "claude-3.7-sonnet-thought",
           },
           tools = {
             opts = {
@@ -131,7 +132,7 @@ local M = {
         inline = {
           adapter = {
             name = "copilot",
-            model = "gpt-4.1",
+            model = "claude-3.7-sonnet-thought",
           },
           tools = {
             opts = {
@@ -144,7 +145,7 @@ local M = {
         cmd = {
           adapter = {
             name = "copilot",
-            model = "gpt-4.1",
+            model = "gpt-4o",
           },
         },
       },
