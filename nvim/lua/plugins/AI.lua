@@ -117,7 +117,7 @@ local M = {
         chat = {
           adapter = {
             name = "copilot",
-            model = "claude-3.7-sonnet-thought",
+            model = "gpt-4o",
           },
           tools = {
             opts = {
