@@ -49,7 +49,7 @@ return {
       },
       modes = {
         search = {
-          enabled = true,
+          enabled = false,
         },
         char = {
           enabled = false, -- operator pending mode doesnt work like normal vim & interferes with eyeliner
