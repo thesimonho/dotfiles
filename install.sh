@@ -64,6 +64,7 @@ link_file() {
 echo "Installing dotfiles..."
 link_file "$DOTFILES/fzf" "$CONFIG_HOME/fzf"
 link_file "$DOTFILES/lazygit" "$CONFIG_HOME/lazygit"
+link_file "$DOTFILES/mcphub" "$CONFIG_HOME/mcphub"
 link_file "$DOTFILES/nvim" "$CONFIG_HOME/nvim"
 link_file "$DOTFILES/wezterm" "$CONFIG_HOME/wezterm"
 link_file "$DOTFILES/yazi" "$CONFIG_HOME/yazi"

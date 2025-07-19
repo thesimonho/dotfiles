@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "aws_docs": {
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "autoApprove": [],
+      "command": "uvx",
+      "env": {
+        "AWS_DOCUMENTATION_PARTITION": "aws",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "fetch": {
+      "args": ["mcp-server-fetch"],
+      "command": "uvx"
+    },
+    "playwright": {
+      "args": ["@playwright/mcp@latest", "--vision"],
+      "command": "npx"
+    },
+    "sequentialthinking": {
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": "npx"
+    }
+  },
+  "nativeMCPServers": {
+    "mcphub": {
+      "disabled": false
+    },
+    "neovim": {
+      "disabled": false,
+      "disabled_prompts": ["parrot"],
+      "disabled_tools": []
+    }
+  }
+}
