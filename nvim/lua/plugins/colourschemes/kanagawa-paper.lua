@@ -1,7 +1,7 @@
 local opts = {
   cache = false,
   dim_inactive = true,
-  diag_background = true,
+  diag_background = false,
   auto_plugins = true,
   integrations = {
     wezterm = {
