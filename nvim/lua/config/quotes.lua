@@ -26,7 +26,9 @@ local quotes = {
     [[must join it and flow with it.]],
   },
   {
-    [[Without change something sleeps inside us, and seldom awakens.]],
+    [[Without change,]],
+    [[something sleeps inside us,]],
+    [[and seldom awakens.]],
     [[The sleeper must awaken.]],
   },
 }
