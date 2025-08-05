@@ -45,4 +45,21 @@ table.insert(
   "--ignore=ANN101,D100,D101,D102,D103,D104,D105,D106,D107,D401,D407,D417,E722,E999,F821,F401,S101"
 )
 
+-- Add filetype for plenary.nvim
+vim.api.nvim_create_autocmd("User", {
+  pattern = "LazyLoad",
+  desc = "Add plenary filetypes",
+  callback = function(args)
+    if args.data ~= "plenary.nvim" then
+      return
+    end
+
+    require("plenary").filetype.add_table({
+      extension = {
+        py = "python",
+      },
+    })
+  end,
+})
+
 return M
