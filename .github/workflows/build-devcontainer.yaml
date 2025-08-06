@@ -1,8 +1,6 @@
 name: Build Devcontainer
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 12 * * 2' # Every Tuesday at 12:00 UTC (4:00 AM PST/PDT)
 jobs:
   build:
     runs-on: self-hosted
