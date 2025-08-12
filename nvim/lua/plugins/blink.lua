@@ -32,8 +32,12 @@ return {
           name = "ripgrep",
           opts = {
             prefix_min_len = 5,
-            context_size = 3,
-            search_casing = "--smart-case",
+            backend = {
+              ripgrep = {
+                context_size = 3,
+                search_casing = "--smart-case",
+              },
+            },
           },
         },
         git = {
