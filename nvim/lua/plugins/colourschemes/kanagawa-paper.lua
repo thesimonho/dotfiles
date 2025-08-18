@@ -1,7 +1,7 @@
 local opts = {
   cache = false,
   dim_inactive = true,
-  diag_background = false,
+  diag_background = true,
   auto_plugins = true,
   integrations = {
     wezterm = {
@@ -15,7 +15,6 @@ return {
     "thesimonho/kanagawa-paper.nvim",
     lazy = false,
     dev = true,
-    branch = "canvas_imported",
     priority = 1000,
     keys = {
       {
