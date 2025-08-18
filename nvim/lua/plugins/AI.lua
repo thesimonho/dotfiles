@@ -63,45 +63,6 @@ local M = {
       { "<leader>ap", "<cmd>CodeCompanionActions<cr>", desc = "Actions Palette" },
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
     },
-    init = function()
-      vim.api.nvim_create_autocmd({ "User" }, {
-        group = vim.api.nvim_create_augroup("CodeCompanionFidgetHooks", { clear = true }),
-        pattern = "CodeCompanion*",
-        callback = function(request)
-          local ignored_events = {
-            CodeCompanionHistoryTitleSet = true,
-          }
-
-          if (request.match and request.match:find("Chat")) or ignored_events[request.match] then
-            return
-          end
-
-          local msg
-          msg = "[CodeCompanion] " .. request.match:gsub("CodeCompanion", "")
-
-          vim.notify(msg, vim.log.levels.INFO, {
-            timeout = 1000,
-            keep = function()
-              return not vim
-                .iter({ "Finished", "Opened", "Hidden", "Closed", "Cleared", "Created", "Set" })
-                :fold(false, function(acc, cond)
-                  return acc or vim.endswith(request.match, cond)
-                end)
-            end,
-            id = "code_companion_status",
-            title = "Code Companion Status",
-            opts = function(notif)
-              notif.icon = ""
-              if vim.endswith(request.match, "Started") then
-                notif.icon = style.spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #style.spinner + 1]
-              elseif vim.endswith(request.match, "Finished") then
-                notif.icon = " "
-              end
-            end,
-          })
-        end,
-      })
-    end,
     opts = {
       display = {
         chat = {
