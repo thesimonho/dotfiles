@@ -40,9 +40,7 @@ local function nvim_set_option(picker, opt, val, item)
 
   picker:find({
     on_done = function()
-      -- BUG: jumps to the wrong item index
-      -- picker.list:view(item.idx)
-      picker.list:view(1)
+      picker.list:view(item.idx)
     end,
   })
 end
@@ -266,11 +264,12 @@ return {
             },
             finder = function()
               local items = {}
-              for _, o in ipairs(vim.tbl_values(vim.api.nvim_get_all_options_info())) do
+              for i, o in ipairs(vim.tbl_values(vim.api.nvim_get_all_options_info())) do
                 local ok, v = pcall(vim.api.nvim_get_option_value, o.name, {})
                 local info = vim.api.nvim_get_option_info2(o.name, {})
                 if ok and info then
                   items[#items + 1] = {
+                    idx = i,
                     text = o.name,
                     value = tostring(v),
                     info = info,
