@@ -5,7 +5,7 @@ return {
       current_only = true,
       width = 1,
       winblend = 30,
-      excluded_filetypes = { "TelescopePrompt", "bigfile", "which-key" },
+      excluded_filetypes = { "bigfile", "which-key" },
       handlers = {
         cursor = {
           enable = true,
