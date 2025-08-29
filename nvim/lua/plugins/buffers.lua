@@ -7,18 +7,21 @@ return {
       hooks = {
         pre_tab_leave = function()
           vim.api.nvim_exec_autocmds("User", { pattern = "ScopeTabLeavePre" })
+          pcall(function()
+            require("persistence").save()
+          end)
+        end,
+        pre_tab_close = function()
+          vim.api.nvim_exec_autocmds("User", { pattern = "ScopeTabLeavePre" })
+          pcall(function()
+            require("persistence").save()
+          end)
         end,
         post_tab_enter = function()
           vim.api.nvim_exec_autocmds("User", { pattern = "ScopeTabEnterPost" })
         end,
       },
     },
-  },
-  { -- restore buffers on session restore
-    "folke/persistence.nvim",
-    pre_save = function()
-      vim.api.nvim_exec_autocmds("User", { pattern = "SessionSavePre" })
-    end,
   },
   {
     "romgrk/barbar.nvim",
