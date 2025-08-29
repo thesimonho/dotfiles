@@ -317,27 +317,6 @@ return {
         },
       },
     },
-    winbar = {
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = {
-        {
-          "navic",
-          color_correction = nil,
-          navic_opts = {
-            highlight = true,
-            separator = " › ",
-            depth_limit = 5,
-            depth_limit_indicator = "..",
-            safe_output = true,
-            click = true,
-          },
-        },
-      },
-      lualine_x = {},
-      lualine_y = {},
-      lualine_z = {},
-    },
     extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix" },
   },
 }
