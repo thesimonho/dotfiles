@@ -30,7 +30,7 @@ M.load_project_session = function(dir)
       Snacks.picker.files({ root = false, hidden = true, dirs = { dir } })
     end
   end, 100)
-  vim.cmd("lua require('persistence').load()")
+  pcall(require("persisted").load)
 end
 
 return M
