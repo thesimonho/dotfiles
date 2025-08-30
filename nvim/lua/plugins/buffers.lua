@@ -1,21 +1,48 @@
 return {
   { "akinsho/bufferline.nvim", enabled = false },
+  { "folke/persistence.nvim", enabled = false },
+  {
+    "olimorris/persisted.nvim",
+    event = "BufReadPre",
+    init = function()
+      -- save barbar buffer order before saving session
+      vim.api.nvim_create_autocmd({ "User" }, {
+        pattern = "PersistedSavePre",
+        group = vim.api.nvim_create_augroup("PersistedHooks", {}),
+        callback = function()
+          vim.api.nvim_exec_autocmds("User", { pattern = "SessionSavePre" })
+        end,
+      })
+    end,
+    opts = {
+      follow_cwd = true,
+      use_git_branch = true,
+      autoload = true,
+      should_save = function()
+        if vim.bo.filetype == "snacks_dashboard" then
+          return false
+        end
+        return true
+      end,
+      on_autoload_no_session = function()
+        vim.notify("No existing session to load.")
+        vim.cmd("Neotree")
+      end,
+    },
+  },
   {
     "tiagovla/scope.nvim",
     event = "LazyFile",
     opts = {
       hooks = {
+        -- save session on tab leave and close
         pre_tab_leave = function()
           vim.api.nvim_exec_autocmds("User", { pattern = "ScopeTabLeavePre" })
-          pcall(function()
-            require("persistence").save()
-          end)
+          pcall(require("persisted").save)
         end,
         pre_tab_close = function()
           vim.api.nvim_exec_autocmds("User", { pattern = "ScopeTabLeavePre" })
-          pcall(function()
-            require("persistence").save()
-          end)
+          pcall(require("persisted").save)
         end,
         post_tab_enter = function()
           vim.api.nvim_exec_autocmds("User", { pattern = "ScopeTabEnterPost" })
