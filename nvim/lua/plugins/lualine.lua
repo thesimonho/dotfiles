@@ -160,7 +160,7 @@ return {
         },
         {
           function()
-            return short_path(2)
+            return short_path(3)
           end,
           cond = function()
             return utils.get_split_count() < 3
