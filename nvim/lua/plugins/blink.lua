@@ -68,6 +68,11 @@ return {
       ghost_text = {
         enabled = false,
       },
+      accept = {
+        auto_brackets = {
+          enabled = false,
+        },
+      },
       menu = {
         enabled = true,
         min_width = 40,
