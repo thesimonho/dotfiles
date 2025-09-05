@@ -31,6 +31,7 @@ local quotes = {
     [[and seldom awakens.]],
     [[The sleeper must awaken.]],
   },
+  { "As you start to walk on the way, the way appears." },
 }
 
 return quotes
