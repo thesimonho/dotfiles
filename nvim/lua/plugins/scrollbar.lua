@@ -1,27 +1,45 @@
 return {
   {
-    "lewis6991/satellite.nvim",
+    "dstein64/nvim-scrollview",
+    dependencies = { "lewis6991/gitsigns.nvim" },
+    event = "LazyFile",
+    config = function(_, opts)
+      require("scrollview").setup(opts)
+      require("scrollview.contrib.gitsigns").setup({
+        add_symbol = "▏",
+        add_priority = 5,
+        change_symbol = "▏",
+        change_priority = 5,
+        delete_symbol = "▏",
+        delete_priority = 5,
+      })
+    end,
     opts = {
+      visibility = "always",
       current_only = true,
-      width = 1,
-      winblend = 30,
-      excluded_filetypes = { "bigfile", "which-key" },
-      handlers = {
-        cursor = {
-          enable = true,
-          symbols = { "●" },
-        },
-        diagnostic = {
-          enable = true,
-          signs = {
-            error = { LazyVim.config.icons.diagnostics.Error },
-            warn = { LazyVim.config.icons.diagnostics.Warn },
-            info = { LazyVim.config.icons.diagnostics.Info },
-            hint = { LazyVim.config.icons.diagnostics.Hint },
-          },
-          min_severity = vim.diagnostic.severity.WARN,
-        },
+      floating_windows = true,
+      hide_on_cursor_intersect = true,
+      signs_on_startup = {
+        "conflicts",
+        "cursor",
+        "diagnostics",
+        "indent",
+        "keywords",
+        "marks",
+        "search",
       },
+      signs_max_per_row = 1,
+      signs_scrollbar_overlap = "over",
+      cursor_priority = 100,
+      diagnostics_error_symbol = "",
+      diagnostics_warn_symbol = "",
+      diagnostics_info_symbol = "",
+      diagnostics_hint_symbol = "",
+      diagnostics_severities = {
+        vim.diagnostic.severity.ERROR,
+        vim.diagnostic.severity.WARN,
+      },
+      excluded_filetypes = { "bigfile", "which-key" },
     },
   },
 }
