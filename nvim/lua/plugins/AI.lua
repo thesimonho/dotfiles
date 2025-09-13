@@ -1,4 +1,3 @@
-local style = require("utils.style")
 vim.g.ai_cmp = false -- show AI suggestions in cmp
 
 local M = {
@@ -53,7 +52,6 @@ local M = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
-      "Davidyz/VectorCode",
     },
     keys = {
       { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Chat" },
@@ -86,9 +84,7 @@ local M = {
             opts = {
               auto_submit_errors = true,
               auto_submit_success = true,
-              default_tools = {
-                "vectorcode_toolbox",
-              },
+              default_tools = {},
             },
           },
           opts = {
@@ -143,52 +139,6 @@ local M = {
             delete_on_clearing_chat = false,
           },
         },
-        vectorcode = {
-          enabled = true,
-          opts = {
-            tool_group = {
-              enabled = true,
-              collapse = true,
-              extras = { "file_search" },
-            },
-            tool_opts = {
-              ["*"] = {},
-              ls = {},
-              vectorise = {},
-              query = {
-                max_num = { chunk = -1, document = -1 },
-                default_num = { chunk = 50, document = 10 },
-                include_stderr = false,
-                no_duplicate = true,
-                chunk_mode = false,
-                summarise = {
-                  enabled = true,
-                  query_augmented = true,
-                },
-              },
-              files_ls = {},
-              files_rm = {},
-            },
-          },
-        },
-      },
-    },
-  },
-  {
-    "Davidyz/VectorCode",
-    build = "CC=gcc CXX=g++ uv tool upgrade vectorcode",
-    opts = {
-      async_opts = {
-        exclude_this = true,
-        n_query = 1,
-        notify = true,
-        run_on_register = true,
-      },
-      async_backend = "default", -- or "lsp"
-      exclude_this = true,
-      notify = true,
-      on_setup = {
-        update = true,
       },
     },
   },
