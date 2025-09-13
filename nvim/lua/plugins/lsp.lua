@@ -19,7 +19,9 @@ return {
         { "<leader>cR", false },
         {
           "<leader>fR",
-          Snacks.rename.rename_file,
+          function()
+            Snacks.rename.rename_file()
+          end,
           desc = "Rename File",
           mode = { "n" },
           has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
