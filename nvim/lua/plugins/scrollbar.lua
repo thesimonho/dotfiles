@@ -15,6 +15,7 @@ return {
       })
     end,
     opts = {
+      excluded_filetypes = { "bigfile", "which-key" },
       visibility = "always",
       current_only = true,
       floating_windows = true,
@@ -23,7 +24,6 @@ return {
         "conflicts",
         "cursor",
         "diagnostics",
-        "indent",
         "keywords",
         "marks",
         "search",
@@ -39,7 +39,11 @@ return {
         vim.diagnostic.severity.ERROR,
         vim.diagnostic.severity.WARN,
       },
-      excluded_filetypes = { "bigfile", "which-key" },
+      keywords_built_ins = { "fix", "hack", "todo", "warn" },
+      keywords_fix_symbol = "󱞂",
+      keywords_hack_symbol = "󱙒",
+      keywords_todo_symbol = "󰎛",
+      keywords_warn_symbol = "󱝾",
     },
   },
 }
