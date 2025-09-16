@@ -57,7 +57,6 @@ return {
       })
     end,
     opts = {
-      auto_toggle = true,
       winbar = {
         controls = {
           enabled = true,
