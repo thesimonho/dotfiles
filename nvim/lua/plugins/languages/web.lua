@@ -8,7 +8,7 @@ local function launch_chrome_debug(port)
     "--remote-debugging-port=" .. port,
     "--no-first-run",
     "--no-default-browser-check",
-    "--user-data-dir=/tmp/chrome-dap-profile",
+    "--user-data-dir=~/.cache/chrome-dap-profile",
     "> /dev/null 2>&1 &",
   }
   local arg_string = table.concat(args, " ")
@@ -174,8 +174,7 @@ return {
             executable = {
               command = "node",
               args = {
-                require("mason-registry").get_package("js-debug-adapter"):get_install_path()
-                  .. "/js-debug/src/dapDebugServer.js",
+                vim.fn.expand("$MASON/packages/js-debug-adapter") .. "/js-debug/src/dapDebugServer.js",
                 "${port}",
               },
             },
