@@ -2,7 +2,7 @@ vim.lsp.set_log_level("ERROR")
 
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "graphql-language-service-cli",
