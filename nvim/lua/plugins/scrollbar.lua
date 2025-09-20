@@ -3,6 +3,14 @@ return {
     "dstein64/nvim-scrollview",
     dependencies = { "lewis6991/gitsigns.nvim" },
     event = "LazyFile",
+    init = function()
+      vim.g.scrollview_keywords_bug_spec = {
+        patterns = { "BUG" },
+        highlight = "ScrollViewKeywordsFix",
+        priority = 25,
+        symbol = "",
+      }
+    end,
     config = function(_, opts)
       require("scrollview").setup(opts)
       require("scrollview.contrib.gitsigns").setup({
