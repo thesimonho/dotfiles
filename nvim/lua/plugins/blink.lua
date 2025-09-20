@@ -1,3 +1,7 @@
+local exclude_filetypes = {
+  "grug-far",
+}
+
 return {
   "saghen/blink.cmp",
   dependencies = {
@@ -5,6 +9,9 @@ return {
     "Kaiser-Yang/blink-cmp-git",
   },
   opts = {
+    enabled = function()
+      return not vim.tbl_contains(exclude_filetypes, vim.bo.filetype)
+    end,
     keymap = {
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide", "fallback" },
