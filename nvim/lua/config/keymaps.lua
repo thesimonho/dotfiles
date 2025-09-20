@@ -32,7 +32,6 @@ vim.keymap.set("i", "kj", "<esc>")
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit" })
 vim.keymap.set("v", "<C-c>", '"+y') -- Copy
 vim.keymap.set("i", "<C-v>", '<esc>"+pa') -- Paste
--- vim.keymap.set("i", "<C-H>", "<C-w>", { desc = "Delete word backward" }) -- Delete word backwards; some terminals: C-H = C-BS. Wezterm handles this now
 vim.keymap.set("i", "<C-Del>", function()
   local col = vim.fn.col(".")
   local line = vim.fn.getline(".")
@@ -47,7 +46,9 @@ vim.keymap.set({ "n", "x" }, "gg", "mggg", { desc = "Go to top of file" })
 vim.keymap.set({ "n", "x" }, "G", "mgG", { desc = "Go to bottom of file" })
 vim.keymap.set("v", "A", "<Esc>ggVG$", { desc = "Select all" })
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save File" })
-Snacks.toggle.option("cursorcolumn", { name = "Column Ruler" }):map("<leader>uR")
+vim.keymap.set("n", "q", "<nop>", { noremap = true }) -- unmap q because its too easy to hit by accident
+vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
+vim.keymap.set("n", "<M-q>", "Q", { noremap = true, desc = "Replay last register" })
 
 -- Windows
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
