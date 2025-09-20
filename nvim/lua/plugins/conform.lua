@@ -1,6 +1,6 @@
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     keys = {
       { "<leader>cm", vim.NIL },
     },
@@ -32,7 +32,7 @@ return {
             },
           },
         },
-        prettier = {
+        prettierd = {
           options = {
             ext_parsers = {
               qmd = "markdown",
