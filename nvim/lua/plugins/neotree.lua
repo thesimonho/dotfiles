@@ -258,7 +258,7 @@ return {
     event = "VeryLazy",
     opts = {
       hint = "floating-big-letter",
-      selection_chars = "1234asdf",
+      selection_chars = "asdf",
       show_prompt = false,
       picker_config = {
         handle_mouse_click = true,
