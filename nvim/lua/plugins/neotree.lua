@@ -156,8 +156,8 @@ return {
           title = "Neo-tree",
         },
         mappings = {
-          ["<cr>"] = open_in_prev_win,
-          ["<2-LeftMouse>"] = open_in_prev_win,
+          ["<cr>"] = "open_with_window_picker",
+          ["<2-LeftMouse>"] = "open_with_window_picker",
           ["<tab>"] = { "toggle_node" },
           ["v"] = "open_vsplit",
           ["s"] = {
@@ -249,6 +249,30 @@ return {
           handler = function(args)
             Snacks.rename.on_rename_file(args.source, args.destination)
           end,
+        },
+      },
+    },
+  },
+  {
+    "s1n7ax/nvim-window-picker",
+    event = "VeryLazy",
+    opts = {
+      hint = "floating-big-letter",
+      selection_chars = "1234asdf",
+      show_prompt = false,
+      picker_config = {
+        handle_mouse_click = true,
+        floating_big_letter = {
+          font = "ansi-shadow",
+        },
+      },
+      filter_rules = {
+        autoselect_one = true,
+        include_current_win = true,
+        include_unfocusable_windows = false,
+        bo = {
+          filetype = { "neo-tree", "notify", "snacks_notif", "grug-far" },
+          buftype = { "terminal" },
         },
       },
     },
