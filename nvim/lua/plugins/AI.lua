@@ -3,6 +3,12 @@ vim.g.ai_cmp = false -- show AI suggestions in cmp
 local M = {
   {
     "zbirenbaum/copilot.lua",
+    dependencies = {
+      "copilotlsp-nvim/copilot-lsp",
+      init = function()
+        vim.g.copilot_nes_debounce = 500
+      end,
+    },
     event = "InsertEnter",
     keys = {
       {
@@ -12,6 +18,13 @@ local M = {
           vim.cmd("wincmd =")
         end,
         desc = "Suggestions Panel",
+      },
+      {
+        "<leader>ad",
+        function()
+          vim.cmd("Copilot disable")
+        end,
+        desc = "Disable Copilot",
       },
     },
     opts = {
@@ -27,6 +40,16 @@ local M = {
           next = "<M-]>",
           prev = "<M-[>",
           dismiss = "<C-e>",
+        },
+      },
+      nes = {
+        enabled = false,
+        auto_trigger = true,
+        move_count_threshold = 3,
+        keymap = {
+          accept_and_goto = "<C-l>",
+          accept = false,
+          dismiss = "<esc>",
         },
       },
       panel = {
