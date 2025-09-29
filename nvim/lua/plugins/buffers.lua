@@ -56,6 +56,18 @@ return {
     keys = {
       { "<leader>bp", "<cmd>BufferPin<cr>", desc = "Pin Buffer" },
       { "<leader>bD", "<Cmd>BufferCloseAllButCurrentOrPinned<CR>", desc = "Delete Other Buffers" },
+      {
+        "<leader>bx",
+        function()
+          local alt = vim.fn.bufnr("#")
+          if alt > 0 and vim.api.nvim_buf_is_valid(alt) and vim.api.nvim_buf_is_loaded(alt) then
+            vim.api.nvim_buf_delete(alt, { force = false })
+          else
+            print("No valid alternate buffer")
+          end
+        end,
+        desc = "Delete Alternate Buffer",
+      },
       { "<S-h>", "<cmd>BufferPrevious<cr>", desc = "Previous Buffer" },
       { "<S-l>", "<cmd>BufferNext<cr>", desc = "Next Buffer" },
     },
