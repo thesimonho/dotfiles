@@ -5,7 +5,6 @@ local exclude_filetypes = {
 return {
   "saghen/blink.cmp",
   dependencies = {
-    "mikavilpas/blink-ripgrep.nvim",
     "Kaiser-Yang/blink-cmp-git",
   },
   opts = {
@@ -30,23 +29,9 @@ return {
     },
     sources = {
       default = {
-        "ripgrep",
         "git",
       },
       providers = {
-        ripgrep = {
-          module = "blink-ripgrep",
-          name = "ripgrep",
-          opts = {
-            prefix_min_len = 5,
-            backend = {
-              ripgrep = {
-                context_size = 3,
-                search_casing = "--smart-case",
-              },
-            },
-          },
-        },
         git = {
           module = "blink-cmp-git",
           name = "git",
