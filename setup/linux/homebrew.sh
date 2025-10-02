@@ -20,6 +20,7 @@ declare -A packages=(
   [awscli]="aws"
   [bat]="bat"
   [carapace]="carapace"
+  [codex]="codex"
   [direnv]="direnv"
   [eza]="eza"
   [fd]="fd"
