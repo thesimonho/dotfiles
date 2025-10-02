@@ -3,22 +3,8 @@ vim.g.ai_cmp = false -- show AI suggestions in cmp
 local M = {
   {
     "zbirenbaum/copilot.lua",
-    dependencies = {
-      "copilotlsp-nvim/copilot-lsp",
-      init = function()
-        vim.g.copilot_nes_debounce = 500
-      end,
-    },
-    event = "InsertEnter",
+    dependencies = { "copilotlsp-nvim/copilot-lsp" },
     keys = {
-      {
-        "<leader>as",
-        function()
-          vim.cmd("Copilot panel")
-          vim.cmd("wincmd =")
-        end,
-        desc = "Suggestions Panel",
-      },
       {
         "<leader>ad",
         function()
@@ -30,9 +16,10 @@ local M = {
     opts = {
       copilot_model = "gpt-4o",
       suggestion = {
-        enabled = true,
+        enabled = not vim.g.ai_cmp,
         auto_trigger = true,
         trigger_on_accept = true,
+        hide_during_completion = vim.g.ai_cmp,
         keymap = {
           accept = "<M-l>",
           accept_word = "<M-h>",
@@ -42,28 +29,35 @@ local M = {
           dismiss = "<C-e>",
         },
       },
-      nes = {
-        enabled = false,
-        auto_trigger = true,
-        move_count_threshold = 3,
-        keymap = {
-          accept_and_goto = "<C-l>",
-          accept = false,
-          dismiss = "<esc>",
-        },
+    },
+  },
+  {
+    "folke/sidekick.nvim",
+    keys = {
+      {
+        "<tab>",
+        function()
+          -- if there is a next edit, jump to it, otherwise apply it if any
+          if not require("sidekick").nes_jump_or_apply() then
+            return "<Tab>" -- fallback to normal tab
+          end
+        end,
+        expr = true,
+        desc = "Goto/Apply Next Edit Suggestion",
       },
-      panel = {
-        enabled = true,
-        auto_refresh = true,
-        keymap = {
-          jump_prev = "[[",
-          jump_next = "]]",
-          accept = "<CR>",
-          refresh = "gr",
-          open = "<M-CR>",
-        },
-        layout = {
-          position = "right",
+      {
+        "<c-.>",
+        function()
+          require("sidekick.cli").focus()
+        end,
+        mode = { "n", "x", "i", "t" },
+        desc = "Sidekick Switch Focus",
+      },
+    },
+    opts = {
+      cli = {
+        mux = {
+          enabled = false,
         },
       },
     },
