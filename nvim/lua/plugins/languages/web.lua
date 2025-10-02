@@ -8,7 +8,7 @@ local function launch_chrome_debug(port)
     "--remote-debugging-port=" .. port,
     "--no-first-run",
     "--no-default-browser-check",
-    "--user-data-dir=~/.cache/chrome-dap-profile",
+    "--user-data-dir=" .. os.getenv("HOME") .. "/.cache/chrome-dap-profile",
     "> /dev/null 2>&1 &",
   }
   local arg_string = table.concat(args, " ")
