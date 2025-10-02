@@ -141,8 +141,6 @@ vim.api.nvim_create_autocmd({ "VimLeavePre", "TabLeave", "TabClosed" }, {
   end,
 })
 
--- dd item from quickfix
-
 -- In quickfix window, press `dd` to remove the current entry
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "qf",
