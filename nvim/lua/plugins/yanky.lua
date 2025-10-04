@@ -3,7 +3,7 @@ return {
   keys = {
     { "<leader>p", vim.NIL },
     { "<leader>y", "<cmd>YankyRingHistory<cr>", desc = "Yank History" },
-    { "p", "<Plug>(YankyPutAfter)", desc = "Put after" },
+    { "p", "<Plug>(YankyPutIndentAfterCharwise)", desc = "Put after" },
     { "P", "<Plug>(YankyPutBeforeLinewise)", desc = "Put before" },
     {
       "iy",
