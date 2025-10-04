@@ -5,6 +5,22 @@ return {
     { "<leader>y", "<cmd>YankyRingHistory<cr>", desc = "Yank History" },
     { "p", "<Plug>(YankyPutAfter)", desc = "Put after" },
     { "P", "<Plug>(YankyPutBeforeLinewise)", desc = "Put before" },
+    {
+      "iy",
+      function()
+        require("yanky.textobj").last_put()
+      end,
+      mode = { "o", "x" },
+      desc = "yank",
+    },
+    {
+      "ay",
+      function()
+        require("yanky.textobj").last_put()
+      end,
+      mode = { "o", "x" },
+      desc = "yank",
+    },
   },
   opts = {
     highlight = {
@@ -13,6 +29,9 @@ return {
       timer = 200,
     },
     preserve_cursor_position = {
+      enabled = true,
+    },
+    textobj = {
       enabled = true,
     },
   },
