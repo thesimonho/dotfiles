@@ -174,6 +174,7 @@ M.key_tables = {
 		{ key = "d", action = act.CloseCurrentPane({ confirm = true }) },
 		{ key = "v", action = act.SplitPane({ direction = "Right" }) },
 		{ key = "s", action = act.SplitPane({ direction = "Down" }) },
+		{ key = "x", action = act.RotatePanes("Clockwise") },
 	},
 	resize_mode = {
 		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
