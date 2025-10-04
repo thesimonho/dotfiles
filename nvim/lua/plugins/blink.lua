@@ -1,3 +1,5 @@
+local style = require("utils.style")
+
 local M = {
   {
     "saghen/blink.cmp",
@@ -24,55 +26,55 @@ local M = {
       appearance = {
         nerd_font_variant = "normal",
       },
-    },
-    completion = {
-      keyword = {
-        range = "full",
-      },
-      trigger = {
-        show_on_insert = false,
-        show_in_snippet = false,
-        show_on_backspace = true,
-        show_on_backspace_in_keyword = true,
-      },
-      list = {
-        selection = {
-          preselect = true,
-          auto_insert = false,
+      completion = {
+        keyword = {
+          range = "full",
         },
-      },
-      ghost_text = {
-        enabled = false,
-      },
-      accept = {
-        auto_brackets = {
-          enabled = false,
+        trigger = {
+          show_on_insert = false,
+          show_in_snippet = false,
+          show_on_backspace = true,
+          show_on_backspace_in_keyword = true,
         },
-      },
-      menu = {
-        enabled = true,
-        min_width = 40,
-        max_height = 15,
-        winblend = 6,
-        border = "rounded",
-        draw = {
-          treesitter = { "lsp" },
-          columns = {
-            { "kind_icon" },
-            { "label", "label_description", gap = 1 },
-            { "source_name" },
+        list = {
+          selection = {
+            preselect = true,
+            auto_insert = false,
           },
         },
-      },
-      documentation = {
-        auto_show = true,
-        treesitter_highlighting = true,
-        window = {
-          min_width = 10,
-          max_width = 60,
-          max_height = 20,
-          border = "rounded",
+        ghost_text = {
+          enabled = false,
+        },
+        accept = {
+          auto_brackets = {
+            enabled = false,
+          },
+        },
+        menu = {
+          enabled = true,
+          min_width = 40,
+          max_height = 15,
           winblend = 6,
+          border = "rounded",
+          draw = {
+            treesitter = { "lsp" },
+            columns = {
+              { "kind_icon" },
+              { "label", "label_description", gap = 1 },
+              { "source_name" },
+            },
+          },
+        },
+        documentation = {
+          auto_show = true,
+          treesitter_highlighting = true,
+          window = {
+            min_width = 10,
+            max_width = 60,
+            max_height = 20,
+            border = style.border_chars_dash,
+            winblend = 6,
+          },
         },
       },
     },
