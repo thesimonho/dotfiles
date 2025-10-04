@@ -1,44 +1,28 @@
-local exclude_filetypes = {
-  "grug-far",
-}
+local M = {
+  {
+    "saghen/blink.cmp",
+    opts = {
+      enabled = function()
+        local exclude_filetypes = {
+          "grug-far",
+        }
+        return not vim.tbl_contains(exclude_filetypes, vim.bo.filetype)
+      end,
+      keymap = {
+        ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<C-e>"] = { "hide", "fallback" },
+        ["<CR>"] = { "accept", "fallback" },
 
-return {
-  "saghen/blink.cmp",
-  dependencies = {
-    "Kaiser-Yang/blink-cmp-git",
-  },
-  opts = {
-    enabled = function()
-      return not vim.tbl_contains(exclude_filetypes, vim.bo.filetype)
-    end,
-    keymap = {
-      ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
-      ["<C-e>"] = { "hide", "fallback" },
-      ["<CR>"] = { "accept", "fallback" },
+        ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
+        ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
 
-      ["<Tab>"] = { "snippet_forward", "select_next", "fallback" },
-      ["<S-Tab>"] = { "snippet_backward", "select_prev", "fallback" },
+        ["<Up>"] = { "select_prev", "fallback" },
+        ["<Down>"] = { "select_next", "fallback" },
 
-      ["<Up>"] = { "select_prev", "fallback" },
-      ["<Down>"] = { "select_next", "fallback" },
-
-      ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
-    },
-    appearance = {
-      nerd_font_variant = "normal",
-    },
-    sources = {
-      default = {
-        "git",
+        ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
       },
-      providers = {
-        git = {
-          module = "blink-cmp-git",
-          name = "git",
-          enabled = function()
-            return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
-          end,
-        },
+      appearance = {
+        nerd_font_variant = "normal",
       },
     },
     completion = {
@@ -94,3 +78,5 @@ return {
     },
   },
 }
+
+return M
