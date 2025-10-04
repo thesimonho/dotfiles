@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 local containers = require("containers")
+local utils = require("utils")
 local SCROLL_SPEED = 0.4
 
 local function handle_selection(window, pane, _, label)
@@ -76,20 +77,20 @@ M.basic_binds = {
 	-- wezterm
 	{ key = "F1", action = act.ActivateCommandPalette },
 	{ key = "/", mods = "CTRL", action = act.Search({ CaseInSensitiveString = "" }) },
-	{ key = "y", mods = "LEADER", action = act.ActivateCopyMode },
-	{ key = "q", mods = "LEADER", action = act.QuitApplication },
+	{ key = "y", mods = "SUPER", action = act.ActivateCopyMode },
+	{ key = "q", mods = "SUPER", action = act.QuitApplication },
 	{
 		key = "Backspace",
 		mods = "CTRL",
 		action = wezterm.action.SendString("\x17"), -- Ctrl+W because C-BS can't be mapped in neovim
 	},
-	{
-		key = "p",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(window, pane)
-			window:perform_action(show_domain_selector(), pane)
-		end),
-	},
+	-- {
+	-- 	key = "p",
+	-- 	mods = "SUPER",
+	-- 	action = wezterm.action_callback(function(window, pane)
+	-- 		window:perform_action(show_domain_selector(), pane)
+	-- 	end),
+	-- },
 
 	-- copy paste
 	{
@@ -112,53 +113,47 @@ M.basic_binds = {
 	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
 	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
 
-	-- panes / windows
-	{ key = "h", mods = "SUPER", action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
-
 	-- tabs / buffers
 	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "`", mods = "LEADER", action = act.ActivateLastTab },
-	{ key = "h", mods = "LEADER", action = act.ActivateTabRelative(-1) },
-	{ key = "l", mods = "LEADER", action = act.ActivateTabRelative(1) },
+	{ key = "`", mods = "SUPER", action = act.ActivateLastTab },
+	{ key = "h", mods = "SUPER", action = act.ActivateTabRelative(-1) },
+	{ key = "l", mods = "SUPER", action = act.ActivateTabRelative(1) },
 
 	-- scrolling
 	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },
 	{ key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) },
-	-- {
-	-- 	key = "u",
-	-- 	mods = "CTRL",
-	-- 	action = wezterm.action_callback(function(window, pane)
-	-- 		if utils.is_not_nvim(pane) then
-	-- 			window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
-	-- 		else
-	-- 			window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
-	-- 		end
-	-- 	end),
-	-- },
-	-- {
-	-- 	key = "d",
-	-- 	mods = "CTRL",
-	-- 	action = wezterm.action_callback(function(window, pane)
-	-- 		if utils.is_not_nvim(pane) then
-	-- 			window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
-	-- 		else
-	-- 			window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
-	-- 		end
-	-- 	end),
-	-- },
+	{
+		key = "u",
+		mods = "CTRL",
+		action = wezterm.action_callback(function(window, pane)
+			if utils.is_not_nvim(pane) then
+				window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
+			else
+				window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
+			end
+		end),
+	},
+	{
+		key = "d",
+		mods = "CTRL",
+		action = wezterm.action_callback(function(window, pane)
+			if utils.is_not_nvim(pane) then
+				window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
+			else
+				window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
+			end
+		end),
+	},
 
 	-- key tables
 	{
 		key = "w",
-		mods = "LEADER",
+		mods = "SUPER",
 		action = act.ActivateKeyTable({ name = "window_mode" }),
 	},
 	{
 		key = "b",
-		mods = "LEADER",
+		mods = "SUPER",
 		action = act.ActivateKeyTable({ name = "buffer_mode" }),
 	},
 }
@@ -171,6 +166,10 @@ M.key_tables = {
 		{ key = "r", action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false }) },
 		{ key = "w", action = act.PaneSelect },
 		{ key = "n", action = act.SpawnWindow },
+		{ key = "h", action = act.ActivatePaneDirection("Left") },
+		{ key = "j", action = act.ActivatePaneDirection("Down") },
+		{ key = "k", action = act.ActivatePaneDirection("Up") },
+		{ key = "l", action = act.ActivatePaneDirection("Right") },
 		{ key = "d", action = act.CloseCurrentPane({ confirm = true }) },
 		{ key = "v", action = act.SplitPane({ direction = "Right" }) },
 		{ key = "s", action = act.SplitPane({ direction = "Down" }) },
