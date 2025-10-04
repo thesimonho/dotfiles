@@ -148,14 +148,20 @@ alias ll='ls -l'
 alias tf='terraform'
 alias lg='lazygit'
 alias vim='nvim'
-alias yz='yazi'
 
 # keybinds
+function open_file_manager() {
+  zle -I        # Clear pending input or partial commands
+  spf           # Launch file manager
+  zle redisplay # Redraw the prompt after Yazi exits
+}
+
+zle -N open_file_manager
+bindkey '^E' open_file_manager
 bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion. do this at the end
 bindkey '^H' backward-kill-word # ctrl backspace
 bindkey '^[[3;5~' kill-word # ctrl delete
 
-# applications
 # add homebrew path depending on osx or linux
 if command -v brew >/dev/null 2>&1; then
   BREW_PREFIX="brew"
