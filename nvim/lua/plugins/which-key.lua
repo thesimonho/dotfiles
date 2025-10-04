@@ -2,6 +2,20 @@ local style = require("utils.style")
 
 return {
   "folke/which-key.nvim",
+  keys = {
+    {
+      "[",
+      function()
+        require("which-key").show({ keys = "[", loop = true })
+      end,
+    },
+    {
+      "]",
+      function()
+        require("which-key").show({ keys = "]", loop = true })
+      end,
+    },
+  },
   opts = {
     show_help = false,
     show_keys = false,
