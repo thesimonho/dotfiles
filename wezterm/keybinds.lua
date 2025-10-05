@@ -2,6 +2,7 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 local containers = require("containers")
 local utils = require("utils")
+local plugins = require("plugins")
 local SCROLL_SPEED = 0.4
 
 local function handle_selection(window, pane, _, label)
@@ -83,6 +84,11 @@ M.basic_binds = {
 		key = "Backspace",
 		mods = "CTRL",
 		action = wezterm.action.SendString("\x17"), -- Ctrl+W because C-BS can't be mapped in neovim
+	},
+	{
+		key = "p",
+		mods = "SUPER",
+		action = plugins.workspace_switcher.switch_workspace(),
 	},
 	-- {
 	-- 	key = "p",
