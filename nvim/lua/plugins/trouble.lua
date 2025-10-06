@@ -3,6 +3,9 @@ local fs = require("utils.fs")
 return {
   {
     "folke/trouble.nvim",
+    keys = {
+      { "<leader>cS", vim.NIL },
+    },
     opts = {
       focus = true, -- Focus the window when opened
       follow = true, -- Follow the current item
