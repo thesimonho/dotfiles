@@ -89,13 +89,6 @@ return {
       start_in_insert = true,
       hide_numbers = true,
       shade_terminals = false,
-      on_create = function(term)
-        vim.keymap.set("t", "<esc>", "<C-\\><C-n>", { silent = true, buffer = term.bufnr })
-        vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", { silent = true, buffer = term.bufnr })
-        vim.keymap.set("t", "<C-j>", "<C-\\><C-n><C-w>j", { silent = true, buffer = term.bufnr })
-        vim.keymap.set("t", "<C-k>", "<C-\\><C-n><C-w>k", { silent = true, buffer = term.bufnr })
-        vim.keymap.set("t", "<C-l>", "<C-\\><C-n><C-w>l", { silent = true, buffer = term.bufnr })
-      end,
       size = function(term)
         if term.direction == "horizontal" then
           return 15
