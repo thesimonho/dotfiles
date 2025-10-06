@@ -1,4 +1,4 @@
-vim.g.ai_cmp = false -- show AI suggestions in cmp
+vim.g.ai_cmp = false -- show AI suggestions in cmp?
 
 local M = {
   {
@@ -84,7 +84,7 @@ local M = {
           auto_scroll = true,
           intro_message = "",
           start_in_insert_mode = false,
-          show_settings = true,
+          show_settings = false,
           window = {
             border = "rounded",
             width = 0.4,
@@ -95,7 +95,7 @@ local M = {
         chat = {
           adapter = {
             name = "copilot",
-            model = "gpt-4o",
+            model = "gpt-5",
           },
           tools = {
             opts = {
@@ -124,7 +124,7 @@ local M = {
         cmd = {
           adapter = {
             name = "copilot",
-            model = "gpt-4o",
+            model = "gpt-5-mini",
           },
         },
       },
