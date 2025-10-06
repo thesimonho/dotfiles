@@ -23,7 +23,7 @@ return {
       })
     end,
     opts = {
-      excluded_filetypes = { "bigfile", "which-key", "snacks_input" },
+      excluded_filetypes = { "bigfile", "which-key", "snacks_input", "snacks_picker_input", "trouble" },
       visibility = "always",
       current_only = true,
       floating_windows = true,
