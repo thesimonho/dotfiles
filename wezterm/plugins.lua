@@ -1,10 +1,27 @@
 local wezterm = require("wezterm")
 local theme = require("theme_switcher")
 
+local function find_binary(name)
+	local handle = io.popen("command -v " .. name .. " 2>/dev/null")
+	if not handle then
+		return nil
+	end
+
+	local result = handle:read("*a")
+	handle:close()
+
+	result = result:gsub("%s+", "")
+	if result == "" then
+		return nil
+	end
+	return result
+end
+
 local M = {}
 
 -- workspace_switcher
 M.workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+M.workspace_switcher.zoxide_path = find_binary("zoxide") or "/usr/bin/zoxide"
 
 M.workspace_switcher.workspace_formatter = function(label)
 	return wezterm.format({
@@ -65,16 +82,16 @@ M.tabline.setup({
 		},
 		tabline_b = {
 			{ "workspace", padding = { left = 1, right = 0 } },
-			{
-				"domain",
-				padding = { left = 1, right = 0 },
-				cond = function()
-					-- if #wezterm.mux.all_domans() > 1 then
-					-- 	return true
-					-- end
-					return false
-				end,
-			},
+			-- {
+			-- 	"domain",
+			-- 	padding = { left = 1, right = 0 },
+			-- 	cond = function()
+			-- 		if #wezterm.mux.all_domains() > 2 then
+			-- 			return true
+			-- 		end
+			-- 		return false
+			-- 	end,
+			-- },
 		},
 		tabline_c = { " " },
 		tabline_x = {
