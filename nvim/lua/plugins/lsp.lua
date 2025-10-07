@@ -5,6 +5,7 @@ return {
     "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
+        "postgrestools", -- supabase
         "graphql-language-service-cli",
         "vim-language-server",
         "yaml-language-server",
