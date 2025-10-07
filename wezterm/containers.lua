@@ -162,21 +162,21 @@ M.create_container_choices = function()
 	return container_choices
 end
 
-utils.poll_until_ready(60, function()
-	local loaded
-	if next(M.ssh_domains) == nil then
-		M.create_ssh_domains()
-		if next(M.ssh_domains) == nil then
-			loaded = false
-		else
-			loaded = true
-			wezterm.reload_configuration()
-		end
-	else
-		return true
-	end
-
-	return loaded
-end)
+-- utils.poll_until_ready(60, function()
+-- 	local loaded
+-- 	if next(M.ssh_domains) == nil then
+-- 		M.create_ssh_domains()
+-- 		if next(M.ssh_domains) == nil then
+-- 			loaded = false
+-- 		else
+-- 			loaded = true
+-- 			wezterm.reload_configuration()
+-- 		end
+-- 	else
+-- 		return true
+-- 	end
+--
+-- 	return loaded
+-- end)
 
 return M
