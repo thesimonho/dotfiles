@@ -99,3 +99,6 @@ echo "✅ SSH keys set."
 
 # homebrew apps
 "$DOTFILES/setup/linux/homebrew.sh"
+
+# socket firewall
+npm install -g sfw
