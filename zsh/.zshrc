@@ -143,9 +143,6 @@ maybe_alias() {
 
 maybe_alias bat "cat=bat --style='header,grid'"
 maybe_alias eza "ls=eza --icons=always --hyperlink --group-directories-first --color=always --header"
-maybe_alias sfw "npm=sfw npm" # socket firewall
-maybe_alias sfw "pip=sfw pip" # socket firewall
-maybe_alias sfw "uv=sfw uv" # socket firewall
 alias la='ls -la'
 alias ll='ls -l'
 alias tf='terraform'
