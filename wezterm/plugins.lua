@@ -7,6 +7,7 @@ local theme = require("theme_switcher")
 local enabled = {
 	tabline = true,
 	workspace_switcher = true,
+	smart_splits = true,
 	dev_containers = false,
 }
 
@@ -245,6 +246,50 @@ if enabled.tabline then
 		},
 		extensions = { "smart_workspace_switcher" },
 	})
+end
+
+if enabled.smart_splits then
+	wezterm.plugin.require("http://github.com/mrjones2014/smart-splits.nvim")
+
+	local function is_vim(pane)
+		return pane:get_user_vars().IS_NVIM == "true"
+	end
+
+	local direction_keys = {
+		h = "Left",
+		j = "Down",
+		k = "Up",
+		l = "Right",
+	}
+
+	local function split_nav(resize_or_move, key)
+		return {
+			key = key,
+			mods = resize_or_move == "resize" and "CTRL|ALT" or "CTRL",
+			action = wezterm.action_callback(function(win, pane)
+				if is_vim(pane) then
+					win:perform_action({
+						SendKey = { key = key, mods = resize_or_move == "resize" and "CTRL|ALT" or "CTRL" },
+					}, pane)
+				else
+					if resize_or_move == "resize" then
+						win:perform_action({ AdjustPaneSize = { direction_keys[key], 5 } }, pane)
+					else
+						win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
+					end
+				end
+			end),
+		}
+	end
+
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "h")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "j")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "k")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "l")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "h")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "j")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "k")
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "l")
 end
 
 return M
