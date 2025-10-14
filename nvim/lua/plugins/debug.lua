@@ -58,6 +58,7 @@ return {
     end,
     opts = {
       winbar = {
+        default_section = "scopes",
         controls = {
           enabled = true,
           buttons = {
