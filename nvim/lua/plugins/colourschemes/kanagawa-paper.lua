@@ -1,5 +1,6 @@
 local opts = {
   cache = false,
+  transparent = true,
   dim_inactive = true,
   diag_background = true,
   auto_plugins = true,
