@@ -5,6 +5,8 @@ local SCROLL_SPEED = 0.4
 
 local M = {}
 
+local last_active_pane_id = nil
+
 M.basic_binds = {
 	-- MacOS rebinds
 	{ key = "c", mods = "CMD", action = act.SendKey({ key = "c", mods = "CTRL" }) },
@@ -20,8 +22,6 @@ M.basic_binds = {
 		mods = "CTRL",
 		action = wezterm.action.SendString("\x17"), -- Ctrl+W because C-BS can't be mapped in neovim
 	},
-
-	-- copy paste
 	{
 		key = "c",
 		mods = "CTRL|SHIFT",
@@ -47,6 +47,32 @@ M.basic_binds = {
 	{ key = "`", mods = "SUPER", action = act.ActivateLastTab },
 	{ key = "h", mods = "SUPER", action = act.ActivateTabRelative(-1) },
 	{ key = "l", mods = "SUPER", action = act.ActivateTabRelative(1) },
+	{
+		key = "\\",
+		mods = "SUPER",
+		action = wezterm.action_callback(function(_, pane)
+			local tab = pane:tab()
+			local panes = tab:panes_with_info()
+			if #panes == 1 then
+				pane:split({
+					direction = "Right",
+					size = 0.5,
+				})
+			elseif panes[1].is_zoomed then
+				tab:set_zoomed(false)
+				for _, p in ipairs(panes) do
+					if p.pane:pane_id() == last_active_pane_id then
+						p.pane:activate()
+						return
+					end
+				end
+			else
+				last_active_pane_id = pane:pane_id()
+				panes[1].pane:activate()
+				tab:set_zoomed(true)
+			end
+		end),
+	},
 
 	-- scrolling
 	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },
