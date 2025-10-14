@@ -1,72 +1,7 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
-local containers = require("containers")
 local utils = require("utils")
-local plugins = require("plugins")
 local SCROLL_SPEED = 0.4
-
-local function handle_selection(window, pane, _, label)
-	if not label then
-		-- no selection
-		return
-	end
-
-	if label == "󰌙 detach domains" then
-		local domains = wezterm.mux.all_domains()
-		for _, domain in ipairs(domains) do
-			if domain:state() == "Attached" and domain:name() ~= "local" and domain:is_spawnable() then
-				domain:detach()
-			end
-		end
-		return
-	elseif label == "󰑓 reload domains" then
-		window:perform_action(act.ReloadConfiguration, pane)
-		return
-	end
-
-	local kind, name = label:match("^(.-): (.-)%s*%*?$")
-	if kind == "devpod" then
-		window:perform_action(
-			act.SwitchToWorkspace({
-				name = name,
-				spawn = {
-					domain = { DomainName = name },
-				},
-			}),
-			pane
-		)
-	elseif kind == "distrobox" then
-		window:perform_action(
-			act.SpawnCommandInNewTab({
-				args = { "distrobox", "enter", "--root", name },
-			}),
-			pane
-		)
-	else
-		window:perform_action(
-			act.SwitchToWorkspace({
-				name = label,
-				spawn = {
-					domain = { DomainName = label },
-				},
-			}),
-			pane
-		)
-	end
-end
-
--- Creates the input selector action
-local function show_domain_selector()
-	-- create choices every time so we can update the * indicator
-	local choices = containers.create_container_choices()
-
-	return act.InputSelector({
-		action = wezterm.action_callback(handle_selection),
-		choices = choices,
-		alphabet = "1234qwer",
-		description = "Attach domain:",
-	})
-end
 
 local M = {}
 
@@ -85,18 +20,6 @@ M.basic_binds = {
 		mods = "CTRL",
 		action = wezterm.action.SendString("\x17"), -- Ctrl+W because C-BS can't be mapped in neovim
 	},
-	{
-		key = "p",
-		mods = "SUPER",
-		action = plugins.workspace_switcher.switch_workspace(),
-	},
-	-- {
-	-- 	key = "p",
-	-- 	mods = "SUPER",
-	-- 	action = wezterm.action_callback(function(window, pane)
-	-- 		window:perform_action(show_domain_selector(), pane)
-	-- 	end),
-	-- },
 
 	-- copy paste
 	{
@@ -120,7 +43,7 @@ M.basic_binds = {
 	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
 
 	-- tabs / buffers
-	{ key = "t", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "t", mods = "SUPER", action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "`", mods = "SUPER", action = act.ActivateLastTab },
 	{ key = "h", mods = "SUPER", action = act.ActivateTabRelative(-1) },
 	{ key = "l", mods = "SUPER", action = act.ActivateTabRelative(1) },
