@@ -75,8 +75,8 @@ if utils.is_windows() then
 	}
 elseif utils.is_mac() then
 	config.font_size = 16
-	config.macos_window_background_blur = 60
-	config.window_background_opacity = 1.0
+	config.macos_window_background_blur = 20
+	config.window_background_opacity = 0.92
 	config.default_prog = { "zsh" }
 else
 	config.font_size = 12
