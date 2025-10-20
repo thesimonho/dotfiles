@@ -43,6 +43,9 @@ local M = {
           enabled = false,
         },
       },
+      nes = {
+        enabled = false,
+      },
     },
   },
   {
