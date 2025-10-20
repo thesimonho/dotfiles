@@ -1,4 +1,4 @@
-vim.lsp.set_log_level("ERROR")
+vim.lsp.set_log_level("off") -- Disable LSP logging
 
 return {
   {
