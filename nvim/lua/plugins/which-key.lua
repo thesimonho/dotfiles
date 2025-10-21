@@ -1,4 +1,4 @@
-local style = require("utils.style")
+local constants = require("config.constants")
 
 local hydra = { active = false }
 -- prevent recursive calls to show which key menu if hydra is already open
@@ -52,7 +52,7 @@ return {
     delay = 50,
     win = {
       title = true,
-      border = style.border_chars_outer_thin,
+      border = constants.border_chars_outer_thin,
       padding = { 1, 0 },
     },
     layout = {

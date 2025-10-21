@@ -1,4 +1,4 @@
-local style = require("utils.style")
+local constants = require("config.constants")
 
 return {
   "folke/noice.nvim",
@@ -18,7 +18,7 @@ return {
     views = {
       hover = {
         border = {
-          style = style.border_chars_outer_thin,
+          style = constants.border_chars_outer_thin,
         },
       },
       mini = {
