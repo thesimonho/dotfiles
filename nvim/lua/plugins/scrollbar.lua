@@ -9,6 +9,7 @@ local function make_patterns_for_words(words)
   return out
 end
 
+-- TODO: add highlight groups for merge conflicts
 return {
   {
     "dstein64/nvim-scrollview",
@@ -36,7 +37,15 @@ return {
       })
     end,
     opts = {
-      excluded_filetypes = { "bigfile", "which-key", "snacks_input", "snacks_picker_input", "trouble", "ccc-ui" },
+      excluded_filetypes = {
+        "bigfile",
+        "which-key",
+        "snacks_input",
+        "snacks_picker_input",
+        "trouble",
+        "ccc-ui",
+        "lazy",
+      },
       visibility = "info",
       current_only = true,
       floating_windows = true,
@@ -48,6 +57,8 @@ return {
         "keywords",
         "marks",
         "search",
+        "latestchange",
+        "quickfix",
       },
       signs_max_per_row = 1,
       signs_scrollbar_overlap = "over",
