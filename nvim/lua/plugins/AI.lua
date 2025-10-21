@@ -3,7 +3,6 @@ vim.g.ai_cmp = false -- show AI suggestions in cmp?
 local M = {
   {
     "zbirenbaum/copilot.lua",
-    dependencies = { "copilotlsp-nvim/copilot-lsp" },
     keys = {
       {
         "<leader>ad",
