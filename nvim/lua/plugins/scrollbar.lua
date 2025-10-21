@@ -1,15 +1,28 @@
+local constants = require("config/constants")
+
+local function make_patterns_for_words(words)
+  local out = {}
+  for _, w in ipairs(words) do
+    local pattern = ("%%f[%%w_]%s%%f[^%%w_]"):format(w)
+    table.insert(out, pattern)
+  end
+  return out
+end
+
 return {
   {
     "dstein64/nvim-scrollview",
     dependencies = { "lewis6991/gitsigns.nvim" },
     event = "LazyFile",
     init = function()
-      vim.g.scrollview_keywords_bug_spec = {
-        patterns = { "BUG" },
-        highlight = "ScrollViewKeywordsFix",
-        priority = 25,
-        symbol = "",
-      }
+      for group, def in pairs(constants.todo_keywords) do
+        vim.g["scrollview_keywords_" .. group:lower() .. "_spec"] = {
+          patterns = make_patterns_for_words(def.alt),
+          highlight = def.highlight,
+          symbol = def.icon,
+          priority = def.priority or 25,
+        }
+      end
     end,
     config = function(_, opts)
       require("scrollview").setup(opts)

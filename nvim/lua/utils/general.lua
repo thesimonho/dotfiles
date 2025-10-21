@@ -1,4 +1,4 @@
-local style = require("utils.style")
+local constants = require("config.constants")
 local fs = require("utils.fs")
 
 local M = {}
@@ -78,8 +78,8 @@ M.get_progress_char = function()
   local current_line = vim.fn.line(".")
   local total_lines = vim.fn.line("$")
   local line_ratio = current_line / total_lines
-  local index = math.ceil(line_ratio * #style.progress)
-  return style.progress[index]
+  local index = math.ceil(line_ratio * #constants.progress)
+  return constants.progress[index]
 end
 
 M.load_help_file = function()

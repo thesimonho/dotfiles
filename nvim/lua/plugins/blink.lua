@@ -1,4 +1,4 @@
-local style = require("utils.style")
+local constants = require("config.constants")
 
 local M = {
   {
@@ -72,7 +72,7 @@ local M = {
             min_width = 10,
             max_width = 60,
             max_height = 20,
-            border = style.border_chars_dash,
+            border = constants.border_chars_dash,
             winblend = 6,
           },
         },

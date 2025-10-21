@@ -1,4 +1,4 @@
-local style = require("utils.style")
+local constants = require("config.constants")
 local icons = require("lazyvim.config").icons
 
 local diff_files = function(state)
@@ -72,7 +72,7 @@ return {
     },
     opts = {
       close_if_last_window = true,
-      popup_border_style = style.border_chars_outer_thin,
+      popup_border_style = constants.border_chars_outer_thin,
       enable_git_status = true,
       enable_modified_markers = true,
       enable_opened_markers = true,
