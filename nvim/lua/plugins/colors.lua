@@ -8,6 +8,7 @@ return {
         default_color = "#408080",
         auto_close = true,
         preserve = true,
+        alpha_show = false,
         save_on_quit = true,
         highlighter = {
           auto_enable = false, --- use just for color picker, no highlighting
