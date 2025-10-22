@@ -57,7 +57,6 @@ return {
         "keywords",
         "marks",
         "search",
-        "latestchange",
         "quickfix",
       },
       signs_max_per_row = 1,
