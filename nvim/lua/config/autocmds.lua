@@ -87,32 +87,6 @@ vim.api.nvim_create_autocmd("WinLeave", {
   end,
 })
 
--- winblend
-local winblend_group = vim.api.nvim_create_augroup("WinblendGroup", { clear = true })
-
-vim.api.nvim_create_autocmd("WinEnter", {
-  group = winblend_group,
-  callback = function()
-    local ignore_ft = { "snacks_dashboard", "neo-tree" }
-    local win = vim.api.nvim_get_current_win()
-
-    if vim.tbl_contains(ignore_ft, vim.bo.filetype) then
-      vim.api.nvim_set_option_value("winblend", 0, { win = win })
-    else
-      vim.api.nvim_set_option_value("winblend", 3, { win = win })
-    end
-  end,
-})
-
-vim.api.nvim_create_autocmd("CmdlineEnter", {
-  group = winblend_group,
-  pattern = { "/", "?" },
-  callback = function()
-    local win = vim.api.nvim_get_current_win()
-    vim.api.nvim_set_option_value("winblend", 0, { win = win })
-  end,
-})
-
 -- line numbers
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()

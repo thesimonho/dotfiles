@@ -243,6 +243,11 @@ return {
           },
         },
         win = {
+          list = {
+            wo = {
+              winblend = 3,
+            },
+          },
           preview = {
             wo = {
               number = false,
@@ -251,6 +256,7 @@ return {
               foldenable = false,
               foldcolumn = "0",
               signcolumn = "no",
+              winblend = 3,
             },
           },
         },
