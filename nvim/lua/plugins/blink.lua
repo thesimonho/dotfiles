@@ -38,8 +38,8 @@ local M = {
         },
         list = {
           selection = {
-            preselect = true,
-            auto_insert = false,
+            preselect = false,
+            auto_insert = true,
           },
         },
         ghost_text = {
