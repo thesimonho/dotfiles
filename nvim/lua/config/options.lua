@@ -5,6 +5,7 @@ local hour = os.date("*t").hour
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
+vim.g.ai_cmp = false -- show AI suggestions in cmp?
 
 -- set clipboard for local and terminal (via OSC52)
 vim.schedule(function()

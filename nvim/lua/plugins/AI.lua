@@ -1,5 +1,3 @@
-vim.g.ai_cmp = false -- show AI suggestions in cmp?
-
 local M = {
   {
     "zbirenbaum/copilot.lua",
