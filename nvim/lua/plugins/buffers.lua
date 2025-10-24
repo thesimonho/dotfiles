@@ -130,37 +130,9 @@ return {
         end,
         desc = "Move to right split",
       },
-      {
-        "<C-A-h>",
-        function()
-          require("smart-splits").resize_left()
-        end,
-        desc = "Resize split left",
-      },
-      {
-        "<C-A-j>",
-        function()
-          require("smart-splits").resize_down()
-        end,
-        desc = "Resize split down",
-      },
-      {
-        "<C-A-k>",
-        function()
-          require("smart-splits").resize_up()
-        end,
-        desc = "Resize split up",
-      },
-      {
-        "<C-A-l>",
-        function()
-          require("smart-splits").resize_right()
-        end,
-        desc = "Resize split right",
-      },
     },
     opts = {
-      at_edge = "split",
+      at_edge = "stop",
       cursor_follows_swapped_bufs = true,
       disable_multiplexer_nav_when_zoomed = false,
       zellij_move_focus_or_tab = false,
