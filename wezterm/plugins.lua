@@ -286,10 +286,6 @@ if enabled.smart_splits then
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "j")
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "k")
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "l")
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "h")
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "j")
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "k")
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("resize", "l")
 end
 
 return M
