@@ -14,24 +14,6 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    opts = function()
-      local keys = require("lazyvim.plugins.lsp.keymaps").get()
-      vim.list_extend(keys, {
-        { "<leader>cR", false },
-        {
-          "<leader>fR",
-          function()
-            Snacks.rename.rename_file()
-          end,
-          desc = "Rename File",
-          mode = { "n" },
-          has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
-        },
-      })
-    end,
-  },
-  {
-    "neovim/nvim-lspconfig",
     opts = {
       diagnostics = {
         virtual_text = {
@@ -49,11 +31,13 @@ return {
       document_highlight = {
         enabled = true,
       },
-      capabilities = {
-        textDocument = {
-          foldingRange = {
-            dynamicRegistration = false,
-            lineFoldingOnly = true,
+      ["*"] = {
+        capabilities = {
+          textDocument = {
+            foldingRange = {
+              -- dynamicRegistration = false,
+              lineFoldingOnly = true,
+            },
           },
         },
       },
