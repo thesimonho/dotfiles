@@ -3,7 +3,6 @@ local config = wezterm.config_builder()
 local keybinds = require("keybinds")
 local theme = require("theme_switcher")
 local utils = require("utils")
--- local containers = require("containers")
 
 config.leader = { key = "Space", mods = "SUPER", timeout_milliseconds = 1500 }
 config.adjust_window_size_when_changing_font_size = false
@@ -34,7 +33,6 @@ config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
 config.mux_enable_ssh_agent = false
 config.scrollback_lines = 7500
--- config.ssh_domains = containers.create_ssh_domains()
 config.tab_and_split_indices_are_zero_based = true
 config.tab_max_width = 32
 config.ui_key_cap_rendering = "WindowsSymbols"
