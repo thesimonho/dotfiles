@@ -1,13 +1,13 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
+local config = require("config")
 local keybinds = require("keybinds")
 local containers = require("containers")
 local theme = require("theme_switcher")
 
 local enabled = {
-	tabline = true,
-	workspace_switcher = true,
-	smart_splits = true,
+	zellij = false,
+	workspace_switcher = false,
 	dev_containers = false,
 }
 
@@ -85,6 +85,8 @@ if enabled.dev_containers then
 			window:perform_action(show_domain_selector(), pane)
 		end),
 	}
+
+	config.ssh_domains = containers.create_ssh_domains()
 end
 
 -- workspace_switcher
@@ -144,7 +146,7 @@ if enabled.workspace_switcher then
 end
 
 -- tabline
-if enabled.tabline then
+if not enabled.zellij then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
 	M.tabline.setup({
 		options = {
@@ -248,7 +250,8 @@ if enabled.tabline then
 	})
 end
 
-if enabled.smart_splits then
+-- smart splits
+if not enabled.zellij then
 	wezterm.plugin.require("http://github.com/mrjones2014/smart-splits.nvim")
 
 	local function is_vim(pane)
@@ -286,6 +289,10 @@ if enabled.smart_splits then
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "j")
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "k")
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "l")
+end
+
+if enabled.zellij then
+	config.enable_tab_bar = false
 end
 
 return M
