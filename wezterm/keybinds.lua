@@ -1,7 +1,5 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
-local utils = require("utils")
-local SCROLL_SPEED = 0.4
 
 local M = {}
 
@@ -70,32 +68,6 @@ M.basic_binds = {
 				last_active_pane_id = pane:pane_id()
 				panes[1].pane:activate()
 				tab:set_zoomed(true)
-			end
-		end),
-	},
-
-	-- scrolling
-	{ key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) },
-	{ key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) },
-	{
-		key = "u",
-		mods = "CTRL",
-		action = wezterm.action_callback(function(window, pane)
-			if utils.is_not_nvim(pane) then
-				window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
-			else
-				window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
-			end
-		end),
-	},
-	{
-		key = "d",
-		mods = "CTRL",
-		action = wezterm.action_callback(function(window, pane)
-			if utils.is_not_nvim(pane) then
-				window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
-			else
-				window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
 			end
 		end),
 	},

@@ -3,15 +3,48 @@ local act = wezterm.action
 local config = require("config")
 local keybinds = require("keybinds")
 local containers = require("containers")
+local utils = require("utils")
 local theme = require("theme_switcher")
 
 local enabled = {
-	zellij = false,
-	workspace_switcher = false,
+	zellij = true,
 	dev_containers = false,
 }
 
 local M = {}
+
+if enabled.zellij then
+	config.enable_tab_bar = false
+else
+	local SCROLL_SPEED = 0.4
+
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = { key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) }
+
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = { key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) }
+
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
+		key = "u",
+		mods = "CTRL",
+		action = wezterm.action_callback(function(window, pane)
+			if utils.is_not_nvim(pane) then
+				window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
+			else
+				window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
+			end
+		end),
+	}
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
+		key = "d",
+		mods = "CTRL",
+		action = wezterm.action_callback(function(window, pane)
+			if utils.is_not_nvim(pane) then
+				window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
+			else
+				window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
+			end
+		end),
+	}
+end
 
 -- dev containers
 if enabled.dev_containers then
@@ -89,62 +122,6 @@ if enabled.dev_containers then
 	config.ssh_domains = containers.create_ssh_domains()
 end
 
--- workspace_switcher
-if enabled.workspace_switcher then
-	local function find_binary(name)
-		local handle = io.popen("command -v " .. name .. " 2>/dev/null")
-		if not handle then
-			return nil
-		end
-
-		local result = handle:read("*a")
-		handle:close()
-
-		result = result:gsub("%s+", "")
-		if result == "" then
-			return nil
-		end
-		return result
-	end
-
-	M.workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
-	M.workspace_switcher.zoxide_path = find_binary("zoxide") or "/usr/bin/zoxide"
-
-	M.workspace_switcher.workspace_formatter = function(label)
-		return wezterm.format({
-			{ Attribute = { Intensity = "Bold" } },
-			{ Foreground = { Color = "#8ea4a2" } },
-			{ Text = "󱂬 : " .. label },
-		})
-	end
-
-	wezterm.on("smart_workspace_switcher.workspace_switcher.chosen", function(window, workspace)
-		local gui_win = window:gui_window()
-		local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
-		gui_win:set_right_status(wezterm.format({
-			{ Attribute = { Intensity = "Bold" } },
-			{ Foreground = { Color = "#8ea4a2" } },
-			{ Text = "󱂬 : " .. base_path .. " " },
-		}))
-	end)
-
-	wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, workspace)
-		local gui_win = window:gui_window()
-		local base_path = string.gsub(workspace, "(.*[/\\])(.*)", "%2")
-		gui_win:set_right_status(wezterm.format({
-			{ Attribute = { Intensity = "Bold" } },
-			{ Foreground = { Color = "#8ea4a2" } },
-			{ Text = "󱂬 : " .. base_path .. " " },
-		}))
-	end)
-
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
-		key = "p",
-		mods = "SUPER",
-		action = M.workspace_switcher.switch_workspace(),
-	}
-end
-
 -- tabline
 if not enabled.zellij then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
@@ -177,16 +154,6 @@ if not enabled.zellij then
 			},
 			tabline_b = {
 				{ "workspace", padding = { left = 1, right = 0 } },
-				-- {
-				-- 	"domain",
-				-- 	padding = { left = 1, right = 0 },
-				-- 	cond = function()
-				-- 		if #wezterm.mux.all_domains() > 2 then
-				-- 			return true
-				-- 		end
-				-- 		return false
-				-- 	end,
-				-- },
 			},
 			tabline_c = { " " },
 			tabline_x = {
@@ -254,10 +221,6 @@ end
 if not enabled.zellij then
 	wezterm.plugin.require("http://github.com/mrjones2014/smart-splits.nvim")
 
-	local function is_vim(pane)
-		return pane:get_user_vars().IS_NVIM == "true"
-	end
-
 	local direction_keys = {
 		h = "Left",
 		j = "Down",
@@ -270,7 +233,7 @@ if not enabled.zellij then
 			key = key,
 			mods = resize_or_move == "resize" and "CTRL|ALT" or "CTRL",
 			action = wezterm.action_callback(function(win, pane)
-				if is_vim(pane) then
+				if pane:get_user_vars().IS_NVIM ~= "true" then
 					win:perform_action({
 						SendKey = { key = key, mods = resize_or_move == "resize" and "CTRL|ALT" or "CTRL" },
 					}, pane)
@@ -289,10 +252,6 @@ if not enabled.zellij then
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "j")
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "k")
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = split_nav("move", "l")
-end
-
-if enabled.zellij then
-	config.enable_tab_bar = false
 end
 
 return M
