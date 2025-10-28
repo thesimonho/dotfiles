@@ -36,15 +36,30 @@ local M = {
     keys = {
       { "<leader>aa", vim.NIL },
       { "<leader>ac", vim.NIL },
+      {
+        "<tab>",
+        function()
+          if require("sidekick.nes").have() then
+            require("sidekick.nes").apply()
+          else
+            require("sidekick.nes").update()
+          end
+        end,
+        mode = "n",
+      },
     },
     opts = {
       cli = {
         mux = {
-          enabled = false,
+          enabled = true,
+          backend = "zellij",
         },
       },
       nes = {
-        enabled = false,
+        enabled = true,
+        trigger = {
+          events = { "User SidekickNesDone" },
+        },
       },
     },
   },

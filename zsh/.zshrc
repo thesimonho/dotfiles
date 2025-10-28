@@ -21,6 +21,14 @@ if [[ -d "$HOME/.ssh" ]]; then
   fi
 fi
 
+hour=$(date +%H)
+if (( 7 <= hour && hour < 19 )); then
+  export IS_DAY=true
+else
+  export IS_DAY=false
+  export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/kanagawa-paper-ink.rc"
+fi
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -121,13 +129,6 @@ fi
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
 
-hour=$(date +%H)
-if (( 7 <= hour && hour < 19 )); then
-  export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/kanagawa-paper-canvas.rc"
-else
-  export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/kanagawa-paper-ink.rc"
-fi
-
 # Set personal aliases, overriding those provided by Oh My Zsh libs,
 # plugins, and themes. Aliases can be placed here, though Oh My Zsh
 # users are encouraged to define aliases within a top-level file in
@@ -162,6 +163,12 @@ bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion. do this at th
 bindkey '^H' backward-kill-word # ctrl backspace
 bindkey '^[[3;5~' kill-word # ctrl delete
 
+if [[ "$IS_DAY" == "true" ]]; then
+  export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/kanagawa-paper-canvas.rc"
+else
+  export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/kanagawa-paper-ink.rc"
+fi
+
 # add homebrew path depending on osx or linux
 if command -v brew >/dev/null 2>&1; then
   BREW_PREFIX="brew"
@@ -175,6 +182,22 @@ else
     exit 1
   fi
   eval "$($BREW_PREFIX shellenv)"
+fi
+
+if [[ -z "$ZELLIJ" ]]; then
+    if [[ "$ZELLIJ_AUTO_ATTACH" == "true" ]]; then
+        zellij attach -c
+    else
+      if [[ "$IS_DAY" == "true" ]]; then
+        zellij options --theme dayfox
+      else
+        zellij options --theme kanagawa
+      fi
+    fi
+
+    if [[ "$ZELLIJ_AUTO_EXIT" == "true" ]]; then
+        exit
+    fi
 fi
 
 eval "$(starship init zsh)"
