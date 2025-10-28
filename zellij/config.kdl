@@ -433,7 +433,7 @@ ui {
     }
 }
 web_client {
-    font "monospace"
+    font "FiraCode Nerd Font"
 }
 // Use a simplified UI without special fonts (arrow glyphs)
 // Options:
@@ -536,7 +536,7 @@ pane_frames true
 // otherwise this will error if such a session exists.
 // Default: <RANDOM>
 //
-session_name "Default"
+session_name "default"
 // When `session_name` is provided, attaches to that session
 // if it is already running or creates it otherwise.
 // Default: false
