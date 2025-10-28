@@ -226,7 +226,7 @@ keybinds clear-defaults=true {
         bind "d" {
             Detach
         }
-        bind "p" {
+        bind "P" {
             LaunchOrFocusPlugin "plugin-manager" {
                 floating true
                 move_to_focused_tab true
@@ -240,7 +240,7 @@ keybinds clear-defaults=true {
             }
             SwitchToMode "locked"
         }
-        bind "Tab" {
+        bind "p" {
             LaunchOrFocusPlugin "session-manager" {
                 floating true
                 move_to_focused_tab true
@@ -307,7 +307,7 @@ keybinds clear-defaults=true {
         }
     }
     shared_except "locked" "entersearch" "search" "renametab" "renamepane" "session" {
-        bind "Tab" {
+        bind "p" {
             SwitchToMode "session"
         }
     }
