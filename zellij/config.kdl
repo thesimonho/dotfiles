@@ -226,7 +226,7 @@ keybinds clear-defaults=true {
         bind "d" {
             Detach
         }
-        bind "P" {
+        bind "p" {
             LaunchOrFocusPlugin "plugin-manager" {
                 floating true
                 move_to_focused_tab true
@@ -240,45 +240,12 @@ keybinds clear-defaults=true {
             }
             SwitchToMode "locked"
         }
-        bind "p" {
+        bind "m" {
             LaunchOrFocusPlugin "session-manager" {
                 floating true
                 move_to_focused_tab true
             }
             SwitchToMode "locked"
-        }
-    }
-    shared {
-        bind "Ctrl h" {
-            MessagePlugin "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
-                name "move_focus_or_tab"
-                payload "left"
-                move_mod "ctrl"
-            }
-        }
-        bind "Ctrl j" {
-            MessagePlugin "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
-                name "move_focus"
-                payload "down"
-                move_mod "ctrl"
-                use_arrow_keys "false"
-            }
-        }
-        bind "Ctrl k" {
-            MessagePlugin "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
-                name "move_focus"
-                payload "up"
-                move_mod "ctrl"
-                use_arrow_keys "false"
-            }
-        }
-        bind "Ctrl l" {
-            MessagePlugin "https://github.com/hiasr/vim-zellij-navigator/releases/download/0.3.0/vim-zellij-navigator.wasm" {
-                name "move_focus_or_tab"
-                payload "right"
-                move_mod "ctrl"
-                use_arrow_keys "false"
-            }
         }
     }
     shared_except "locked" "entersearch" "renametab" "renamepane" "prompt" "tmux" {
@@ -307,7 +274,7 @@ keybinds clear-defaults=true {
         }
     }
     shared_except "locked" "entersearch" "search" "renametab" "renamepane" "session" {
-        bind "p" {
+        bind "o" {
             SwitchToMode "session"
         }
     }
@@ -402,6 +369,17 @@ keybinds clear-defaults=true {
             SwitchToMode "pane"
         }
     }
+    shared_except "locked" {
+        bind "z" {
+            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/zsm.wasm" {
+                floating true
+                move_to_focused_tab true
+                show_resurrectable_sessions true
+                base_paths "/var/mnt/Projects|~/Projects"
+            }
+            SwitchToMode "locked"
+        }
+    }
 }
 // Plugin aliases - can be used to change the implementation of Zellij
 // changing these requires a restart to take effect
@@ -420,12 +398,16 @@ plugins {
     welcome-screen location="zellij:session-manager" {
         welcome_screen true
     }
+    zjstatus-hints location="file:~/.config/zellij/plugins/zjstatus-hints.wasm" {
+        max_length 0
+        overflow_str "..."
+        pipe_name "zjstatus_hints"
+        hide_in_base_mode true
+    }
 }
 // Plugins to load in the background when a new session starts
-// eg. "file:/path/to/my-plugin.wasm"
-// eg. "https://example.com/my-plugin.wasm"
 load_plugins {
-
+    zjstatus-hints
 }
 ui {
     pane_frames {
