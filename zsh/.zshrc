@@ -153,7 +153,7 @@ alias vim='nvim'
 # keybinds
 function open_file_manager() {
   zle -I        # Clear pending input or partial commands
-  spf           # Launch file manager
+  yazi           # Launch file manager
   zle redisplay # Redraw the prompt after Yazi exits
 }
 
