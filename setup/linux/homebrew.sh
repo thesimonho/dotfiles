@@ -30,7 +30,6 @@ declare -A packages=(
   [luarocks]="luarocks"
   [neovim]="nvim"
   [ripgrep]="rg"
-  [superfile]="spf"
   [starship]="starship"
   [tealdeer]="tldr"
   [uv]="uv"
