@@ -35,7 +35,6 @@ declare -A packages=(
   [tealdeer]="tldr"
   [uv]="uv"
   [yazi]="yazi"
-  [zellij]="zellij"
   [zoxide]="zoxide z"
 )
 

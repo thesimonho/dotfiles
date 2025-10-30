@@ -7,7 +7,7 @@ local utils = require("utils")
 local theme = require("theme_switcher")
 
 local enabled = {
-	zellij = true,
+	zellij = false,
 	dev_containers = false,
 }
 
