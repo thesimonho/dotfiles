@@ -45,7 +45,7 @@ layout {
         children
         pane size=1 borderless=true {
             plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
-                format_left "{mode} #[fg=red,bold]{session} {tabs}"
+                format_left "{mode} {swap_layout} #[fg=green,bold]{session} {tabs}"
                 format_center ""
                 format_right "{pipe_zjstatus_hints} {datetime}"
                 format_space ""
@@ -55,10 +55,10 @@ layout {
                 border_format "#[fg=white]{char}"
                 border_position "top"
                 hide_frame_for_single_pane "false"
-                mode_normal "#[bg=blue]"
-                tab_normal "#[fg=black] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
+                mode_normal "#[fg=blue]"
+                tab_normal "#[fg=white] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
                 tab_active "#[fg=white,bold,bg=black] {index} {name} {fullscreen_indicator}{sync_indicator}{floating_indicator}"
-                tab_separator "#[fg=white_bright, bg=black_bright] | "
+                tab_separator "#[fg=white, bg=black] | "
                 tab_fullscreen_indicator "□ "
                 tab_sync_indicator "  "
                 tab_floating_indicator "󰉈 "

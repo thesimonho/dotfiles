@@ -189,9 +189,9 @@ if [[ -z "$ZELLIJ" ]]; then
         zellij attach -c
     else
       if [[ "$IS_DAY" == "true" ]]; then
-        zellij options --theme dayfox
+        zellij options --theme kanagawa-paper-canvas
       else
-        zellij options --theme kanagawa
+        zellij options --theme kanagawa-paper-ink
       fi
     fi
 
