@@ -21,29 +21,6 @@ else
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = { key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) }
 
 	keybinds.basic_binds[#keybinds.basic_binds + 1] = { key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) }
-
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
-		key = "u",
-		mods = "CTRL",
-		action = wezterm.action_callback(function(window, pane)
-			if utils.is_not_nvim(pane) then
-				window:perform_action(act.ScrollByPage(-SCROLL_SPEED), pane)
-			else
-				window:perform_action(act.SendKey({ key = "u", mods = "CTRL" }), pane)
-			end
-		end),
-	}
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
-		key = "d",
-		mods = "CTRL",
-		action = wezterm.action_callback(function(window, pane)
-			if utils.is_not_nvim(pane) then
-				window:perform_action(act.ScrollByPage(SCROLL_SPEED), pane)
-			else
-				window:perform_action(act.SendKey({ key = "d", mods = "CTRL" }), pane)
-			end
-		end),
-	}
 end
 
 -- dev containers
