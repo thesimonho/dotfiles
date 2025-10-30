@@ -68,7 +68,6 @@ link_file "$DOTFILES/mcphub" "$CONFIG_HOME/mcphub"
 link_file "$DOTFILES/nvim" "$CONFIG_HOME/nvim"
 link_file "$DOTFILES/wezterm" "$CONFIG_HOME/wezterm"
 link_file "$DOTFILES/yazi" "$CONFIG_HOME/yazi"
-link_file "$DOTFILES/zellij" "$CONFIG_HOME/zellij"
 
 link_file "$DOTFILES/starship.toml" "$CONFIG_HOME/starship.toml"
 

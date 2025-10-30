@@ -184,21 +184,21 @@ else
   eval "$($BREW_PREFIX shellenv)"
 fi
 
-if [[ -z "$ZELLIJ" ]]; then
-    if [[ "$ZELLIJ_AUTO_ATTACH" == "true" ]]; then
-        zellij attach -c
-    else
-      if [[ "$IS_DAY" == "true" ]]; then
-        zellij options --theme kanagawa-paper-canvas
-      else
-        zellij options --theme kanagawa-paper-ink
-      fi
-    fi
-
-    if [[ "$ZELLIJ_AUTO_EXIT" == "true" ]]; then
-        exit
-    fi
-fi
+# if [[ -z "$ZELLIJ" ]]; then
+#     if [[ "$ZELLIJ_AUTO_ATTACH" == "true" ]]; then
+#         zellij attach -c
+#     else
+#       if [[ "$IS_DAY" == "true" ]]; then
+#         zellij options --theme kanagawa-paper-canvas
+#       else
+#         zellij options --theme kanagawa-paper-ink
+#       fi
+#     fi
+#
+#     if [[ "$ZELLIJ_AUTO_EXIT" == "true" ]]; then
+#         exit
+#     fi
+# fi
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
