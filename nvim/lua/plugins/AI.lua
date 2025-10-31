@@ -51,15 +51,11 @@ local M = {
     opts = {
       cli = {
         mux = {
-          enabled = true,
-          backend = "zellij",
+          enabled = false,
         },
       },
       nes = {
         enabled = true,
-        trigger = {
-          events = { "User SidekickNesDone" },
-        },
       },
     },
   },
