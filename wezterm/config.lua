@@ -17,6 +17,7 @@ config.default_workspace = "local"
 config.disable_default_key_bindings = true
 config.enable_kitty_keyboard = false -- this sends wrong termcodes for Del and BS
 config.enable_scroll_bar = false
+config.enable_tab_bar = true
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
@@ -33,7 +34,8 @@ config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
 config.mux_enable_ssh_agent = false
 config.scrollback_lines = 7500
-config.tab_and_split_indices_are_zero_based = true
+config.show_new_tab_button_in_tab_bar = true
+config.tab_and_split_indices_are_zero_based = false
 config.tab_max_width = 32
 config.ui_key_cap_rendering = "WindowsSymbols"
 config.underline_position = -2

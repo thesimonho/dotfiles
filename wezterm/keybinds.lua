@@ -111,4 +111,13 @@ M.key_tables = {
 	},
 }
 
+-- super + number to activate that tab
+for i = 1, 9 do
+	table.insert(M.basic_binds, {
+		key = tostring(i),
+		mods = "SUPER",
+		action = wezterm.action.ActivateTab(i - 1),
+	})
+end
+
 return M

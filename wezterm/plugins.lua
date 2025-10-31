@@ -3,25 +3,14 @@ local act = wezterm.action
 local config = require("config")
 local keybinds = require("keybinds")
 local containers = require("containers")
-local utils = require("utils")
 local theme = require("theme_switcher")
 
 local enabled = {
-	zellij = false,
+	tabline = true,
 	dev_containers = false,
 }
 
 local M = {}
-
-if enabled.zellij then
-	config.enable_tab_bar = false
-else
-	local SCROLL_SPEED = 0.4
-
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = { key = "PageUp", action = act.ScrollByPage(-SCROLL_SPEED) }
-
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = { key = "PageDown", action = act.ScrollByPage(SCROLL_SPEED) }
-end
 
 -- dev containers
 if enabled.dev_containers then
@@ -100,7 +89,7 @@ if enabled.dev_containers then
 end
 
 -- tabline
-if not enabled.zellij then
+if enabled.tabline then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
 	M.tabline.setup({
 		options = {
@@ -178,6 +167,7 @@ if not enabled.zellij then
 			tabline_z = { "hostname" },
 			tab_active = {
 				{ "process", icons_only = true, padding = { left = 2, right = 0 } },
+				{ "index" },
 				{ "parent", max_length = 10, padding = 0 },
 				"/",
 				{ "cwd", max_length = 15, padding = { left = 0, right = 2 } },
@@ -185,6 +175,7 @@ if not enabled.zellij then
 			},
 			tab_inactive = {
 				{ "process", icons_only = true, padding = { left = 2, right = 0 } },
+				{ "index" },
 				{ "parent", max_length = 10, padding = 0 },
 				"/",
 				{ "cwd", max_length = 15, padding = { left = 0, right = 2 } },
