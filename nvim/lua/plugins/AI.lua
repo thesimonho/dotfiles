@@ -66,6 +66,7 @@ local M = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
       "ravitemer/codecompanion-history.nvim",
+      "franco-ruggeri/codecompanion-spinner.nvim",
     },
     keys = {
       { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Chat" },
@@ -126,6 +127,7 @@ local M = {
         },
       },
       extensions = {
+        spinner = {},
         mcphub = {
           callback = "mcphub.extensions.codecompanion",
           opts = {
