@@ -7,6 +7,7 @@ local theme = require("theme_switcher")
 
 local enabled = {
 	tabline = true,
+	toggle_terminal = true,
 	dev_containers = false,
 }
 
@@ -86,6 +87,24 @@ if enabled.dev_containers then
 	}
 
 	config.ssh_domains = containers.create_ssh_domains()
+end
+
+
+-- toggle term
+if enabled.toggle_terminal then
+	M.toggle_terminal = wezterm.plugin.require("https://github.com/zsh-sage/toggle_terminal.wez")
+	M.toggle_terminal.apply_to_config(config, {
+		key = "\\",
+		mods = "SUPER",
+		direction = "Right",
+		size = { Percent = 50 },
+		change_invoker_id_everytime = false, -- Change invoker pane on every toggle
+		zoom = {
+			auto_zoom_toggle_terminal = false,
+			auto_zoom_invoker_pane = true,
+			remember_zoomed = true,
+		},
+	})
 end
 
 -- tabline
@@ -181,7 +200,6 @@ if enabled.tabline then
 				{ "cwd", max_length = 15, padding = { left = 0, right = 2 } },
 			},
 		},
-		extensions = { "smart_workspace_switcher" },
 	})
 end
 
