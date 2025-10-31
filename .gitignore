@@ -10,6 +10,7 @@ Thumbs.db
 *.swn
 *.bak
 *.tmp
+**/tmp
 
 # Logs, caches
 *.log

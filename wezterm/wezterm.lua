@@ -4,7 +4,7 @@ require("plugins")
 
 wezterm.on("gui-startup", function(cmd)
 	local _, _, window = wezterm.mux.spawn_window(cmd or {
-		workspace = "local",
+		workspace = "default",
 	})
 	window:gui_window()
 	local screens = wezterm.gui.screens()

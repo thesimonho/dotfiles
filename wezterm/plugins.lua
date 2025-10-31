@@ -7,6 +7,7 @@ local theme = require("theme_switcher")
 
 local enabled = {
 	tabline = true,
+	session = true,
 	toggle_terminal = true,
 	dev_containers = false,
 }
@@ -89,6 +90,60 @@ if enabled.dev_containers then
 	config.ssh_domains = containers.create_ssh_domains()
 end
 
+-- sessions
+if enabled.session then
+	M.sessionizer = wezterm.plugin.require("https://github.com/mikkasendke/sessionizer.wezterm")
+	M.sessionizer_history = wezterm.plugin.require("https://github.com/mikkasendke/sessionizer-history")
+
+	M.sessionizer_schema = {
+		options = {
+			prompt = "Switch to workspace: ",
+			callback = M.sessionizer_history.Wrapper(M.sessionizer.DefaultCallback),
+		},
+		{
+			M.sessionizer_history.MostRecentWorkspace({}),
+			processing = M.sessionizer.for_each_entry(function(entry)
+				entry.label = entry.label:gsub("^Recent %((.-)%)$", "%1")
+				entry.label = wezterm.format({
+					{ Foreground = { AnsiColor = "Blue" } },
+					{ Attribute = { Intensity = "Bold" } },
+					{ Text = " " .. entry.label },
+				})
+			end),
+		},
+		{
+			M.sessionizer.AllActiveWorkspaces({ filter_current = false, filter_default = false }),
+			processing = M.sessionizer.for_each_entry(function(entry)
+				entry.label = wezterm.format({
+					{ Foreground = { AnsiColor = "Green" } },
+					{ Attribute = { Italic = true } },
+					{ Text = "󱂬 " .. entry.label },
+				})
+			end),
+		},
+		{
+			M.sessionizer.FdSearch({
+				wezterm.home_dir .. "/Projects",
+				fd_path = "/home/linuxbrew/.linuxbrew/bin/fd",
+				exclude = { ".Trash-1000", "node_modules" },
+			}),
+			processing = M.sessionizer.for_each_entry(function(entry)
+				entry.label = entry.label:gsub("^" .. wezterm.home_dir .. "/Projects/", " ")
+			end),
+		},
+		processing = M.sessionizer.for_each_entry(function(entry)
+			entry.label = entry.label:gsub(wezterm.home_dir, "~")
+		end),
+	}
+
+	table.insert(keybinds.basic_binds, {
+		key = "p",
+		mods = "SUPER",
+		action = wezterm.action_callback(function(window, pane)
+			window:perform_action(M.sessionizer.show(M.sessionizer_schema), pane)
+		end),
+	})
+end
 
 -- toggle term
 if enabled.toggle_terminal then
