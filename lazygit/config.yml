@@ -34,9 +34,9 @@ gui:
   animateExplosion: true # shows an explosion animation when nuking the working tree
   portraitMode: "auto" # one of 'auto' | 'never' | 'always'
 git:
-  paging:
-    colorArg: always
-    useConfig: false
+  pagers:
+    - colorArg: always
+      useConfig: false
   commit:
     signOff: false
   log:
