@@ -8,7 +8,7 @@ local theme = require("theme_switcher")
 local enabled = {
 	tabline = true,
 	session = true,
-	resurrect = false,
+	resurrect = true,
 	toggle_terminal = true,
 	dev_containers = false,
 }
@@ -23,17 +23,28 @@ if enabled.session then
 	M.sessionizer_schema = {
 		options = {
 			prompt = "Switch to workspace: ",
-			callback = M.sessionizer_history.Wrapper(function(window, pane, id, label)
-				M.sessionizer.DefaultCallback(window, pane, id, label)
-				if enabled.resurrect and M.resurrect then
-					local workspace_state = M.resurrect.workspace_state
-					workspace_state.restore_workspace(M.resurrect.state_manager.load_state(id, "workspace"), {
-						window = window,
-						relative = true,
-						restore_text = true,
-						on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
-					})
+			callback = M.sessionizer_history.Wrapper(function(win, pane, id, label)
+				if not id then
+					return
 				end
+
+				win:perform_action(
+					require("wezterm").action.SwitchToWorkspace({ name = id, spawn = { cwd = id } }),
+					pane
+				)
+
+				local opts = {
+					spawn_in_workspace = true,
+					window = win:mux_window(),
+					relative = true,
+					restore_text = true,
+					close_open_tabs = true,
+					close_open_panes = true,
+					resize_window = false,
+					on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
+				}
+				local state = M.resurrect.state_manager.load_state(id, "workspace")
+				M.resurrect.workspace_state.restore_workspace(state, opts)
 			end),
 		},
 		{
