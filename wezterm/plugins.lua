@@ -8,88 +8,12 @@ local theme = require("theme_switcher")
 local enabled = {
 	tabline = true,
 	session = true,
-	resurrect = true,
+	resurrect = false,
 	toggle_terminal = true,
 	dev_containers = false,
 }
 
 local M = {}
-
--- dev containers
-if enabled.dev_containers then
-	local function handle_selection(window, pane, _, label)
-		if not label then
-			-- no selection
-			return
-		end
-
-		if label == "󰌙 detach domains" then
-			local domains = wezterm.mux.all_domains()
-			for _, domain in ipairs(domains) do
-				if domain:state() == "Attached" and domain:name() ~= "local" and domain:is_spawnable() then
-					domain:detach()
-				end
-			end
-			return
-		elseif label == "󰑓 reload domains" then
-			window:perform_action(act.ReloadConfiguration, pane)
-			return
-		end
-
-		local kind, name = label:match("^(.-): (.-)%s*%*?$")
-		if kind == "devpod" then
-			window:perform_action(
-				act.SwitchToWorkspace({
-					name = name,
-					spawn = {
-						domain = { DomainName = name },
-					},
-				}),
-				pane
-			)
-		elseif kind == "distrobox" then
-			window:perform_action(
-				act.SpawnCommandInNewTab({
-					args = { "distrobox", "enter", "--root", name },
-				}),
-				pane
-			)
-		else
-			window:perform_action(
-				act.SwitchToWorkspace({
-					name = label,
-					spawn = {
-						domain = { DomainName = label },
-					},
-				}),
-				pane
-			)
-		end
-	end
-
-	-- Creates the input selector action
-	local function show_domain_selector()
-		-- create choices every time so we can update the * indicator
-		local choices = containers.create_container_choices()
-
-		return act.InputSelector({
-			action = wezterm.action_callback(handle_selection),
-			choices = choices,
-			alphabet = "1234qwer",
-			description = "Attach domain:",
-		})
-	end
-
-	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
-		key = "p",
-		mods = "SUPER",
-		action = wezterm.action_callback(function(window, pane)
-			window:perform_action(show_domain_selector(), pane)
-		end),
-	}
-
-	config.ssh_domains = containers.create_ssh_domains()
-end
 
 -- sessions
 if enabled.session then
@@ -190,27 +114,35 @@ end
 
 -- tabline
 if enabled.tabline then
-	local my_extension = {
-		"my_extension_name",
-		events = {
-			show = "my_plugin.show",
-			hide = "my_plugin.hide",
-			delay = 3,
-			callback = function(window)
-				wezterm.log_info("Extension was shown")
-			end,
-		},
-		sections = {
-			tabline_x = { "mode" },
-		},
-		colors = {
-			a = { fg = "#181825", bg = "#f38ba8" },
-			b = { fg = "#f38ba8", bg = "#313244" },
-			c = { fg = "#cdd6f4", bg = "#181825" },
-		},
-	}
-
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+
+	local function generate_keytable_hint_text(tbl, sep)
+		if not tbl then
+			return ""
+		end
+		sep = sep or " │ "
+		local hint = {}
+		for _, entry in ipairs(tbl) do
+			if entry.desc then
+				table.insert(hint, string.format("(%s) %s", entry.key, entry.desc))
+			end
+		end
+		return table.concat(hint, sep)
+	end
+
+	local function keytable_hint(window)
+		local kt = window:active_key_table()
+		if not kt or not kt:match("_mode$") then
+			return " 🐼 "
+		end
+		return M.tabline.hints[kt] .. " "
+	end
+
+	M.tabline.hints = {}
+	for name, tbl in pairs(keybinds.key_tables) do
+		M.tabline.hints[name] = generate_keytable_hint_text(tbl)
+	end
+
 	M.tabline.setup({
 		options = {
 			icons_enabled = true,
@@ -228,64 +160,34 @@ if enabled.tabline then
 				right = "",
 			},
 		},
-		extensions = { "resurrect", my_extension },
+		extensions = { "resurrect" },
 		sections = {
 			tabline_a = {
 				{
 					"mode",
-					icon = "🐼",
 					fmt = function(text)
 						return string.lower(text)
 					end,
+					padding = { left = 2, right = 1 },
 				},
 			},
 			tabline_b = {
 				{ "workspace", padding = { left = 1, right = 0 } },
 			},
 			tabline_c = { " " },
-			tabline_x = {
-				function(window)
-					local metadata = window:active_pane():get_metadata()
-					if not metadata then
-						return ""
-					end
-
-					local latency = metadata.since_last_response_ms
-					if not latency then
-						return ""
-					end
-
-					local color
-					local icon
-					local red = "\27[31m"
-					local yellow = "\27[33m"
-					local green = "\27[32m"
-					if metadata.is_tardy then
-						if latency > 10000 then
-							color = red
-							icon = "󰢼"
-							latency = ">999"
-						else
-							color = yellow
-							icon = "󰢽"
-						end
-					else
-						color = green
-						icon = "󰢾"
-						latency = "<1"
-					end
-					return string.format(color .. icon .. " %sms ", latency)
-				end,
-			},
+			tabline_x = {},
 			tabline_y = {
 				{
 					"datetime",
 					style = "%A %b %d",
 					icon = "",
 					hour_to_icon = false,
+					cond = function(window)
+						return window:active_key_table() == nil
+					end,
 				},
 			},
-			tabline_z = { "hostname" },
+			tabline_z = { keytable_hint },
 			tab_active = {
 				{ "index", padding = { left = 2, right = 1 } },
 				{ "process", icons_only = false, padding = { left = 0, right = 2 } },
@@ -298,6 +200,82 @@ if enabled.tabline then
 			},
 		},
 	})
+end
+
+-- dev containers
+if enabled.dev_containers then
+	local function handle_selection(window, pane, _, label)
+		if not label then
+			-- no selection
+			return
+		end
+
+		if label == "󰌙 detach domains" then
+			local domains = wezterm.mux.all_domains()
+			for _, domain in ipairs(domains) do
+				if domain:state() == "Attached" and domain:name() ~= "local" and domain:is_spawnable() then
+					domain:detach()
+				end
+			end
+			return
+		elseif label == "󰑓 reload domains" then
+			window:perform_action(act.ReloadConfiguration, pane)
+			return
+		end
+
+		local kind, name = label:match("^(.-): (.-)%s*%*?$")
+		if kind == "devpod" then
+			window:perform_action(
+				act.SwitchToWorkspace({
+					name = name,
+					spawn = {
+						domain = { DomainName = name },
+					},
+				}),
+				pane
+			)
+		elseif kind == "distrobox" then
+			window:perform_action(
+				act.SpawnCommandInNewTab({
+					args = { "distrobox", "enter", "--root", name },
+				}),
+				pane
+			)
+		else
+			window:perform_action(
+				act.SwitchToWorkspace({
+					name = label,
+					spawn = {
+						domain = { DomainName = label },
+					},
+				}),
+				pane
+			)
+		end
+	end
+
+	-- Creates the input selector action
+	local function show_domain_selector()
+		-- create choices every time so we can update the * indicator
+		local choices = containers.create_container_choices()
+
+		return act.InputSelector({
+			action = wezterm.action_callback(handle_selection),
+			choices = choices,
+			alphabet = "1234qwer",
+			description = "Attach domain:",
+		})
+	end
+
+	keybinds.basic_binds[#keybinds.basic_binds + 1] = {
+		key = "p",
+		mods = "SUPER",
+		action = wezterm.action_callback(function(window, pane)
+			window:perform_action(show_domain_selector(), pane)
+		end),
+	}
+
+	config.ssh_domains = containers.create_ssh_domains()
 end
 
 return M
