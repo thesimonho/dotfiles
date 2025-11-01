@@ -85,7 +85,7 @@ local M = {
           show_settings = false,
           window = {
             border = "rounded",
-            width = 0.4,
+            width = 0.5,
           },
         },
       },
