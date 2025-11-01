@@ -8,6 +8,7 @@ local theme = require("theme_switcher")
 local enabled = {
 	tabline = true,
 	session = true,
+	resurrect = true,
 	toggle_terminal = true,
 	dev_containers = false,
 }
@@ -98,14 +99,25 @@ if enabled.session then
 	M.sessionizer_schema = {
 		options = {
 			prompt = "Switch to workspace: ",
-			callback = M.sessionizer_history.Wrapper(M.sessionizer.DefaultCallback),
+			callback = M.sessionizer_history.Wrapper(function(window, pane, id, label)
+				M.sessionizer.DefaultCallback(window, pane, id, label)
+				if enabled.resurrect and M.resurrect then
+					local workspace_state = M.resurrect.workspace_state
+					workspace_state.restore_workspace(M.resurrect.state_manager.load_state(id, "workspace"), {
+						window = window,
+						relative = true,
+						restore_text = true,
+						on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
+					})
+				end
+			end),
 		},
 		{
 			M.sessionizer_history.MostRecentWorkspace({}),
 			processing = M.sessionizer.for_each_entry(function(entry)
 				entry.label = entry.label:gsub("^Recent %((.-)%)$", "%1")
 				entry.label = wezterm.format({
-					{ Foreground = { AnsiColor = "Blue" } },
+					{ Foreground = { AnsiColor = "Maroon" } },
 					{ Attribute = { Intensity = "Bold" } },
 					{ Text = " " .. entry.label },
 				})
@@ -145,6 +157,20 @@ if enabled.session then
 	})
 end
 
+-- resurrect
+if enabled.resurrect then
+	M.resurrect = wezterm.plugin.require("https://github.com/MLFlexer/resurrect.wezterm")
+	M.resurrect.state_manager.periodic_save({
+		interval_seconds = 10 * 60,
+		save_workspaces = true,
+		save_windows = true,
+		save_tabs = true,
+	})
+	wezterm.on("resurrect.error", function(err)
+		wezterm.log_error("Resurrect error: " .. err)
+	end)
+end
+
 -- toggle term
 if enabled.toggle_terminal then
 	M.toggle_terminal = wezterm.plugin.require("https://github.com/zsh-sage/toggle_terminal.wez")
@@ -164,6 +190,26 @@ end
 
 -- tabline
 if enabled.tabline then
+	local my_extension = {
+		"my_extension_name",
+		events = {
+			show = "my_plugin.show",
+			hide = "my_plugin.hide",
+			delay = 3,
+			callback = function(window)
+				wezterm.log_info("Extension was shown")
+			end,
+		},
+		sections = {
+			tabline_x = { "mode" },
+		},
+		colors = {
+			a = { fg = "#181825", bg = "#f38ba8" },
+			b = { fg = "#f38ba8", bg = "#313244" },
+			c = { fg = "#cdd6f4", bg = "#181825" },
+		},
+	}
+
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
 	M.tabline.setup({
 		options = {
@@ -182,6 +228,7 @@ if enabled.tabline then
 				right = "",
 			},
 		},
+		extensions = { "resurrect", my_extension },
 		sections = {
 			tabline_a = {
 				{
@@ -240,19 +287,14 @@ if enabled.tabline then
 			},
 			tabline_z = { "hostname" },
 			tab_active = {
-				{ "process", icons_only = true, padding = { left = 2, right = 0 } },
-				{ "index" },
-				{ "parent", max_length = 10, padding = 0 },
-				"/",
-				{ "cwd", max_length = 15, padding = { left = 0, right = 2 } },
-				{ "zoomed", padding = 0 },
+				{ "index", padding = { left = 2, right = 1 } },
+				{ "process", icons_only = false, padding = { left = 0, right = 2 } },
+				-- { "cwd", max_length = 10, padding = { left = 0, right = 2 } },
 			},
 			tab_inactive = {
-				{ "process", icons_only = true, padding = { left = 2, right = 0 } },
-				{ "index" },
-				{ "parent", max_length = 10, padding = 0 },
-				"/",
-				{ "cwd", max_length = 15, padding = { left = 0, right = 2 } },
+				{ "index", padding = { left = 2, right = 1 } },
+				{ "process", icons_only = false, padding = { left = 0, right = 2 } },
+				-- { "cwd", max_length = 10, padding = { left = 0, right = 2 } },
 			},
 		},
 	})
