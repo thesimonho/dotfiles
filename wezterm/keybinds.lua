@@ -41,8 +41,14 @@ M.basic_binds = {
 	-- tabs / buffers
 	{ key = "t", mods = "SUPER", action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "`", mods = "SUPER", action = act.ActivateLastTab },
-	{ key = "h", mods = "SUPER", action = act.ActivateTabRelative(-1) },
-	{ key = "l", mods = "SUPER", action = act.ActivateTabRelative(1) },
+	{ key = "h", mods = "SUPER|SHIFT", action = act.ActivateTabRelative(-1) },
+	{ key = "l", mods = "SUPER|SHIFT", action = act.ActivateTabRelative(1) },
+
+	-- panes / windows
+	{ key = "h", mods = "SUPER", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
 
 	-- key tables
 	{
@@ -59,16 +65,13 @@ M.basic_binds = {
 
 M.key_tables = {
 	buffer_mode = { -- wezterm tabs
+		{ key = "n", action = act.SpawnTab("CurrentPaneDomain") },
 		{ key = "d", action = act.CloseCurrentTab({ confirm = true }) },
 	},
 	window_mode = { -- wezterm panes
 		{ key = "r", action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false }) },
 		{ key = "w", action = act.PaneSelect },
 		{ key = "n", action = act.SpawnWindow },
-		{ key = "h", action = act.ActivatePaneDirection("Left") },
-		{ key = "j", action = act.ActivatePaneDirection("Down") },
-		{ key = "k", action = act.ActivatePaneDirection("Up") },
-		{ key = "l", action = act.ActivatePaneDirection("Right") },
 		{ key = "d", action = act.CloseCurrentPane({ confirm = true }) },
 		{ key = "v", action = act.SplitPane({ direction = "Right" }) },
 		{ key = "s", action = act.SplitPane({ direction = "Down" }) },
