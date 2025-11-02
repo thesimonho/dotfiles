@@ -28,12 +28,14 @@ if enabled.session then
 					return
 				end
 
-				win:perform_action(
-					require("wezterm").action.SwitchToWorkspace({ name = id, spawn = { cwd = id } }),
-					pane
-				)
-
 				if enabled.resurrect then
+					-- Save current workspace before switching
+					local workspace_state = M.resurrect.workspace_state
+					M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+				end
+
+				win:perform_action(act.SwitchToWorkspace({ name = id, spawn = { cwd = id } }), pane)
+
 					local opts = {
 						spawn_in_workspace = true,
 						window = win:mux_window(),
