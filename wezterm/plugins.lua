@@ -33,18 +33,29 @@ if enabled.session then
 					pane
 				)
 
-				local opts = {
-					spawn_in_workspace = true,
-					window = win:mux_window(),
-					relative = true,
-					restore_text = true,
-					close_open_tabs = true,
-					close_open_panes = true,
-					resize_window = false,
-					on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
-				}
-				local state = M.resurrect.state_manager.load_state(id, "workspace")
-				M.resurrect.workspace_state.restore_workspace(state, opts)
+				if enabled.resurrect then
+					local opts = {
+						spawn_in_workspace = true,
+						window = win:mux_window(),
+						relative = true,
+						restore_text = true,
+						close_open_tabs = true,
+						close_open_panes = true,
+						resize_window = false,
+						on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
+					}
+
+					local workspace_state = M.resurrect.workspace_state
+					local ok, err = pcall(function()
+						local state = M.resurrect.state_manager.load_state(id, "workspace")
+						workspace_state.restore_workspace(state, opts)
+					end)
+					if not ok then
+						wezterm.log_info(err)
+						wezterm.log_info("No existing state for workspace: " .. id .. ". Creating new save state.")
+						M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+					end
+				end
 			end),
 		},
 		{
