@@ -38,34 +38,25 @@ M.basic_binds = {
 	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
 	{ key = "0", mods = "CTRL", action = act.ResetFontSize },
 
-	-- tabs / buffers
-	{ key = "t", mods = "SUPER", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "`", mods = "SUPER", action = act.ActivateLastTab },
-	{ key = "h", mods = "SUPER|SHIFT", action = act.ActivateTabRelative(-1) },
-	{ key = "l", mods = "SUPER|SHIFT", action = act.ActivateTabRelative(1) },
-
-	-- panes / windows
-	{ key = "h", mods = "SUPER", action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
-
 	-- key tables
 	{
 		key = "w",
 		mods = "SUPER",
-		action = act.ActivateKeyTable({ name = "window_mode", timeout_milliseconds = 5000 }),
+		action = act.ActivateKeyTable({ name = "window_mode", timeout_milliseconds = 10000 }),
 	},
 	{
-		key = "b",
+		key = "t",
 		mods = "SUPER",
-		action = act.ActivateKeyTable({ name = "tab_mode", timeout_milliseconds = 5000 }),
+		action = act.ActivateKeyTable({ name = "tab_mode", timeout_milliseconds = 10000 }),
 	},
 }
 
 M.key_tables = {
 	tab_mode = { -- wezterm tabs
 		{ key = "Escape", action = "PopKeyTable" },
+		{ key = "`", action = act.ActivateLastTab, desc = "Last" },
+		{ key = "h", action = act.ActivateTabRelative(-1), desc = "" },
+		{ key = "l", action = act.ActivateTabRelative(1), desc = "" },
 		{ key = "n", action = act.SpawnTab("CurrentPaneDomain"), desc = "New" },
 		{ key = "d", action = act.CloseCurrentTab({ confirm = true }), desc = "Close" },
 	},
@@ -77,17 +68,21 @@ M.key_tables = {
 			desc = "Resize",
 		},
 		{ key = "w", action = act.PaneSelect, desc = "Pick" },
-		{ key = "v", action = act.SplitPane({ direction = "Right" }), desc = "Split Right" },
-		{ key = "s", action = act.SplitPane({ direction = "Down" }), desc = "Split Down" },
+		{ key = "h", action = act.ActivatePaneDirection("Left"), desc = "" },
+		{ key = "j", action = act.ActivatePaneDirection("Down"), desc = "" },
+		{ key = "k", action = act.ActivatePaneDirection("Up"), desc = "" },
+		{ key = "l", action = act.ActivatePaneDirection("Right"), desc = "" },
+		{ key = "v", action = act.SplitPane({ direction = "Right" }), desc = "Split |" },
+		{ key = "s", action = act.SplitPane({ direction = "Down" }), desc = "Split -" },
 		{ key = "x", action = act.RotatePanes("Clockwise"), desc = "Rotate" },
 		{ key = "d", action = act.CloseCurrentPane({ confirm = true }), desc = "Close" },
 	},
 	resize_mode = {
 		{ key = "Escape", action = "PopKeyTable" },
-		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }), desc = "Left" },
-		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }), desc = "Down" },
-		{ key = "k", action = act.AdjustPaneSize({ "Up", 1 }), desc = "Up" },
-		{ key = "l", action = act.AdjustPaneSize({ "Right", 1 }), desc = "Right" },
+		{ key = "h", action = act.AdjustPaneSize({ "Left", 1 }), desc = "" },
+		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }), desc = "" },
+		{ key = "k", action = act.AdjustPaneSize({ "Up", 1 }), desc = "" },
+		{ key = "l", action = act.AdjustPaneSize({ "Right", 1 }), desc = "" },
 	},
 }
 
