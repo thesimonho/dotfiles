@@ -139,6 +139,7 @@ end
 if enabled.tabline then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
 	M.tabline_theme = require("colors.wezterm_tabline." .. theme.color_scheme)
+	local hint_icon = "󰋗 "
 
 	local function generate_keytable_hint_text(tbl, sep)
 		if not tbl then
@@ -157,9 +158,9 @@ if enabled.tabline then
 	local function keytable_hint(window)
 		local kt = window:active_key_table()
 		if not kt or not kt:match("_mode$") then
-			return " 🐼 "
+			return hint_icon
 		end
-		return M.tabline.hints[kt] .. " "
+		return hint_icon .. " " .. M.tabline.hints[kt] .. " "
 	end
 
 	M.tabline.hints = {}
@@ -194,9 +195,9 @@ if enabled.tabline then
 				{
 					"mode",
 					fmt = function(text)
-						return string.lower(text)
+						return "🐼 " .. string.lower(text)
 					end,
-					padding = { left = 2, right = 1 },
+					padding = { left = 1, right = 1 },
 				},
 			},
 			tabline_b = {
@@ -204,18 +205,14 @@ if enabled.tabline then
 			},
 			tabline_c = { " " },
 			tabline_x = {},
-			tabline_y = {
+			tabline_y = { keytable_hint },
+			tabline_z = {
 				{
 					"datetime",
-					style = "%A %b %d",
-					icon = "",
-					hour_to_icon = false,
-					cond = function(window)
-						return window:active_key_table() == nil
-					end,
+					style = "%a %b %d",
+					padding = { left = 0, right = 1 },
 				},
 			},
-			tabline_z = { keytable_hint },
 			tab_active = {
 				{ "index", padding = { left = 2, right = 1 } },
 				{ "process", icons_only = false, padding = { left = 0, right = 2 } },

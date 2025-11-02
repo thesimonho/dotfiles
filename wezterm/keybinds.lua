@@ -72,7 +72,6 @@ M.key_tables = {
 			action = act.ActivateKeyTable({ name = "extract_mode", timeout_milliseconds = 5000 }),
 			desc = "Extract",
 		},
-		{ key = "p", action = act.PaneSelect, desc = "Pick" },
 		{ key = "v", action = act.SplitPane({ direction = "Right" }), desc = "Split |" },
 		{ key = "s", action = act.SplitPane({ direction = "Down" }), desc = "Split -" },
 		{ key = "x", action = act.RotatePanes("Clockwise"), desc = "Rotate" },
