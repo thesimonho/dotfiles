@@ -138,6 +138,7 @@ end
 -- tabline
 if enabled.tabline then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+	M.tabline_theme = require("colors.wezterm_tabline." .. theme.color_scheme)
 
 	local function generate_keytable_hint_text(tbl, sep)
 		if not tbl then
@@ -164,12 +165,16 @@ if enabled.tabline then
 	M.tabline.hints = {}
 	for name, tbl in pairs(keybinds.key_tables) do
 		M.tabline.hints[name] = generate_keytable_hint_text(tbl)
+		-- if tabline_theme doesnt contain the keytable, use default
+		if not M.tabline_theme[name] then
+			M.tabline_theme[name] = M.tabline_theme.default_mode
+		end
 	end
 
 	M.tabline.setup({
 		options = {
+			theme = M.tabline_theme,
 			icons_enabled = true,
-			theme = require("colors.wezterm_tabline." .. theme.color_scheme),
 			section_separators = {
 				left = wezterm.nerdfonts.ple_right_half_circle_thick,
 				right = wezterm.nerdfonts.ple_left_half_circle_thick,
