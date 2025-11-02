@@ -30,6 +30,7 @@ if enabled.session then
 
 				win:perform_action(act.SwitchToWorkspace({ name = id, spawn = { cwd = id } }), pane)
 
+				if enabled.resurrect then
 					local opts = {
 						spawn_in_workspace = true,
 						window = win:mux_window(),
@@ -41,16 +42,23 @@ if enabled.session then
 						on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
 					}
 
-					local workspace_state = M.resurrect.workspace_state
-					local ok, err = pcall(function()
-						local state = M.resurrect.state_manager.load_state(id, "workspace")
-						workspace_state.restore_workspace(state, opts)
+					local loaded_state
+					local loaded_ok, load_err = pcall(function()
+						loaded_state = M.resurrect.state_manager.load_state(id, "workspace")
 					end)
-					if not ok then
-						wezterm.log_info(err)
-						wezterm.log_info("No existing state for workspace: " .. id .. ". Creating new save state.")
-						M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+					if not loaded_ok then
+						wezterm.log_error("Failed to load resurrect state: " .. load_err)
 					end
+
+					wezterm.time.call_after(1000, function()
+						local ok, err = pcall(function()
+							local workspace_state = M.resurrect.workspace_state
+							workspace_state.restore_workspace(loaded_state, opts)
+						end)
+						if not ok then
+							wezterm.log_error(err)
+						end
+					end)
 				end
 			end),
 		},
