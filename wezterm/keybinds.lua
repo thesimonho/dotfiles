@@ -55,9 +55,9 @@ M.key_tables = {
 	tab_mode = { -- wezterm tabs
 		{ key = "Escape", action = "PopKeyTable" },
 		{ key = "`", action = act.ActivateLastTab, desc = "Last" },
+		{ key = "n", action = act.SpawnTab("CurrentPaneDomain"), desc = "New" },
 		{ key = "h", action = act.ActivateTabRelative(-1), desc = "" },
 		{ key = "l", action = act.ActivateTabRelative(1), desc = "" },
-		{ key = "n", action = act.SpawnTab("CurrentPaneDomain"), desc = "New" },
 		{ key = "d", action = act.CloseCurrentTab({ confirm = true }), desc = "Close" },
 	},
 	window_mode = { -- wezterm panes
@@ -67,14 +67,19 @@ M.key_tables = {
 			action = act.ActivateKeyTable({ name = "resize_mode", one_shot = false, timeout_milliseconds = 5000 }),
 			desc = "Resize",
 		},
-		{ key = "w", action = act.PaneSelect, desc = "Pick" },
+		{
+			key = "e",
+			action = act.ActivateKeyTable({ name = "extract_mode", timeout_milliseconds = 5000 }),
+			desc = "Extract",
+		},
+		{ key = "p", action = act.PaneSelect, desc = "Pick" },
+		{ key = "v", action = act.SplitPane({ direction = "Right" }), desc = "Split |" },
+		{ key = "s", action = act.SplitPane({ direction = "Down" }), desc = "Split -" },
+		{ key = "x", action = act.RotatePanes("Clockwise"), desc = "Rotate" },
 		{ key = "h", action = act.ActivatePaneDirection("Left"), desc = "" },
 		{ key = "j", action = act.ActivatePaneDirection("Down"), desc = "" },
 		{ key = "k", action = act.ActivatePaneDirection("Up"), desc = "" },
 		{ key = "l", action = act.ActivatePaneDirection("Right"), desc = "" },
-		{ key = "v", action = act.SplitPane({ direction = "Right" }), desc = "Split |" },
-		{ key = "s", action = act.SplitPane({ direction = "Down" }), desc = "Split -" },
-		{ key = "x", action = act.RotatePanes("Clockwise"), desc = "Rotate" },
 		{ key = "d", action = act.CloseCurrentPane({ confirm = true }), desc = "Close" },
 	},
 	resize_mode = {
@@ -83,6 +88,23 @@ M.key_tables = {
 		{ key = "j", action = act.AdjustPaneSize({ "Down", 1 }), desc = "" },
 		{ key = "k", action = act.AdjustPaneSize({ "Up", 1 }), desc = "" },
 		{ key = "l", action = act.AdjustPaneSize({ "Right", 1 }), desc = "" },
+	},
+	extract_mode = {
+		{ key = "Escape", action = "PopKeyTable" },
+		{
+			key = "t",
+			action = wezterm.action_callback(function(_, pane)
+				pane:move_to_new_tab()
+			end),
+			desc = "to Tab",
+		},
+		{
+			key = "w",
+			action = wezterm.action_callback(function(_, pane)
+				pane:move_to_new_window()
+			end),
+			desc = "to Window",
+		},
 	},
 }
 
