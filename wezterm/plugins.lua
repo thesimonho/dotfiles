@@ -28,12 +28,6 @@ if enabled.session then
 					return
 				end
 
-				if enabled.resurrect then
-					-- Save current workspace before switching
-					local workspace_state = M.resurrect.workspace_state
-					M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
-				end
-
 				win:perform_action(act.SwitchToWorkspace({ name = id, spawn = { cwd = id } }), pane)
 
 					local opts = {
@@ -100,6 +94,11 @@ if enabled.session then
 		key = "p",
 		mods = "SUPER",
 		action = wezterm.action_callback(function(window, pane)
+			if enabled.resurrect then
+				-- Save current workspace before switching
+				local workspace_state = M.resurrect.workspace_state
+				M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+			end
 			window:perform_action(M.sessionizer.show(M.sessionizer_schema), pane)
 		end),
 	})
