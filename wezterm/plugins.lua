@@ -7,7 +7,7 @@ local theme = require("theme_switcher")
 
 local enabled = {
 	tabline = true,
-	session = true,
+	workspace = true,
 	resurrect = true,
 	toggle_terminal = true,
 	dev_containers = false,
@@ -16,99 +16,88 @@ local enabled = {
 local M = {}
 
 -- sessions
-if enabled.session then
-	M.sessionizer = wezterm.plugin.require("https://github.com/mikkasendke/sessionizer.wezterm")
-	M.sessionizer_history = wezterm.plugin.require("https://github.com/mikkasendke/sessionizer-history")
+if enabled.workspace then
+	M.workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 
-	M.sessionizer_schema = {
-		options = {
-			prompt = "Switch to workspace: ",
-			callback = M.sessionizer_history.Wrapper(function(win, pane, id, label)
-				if not id then
-					return
-				end
+	local function get_previous(choices)
+		choices = choices or {}
+		if not wezterm.GLOBAL.previous_workspace then
+			return choices
+		end
 
-				win:perform_action(act.SwitchToWorkspace({ name = id, spawn = { cwd = id } }), pane)
-
-				if enabled.resurrect then
-					local opts = {
-						spawn_in_workspace = true,
-						window = win:mux_window(),
-						relative = true,
-						restore_text = true,
-						close_open_tabs = true,
-						close_open_panes = true,
-						resize_window = false,
-						on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
-					}
-
-					local loaded_state
-					local loaded_ok, load_err = pcall(function()
-						loaded_state = M.resurrect.state_manager.load_state(id, "workspace")
-					end)
-					if not loaded_ok then
-						wezterm.log_error("Failed to load resurrect state: " .. load_err)
-					end
-
-					wezterm.time.call_after(1000, function()
-						local ok, err = pcall(function()
-							local workspace_state = M.resurrect.workspace_state
-							workspace_state.restore_workspace(loaded_state, opts)
-						end)
-						if not ok then
-							wezterm.log_error(err)
-						end
-					end)
-				end
-			end),
-		},
-		{
-			M.sessionizer_history.MostRecentWorkspace({}),
-			processing = M.sessionizer.for_each_entry(function(entry)
-				entry.label = entry.label:gsub("^Recent %((.-)%)$", "%1")
-				entry.label = wezterm.format({
-					{ Foreground = { AnsiColor = "Maroon" } },
-					{ Attribute = { Intensity = "Bold" } },
-					{ Text = " " .. entry.label },
-				})
-			end),
-		},
-		{
-			M.sessionizer.AllActiveWorkspaces({ filter_current = false, filter_default = false }),
-			processing = M.sessionizer.for_each_entry(function(entry)
-				entry.label = wezterm.format({
-					{ Foreground = { AnsiColor = "Green" } },
-					{ Attribute = { Italic = true } },
-					{ Text = "󱂬 " .. entry.label },
-				})
-			end),
-		},
-		{
-			M.sessionizer.FdSearch({
-				wezterm.home_dir .. "/Projects",
-				fd_path = "/home/linuxbrew/.linuxbrew/bin/fd",
-				exclude = { ".Trash-1000", "node_modules" },
+		table.insert(choices, {
+			id = wezterm.GLOBAL.previous_workspace,
+			label = wezterm.format({
+				{ Foreground = { AnsiColor = "Maroon" } },
+				{ Attribute = { Intensity = "Bold" } },
+				{ Text = wezterm.GLOBAL.previous_workspace },
 			}),
-			processing = M.sessionizer.for_each_entry(function(entry)
-				entry.label = entry.label:gsub("^" .. wezterm.home_dir .. "/Projects/", " ")
-			end),
-		},
-		processing = M.sessionizer.for_each_entry(function(entry)
-			entry.label = entry.label:gsub(wezterm.home_dir, "~")
-		end),
-	}
+		})
+		return choices
+	end
+
+	local function create_choices(path, choices, depth)
+		choices = choices or {}
+		local current = {}
+		depth = depth or 1
+
+		-- normalize path
+		if path:sub(-1) ~= "/" then
+			path = path .. "/"
+		end
+
+		-- helper to build repeated patterns like "*/" or "*/*/"
+		local function build_pattern(base, level)
+			if level == 1 then
+				return base .. "*/.git"
+			end
+			return base .. string.rep("*/", level - 1) .. "*/.git"
+		end
+
+		for level = 1, depth do
+			for _, dir in ipairs(wezterm.glob(build_pattern(path, level))) do
+				local label_pattern
+				if level == 1 then
+					label_pattern = "^" .. path .. "([^/]+)/%.git/?$"
+				else
+					label_pattern = "^" .. path .. ".-/([^/]+)/%.git/?$"
+				end
+
+				table.insert(current, {
+					id = dir:gsub("/%.git$", ""),
+					label = dir:gsub(label_pattern, "%1"):lower(),
+				})
+			end
+		end
+
+		table.sort(current, function(a, b)
+			return a.label < b.label
+		end)
+
+		for i = 1, #current do
+			choices[#choices + 1] = current[i]
+		end
+
+		return choices
+	end
+
+	M.workspace_switcher.get_choices = function()
+		local choices = {}
+		choices = get_previous(choices)
+		choices = M.workspace_switcher.choices.get_workspace_elements(choices)
+		choices = create_choices(wezterm.home_dir .. "/Projects", choices, 2)
+		return choices
+	end
 
 	table.insert(keybinds.basic_binds, {
 		key = "p",
 		mods = "SUPER",
-		action = wezterm.action_callback(function(window, pane)
-			if enabled.resurrect then
-				-- Save current workspace before switching
-				local workspace_state = M.resurrect.workspace_state
-				M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
-			end
-			window:perform_action(M.sessionizer.show(M.sessionizer_schema), pane)
-		end),
+		action = M.workspace_switcher.switch_workspace(),
+	})
+	table.insert(keybinds.basic_binds, {
+		key = "`",
+		mods = "SUPER",
+		action = M.workspace_switcher.switch_to_prev_workspace(),
 	})
 end
 
@@ -121,9 +110,28 @@ if enabled.resurrect then
 		save_windows = true,
 		save_tabs = true,
 	})
+
 	wezterm.on("resurrect.error", function(err)
 		wezterm.log_error("Resurrect error: " .. err)
 	end)
+
+	if enabled.workspace then
+		wezterm.on("smart_workspace_switcher.workspace_switcher.selected", function()
+			local workspace_state = M.resurrect.workspace_state
+			M.resurrect.state_manager.save_state(workspace_state.get_workspace_state())
+		end)
+
+		wezterm.on("smart_workspace_switcher.workspace_switcher.created", function(window, _, label)
+			local workspace_state = M.resurrect.workspace_state
+			workspace_state.restore_workspace(M.resurrect.state_manager.load_state(label, "workspace"), {
+				window = window,
+				relative = true,
+				restore_text = false,
+				resize_window = false,
+				on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
+			})
+		end)
+	end
 end
 
 -- toggle term
