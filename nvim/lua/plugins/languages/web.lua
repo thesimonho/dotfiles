@@ -61,6 +61,31 @@ return {
       },
     },
   },
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = function(opts)
+      local api = require("typescript-tools.api")
+      opts.handlers = {
+        ["textDocument/publishDiagnostics"] = api.filter_diagnostics({ 80006 }),
+      }
+      opts.settings = {
+        expose_as_code_action = { "all" },
+        complete_function_calls = true,
+        code_lens = "all",
+        disable_member_code_lens = false,
+        tsserver_file_preferences = {
+          includeInlayParameterNameHints = "all",
+          includeCompletionsForModuleExports = true,
+          quotePreference = "auto",
+        },
+        tsserver_format_options = {
+          allowIncompleteCompletions = false,
+          allowRenameOfImportPath = false,
+        },
+      }
+    end,
+  },
   { -- formatters
     "stevearc/conform.nvim",
     opts = {
