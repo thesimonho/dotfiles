@@ -47,7 +47,7 @@ M.basic_binds = {
 	{
 		key = "t",
 		mods = "SUPER",
-		action = act.ActivateKeyTable({ name = "tab_mode", timeout_milliseconds = 10000 }),
+		action = act.ActivateKeyTable({ name = "tab_mode", one_shot = false, timeout_milliseconds = 10000 }),
 	},
 }
 
@@ -55,10 +55,24 @@ M.key_tables = {
 	tab_mode = { -- wezterm tabs
 		{ key = "Escape", action = "PopKeyTable" },
 		{ key = "`", action = act.ActivateLastTab, desc = "Last" },
-		{ key = "n", action = act.SpawnTab("CurrentPaneDomain"), desc = "New" },
+		{
+			key = "n",
+			action = act.Multiple({
+				act.SpawnTab("CurrentPaneDomain"),
+				"PopKeyTable",
+			}),
+			desc = "New",
+		},
 		{ key = "h", action = act.ActivateTabRelative(-1), desc = "" },
 		{ key = "l", action = act.ActivateTabRelative(1), desc = "" },
-		{ key = "d", action = act.CloseCurrentTab({ confirm = true }), desc = "Close" },
+		{
+			key = "d",
+			action = act.Multiple({
+				act.CloseCurrentTab({ confirm = true }),
+				"PopKeyTable",
+			}),
+			desc = "Close",
+		},
 	},
 	window_mode = { -- wezterm panes
 		{ key = "Escape", action = "PopKeyTable" },

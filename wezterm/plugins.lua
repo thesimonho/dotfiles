@@ -126,7 +126,7 @@ if enabled.resurrect then
 			workspace_state.restore_workspace(M.resurrect.state_manager.load_state(label, "workspace"), {
 				window = window,
 				relative = true,
-				restore_text = false,
+				restore_text = true,
 				resize_window = false,
 				on_pane_restore = M.resurrect.tab_state.default_on_pane_restore,
 			})
