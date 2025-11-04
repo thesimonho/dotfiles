@@ -31,8 +31,8 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.python", enabled = os_utils.has_executable("python") },
     { import = "lazyvim.plugins.extras.lang.tailwind", enabled = fs.has_in_project("tailwind.config.ts") },
     { import = "lazyvim.plugins.extras.lang.terraform", enabled = os_utils.has_executable("terraform") },
-    { import = "lazyvim.plugins.extras.lang.typescript", enabled = fs.has_in_project("tsconfig.json") },
-    { import = "lazyvim.plugins.extras.lang.vue", enabled = fs.has_in_project("vue.config.ts") },
+    -- { import = "lazyvim.plugins.extras.lang.typescript", enabled = fs.has_in_project("tsconfig.json") },
+    -- { import = "lazyvim.plugins.extras.lang.vue", enabled = fs.has_in_project("vue.config.ts") },
     { import = "lazyvim.plugins.extras.lang.yaml" },
     -- import/override with your plugins
     { import = "plugins" },
