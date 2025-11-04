@@ -245,7 +245,7 @@ return {
         win = {
           list = {
             wo = {
-              winblend = 3,
+              winblend = 0,
             },
           },
           preview = {
@@ -256,7 +256,7 @@ return {
               foldenable = false,
               foldcolumn = "0",
               signcolumn = "no",
-              winblend = 3,
+              winblend = 0,
             },
           },
         },
