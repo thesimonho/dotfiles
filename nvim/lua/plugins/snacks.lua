@@ -187,7 +187,10 @@ return {
           },
         },
         filter = function(buf)
-          return vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and vim.bo[buf].buftype ~= "bigfile"
+          local excluded_filetypes = { "help", "lazy", "mason", "toggleterm", "which-key", "snacks_picker_preview" }
+          return vim.g.snacks_indent ~= false
+            and vim.b[buf].snacks_indent ~= false
+            and not vim.tbl_contains(excluded_filetypes, vim.bo[buf].filetype)
         end,
         priority = 200,
       },
