@@ -53,8 +53,6 @@ return {
     "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
-        -- lsp
-        "vue-language-server",
         -- linters
         "eslint_d",
         -- formatters
@@ -62,84 +60,6 @@ return {
         "prettier",
       },
     },
-  },
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        vue_ls = {},
-        ["typescript-tools"] = {},
-      },
-    },
-  },
-  {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opts = function(opts)
-      local api = require("typescript-tools.api")
-      opts.handlers = {
-        ["textDocument/publishDiagnostics"] = api.filter_diagnostics({ 80006 }),
-      }
-      opts.settings = {
-        expose_as_code_action = { "all" },
-        complete_function_calls = true,
-        code_lens = "all",
-        disable_member_code_lens = false,
-        tsserver_plugins = {
-          "@vue/typescript-plugin",
-        },
-        tsserver_file_preferences = {
-          quotePreference = "auto",
-          importModuleSpecifierEnding = "auto",
-          jsxAttributeCompletionStyle = "auto",
-          allowTextChangesInNewFiles = true,
-          providePrefixAndSuffixTextForRename = true,
-          allowRenameOfImportPath = true,
-          includeAutomaticOptionalChainCompletions = true,
-          provideRefactorNotApplicableReason = true,
-          generateReturnInDocTemplate = true,
-          includeCompletionsForImportStatements = true,
-          includeCompletionsForModuleExports = true,
-          includeCompletionsWithSnippetText = true,
-          includeCompletionsWithClassMemberSnippets = true,
-          includeCompletionsWithObjectLiteralMethodSnippets = true,
-          useLabelDetailsInCompletionEntries = true,
-          allowIncompleteCompletions = true,
-          displayPartsForJSDoc = true,
-          disableLineTextInReferences = true,
-          includeInlayParameterNameHints = "all",
-          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-          includeInlayFunctionParameterTypeHints = false,
-          includeInlayVariableTypeHints = false,
-          includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-          includeInlayPropertyDeclarationTypeHints = false,
-          includeInlayFunctionLikeReturnTypeHints = false,
-          includeInlayEnumMemberValueHints = false,
-        },
-        tsserver_format_options = {
-          allowIncompleteCompletions = false,
-          allowRenameOfImportPath = false,
-          insertSpaceAfterCommaDelimiter = true,
-          insertSpaceAfterConstructor = false,
-          insertSpaceAfterSemicolonInForStatements = true,
-          insertSpaceBeforeAndAfterBinaryOperators = true,
-          insertSpaceAfterKeywordsInControlFlowStatements = true,
-          insertSpaceAfterFunctionKeywordForAnonymousFunctions = true,
-          insertSpaceBeforeFunctionParenthesis = false,
-          insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = false,
-          insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets = false,
-          insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces = true,
-          insertSpaceAfterOpeningAndBeforeClosingEmptyBraces = true,
-          insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces = false,
-          insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces = false,
-          insertSpaceAfterTypeAssertion = false,
-          placeOpenBraceOnNewLineForFunctions = false,
-          placeOpenBraceOnNewLineForControlBlocks = false,
-          semicolons = "ignore",
-          indentSwitchCase = true,
-        },
-      }
-    end,
   },
   { -- formatters
     "stevearc/conform.nvim",
