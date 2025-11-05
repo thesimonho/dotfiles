@@ -44,16 +44,24 @@ return {
       incremental_selection = {
         enable = false, -- use flash treesitter mode instead
       },
-      textobjects = {
-        swap = {
-          enable = true,
-          swap_next = {
-            ["<leader>cx"] = "@parameter.inner",
-          },
-          swap_previous = {
-            ["<leader>cX"] = "@parameter.inner",
-          },
-        },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    keys = {
+      {
+        "<leader>cx",
+        function()
+          require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
+        end,
+        desc = "Swap next parameter",
+      },
+      {
+        "<leader>cX",
+        function()
+          require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.inner")
+        end,
+        desc = "Swap previous parameter",
       },
     },
   },
