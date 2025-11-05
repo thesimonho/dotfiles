@@ -64,6 +64,15 @@ return {
     },
   },
   {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        vue_ls = {},
+        ["typescript-tools"] = {},
+      },
+    },
+  },
+  {
     "pmizio/typescript-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = function(opts)
