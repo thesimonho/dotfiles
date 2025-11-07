@@ -187,7 +187,8 @@ return {
           },
         },
         filter = function(buf)
-          local excluded_filetypes = { "help", "lazy", "mason", "toggleterm", "wk", "snacks_picker_preview" }
+          local excluded_filetypes =
+            { "help", "lazy", "mason", "mcphub", "toggleterm", "wk", "snacks_picker_preview", "noice" }
           return vim.g.snacks_indent ~= false
             and vim.b[buf].snacks_indent ~= false
             and not vim.tbl_contains(excluded_filetypes, vim.bo[buf].filetype)

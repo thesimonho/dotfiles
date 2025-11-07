@@ -3,7 +3,7 @@ return {
   { "folke/persistence.nvim", enabled = false },
   {
     "olimorris/persisted.nvim",
-    event = "BufReadPre",
+    lazy = false,
     init = function()
       -- save barbar buffer order before saving session
       vim.api.nvim_create_autocmd({ "User" }, {
@@ -15,9 +15,14 @@ return {
       })
     end,
     opts = {
+      autostart = true,
+      autoload = true,
       follow_cwd = true,
       use_git_branch = true,
-      autoload = true,
+      allowed_dirs = {
+        "~/dotfiles",
+        "~/Projects",
+      },
       should_save = function()
         if vim.bo.filetype == "snacks_dashboard" then
           return false
@@ -25,8 +30,7 @@ return {
         return true
       end,
       on_autoload_no_session = function()
-        vim.notify("No existing session to load.")
-        vim.cmd("Neotree")
+        Snacks.dashboard()
       end,
     },
   },
