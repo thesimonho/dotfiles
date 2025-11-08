@@ -8,15 +8,17 @@ REPO_URL_DEFAULT="https://github.com/thesimonho/dotfiles"
 REPO_DIR_DEFAULT="$HOME/dotfiles"
 HOST_DEFAULT="linux"
 BRANCH_DEFAULT="master"
+FLAKE_SUBDIR_DEFAULT="nix"
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [--repo URL] [--dir PATH] [--host NAME] [--branch BRANCH]
++Usage: $(basename "$0") [--repo URL] [--dir PATH] [--host NAME] [--branch BRANCH] [--flake-subdir NAME]
 
   --repo    Git repo URL (default: $REPO_URL_DEFAULT)
   --dir     Local checkout directory (default: $REPO_DIR_DEFAULT)
   --host    Flake output host (e.g., work, linux)
   --branch  Git branch to checkout (default: $BRANCH_DEFAULT)
++  --flake-subdir  Subdirectory under the repo that contains flake.nix (default: $FLAKE_SUBDIR_DEFAULT)
 
 Examples:
   $(basename "$0") --host work
@@ -28,6 +30,7 @@ REPO_URL="$REPO_URL_DEFAULT"
 REPO_DIR="$REPO_DIR_DEFAULT"
 HOST="$HOST_DEFAULT"
 BRANCH="$BRANCH_DEFAULT"
+FLAKE_SUBDIR="$FLAKE_SUBDIR_DEFAULT"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -47,6 +50,10 @@ while [[ $# -gt 0 ]]; do
     BRANCH="$2"
     shift 2
     ;;
+  --flake-subdir)
+    FLAKE_SUBDIR="$2"
+    shift 2
+    ;;
   -h | --help)
     usage
     exit 0
@@ -63,6 +70,7 @@ OS="$(uname -s)"
 ARCH="$(uname -m)"
 
 echo "==> Detected OS: $OS  ARCH: $ARCH"
+FLAKE_DIR="${REPO_DIR}/${FLAKE_SUBDIR}"
 
 # ------------------------------------------------------
 # 0) Ensure Git is installed
@@ -185,10 +193,10 @@ apply_host() {
 
   case "$OS" in
   Darwin)
-    nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake "$REPO_DIR#$host"
+    nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake "$FLAKE_DIR#$host"
     ;;
   Linux)
-    nix run home-manager/release-25.05 -- switch --flake "$REPO_DIR#$host"
+    nix run home-manager/release-25.05 -- switch --flake "$FLAKE_DIR#$host"
     ;;
   *)
     echo "Unsupported OS: $OS" >&2
@@ -208,9 +216,9 @@ main() {
   echo
   echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
   if [ "$OS" = "Darwin" ]; then
-    echo "   darwin-rebuild switch --flake $REPO_DIR#$HOST_TO_USE"
+    echo "     darwin-rebuild switch --flake $FLAKE_DIR#$HOST_TO_USE"
   else
-    echo "   home-manager switch --flake $REPO_DIR#$HOST_TO_USE"
+    echo "     home-manager switch --flake $FLAKE_DIR#$HOST_TO_USE"
   fi
 }
 
