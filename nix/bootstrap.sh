@@ -1,0 +1,217 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# -----------------------------
+# Settings
+# -----------------------------
+REPO_URL_DEFAULT="https://github.com/thesimonho/dotfiles"
+REPO_DIR_DEFAULT="$HOME/dotfiles"
+HOST_DEFAULT="linux"
+BRANCH_DEFAULT="master"
+
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [--repo URL] [--dir PATH] [--host NAME] [--branch BRANCH]
+
+  --repo    Git repo URL (default: $REPO_URL_DEFAULT)
+  --dir     Local checkout directory (default: $REPO_DIR_DEFAULT)
+  --host    Flake output host (e.g., work, linux)
+  --branch  Git branch to checkout (default: $BRANCH_DEFAULT)
+
+Examples:
+  $(basename "$0") --host work
+  $(basename "$0") --repo https://github.com/thesimonho/dotfiles --host linux
+EOF
+}
+
+REPO_URL="$REPO_URL_DEFAULT"
+REPO_DIR="$REPO_DIR_DEFAULT"
+HOST="$HOST_DEFAULT"
+BRANCH="$BRANCH_DEFAULT"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  --repo)
+    REPO_URL="$2"
+    shift 2
+    ;;
+  --dir)
+    REPO_DIR="$2"
+    shift 2
+    ;;
+  --host)
+    HOST="$2"
+    shift 2
+    ;;
+  --branch)
+    BRANCH="$2"
+    shift 2
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown arg: $1" >&2
+    usage
+    exit 1
+    ;;
+  esac
+done
+
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+
+echo "==> Detected OS: $OS  ARCH: $ARCH"
+
+# ------------------------------------------------------
+# 0) Ensure Git is installed
+# ------------------------------------------------------
+ensure_git() {
+  if command -v git >/dev/null 2>&1; then
+    echo "==> Git already installed."
+    return
+  fi
+
+  echo "==> Installing git..."
+  case "$OS" in
+  Linux)
+    if command -v apt-get >/dev/null 2>&1; then
+      sudo apt-get update -y && sudo apt-get install -y git
+    elif command -v dnf >/dev/null 2>&1; then
+      sudo dnf install -y git
+    elif command -v yum >/dev/null 2>&1; then
+      sudo yum install -y git
+    elif command -v pacman >/dev/null 2>&1; then
+      sudo pacman -Sy --noconfirm git
+    else
+      echo "No supported package manager found. Please install git manually." >&2
+      exit 1
+    fi
+    ;;
+  Darwin)
+    if ! xcode-select -p >/dev/null 2>&1; then
+      echo "==> Installing Xcode Command Line Tools (for git)..."
+      xcode-select --install || true
+    fi
+    ;;
+  *)
+    echo "Unsupported OS: $OS" >&2
+    exit 1
+    ;;
+  esac
+}
+
+# ------------------------------------------------------
+# 1) Ensure Nix is installed + flakes are enabled
+# ------------------------------------------------------
+ensure_nix() {
+  if command -v nix >/dev/null 2>&1; then
+    echo "==> Nix already installed."
+  else
+    echo "==> Installing Nix..."
+    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
+  fi
+
+  mkdir -p "$HOME/.config/nix"
+  NIXCONF="$HOME/.config/nix/nix.conf"
+  if ! grep -q "experimental-features" "$NIXCONF" 2>/dev/null; then
+    echo "==> Enabling flakes in $NIXCONF"
+    printf "experimental-features = nix-command flakes\n" >>"$NIXCONF"
+  fi
+
+  set +u
+  if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    # single-user install
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  elif [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+    # multi-user install
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  fi
+  set -u
+
+}
+
+# ------------------------------------------------------
+# 2) Clone or update repo
+# ------------------------------------------------------
+sync_repo() {
+  if [ -d "$REPO_DIR/.git" ]; then
+    echo "==> Repo exists at $REPO_DIR, pulling..."
+    git -C "$REPO_DIR" fetch --all --tags
+    git -C "$REPO_DIR" checkout "$BRANCH"
+    git -C "$REPO_DIR" pull --rebase --autostash
+  else
+    echo "==> Cloning $REPO_URL to $REPO_DIR"
+    git clone --branch "$BRANCH" "$REPO_URL" "$REPO_DIR"
+  fi
+}
+
+# ------------------------------------------------------
+# 3) Guess a sensible default host
+# ------------------------------------------------------
+guess_host() {
+  if [ -n "$HOST" ]; then
+    echo "$HOST"
+    return
+  fi
+
+  local short_hostname
+  short_hostname="$(hostname -s 2>/dev/null || hostname)"
+
+  case "$OS" in
+  Darwin)
+    echo "macos-work"
+    ;;
+  Linux)
+    case "$short_hostname" in
+    "Simon-WS") echo "linux" ;;
+    "Simon-Laptop") echo "laptop" ;;
+    *) echo "linux" ;;
+    esac
+    ;;
+  *)
+    echo "linux"
+    ;;
+  esac
+}
+
+# ------------------------------------------------------
+# 4) Apply configuration
+# ------------------------------------------------------
+apply_host() {
+  local host="$1"
+  echo "==> Applying host: $host"
+
+  case "$OS" in
+  Darwin)
+    nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake "$REPO_DIR#$host"
+    ;;
+  Linux)
+    nix run home-manager/release-25.05 -- switch --flake "$REPO_DIR#$host"
+    ;;
+  *)
+    echo "Unsupported OS: $OS" >&2
+    exit 2
+    ;;
+  esac
+}
+
+main() {
+  ensure_git
+  ensure_nix
+  sync_repo
+  HOST_TO_USE="$(guess_host)"
+  echo "==> Host selected: $HOST_TO_USE"
+  apply_host "$HOST_TO_USE"
+
+  echo
+  echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
+  if [ "$OS" = "Darwin" ]; then
+    echo "   darwin-rebuild switch --flake $REPO_DIR#$HOST_TO_USE"
+  else
+    echo "   home-manager switch --flake $REPO_DIR#$HOST_TO_USE"
+  fi
+}
+
+main "$@"
