@@ -26,7 +26,6 @@
       # };
 
       homeConfigurations."linux" = home-manager.lib.homeManagerConfiguration {
-        system = "x86_64-linux";
         pkgs = mkPkgs "x86_64-linux";
         modules = [
           ./hosts/linux.nix
