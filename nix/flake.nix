@@ -29,8 +29,8 @@
         pkgs = mkPkgs "x86_64-linux";
         modules = [
           ./hosts/linux.nix
-          ./modules/common.nix
-          ./modules/flatpak.nix
+          # ./modules/common.nix
+          # ./modules/flatpak.nix
           { home.stateVersion = "25.05"; }
         ];
       };
