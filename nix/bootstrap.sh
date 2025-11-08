@@ -141,6 +141,30 @@ ensure_nix() {
 }
 
 # ------------------------------------------------------
+# 1.5) Ensure Home Manager (flake-native install)
+# ------------------------------------------------------
+ensure_home_manager() {
+  local HM_PROFILE_REF="github:nix-community/home-manager/release-25.05"
+
+  if command -v home-manager >/dev/null 2>&1; then
+    echo "==> Home Manager already installed."
+    return
+  fi
+
+  echo "==> Installing Home Manager CLI into your profile..."
+  # Requires nix-command (enabled in ensure_nix)
+  nix profile install "$HM_PROFILE_REF"
+
+  # No-op if it already exists. Your flake can ignore it.
+  nix run nixpkgs#home-manager -- init || true
+
+  # Re-source environment in case PATH changed
+  set +u
+  [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  set -u
+}
+
+# ------------------------------------------------------
 # 2) Clone or update repo
 # ------------------------------------------------------
 sync_repo() {
@@ -196,7 +220,7 @@ apply_host() {
     nix run nix-darwin --extra-experimental-features 'nix-command flakes' -- switch --flake "$FLAKE_DIR#$host"
     ;;
   Linux)
-    nix run home-manager/release-25.05 -- switch --flake "$FLAKE_DIR#$host"
+    home-manager switch --flake "$FLAKE_DIR#$host"
     ;;
   *)
     echo "Unsupported OS: $OS" >&2
@@ -208,6 +232,7 @@ apply_host() {
 main() {
   ensure_git
   ensure_nix
+  ensure_home_manager
   sync_repo
   HOST_TO_USE="$(guess_host)"
   echo "==> Host selected: $HOST_TO_USE"
