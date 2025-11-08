@@ -1,5 +1,5 @@
 {
-  "mcpServers": {
+  "servers": {
     "aws_docs": {
       "args": ["awslabs.aws-documentation-mcp-server@latest"],
       "autoApprove": [],
@@ -9,16 +9,23 @@
         "FASTMCP_LOG_LEVEL": "ERROR"
       }
     },
+    "browser_tools": {
+      "args": ["@agentdeskai/browser-tools-mcp@latest"],
+      "command": "npx"
+    },
+    "context7": {
+      "args": ["-y", "@upstash/context7-mcp"],
+      "command": "npx",
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "6000"
+      }
+    },
     "fetch": {
       "args": ["mcp-server-fetch"],
       "command": "uvx"
     },
     "playwright": {
       "args": ["@playwright/mcp@latest", "--vision"],
-      "command": "npx"
-    },
-    "sequentialthinking": {
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "command": "npx"
     }
   },
