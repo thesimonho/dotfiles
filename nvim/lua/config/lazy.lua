@@ -25,8 +25,8 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.util.octo" },
     { import = "lazyvim.plugins.extras.vscode", enabled = os_utils.has_executable("code") },
     -- languages
-    { import = "lazyvim.plugins.extras.lang.go", enabled = os_utils.has_executable("go") },
     { import = "lazyvim.plugins.extras.lang.docker", enabled = os_utils.has_executable("docker") },
+    { import = "lazyvim.plugins.extras.lang.go", enabled = os_utils.has_executable("go") },
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.markdown" },
     { import = "lazyvim.plugins.extras.lang.python", enabled = os_utils.has_executable("python") },
