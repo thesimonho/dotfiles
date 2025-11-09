@@ -3,16 +3,37 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixgl = {
+      url = "github:nix-community/nixGL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # nix-darwin.url = "github:LnL7/nix-darwin/release-25.05";
     # nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    wezterm.url = "github:wezterm/wezterm?dir=nix";
+    yazi.url = "github:sxyazi/yazi";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
-    let mkPkgs = system: import nixpkgs { inherit system; };
+  outputs =
+    inputs@{ self, nixpkgs, nixpkgs-unstable, nixgl, home-manager, ... }:
+    let
+      pkgsFor = system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ nixgl.overlay ];
+          config.allowUnfree = true;
+        };
+      unstableFor = system:
+        import nixpkgs-unstable {
+          inherit system;
+          overlays = [ nixgl.overlay ];
+          config.allowUnfree = true;
+        };
     in {
       apps.x86_64-linux.hm = {
         type = "app";
@@ -25,13 +46,31 @@
       #     "${home-manager.packages.aarch64-darwin.home-manager}/bin/home-manager";
       # };
 
-      homeConfigurations."linux" = home-manager.lib.homeManagerConfiguration {
-        pkgs = mkPkgs "x86_64-linux";
+      homeConfigurations."home" = home-manager.lib.homeManagerConfiguration {
+        pkgs = pkgsFor "x86_64-linux";
+        extraSpecialArgs = {
+          inherit inputs;
+          pkgsUnstable = unstableFor "x86_64-linux";
+        };
         modules = [
+          ./modules/common.nix
+          ./modules/home.nix
           ./hosts/linux.nix
-          # ./modules/common.nix
-          # ./modules/flatpak.nix
-          { home.stateVersion = "25.05"; }
+          { home.stateVersion = "25.05"; } # dont touch this
+        ];
+      };
+
+      homeConfigurations."work" = home-manager.lib.homeManagerConfiguration {
+        pkgs = pkgsFor "x86_64-linux";
+        extraSpecialArgs = {
+          inherit inputs;
+          pkgsUnstable = unstableFor "x86_64-linux";
+        };
+        modules = [
+          ./modules/common.nix
+          ./modules/work.nix
+          ./hosts/linux.nix
+          { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
     };
