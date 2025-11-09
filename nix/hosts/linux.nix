@@ -1,8 +1,8 @@
 { config, pkgs, ... }: {
-  home.username = "simon";
-  home.homeDirectory = "/home/simon";
+  home = {
+    username = "simon";
+    homeDirectory = "/home/simon";
+  };
 
-  programs.home-manager.enable = true;
-
-  home.packages = with pkgs; [ git ];
+  programs = { home-manager.enable = true; };
 }

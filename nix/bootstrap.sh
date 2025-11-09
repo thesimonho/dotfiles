@@ -18,7 +18,7 @@ usage() {
   --dir     Local checkout directory (default: $REPO_DIR_DEFAULT)
   --host    Flake output host (e.g., work, linux)
   --branch  Git branch to checkout (default: $BRANCH_DEFAULT)
-+  --flake-subdir  Subdirectory under the repo that contains flake.nix (default: $FLAKE_SUBDIR_DEFAULT)
+  --flake-subdir  Subdirectory under the repo that contains flake.nix (default: $FLAKE_SUBDIR_DEFAULT)
 
 Examples:
   $(basename "$0") --host work
