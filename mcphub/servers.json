@@ -25,7 +25,7 @@
       "command": "uvx"
     },
     "playwright": {
-      "args": ["@playwright/mcp@latest", "--vision"],
+      "args": ["@playwright/mcp@latest", "--vision", "--extension"],
       "command": "npx"
     }
   },
