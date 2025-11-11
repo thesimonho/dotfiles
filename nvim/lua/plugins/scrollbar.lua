@@ -47,7 +47,7 @@ return {
         "lazy",
       },
       visibility = "info",
-      current_only = true,
+      current_only = false,
       floating_windows = true,
       hide_on_cursor_intersect = true,
       signs_on_startup = {
