@@ -32,22 +32,36 @@ local diff_files = function(state)
   end
 end
 
-local function open_in_prev_win(state)
+local function open_in_oil(state)
   local node = state.tree:get_node()
-  if node.type == "directory" or node.type == "message" then
-    require("neo-tree.sources.filesystem.commands").toggle_node(state)
-    return
+  if node.type == "directory" then
+    local path = node:get_id()
+    require("neo-tree.command").execute({ action = "close" })
+    vim.cmd.Oil(path)
+  else
+    vim.notify("Not a directory: " .. node.name, vim.log.levels.WARN)
   end
-  local path = node:get_id()
-  local prev_win = vim.g.neotree_prev_win
-  require("neo-tree.command").execute({ action = "close" })
-  if prev_win and vim.api.nvim_win_is_valid(prev_win) then
-    vim.api.nvim_set_current_win(prev_win)
-  end
-  vim.cmd.edit(path)
 end
 
 return {
+  {
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-mini/mini.icons" },
+    lazy = false,
+    keys = {
+      { "<leader>E", "<CMD>Oil<CR>", desc = "Oil" },
+    },
+    opts = {
+      delete_to_trash = true,
+      watch_for_changes = true,
+      keymaps = {
+        ["?"] = { "actions.show_help", mode = "n" },
+        ["<Esc>"] = { "actions.close", mode = "n" },
+        ["q"] = { "actions.close", mode = "n" },
+        ["<BS>"] = { "actions.parent", mode = "n" },
+      },
+    },
+  },
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
@@ -59,7 +73,6 @@ return {
       {
         "<leader>e",
         function()
-          vim.g.neotree_prev_win = vim.api.nvim_get_current_win()
           require("neo-tree.command").execute({
             position = "float",
             toggle = false,
@@ -199,6 +212,12 @@ return {
                 diff_files(state)
               end,
               desc = "diff_files",
+            },
+            ["E"] = {
+              function(state)
+                open_in_oil(state)
+              end,
+              desc = "open_in_oil",
             },
             ["f"] = "fuzzy_finder",
             ["F"] = "fuzzy_finder_directory",
