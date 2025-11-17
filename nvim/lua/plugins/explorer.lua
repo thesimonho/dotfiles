@@ -1,5 +1,4 @@
 local constants = require("config.constants")
-local icons = require("lazyvim.config").icons
 
 local diff_files = function(state)
   local node = state.tree:get_node()
@@ -143,9 +142,9 @@ return {
         git_status = {
           symbols = {
             -- Change type
-            added = icons.git.added,
-            deleted = icons.git.removed,
-            modified = icons.git.modified,
+            added = constants.icons.git.added,
+            deleted = constants.icons.git.removed,
+            modified = constants.icons.git.modified,
             renamed = "  ",
             -- Status type
             untracked = "󰞋  ",

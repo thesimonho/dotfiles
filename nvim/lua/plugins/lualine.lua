@@ -1,6 +1,6 @@
 local utils = require("utils.general")
 local fs = require("utils.fs")
-local icons = require("config.constants").icons
+local constants = require("config.constants")
 local theme = nil
 
 local function get_lsp_clients()
@@ -111,9 +111,9 @@ return {
           "diff",
           padding = { left = 1, right = 0 },
           symbols = {
-            added = icons.git.added,
-            modified = icons.git.modified,
-            removed = icons.git.removed,
+            added = constants.icons.git.added,
+            modified = constants.icons.git.modified,
+            removed = constants.icons.git.removed,
           },
           cond = function()
             return utils.get_split_count() < 3
@@ -242,10 +242,10 @@ return {
         {
           "diagnostics",
           symbols = {
-            error = icons.diagnostics.Error,
-            warn = icons.diagnostics.Warn,
-            info = icons.diagnostics.Info,
-            hint = icons.diagnostics.Hint,
+            error = constants.icons.diagnostics.Error,
+            warn = constants.icons.diagnostics.Warn,
+            info = constants.icons.diagnostics.Info,
+            hint = constants.icons.diagnostics.Hint,
           },
           cond = function()
             return utils.get_split_count() < 4
