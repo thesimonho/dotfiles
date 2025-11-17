@@ -23,4 +23,25 @@ M.todo_keywords = {
   TEST = { alt = { "TEST", "TESTING", "PASSED", "FAILED" }, highlight = "statement", icon = "󰙨" },
 }
 
+M.icons = {
+  dap = {
+    Stopped = { " ", "DapStoppedLine" },
+    Breakpoint = { " ", "DiagnosticError" },
+    BreakpointCondition = { " ", "DiagnosticHint" },
+    BreakpointRejected = { " ", "DiagnosticWarn" },
+    LogPoint = { " ", "DiagnosticInfo" },
+  },
+  diagnostics = {
+    Error = " ",
+    Warn = " ",
+    Hint = " ",
+    Info = " ",
+  },
+  git = {
+    added = " ",
+    modified = " ",
+    removed = " ",
+  },
+}
+
 return M
