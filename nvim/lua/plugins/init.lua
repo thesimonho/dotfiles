@@ -1,28 +1,11 @@
+local icons = require("config.constants").icons
+
 return {
   {
     "LazyVim/LazyVim",
     opts = {
       colorscheme = "kanagawa-paper",
-      icons = {
-        dap = {
-          Stopped = { " ", "DapStoppedLine" },
-          Breakpoint = { " ", "DiagnosticError" },
-          BreakpointCondition = { " ", "DiagnosticHint" },
-          BreakpointRejected = { " ", "DiagnosticWarn" },
-          LogPoint = { " ", "DiagnosticInfo" },
-        },
-        diagnostics = {
-          Error = " ",
-          Warn = " ",
-          Hint = " ",
-          Info = " ",
-        },
-        git = {
-          added = " ",
-          modified = " ",
-          removed = " ",
-        },
-      },
+      icons = icons,
     },
   },
 
