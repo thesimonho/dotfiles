@@ -1,9 +1,12 @@
+local icons = require("config.constants").icons
 local fs = require("utils.fs")
 
 return {
   {
     "folke/trouble.nvim",
     keys = {
+      { "<leader>xL", vim.NIL },
+      { "<leader>xQ", vim.NIL },
       { "<leader>cS", vim.NIL },
     },
     opts = {
@@ -32,6 +35,65 @@ return {
     keys = {
       { "<leader>sT", vim.NIL },
       { "<leader>xT", vim.NIL },
+    },
+  },
+  {
+    "stevearc/quicker.nvim",
+    lazy = true,
+    ft = "qf",
+    opts = {
+      opts = {
+        number = false,
+        relativenumber = false,
+        winfixheight = true,
+        wrap = false,
+      },
+      keys = {
+        {
+          "<Tab>",
+          function()
+            require("quicker").toggle_expand()
+          end,
+          desc = "Toggle context",
+        },
+        {
+          "r",
+          function()
+            require("quicker").refresh()
+          end,
+          desc = "Refresh list",
+        },
+      },
+      edit = {
+        enabled = true,
+        autosave = "unmodified",
+      },
+      highlight = {
+        treesitter = true,
+        lsp = true,
+      },
+      follow = {
+        enabled = true,
+      },
+      type_icons = {
+        E = icons.diagnostics.Error,
+        W = icons.diagnostics.Warn,
+        I = icons.diagnostics.Info,
+        N = icons.diagnostics.Info,
+        H = icons.diagnostics.Hint,
+      },
+      borders = {
+        vert = "│",
+        -- Strong headers separate results from different files
+        strong_header = "─",
+        strong_cross = "┼",
+        strong_end = "┤",
+        -- Soft headers separate results within the same file
+        soft_header = "╌",
+        soft_cross = "┼",
+        soft_end = "┤",
+      },
+      trim_leading_whitespace = "common",
     },
   },
 }
