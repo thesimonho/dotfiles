@@ -44,7 +44,7 @@ local M = {
         },
       },
       nes = {
-        enabled = true,
+        enabled = false,
       },
     },
   },
