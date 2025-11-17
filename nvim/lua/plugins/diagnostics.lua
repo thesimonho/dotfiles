@@ -1,4 +1,4 @@
-local icons = require("config.constants").icons
+local constants = require("config.constants")
 local fs = require("utils.fs")
 
 return {
@@ -76,11 +76,11 @@ return {
         enabled = true,
       },
       type_icons = {
-        E = icons.diagnostics.Error,
-        W = icons.diagnostics.Warn,
-        I = icons.diagnostics.Info,
-        N = icons.diagnostics.Info,
-        H = icons.diagnostics.Hint,
+        E = constants.icons.diagnostics.Error,
+        W = constants.icons.diagnostics.Warn,
+        I = constants.icons.diagnostics.Info,
+        N = constants.icons.diagnostics.Info,
+        H = constants.icons.diagnostics.Hint,
       },
       borders = {
         vert = "│",

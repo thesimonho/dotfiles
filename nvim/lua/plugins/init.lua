@@ -1,11 +1,11 @@
-local icons = require("config.constants").icons
+local constants = require("config.constants")
 
 return {
   {
     "LazyVim/LazyVim",
     opts = {
       colorscheme = "kanagawa-paper",
-      icons = icons,
+      icons = constants.icons,
     },
   },
 

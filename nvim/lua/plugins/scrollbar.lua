@@ -1,4 +1,4 @@
-local constants = require("config/constants")
+local constants = require("config.constants")
 
 local function make_patterns_for_words(words)
   local out = {}
@@ -9,7 +9,6 @@ local function make_patterns_for_words(words)
   return out
 end
 
--- TODO: add highlight groups for merge conflicts
 return {
   {
     "dstein64/nvim-scrollview",

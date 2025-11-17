@@ -1,4 +1,4 @@
-local constants = require("config/constants")
+local constants = require("config.constants")
 
 -- TODO: text
 -- FIXME: text
