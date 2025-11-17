@@ -1,6 +1,6 @@
 local utils = require("utils.general")
 local fs = require("utils.fs")
-local icons = require("lazyvim.config").icons
+local icons = require("config.constants").icons
 local theme = nil
 
 local function get_lsp_clients()
