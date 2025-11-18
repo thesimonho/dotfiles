@@ -47,7 +47,7 @@ M.basic_binds = {
 	{
 		key = "t",
 		mods = "SUPER",
-		action = act.ActivateKeyTable({ name = "tab_mode", one_shot = false, timeout_milliseconds = 10000 }),
+		action = act.ActivateKeyTable({ name = "tab_mode", timeout_milliseconds = 10000 }),
 	},
 }
 

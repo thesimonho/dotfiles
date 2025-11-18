@@ -8,8 +8,8 @@ local theme = require("theme_switcher")
 local enabled = {
 	tabline = true,
 	workspace = true,
-	resurrect = true,
-	toggle_terminal = true,
+	resurrect = false,
+	toggle_terminal = false,
 	dev_containers = false,
 }
 
@@ -205,7 +205,7 @@ if enabled.tabline then
 				right = "",
 			},
 		},
-		extensions = { "resurrect" },
+		-- extensions = { "resurrect" },
 		sections = {
 			tabline_a = {
 				{
@@ -221,7 +221,7 @@ if enabled.tabline then
 			},
 			tabline_c = { " " },
 			tabline_x = {},
-			tabline_y = { keytable_hint },
+			-- tabline_y = { keytable_hint },
 			tabline_z = {
 				{
 					"datetime",
