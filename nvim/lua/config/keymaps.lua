@@ -1,6 +1,7 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 local wk = require("which-key")
+local general = require("utils.general")
 
 -- Delete some default keymaps
 vim.api.nvim_del_keymap("n", "<leader>K")
@@ -45,7 +46,8 @@ vim.keymap.set({ "n", "x" }, "G", "mgG", { desc = "Go to bottom of file" })
 vim.keymap.set("v", "A", "<Esc>ggVG$", { desc = "Select all" })
 vim.keymap.set("n", "<leader>fs", "<cmd>w<cr><esc>", { desc = "Save File" })
 vim.keymap.set("n", "q", "<nop>", { noremap = true }) -- unmap q because its too easy to hit by accident
-vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" })
+vim.keymap.set("n", "Q", "q", { noremap = true, desc = "Record macro" }) -- remap Q to record macros
+vim.keymap.set("n", "<leader>cq", general.add_current_line_to_qf, { noremap = true, desc = "Add to quickfix" })
 vim.keymap.set("n", "<M-q>", "Q", { noremap = true, desc = "Replay last register" })
 
 -- Windows

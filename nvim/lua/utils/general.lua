@@ -154,4 +154,36 @@ M.set_osc52_clipboard = function()
   }
 end
 
+--- add current line to quickfix list
+M.add_current_line_to_qf = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local lnum = cursor[1]
+
+  local line = vim.api.nvim_buf_get_lines(bufnr, lnum - 1, lnum, false)[1] or ""
+
+  vim.ui.input({ prompt = "Quickfix text (leave empty to use line):" }, function(input)
+    if input == nil then
+      return
+    end
+
+    local text = vim.trim(input)
+    if text == "" then
+      text = line
+    end
+
+    vim.fn.setqflist({
+      {
+        filename = filename,
+        lnum = lnum,
+        col = 1,
+        text = text,
+      },
+    }, "a")
+
+    vim.notify("Added line to quickfix", vim.log.levels.INFO)
+  end)
+end
+
 return M
