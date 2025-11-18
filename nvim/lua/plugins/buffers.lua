@@ -15,8 +15,7 @@ return {
       })
     end,
     opts = {
-      autostart = true,
-      autoload = true,
+      autoload = false,
       follow_cwd = true,
       use_git_branch = true,
       allowed_dirs = {
