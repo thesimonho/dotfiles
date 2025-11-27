@@ -23,7 +23,21 @@
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
     ];
+    file.".config/nvim" = {
+    source = ../../nvim;
+    recursive = true;
   };
+  file.".config/wezterm" = {
+    source = ../../wezterm;
+    recursive = true;
+  };
+  };
+    file.".config/yazi" = {
+    source = ../../yazi;
+    recursive = true;
+  };
+  };
+
 
    services.flatpak = {
     enable = true;
