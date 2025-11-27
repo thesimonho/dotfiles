@@ -2,36 +2,31 @@
   description = "Cross-platform config using Home Manager (Linux/macOS)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixgl = {
-      url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # nix-darwin.url = "github:LnL7/nix-darwin/release-25.05";
-    # nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     wezterm.url = "github:wezterm/wezterm?dir=nix";
     yazi.url = "github:sxyazi/yazi";
   };
 
   outputs =
-    inputs@{ self, nixpkgs, nixpkgs-unstable, nixgl, home-manager, ... }:
+    inputs@{ self, nixpkgs, nixpkgs-unstable, nix-flatpak, home-manager, ... }:
     let
       pkgsFor = system:
         import nixpkgs {
           inherit system;
-          overlays = [ nixgl.overlay ];
+          overlays = [ ];
           config.allowUnfree = true;
         };
       unstableFor = system:
         import nixpkgs-unstable {
           inherit system;
-          overlays = [ nixgl.overlay ];
+          overlays = [ ];
           config.allowUnfree = true;
         };
     in {
@@ -40,11 +35,6 @@
         program =
           "${home-manager.packages.x86_64-linux.home-manager}/bin/home-manager";
       };
-      # apps.aarch64-darwin.hm = {
-      #   type = "app";
-      #   program =
-      #     "${home-manager.packages.aarch64-darwin.home-manager}/bin/home-manager";
-      # };
 
       homeConfigurations."home" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor "x86_64-linux";
@@ -53,6 +43,7 @@
           pkgsUnstable = unstableFor "x86_64-linux";
         };
         modules = [
+      inputs.nix-flatpak.homeManagerModules.nix-flatpak
           ./modules/common.nix
           ./modules/home.nix
           ./hosts/linux.nix
@@ -67,6 +58,7 @@
           pkgsUnstable = unstableFor "x86_64-linux";
         };
         modules = [
+      inputs.nix-flatpak.homeManagerModules.nix-flatpak
           ./modules/common.nix
           ./modules/work.nix
           ./hosts/linux.nix
