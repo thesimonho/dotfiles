@@ -1,6 +1,6 @@
 .PHONY: update clean
 
-FLAKE_DIR := /mnt/dotfiles/nix
+FLAKE_DIR := .
 
 update:
 	@if [ -z "$(word 2,$(MAKECMDGOALS))" ]; then \
@@ -9,7 +9,7 @@ update:
 	fi
 	@host=$(word 2,$(MAKECMDGOALS)); \
 	echo "==> Applying host $$host using flake at $(FLAKE_DIR)"; \
-	nix run "$(FLAKE_DIR)#hm" -- switch --flake "$(FLAKE_DIR)#$$host" --impure
+	nix run "$(FLAKE_DIR)#hm" -- switch --flake "$(FLAKE_DIR)#$$host"
 
 %:
 	@:

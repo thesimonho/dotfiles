@@ -6,31 +6,30 @@ set -euo pipefail
 # -----------------------------
 REPO_URL_DEFAULT="https://github.com/thesimonho/dotfiles"
 REPO_DIR_DEFAULT="$HOME/dotfiles"
-HOST_DEFAULT="linux"
 BRANCH_DEFAULT="master"
 FLAKE_SUBDIR_DEFAULT="nix"
 
 usage() {
   cat <<EOF
-+Usage: $(basename "$0") [--repo URL] [--dir PATH] [--host NAME] [--branch BRANCH] [--flake-subdir NAME]
+Usage: $(basename "$0") --host NAME [--repo URL] [--dir PATH] [--branch BRANCH] [--flake-subdir NAME]
 
+  --host    Flake output host (required, e.g., home, work)
   --repo    Git repo URL (default: $REPO_URL_DEFAULT)
   --dir     Local checkout directory (default: $REPO_DIR_DEFAULT)
-  --host    Flake output host (e.g., work, linux)
   --branch  Git branch to checkout (default: $BRANCH_DEFAULT)
   --flake-subdir  Subdirectory under the repo that contains flake.nix (default: $FLAKE_SUBDIR_DEFAULT)
 
 Examples:
-  $(basename "$0") --host work
-  $(basename "$0") --repo https://github.com/thesimonho/dotfiles --host linux
+  $(basename "$0") --host home
+  $(basename "$0") --host work --repo https://github.com/thesimonho/dotfiles
 EOF
 }
 
 REPO_URL="$REPO_URL_DEFAULT"
 REPO_DIR="$REPO_DIR_DEFAULT"
-HOST="$HOST_DEFAULT"
 BRANCH="$BRANCH_DEFAULT"
 FLAKE_SUBDIR="$FLAKE_SUBDIR_DEFAULT"
+HOST=""   # required, must be provided via --host
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -66,10 +65,18 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [ -z "$HOST" ]; then
+  echo "Error: --host is required (e.g., --host home or --host work)" >&2
+  usage
+  exit 1
+fi
+
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
 echo "==> Detected OS: $OS  ARCH: $ARCH"
+echo "==> Using host: $HOST"
+
 FLAKE_DIR="${REPO_DIR}/${FLAKE_SUBDIR}"
 
 # ------------------------------------------------------
@@ -137,7 +144,6 @@ ensure_nix() {
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
   fi
   set -u
-
 }
 
 # ------------------------------------------------------
@@ -156,36 +162,7 @@ sync_repo() {
 }
 
 # ------------------------------------------------------
-# 3) Guess a sensible default host
-# ------------------------------------------------------
-guess_host() {
-  if [ -n "$HOST" ]; then
-    echo "$HOST"
-    return
-  fi
-
-  local short_hostname
-  short_hostname="$(hostname -s 2>/dev/null || hostname)"
-
-  case "$OS" in
-  Darwin)
-    echo "macos-work"
-    ;;
-  Linux)
-    case "$short_hostname" in
-    "Simon-WS") echo "linux" ;;
-    "Simon-Laptop") echo "laptop" ;;
-    *) echo "linux" ;;
-    esac
-    ;;
-  *)
-    echo "linux"
-    ;;
-  esac
-}
-
-# ------------------------------------------------------
-# 4) Apply configuration
+# 3) Apply configuration
 # ------------------------------------------------------
 apply_host() {
   local host="$1"
@@ -211,18 +188,10 @@ main() {
   ensure_nix
   sync_repo
 
-  HOST_TO_USE="$(guess_host)"
-  echo "==> Host selected: $HOST_TO_USE"
-
-  apply_host "$HOST_TO_USE"
+  apply_host "$HOST"
 
   echo
   echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
-  if [ "$OS" = "Darwin" ]; then
-    echo "     darwin-rebuild switch --flake $FLAKE_DIR#$HOST_TO_USE"
-  else
-    echo "     nix run \"$FLAKE_DIR#hm\" -- switch --flake $FLAKE_DIR#$HOST_TO_USE"
-  fi
 }
 
 main "$@"
