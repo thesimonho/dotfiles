@@ -1,9 +1,6 @@
 { config, inputs, pkgs, pkgsUnstable, lib, ... }:
 
-let
-  nixGL = pkgs.nixgl.auto.nixGLDefault;
-  wezterm = inputs.wezterm.packages.${pkgs.system}.default;
-in {
+{
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
@@ -18,16 +15,44 @@ in {
     packages = with pkgs; [
       (pkgsUnstable.codex)
       eza
+      flatpak
       lazygit
       luajitPackages.luarocks_bootstrap
       neovim
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
-      (pkgs.writeShellScriptBin "wezterm" ''
-        exec ${nixGL}/bin/nixGL ${wezterm}/bin/wezterm "$@"
-      '')
     ];
+  };
+
+   services.flatpak = {
+    enable = true;
+    uninstallUnmanaged = true;
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://flathub.org/repo/flathub.flatpakrepo";
+      }
+    ];
+
+    packages = [
+      "org.deskflow.deskflow"
+      "org.gimp.GIMP"
+      "org.kde.kolourpaint"
+      "com.google.Chrome"
+      "com.jeffser.Alpaca"
+      "com.jeffser.Alpaca.Plugins.Ollama"
+      "com.visualstudio.code"
+      "org.wezfurlong.wezterm"
+    ];
+
+    update = {
+      onActivation = true;
+      auto = {
+        enable = true;
+        onCalendar = "weekly";
+      };
+    };
   };
 
   # ---------------------------------------------------------------------------
@@ -48,23 +73,34 @@ in {
     };
     git = {
       enable = true;
-      userName = "Simon Ho";
-      extraConfig = {
-        branch.sort = "-committerdate";
-        column.ui = "auto";
-        core.autocrlf = "input";
-        fetch.writeCommitGraph = true;
-        rerere.enable = true;
+      lfs = { enable = true; };
+      maintenance = { enable = true; };
+      settings = {
+        user = {
+          name = "Simon Ho";
+        };
+        core = {
+          autocrlf = "input";
+        };
+        rerere = {
+          enabled = true;
+        };
+        column = {
+          ui = "auto";
+        };
+        branch = {
+          sort = "-committerdate";
+        };
+        fetch = {
+          writeCommitGraph = true;
+        };
       };
     };
     ripgrep = { enable = true; };
     starship = {
       enable = true;
-      settings = builtins.fromTOML (builtins.readFile
-        "${config.home.homeDirectory}/dotfiles/starship.toml");
     };
     tealdeer = { enable = true; };
-    uv = { enable = true; };
     yazi = {
       enable = true;
       package = inputs.yazi.packages.${pkgs.system}.default.override {
@@ -210,6 +246,10 @@ in {
         }
       ];
     };
+  };
+    xdg.configFile."starship.toml" = {
+    source = ../../starship.toml;
+    force = true;
   };
 }
 
