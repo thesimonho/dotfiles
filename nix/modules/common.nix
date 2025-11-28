@@ -31,12 +31,12 @@
     source = ../../wezterm;
     recursive = true;
   };
-  };
     file.".config/yazi" = {
     source = ../../yazi;
     recursive = true;
   };
   };
+
 
 
    services.flatpak = {
@@ -57,7 +57,6 @@
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
       "com.visualstudio.code"
-      "org.wezfurlong.wezterm"
     ];
 
     update = {
