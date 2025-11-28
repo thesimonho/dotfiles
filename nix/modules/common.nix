@@ -1,5 +1,7 @@
 { config, inputs, pkgs, pkgsUnstable, lib, ... }:
-
+let
+  wezterm = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
+in 
 {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
@@ -22,21 +24,29 @@
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
+      wezterm
     ];
     file.".config/nvim" = {
     source = ../../nvim;
     recursive = true;
+    force=true;
   };
   file.".config/wezterm" = {
     source = ../../wezterm;
     recursive = true;
+    force=true;
   };
     file.".config/yazi" = {
     source = ../../yazi;
     recursive = true;
+    force=true;
+  };
+      file.".config/lazygit" = {
+    source = ../../lazygit;
+    recursive = true;
+    force = true;
   };
   };
-
 
 
    services.flatpak = {
@@ -265,4 +275,3 @@
     force = true;
   };
 }
-
