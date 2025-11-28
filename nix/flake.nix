@@ -1,6 +1,17 @@
 {
   description = "Cross-platform config using Home Manager (Linux/macOS)";
 
+  nixConfig = {
+    extra-substituters = [ 
+      "https://wezterm.cachix.org"
+      "https://yazi.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0="
+      "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
