@@ -8,10 +8,15 @@ local function get_lsp_clients()
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
   local client_names = {}
-  for _, client in ipairs(clients) do
+  for _, client in ipairs(clients or {}) do
     if not vim.tbl_contains(ignore, client.name) then
       table.insert(client_names, client.name)
     end
+  end
+
+  local max = 2
+  if #client_names > max then
+    return table.concat({ client_names[1], client_names[2] }, ",") .. "…"
   end
   return table.concat(client_names, ",")
 end
