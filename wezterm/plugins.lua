@@ -221,7 +221,7 @@ if enabled.tabline then
 			},
 			tabline_c = { " " },
 			tabline_x = {},
-			-- tabline_y = { keytable_hint },
+			tabline_y = { keytable_hint },
 			tabline_z = {
 				{
 					"datetime",
