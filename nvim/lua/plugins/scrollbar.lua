@@ -44,6 +44,7 @@ return {
         "trouble",
         "ccc-ui",
         "lazy",
+        "noice",
       },
       visibility = "info",
       current_only = false,
