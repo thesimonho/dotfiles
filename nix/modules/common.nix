@@ -1,7 +1,7 @@
 { config, inputs, pkgs, pkgsUnstable, lib, ... }:
 let
   system = pkgs.stdenv.hostPlatform.system;
-  nixGL = pkgs.nixgl.auto.nixGLDefault; 
+  nixGL = pkgs.nixgl.auto.nixGLDefault;
 
   ghosttyPkg = inputs.ghostty.packages.${system}.default;
   weztermPkg = inputs.wezterm.packages.${system}.default;
@@ -12,8 +12,7 @@ let
   weztermWrapped = pkgs.writeShellScriptBin "wezterm" ''
     exec ${nixGL}/bin/nixGL ${weztermPkg}/bin/wezterm "$@"
   '';
-in 
-{
+in {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
@@ -27,6 +26,7 @@ in
     shell.enableZshIntegration = true;
     packages = with pkgs; [
       (pkgsUnstable.codex)
+      docker
       eza
       flatpak
       ghosttyWrapped
@@ -40,45 +40,44 @@ in
       weztermWrapped
     ];
     file.".config/nvim" = {
-    source = ../../nvim;
-    recursive = true;
-    force=true;
-  };
-  file.".config/wezterm" = {
-    source = ../../wezterm;
-    recursive = true;
-    force=true;
-  };
+      source = ../../nvim;
+      recursive = true;
+      force = true;
+    };
+    file.".config/wezterm" = {
+      source = ../../wezterm;
+      recursive = true;
+      force = true;
+    };
     file.".config/yazi" = {
-    source = ../../yazi;
-    recursive = true;
-    force=true;
-  };
-      file.".config/lazygit" = {
-    source = ../../lazygit;
-    recursive = true;
-    force = true;
-  };
+      source = ../../yazi;
+      recursive = true;
+      force = true;
+    };
+    file.".config/lazygit" = {
+      source = ../../lazygit;
+      recursive = true;
+      force = true;
+    };
   };
 
-
-   services.flatpak = {
+  services.flatpak = {
     enable = true;
     uninstallUnmanaged = true;
-    remotes = [
-      {
-        name = "flathub";
-        location = "https://flathub.org/repo/flathub.flatpakrepo";
-      }
-    ];
+    remotes = [{
+      name = "flathub";
+      location = "https://flathub.org/repo/flathub.flatpakrepo";
+    }];
 
     packages = [
       "org.deskflow.deskflow"
+      "it.mijorus.gearlever"
       "org.gimp.GIMP"
       "org.kde.kolourpaint"
       "com.google.Chrome"
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
+      "org.mozilla.firefox"
       "com.visualstudio.code"
     ];
 
@@ -112,30 +111,16 @@ in
       lfs = { enable = true; };
       maintenance = { enable = true; };
       settings = {
-        user = {
-          name = "Simon Ho";
-        };
-        core = {
-          autocrlf = "input";
-        };
-        rerere = {
-          enabled = true;
-        };
-        column = {
-          ui = "auto";
-        };
-        branch = {
-          sort = "-committerdate";
-        };
-        fetch = {
-          writeCommitGraph = true;
-        };
+        user = { name = "Simon Ho"; };
+        core = { autocrlf = "input"; };
+        rerere = { enabled = true; };
+        column = { ui = "auto"; };
+        branch = { sort = "-committerdate"; };
+        fetch = { writeCommitGraph = true; };
       };
     };
     ripgrep = { enable = true; };
-    starship = {
-      enable = true;
-    };
+    starship = { enable = true; };
     tealdeer = { enable = true; };
     yazi = {
       enable = true;
@@ -283,8 +268,9 @@ in
       ];
     };
   };
-    xdg.configFile."starship.toml" = {
+  xdg.configFile."starship.toml" = {
     source = ../../starship.toml;
     force = true;
   };
 }
+

@@ -11,9 +11,7 @@
   targets = {
     genericLinux = {
       enable = true;
-      nixGL = {
-        defaultWrapper = "nvidia";
-      };
+      nixGL = { defaultWrapper = "nvidia"; };
     };
   };
 

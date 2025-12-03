@@ -29,7 +29,7 @@ REPO_URL="$REPO_URL_DEFAULT"
 REPO_DIR="$REPO_DIR_DEFAULT"
 BRANCH="$BRANCH_DEFAULT"
 FLAKE_SUBDIR="$FLAKE_SUBDIR_DEFAULT"
-HOST=""   # required, must be provided via --host
+HOST="" # required, must be provided via --host
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

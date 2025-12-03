@@ -4,21 +4,15 @@
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
-  home = {
-    packages = with pkgs; [
-      flatpak
-    ];
-  };
+  home = { packages = with pkgs; [ flatpak ]; };
 
   services.flatpak = {
     enable = true;
     uninstallUnmanaged = true;
-    remotes = [
-      {
-        name = "flathub";
-        location = "https://flathub.org/repo/flathub.flatpakrepo";
-      }
-    ];
+    remotes = [{
+      name = "flathub";
+      location = "https://flathub.org/repo/flathub.flatpakrepo";
+    }];
 
     packages = [
       "com.discordapp.Discord"
@@ -42,12 +36,6 @@
   # ---------------------------------------------------------------------------
   programs = {
     gh = { hosts = { "github.com" = { user = "thesimonho"; }; }; };
-    git = {
-      settings = {
-        user = {
-          email = "simonho.ubc@gmail.com";
-        };
-      };
-    };
+    git = { settings = { user = { email = "simonho.ubc@gmail.com"; }; }; };
   };
 }
