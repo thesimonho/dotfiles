@@ -13,33 +13,35 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixgl.url = "github:nix-community/nixGL";
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
+        ghostty.url = "github:ghostty-org/ghostty";
     wezterm.url = "github:wezterm/wezterm?dir=nix";
     yazi.url = "github:sxyazi/yazi";
   };
 
   outputs =
-    inputs@{ self, nixpkgs, nixpkgs-unstable, nix-flatpak, home-manager, ... }:
+    inputs@{ self, nixpkgs, nixpkgs-unstable, nixgl, nix-flatpak, home-manager, ghostty,... }:
     let
-      pkgsFor = system:
-        import nixpkgs {
-          inherit system;
-          overlays = [ ];
-          config.allowUnfree = true;
-        };
-      unstableFor = system:
-        import nixpkgs-unstable {
-          inherit system;
-          overlays = [ ];
-          config.allowUnfree = true;
-        };
+  pkgsFor = system:
+  import nixpkgs {
+    inherit system;
+    overlays = [ nixgl.overlays.default ];
+    config.allowUnfree = true;
+  };
+
+  unstableFor = system:
+  import nixpkgs-unstable {
+    inherit system;
+    overlays = [ nixgl.overlays.default ];
+    config.allowUnfree = true;
+  };
     in {
       apps.x86_64-linux.hm = {
         type = "app";
