@@ -80,7 +80,8 @@ elseif utils.is_mac() then
 	config.default_prog = { "zsh" }
 else
 	config.font_size = 12
-	config.window_background_opacity = 0.95
+	config.window_background_opacity = 0.9
+	config.kde_window_background_blur = true
 	config.default_prog = { "zsh" }
 end
 
