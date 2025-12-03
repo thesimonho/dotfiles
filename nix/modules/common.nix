@@ -39,6 +39,7 @@ in {
       nodejs_24
       weztermWrapped
     ];
+
     file.".config/nvim" = {
       source = ../../nvim;
       recursive = true;
@@ -56,6 +57,11 @@ in {
     };
     file.".config/lazygit" = {
       source = ../../lazygit;
+      recursive = true;
+      force = true;
+    };
+    file.".config/fzf" = {
+      source = ../../fzf;
       recursive = true;
       force = true;
     };
