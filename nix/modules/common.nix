@@ -1,17 +1,5 @@
 { config, inputs, pkgs, pkgsUnstable, lib, ... }:
-let
-  system = pkgs.stdenv.hostPlatform.system;
-  nixGL = pkgs.nixgl.auto.nixGLDefault;
-
-  ghosttyPkg = inputs.ghostty.packages.${system}.default;
-  weztermPkg = inputs.wezterm.packages.${system}.default;
-
-  ghosttyWrapped = pkgs.writeShellScriptBin "ghostty" ''
-    exec ${nixGL}/bin/nixGL ${ghosttyPkg}/bin/ghostty "$@"
-  '';
-  weztermWrapped = pkgs.writeShellScriptBin "wezterm" ''
-    exec ${nixGL}/bin/nixGL ${weztermPkg}/bin/wezterm "$@"
-  '';
+let system = pkgs.stdenv.hostPlatform.system;
 in {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
@@ -29,7 +17,6 @@ in {
       docker
       eza
       flatpak
-      ghosttyWrapped
       lazygit
       luajitPackages.luarocks_bootstrap
       neovim
@@ -37,7 +24,6 @@ in {
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
       nodejs_24
-      weztermWrapped
     ];
 
     file.".config/nvim" = {

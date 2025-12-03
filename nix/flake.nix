@@ -2,19 +2,15 @@
   description = "Cross-platform config using Home Manager (Linux/macOS)";
 
   nixConfig = {
-    extra-substituters =
-      [ "https://wezterm.cachix.org" "https://yazi.cachix.org" ];
-    extra-trusted-public-keys = [
-      "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0="
-      "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
-    ];
+    extra-substituters = [ "https://yazi.cachix.org" ];
+    extra-trusted-public-keys =
+      [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
   };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    nixgl.url = "github:nix-community/nixGL";
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     home-manager = {
@@ -27,25 +23,23 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    ghostty.url = "github:ghostty-org/ghostty";
-    wezterm.url = "github:wezterm/wezterm?dir=nix";
     yazi.url = "github:sxyazi/yazi";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixgl, nix-flatpak
-    , home-manager, plasma-manager, ghostty, ... }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nix-flatpak, home-manager
+    , plasma-manager, ... }:
     let
       pkgsFor = system:
         import nixpkgs {
           inherit system;
-          overlays = [ nixgl.overlays.default ];
+          overlays = [ ];
           config.allowUnfree = true;
         };
 
       unstableFor = system:
         import nixpkgs-unstable {
           inherit system;
-          overlays = [ nixgl.overlays.default ];
+          overlays = [ ];
           config.allowUnfree = true;
         };
     in {
