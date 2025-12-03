@@ -124,9 +124,8 @@ in {
     tealdeer = { enable = true; };
     yazi = {
       enable = true;
-      package = inputs.yazi.packages.${pkgs.system}.default.override {
-        _7zz = pkgs._7zz;
-      };
+      package =
+        inputs.yazi.packages.${system}.default.override { _7zz = pkgs._7zz; };
     };
     zoxide = { enable = true; };
     zsh = {
