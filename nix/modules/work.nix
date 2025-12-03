@@ -4,25 +4,17 @@
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
-  home = {
-    packages = with pkgs; [
-      flatpak
-    ];
-  };
+  home = { packages = with pkgs; [ flatpak ]; };
 
   services.flatpak = {
     enable = true;
     uninstallUnmanaged = true;
-    remotes = [
-      {
-        name = "flathub";
-        location = "https://flathub.org/repo/flathub.flatpakrepo";
-      }
-    ];
+    remotes = [{
+      name = "flathub";
+      location = "https://flathub.org/repo/flathub.flatpakrepo";
+    }];
 
-    packages = [
-      "com.slack.Slack"
-    ];
+    packages = [ "com.slack.Slack" ];
 
     update = {
       onActivation = true;
@@ -49,9 +41,7 @@
     gh = { hosts = { "github.com" = { user = "simon@sprungstudios.com"; }; }; };
     git = {
       settings = {
-        user = {
-          email = "simon@sprungstudios.com";
-        };
+        user = { email = "simon@sprungstudios.com"; };
         # url = {
         #   "ssh://git@github.com/" = { insteadOf = "https://github.com/"; };
         # };
