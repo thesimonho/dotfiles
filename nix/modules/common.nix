@@ -1,6 +1,17 @@
 { config, inputs, pkgs, pkgsUnstable, lib, ... }:
 let
-  wezterm = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  system = pkgs.stdenv.hostPlatform.system;
+  nixGL = pkgs.nixgl.auto.nixGLDefault; 
+
+  ghosttyPkg = inputs.ghostty.packages.${system}.default;
+  weztermPkg = inputs.wezterm.packages.${system}.default;
+
+  ghosttyWrapped = pkgs.writeShellScriptBin "ghostty" ''
+    exec ${nixGL}/bin/nixGL ${ghosttyPkg}/bin/ghostty "$@"
+  '';
+  weztermWrapped = pkgs.writeShellScriptBin "wezterm" ''
+    exec ${nixGL}/bin/nixGL ${weztermPkg}/bin/wezterm "$@"
+  '';
 in 
 {
   # ---------------------------------------------------------------------------
@@ -18,13 +29,15 @@ in
       (pkgsUnstable.codex)
       eza
       flatpak
+      ghosttyWrapped
       lazygit
       luajitPackages.luarocks_bootstrap
       neovim
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
-      wezterm
+      nodejs_24
+      weztermWrapped
     ];
     file.".config/nvim" = {
     source = ../../nvim;
