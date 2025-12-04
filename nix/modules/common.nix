@@ -10,7 +10,9 @@ in {
       EDITOR = "nvim";
       LANG = "en_US.UTF-8";
       COLORTERM = "truecolor";
+      NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
     };
+    sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableZshIntegration = true;
     packages = with pkgs; [
       (pkgsUnstable.codex)
