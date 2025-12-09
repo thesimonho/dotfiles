@@ -32,23 +32,6 @@ local M = {
     },
   },
   {
-    "folke/sidekick.nvim",
-    keys = {
-      { "<leader>aa", vim.NIL },
-      { "<leader>ac", vim.NIL },
-    },
-    opts = {
-      cli = {
-        mux = {
-          enabled = false,
-        },
-      },
-      nes = {
-        enabled = false,
-      },
-    },
-  },
-  {
     "olimorris/codecompanion.nvim",
     event = "LazyFile",
     dependencies = {
@@ -62,7 +45,6 @@ local M = {
       { "<leader>aa", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Chat" },
       { "<leader>an", "<cmd>CodeCompanionChat<cr>", desc = "New Chat" },
       { "<leader>ae", "<cmd>CodeCompanion<cr>", mode = "v", desc = "Edit Inline" },
-      { "<leader>ap", "<cmd>CodeCompanionActions<cr>", desc = "Actions Palette" },
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
     },
     opts = {
@@ -78,11 +60,37 @@ local M = {
           },
         },
       },
+      adapters = {
+        acp = {
+          opts = {
+            show_defaults = false,
+          },
+          codex = function()
+            return require("codecompanion.adapters").extend("codex", {
+              commands = {
+                default = {
+                  "npx",
+                  "@zed-industries/codex-acp",
+                },
+              },
+              defaults = {
+                auth_method = "chatgpt",
+                timeout = 30000,
+              },
+            })
+          end,
+        },
+        http = {
+          opts = {
+            show_model_choices = false,
+          },
+        },
+      },
       strategies = {
         chat = {
           adapter = {
             name = "copilot",
-            model = "gpt-5",
+            model = "gpt-5.1",
           },
           tools = {
             opts = {
@@ -106,12 +114,6 @@ local M = {
                 "full_stack_dev",
               },
             },
-          },
-        },
-        cmd = {
-          adapter = {
-            name = "copilot",
-            model = "gpt-5-mini",
           },
         },
       },
