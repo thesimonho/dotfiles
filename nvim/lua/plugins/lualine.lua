@@ -121,7 +121,7 @@ return {
             removed = constants.icons.git.removed,
           },
           cond = function()
-            return utils.get_split_count() < 3
+            return utils.get_split_count() == 1
           end,
           source = function()
             local gitsigns = vim.b.gitsigns_status_dict
@@ -200,14 +200,6 @@ return {
       },
       lualine_x = {
         {
-          function()
-            return require("package-info").get_status()
-          end,
-          cond = function()
-            return utils.get_split_count() < 3
-          end,
-        },
-        {
           "fileformat",
           cond = function()
             return utils.get_split_count() < 3
@@ -234,7 +226,7 @@ return {
         {
           get_lsp_clients,
           cond = function()
-            return vim.bo.filetype ~= "lspinfo" and utils.get_split_count() < 2
+            return vim.bo.filetype ~= "lspinfo" and utils.get_split_count() == 1
           end,
           on_click = function()
             vim.cmd("LspInfo")

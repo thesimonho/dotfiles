@@ -11,21 +11,14 @@ return {
   {
     "olrtg/nvim-emmet",
     ft = { "html", "css", "sass", "scss", "vue", "javascriptreact", "typescriptreact" },
-    init = function()
-      local wk = require("which-key")
-      wk.add({
-        mode = { "n", "v" },
-        { "<localleader>e", group = "Emmet" },
-      })
-    end,
     keys = {
       {
-        "<localleader>ew",
+        "<localleader>e",
         function()
           require("nvim-emmet").wrap_with_abbreviation()
         end,
         mode = { "n", "v" },
-        desc = "Wrap with Abbreviation",
+        desc = "Emmet Wrap",
       },
     },
   },
