@@ -27,6 +27,10 @@
     "playwright": {
       "args": ["@playwright/mcp@latest", "--vision", "--extension"],
       "command": "npx"
+    },
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
     }
   },
   "nativeMCPServers": {
