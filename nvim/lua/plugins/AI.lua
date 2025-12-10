@@ -1,3 +1,5 @@
+local constants = require("config.constants")
+
 local M = {
   {
     "zbirenbaum/copilot.lua",
@@ -32,6 +34,31 @@ local M = {
     },
   },
   {
+    "folke/sidekick.nvim",
+    opts = {
+      nes = {
+        enabled = true,
+        debounce = 2000,
+        diff = {
+          inline = "words",
+        },
+      },
+      cli = {
+        win = {
+          layout = "float",
+          float = {
+            width = 0.8,
+            height = 0.8,
+            border = constants.border_chars_outer_thin,
+          },
+        },
+        mux = {
+          enabled = false,
+        },
+      },
+    },
+  },
+  {
     "olimorris/codecompanion.nvim",
     event = "LazyFile",
     dependencies = {
@@ -41,7 +68,7 @@ local M = {
       "franco-ruggeri/codecompanion-spinner.nvim",
     },
     keys = {
-      { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Chat" },
+      { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Chat" },
       { "<leader>aa", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Chat" },
       { "<leader>an", "<cmd>CodeCompanionChat<cr>", desc = "New Chat" },
       { "<leader>ae", "<cmd>CodeCompanion<cr>", mode = "v", desc = "Edit Inline" },
@@ -82,7 +109,7 @@ local M = {
         },
         http = {
           opts = {
-            show_model_choices = false,
+            show_defaults = false,
           },
         },
       },

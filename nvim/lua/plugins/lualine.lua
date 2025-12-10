@@ -209,6 +209,41 @@ return {
             vim.api.nvim_feedkeys(":set fileformat=" .. fileformat, "n", true)
           end,
         },
+        {
+          function()
+            return " "
+          end,
+          color = function()
+            local status = require("sidekick.status").get()
+            if status then
+              return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or "Special"
+            end
+          end,
+          separator = "",
+          padding = { left = 1, right = 1 },
+          cond = function()
+            local status = require("sidekick.status")
+            return status.get() ~= nil
+          end,
+        },
+        {
+          function()
+            local status = require("sidekick.status").cli()
+            return " " .. (#status > 1 and #status or "")
+          end,
+          color = function()
+            return "Special"
+          end,
+          separator = "",
+          padding = { left = 0, right = 1 },
+          cond = function()
+            return #require("sidekick.status").cli() > 0
+          end,
+
+          on_click = function()
+            vim.cmd("Sidekick cli toggle")
+          end,
+        },
       },
       lualine_y = {
         {
