@@ -23,11 +23,12 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    agenix.url = "github:ryantm/agenix";
     yazi.url = "github:sxyazi/yazi";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nix-flatpak, home-manager
-    , plasma-manager, ... }:
+    , plasma-manager, agenix, ... }:
     let
       pkgsFor = system:
         import nixpkgs {
@@ -58,9 +59,10 @@
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
           inputs.plasma-manager.homeModules.plasma-manager
-          ./modules/common.nix
-          ./modules/home.nix
+          agenix.homeManagerModules.default
+          ./hosts/home.nix
           ./hosts/linux.nix
+          ./modules/common.nix
           ./modules/kde.nix
           ./modules/ssh.nix
           { home.stateVersion = "25.05"; } # dont touch this
@@ -76,9 +78,10 @@
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
           inputs.plasma-manager.homeModules.plasma-manager
-          ./modules/common.nix
-          ./modules/work.nix
+          agenix.homeManagerModules.default
+          ./hosts/work.nix
           ./hosts/linux.nix
+          ./modules/common.nix
           ./modules/kde.nix
           ./modules/ssh.nix
           { home.stateVersion = "25.05"; } # dont touch this
