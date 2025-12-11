@@ -62,6 +62,7 @@
           ./modules/home.nix
           ./hosts/linux.nix
           ./modules/kde.nix
+          ./modules/ssh.nix
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
@@ -79,6 +80,7 @@
           ./modules/work.nix
           ./hosts/linux.nix
           ./modules/kde.nix
+          ./modules/ssh.nix
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
