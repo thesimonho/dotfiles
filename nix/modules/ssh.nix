@@ -1,6 +1,21 @@
 { config, pkgs, lib, ... }:
 
-{
+let
+  sshDir = "${config.home.homeDirectory}/.ssh";
+  meta = import ../secrets/meta.nix;
+
+  mkSecret = name: item: {
+    # Attribute name: "ssh-personal" etc
+    name = "${name}";
+    value = {
+      file = builtins.toPath "${../secrets}/${item.file}.age";
+      path = "${sshDir}/${item.file}";
+      mode = "600";
+      symlink = false;
+    };
+  };
+in {
+  home = { packages = with pkgs; [ age ]; };
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
@@ -14,7 +29,7 @@
         forwardX11 = true;
         forwardX11Trusted = true;
         identitiesOnly = true;
-        identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_sprung";
+        identityFile = "${sshDir}/${meta.sprung.file}";
       };
       "personal-github.com" = {
         hostname = "ssh.github.com";
@@ -25,8 +40,12 @@
         forwardX11 = true;
         forwardX11Trusted = true;
         identitiesOnly = true;
-        identityFile = "${config.home.homeDirectory}/.ssh/id_ed25519";
+        identityFile = "${sshDir}/${meta.personal.file}";
       };
     };
+  };
+  age = {
+    identityPaths = [ "${sshDir}/ssh-identity" ];
+    secrets = lib.mapAttrs' mkSecret meta;
   };
 }
