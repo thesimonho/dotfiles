@@ -22,7 +22,9 @@ in {
       eza
       flatpak
       ghostty
+      lazydocker
       lazygit
+      lazyjournal
       luajitPackages.luarocks_bootstrap
       neovim
       nerd-fonts.fira-code
