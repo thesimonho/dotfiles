@@ -8,12 +8,7 @@
 
   programs.home-manager.enable = true;
 
-  targets = {
-    genericLinux = {
-      enable = true;
-      nixGL = { defaultWrapper = "nvidia"; };
-    };
-  };
+  targets = { genericLinux = { enable = true; }; };
 
   xdg.enable = true;
   xdg.autostart.enable = true;

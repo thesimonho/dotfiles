@@ -21,13 +21,19 @@ in {
       docker
       eza
       flatpak
+      ghostty
       lazygit
       luajitPackages.luarocks_bootstrap
       neovim
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
+
+      go_1_24
+      rustup
       nodejs_24
+      python311
+      uv
     ];
 
     file.".config/nvim" = {
@@ -67,6 +73,8 @@ in {
 
     packages = [
       "org.deskflow.deskflow"
+      "com.ranfdev.DistroShelf"
+      "com.github.tchx84.Flatseal"
       "it.mijorus.gearlever"
       "org.gimp.GIMP"
       "org.kde.kolourpaint"
