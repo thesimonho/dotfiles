@@ -18,10 +18,12 @@ return {
           output = true,
         },
         inputs = {
+          ccc.input.oklch,
           ccc.input.hsl,
           ccc.input.rgb,
         },
         outputs = {
+          ccc.output.css_oklch,
           ccc.output.hex,
           ccc.output.css_rgb,
           ccc.output.css_hsl,
