@@ -58,6 +58,16 @@ in {
       recursive = true;
       force = true;
     };
+    file.".codex" = {
+      source = ../../codex;
+      recursive = true;
+      force = true;
+    };
+    file.".config/mcphub" = {
+      source = ../../mcphub;
+      recursive = true;
+      force = true;
+    };
     file.".config/fzf" = {
       source = ../../fzf;
       recursive = true;
