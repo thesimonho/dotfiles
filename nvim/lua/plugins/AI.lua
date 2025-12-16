@@ -37,10 +37,10 @@ local M = {
     "folke/sidekick.nvim",
     opts = {
       nes = {
-        enabled = true,
+        enabled = false,
         debounce = 2000,
         diff = {
-          inline = "words",
+          inline = false,
         },
       },
       cli = {
@@ -90,7 +90,7 @@ local M = {
       adapters = {
         acp = {
           opts = {
-            show_defaults = false,
+            show_presets = false,
           },
           codex = function()
             return require("codecompanion.adapters").extend("codex", {
@@ -109,11 +109,11 @@ local M = {
         },
         http = {
           opts = {
-            show_defaults = false,
+            show_presets = false,
           },
         },
       },
-      strategies = {
+      interactions = {
         chat = {
           adapter = {
             name = "copilot",
@@ -132,15 +132,7 @@ local M = {
         },
         inline = {
           adapter = {
-            name = "copilot",
-            model = "claude-3.7-sonnet-thought",
-          },
-          tools = {
-            opts = {
-              default_tools = {
-                "full_stack_dev",
-              },
-            },
+            name = "codex",
           },
         },
       },
