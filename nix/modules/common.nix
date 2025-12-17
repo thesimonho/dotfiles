@@ -21,7 +21,6 @@ in {
       docker
       eza
       flatpak
-      ghostty
       lazydocker
       lazygit
       lazyjournal
@@ -30,6 +29,7 @@ in {
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
+      inputs.ghostty.packages.${system}.default
 
       go_1_24
       rustup

@@ -23,12 +23,13 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    ghostty.url = "github:ghostty-org/ghostty";
     agenix.url = "github:ryantm/agenix";
     yazi.url = "github:sxyazi/yazi";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nix-flatpak, home-manager
-    , plasma-manager, agenix, ... }:
+    , plasma-manager, agenix, ghostty, ... }:
     let
       pkgsFor = system:
         import nixpkgs {
