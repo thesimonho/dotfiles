@@ -1,7 +1,7 @@
 model = "gpt-5.1-codex-max"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
-approval_policy = "untrusted"
+approval_policy = "trusted"
 
 [sandbox_workspace_write]
 network_access = true
@@ -20,8 +20,5 @@ args = ["@playwright/mcp@latest", "--vision", "--extension"]
 
 [mcp_servers.playwright-test]
 command = "npx"
-args = [
-  "playwright",
-  "run-test-mcp-server"
-]
+args = ["playwright", "run-test-mcp-server"]
 
