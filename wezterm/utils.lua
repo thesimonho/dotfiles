@@ -11,11 +11,6 @@ M.is_mac = function()
 	return wezterm.target_triple == "aarch64-apple-darwin"
 end
 
-M.is_not_nvim = function(pane)
-	local info = pane:get_foreground_process_name()
-	return not (info and info:match("n?vim"))
-end
-
 M.string_split = function(inputstr, sep)
 	if sep == nil then
 		sep = ","
