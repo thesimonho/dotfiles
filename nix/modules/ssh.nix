@@ -16,6 +16,7 @@ let
   };
 in {
   home = { packages = with pkgs; [ age ]; };
+  # add yubikey support https://github.com/oddlama/agenix-rekey
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
