@@ -1,10 +1,16 @@
 return {
   "gbprod/yanky.nvim",
   keys = {
-    { "<leader>p", vim.NIL },
-    { "<leader>y", "<cmd>YankyRingHistory<cr>", desc = "Yank History" },
-    { "p", "<Plug>(YankyPutAfter)", desc = "Put after" },
-    { "P", "<Plug>(YankyPutBeforeLinewise)", desc = "Put before" },
+    {
+      "<leader>y",
+      function()
+        Snacks.picker.yanky()
+      end,
+      desc = "Yank History",
+    },
+    { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank Text" },
+    { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put after" },
+    { "P", "<Plug>(YankyPutBeforeLinewise)", mode = { "n", "x" }, desc = "Put before" },
     {
       "iy",
       function()
