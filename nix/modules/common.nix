@@ -84,12 +84,12 @@ in {
     }];
 
     packages = [
+      "com.bitwarden.desktop"
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
       "com.github.tchx84.Flatseal"
       "it.mijorus.gearlever"
       "org.gimp.GIMP"
-      "org.kde.kolourpaint"
       "com.google.Chrome"
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
