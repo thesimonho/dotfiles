@@ -36,7 +36,6 @@ in {
       rustup
       nodejs_24
       python311
-      uv
     ];
 
     file.".config/nvim" = {
