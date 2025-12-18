@@ -22,6 +22,7 @@
       lt = "eza --tree";
       tf = "terraform";
       lg = "lazygit";
+      ld = "lazydocker";
       vim = "nvim";
     };
     localVariables = {
@@ -107,6 +108,9 @@
         bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion
         bindkey '^H' backward-kill-word # ctrl backspace
         bindkey '^[[3;5~' kill-word # ctrl delete
+
+        eval "$(pay-respects bash --alias fuck)"
+        eval "$(pay-respects zsh --alias fuck)"
       '')
     ];
     plugins = [

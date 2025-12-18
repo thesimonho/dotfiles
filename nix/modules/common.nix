@@ -29,6 +29,7 @@ in {
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
+      pay-respects
       inputs.ghostty.packages.${system}.default
 
       go_1_24
