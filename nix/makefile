@@ -1,10 +1,13 @@
-.PHONY: update clean
+.PHONY: update switch clean
 
 FLAKE_DIR := .
 
 update:
+	nix flake update
+
+switch:
 	@if [ -z "$(word 2,$(MAKECMDGOALS))" ]; then \
-	  echo "Usage: make update <flake-host>"; \
+	  echo "Usage: make switch <flake-host>"; \
 	  exit 1; \
 	fi
 	@host=$(word 2,$(MAKECMDGOALS)); \

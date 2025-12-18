@@ -2,9 +2,17 @@
   description = "Cross-platform config using Home Manager (Linux/macOS)";
 
   nixConfig = {
+    max-jobs = "auto";
+    cores = 0;
+    download-buffer-size = 128;
+    connect-timeout = 60;
+    stalled-download-timeout = 300;
+    warn-dirty = false;
+
     extra-substituters = [ "https://yazi.cachix.org" ];
     extra-trusted-public-keys =
       [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
+    extra-experimental-features = [ "nix-command" "flakes" ];
   };
 
   inputs = {
@@ -66,6 +74,7 @@
           ./modules/common.nix
           ./modules/kde.nix
           ./modules/ssh.nix
+          ./modules/AI.nix
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
@@ -85,6 +94,7 @@
           ./modules/common.nix
           ./modules/kde.nix
           ./modules/ssh.nix
+          ./modules/AI.nix
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };

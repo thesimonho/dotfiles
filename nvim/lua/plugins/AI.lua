@@ -34,31 +34,6 @@ local M = {
     },
   },
   {
-    "folke/sidekick.nvim",
-    opts = {
-      nes = {
-        enabled = false,
-        debounce = 2000,
-        diff = {
-          inline = false,
-        },
-      },
-      cli = {
-        win = {
-          layout = "float",
-          float = {
-            width = 0.8,
-            height = 0.8,
-            border = constants.border_chars_outer_thin,
-          },
-        },
-        mux = {
-          enabled = false,
-        },
-      },
-    },
-  },
-  {
     "olimorris/codecompanion.nvim",
     event = "LazyFile",
     dependencies = {
@@ -68,8 +43,8 @@ local M = {
       "franco-ruggeri/codecompanion-spinner.nvim",
     },
     keys = {
-      { "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", mode = "n", desc = "Chat" },
-      { "<leader>aa", "<cmd>CodeCompanionChat Add<cr>", mode = "v", desc = "Add to Chat" },
+      { "<leader>ac", "<cmd>CodeCompanionChat adapter=copilot<cr>", mode = "n", desc = "Chat" },
+      { "<leader>aa", "<cmd>CodeCompanionChat adapter=codex<cr>", mode = "v", desc = "Agent" },
       { "<leader>an", "<cmd>CodeCompanionChat<cr>", desc = "New Chat" },
       { "<leader>ae", "<cmd>CodeCompanion<cr>", mode = "v", desc = "Edit Inline" },
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
@@ -80,7 +55,7 @@ local M = {
           auto_scroll = true,
           intro_message = "",
           start_in_insert_mode = false,
-          show_settings = false,
+          show_settings = true,
           window = {
             border = "rounded",
             width = 0.5,
@@ -88,29 +63,29 @@ local M = {
         },
       },
       adapters = {
+        http = {
+          opts = {
+            show_presets = false,
+          },
+        },
         acp = {
           opts = {
             show_presets = false,
           },
           codex = function()
             return require("codecompanion.adapters").extend("codex", {
-              commands = {
-                default = {
-                  "npx",
-                  "@zed-industries/codex-acp",
-                },
-              },
               defaults = {
                 auth_method = "chatgpt",
-                timeout = 30000,
               },
             })
           end,
-        },
-        http = {
-          opts = {
-            show_presets = false,
-          },
+          claude_code = function()
+            return require("codecompanion.adapters").extend("claude_code", {
+              env = {
+                CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_OAUTH_TOKEN", -- set this in env var using token value from claude code oauth
+              },
+            })
+          end,
         },
       },
       interactions = {
@@ -118,13 +93,6 @@ local M = {
           adapter = {
             name = "copilot",
             model = "gpt-5.1",
-          },
-          tools = {
-            opts = {
-              auto_submit_errors = true,
-              auto_submit_success = true,
-              default_tools = {},
-            },
           },
           opts = {
             goto_file_action = "edit",
