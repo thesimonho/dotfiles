@@ -46,7 +46,7 @@
       location = "https://flathub.org/repo/flathub.flatpakrepo";
     }];
 
-    packages = [ "org.kde.haruna" ];
+    packages = [ "org.kde.haruna" "org.kde.kolourpaint" ];
 
     update = {
       onActivation = true;
