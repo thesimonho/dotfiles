@@ -1,5 +1,7 @@
 { config, inputs, pkgs, pkgsUnstable, lib, ... }:
-let system = pkgs.stdenv.hostPlatform.system;
+let
+  system = pkgs.stdenv.hostPlatform.system;
+  dotfiles = "${config.home.homeDirectory}/dotfiles";
 in {
   imports = [ ./zsh.nix ];
 
@@ -38,40 +40,18 @@ in {
       python311
     ];
 
-    file.".config/nvim" = {
-      source = ../../nvim;
-      recursive = true;
-      force = true;
-    };
-    file.".config/wezterm" = {
-      source = ../../wezterm;
-      recursive = true;
-      force = true;
-    };
-    file.".config/yazi" = {
-      source = ../../yazi;
-      recursive = true;
-      force = true;
-    };
-    file.".config/lazygit" = {
-      source = ../../lazygit;
-      recursive = true;
-      force = true;
-    };
-    file.".codex" = {
-      source = ../../codex;
-      recursive = true;
-      force = true;
-    };
-    file.".config/mcphub" = {
-      source = ../../mcphub;
-      recursive = true;
-      force = true;
-    };
-    file.".config/fzf" = {
-      source = ../../fzf;
-      recursive = true;
-      force = true;
+    # applications
+    file.".local/share/applications/ghostty.desktop" = {
+      executable = true;
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=Ghostty
+        Exec=ghostty
+        Icon=ghostty
+        Terminal=false
+        Categories=System;TerminalEmulator;
+      '';
     };
   };
 
@@ -145,8 +125,39 @@ in {
     };
     zoxide = { enable = true; };
   };
+
+  # symlinks
+  home.file.".codex" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/codex";
+    force = true;
+  };
+
+  xdg.configFile."nvim" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/nvim";
+    force = true;
+  };
+  xdg.configFile."wezterm" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/wezterm";
+    force = true;
+  };
+  xdg.configFile."yazi" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/yazi";
+    force = true;
+  };
+  xdg.configFile."lazygit" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/lazygit";
+    force = true;
+  };
+  xdg.configFile."mcphub" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/mcphub";
+    force = true;
+  };
+  xdg.configFile."fzf" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
+    force = true;
+  };
   xdg.configFile."starship.toml" = {
-    source = ../../starship.toml;
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/starship.toml";
     force = true;
   };
 }
