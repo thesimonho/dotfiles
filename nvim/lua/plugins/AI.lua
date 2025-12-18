@@ -44,7 +44,7 @@ local M = {
     },
     keys = {
       { "<leader>ac", "<cmd>CodeCompanionChat adapter=copilot<cr>", mode = "n", desc = "Chat" },
-      { "<leader>aa", "<cmd>CodeCompanionChat adapter=codex<cr>", mode = "v", desc = "Agent" },
+      { "<leader>aa", "<cmd>CodeCompanionChat adapter=codex<cr>", mode = "n", desc = "Agent" },
       { "<leader>an", "<cmd>CodeCompanionChat<cr>", desc = "New Chat" },
       { "<leader>ae", "<cmd>CodeCompanion<cr>", mode = "v", desc = "Edit Inline" },
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
