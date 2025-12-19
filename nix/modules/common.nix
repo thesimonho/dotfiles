@@ -64,7 +64,6 @@ in {
     }];
 
     packages = [
-      "com.bitwarden.desktop"
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
       "com.github.tchx84.Flatseal"
