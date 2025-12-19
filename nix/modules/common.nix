@@ -74,6 +74,7 @@ in {
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
       "org.mozilla.firefox"
+      "io.podman_desktop.PodmanDesktop"
       "com.visualstudio.code"
     ];
 
@@ -160,5 +161,6 @@ in {
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/starship.toml";
     force = true;
   };
+
 }
 
