@@ -4,7 +4,11 @@
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
-  home = { packages = with pkgs; [ flatpak ]; };
+  home = {
+    username = "simon";
+    homeDirectory = "/home/simon";
+    packages = with pkgs; [ flatpak ];
+  };
 
   services.flatpak = {
     enable = true;
