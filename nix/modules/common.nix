@@ -8,7 +8,11 @@ in {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
+  xdg.enable = true;
+  xdg.autostart.enable = true;
+  targets.genericLinux.enable = true;
   fonts.fontconfig.enable = true;
+ 
   home = {
     sessionVariables = {
       EDITOR = "nvim";
@@ -47,6 +51,8 @@ in {
         [Desktop Entry]
         Type=Application
         Name=Ghostty
+        GenericName=Terminal Emulator
+        Comment=A terminal emulator for the modern age
         Exec=ghostty
         Icon=com.mitchellh.ghostty
         Terminal=false
@@ -115,6 +121,7 @@ in {
         fetch = { writeCommitGraph = true; };
       };
     };
+    home-manager = { enable = true };
     ripgrep = { enable = true; };
     starship = { enable = true; };
     tealdeer = { enable = true; };

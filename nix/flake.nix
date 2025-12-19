@@ -70,7 +70,6 @@
           inputs.plasma-manager.homeModules.plasma-manager
           agenix.homeManagerModules.default
           ./hosts/home.nix
-          ./hosts/linux.nix
           ./modules/common.nix
           ./modules/kde.nix
           ./modules/ssh.nix
@@ -90,7 +89,6 @@
           inputs.plasma-manager.homeModules.plasma-manager
           agenix.homeManagerModules.default
           ./hosts/work.nix
-          ./hosts/linux.nix
           ./modules/common.nix
           ./modules/kde.nix
           ./modules/ssh.nix
