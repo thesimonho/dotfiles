@@ -48,7 +48,7 @@ in {
         Type=Application
         Name=Ghostty
         Exec=ghostty
-        Icon=ghostty
+        Icon=com.mitchellh.ghostty
         Terminal=false
         Categories=System;TerminalEmulator;
       '';
