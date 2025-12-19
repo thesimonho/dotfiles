@@ -15,6 +15,7 @@
     }];
 
     packages = [
+      "com.bitwarden.desktop"
       "com.discordapp.Discord"
       "com.dropbox.Client"
       "io.github.berarma.Oversteer"
