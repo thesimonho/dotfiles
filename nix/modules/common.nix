@@ -32,15 +32,16 @@ in {
       nerd-fonts.fira-code
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
+      nodejs_24
       pay-respects
       inputs.ghostty.packages.${system}.default
       uv
       wezterm
 
-      go_1_24
-      rustup
-      nodejs_24
-      python311
+      # overwrites system installations
+#       go_1_24
+#       rustup
+#       python311
     ];
 
     # applications
