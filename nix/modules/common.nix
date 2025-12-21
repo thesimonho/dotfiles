@@ -20,7 +20,7 @@ in {
       NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
     };
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
-    shell.enableZshIntegration = true;
+    shell.enableShellIntegration = true;
     packages = with pkgs; [
       docker
       eza
