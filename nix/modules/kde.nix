@@ -4,26 +4,45 @@
       enable = true;
       input.keyboard = {
         numlockOnStartup = "on";
-        repeatDelay = 400;
-        repeatRate = 25;
+        repeatDelay = 350;
+        repeatRate = 30;
       };
-      kwin.effects = { wobblyWindows.enable = true; };
-      panels = [{
-        floating = true;
-        location = "bottom";
-        opacity = "translucent";
-        screen = "all";
-        widgets = [
-          "org.kde.plasma.kickoff"
-          "org.kde.plasma.pager"
-          "org.kde.plasma.taskmanager"
-          "org.kde.plasma.marginsseparator"
-          "org.kde.plasma.systemmonitor.cpu"
-          "org.kde.plasma.systemmonitor.memory"
-          "org.kde.plasma.systemtray"
-          "org.kde.plasma.digitalclock"
-        ];
-      }];
+      kwin.effects = {
+        blur.enable = true;
+        translucency.enable = true;
+        wobblyWindows.enable = true;
+      };
+      kscreenlocker.timeout = 15;
+      session.sessionRestore.restoreOpenApplicationsOnLogin = "startWithEmptySession";
+      powerdevil.AC = {
+        autoSuspend = {
+          action = "nothing";
+        };
+        dimDisplay = {
+          enable = true;
+          idleTimeout = 600;
+        };
+        turnOffDisplay = {
+            idleTimeout = 1200;
+        };
+      };
+      shortcuts = {
+        ksmserver = {
+          "Lock Session" = "Screensaver";
+        };
+        plasmashell = {
+          "activate application launcher" = "Alt+F1";
+        };
+        kwin = {
+          "Overview" = "";
+          "Walk Through Windows" = "Alt+Tab";
+          "Walk Through Windows (Reverse)" = "Alt+Shift+Tab";
+          "Walk Through Windows of Current Application" = "Alt+`";
+        };
+        "org.kde.kscreen.desktop" = {
+          "ShowOSD" = "Display";
+        };
+      };
     };
     konsole = {
       enable = true;
