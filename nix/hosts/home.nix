@@ -25,7 +25,7 @@
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------
   programs = {
-    gh = { hosts = { "github.com" = { user = "thesimonho"; }; }; };
-    git = { settings = { user = { email = "simonho.ubc@gmail.com"; }; }; };
+    gh = { hosts = { "github.com" = { user = lib.mkForce "thesimonho"; }; }; };
+    git = { settings = { user = { email = lib.mkForce "simonho.ubc@gmail.com"; }; }; };
   };
 }
