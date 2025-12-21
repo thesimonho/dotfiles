@@ -34,6 +34,8 @@ in {
       nerd-fonts.symbols-only
       pay-respects
       inputs.ghostty.packages.${system}.default
+      uv
+      wezterm
 
       go_1_24
       rustup
@@ -42,6 +44,21 @@ in {
     ];
 
     # applications
+    file.".local/share/applications/wezterm.desktop" = {
+      executable = true;
+      text = ''
+        [Desktop Entry]
+        Type=Application
+        Name=WezTerm
+        GenericName=Terminal Emulator
+        Comment=GPU-accelerated cross-platform terminal emulator
+        Exec=wezterm
+        Icon=org.wezfurlong.wezterm
+        Terminal=false
+        Categories=System;TerminalEmulator;Development;
+      '';
+    };
+
     file.".local/share/applications/ghostty.desktop" = {
       executable = true;
       text = ''
@@ -53,7 +70,7 @@ in {
         Exec=ghostty
         Icon=com.mitchellh.ghostty
         Terminal=false
-        Categories=System;TerminalEmulator;
+        Categories=System;TerminalEmulator;Development;
       '';
     };
   };
@@ -81,7 +98,6 @@ in {
       "com.google.Chrome"
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
-      "org.mozilla.firefox"
       "io.podman_desktop.PodmanDesktop"
       "com.visualstudio.code"
     ];
