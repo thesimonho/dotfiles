@@ -19,6 +19,16 @@
       "com.calibre_ebook.calibre"
       "eu.betterbird.Betterbird"
     ];
+    overrides = {
+      "com.discordapp.Discord".Context = {
+        filesystems = [
+          "xdg-documents"
+          "xdg-download"
+          "xdg-pictures"
+          "xdg-videos"
+        ];
+      };
+    };
   };
 
   # ---------------------------------------------------------------------------

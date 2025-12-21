@@ -12,6 +12,16 @@
 
   services.flatpak = {
     packages = [ "com.slack.Slack" ];
+    overrides = {
+      "com.slack.Slack".Context = {
+        filesystems = [
+          "xdg-documents"
+          "xdg-download"
+          "xdg-pictures"
+          "xdg-videos"
+        ];
+      };
+    };
   };
 
   # ---------------------------------------------------------------------------
