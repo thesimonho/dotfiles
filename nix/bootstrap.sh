@@ -80,7 +80,7 @@ echo "==> Using host: $HOST"
 FLAKE_DIR="${REPO_DIR}/${FLAKE_SUBDIR}"
 
 # ------------------------------------------------------
-# 0) Ensure Git is installed
+# Ensure Git is installed
 # ------------------------------------------------------
 ensure_git() {
   if command -v git >/dev/null 2>&1; then
@@ -147,7 +147,7 @@ ensure_nix() {
 }
 
 # ------------------------------------------------------
-# 2) Clone or update repo
+# Clone or update repo
 # ------------------------------------------------------
 sync_repo() {
   if [ -d "$REPO_DIR/.git" ]; then
@@ -162,7 +162,7 @@ sync_repo() {
 }
 
 # ------------------------------------------------------
-# 3) Apply configuration
+# Apply configuration
 # ------------------------------------------------------
 apply_host() {
   local host="$1"
@@ -170,11 +170,11 @@ apply_host() {
 
   case "$OS" in
   Linux)
-    nix run "$FLAKE_DIR#hm" -- switch --flake "$FLAKE_DIR#$host"
+    nix run --accept-flake-config "$FLAKE_DIR#hm" -- switch --flake "$FLAKE_DIR#$host" -b backup
     ;;
   Darwin)
-    nix run nix-darwin --extra-experimental-features 'nix-command flakes' \
-      -- switch --flake "$FLAKE_DIR#$host"
+    nix run nix-darwin --accept-flake-config --extra-experimental-features 'nix-command flakes' \
+      -- switch --flake "$FLAKE_DIR#$host" -b backup
     ;;
   *)
     echo "Unsupported OS: $OS" >&2
