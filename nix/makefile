@@ -6,6 +6,10 @@ update:
 	nix flake update
 
 switch:
+	@if [ ! -f ~/.ssh/ssh-identity ] || [ ! -f ~/.ssh/ssh-identity.pub ]; then \
+	  echo "Warning: Missing ~/.ssh/ssh-identity or ~/.ssh/ssh-identity.pub"; \
+	  exit 1; \
+	fi
 	@if [ -z "$(word 2,$(MAKECMDGOALS))" ]; then \
 	  echo "Usage: make switch <flake-host>"; \
 	  exit 1; \
