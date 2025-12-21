@@ -41,10 +41,7 @@ in {
       nerd-fonts.symbols-only
       nodejs_24
       pay-respects
-      inputs.ghostty.packages.${system}.default
       uv
-      wezterm
-
       # overwrites system installations
 #       go_1_24
 #       rustup
@@ -52,35 +49,35 @@ in {
     ];
 
     # applications
-    file.".local/share/applications/wezterm.desktop" = {
-      executable = true;
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=WezTerm
-        GenericName=Terminal Emulator
-        Comment=GPU-accelerated cross-platform terminal emulator
-        Exec=wezterm
-        Icon=org.wezfurlong.wezterm
-        Terminal=false
-        Categories=System;TerminalEmulator;Development;
-      '';
-    };
-
-    file.".local/share/applications/ghostty.desktop" = {
-      executable = true;
-      text = ''
-        [Desktop Entry]
-        Type=Application
-        Name=Ghostty
-        GenericName=Terminal Emulator
-        Comment=A terminal emulator for the modern age
-        Exec=ghostty
-        Icon=com.mitchellh.ghostty
-        Terminal=false
-        Categories=System;TerminalEmulator;Development;
-      '';
-    };
+    # file.".local/share/applications/wezterm.desktop" = {
+    #   executable = true;
+    #   text = ''
+    #     [Desktop Entry]
+    #     Type=Application
+    #     Name=WezTerm
+    #     GenericName=Terminal Emulator
+    #     Comment=GPU-accelerated cross-platform terminal emulator
+    #     Exec=wezterm
+    #     Icon=org.wezfurlong.wezterm
+    #     Terminal=false
+    #     Categories=System;TerminalEmulator;Development;
+    #   '';
+    # };
+    #
+    # file.".local/share/applications/ghostty.desktop" = {
+    #   executable = true;
+    #   text = ''
+    #     [Desktop Entry]
+    #     Type=Application
+    #     Name=Ghostty
+    #     GenericName=Terminal Emulator
+    #     Comment=A terminal emulator for the modern age
+    #     Exec=ghostty
+    #     Icon=com.mitchellh.ghostty
+    #     Terminal=false
+    #     Categories=System;TerminalEmulator;Development;
+    #   '';
+    # };
   };
 
   services.flatpak = {
