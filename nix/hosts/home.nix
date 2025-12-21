@@ -15,8 +15,8 @@
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
       "com.dropbox.Client"
-      "io.github.berarma.Oversteer"
-      "com.calibre_ebook.calibre"
+      # "io.github.berarma.Oversteer"
+      # "com.calibre_ebook.calibre"
       "eu.betterbird.Betterbird"
     ];
     overrides = {

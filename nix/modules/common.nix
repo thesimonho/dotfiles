@@ -29,23 +29,19 @@ in {
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableShellIntegration = true;
     packages = with pkgs; [
-      docker
+      # docker
       eza
       lazydocker
       lazygit
       lazyjournal
       luajitPackages.luarocks_bootstrap
       neovim
-      nerd-fonts.fira-code
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.symbols-only
+      # nerd-fonts.fira-code
+      # nerd-fonts.jetbrains-mono
+      # nerd-fonts.symbols-only
       nodejs_24
       pay-respects
       uv
-      # overwrites system installations
-#       go_1_24
-#       rustup
-#       python311
     ];
 
     # applications
@@ -98,8 +94,9 @@ in {
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
       "it.mijorus.gearlever"
-      "org.gimp.GIMP"
-      "com.google.Chrome"
+      # "org.inkscape.Inkscape"
+      # "org.gimp.GIMP"
+      # "com.google.Chrome"
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
       "io.podman_desktop.PodmanDesktop"
