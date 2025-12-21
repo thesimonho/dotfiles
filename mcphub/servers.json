@@ -1,46 +1,66 @@
 {
-  "servers": {
-    "aws_docs": {
-      "args": ["awslabs.aws-documentation-mcp-server@latest"],
-      "autoApprove": [],
-      "command": "uvx",
-      "env": {
-        "AWS_DOCUMENTATION_PARTITION": "aws",
-        "FASTMCP_LOG_LEVEL": "ERROR"
-      }
-    },
-    "browser_tools": {
-      "args": ["@agentdeskai/browser-tools-mcp@latest"],
-      "command": "npx"
-    },
-    "context7": {
-      "args": ["-y", "@upstash/context7-mcp"],
-      "command": "npx",
-      "env": {
-        "DEFAULT_MINIMUM_TOKENS": "6000"
-      }
-    },
-    "fetch": {
-      "args": ["mcp-server-fetch"],
-      "command": "uvx"
-    },
-    "playwright": {
-      "args": ["@playwright/mcp@latest", "--vision", "--extension"],
-      "command": "npx"
-    },
-    "next-devtools": {
-      "command": "npx",
-      "args": ["-y", "next-devtools-mcp@latest"]
-    }
-  },
   "nativeMCPServers": {
     "mcphub": {
       "disabled": false
     },
     "neovim": {
       "disabled": false,
-      "disabled_prompts": ["parrot"],
+      "disabled_prompts": [
+        "parrot"
+      ],
       "disabled_tools": []
+    }
+  },
+  "servers": {
+    "aws_docs": {
+      "args": [
+        "awslabs.aws-documentation-mcp-server@latest"
+      ],
+      "autoApprove": [],
+      "command": "uvx",
+      "disabled": false,
+      "env": {
+        "AWS_DOCUMENTATION_PARTITION": "aws",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "browser_tools": {
+      "args": [
+        "@agentdeskai/browser-tools-mcp@latest"
+      ],
+      "command": "npx"
+    },
+    "context7": {
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "command": "npx",
+      "env": {
+        "DEFAULT_MINIMUM_TOKENS": "6000"
+      }
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "command": "uvx",
+      "disabled": false
+    },
+    "next-devtools": {
+      "args": [
+        "-y",
+        "next-devtools-mcp@latest"
+      ],
+      "command": "npx"
+    },
+    "playwright": {
+      "args": [
+        "@playwright/mcp@latest",
+        "--vision",
+        "--extension"
+      ],
+      "command": "npx"
     }
   }
 }
