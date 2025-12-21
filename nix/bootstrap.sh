@@ -190,6 +190,15 @@ main() {
 
   apply_host "$HOST"
 
+  ZSH_PATH="$HOME/.nix-profile/bin/zsh"
+  if ! grep -qx "$ZSH_PATH" /etc/shells; then
+      echo "==> Adding nix zsh to /etc/shells..."
+      echo "$ZSH_PATH" | sudo tee -a /etc/shells
+  fi
+
+  echo "==> Changing default shell to nix zsh..."
+  chsh -s "$ZSH_PATH"
+
   echo
   echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
 }
