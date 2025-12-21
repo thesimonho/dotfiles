@@ -7,10 +7,17 @@ in {
   # Shared packages and environment
   # ---------------------------------------------------------------------------
   imports = [ ./zsh.nix ];
-  xdg.enable = true;
-  xdg.autostart.enable = true;
   targets.genericLinux.enable = true;
   fonts.fontconfig.enable = true;
+  xdg.enable = true;
+  xdg.autostart.enable = true;
+  xdg.systemDirs.data = [
+    "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
+    "/var/lib/flatpak/exports/share"
+  ];
+  xdg.configFile."environment.d/20-flatpak.conf".text = ''
+    XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share
+  '';
  
   home = {
     sessionVariables = {
