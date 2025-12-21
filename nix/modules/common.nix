@@ -100,7 +100,6 @@ in {
     packages = [
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
-      "com.github.tchx84.Flatseal"
       "it.mijorus.gearlever"
       "org.gimp.GIMP"
       "com.google.Chrome"

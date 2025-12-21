@@ -138,7 +138,7 @@ ensure_flatpak() {
     elif command -v yum >/dev/null 2>&1; then
       sudo yum install -y flatpak
     elif command -v pacman >/dev/null 2>&1; then
-      sudo pacman -Sy --noconfirm flatpak
+      sudo pacman -Sy --noconfirm flatpak flatpak-kcm
     elif command -v zypper >/dev/null 2>&1; then
       sudo zypper install -y flatpak
     else

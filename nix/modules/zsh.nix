@@ -109,7 +109,6 @@
         bindkey '^H' backward-kill-word # ctrl backspace
         bindkey '^[[3;5~' kill-word # ctrl delete
 
-        eval "$(pay-respects bash --alias fuck)"
         eval "$(pay-respects zsh --alias fuck)"
       '')
     ];
