@@ -108,6 +108,12 @@ in {
       "io.podman_desktop.PodmanDesktop"
       "com.visualstudio.code"
     ];
+    overrides = {
+      global = {
+        # Force Wayland by default
+        Context.sockets = ["wayland" "!x11" "!fallback-x11"];
+      };
+    };
   };
 
   # ---------------------------------------------------------------------------
