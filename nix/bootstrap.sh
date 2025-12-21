@@ -118,7 +118,43 @@ ensure_git() {
 }
 
 # ------------------------------------------------------
-# 1) Ensure Nix is installed + flakes are enabled
+# Ensure Flatpak is installed and initialized system wide (Linux only)
+# ------------------------------------------------------
+ensure_flatpak() {
+  if [ "$OS" != "Linux" ]; then
+    return
+  fi
+
+  if [ -x /usr/bin/flatpak ]; then
+    echo "==> System Flatpak already installed."
+  else
+    echo "==> Installing system Flatpak..."
+
+    if command -v apt-get >/dev/null 2>&1; then
+      sudo apt-get update -y
+      sudo apt-get install -y flatpak
+    elif command -v dnf >/dev/null 2>&1; then
+      sudo dnf install -y flatpak
+    elif command -v yum >/dev/null 2>&1; then
+      sudo yum install -y flatpak
+    elif command -v pacman >/dev/null 2>&1; then
+      sudo pacman -Sy --noconfirm flatpak
+    elif command -v zypper >/dev/null 2>&1; then
+      sudo zypper install -y flatpak
+    else
+      echo "❌ No supported package manager found to install Flatpak." >&2
+      echo "Please install Flatpak manually and re-run this script." >&2
+      exit 1
+    fi
+
+    # Initialize system repo if needed
+    sudo flatpak remote-add --if-not-exists --system flathub \
+      https://flathub.org/repo/flathub.flatpakrepo
+  fi
+}
+
+# ------------------------------------------------------
+# Ensure Nix is installed + flakes are enabled
 # ------------------------------------------------------
 ensure_nix() {
   if command -v nix >/dev/null 2>&1; then
@@ -186,14 +222,15 @@ apply_host() {
 main() {
   ensure_git
   ensure_nix
+  ensure_flatpak
   sync_repo
 
   apply_host "$HOST"
 
   ZSH_PATH="$HOME/.nix-profile/bin/zsh"
   if ! grep -qx "$ZSH_PATH" /etc/shells; then
-      echo "==> Adding nix zsh to /etc/shells..."
-      echo "$ZSH_PATH" | sudo tee -a /etc/shells
+    echo "==> Adding nix zsh to /etc/shells..."
+    echo "$ZSH_PATH" | sudo tee -a /etc/shells
   fi
 
   echo "==> Changing default shell to nix zsh..."
