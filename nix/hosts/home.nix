@@ -7,17 +7,10 @@
   home = {
     username = "simon";
     homeDirectory = "/home/simon";
-    packages = with pkgs; [ flatpak ];
+    packages = with pkgs; [  ];
   };
 
   services.flatpak = {
-    enable = true;
-    uninstallUnmanaged = true;
-    remotes = [{
-      name = "flathub";
-      location = "https://flathub.org/repo/flathub.flatpakrepo";
-    }];
-
     packages = [
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
@@ -26,14 +19,6 @@
       "com.calibre_ebook.calibre"
       "eu.betterbird.Betterbird"
     ];
-
-    update = {
-      onActivation = true;
-      auto = {
-        enable = true;
-        onCalendar = "weekly";
-      };
-    };
   };
 
   # ---------------------------------------------------------------------------

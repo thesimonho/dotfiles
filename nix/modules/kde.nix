@@ -38,22 +38,4 @@
       };
     };
   };
-  services.flatpak = {
-    enable = true;
-    uninstallUnmanaged = true;
-    remotes = [{
-      name = "flathub";
-      location = "https://flathub.org/repo/flathub.flatpakrepo";
-    }];
-
-    packages = [ "org.kde.haruna" "org.kde.kolourpaint" ];
-
-    update = {
-      onActivation = true;
-      auto = {
-        enable = true;
-        onCalendar = "weekly";
-      };
-    };
-  };
 }

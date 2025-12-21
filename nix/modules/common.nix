@@ -3,11 +3,10 @@ let
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
 in {
-  imports = [ ./zsh.nix ];
-
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
+  imports = [ ./zsh.nix ];
   xdg.enable = true;
   xdg.autostart.enable = true;
   targets.genericLinux.enable = true;
@@ -23,10 +22,8 @@ in {
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableZshIntegration = true;
     packages = with pkgs; [
-      (pkgsUnstable.codex)
       docker
       eza
-      flatpak
       lazydocker
       lazygit
       lazyjournal
@@ -68,7 +65,13 @@ in {
       name = "flathub";
       location = "https://flathub.org/repo/flathub.flatpakrepo";
     }];
-
+    update = {
+      onActivation = true;
+      auto = {
+        enable = true;
+        onCalendar = "weekly";
+      };
+    };
     packages = [
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
@@ -82,14 +85,6 @@ in {
       "io.podman_desktop.PodmanDesktop"
       "com.visualstudio.code"
     ];
-
-    update = {
-      onActivation = true;
-      auto = {
-        enable = true;
-        onCalendar = "weekly";
-      };
-    };
   };
 
   # ---------------------------------------------------------------------------
@@ -121,7 +116,7 @@ in {
         fetch = { writeCommitGraph = true; };
       };
     };
-    home-manager = { enable = true };
+    home-manager = { enable = true; };
     ripgrep = { enable = true; };
     starship = { enable = true; };
     tealdeer = { enable = true; };
