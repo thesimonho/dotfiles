@@ -6,8 +6,8 @@ update:
 	nix flake update
 
 switch:
-	@if [ ! -f ~/.ssh/ssh-identity ] || [ ! -f ~/.ssh/ssh-identity.pub ]; then \
-	  echo "Warning: Missing ~/.ssh/ssh-identity or ~/.ssh/ssh-identity.pub"; \
+	@if [ ! -f ~/.ssh/ssh_identity ] || [ ! -f ~/.ssh/ssh_identity.pub ]; then \
+	  echo "Warning: Missing ~/.ssh/ssh_identity or ~/.ssh/ssh_identity.pub"; \
 	  exit 1; \
 	fi
 	@if [ -z "$(word 2,$(MAKECMDGOALS))" ]; then \
