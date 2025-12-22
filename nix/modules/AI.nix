@@ -1,6 +1,15 @@
-{ config, inputs, pkgs, pkgsUnstable, lib, ... }:
-let system = pkgs.stdenv.hostPlatform.system;
-in {
+{
+  config,
+  inputs,
+  pkgs,
+  pkgsUnstable,
+  lib,
+  ...
+}:
+let
+  system = pkgs.stdenv.hostPlatform.system;
+in
+{
   home = {
     packages = with pkgs; [
       (pkgsUnstable.opencode)

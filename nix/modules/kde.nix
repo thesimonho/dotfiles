@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".text = ''
     [D-BUS Service]
     Name=org.freedesktop.secrets
@@ -29,10 +30,11 @@
           idleTimeout = 600;
         };
         turnOffDisplay = {
-            idleTimeout = 1200;
+          idleTimeout = 1200;
         };
       };
-      shortcuts = { # mostly to remove Meta key binds
+      shortcuts = {
+        # mostly to remove Meta key binds
         ksmserver = {
           "Lock Session" = "Screensaver";
         };

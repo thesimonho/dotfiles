@@ -1,4 +1,10 @@
-{ inputs, pkgs, pkgsUnstable, lib, ... }:
+{
+  inputs,
+  pkgs,
+  pkgsUnstable,
+  lib,
+  ...
+}:
 
 {
   # ---------------------------------------------------------------------------
@@ -7,7 +13,7 @@
   home = {
     username = "simon";
     homeDirectory = "/home/simon";
-    packages = with pkgs; [  ];
+    packages = with pkgs; [ ];
   };
 
   services.flatpak = {
@@ -37,10 +43,18 @@
         };
       };
     };
-    gh = { hosts = { "github.com" = { user = "simon@sprungstudios.com"; }; }; };
+    gh = {
+      hosts = {
+        "github.com" = {
+          user = "simon@sprungstudios.com";
+        };
+      };
+    };
     git = {
       settings = {
-        user = { email = "simon@sprungstudios.com"; };
+        user = {
+          email = "simon@sprungstudios.com";
+        };
         # url = {
         #   "ssh://git@github.com/" = { insteadOf = "https://github.com/"; };
         # };
