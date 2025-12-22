@@ -95,8 +95,6 @@ ensure_git() {
       sudo apt-get update -y && sudo apt-get install -y git
     elif command -v dnf >/dev/null 2>&1; then
       sudo dnf install -y git
-    elif command -v yum >/dev/null 2>&1; then
-      sudo yum install -y git
     elif command -v pacman >/dev/null 2>&1; then
       sudo pacman -Sy --noconfirm git
     else
@@ -135,12 +133,8 @@ ensure_flatpak() {
       sudo apt-get install -y flatpak
     elif command -v dnf >/dev/null 2>&1; then
       sudo dnf install -y flatpak
-    elif command -v yum >/dev/null 2>&1; then
-      sudo yum install -y flatpak
     elif command -v pacman >/dev/null 2>&1; then
       sudo pacman -Sy --noconfirm flatpak flatpak-kcm
-    elif command -v zypper >/dev/null 2>&1; then
-      sudo zypper install -y flatpak
     else
       echo "❌ No supported package manager found to install Flatpak." >&2
       echo "Please install Flatpak manually and re-run this script." >&2
@@ -150,6 +144,32 @@ ensure_flatpak() {
     # Initialize system repo if needed
     sudo flatpak remote-add --if-not-exists --system flathub \
       https://flathub.org/repo/flathub.flatpakrepo
+  fi
+}
+
+# ------------------------------------------------------
+# Ensure KDE applications are installed
+# ------------------------------------------------------
+ensure_kde() {
+  # Detect KDE Plasma
+  if [[ "${XDG_CURRENT_DESKTOP,,}" == *kde* ]] ||
+    [[ "${DESKTOP_SESSION,,}" == *plasma* ]] ||
+    [[ "${KDE_FULL_SESSION}" == "true" ]]; then
+
+    if ! command -v ksshaskpass >/dev/null 2>&1; then
+      echo "KDE detected; installing K apps"
+
+      if command -v apt >/dev/null 2>&1; then
+        sudo apt update && sudo apt install -y ksshaskpass plasma-discover partitionmanager
+      elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -S --noconfirm ksshaskpass discover partitionmanager
+      elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y ksshaskpass plasma-discover kde-partitionmanager
+      else
+        echo "Unsupported package manager; install K apps manually"
+        return 1
+      fi
+    fi
   fi
 }
 
@@ -221,6 +241,7 @@ apply_host() {
 
 main() {
   ensure_git
+  ensure_kde
   ensure_nix
   ensure_flatpak
   sync_repo
@@ -236,7 +257,6 @@ main() {
   echo "==> Changing default shell to nix zsh..."
   chsh -s "$ZSH_PATH"
 
-  echo
   echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
 }
 
