@@ -80,27 +80,66 @@ echo "==> Using host: $HOST"
 FLAKE_DIR="${REPO_DIR}/${FLAKE_SUBDIR}"
 
 # ------------------------------------------------------
+# Helpers
+# ------------------------------------------------------
+detect_pkgmgr() {
+  if command -v apt-get >/dev/null 2>&1; then
+    echo "apt"
+  elif command -v dnf >/dev/null 2>&1; then
+    echo "dnf"
+  elif command -v pacman >/dev/null 2>&1; then
+    echo "pacman"
+  else
+    echo "none"
+  fi
+}
+
+pkg_update() {
+  case "$(detect_pkgmgr)" in
+  apt) sudo apt-get update -y ;;
+  dnf) : ;; # typically not required
+  pacman) sudo pacman -Sy ;;
+  none)
+    echo "No supported package manager found." >&2
+    return 1
+    ;;
+  esac
+}
+
+pkg_install() {
+  # Usage: pkg_install pkg1 pkg2 ...
+  local pm
+  pm="$(detect_pkgmgr)"
+  case "$pm" in
+  apt)
+    sudo apt-get install -y "$@"
+    ;;
+  dnf)
+    sudo dnf install -y "$@"
+    ;;
+  pacman)
+    sudo pacman -S --noconfirm --needed "$@"
+    ;;
+  none)
+    echo "No supported package manager found. Please install: $*" >&2
+    return 1
+    ;;
+  esac
+}
+
+# ------------------------------------------------------
 # Ensure Git is installed
 # ------------------------------------------------------
 ensure_git() {
   if command -v git >/dev/null 2>&1; then
     echo "==> Git already installed."
-    return
+    return 0
   fi
 
   echo "==> Installing git..."
   case "$OS" in
   Linux)
-    if command -v apt-get >/dev/null 2>&1; then
-      sudo apt-get update -y && sudo apt-get install -y git
-    elif command -v dnf >/dev/null 2>&1; then
-      sudo dnf install -y git
-    elif command -v pacman >/dev/null 2>&1; then
-      sudo pacman -Sy --noconfirm git
-    else
-      echo "No supported package manager found. Please install git manually." >&2
-      exit 1
-    fi
+    pkg_install git || exit 1
     ;;
   Darwin)
     if ! xcode-select -p >/dev/null 2>&1; then
@@ -127,19 +166,7 @@ ensure_flatpak() {
     echo "==> System Flatpak already installed."
   else
     echo "==> Installing system Flatpak..."
-
-    if command -v apt-get >/dev/null 2>&1; then
-      sudo apt-get update -y
-      sudo apt-get install -y flatpak
-    elif command -v dnf >/dev/null 2>&1; then
-      sudo dnf install -y flatpak
-    elif command -v pacman >/dev/null 2>&1; then
-      sudo pacman -Sy --noconfirm flatpak flatpak-kcm
-    else
-      echo "❌ No supported package manager found to install Flatpak." >&2
-      echo "Please install Flatpak manually and re-run this script." >&2
-      exit 1
-    fi
+    pkg_install flatpak || exit 1
 
     # Initialize system repo if needed
     sudo flatpak remote-add --if-not-exists --system flathub \
@@ -156,20 +183,22 @@ ensure_kde() {
     [[ "${DESKTOP_SESSION,,}" == *plasma* ]] ||
     [[ "${KDE_FULL_SESSION}" == "true" ]]; then
 
-    if ! command -v ksshaskpass >/dev/null 2>&1; then
-      echo "KDE detected; installing K apps"
-
-      if command -v apt >/dev/null 2>&1; then
-        sudo apt update && sudo apt install -y ksshaskpass plasma-discover partitionmanager
-      elif command -v pacman >/dev/null 2>&1; then
-        sudo pacman -S --noconfirm ksshaskpass discover partitionmanager
-      elif command -v dnf >/dev/null 2>&1; then
-        sudo dnf install -y ksshaskpass plasma-discover kde-partitionmanager
-      else
-        echo "Unsupported package manager; install K apps manually"
-        return 1
-      fi
-    fi
+    echo "KDE detected; installing KDE utilities"
+    case "$(detect_pkgmgr)" in
+    apt)
+      pkg_install ksshaskpass plasma-discover partitionmanager flatpak-kcm
+      ;;
+    dnf)
+      pkg_install ksshaskpass plasma-discover kde-partitionmanager
+      ;;
+    pacman)
+      pkg_install ksshaskpass discover partitionmanager flatpak-kcm
+      ;;
+    *)
+      echo "Unsupported package manager; install KDE utilities manually" >&2
+      return 1
+      ;;
+    esac
   fi
 }
 
@@ -240,6 +269,8 @@ apply_host() {
 }
 
 main() {
+  pkg_update || exit 1 # update package managers
+
   ensure_git
   ensure_kde
   ensure_nix
