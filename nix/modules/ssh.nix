@@ -5,7 +5,6 @@ let
   meta = import ../secrets/meta.nix;
 
   mkSecret = name: item: {
-    # Attribute name: "ssh-personal" etc
     name = "${name}";
     value = {
       file = builtins.toPath "${../secrets}/${item.file}.age";
@@ -42,7 +41,7 @@ in {
     };
   };
   age = {
-    identityPaths = [ "${sshDir}/ssh-identity" ];
+    identityPaths = [ "${sshDir}/ssh_identity" ];
     secrets = lib.mapAttrs' mkSecret meta;
   };
 }

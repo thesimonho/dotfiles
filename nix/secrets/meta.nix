@@ -3,12 +3,12 @@
 
 {
   personal = {
-    file = "ssh-personal";
+    file = "id_personal";
     publicKey =
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMa8Ec2tSLTEmmMfJw/qF2rNRycb7wm1Pxls2qr3AbPF";
   };
   sprung = {
-    file = "ssh-sprung";
+    file = "id_sprung";
     publicKey =
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMa8Ec2tSLTEmmMfJw/qF2rNRycb7wm1Pxls2qr3AbPF";
   };

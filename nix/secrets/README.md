@@ -31,15 +31,15 @@ Think of it as the master key that unlocks all `.age` files.
 
 These are your real SSH private keys you want to deploy:
 
-- `id_ed25519_personal`
-- `id_ed25519_work`
+- `id_personal`
+- `id_work`
 - etc.
 
 Each of these becomes an encrypted file:
 
 ```
-personal.age
-work.age
+id_personal.age
+id_work.age
 ```
 
 They **do not decrypt themselves**.
@@ -52,17 +52,17 @@ They are just _data_ encrypted using your **identity public key**.
 Run:
 
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/ssh-identity -C "agenix-identity"
+ssh-keygen -t ed25519 -f ~/.ssh/ssh_identity -C "agenix-identity"
 ```
 
 This creates:
 
 ```
-~/.ssh/ssh-identity          ← identity private key (KEEP SECRET)
-~/.ssh/ssh-identity.pub      ← identity public key (safe to commit)
+~/.ssh/ssh_identity          ← identity private key (KEEP SECRET)
+~/.ssh/ssh_identity.pub      ← identity public key (safe to commit)
 ```
 
-Use the public key (`ssh-identity.pub`) in `meta.nix`.
+Use the public key (`ssh_identity.pub`) in `meta.nix`.
 
 ---
 
@@ -73,14 +73,12 @@ Example:
 ```nix
 {
   personal = {
-    file = "personal";                  # encrypted file name (personal.age)
-    target = "id_ed25519_personal";     # path under ~/.ssh after decryption
+    file = "id_personal";                  # encrypted file name (personal.age)
     publicKey = "ssh-ed25519 AAAA… agenix-identity";
   };
 
   work = {
-    file = "work";
-    target = "id_ed25519_work";
+    file = "id_work";
     publicKey = "ssh-ed25519 AAAA… agenix-identity";
   };
 }
@@ -95,7 +93,7 @@ Every entry uses the **same** `publicKey`—the identity public key.
 To add or modify a secret:
 
 ```bash
-nix run github:ryantm/agenix -- -e secrets/personal.age
+nix run github:ryantm/agenix -- -e secrets/id_personal.age
 ```
 
 Paste the **payload private key**, for example:
@@ -111,7 +109,7 @@ Save → agenix encrypts using the identity public key.
 Repeat for:
 
 ```bash
-nix run github:ryantm/agenix -- -e secrets/work.age
+nix run github:ryantm/agenix -- -e secrets/id_work.age
 ```
 
 These `.age` files **are safe to commit**.
@@ -128,7 +126,7 @@ let
   meta = import ../secrets/meta.nix;
 
   mkSecret = name: item: {
-    name = "ssh-${name}";
+    name = "id_${name}";
     value = {
       file = ../secrets/"${item.file}.age";
       path = "${sshDir}/${item.target}";
@@ -139,7 +137,7 @@ let
 in {
   age = {
     # The identity private key used to decrypt all secrets
-    identityPaths = [ "${sshDir}/ssh-identity" ];
+    identityPaths = [ "${sshDir}/ssh_identity" ];
 
     # Generate one age.secrets.* entry per payload key
     secrets = lib.mapAttrs' mkSecret meta;
@@ -155,14 +153,14 @@ home-manager switch
 
 Agenix will:
 
-- use `ssh-identity` to decrypt all `.age` files
+- use `ssh_identity` to decrypt all `.age` files
 - write them to `~/.ssh/<target>`
 
 Example results:
 
 ```
-~/.ssh/id_ed25519_personal
-~/.ssh/id_ed25519_work
+~/.ssh/id_personal
+~/.ssh/id_work
 ```
 
 ---
@@ -174,8 +172,8 @@ To authorize a new machine, you must install the **identity private key** on it 
 1. Copy the identity key:
 
 ```bash
-scp ~/.ssh/ssh-identity newmachine:~/.ssh/
-chmod 600 ~/.ssh/ssh-identity
+scp ~/.ssh/ssh_identity newmachine:~/.ssh/
+chmod 600 ~/.ssh/ssh_identity
 ```
 
 1. Clone your dotfiles and run:
@@ -195,15 +193,14 @@ You **never** manually copy the personal/work private keys again.
 1. Generate it normally:
 
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_new
+ssh-keygen -t ed25519 -f ~/.ssh/id_new
 ```
 
 1. Add a new entry to `meta.nix`:
 
 ```nix
 new = {
-  file = "new";
-  target = "id_ed25519_new";
+  file = "id_new";
   publicKey = "ssh-ed25519 AAAA… agenix-identity";
 };
 ```
@@ -211,7 +208,7 @@ new = {
 1. Create the secret (run from the secrets directory):
 
 ```bash
-nix run github:ryantm/agenix -- --identity ~/.ssh/ssh-identity -e new.age
+nix run github:ryantm/agenix -- --identity ~/.ssh/ssh_identity -e new.age
 ```
 
 1. Rebuild:
@@ -220,7 +217,7 @@ nix run github:ryantm/agenix -- --identity ~/.ssh/ssh-identity -e new.age
 home-manager switch
 ```
 
-The new key now appears on every machine with `ssh-identity`.
+The new key now appears on every machine with `ssh_identity`.
 
 ---
 
@@ -252,5 +249,5 @@ home-manager switch
 ### Show your identity public key
 
 ```
-cat ~/.ssh/ssh-identity.pub
+cat ~/.ssh/ssh_identity.pub
 ```
