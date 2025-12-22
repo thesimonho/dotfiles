@@ -27,8 +27,6 @@ in {
         user = "git";
         addKeysToAgent = "true";
         forwardAgent = true;
-        forwardX11 = true;
-        forwardX11Trusted = true;
         identitiesOnly = true;
         identityFile = "${sshDir}/${meta.sprung.file}";
       };
@@ -38,8 +36,6 @@ in {
         user = "git";
         addKeysToAgent = "true";
         forwardAgent = true;
-        forwardX11 = true;
-        forwardX11Trusted = true;
         identitiesOnly = true;
         identityFile = "${sshDir}/${meta.personal.file}";
       };
