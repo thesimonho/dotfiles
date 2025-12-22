@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   programs.zsh = {
@@ -10,12 +15,16 @@
     history.share = false;
     oh-my-zsh = {
       enable = true;
-      plugins = [ "colored-man-pages" "git" "jsontools" "safe-paste" ];
+      plugins = [
+        "colored-man-pages"
+        "git"
+        "jsontools"
+        "safe-paste"
+      ];
     };
     shellAliases = {
       cat = "bat --style='header,grid'";
-      eza =
-        "eza --icons=always --hyperlink --group-directories-first --color=always --header";
+      eza = "eza --icons=always --hyperlink --group-directories-first --color=always --header";
       ls = "eza";
       la = "eza -la";
       ll = "eza -l";

@@ -1,14 +1,23 @@
-{ config, inputs, pkgs, pkgsUnstable, lib, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  pkgsUnstable,
+  lib,
+  ...
+}:
 let
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
-in {
+in
+{
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
   imports = [ ./zsh.nix ];
   targets.genericLinux.enable = true;
   fonts.fontconfig.enable = true;
+
   xdg.enable = true;
   xdg.autostart.enable = true;
   xdg.systemDirs.data = [
@@ -18,7 +27,7 @@ in {
   xdg.configFile."environment.d/20-flatpak.conf".text = ''
     XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share
   '';
- 
+
   home = {
     sessionVariables = {
       EDITOR = "nvim";
@@ -36,6 +45,8 @@ in {
       lazyjournal
       luajitPackages.luarocks_bootstrap
       neovim
+      nixd
+      nixfmt-rfc-style
       # nerd-fonts.fira-code
       # nerd-fonts.jetbrains-mono
       # nerd-fonts.symbols-only
@@ -79,10 +90,12 @@ in {
   services.flatpak = {
     enable = true;
     uninstallUnmanaged = true;
-    remotes = [{
-      name = "flathub";
-      location = "https://flathub.org/repo/flathub.flatpakrepo";
-    }];
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://flathub.org/repo/flathub.flatpakrepo";
+      }
+    ];
     update = {
       onActivation = true;
       auto = {
@@ -108,41 +121,74 @@ in {
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------
   programs = {
-    bat = { enable = true; };
-    carapace = { enable = true; };
+    bat = {
+      enable = true;
+    };
+    carapace = {
+      enable = true;
+    };
     direnv = {
       enable = true;
       silent = true;
     };
-    fd = { enable = true; };
-    fzf = { enable = true; };
+    fd = {
+      enable = true;
+    };
+    fzf = {
+      enable = true;
+    };
     gh = {
       enable = true;
       gitCredentialHelper.enable = true;
     };
     git = {
       enable = true;
-      lfs = { enable = true; };
-      maintenance = { enable = true; };
+      lfs = {
+        enable = true;
+      };
+      maintenance = {
+        enable = true;
+      };
       settings = {
-        user = { name = "Simon Ho"; };
-        core = { autocrlf = "input"; };
-        rerere = { enabled = true; };
-        column = { ui = "auto"; };
-        branch = { sort = "-committerdate"; };
-        fetch = { writeCommitGraph = true; };
+        user = {
+          name = "Simon Ho";
+        };
+        core = {
+          autocrlf = "input";
+        };
+        rerere = {
+          enabled = true;
+        };
+        column = {
+          ui = "auto";
+        };
+        branch = {
+          sort = "-committerdate";
+        };
+        fetch = {
+          writeCommitGraph = true;
+        };
       };
     };
-    home-manager = { enable = true; };
-    ripgrep = { enable = true; };
-    starship = { enable = true; };
-    tealdeer = { enable = true; };
+    home-manager = {
+      enable = true;
+    };
+    ripgrep = {
+      enable = true;
+    };
+    starship = {
+      enable = true;
+    };
+    tealdeer = {
+      enable = true;
+    };
     yazi = {
       enable = true;
-      package =
-        inputs.yazi.packages.${system}.default.override { _7zz = pkgs._7zz; };
+      package = inputs.yazi.packages.${system}.default.override { _7zz = pkgs._7zz; };
     };
-    zoxide = { enable = true; };
+    zoxide = {
+      enable = true;
+    };
   };
 
   # symlinks
@@ -181,4 +227,3 @@ in {
   };
 
 }
-

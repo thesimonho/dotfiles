@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   sshDir = "${config.home.homeDirectory}/.ssh";
@@ -13,8 +18,11 @@ let
       symlink = false;
     };
   };
-in {
-  home = { packages = with pkgs; [ age ]; };
+in
+{
+  home = {
+    packages = with pkgs; [ age ];
+  };
 
   # set ssh env variables
   xdg.configFile."environment.d/ssh.conf".text = ''
@@ -59,10 +67,17 @@ in {
         "SSH_ASKPASS=/usr/bin/ksshaskpass"
         "SSH_ASKPASS_REQUIRE=prefer"
       ];
-      PassEnvironment = [ "DISPLAY" "WAYLAND_DISPLAY" "XAUTHORITY" "DBUS_SESSION_BUS_ADDRESS" ];
+      PassEnvironment = [
+        "DISPLAY"
+        "WAYLAND_DISPLAY"
+        "XAUTHORITY"
+        "DBUS_SESSION_BUS_ADDRESS"
+      ];
       ExecStart = "${config.home.homeDirectory}/.local/bin/ssh-add-keys";
     };
-    Install = { WantedBy = [ "default.target" ]; };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
   };
 
   # TODO: add yubikey support https://github.com/oddlama/agenix-rekey

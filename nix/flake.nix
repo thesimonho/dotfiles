@@ -10,9 +10,11 @@
     warn-dirty = false;
 
     extra-substituters = [ "https://yazi.cachix.org" ];
-    extra-trusted-public-keys =
-      [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
-    extra-experimental-features = [ "nix-command" "flakes" ];
+    extra-trusted-public-keys = [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
+    extra-experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   inputs = {
@@ -35,27 +37,35 @@
     yazi.url = "github:sxyazi/yazi";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nix-flatpak, home-manager
-    , plasma-manager, agenix, ... }:
+  outputs =
+    inputs@{
+      nixpkgs,
+      nixpkgs-unstable,
+      home-manager,
+      agenix,
+      ...
+    }:
     let
-      pkgsFor = system:
+      pkgsFor =
+        system:
         import nixpkgs {
           inherit system;
           overlays = [ ];
           config.allowUnfree = true;
         };
 
-      unstableFor = system:
+      unstableFor =
+        system:
         import nixpkgs-unstable {
           inherit system;
           overlays = [ ];
           config.allowUnfree = true;
         };
-    in {
+    in
+    {
       apps.x86_64-linux.hm = {
         type = "app";
-        program =
-          "${home-manager.packages.x86_64-linux.home-manager}/bin/home-manager";
+        program = "${home-manager.packages.x86_64-linux.home-manager}/bin/home-manager";
       };
 
       homeConfigurations."home" = home-manager.lib.homeManagerConfiguration {
@@ -98,4 +108,3 @@
       };
     };
 }
-
