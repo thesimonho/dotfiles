@@ -32,7 +32,7 @@
             idleTimeout = 1200;
         };
       };
-      shortcuts = {
+      shortcuts = { # mostly to remove Meta key binds
         ksmserver = {
           "Lock Session" = "Screensaver";
         };
@@ -41,9 +41,13 @@
         };
         kwin = {
           "Overview" = "";
+          "Edit Tiles" = "";
           "Walk Through Windows" = "Alt+Tab";
           "Walk Through Windows (Reverse)" = "Alt+Shift+Tab";
           "Walk Through Windows of Current Application" = "Alt+`";
+        };
+        org_kde_powerdevil = {
+          "powerProfile" = "Battery";
         };
         "org.kde.kscreen.desktop" = {
           "ShowOSD" = "Display";
