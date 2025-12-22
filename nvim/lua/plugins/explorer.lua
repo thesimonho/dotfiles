@@ -20,6 +20,7 @@ return {
       { "<leader>E", "<CMD>Oil<CR>", desc = "Oil" },
     },
     opts = {
+      default_file_explorer = false,
       delete_to_trash = true,
       watch_for_changes = true,
       keymaps = {
