@@ -34,26 +34,6 @@
     initContent = lib.mkMerge [
       # 500: early init
       (lib.mkOrder 500 ''
-        # ssh
-        if [[ "$XDG_SESSION_DESKTOP" == "KDE" ]] && [[ -x /usr/bin/ksshaskpass ]]; then
-          export SSH_ASKPASS_REQUIRE=prefer
-          export SSH_ASKPASS="/usr/bin/ksshaskpass"
-        fi
-
-        ## Dynamically discover SSH private key filenames
-        if [[ -d "$HOME/.ssh" ]]; then
-          setopt extended_glob
-          private_keys=($HOME/.ssh/id_*~*.pub(N))
-          loaded_keys_count=$(ssh-add -l 2>/dev/null | grep -c '^')
-
-          # Only add keys if the agent is empty or missing keys
-          if (( ''${#private_keys[@]} > 0 && loaded_keys_count != ''${#private_keys[@]} )); then
-            for key in "''${private_keys[@]}"; do
-              ssh-add "$key" 2>/dev/null
-            done
-          fi
-        fi
-
         # Determine if it's day or night for theming purposes
         hour=$(date +%H)
         if (( 7 <= hour && hour < 19 )); then
