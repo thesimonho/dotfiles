@@ -288,6 +288,10 @@ main() {
   echo "==> Changing default shell to nix zsh..."
   chsh -s "$ZSH_PATH"
 
+  if command -v mise >/dev/null 2>&1; then
+    mise install || true
+  fi
+
   echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
 }
 

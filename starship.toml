@@ -2,7 +2,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-╭ ${custom.hostname}$directory$direnv$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
+╭ ${custom.hostname}$directory$git_branch$git_status$git_state$python$go$conda $fill $cmd_duration$time$battery
 ╰$character
 """
 add_newline = true
@@ -27,14 +27,6 @@ format = '[$read_only]($read_only_style)[$path]($style) '
 truncate_to_repo = false
 repo_root_style = "bold cyan"
 before_repo_root_style = "dimmed bright-black"
-
-[direnv]
-disabled = false
-detect_files = [".envrc"]
-symbol = "󱃷 "
-allowed_msg = "loaded"
-denied_msg = "denied"
-format = '[\($symbol$allowed\)]($style) '
 
 [docker_context]
 symbol = " "

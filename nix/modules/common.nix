@@ -50,7 +50,6 @@ in
       # nerd-fonts.fira-code
       # nerd-fonts.jetbrains-mono
       # nerd-fonts.symbols-only
-      nodejs_24
       pay-respects
       uv
     ];
@@ -112,7 +111,6 @@ in
       # "com.google.Chrome"
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
-      "io.podman_desktop.PodmanDesktop"
       "com.visualstudio.code"
     ];
   };
@@ -126,10 +124,6 @@ in
     };
     carapace = {
       enable = true;
-    };
-    direnv = {
-      enable = true;
-      silent = true;
     };
     fd = {
       enable = true;
@@ -172,6 +166,29 @@ in
     };
     home-manager = {
       enable = true;
+    };
+    mise = {
+      enable = true;
+      package = pkgsUnstable.mise;
+      globalConfig = {
+        tools = {
+          node = "24";
+        };
+        settings = {
+          env_file = ".env";
+          trusted_config_paths = [
+            "~"
+            "/run/media/Projects"
+          ];
+          auto_install = true;
+          not_found_auto_install = true;
+          status = {
+            missing_tools = "if_other_versions_installed";
+            show_env = true;
+            show_tools = true;
+          };
+        };
+      };
     };
     ripgrep = {
       enable = true;
@@ -225,5 +242,4 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/starship.toml";
     force = true;
   };
-
 }

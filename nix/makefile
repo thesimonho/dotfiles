@@ -16,7 +16,7 @@ switch:
 	fi
 	@host=$(word 2,$(MAKECMDGOALS)); \
 	echo "==> Applying host $$host using flake at $(FLAKE_DIR)"; \
-	nix run "$(FLAKE_DIR)#hm" -- switch --flake "$(FLAKE_DIR)#$$host"
+	nix run "$(FLAKE_DIR)#hm" -- switch --flake "$(FLAKE_DIR)#$$host" -b backup
 
 %:
 	@:
