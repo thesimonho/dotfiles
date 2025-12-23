@@ -21,7 +21,6 @@ declare -A packages=(
   [bat]="bat"
   [carapace]="carapace"
   [codex]="codex"
-  [direnv]="direnv"
   [eza]="eza"
   [fd]="fd"
   [fzf]="fzf"

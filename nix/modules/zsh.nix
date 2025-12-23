@@ -20,6 +20,7 @@
         "git"
         "jsontools"
         "safe-paste"
+        "mise"
       ];
     };
     shellAliases = {

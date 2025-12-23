@@ -185,6 +185,5 @@ fi
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-eval "$(direnv hook zsh)"
 export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
 source <(carapace _carapace)

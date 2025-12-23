@@ -144,27 +144,6 @@ return {
       lualine_c = {
         {
           function()
-            local status = require("direnv").statusline()
-            if string.find(status, "active") then
-              return "󱃷"
-            else
-              return ""
-            end
-          end,
-          cond = function()
-            return utils.get_split_count() < 3
-          end,
-          color = function()
-            return { fg = Snacks.util.color("Added") }
-          end,
-          separator = "",
-          padding = { left = 1, right = 0 },
-          on_click = function()
-            vim.cmd("Direnv edit")
-          end,
-        },
-        {
-          function()
             return short_path(3)
           end,
           cond = function()
