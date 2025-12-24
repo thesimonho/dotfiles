@@ -1,0 +1,18 @@
+keybind = super+p=toggle_command_palette
+keybind = global:super+backquote=toggle_quick_terminal
+
+keybind = super+w>h=goto_split:left
+keybind = super+w>j=goto_split:down
+keybind = super+w>k=goto_split:up
+keybind = super+w>l=goto_split:right
+
+keybind = super+w>s=new_split:down
+keybind = super+w>v=new_split:right
+keybind = super+w>==equalize_splits
+keybind = super+w>d=close_surface
+
+keybind = super+t>t=toggle_tab_overview
+keybind = super+t>n=new_tab
+keybind = super+t>d=close_tab
+keybind = super+h=previous_tab
+keybind = super+l=next_tab

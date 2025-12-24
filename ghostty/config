@@ -1,0 +1,41 @@
+config-file = keybindings
+
+font-family = FiraCode Nerd Font Mono
+font-size = 12
+font-feature = -calt, -clig, -liga, -dlig
+
+adjust-underline-position = 2
+
+theme = light:kanagawa-paper-canvas,dark:kanagawa-paper-ink
+window-theme = system
+
+minimum-contrast = 1.1
+
+mouse-shift-capture = true
+
+background-opacity = 0.98
+background-blur = true
+
+link-url = true
+link-previews = true
+
+window-inherit-working-directory = true
+window-new-tab-position = current
+window-show-tab-bar = auto
+
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+clipboard-paste-protection = true
+clipboard-paste-bracketed-safe = true
+
+copy-on-select = false
+
+right-click-action = context-menu
+
+quit-after-last-window-closed = false
+
+quick-terminal-position = top
+
+linux-cgroup = always
+linux-cgroup-hard-fail = false
