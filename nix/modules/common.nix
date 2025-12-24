@@ -184,8 +184,8 @@ in
           not_found_auto_install = true;
           status = {
             missing_tools = "if_other_versions_installed";
-            show_env = true;
-            show_tools = true;
+            show_env = false;
+            show_tools = false;
           };
         };
       };
