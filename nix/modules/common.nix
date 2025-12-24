@@ -218,6 +218,10 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/nvim";
     force = true;
   };
+  xdg.configFile."ghostty" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/ghostty";
+    force = true;
+  };
   xdg.configFile."wezterm" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/wezterm";
     force = true;
