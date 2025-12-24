@@ -39,7 +39,6 @@ in
     shell.enableShellIntegration = true;
     packages = with pkgs; [
       # docker
-      eza
       lazydocker
       lazygit
       lazyjournal
@@ -124,6 +123,16 @@ in
     };
     carapace = {
       enable = true;
+    };
+    eza = {
+      enable = true;
+      colors = "always";
+      icons = "always";
+      extraOptions = [
+        "--hyperlink"
+        "--group-directories-first"
+        "--header"
+      ];
     };
     fd = {
       enable = true;
