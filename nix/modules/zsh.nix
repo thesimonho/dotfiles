@@ -25,7 +25,6 @@
     };
     shellAliases = {
       cat = "bat --style='header,grid'";
-      eza = "eza --icons=always --hyperlink --group-directories-first --color=always --header";
       ls = "eza";
       la = "eza -la";
       ll = "eza -l";
@@ -67,7 +66,7 @@
         zstyle ':completion:*' menu no
 
         # fzf-tab styles
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --icons=always --group-directories-first --color=always $realpath'
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 $realpath'
         zstyle ':fzf-tab:*' use-fzf-default-opts yes
         zstyle ':fzf-tab:*' switch-group '<' '>'
       '')
