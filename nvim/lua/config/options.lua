@@ -22,7 +22,6 @@ vim.schedule(function()
 end)
 
 vim.opt.shada = [['500,<50,s10,h]]
-vim.opt.background = (hour >= 7 and hour < 19) and "light" or "dark"
 vim.opt.termguicolors = true
 vim.opt.list = false
 vim.opt.cursorline = true
@@ -44,10 +43,3 @@ vim.opt.foldnestmax = 5
 vim.opt.conceallevel = 0
 vim.opt.mousemoveevent = true
 vim.opt.wrap = true
-
--- GUI options
-if util_os.is_darwin() then
-  vim.o.guifont = "FiraCode Nerd Font:h14"
-else
-  vim.o.guifont = "FiraCode Nerd Font:h11"
-end

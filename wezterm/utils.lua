@@ -11,6 +11,10 @@ M.is_mac = function()
 	return wezterm.target_triple == "aarch64-apple-darwin"
 end
 
+M.is_dark = function()
+	return wezterm.gui.get_appearance:find("Dark")
+end
+
 M.string_split = function(inputstr, sep)
 	if sep == nil then
 		sep = ","
