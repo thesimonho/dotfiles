@@ -62,7 +62,7 @@
       profiles = {
         zsh = {
           command = "${pkgs.zsh}/bin/zsh";
-          font.name = "Fira Code";
+          font.name = "CaskaydiaCove Nerd Font Mono";
           font.size = 12;
           colorScheme = "Breeze";
         };
