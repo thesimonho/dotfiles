@@ -54,7 +54,7 @@ local M = {
           enabled = true,
           min_width = 40,
           max_height = 15,
-          winblend = 6,
+          winblend = 0,
           border = "rounded",
           draw = {
             treesitter = { "lsp" },
@@ -73,7 +73,7 @@ local M = {
             max_width = 60,
             max_height = 20,
             border = constants.border_chars_dash,
-            winblend = 6,
+            winblend = 0,
           },
         },
       },
