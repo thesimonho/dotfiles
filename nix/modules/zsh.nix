@@ -14,7 +14,7 @@
     autosuggestion = {
       enable = true;
       highlight = ''
-        fg=246,italic
+        fg=246
       '';
     };
     syntaxHighlighting = {
@@ -22,10 +22,11 @@
       highlighters = [
         "main"
         "brackets"
-        "regexp"
+        "pattern"
       ];
       patterns = {
-        "^rm .*" = "fg=red,bold";
+        "rm *" = "fg=red,bold";
+        "sudo rm *" = "bg=red,fg=white";
       };
       styles = {
         path = "fg=magenta";
