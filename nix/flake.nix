@@ -18,8 +18,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 

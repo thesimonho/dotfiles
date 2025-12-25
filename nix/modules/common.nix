@@ -38,7 +38,6 @@ in
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableShellIntegration = true;
     packages = with pkgs; [
-      # docker
       lazydocker
       lazygit
       lazyjournal
@@ -46,12 +45,14 @@ in
       neovim
       nixd
       nixfmt-rfc-style
+      pay-respects
+      pkgsUnstable.snitch
+      uv
+      # docker
       # nerd-fonts.caskaydia-cove
       # nerd-fonts.fira-code
       # nerd-fonts.jetbrains-mono
       # nerd-fonts.symbols-only
-      pay-respects
-      uv
     ];
 
     # applications
@@ -103,12 +104,12 @@ in
       };
     };
     packages = [
-      "org.deskflow.deskflow"
-      "com.ranfdev.DistroShelf"
-      "it.mijorus.gearlever"
       # "org.inkscape.Inkscape"
       # "org.gimp.GIMP"
       # "com.google.Chrome"
+      "org.deskflow.deskflow"
+      "com.ranfdev.DistroShelf"
+      "it.mijorus.gearlever"
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
       "com.visualstudio.code"
