@@ -63,6 +63,21 @@
       HIST_STAMPS = "yyyy-mm-dd";
     };
     initContent = lib.mkMerge [
+      # 100: dawn of time
+      (lib.mkOrder 100 ''
+        # Ensure symlinks are italic, red, no bg (LS_COLORS ln=)
+        if [[ -n "$LS_COLORS" ]]; then
+          export LS_COLORS="$(
+            printf '%s' "$LS_COLORS" |
+              sed -E \
+                -e 's/(^|:)ln=[^:]*(\:|$)/\1ln=01;36;3\2/' \
+                -e 's/(^|:)or=[^:]*(\:|$)/\1or=31;01\2/'
+          )"
+        else
+          export LS_COLORS="ln=01;36;3:or=31;01"
+        fi
+      '')
+
       # 500: early init
       (lib.mkOrder 500 ''
         # Determine if it's day or night for theming purposes
