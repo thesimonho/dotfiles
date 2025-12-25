@@ -10,9 +10,30 @@
     enable = true;
     enableCompletion = true;
     enableVteIntegration = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
     history.share = false;
+    autosuggestion = {
+      enable = true;
+      highlight = ''
+        fg=246,italic
+      '';
+    };
+    syntaxHighlighting = {
+      enable = true;
+      highlighters = [
+        "main"
+        "brackets"
+        "regexp"
+      ];
+      patterns = {
+        "^rm .*" = "fg=red,bold";
+      };
+      styles = {
+        path = "fg=magenta";
+        suffix-alias = "fg=green,bold";
+        precommand = "fg=green,bold";
+        autodirectory = "fg=green,bold";
+      };
+    };
     oh-my-zsh = {
       enable = true;
       plugins = [
@@ -73,18 +94,6 @@
 
       # 1000: general config
       (lib.mkOrder 1000 ''
-        typeset -A ZSH_HIGHLIGHT_STYLES ZSH_HIGHLIGHT_REGEXP
-        ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main brackets regexp)
-        ZSH_HIGHLIGHT_REGEXP+=('^rm .*' fg=red,bold)
-        ZSH_HIGHLIGHT_STYLES[path]='fg=magenta'
-        ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green,bold'
-        ZSH_HIGHLIGHT_STYLES[precommand]='fg=green,bold'
-        ZSH_HIGHLIGHT_STYLES[autodirectory]='fg=green,bold'
-        ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
-      '')
-
-      # 1500: final init
-      (lib.mkOrder 1500 ''
         # keybinds
         function open_file_manager() {
           zle -I        # Clear pending input or partial commands
@@ -97,7 +106,10 @@
         bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion
         bindkey '^H' backward-kill-word # ctrl backspace
         bindkey '^[[3;5~' kill-word # ctrl delete
+      '')
 
+      # 1500: final init
+      (lib.mkOrder 1500 ''
         eval "$(pay-respects zsh --alias fuck)"
       '')
     ];
