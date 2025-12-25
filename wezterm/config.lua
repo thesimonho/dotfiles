@@ -1,7 +1,6 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local keybinds = require("keybinds")
-local theme = require("theme_switcher")
 local utils = require("utils")
 
 config.leader = { key = "Space", mods = "SUPER", timeout_milliseconds = 1500 }
@@ -9,7 +8,7 @@ config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
 config.color_scheme_dirs = { "~/.config/wezterm/colors" }
-config.color_scheme = theme.color_scheme
+config.color_scheme = utils.is_dark() and "kanagawa-paper-ink" or "kanagawa-paper-canvas"
 config.cursor_blink_rate = 0
 config.default_cursor_style = "SteadyBar"
 config.default_domain = "local"

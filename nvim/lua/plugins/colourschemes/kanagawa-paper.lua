@@ -4,11 +4,6 @@ local opts = {
   dim_inactive = true,
   diag_background = true,
   auto_plugins = true,
-  integrations = {
-    wezterm = {
-      enabled = true,
-    },
-  },
 }
 
 return {

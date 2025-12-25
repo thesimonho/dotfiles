@@ -3,7 +3,7 @@ local act = wezterm.action
 local config = require("config")
 local keybinds = require("keybinds")
 local containers = require("containers")
-local theme = require("theme_switcher")
+local utils = require("utils")
 
 local enabled = {
 	tabline = true,
@@ -154,7 +154,9 @@ end
 -- tabline
 if enabled.tabline then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-	M.tabline_theme = require("colors.wezterm_tabline." .. theme.color_scheme)
+
+	local theme_name = utils.is_dark() and "kanagawa-paper-ink" or "kanagawa-paper-canvas"
+	M.tabline_theme = require("colors.wezterm_tabline." .. theme_name)
 	local hint_icon = "󰋗 "
 
 	local function generate_keytable_hint_text(tbl, sep)
