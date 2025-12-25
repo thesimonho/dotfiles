@@ -46,6 +46,7 @@ in
       neovim
       nixd
       nixfmt-rfc-style
+      # nerd-fonts.caskaydia-cove
       # nerd-fonts.fira-code
       # nerd-fonts.jetbrains-mono
       # nerd-fonts.symbols-only
@@ -133,6 +134,22 @@ in
         "--group-directories-first"
         "--header"
       ];
+      theme = {
+        filekinds = {
+          symlink = {
+            is_italic = true;
+          };
+        };
+        symlink_path = {
+          is_italic = true;
+        };
+        broken_symlink_path = {
+          is_italic = true;
+        };
+        broken_path_overlay = {
+          is_italic = true;
+        };
+      };
     };
     fd = {
       enable = true;

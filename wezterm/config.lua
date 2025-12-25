@@ -20,6 +20,7 @@ config.enable_scroll_bar = false
 config.enable_tab_bar = true
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
+	{ family = "CaskaydiaCove Nerd Font Mono", weight = "DemiLight" },
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
 })
