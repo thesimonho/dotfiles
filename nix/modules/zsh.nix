@@ -54,6 +54,9 @@
       tf = "terraform";
       lg = "lazygit";
       ld = "lazydocker";
+      lj = "lazyjournal";
+      ss = "snitch";
+      netstat = "snitch";
       vim = "nvim";
     };
     localVariables = {
