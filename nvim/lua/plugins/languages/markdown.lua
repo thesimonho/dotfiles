@@ -16,8 +16,8 @@ M = {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        markdown = { "prettierd", "markdownlint", "markdown-toc" },
-        ["markdown.mdx"] = { "prettierd", "markdownlint", "markdown-toc" },
+        markdown = { "prettierd", "markdownlint" },
+        ["markdown.mdx"] = { "prettierd", "markdownlint" },
       },
     },
   },
