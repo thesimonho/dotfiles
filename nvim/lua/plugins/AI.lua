@@ -50,7 +50,15 @@ local M = {
       { "<leader>ac", "<cmd>CodeCompanionChat Toggle adapter=copilot<cr>", mode = "n", desc = "Chat" },
       { "<leader>aa", "<cmd>CodeCompanionChat Toggle adapter=codex<cr>", mode = "n", desc = "Agent" },
       { "<leader>an", "<cmd>CodeCompanionChat<cr>", desc = "New Chat" },
-      { "<leader>ae", "<cmd>CodeCompanion<cr>", mode = "v", desc = "Edit Inline" },
+      {
+        "<leader>ae",
+        function()
+          local keys = vim.api.nvim_replace_termcodes(":CodeCompanion ", true, false, true)
+          vim.api.nvim_feedkeys(keys, "n", false)
+        end,
+        mode = "v",
+        desc = "Edit Inline",
+      },
       { "<leader>ah", "<cmd>CodeCompanionHistory<cr>", desc = "Chat History" },
     },
     opts = {
