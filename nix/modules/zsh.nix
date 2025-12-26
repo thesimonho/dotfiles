@@ -13,9 +13,7 @@
     history.share = false;
     autosuggestion = {
       enable = true;
-      highlight = ''
-        fg=246
-      '';
+      highlight = "fg=244,underline";
     };
     syntaxHighlighting = {
       enable = true;
