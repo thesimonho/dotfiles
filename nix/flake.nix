@@ -9,8 +9,8 @@
     stalled-download-timeout = 300;
     warn-dirty = false;
 
-    extra-substituters = [ "https://yazi.cachix.org" ];
-    extra-trusted-public-keys = [ "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k=" ];
+    extra-substituters = [ ];
+    extra-trusted-public-keys = [ ];
     extra-experimental-features = [
       "nix-command"
       "flakes"
@@ -34,7 +34,6 @@
     };
 
     agenix.url = "github:ryantm/agenix";
-    yazi.url = "github:sxyazi/yazi";
   };
 
   outputs =
