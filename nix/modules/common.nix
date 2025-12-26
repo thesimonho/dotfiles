@@ -48,6 +48,7 @@ in
       nixfmt-rfc-style
       pay-respects
       pkgsUnstable.snitch
+      sqlite
       uv
       # docker
       # nerd-fonts.caskaydia-cove
