@@ -12,7 +12,8 @@ M.is_mac = function()
 end
 
 M.is_dark = function()
-	return wezterm.gui.get_appearance:find("Dark")
+	local appearance = wezterm.gui.get_appearance()
+	return appearance:find("Dark") ~= nil
 end
 
 M.string_split = function(inputstr, sep)
