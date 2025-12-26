@@ -60,8 +60,6 @@ return {
                   end
                 elseif #marks > 0 then
                   hl = "Mark"
-                elseif args.virtnum > 0 then
-                  hl = "SnacksIndent"
                 else
                   hl = "LineNr"
                 end
