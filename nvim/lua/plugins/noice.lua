@@ -23,7 +23,7 @@ return {
       },
       mini = {
         win_options = {
-          winblend = 15,
+          winblend = 0,
         },
       },
       confirm = {
