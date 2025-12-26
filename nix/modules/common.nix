@@ -38,6 +38,7 @@ in
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableShellIntegration = true;
     packages = with pkgs; [
+      ast-grep
       lazydocker
       lazygit
       lazyjournal
