@@ -29,10 +29,18 @@ return {
     },
   },
   opts = {
+    ring = {
+      sync_with_numbered_registers = true,
+      update_register_on_cycle = true,
+    },
     highlight = {
       on_put = true,
       on_yank = true,
       timer = 200,
+    },
+    system_clipboard = {
+      sync_with_ring = true,
+      clipboard_register = "unnamedplus",
     },
     preserve_cursor_position = {
       enabled = true,
