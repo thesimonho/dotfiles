@@ -1,5 +1,6 @@
 return {
   "gbprod/yanky.nvim",
+  dependencies = { "kkharji/sqlite.lua" },
   keys = {
     {
       "<leader>y",
@@ -29,6 +30,9 @@ return {
     },
   },
   opts = {
+    ring = {
+      storage = "sqlite",
+    },
     highlight = {
       on_put = true,
       on_yank = true,
