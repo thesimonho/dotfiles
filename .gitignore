@@ -50,3 +50,6 @@ nushell/api.env
 # yazi
 yazi/plugins
 yazi/package.toml
+
+#AI
+codex
