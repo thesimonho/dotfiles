@@ -42,13 +42,14 @@ in
       lazydocker
       lazygit
       lazyjournal
-      luajitPackages.luarocks_bootstrap
+      lua54Packages.luarocks
       neovim
       nixd
       nixfmt-rfc-style
       pay-respects
       pkgsUnstable.snitch
       uv
+      # cmake
       # docker
       # nerd-fonts.caskaydia-cove
       # nerd-fonts.fira-code
@@ -201,12 +202,21 @@ in
       globalConfig = {
         tools = {
           node = "24";
+          python = "3.14";
+          go = "1.25";
+          rust = "1.92";
         };
         settings = {
           env_file = ".env";
           trusted_config_paths = [
             "~"
             "/run/media/Projects"
+          ];
+          idiomatic_version_file_enable_tools = [
+            "node"
+            "go"
+            "python"
+            "terraform"
           ];
           auto_install = true;
           not_found_auto_install = true;
@@ -215,6 +225,7 @@ in
             show_env = false;
             show_tools = false;
           };
+          python.uv_venv_auto = true;
         };
       };
     };
