@@ -162,6 +162,8 @@ local M = {
             },
             auto_generate_title = true,
             title_generation_opts = {
+              adapter = "copilot",
+              model = models.chat,
               refresh_every_n_prompts = 5,
               max_refreshes = 3,
             },
