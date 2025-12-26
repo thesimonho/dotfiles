@@ -63,6 +63,9 @@
       CASE_SENSITIVE = "false";
       HIST_STAMPS = "yyyy-mm-dd";
     };
+    profileExtra = ''
+      export VIRTUAL_ENV_DISABLE_PROMPT=1
+    '';
     initContent = lib.mkMerge [
       # 100: dawn of time
       (lib.mkOrder 100 ''
