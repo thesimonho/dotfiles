@@ -1,4 +1,8 @@
-local constants = require("config.constants")
+local models = {
+  completion = "gpt-41-copilot",
+  chat = "gpt-5.2",
+  agent = "gpt-5.1-codex-max",
+}
 
 local M = {
   {
@@ -16,7 +20,7 @@ local M = {
       },
     },
     opts = {
-      copilot_model = "gpt-4o",
+      copilot_model = models.completion,
       suggestion = {
         enabled = not vim.g.ai_cmp,
         auto_trigger = true,
@@ -55,10 +59,14 @@ local M = {
           auto_scroll = true,
           intro_message = "",
           start_in_insert_mode = false,
-          show_settings = true,
+          show_settings = false,
+          show_reasoning = false,
+          fold_reasoning = true,
           window = {
+            layout = "float",
             border = "rounded",
-            width = 0.5,
+            width = 0.8,
+            height = 0.8,
           },
         },
       },
@@ -77,6 +85,11 @@ local M = {
               defaults = {
                 auth_method = "chatgpt",
               },
+              schema = {
+                model = {
+                  default = models.agent,
+                },
+              },
             })
           end,
           claude_code = function()
@@ -92,7 +105,14 @@ local M = {
         chat = {
           adapter = {
             name = "copilot",
-            model = "gpt-5.1",
+            model = models.chat,
+          },
+          tools = {
+            opts = {
+              default_tools = {
+                "full_stack_dev",
+              },
+            },
           },
           opts = {
             goto_file_action = "edit",
@@ -100,7 +120,15 @@ local M = {
         },
         inline = {
           adapter = {
-            name = "codex",
+            name = "copilot",
+            model = models.chat,
+          },
+          tools = {
+            opts = {
+              default_tools = {
+                "full_stack_dev",
+              },
+            },
           },
         },
       },
