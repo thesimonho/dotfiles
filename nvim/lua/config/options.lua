@@ -31,7 +31,8 @@ vim.opt.titlelen = 0 -- do not shorten title
 vim.opt.titlestring = 'neovim -- %{expand("%:p:t")}'
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
-vim.opt.pumblend = 10
+vim.opt.pumblend = 0
+vim.opt.winblend = 0
 vim.opt.sessionoptions = { "globals", "buffers", "folds", "winsize" }
 
 vim.opt.cursorcolumn = false
