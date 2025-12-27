@@ -23,7 +23,7 @@ return {
       },
       mini = {
         win_options = {
-          winblend = 0,
+          winblend = 10,
         },
       },
       confirm = {
@@ -34,6 +34,14 @@ return {
       { -- @recording message
         filter = { event = "msg_showmode" },
         view = "notify",
+      },
+      { -- skip "written" messages
+        filter = {
+          event = "msg_show",
+          kind = "",
+          find = "written",
+        },
+        opts = { skip = true },
       },
     },
   },
