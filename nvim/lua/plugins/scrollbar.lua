@@ -77,4 +77,17 @@ return {
       keywords_warn_symbol = "󱝾",
     },
   },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      scroll = {
+        filter = function(buf)
+          return vim.g.snacks_scroll ~= false
+            and vim.b[buf].snacks_scroll ~= false
+            and vim.bo[buf].buftype ~= "terminal"
+            and vim.bo[buf].filetype ~= "bigfile"
+        end,
+      },
+    },
+  },
 }
