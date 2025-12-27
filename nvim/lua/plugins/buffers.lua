@@ -15,9 +15,9 @@ return {
       })
     end,
     opts = {
-      autoload = false,
+      autoload = true,
       follow_cwd = true,
-      use_git_branch = true,
+      use_git_branch = false,
       allowed_dirs = {
         "~/dotfiles",
         "~/Projects",
