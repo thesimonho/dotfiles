@@ -45,4 +45,32 @@ return {
       },
     },
   },
+  {
+    "folke/snacks.nvim",
+    opts = {
+      input = {
+        enabled = true,
+        win = {
+          style = "above_cursor",
+        },
+      },
+      notifier = {
+        margin = { top = 1, right = 1, bottom = 1 },
+        style = "fancy",
+      },
+      styles = {
+        notification = {
+          wo = {
+            winblend = 10,
+          },
+        },
+        above_cursor = {
+          title_pos = "left",
+          relative = "cursor",
+          row = -3,
+          col = 0,
+        },
+      },
+    },
+  },
 }
