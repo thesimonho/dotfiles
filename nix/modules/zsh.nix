@@ -20,12 +20,8 @@
       highlighters = [
         "main"
         "brackets"
-        "pattern"
+        "regexp"
       ];
-      patterns = {
-        "rm *" = "fg=red,bold";
-        "sudo rm *" = "bg=red,fg=white";
-      };
       styles = {
         path = "fg=magenta";
         suffix-alias = "fg=green,bold";
@@ -101,6 +97,9 @@
 
       # 550: before compinit — completion styles & fzf-tab zstyles
       (lib.mkOrder 550 ''
+        typeset -A ZSH_HIGHLIGHT_REGEXP
+        ZSH_HIGHLIGHT_REGEXP+=('^rm .*' fg=red,bold)
+
         zstyle ':completion:*:git-checkout:*' sort false
         zstyle ':completion:*:descriptions' format '[%d]'
         zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
