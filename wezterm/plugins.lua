@@ -8,7 +8,7 @@ local utils = require("utils")
 local enabled = {
 	tabline = true,
 	workspace = true,
-	resurrect = false,
+	resurrect = true,
 	toggle_terminal = false,
 	dev_containers = false,
 }
@@ -85,6 +85,7 @@ if enabled.workspace then
 		local choices = {}
 		choices = get_previous(choices)
 		choices = M.workspace_switcher.choices.get_workspace_elements(choices)
+		choices = create_choices(wezterm.home_dir .. "/", choices, 1)
 		choices = create_choices(wezterm.home_dir .. "/Projects", choices, 2)
 		return choices
 	end
@@ -156,9 +157,10 @@ if enabled.tabline then
 	M.tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
 
 	local theme_name = utils.is_dark() and "kanagawa-paper-ink" or "kanagawa-paper-canvas"
+	M.wezterm_theme = wezterm.color.load_scheme(wezterm.config_dir .. "/colors/" .. theme_name .. ".toml")
 	M.tabline_theme = require("colors.wezterm_tabline." .. theme_name)
-	local hint_icon = "󰋗 "
 
+	local hint_icon = "󰋗 "
 	local function generate_keytable_hint_text(tbl, sep)
 		if not tbl then
 			return ""
@@ -192,6 +194,7 @@ if enabled.tabline then
 
 	M.tabline.setup({
 		options = {
+			theme = M.wezterm_theme,
 			theme_overrides = M.tabline_theme,
 			icons_enabled = true,
 			section_separators = {
@@ -207,7 +210,6 @@ if enabled.tabline then
 				right = "",
 			},
 		},
-		-- extensions = { "resurrect" },
 		sections = {
 			tabline_a = {
 				{
