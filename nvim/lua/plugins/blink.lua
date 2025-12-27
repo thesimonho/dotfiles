@@ -56,6 +56,7 @@ local M = {
           max_height = 15,
           winblend = 0,
           border = "rounded",
+          scrollbar = false,
           draw = {
             treesitter = { "lsp" },
             columns = {
@@ -72,6 +73,7 @@ local M = {
             min_width = 10,
             max_width = 60,
             max_height = 20,
+            scrollbar = false,
             border = constants.border_chars_dash,
             winblend = 0,
           },
