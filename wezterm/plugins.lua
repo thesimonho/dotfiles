@@ -192,7 +192,7 @@ if enabled.tabline then
 
 	M.tabline.setup({
 		options = {
-			theme = M.tabline_theme,
+			theme_overrides = M.tabline_theme,
 			icons_enabled = true,
 			section_separators = {
 				left = wezterm.nerdfonts.ple_right_half_circle_thick,
