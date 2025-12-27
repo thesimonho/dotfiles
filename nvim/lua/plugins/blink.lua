@@ -21,6 +21,9 @@ local M = {
         ["<Up>"] = { "select_prev", "fallback" },
         ["<Down>"] = { "select_next", "fallback" },
 
+        ["<C-b>"] = { "scroll_documentation_up", "scroll_signature_up" },
+        ["<C-f"] = { "scroll_documentation_down", "scroll_signature_down" },
+
         ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
       },
       appearance = {
