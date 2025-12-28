@@ -10,8 +10,6 @@ adjust-underline-position = 2
 theme = light:kanagawa-paper-canvas,dark:kanagawa-paper-ink
 window-theme = system
 
-minimum-contrast = 1.1
-
 mouse-shift-capture = true
 
 background-opacity = 0.98

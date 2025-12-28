@@ -5,7 +5,6 @@ return {
     opts = function()
       local ccc = require("ccc")
       return {
-        default_color = "#408080",
         auto_close = true,
         preserve = true,
         alpha_show = false,
