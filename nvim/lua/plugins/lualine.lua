@@ -116,9 +116,9 @@ return {
           "diff",
           padding = { left = 1, right = 0 },
           symbols = {
-            added = constants.icons.git.added,
-            modified = constants.icons.git.modified,
-            removed = constants.icons.git.removed,
+            added = constants.icons.git.added .. " ",
+            modified = constants.icons.git.modified .. " ",
+            removed = constants.icons.git.removed .. " ",
           },
           cond = function()
             return utils.get_split_count() == 1
@@ -218,10 +218,10 @@ return {
         {
           "diagnostics",
           symbols = {
-            error = constants.icons.diagnostics.Error,
-            warn = constants.icons.diagnostics.Warn,
-            info = constants.icons.diagnostics.Info,
-            hint = constants.icons.diagnostics.Hint,
+            error = constants.icons.diagnostics.Error .. " ",
+            warn = constants.icons.diagnostics.Warn .. " ",
+            info = constants.icons.diagnostics.Info .. " ",
+            hint = constants.icons.diagnostics.Hint .. " ",
           },
           cond = function()
             return utils.get_split_count() < 4
