@@ -10,6 +10,8 @@ local M = {
     dependencies = {
       "copilotlsp-nvim/copilot-lsp",
     },
+    cmd = "Copilot",
+    event = "InsertEnter",
     keys = {
       {
         "<leader>ad",
@@ -33,6 +35,14 @@ local M = {
           next = "<M-]>",
           prev = "<M-[>",
           dismiss = "<C-e>",
+        },
+      },
+      nes = {
+        enabled = true,
+        keymap = {
+          accept = false,
+          accept_and_goto = "<Tab>",
+          dismiss = "<Esc>",
         },
       },
     },
