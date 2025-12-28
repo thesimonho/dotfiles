@@ -11,6 +11,7 @@ theme = light:kanagawa-paper-canvas,dark:kanagawa-paper-ink
 window-theme = system
 
 mouse-shift-capture = true
+mouse-hide-while-typing = true
 
 background-opacity = 0.98
 background-blur = true
