@@ -25,22 +25,22 @@ M.todo_keywords = {
 
 M.icons = {
   dap = {
-    Stopped = { " ", "DapStoppedLine" },
-    Breakpoint = { " ", "DiagnosticError" },
-    BreakpointCondition = { " ", "DiagnosticHint" },
-    BreakpointRejected = { " ", "DiagnosticWarn" },
-    LogPoint = { " ", "DiagnosticInfo" },
+    Stopped = { "", "DapStoppedLine" },
+    Breakpoint = { "", "DiagnosticError" },
+    BreakpointCondition = { "", "DiagnosticHint" },
+    BreakpointRejected = { "", "DiagnosticWarn" },
+    LogPoint = { "", "DiagnosticInfo" },
   },
   diagnostics = {
-    Error = " ",
-    Warn = " ",
-    Hint = " ",
-    Info = " ",
+    Error = "",
+    Warn = "",
+    Hint = "",
+    Info = "",
   },
   git = {
-    added = " ",
-    modified = " ",
-    removed = " ",
+    added = "",
+    modified = "",
+    removed = "",
   },
 }
 
