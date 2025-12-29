@@ -52,6 +52,7 @@
       ss = "snitch";
       netstat = "snitch";
       vim = "nvim";
+      bw = "flatpak run --command=bw com.bitwarden.desktop";
     };
     localVariables = {
       HYPHEN_INSENSITIVE = "true";
