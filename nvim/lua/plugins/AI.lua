@@ -1,7 +1,13 @@
 local models = {
   completion = "gpt-41-copilot",
-  chat = "gpt-5.2",
-  agent = "gpt-5.1-codex-max",
+  openai = {
+    chat = "gpt-5.2",
+    agent = "gpt-5.1-codex-max",
+  },
+  claude = {
+    chat = "claude-sonnet-4-5",
+    agent = "claude-sonnet-4-5",
+  },
 }
 
 local M = {
@@ -47,6 +53,7 @@ local M = {
       },
     },
   },
+  -- NOTE: we can maybe replace this with sidekick.nvim for agents, browser for chat, and cancel copilot (windsurf for completions?)
   {
     "olimorris/codecompanion.nvim",
     event = "LazyFile",
@@ -58,7 +65,7 @@ local M = {
     },
     keys = {
       { "<leader>ac", "<cmd>CodeCompanionChat Toggle adapter=copilot<cr>", mode = "n", desc = "Chat" },
-      { "<leader>aa", "<cmd>CodeCompanionChat Toggle adapter=codex<cr>", mode = "n", desc = "Agent" },
+      { "<leader>aa", "<cmd>CodeCompanionChat Toggle adapter=claude_code<cr>", mode = "n", desc = "Agent" },
       { "<leader>an", "<cmd>CodeCompanionChat<cr>", desc = "New Chat" },
       {
         "<leader>ae",
@@ -105,7 +112,7 @@ local M = {
               },
               schema = {
                 model = {
-                  default = models.agent,
+                  default = models.openai.agent,
                 },
               },
             })
@@ -113,7 +120,12 @@ local M = {
           claude_code = function()
             return require("codecompanion.adapters").extend("claude_code", {
               env = {
-                CLAUDE_CODE_OAUTH_TOKEN = "CLAUDE_CODE_OAUTH_TOKEN", -- set this in env var using token value from claude code oauth
+                CLAUDE_CODE_OAUTH_TOKEN = vim.env.CLAUDE_CODE_OAUTH_TOKEN, -- token value from claude setup-token
+              },
+              schema = {
+                model = {
+                  default = models.claude.agent,
+                },
               },
             })
           end,
@@ -123,7 +135,7 @@ local M = {
         chat = {
           adapter = {
             name = "copilot",
-            model = models.chat,
+            model = models.claude.chat,
           },
           tools = {
             opts = {
@@ -139,7 +151,7 @@ local M = {
         inline = {
           adapter = {
             name = "copilot",
-            model = models.chat,
+            model = models.claude.chat,
           },
           tools = {
             opts = {
