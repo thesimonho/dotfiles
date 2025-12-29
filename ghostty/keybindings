@@ -4,6 +4,7 @@ keybind = global:super+backquote=toggle_quick_terminal
 keybind = performable:ctrl+shift+c=copy_to_clipboard
 keybind = performable:ctrl+shift+v=paste_from_clipboard
 
+keybind = shift+enter=text:\x1b\r
 keybind = ctrl+Backspace=text:\x17
 keybind = ctrl+Delete=text:\x1b[3;5~
 
