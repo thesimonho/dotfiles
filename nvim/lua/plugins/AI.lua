@@ -31,6 +31,14 @@ local M = {
   },
   {
     "folke/sidekick.nvim",
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "sidekick_terminal",
+        callback = function()
+          vim.keymap.set("t", "<esc>", "<esc>", { buffer = true, silent = true })
+        end,
+      })
+    end,
     opts = {
       cli = {
         watch = true,
@@ -47,5 +55,9 @@ local M = {
     },
   },
 }
+
+vim.keymap.set("n", "<leader>ac", function()
+  vim.fn.system("xdg-open https://www.claude.ai")
+end, { desc = "Chat in browser" })
 
 return M
