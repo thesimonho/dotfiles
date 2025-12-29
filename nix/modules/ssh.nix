@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 
@@ -9,19 +10,37 @@ let
   sshDir = "${config.home.homeDirectory}/.ssh";
   meta = import ../secrets/meta.nix;
 
-  mkSecret = name: item: {
-    name = "${name}";
+  # Generate SSH keys
+  mkSshSecret = name: info: {
+    name = name;
     value = {
-      file = builtins.toPath "${../secrets}/${item.file}.age";
-      path = "${sshDir}/${item.file}";
+      file = builtins.toPath "${../secrets}/${info.file}.age";
+      path = "${sshDir}/${info.file}";
       mode = "600";
       symlink = false;
     };
   };
+  sshSecrets = lib.mapAttrs' mkSshSecret (lib.filterAttrs (name: info: info.sshKey) meta.secrets);
+
+  # Generate age secret config for other secrets
+  mkOtherSecret = name: info: {
+    name = name;
+    value = {
+      file = builtins.toPath "${../secrets}/${info.file}.age";
+      path = "${config.home.homeDirectory}/.secrets/${info.file}";
+      symlink = false;
+    };
+  };
+  otherSecrets = lib.mapAttrs' mkOtherSecret (
+    lib.filterAttrs (name: info: !info.sshKey) meta.secrets
+  );
 in
 {
   home = {
-    packages = with pkgs; [ age ];
+    packages = with pkgs; [
+      age
+      inputs.agenix.packages.${stdenv.hostPlatform.system}.default
+    ];
   };
 
   # set ssh env variables
@@ -80,7 +99,7 @@ in
     };
   };
 
-  # TODO: add yubikey support https://github.com/oddlama/agenix-rekey
+  # TODO: add yubikey/rekey support https://github.com/oddlama/agenix-rekey
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
@@ -92,7 +111,7 @@ in
         addKeysToAgent = "true";
         forwardAgent = true;
         identitiesOnly = true;
-        identityFile = "${sshDir}/${meta.sprung.file}";
+        identityFile = "${sshDir}/${meta.secrets.sprung.file}";
       };
       "personal-github.com" = {
         hostname = "ssh.github.com";
@@ -101,12 +120,12 @@ in
         addKeysToAgent = "true";
         forwardAgent = true;
         identitiesOnly = true;
-        identityFile = "${sshDir}/${meta.personal.file}";
+        identityFile = "${sshDir}/${meta.secrets.personal.file}";
       };
     };
   };
   age = {
     identityPaths = [ "${sshDir}/ssh_identity" ];
-    secrets = lib.mapAttrs' mkSecret meta;
+    secrets = sshSecrets // otherSecrets;
   };
 }

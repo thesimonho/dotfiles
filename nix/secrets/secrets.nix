@@ -1,7 +1,9 @@
 let
   meta = import ./meta.nix;
+
+  mkAgeEntry = name: info: {
+    name = "${info.file}.age";
+    value.publicKeys = [ meta.identityKey ];
+  };
 in
-{
-  "id_personal.age".publicKeys = [ meta.personal.publicKey ];
-  "id_sprung.age".publicKeys = [ meta.sprung.publicKey ];
-}
+builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs mkAgeEntry meta.secrets))
