@@ -1,6 +1,6 @@
 config-file = keybindings
 
-font-family = CaskaydiaCove Nerd Font Mono
+font-family = CaskaydiaCove Nerd Font
 font-style = SemiLight
 font-size = 12
 font-feature = -calt, -clig, -liga, -dlig
