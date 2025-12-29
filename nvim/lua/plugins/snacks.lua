@@ -154,6 +154,14 @@ return {
           },
         },
         win = {
+          input = {
+            keys = {
+              ["<a-a>"] = {
+                "sidekick_send",
+                mode = { "n", "i" },
+              },
+            },
+          },
           list = {
             wo = {
               winblend = 0,
@@ -170,6 +178,11 @@ return {
               winblend = 0,
             },
           },
+        },
+        actions = {
+          sidekick_send = function(...)
+            return require("sidekick.cli.picker.snacks").send(...)
+          end,
         },
         sources = {
           options = {

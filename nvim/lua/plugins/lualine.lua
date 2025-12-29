@@ -183,9 +183,26 @@ return {
           cond = function()
             return utils.get_split_count() < 3
           end,
+          separator = "",
           on_click = function()
             local fileformat = vim.api.nvim_get_option_value("fileformat", { scope = "local" })
             vim.api.nvim_feedkeys(":set fileformat=" .. fileformat, "n", true)
+          end,
+        },
+        {
+          function()
+            local status = require("sidekick.status").cli()
+            return " " .. (#status > 1 and #status or "")
+          end,
+          cond = function()
+            return #require("sidekick.status").cli() > 0
+          end,
+          separator = "",
+          color = function()
+            return "Special3"
+          end,
+          on_click = function()
+            vim.cmd("Sidekick cli toggle")
           end,
         },
       },
