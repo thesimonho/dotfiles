@@ -397,10 +397,6 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/lazygit";
     force = true;
   };
-  xdg.configFile."mcphub" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/mcphub";
-    force = true;
-  };
   xdg.configFile."fzf" = {
     source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
     force = true;
