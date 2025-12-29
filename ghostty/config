@@ -13,7 +13,7 @@ window-theme = system
 mouse-shift-capture = true
 mouse-hide-while-typing = true
 
-background-opacity = 0.98
+background-opacity = 0.80
 background-blur = true
 
 link-url = true
