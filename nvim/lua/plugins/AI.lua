@@ -8,7 +8,7 @@ local M = {
         .toggle({
           name = "AI Completions",
           get = function()
-            return require("supermaven-nvim.api").is_running()
+            return require("supermaven-nvim.api").is_running() or false
           end,
           set = function()
             require("supermaven-nvim.api").toggle()
