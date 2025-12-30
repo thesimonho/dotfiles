@@ -11,12 +11,8 @@ return {
         preserve = true,
         alpha_show = "auto",
         save_on_quit = true,
-        lsp = true,
         highlighter = {
-          auto_enable = true,
-          lsp = true,
-          update_insert = true,
-          excludes = { "lazy" },
+          auto_enable = false,
         },
         highlight_mode = "virtual",
         virtual_symbol = "󰝤 ",
@@ -58,5 +54,46 @@ return {
         },
       }
     end,
+  },
+  {
+    "catgoose/nvim-colorizer.lua",
+    event = "VeryLazy",
+    opts = {
+      filetypes = {
+        "*",
+        "!bigfile",
+        "!lazy",
+        "!ccc-ui",
+      },
+      lazy_load = true,
+      user_default_options = {
+        names = true,
+        names_opts = {
+          lowercase = true, -- name:lower(), highlight `blue` and `red`
+          camelcase = true, -- name, highlight `Blue` and `Red`
+          uppercase = true, -- name:upper(), highlight `BLUE` and `RED`
+          strip_digits = true, -- ignore names with digits,
+        },
+        RGB = true, -- #RGB hex codes
+        RGBA = true, -- #RGBA hex codes
+        RRGGBB = true, -- #RRGGBB hex codes
+        RRGGBBAA = true, -- #RRGGBBAA hex codes
+        AARRGGBB = true, -- 0xAARRGGBB hex codes
+        rgb_fn = true, -- CSS rgb() and rgba() functions
+        hsl_fn = true, -- CSS hsl() and hsla() functions
+        oklch_fn = true, -- CSS oklch() function
+        tailwind = "both",
+        tailwind_opts = {
+          update_names = true, -- update tailwind names from LSP results.
+        },
+        sass = { enable = true, parsers = { "css" } }, -- Enable sass colors
+        xterm = true, -- Enable xterm 256-color codes (#xNN, \e[38;5;NNNm)
+        mode = "virtualtext",
+        virtualtext = "󰝤",
+        virtualtext_inline = "before",
+        virtualtext_mode = "foreground",
+        always_update = true,
+      },
+    },
   },
 }
