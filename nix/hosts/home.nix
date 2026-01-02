@@ -13,7 +13,7 @@
   home = {
     username = "simon";
     homeDirectory = "/home/simon";
-    packages = with pkgs; [ ];
+    packages = with pkgs; [ stripe-cli ];
   };
 
   services.flatpak = {
@@ -21,9 +21,9 @@
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
       "com.dropbox.Client"
+      "eu.betterbird.Betterbird"
       # "io.github.berarma.Oversteer"
       # "com.calibre_ebook.calibre"
-      "eu.betterbird.Betterbird"
     ];
     overrides = {
       "com.discordapp.Discord".Context = {
