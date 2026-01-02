@@ -22,7 +22,7 @@ local M = {
         clear_suggestion = "<C-e>",
         accept_word = "<M-h>",
       },
-      ignore_filetypes = { "bigfile", "snacks_input", "snacks_notif" },
+      ignore_filetypes = { "bigfile", "neo-tree-popup", "snacks_input", "snacks_notif" },
       color = {
         cterm = 244,
       },
