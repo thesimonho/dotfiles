@@ -65,6 +65,10 @@ return {
         "!lazy",
         "!ccc-ui",
       },
+      buftypes = {
+        "*",
+        "!terminal",
+      },
       lazy_load = true,
       user_default_options = {
         names = true,
