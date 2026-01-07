@@ -124,15 +124,40 @@
 
       # 1000: general config
       (lib.mkOrder 1000 ''
+        autoload zmv  # regex mv
+
+        # hooks
+        chpwd() {
+          ls
+        }
+
         # keybinds
         function open_file_manager() {
           zle -I        # Clear pending input or partial commands
           yazi           # Launch file manager
           zle redisplay # Redraw the prompt after Yazi exits
         }
-
         zle -N open_file_manager
         bindkey '^E' open_file_manager
+
+        autoload -Uz edit-command-line
+        zle -N edit-command-line
+        bindkey '^X^E' edit-command-line
+
+        copy-command() {
+          if command -v pbcopy &> /dev/null; then
+            echo -n "$BUFFER" | pbcopy
+          elif command -v wl-copy &> /dev/null; then
+            echo -n "$BUFFER" | wl-copy
+          else
+            zle -M "No clipboard tool found"
+            return 1
+          fi
+          zle -M "Copied to clipboard"
+        }
+        zle -N copy-command
+        bindkey '^X^C' copy-command
+
         bindkey '^[l' autosuggest-accept # alt+L to accept autosuggestion
         bindkey '^H' backward-kill-word # ctrl backspace
         bindkey '^[[3;5~' kill-word # ctrl delete
@@ -151,15 +176,6 @@
           repo = "fzf-tab";
           rev = "v1.2.0";
           sha256 = "sha256-q26XVS/LcyZPRqDNwKKA9exgBByE0muyuNb0Bbar2lY=";
-        };
-      }
-      {
-        name = "cd-ls";
-        src = pkgs.fetchFromGitHub {
-          owner = "zshzoo";
-          repo = "cd-ls";
-          rev = "f26c86baf50ca0e92b454753dc6f1d25228e67bf";
-          sha256 = "sha256-QUnZBb0X6F42FcvNxq65zq2oB8cn1Ym4SuU8MXpIfN4=";
         };
       }
       {
