@@ -48,6 +48,7 @@ in
       nixfmt-rfc-style
       pay-respects
       pkgsUnstable.snitch
+      wl-clipboard
       uv
       # cmake
       # docker
