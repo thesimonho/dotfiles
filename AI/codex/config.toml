@@ -13,12 +13,3 @@ web_search_request = false
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
 env = { DEFAULT_MINIMUM_TOKENS = "6000" }
-
-[mcp_servers.playwright]
-command = "npx"
-args = ["@playwright/mcp@latest", "--vision", "--extension"]
-
-[mcp_servers.playwright-test]
-command = "npx"
-args = ["playwright", "run-test-mcp-server"]
-
