@@ -377,33 +377,30 @@ in
   };
 
   # symlinks
-  home.file.".codex" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/codex";
-    force = true;
-  };
-
-  xdg.configFile."nvim" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/nvim";
-    force = true;
-  };
-  xdg.configFile."ghostty" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/ghostty";
-    force = true;
-  };
-  xdg.configFile."wezterm" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/wezterm";
-    force = true;
-  };
-  xdg.configFile."lazygit" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/lazygit";
-    force = true;
-  };
-  xdg.configFile."fzf" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
-    force = true;
-  };
-  xdg.configFile."starship.toml" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/starship.toml";
-    force = true;
+  xdg.configFile = {
+    "nvim" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/nvim";
+      force = true;
+    };
+    "ghostty" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/ghostty";
+      force = true;
+    };
+    "wezterm" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/wezterm";
+      force = true;
+    };
+    "lazygit" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/lazygit";
+      force = true;
+    };
+    "fzf" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
+      force = true;
+    };
+    "starship.toml" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/starship.toml";
+      force = true;
+    };
   };
 }
