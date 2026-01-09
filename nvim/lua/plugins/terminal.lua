@@ -18,9 +18,9 @@ local function term_or_exec(term_num)
     local container_name = path[#path]:lower():gsub("[ _]", "-")
     local cmd = "ssh " .. container_name .. ".devpod"
     vim.notify_once("Launching devcontainer: " .. container_name, vim.log.levels.INFO)
-    return term_num .. "TermExec cmd='" .. cmd .. "' go_back=0"
+    return term_num .. "TermExec cmd='" .. cmd .. "' go_back=0 direction='float'"
   end
-  return term_num .. "ToggleTerm"
+  return term_num .. "ToggleTerm direction='float'"
 end
 
 local function init_or_toggle()
@@ -89,6 +89,7 @@ return {
       start_in_insert = true,
       hide_numbers = true,
       shade_terminals = false,
+      persist_mode = true,
       size = function(term)
         if term.direction == "horizontal" then
           return 15
