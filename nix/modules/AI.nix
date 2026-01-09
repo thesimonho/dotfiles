@@ -12,7 +12,6 @@ in
 {
   home = {
     packages = with pkgs; [
-      pkgsUnstable.opencode
       pkgsUnstable.claude-code
       pkgsUnstable.claude-code-acp
       pkgsUnstable.codex
