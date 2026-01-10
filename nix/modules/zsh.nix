@@ -4,7 +4,10 @@
   lib,
   ...
 }:
-
+let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
+in
 {
   programs.zsh = {
     enable = true;
@@ -45,14 +48,13 @@
       la = "eza -la";
       ll = "eza -l";
       lt = "eza --tree";
-      tf = "terraform";
       lg = "lazygit";
       ld = "lazydocker";
       lj = "lazyjournal";
       ss = "snitch";
       netstat = "snitch";
       vim = "nvim";
-      bw = "flatpak run --command=bw com.bitwarden.desktop";
+      bw = lib.mkIf isLinux "flatpak run --command=bw com.bitwarden.desktop";
     };
     localVariables = {
       HYPHEN_INSENSITIVE = "true";

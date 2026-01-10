@@ -7,24 +7,50 @@
   ...
 }:
 let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
+
+  sharedPackages = [
+    pkgs.lazydocker
+    pkgs.lazygit
+    pkgs.lazyjournal
+    pkgs.lua54Packages.luarocks
+    pkgs.neovim
+    pkgs.nixd
+    pkgs.nixfmt-rfc-style
+    pkgs.pay-respects
+    pkgsUnstable.snitch
+    pkgs.uv
+    # cmake
+    # docker
+    # nerd-fonts.caskaydia-cove
+    # nerd-fonts.fira-code
+    # nerd-fonts.jetbrains-mono
+    # nerd-fonts.symbols-only
+  ];
+  linuxPackages = lib.optionals isLinux [
+    pkgs.wl-clipboard
+  ];
+  darwinPackages = lib.optionals isDarwin [ ];
 in
 {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
   imports = [ ./zsh.nix ];
-  targets.genericLinux.enable = true;
+  targets.genericLinux.enable = isLinux;
   fonts.fontconfig.enable = true;
 
   xdg.enable = true;
   xdg.autostart.enable = true;
-  xdg.systemDirs.data = [
+
+  xdg.systemDirs.data = lib.mkIf isLinux [
     "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
     "/var/lib/flatpak/exports/share"
   ];
-  xdg.configFile."environment.d/20-flatpak.conf".text = ''
+  xdg.configFile."environment.d/20-flatpak.conf".text = lib.mkIf isLinux ''
     XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share
   '';
 
@@ -37,60 +63,10 @@ in
     };
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableShellIntegration = true;
-    packages = with pkgs; [
-      ast-grep
-      lazydocker
-      lazygit
-      lazyjournal
-      lua54Packages.luarocks
-      neovim
-      nixd
-      nixfmt-rfc-style
-      pay-respects
-      pkgsUnstable.snitch
-      wl-clipboard
-      uv
-      # cmake
-      # docker
-      # nerd-fonts.caskaydia-cove
-      # nerd-fonts.fira-code
-      # nerd-fonts.jetbrains-mono
-      # nerd-fonts.symbols-only
-    ];
-
-    # applications
-    # file.".local/share/applications/wezterm.desktop" = {
-    #   executable = true;
-    #   text = ''
-    #     [Desktop Entry]
-    #     Type=Application
-    #     Name=WezTerm
-    #     GenericName=Terminal Emulator
-    #     Comment=GPU-accelerated cross-platform terminal emulator
-    #     Exec=wezterm
-    #     Icon=org.wezfurlong.wezterm
-    #     Terminal=false
-    #     Categories=System;TerminalEmulator;Development;
-    #   '';
-    # };
-    #
-    # file.".local/share/applications/ghostty.desktop" = {
-    #   executable = true;
-    #   text = ''
-    #     [Desktop Entry]
-    #     Type=Application
-    #     Name=Ghostty
-    #     GenericName=Terminal Emulator
-    #     Comment=A terminal emulator for the modern age
-    #     Exec=ghostty
-    #     Icon=com.mitchellh.ghostty
-    #     Terminal=false
-    #     Categories=System;TerminalEmulator;Development;
-    #   '';
-    # };
+    packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 
-  services.flatpak = {
+  services.flatpak = lib.mkIf isLinux {
     enable = true;
     uninstallUnmanaged = true;
     remotes = [
