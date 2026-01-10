@@ -7,6 +7,8 @@
 }:
 
 let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
   sshDir = "${config.home.homeDirectory}/.ssh";
   meta = import ../secrets/meta.nix;
 
@@ -44,7 +46,7 @@ in
   };
 
   # set ssh env variables
-  xdg.configFile."environment.d/ssh.conf".text = ''
+  xdg.configFile."environment.d/ssh.conf".text = lib.mkIf isLinux ''
     SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
     SSH_ASKPASS=/usr/bin/ksshaskpass
     SSH_ASKPASS_REQUIRE=prefer
@@ -73,7 +75,7 @@ in
   home.file.".local/bin/ssh-add-keys".executable = true;
 
   # service to add keys on login
-  systemd.user.services.ssh-add-keys = {
+  systemd.user.services.ssh-add-keys = lib.mkIf isLinux {
     Unit = {
       Description = "Load SSH keys into agent";
       After = [ "ssh-agent.socket" ];

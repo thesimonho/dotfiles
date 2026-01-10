@@ -6,6 +6,18 @@
   ...
 }:
 
+let
+  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.isDarwin;
+
+  sharedPackages = [
+    pkgs.terraform
+  ];
+  linuxPackages = lib.optionals isLinux [ ];
+  darwinPackages = lib.optionals isDarwin [
+    pkgs.slack
+  ];
+in
 {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
@@ -13,10 +25,10 @@
   home = {
     username = "simon";
     homeDirectory = "/home/simon";
-    packages = with pkgs; [ ];
+    packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 
-  services.flatpak = {
+  services.flatpak = lib.mkIf isLinux {
     packages = [ "com.slack.Slack" ];
     overrides = {
       "com.slack.Slack".Context = {
@@ -58,6 +70,11 @@
         # url = {
         #   "ssh://git@github.com/" = { insteadOf = "https://github.com/"; };
         # };
+      };
+    };
+    zsh = {
+      shellAliases = {
+        tf = "terraform";
       };
     };
   };

@@ -1,5 +1,6 @@
-{ pkgs, ... }:
-{
+{ pkgs, lib, ... }:
+
+lib.mkIf pkgs.stdenv.isLinux {
   xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".text = ''
     [D-BUS Service]
     Name=org.freedesktop.secrets
