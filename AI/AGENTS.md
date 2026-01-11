@@ -15,7 +15,7 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 - Early returns over nested conditionals
 - Defensive coding: use guards and type narrowing even without strict mode
 - Write docstrings. Use these conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
-- Comments explain *why*, not *what* - provide enough context for someone to write tests against intended behaviour
+- Comments explain _why_, not _what_ - provide enough context for someone to write tests against intended behaviour
 - No line-by-line commentary
 
 ## Testing
@@ -37,8 +37,6 @@ Use TDD: write tests first, then write code to make them pass. Only applies when
 
 ## Git
 
-- Always create and checkout a new branch before starting
-- Commit in small logical chunks
 - Branch prefixes: `fix_`, `feat_`, etc.
 - Conventional commits
 - Merge commits (no squash)
