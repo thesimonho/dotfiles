@@ -10,9 +10,7 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
 
-  sharedPackages = [
-    pkgs.terraform
-  ];
+  sharedPackages = [ ];
   linuxPackages = lib.optionals isLinux [ ];
   darwinPackages = lib.optionals isDarwin [
     pkgs.slack
