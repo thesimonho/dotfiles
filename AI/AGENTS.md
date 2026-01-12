@@ -34,9 +34,3 @@ Use TDD: write tests first, then write code to make them pass. Only applies when
 - Focus on: bugs, performance, architectural concerns
 - Minor stylistic nitpicks can be noted as an aside
 - Stop and ask before making significant changes
-
-## Git
-
-- Branch prefixes: `fix_`, `feat_`, etc.
-- Conventional commits
-- Merge commits (no squash)
