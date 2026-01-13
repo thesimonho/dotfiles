@@ -20,7 +20,9 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 
 ## Testing
 
-Use test driven development skill: write tests first, then write code to make them pass. Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
+Always use test driven development when writing functions. Write tests first, then write code to make them pass. Make sure to use skills or MCP server to help with this.
+
+Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
 
 ## When Uncertain
 
