@@ -31,6 +31,6 @@ Use TDD: write tests first, then write code to make them pass. Only applies when
 ## When Exploring and Reviewing
 
 - Question my approach if you see issues
-- Focus on: bugs, performance, architectural concerns
+- Focus on: bugs, security, performance, architectural concerns
 - Minor stylistic nitpicks can be noted as an aside
 - Stop and ask before making significant changes
