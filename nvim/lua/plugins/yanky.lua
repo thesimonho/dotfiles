@@ -9,8 +9,12 @@ return {
       desc = "Yank History",
     },
     { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Yank Text" },
-    { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put after" },
+    { "<C-c>", "<Plug>(YankyYank)", mode = { "v" }, desc = "Yank Text" },
+
     { "P", "<Plug>(YankyPutBeforeLinewise)", mode = { "n", "x" }, desc = "Put before" },
+    { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put after" },
+    { "<C-v>", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put after" },
+    { "<C-v>", "<C-r>+", mode = { "i" }, desc = "Put after" },
     {
       "iy",
       function()
