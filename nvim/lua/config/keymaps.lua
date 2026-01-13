@@ -29,8 +29,7 @@ vim.api.nvim_del_keymap("n", "<leader><tab>o")
 -- General
 vim.keymap.set("i", "kj", "<esc>")
 vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit" })
-vim.keymap.set("v", "<C-c>", '"+y') -- Copy
-vim.keymap.set("i", "<C-v>", '<esc>"+pa') -- Paste
+
 vim.keymap.set("i", "<C-Del>", function()
   local col = vim.fn.col(".")
   local line = vim.fn.getline(".")
