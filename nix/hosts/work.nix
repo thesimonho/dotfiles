@@ -21,8 +21,8 @@ in
   # Shared packages and environment
   # ---------------------------------------------------------------------------
   home = {
-    username = "simon";
-    homeDirectory = "/home/simon";
+    username = "simon.ho";
+    homeDirectory = "/Users/simon.ho";
     packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 

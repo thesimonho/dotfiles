@@ -46,11 +46,15 @@ in
   };
 
   # set ssh env variables
-  xdg.configFile."environment.d/ssh.conf".text = lib.mkIf isLinux ''
-    SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
-    SSH_ASKPASS=/usr/bin/ksshaskpass
-    SSH_ASKPASS_REQUIRE=prefer
-  '';
+  xdg.configFile = {
+    "environment.d/ssh.conf" = lib.mkIf isLinux {
+      text = ''
+        SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/ssh-agent.socket
+        SSH_ASKPASS=/usr/bin/ksshaskpass
+        SSH_ASKPASS_REQUIRE=prefer
+      '';
+    };
+  };
 
   # script to discover and add keys (id_xxx)
   home.file.".local/bin/ssh-add-keys".text = ''
