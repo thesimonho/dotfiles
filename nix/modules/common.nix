@@ -50,9 +50,11 @@ in
     "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
     "/var/lib/flatpak/exports/share"
   ];
-  xdg.configFile."environment.d/20-flatpak.conf".text = lib.mkIf isLinux ''
-    XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share
-  '';
+  xdg.configFile = {
+    "environment.d/20-flatpak.conf" = lib.mkIf isLinux {
+      text = "XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share";
+    };
+  };
 
   home = {
     sessionVariables = {

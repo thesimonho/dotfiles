@@ -83,6 +83,7 @@ FLAKE_DIR="${REPO_DIR}/${FLAKE_SUBDIR}"
 # Helpers
 # ------------------------------------------------------
 detect_pkgmgr() {
+  [[ "$OS" == "Linux" ]] || return 0
   if command -v apt-get >/dev/null 2>&1; then
     echo "apt"
   elif command -v dnf >/dev/null 2>&1; then
@@ -95,18 +96,19 @@ detect_pkgmgr() {
 }
 
 pkg_update() {
+  [[ "$OS" == "Linux" ]] || return 0
   case "$(detect_pkgmgr)" in
   apt) sudo apt-get update -y ;;
   dnf) : ;; # typically not required
   pacman) sudo pacman -Sy ;;
   none)
-    echo "No supported package manager found." >&2
-    return 1
+    echo "No supported Linux package manager found." >&2
     ;;
   esac
 }
 
 pkg_install() {
+  [[ "$OS" == "Linux" ]] || return 0
   # Usage: pkg_install pkg1 pkg2 ...
   local pm
   pm="$(detect_pkgmgr)"
@@ -158,9 +160,7 @@ ensure_git() {
 # Ensure Flatpak is installed and initialized system wide (Linux only)
 # ------------------------------------------------------
 ensure_flatpak() {
-  if [ "$OS" != "Linux" ]; then
-    return
-  fi
+  [[ "$OS" == "Linux" ]] || return 0
 
   if [ -x /usr/bin/flatpak ]; then
     echo "==> System Flatpak already installed."
@@ -178,10 +178,12 @@ ensure_flatpak() {
 # Ensure KDE applications are installed
 # ------------------------------------------------------
 ensure_kde() {
+  [[ "$OS" == "Linux" ]] || return 0
+
   # Detect KDE Plasma
-  if [[ "${XDG_CURRENT_DESKTOP,,}" == *kde* ]] ||
-    [[ "${DESKTOP_SESSION,,}" == *plasma* ]] ||
-    [[ "${KDE_FULL_SESSION}" == "true" ]]; then
+  if [[ "${XDG_CURRENT_DESKTOP:-}" == *kde* ]] ||
+    [[ "${DESKTOP_SESSION:-}" == *plasma* ]] ||
+    [[ "${KDE_FULL_SESSION:-}" == "true" ]]; then
 
     echo "KDE detected; installing KDE utilities"
     case "$(detect_pkgmgr)" in
@@ -196,7 +198,6 @@ ensure_kde() {
       ;;
     *)
       echo "Unsupported package manager; install KDE utilities manually" >&2
-      return 1
       ;;
     esac
   fi

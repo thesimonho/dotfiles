@@ -66,6 +66,10 @@
         type = "app";
         program = "${home-manager.packages.x86_64-linux.home-manager}/bin/home-manager";
       };
+      apps.aarch64-darwin.hm = {
+        type = "app";
+        program = "${home-manager.packages.aarch64-darwin.home-manager}/bin/home-manager";
+      };
 
       homeConfigurations."home" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor "x86_64-linux";
@@ -86,12 +90,11 @@
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
-
       homeConfigurations."work" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor "x86_64-linux";
+        pkgs = pkgsFor "aarch64-darwin";
         extraSpecialArgs = {
           inherit inputs;
-          pkgsUnstable = unstableFor "x86_64-linux";
+          pkgsUnstable = unstableFor "aarch64-darwin";
         };
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak

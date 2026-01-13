@@ -13,7 +13,7 @@
   home = {
     username = "simon";
     homeDirectory = "/home/simon";
-    packages = with pkgs; [ stripe-cli ];
+    packages = [ pkgs.stripe-cli ];
   };
 
   services.flatpak = {
