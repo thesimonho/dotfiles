@@ -7,9 +7,12 @@ approval_policy = "untrusted"
 network_access = true
 
 [features]
-web_search_request = false
+web_search_request = true
 
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
 env = { DEFAULT_MINIMUM_TOKENS = "6000" }
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
