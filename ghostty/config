@@ -1,3 +1,4 @@
+auto-update = off
 config-file = keybindings
 
 font-family = CaskaydiaCove Nerd Font
@@ -8,20 +9,30 @@ font-feature = -calt, -clig, -liga, -dlig
 adjust-underline-position = 2
 
 theme = light:kanagawa-paper-canvas,dark:kanagawa-paper-ink
-window-theme = system
 
 mouse-shift-capture = true
 mouse-hide-while-typing = true
+focus-follows-mouse = true
 
-background-opacity = 0.95
+unfocused-split-opacity = 0.5
+background-opacity = 0.97
 background-blur = true
 bold-color = bright
+bold-is-bright = true
 
 link-url = true
 link-previews = true
 
+initial-window = false
+window-theme = system
+window-subtitle = working-directory
+window-save-state = always
+window-new-tab-position = end
+window-theme = system
+window-padding-x = 0
+window-padding-y = 0
+window-padding-balance = true
 window-inherit-working-directory = true
-window-new-tab-position = current
 window-show-tab-bar = auto
 
 clipboard-read = allow
@@ -41,6 +52,4 @@ quick-terminal-position = top
 linux-cgroup = always
 linux-cgroup-hard-fail = false
 
-
 macos-option-as-alt = true
-macos-secure-input-indication = true
