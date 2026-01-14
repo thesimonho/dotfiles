@@ -11,8 +11,8 @@
   # Shared packages and environment
   # ---------------------------------------------------------------------------
   home = {
-    username = "simon";
-    homeDirectory = "/home/simon";
+    username = lib.mkForce "simon";
+    homeDirectory = lib.mkForce "/home/simon";
     packages = [ pkgs.stripe-cli ];
   };
 
