@@ -54,3 +54,5 @@ nushell/api.env
 yazi/plugins
 yazi/package.toml
 
+# tmux
+tmux/plugins
