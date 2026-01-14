@@ -22,7 +22,9 @@ let
     pkgs.nixfmt-rfc-style
     pkgs.pay-respects
     pkgsUnstable.snitch
+    pkgs.tmux
     pkgs.uv
+    pkgs.zellij
     # cmake
     # docker
     # nerd-fonts.caskaydia-cove
@@ -374,6 +376,10 @@ in
     };
     "fzf" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
+      force = true;
+    };
+    "zellij" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/zellij";
       force = true;
     };
     "starship.toml" = {
