@@ -34,14 +34,10 @@ keybinds clear-defaults=true {
             SwitchToMode "locked"
         }
         bind "v" {
-            NewPane "right"
+            NewPane
             SwitchToMode "locked"
         }
         bind "s" {
-            NewPane "down"
-            SwitchToMode "locked"
-        }
-        bind "S" {
             NewPane "stacked"
             SwitchToMode "locked"
         }
