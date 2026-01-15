@@ -7,7 +7,8 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 ## Documentation
 
 - Keep README and project AGENTS.md/CLAUDE.md files up to date when making significant changes
-- Create README.md files for subdirectories when nuance and detail is needed for a submodule
+- Create README.md files for subdirectories/submodules when nuance and detail is needed for that section.
+- When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
 
 ## Coding Style
 
