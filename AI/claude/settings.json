@@ -19,7 +19,7 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opusplan",
+  "model": "sonnet",
   "enabledPlugins": {
     "context7@claude-plugins-official": true
   }
