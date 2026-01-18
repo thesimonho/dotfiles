@@ -6,22 +6,21 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 
 ## Documentation
 
-- Keep README and project AGENTS.md/CLAUDE.md files up to date when making significant changes
 - Create README.md files for subdirectories/submodules when nuance and detail is needed for that section.
 - When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
+- Keep repo/subdirectory README.md and project AGENTS.md/CLAUDE.md files up to date when making significant changes.
 
 ## Coding Style
 
 - Small, testable functions
 - Early returns over nested conditionals
 - Defensive coding: use guards and type narrowing even without strict mode
-- Write docstrings. Use these conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
-- Comments explain _why_, not _what_ - provide enough context for someone to write tests against intended behaviour
-- No line-by-line commentary
+- Write docstrings. Conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
+- Comments explain why, not what - provide enough context for someone to write tests against intended behaviour
 
 ## Testing
 
-Always use test driven development when writing functions. Write tests first, then write code to make them pass. Make sure to use skills or MCP server to help with this.
+Always use test driven development when writing functions. Write tests first, then write code to make them pass. Make sure to use skills to help with this.
 
 Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
 
