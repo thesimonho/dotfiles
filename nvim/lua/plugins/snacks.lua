@@ -71,6 +71,7 @@ return {
         LazyVim.pick("smart", {
           root = false,
           hidden = true,
+          ignored = true,
           multi = { "buffers", "files" },
           matcher = {
             cwd_bonus = true,
@@ -89,7 +90,11 @@ return {
         mode = { "n", "x" },
       },
       { "<leader>so", LazyVim.pick("options"), desc = "Options" },
-      { "<leader>ff", LazyVim.pick("files", { root = false, hidden = true }), desc = "Find Files (cwd)" },
+      {
+        "<leader>ff",
+        LazyVim.pick("files", { root = false, hidden = true, ignored = true }),
+        desc = "Find Files (cwd)",
+      },
       {
         "<leader>fp",
         function()
@@ -126,6 +131,10 @@ return {
       quickfile = { enabled = true },
       picker = {
         enabled = true,
+        exclude = {
+          ".git",
+          "node_modules",
+        },
         matcher = {
           fuzzy = true, -- use fuzzy matching
           smartcase = true, -- use smartcase
@@ -143,7 +152,7 @@ return {
             filename_only = false, -- only show the filename
             truncate = 40, -- truncate the file path to (roughly) this length
             icon_width = 2, -- width of the icon (in characters)
-            git_status_hl = true, -- use the git status highlight group for the filename
+            git_status_hl = false, -- use the git status highlight group for the filename
           },
           selected = {
             show_always = false, -- only show the selected column when there are multiple selections

@@ -1,6 +1,7 @@
 # OS
 .DS_store
 Thumbs.db
+.env
 .envrc
 
 # Ignore backup and swap files
