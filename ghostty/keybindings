@@ -8,18 +8,23 @@ keybind = shift+enter=text:\x1b\r
 keybind = ctrl+Backspace=text:\x17
 keybind = ctrl+Delete=text:\x1b[3;5~
 
-keybind = super+w>h=goto_split:left
-keybind = super+w>j=goto_split:down
-keybind = super+w>k=goto_split:up
-keybind = super+w>l=goto_split:right
+keybind = super+h=goto_split:left
+keybind = super+j=goto_split:down
+keybind = super+k=goto_split:up
+keybind = super+l=goto_split:right
 
 keybind = super+w>s=new_split:down
 keybind = super+w>v=new_split:right
-keybind = super+w>==equalize_splits
 keybind = super+w>d=close_surface
+keybind = super+w>==equalize_splits
+keybind = super+w>m=toggle_split_zoom
 
-keybind = super+t>t=toggle_tab_overview
+keybind = ctrl+t=new_tab
 keybind = super+t>n=new_tab
 keybind = super+t>d=close_tab
-keybind = super+h=previous_tab
-keybind = super+l=next_tab
+keybind = super+t>h=previous_tab
+keybind = super+t>l=next_tab
+keybind = super+t>t=toggle_tab_overview
+
+keybind = super+u=scroll_page_up
+keybind = super+d=scroll_page_down

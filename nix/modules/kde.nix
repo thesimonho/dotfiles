@@ -41,10 +41,12 @@ lib.mkIf pkgs.stdenv.isLinux {
         };
         plasmashell = {
           "activate application launcher" = "Alt+F1";
+          "show-on-mouse-pos" = "";
         };
         kwin = {
           "Overview" = "";
           "Edit Tiles" = "";
+          "Show Desktop" = "";
           "Walk Through Windows" = "Alt+Tab";
           "Walk Through Windows (Reverse)" = "Alt+Shift+Tab";
           "Walk Through Windows of Current Application" = "Alt+`";
@@ -63,7 +65,7 @@ lib.mkIf pkgs.stdenv.isLinux {
       profiles = {
         zsh = {
           command = "${pkgs.zsh}/bin/zsh";
-          font.name = "CaskaydiaCove Nerd Font Mono";
+          font.name = "CaskaydiaCove Nerd Font";
           font.size = 12;
           colorScheme = "Breeze";
         };
