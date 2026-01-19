@@ -378,8 +378,8 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
       force = true;
     };
-    "tmux" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux";
+    "tmux/tmux.conf" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux/tmux.conf";
       force = true;
     };
     "zellij" = {
