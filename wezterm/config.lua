@@ -7,6 +7,7 @@ config.leader = { key = "Space", mods = "SUPER", timeout_milliseconds = 1500 }
 config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
+config.bold_brightens_ansi_colors = "BrightAndBold"
 config.color_scheme_dirs = { "~/.config/wezterm/colors" }
 config.color_scheme = utils.is_dark() and "kanagawa-paper-ink" or "kanagawa-paper-canvas"
 config.cursor_blink_rate = 0
@@ -19,7 +20,7 @@ config.enable_scroll_bar = false
 config.enable_tab_bar = true
 config.enable_wayland = true
 config.font = wezterm.font_with_fallback({
-	{ family = "CaskaydiaCove Nerd Font Mono", weight = "DemiLight" },
+	{ family = "CaskaydiaCove Nerd Font", weight = "DemiLight" },
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
 })
