@@ -51,9 +51,5 @@ Session.vim
 nushell/**/history*
 nushell/api.env
 
-# yazi
-yazi/plugins
-yazi/package.toml
-
 # tmux
 tmux/plugins
