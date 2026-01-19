@@ -57,6 +57,9 @@ lib.mkIf pkgs.stdenv.isLinux {
         "org.kde.kscreen.desktop" = {
           "ShowOSD" = "Display";
         };
+        "org.kde.spectacle.desktop" = {
+          "RecordRegion" = "Meta+Shift+R";
+        };
       };
     };
     konsole = {
