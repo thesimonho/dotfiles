@@ -45,9 +45,9 @@ in
     shellAliases = {
       cat = "bat --style='header,grid'";
       ls = "eza";
-      la = "eza -la";
-      ll = "eza -l";
-      lt = "eza --tree";
+      la = "ls -la";
+      ll = "ls -l";
+      lt = "ls --tree";
       lg = "lazygit";
       ld = "lazydocker";
       lj = "lazyjournal";
@@ -130,7 +130,7 @@ in
 
         # hooks
         chpwd() {
-          ls
+          eza --icons=always --group-directories-first --hyperlink
         }
 
         # keybinds
