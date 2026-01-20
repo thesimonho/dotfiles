@@ -34,6 +34,7 @@ config.inactive_pane_hsb = {
 config.keys = keybinds.basic_binds
 config.key_tables = keybinds.key_tables
 config.mux_enable_ssh_agent = false
+config.pane_focus_follows_mouse = true
 config.scrollback_lines = 7500
 config.show_new_tab_button_in_tab_bar = true
 config.tab_and_split_indices_are_zero_based = false
