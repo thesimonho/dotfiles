@@ -9,7 +9,6 @@ local enabled = {
 	tabline = true,
 	workspace = true,
 	resurrect = true,
-	toggle_terminal = false,
 	dev_containers = false,
 }
 
@@ -133,23 +132,6 @@ if enabled.resurrect then
 			})
 		end)
 	end
-end
-
--- toggle term
-if enabled.toggle_terminal then
-	M.toggle_terminal = wezterm.plugin.require("https://github.com/zsh-sage/toggle_terminal.wez")
-	M.toggle_terminal.apply_to_config(config, {
-		key = "\\",
-		mods = "SUPER",
-		direction = "Right",
-		size = { Percent = 50 },
-		change_invoker_id_everytime = false, -- Change invoker pane on every toggle
-		zoom = {
-			auto_zoom_toggle_terminal = false,
-			auto_zoom_invoker_pane = true,
-			remember_zoomed = true,
-		},
-	})
 end
 
 -- tabline
