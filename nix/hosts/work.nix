@@ -10,7 +10,9 @@ let
   isLinux = pkgs.stdenv.isLinux;
   isDarwin = pkgs.stdenv.isDarwin;
 
-  sharedPackages = [ ];
+  sharedPackages = [
+    pkgs.awscli2
+  ];
   linuxPackages = lib.optionals isLinux [ ];
   darwinPackages = lib.optionals isDarwin [
     pkgs.slack
@@ -44,15 +46,6 @@ in
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------
   programs = {
-    awscli = {
-      enable = true;
-      settings = {
-        "default" = {
-          region = "us-west-2";
-          output = "json";
-        };
-      };
-    };
     gh = {
       hosts = {
         "github.com" = {
