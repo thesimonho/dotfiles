@@ -24,6 +24,7 @@ config.font = wezterm.font_with_fallback({
 	{ family = "FiraCode Nerd Font", weight = "Regular" },
 	"Liberation Mono",
 })
+config.freetype_load_flags = "NO_HINTING"
 config.front_end = "WebGpu"
 config.harfbuzz_features = { "zero", "cv01", "cv02", "ss03", "ss05", "ss08", "calt=0", "clig=0", "liga=0" }
 config.hide_tab_bar_if_only_one_tab = false
