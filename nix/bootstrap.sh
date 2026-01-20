@@ -188,13 +188,13 @@ ensure_kde() {
     echo "KDE detected; installing KDE utilities"
     case "$(detect_pkgmgr)" in
     apt)
-      pkg_install ksshaskpass plasma-discover partitionmanager flatpak-kcm
+      pkg_install ksshaskpass partitionmanager flatpak-kcm
       ;;
     dnf)
-      pkg_install ksshaskpass plasma-discover kde-partitionmanager
+      pkg_install ksshaskpass kde-partitionmanager
       ;;
     pacman)
-      pkg_install ksshaskpass discover partitionmanager flatpak-kcm
+      pkg_install ksshaskpass partitionmanager flatpak-kcm
       ;;
     *)
       echo "Unsupported package manager; install KDE utilities manually" >&2
