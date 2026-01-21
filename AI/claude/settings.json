@@ -1,5 +1,7 @@
 {
+  "model": "opusplan",
   "permissions": {
+    "defaultMode": "default",
     "allow": [
       "Bash(ls:*)",
       "Bash(npm run *)",
@@ -26,11 +28,17 @@
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Read(./config/credentials.json)"
-    ],
-    "defaultMode": "default"
+    ]
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true
   },
-  "model": "opusplan"
+  "extraKnownMarketplaces": {
+    "artificial-jellybeans": {
+      "source": {
+        "source": "github",
+        "repo": "thesimonho/artificial-jellybeans"
+      }
+    }
+  }
 }
