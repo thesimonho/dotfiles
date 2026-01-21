@@ -22,27 +22,27 @@ in
 
   # symlinks
   home.file = {
-    ".claude/personal/CLAUDE.md" = {
+    ".claude/CLAUDE.md" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.md";
       force = true;
     };
-    ".claude/personal/skills" = {
+    ".claude/skills" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
       force = true;
     };
-    ".claude/personal/settings.json" = {
+    ".claude/settings.json" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/settings.json";
       force = true;
     };
-    ".claude/work/CLAUDE.md" = {
+    ".claude-2/CLAUDE.md" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.md";
       force = true;
     };
-    ".claude/work/skills" = {
+    ".claude-2/skills" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
       force = true;
     };
-    ".claude/work/settings.json" = {
+    ".claude-2/settings.json" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/settings.json";
       force = true;
     };
