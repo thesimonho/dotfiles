@@ -21,6 +21,7 @@ let
     pkgs.nixd
     pkgs.nixfmt-rfc-style
     pkgs.pay-respects
+    pkgs.scc
     pkgsUnstable.snitch
     pkgs.tmux
     pkgs.uv
