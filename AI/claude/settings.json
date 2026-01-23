@@ -4,12 +4,7 @@
       "Bash(ls:*)",
       "Bash(npm run *)",
       "WebSearch",
-      "WebFetch(domain:stripe.com)",
-      "WebFetch(domain:sentry.io)",
-      "WebFetch(domain:framer.com)",
-      "WebFetch(domain:motion.dev)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:npmjs.org)",
+      "WebFetch",
       "mcp__plugin_playwright_playwright__browser_navigate",
       "mcp__plugin_playwright_playwright__browser_wait_for",
       "mcp__plugin_playwright_playwright__browser_click",
@@ -29,7 +24,7 @@
     ],
     "defaultMode": "default"
   },
-  "model": "opusplan",
+  "model": "sonnet",
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "power-trio@artificial-jellybeans": true
@@ -41,5 +36,10 @@
         "repo": "thesimonho/artificial-jellybeans"
       }
     }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
   }
 }

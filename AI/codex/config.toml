@@ -16,3 +16,11 @@ env = { DEFAULT_MINIMUM_TOKENS = "6000" }
 
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
+
+[mcp_servers.pencil]
+command = "/tmp/.mount_pencilaZereY/resources/app.asar.unpacked/out/mcp-server-linux-x64"
+args = ["--ws-port", "36261"]
+model = "gpt-5.1-codex-max"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+approval_policy = "untrusted"
