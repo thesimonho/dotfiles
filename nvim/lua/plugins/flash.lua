@@ -12,15 +12,7 @@ return {
         desc = "Flash forward",
       },
       {
-        "S",
-        mode = { "n", "x", "o" },
-        function()
-          require("flash").jump({ search = { forward = false } })
-        end,
-        desc = "Flash backward",
-      },
-      {
-        "<M-s>",
+        "<S>",
         mode = { "n", "x", "o" },
         function()
           require("flash").treesitter()
