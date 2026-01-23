@@ -13,6 +13,9 @@ let
   dotfiles = "${config.home.homeDirectory}/dotfiles";
 
   sharedPackages = [
+    ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
+      doCheck = false;
+    }))
     pkgs.lazydocker
     pkgs.lazygit
     pkgs.lazyjournal
