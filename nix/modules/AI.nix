@@ -34,6 +34,7 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/settings.json";
       force = true;
     };
+
     ".claude-2/CLAUDE.md" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.md";
       force = true;
