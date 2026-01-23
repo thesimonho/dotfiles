@@ -25,9 +25,15 @@
     "defaultMode": "default"
   },
   "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "power-trio@artificial-jellybeans": true
+    "power-trio@artificial-jellybeans": true,
+    "postgres-best-practices@supabase-agent-skills": true
   },
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
@@ -36,10 +42,5 @@
         "repo": "thesimonho/artificial-jellybeans"
       }
     }
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y ccstatusline@latest",
-    "padding": 0
   }
 }
