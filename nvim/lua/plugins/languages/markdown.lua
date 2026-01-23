@@ -39,35 +39,45 @@ M = {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "codecompanion" },
+    ft = { "markdown" },
     opts = {
-      file_types = { "markdown", "codecompanion" },
+      file_types = { "markdown" },
+      render_modes = { "n", "c", "v", "t" },
+      preset = "lazy",
+      nested = false,
       completions = {
         blink = { enabled = true },
       },
       heading = {
         position = "inline",
         sign = true,
-        signs = { "󰫎 " },
-        border = true,
+        border = false,
         width = "full",
-        icons = { " 󰲡 ", " 󰲣 ", " 󰲥 ", " 󰲧 ", " 󰲩 ", " 󰲫 " },
+        icons = false,
       },
       code = {
         sign = true,
-        style = "full",
         width = "block",
+        conceal_delimiters = false,
+        language = false,
         min_width = 60,
-        left_pad = 2,
-        language_pad = 2,
+        left_pad = 0,
+        language_pad = 0,
       },
       pipe_table = {
+        enabled = false,
         preset = "round",
         alignment_indicator = "┅",
       },
       sign = {
         enabled = true,
         highlight = "RenderMarkdownSign",
+      },
+      win_options = {
+        conceallevel = {
+          default = vim.o.conceallevel,
+          rendered = vim.o.conceallevel,
+        },
       },
     },
   },
