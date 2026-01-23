@@ -50,6 +50,8 @@ vim.keymap.set("n", "<leader>cq", general.add_current_line_to_qf, { noremap = tr
 vim.keymap.set("n", "<M-q>", "Q", { noremap = true, desc = "Replay last register" })
 
 -- Windows
+vim.keymap.set("n", "<leader>ws", "<C-W>s<C-W>p", { desc = "Split Window", remap = true })
+vim.keymap.set("n", "<leader>wv", "<C-W>v<C-W>p", { desc = "Split Window Right", remap = true })
 vim.keymap.set("n", "<leader>wD", "<C-W>o", { desc = "Delete other windows" })
 vim.keymap.set("n", "<leader>wo", "<C-W>p", { desc = "Other window" })
 
