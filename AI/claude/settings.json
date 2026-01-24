@@ -27,7 +27,7 @@
   "model": "sonnet",
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccstatusline@latest",
+    "command": "sh ~/.claude/statusline/statusline.sh",
     "padding": 0
   },
   "enabledPlugins": {

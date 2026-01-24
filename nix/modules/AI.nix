@@ -30,6 +30,10 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
       force = true;
     };
+    ".claude/statusline" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/statusline";
+      force = true;
+    };
     ".claude/settings.json" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/settings.json";
       force = true;
@@ -41,6 +45,10 @@ in
     };
     ".claude-2/skills" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
+      force = true;
+    };
+    ".claude-2/statusline" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/statusline";
       force = true;
     };
     ".claude-2/settings.json" = {
