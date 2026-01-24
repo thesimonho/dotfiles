@@ -65,7 +65,7 @@ in
       force = true;
     };
     ".codex/config.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/codex/config.toml";
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
       force = true;
     };
   };
