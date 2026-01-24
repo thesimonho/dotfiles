@@ -24,6 +24,23 @@
     ],
     "defaultMode": "default"
   },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write && .md file",
+        "hooks": ["block unless README/CLAUDE/AGENTS"]
+      },
+      { "matcher": "git push", "hooks": ["open editor for review"] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Edit && .ts/.tsx/.js/.jsx", "hooks": ["prettier --write"] },
+      { "matcher": "Edit && .ts/.tsx", "hooks": ["tsc --noEmit"] },
+      { "matcher": "Edit", "hooks": ["grep console.log warning"] }
+    ],
+    "Stop": [
+      { "matcher": "*", "hooks": ["check modified files for console.log"] }
+    ]
+  },
   "model": "sonnet",
   "statusLine": {
     "type": "command",
@@ -32,7 +49,6 @@
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "power-trio@artificial-jellybeans": true,
     "postgres-best-practices@supabase-agent-skills": true
   },
   "extraKnownMarketplaces": {

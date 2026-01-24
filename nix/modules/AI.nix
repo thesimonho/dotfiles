@@ -12,7 +12,7 @@ let
 in
 {
   home = {
-    packages = with pkgs; [
+    packages = [
       pkgsUnstable.claude-code
       pkgsUnstable.claude-code-acp
       pkgsUnstable.codex
