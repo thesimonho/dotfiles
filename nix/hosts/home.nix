@@ -18,6 +18,7 @@
 
   services.flatpak = {
     packages = [
+      "com.google.AndroidStudio"
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
       "com.dropbox.Client"

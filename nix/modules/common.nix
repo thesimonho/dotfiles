@@ -21,6 +21,7 @@ let
     pkgs.lazyjournal
     pkgs.lua54Packages.luarocks
     pkgs.neovim
+    pkgs.ninja
     pkgs.nixd
     pkgs.nixfmt-rfc-style
     pkgs.pay-respects
@@ -68,6 +69,7 @@ in
       LANG = "en_US.UTF-8";
       COLORTERM = "truecolor";
       NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
+      CHROME_EXECUTABLE = "google-chrome-stable";
     };
     sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
     shell.enableShellIntegration = true;
