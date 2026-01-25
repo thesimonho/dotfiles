@@ -69,6 +69,9 @@ let
 in
 {
   home = {
+    sessionVariables = {
+      CLAUDE_PLUGIN_ROOT = "${dotfiles}/AI";
+    };
     packages = [
       pkgsUnstable.claude-code
       pkgsUnstable.claude-code-acp
