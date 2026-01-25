@@ -1,25 +1,5 @@
 # Coding Style
 
-## Immutability (CRITICAL)
-
-ALWAYS create new objects, NEVER mutate:
-
-```javascript
-// WRONG: Mutation
-function updateUser(user, name) {
-  user.name = name; // MUTATION!
-  return user;
-}
-
-// CORRECT: Immutability
-function updateUser(user, name) {
-  return {
-    ...user,
-    name,
-  };
-}
-```
-
 ## File Organization
 
 MANY SMALL FILES > FEW LARGE FILES:
@@ -33,37 +13,6 @@ MANY SMALL FILES > FEW LARGE FILES:
 
 - Write docstrings. Conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
 - Comments explain why, not what - provide enough context for someone to write tests against intended behaviour
-
-## Error Handling
-
-Write defensive code with guards and type narrowing.
-
-ALWAYS handle errors comprehensively:
-
-```typescript
-try {
-  const result = await riskyOperation();
-  return result;
-} catch (error) {
-  console.error("Operation failed:", error);
-  throw new Error("Detailed user-friendly message");
-}
-```
-
-## Input Validation
-
-ALWAYS validate user input:
-
-```typescript
-import { z } from "zod";
-
-const schema = z.object({
-  email: z.string().email(),
-  age: z.number().int().min(0).max(150),
-});
-
-const validated = schema.parse(input);
-```
 
 ## Code Quality Checklist
 
@@ -96,11 +45,9 @@ Types: feat, fix, refactor, docs, test, chore, perf, ci
 
 When creating PRs:
 
-1. Analyze full commit history (not just latest commit)
+1. Analyze full commit history of the branch (not just latest commit)
 2. Use `git diff [base-branch]...HEAD` to see all changes
 3. Draft comprehensive PR summary
-4. Include test plan with TODOs
-5. Push with `-u` flag if new branch
 
 ## Feature Implementation Workflow
 
@@ -125,35 +72,6 @@ When creating PRs:
    - Detailed commit messages
    - Follow conventional commits format
 
-# Common Patterns
-
-## API Response Format
-
-```typescript
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  meta?: {
-    total: number;
-    page: number;
-    limit: number;
-  };
-}
-```
-
-## Repository Pattern
-
-```typescript
-interface Repository<T> {
-  findAll(filters?: Filters): Promise<T[]>;
-  findById(id: string): Promise<T | null>;
-  create(data: CreateDto): Promise<T>;
-  update(id: string, data: UpdateDto): Promise<T>;
-  delete(id: string): Promise<void>;
-}
-```
-
 # Security Guidelines
 
 ## Mandatory Security Checks
@@ -175,7 +93,7 @@ Before ANY commit:
 // NEVER: Hardcoded secrets
 const apiKey = "sk-proj-xxxxx";
 
-// ALWAYS: Environment variables
+// ALWAYS: Private environment variables
 const apiKey = process.env.OPENAI_API_KEY;
 
 if (!apiKey) {
@@ -188,20 +106,20 @@ if (!apiKey) {
 If security issue found:
 
 1. STOP immediately
-2. Use **security-reviewer** agent
-3. Fix CRITICAL issues before continuing
-4. Rotate any exposed secrets
+2. Tell the user
+3. Use **security-reviewer** agent
+4. Fix CRITICAL issues before continuing
 5. Review entire codebase for similar issues
 
 # Testing Requirements
 
 ## Minimum Test Coverage: 80%
 
-Test Types (ALL required):
+Test Types:
 
 1. **Unit Tests** - Individual functions, utilities, components
-2. **Integration Tests** - API endpoints, database operations
-3. **E2E Tests** - Critical user flows (Playwright)
+2. **Integration Tests** - API endpoints, database operations (if applicable)
+3. **E2E Tests** - Critical user flows (if applicable)
 
 ## Test-Driven Development
 
