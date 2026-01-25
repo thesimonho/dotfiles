@@ -1,8 +1,4 @@
-# AGENTS.md / CLAUDE.md
-
-## Planning
-
-Always create a plan first. Have the plan and spec reviewed before proceeding with implementation.
+# Workflow
 
 ## Documentation
 
@@ -10,19 +6,9 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 - When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
 - Keep repo/subdirectory README.md and project AGENTS.md/CLAUDE.md files up to date when making significant changes.
 
-## Coding Style
+## Planning
 
-- Small, testable functions
-- Early returns over nested conditionals
-- Defensive coding: use guards and type narrowing even without strict mode
-- Write docstrings. Conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
-- Comments explain why, not what - provide enough context for someone to write tests against intended behaviour
-
-## Testing
-
-Always use test driven development when writing functions. Write tests first, then write code to make them pass. Make sure to use skills to help with this.
-
-Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
+Always create a plan first. Have the plan and spec reviewed before proceeding with implementation.
 
 ## When Uncertain
 

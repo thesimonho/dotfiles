@@ -9,6 +9,63 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
+
+  claudeMappings = [
+    {
+      name = "agents";
+      source = "${dotfiles}/AI/agents";
+    }
+    {
+      name = "commands";
+      source = "${dotfiles}/AI/commands";
+    }
+    {
+      name = "hooks";
+      source = "${dotfiles}/AI/hooks";
+    }
+    {
+      name = "rules";
+      source = "${dotfiles}/AI/rules";
+    }
+    {
+      name = "scripts";
+      source = "${dotfiles}/AI/scripts";
+    }
+    {
+      name = "skills";
+      source = "${dotfiles}/AI/skills";
+    }
+
+    {
+      name = "statusline";
+      source = "${dotfiles}/AI/settings/claude/statusline";
+    }
+    {
+      name = "settings.json";
+      source = "${dotfiles}/AI/settings/claude/settings.json";
+    }
+  ];
+
+  mkClaudeLinks =
+    targetDir:
+    lib.listToAttrs (
+      map (item: {
+        name = "${targetDir}/${item.name}";
+        value = {
+          source = config.lib.file.mkOutOfStoreSymlink item.source;
+          force = true;
+        };
+      }) claudeMappings
+    );
+
+  generateAgentsMd = pkgs.writeShellScript "generate-agents-md" ''
+    {
+      for file in ${dotfiles}/AI/rules/*.md; do
+        cat "$file"
+        echo ""
+      done
+    } > ${dotfiles}/AI/AGENTS.generated.md
+  '';
 in
 {
   home = {
@@ -20,44 +77,15 @@ in
     ];
   };
 
+  # Generate agents.md file
+  home.activation.generateAgentsMd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${generateAgentsMd}
+  '';
+
   # symlinks
   home.file = {
-    ".claude/CLAUDE.md" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.md";
-      force = true;
-    };
-    ".claude/skills" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
-      force = true;
-    };
-    ".claude/statusline" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/statusline";
-      force = true;
-    };
-    ".claude/settings.json" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/settings.json";
-      force = true;
-    };
-
-    ".claude-2/CLAUDE.md" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.md";
-      force = true;
-    };
-    ".claude-2/skills" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
-      force = true;
-    };
-    ".claude-2/statusline" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/statusline";
-      force = true;
-    };
-    ".claude-2/settings.json" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/claude/settings.json";
-      force = true;
-    };
-
     ".codex/AGENTS.md" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.md";
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
       force = true;
     };
     ".codex/skills" = {
@@ -68,5 +96,7 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
       force = true;
     };
-  };
+  }
+  // mkClaudeLinks ".claude"
+  // mkClaudeLinks ".claude-2";
 }
