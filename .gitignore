@@ -53,3 +53,7 @@ nushell/api.env
 
 # tmux
 tmux/plugins
+
+# ai
+AI/skills/.system
+AI/skills/learned
