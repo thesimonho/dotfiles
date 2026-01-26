@@ -15,7 +15,8 @@ local function create_agent_terminal(agent)
     display_name = agent,
     direction = "float",
     close_on_exit = true,
-    auto_scroll = true,
+    auto_scroll = false,
+    hidden = true,
     float_opts = {
       border = "rounded",
     },
