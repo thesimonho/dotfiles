@@ -1,6 +1,6 @@
 ---
 name: verification-loop
-description: A comprehensive verification system for sessions. Invoke this skill: after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass; or after refactoring
+description: A comprehensive verification system for sessions. Invoke this skill after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring
 ---
 
 # Verification Loop Skill
