@@ -176,14 +176,6 @@ return {
         window = {
           mappings = {
             ["<A-h>"] = "toggle_hidden",
-            ["<A-a>"] = {
-              function(state)
-                local node = state.tree:get_node()
-                local relative = vim.fn.fnamemodify(node.path, ":.")
-                return require("sidekick.cli").send({ msg = "@" .. relative })
-              end,
-              desc = "send_to_sidekick",
-            },
             ["E"] = {
               function(state)
                 open_in_oil(state)
