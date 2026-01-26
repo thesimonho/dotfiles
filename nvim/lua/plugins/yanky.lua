@@ -13,7 +13,6 @@ return {
 
     { "P", "<Plug>(YankyPutBeforeLinewise)", mode = { "n", "x" }, desc = "Put before" },
     { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put after" },
-    { "<C-v>", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Put after" },
     { "<C-v>", '<C-o>"+P', mode = { "i" }, desc = "Put after" },
     {
       "iy",
