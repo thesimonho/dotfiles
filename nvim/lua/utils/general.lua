@@ -186,4 +186,24 @@ M.add_current_line_to_qf = function()
   end)
 end
 
+-- given a sorted array of numbers, return the first unused integer value
+M.find_first_unused_number = function(arr)
+  if type(arr) ~= "table" or #arr == 0 then
+    return 1
+  end
+
+  local expected = 1
+  for _, v in ipairs(arr) do
+    if v > expected then
+      return expected
+    end
+    if v == expected then
+      expected = expected + 1
+    end
+    -- if v < expected, just continue (defensive against duplicates)
+  end
+
+  return expected
+end
+
 return M
