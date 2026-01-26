@@ -1,8 +1,11 @@
-local agents = { "claude", "codex" }
+local agents = {
+  { cmd = "claude", label = "Claude Code" },
+  { cmd = "codex", label = "Codex" },
+}
 local available_agents = {}
 local open_agents = {}
 for _, agent in ipairs(agents) do
-  if vim.fn.executable(agent) == 1 then
+  if vim.fn.executable(agent.cmd) == 1 then
     available_agents[#available_agents + 1] = agent
   end
 end
@@ -11,8 +14,9 @@ local function create_agent_terminal(agent)
   local Terminal = require("toggleterm.terminal").Terminal
 
   local t = Terminal:new({
-    cmd = agent,
-    display_name = agent,
+    count = 5, -- always set to terminal #5
+    cmd = agent.cmd,
+    display_name = agent.label,
     direction = "float",
     close_on_exit = true,
     auto_scroll = false,
@@ -79,6 +83,9 @@ vim.keymap.set({ "n", "i", "v", "t" }, "<C-.>", function()
 
   vim.ui.select(available_agents, {
     prompt = "Select an AI agent",
+    format_item = function(agent)
+      return string.format("%s", agent.label)
+    end,
   }, function(choice)
     if not choice then
       return
