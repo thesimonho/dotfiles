@@ -155,14 +155,17 @@ return {
         cwd_target = {
           sidebar = "window", -- match this to however cd is set elsewhere (tab, window, global)
         },
+        follow_current_file = {
+          enabled = true,
+        },
         filtered_items = {
           visible = false, -- when true, they will just be displayed differently than normal items
           hide_hidden = false, -- only works on Windows for hidden files/directories
           hide_dotfiles = false,
           hide_gitignored = false,
         },
-        follow_current_file = {
-          enabled = true,
+        always_show_by_pattern = { -- uses glob style patterns
+          ".env*", -- BUG: this is not working so have to set hide_gitignored = false
         },
         hide_by_pattern = {
           "^./.git/",
