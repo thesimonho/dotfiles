@@ -31,4 +31,4 @@ Workflow:
 
 ## Agent Support
 
-- **e2e-runner** - Playwright E2E testing specialist
+- **playwright-runner** - Playwright E2E testing specialist
