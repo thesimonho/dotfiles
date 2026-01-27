@@ -1,3 +1,9 @@
+---
+name: checkpoint
+description: Create or verify a checkpoint in your workflow. Use proactively as part of making code changes and fixing bugs. This is a meta tool to support regular coding workflows.
+user-invocable: true
+---
+
 # Checkpoint Command
 
 Create or verify a checkpoint in your workflow.
