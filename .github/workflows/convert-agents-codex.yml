@@ -19,15 +19,26 @@ jobs:
         run: ./AI/scripts/conversion/build-codex-skills.sh
       - name: Rewrite Codex frontmatter
         run: ./AI/scripts/conversion/rewrite-agent-frontmatter.sh
-      - name: Check for changes
-        id: check_changes
+      - name: Debug - show git status
         run: |
+          echo "=== Git status ==="
+          git status
+          echo "=== Files in codex_generated ==="
+          find AI/agents/codex_generated -type f
+          echo "=== Git diff ==="
+          git diff AI/agents/codex_generated/
+          echo "=== Git diff after add ==="
           git add AI/agents/codex_generated/
-          if git diff --cached --quiet; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-          fi
+          git diff --cached
+            - name: Check for changes
+              id: check_changes
+              run: |
+                git add AI/agents/codex_generated/
+                if git diff --cached --quiet; then
+                  echo "has_changes=false" >> $GITHUB_OUTPUT
+                else
+                  echo "has_changes=true" >> $GITHUB_OUTPUT
+                fi
       - name: Commit and push changes
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
