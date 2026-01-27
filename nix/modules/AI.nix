@@ -66,6 +66,22 @@ let
       done
     } > ${dotfiles}/AI/AGENTS.generated.md
   '';
+
+  staticSkills = ../../AI/skills;
+  staticSkillDirs = builtins.readDir staticSkills;
+  staticSkillNames = builtins.filter (name: staticSkillDirs.${name} == "directory") (
+    builtins.attrNames staticSkillDirs
+  );
+
+  mkCodexStaticSkills = builtins.listToAttrs (
+    map (skillName: {
+      name = ".codex/skills/${skillName}";
+      value = {
+        source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/AI/skills/${skillName}";
+        force = true;
+      };
+    }) staticSkillNames
+  );
 in
 {
   home = {
@@ -91,15 +107,20 @@ in
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
       force = true;
     };
-    ".codex/skills" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills";
-      force = true;
-    };
     ".codex/config.toml" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
       force = true;
     };
   }
   // mkClaudeLinks ".claude"
-  // mkClaudeLinks ".claude-2";
+  // mkClaudeLinks ".claude-2"
+  // mkCodexStaticSkills; # Static skills (from AI/skills)
+
+  home.activation.generateCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    export AGENTS_ROOT="${dotfiles}/AI/agents"
+    export SKILLS_OUTPUT="$HOME/.codex/skills"
+    export AWK_BIN="${pkgs.gawk}/bin/awk"
+    $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
+    $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
+  '';
 }
