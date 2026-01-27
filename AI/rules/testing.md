@@ -12,23 +12,23 @@ Test Types:
 
 Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
 
+Use **tdd-workflow** skill
+
 Workflow:
 
 1. Write test first (RED)
-2. Run test - it should FAIL
-3. Write minimal implementation (GREEN)
-4. Run test - it should PASS
-5. Refactor (IMPROVE)
-6. Verify coverage (80%+)
+1. Run test - it should FAIL
+1. Write minimal implementation (GREEN)
+1. Run test - it should PASS
+1. Refactor (IMPROVE)
+1. Verify coverage (80%+)
 
 ## Troubleshooting Test Failures
 
-1. Use **tdd-guide** agent/skill
-2. Check test isolation
-3. Verify mocks are correct
-4. Fix implementation, not tests (unless tests are wrong)
+1. Check test isolation
+2. Verify mocks are correct
+3. Fix implementation, not tests (unless tests are wrong)
 
 ## Agent Support
 
-- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first
 - **e2e-runner** - Playwright E2E testing specialist

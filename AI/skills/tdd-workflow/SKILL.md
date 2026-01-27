@@ -1,19 +1,11 @@
 ---
 name: tdd-workflow
-description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.
+description: Proactively use this skill when implementing features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.
 ---
 
 # Test-Driven Development Workflow
 
 This skill ensures all code development follows TDD principles with comprehensive test coverage.
-
-## When to Activate
-
-- Writing new features or functionality
-- Fixing bugs or issues
-- Refactoring existing code
-- Adding API endpoints
-- Creating new components
 
 ## Core Principles
 
@@ -24,7 +16,8 @@ ALWAYS write tests first, then implement code to make tests pass.
 ### 2. Coverage Requirements
 
 - Minimum 80% coverage (unit + integration + E2E)
-- All edge cases covered
+  -- Don't write exhaustive tests for everything. Focus on critical paths.
+- Critical edge cases covered
 - Error scenarios tested
 - Boundary conditions verified
 
@@ -63,9 +56,9 @@ As a user, I want to search for markets semantically,
 so that I can find relevant markets even without exact keywords.
 ```
 
-### Step 2: Generate Test Cases
+### Step 2: Write Tests First (RED)
 
-For each user journey, create comprehensive test cases:
+For each user journey, create critical test cases:
 
 ```typescript
 describe("Semantic Search", () => {
@@ -77,24 +70,20 @@ describe("Semantic Search", () => {
     // Test edge case
   });
 
-  it("falls back to substring search when Redis unavailable", async () => {
-    // Test fallback behavior
-  });
-
   it("sorts results by similarity score", async () => {
     // Test sorting logic
   });
 });
 ```
 
-### Step 3: Run Tests (They Should Fail)
+### Step 3: Run Tests (Verify they FAIL)
 
 ```bash
 npm test
 # Tests should fail - we haven't implemented yet
 ```
 
-### Step 4: Implement Code
+### Step 4: Implement Minimal Code (GREEN)
 
 Write minimal code to make tests pass:
 
@@ -105,7 +94,7 @@ export async function searchMarkets(query: string) {
 }
 ```
 
-### Step 5: Run Tests Again
+### Step 5: Run Tests Again (Verify they PASS)
 
 ```bash
 npm test
@@ -246,50 +235,6 @@ test("user can create a new market", async ({ page }) => {
 });
 ```
 
-## Mocking External Services
-
-### Supabase Mock
-
-```typescript
-jest.mock("@/lib/supabase", () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() =>
-          Promise.resolve({
-            data: [{ id: 1, name: "Test Market" }],
-            error: null,
-          }),
-        ),
-      })),
-    })),
-  },
-}));
-```
-
-### Redis Mock
-
-```typescript
-jest.mock("@/lib/redis", () => ({
-  searchMarketsByVector: jest.fn(() =>
-    Promise.resolve([{ slug: "test-market", similarity_score: 0.95 }]),
-  ),
-  checkRedisHealth: jest.fn(() => Promise.resolve({ connected: true })),
-}));
-```
-
-### OpenAI Mock
-
-```typescript
-jest.mock("@/lib/openai", () => ({
-  generateEmbedding: jest.fn(() =>
-    Promise.resolve(
-      new Array(1536).fill(0.1), // Mock 1536-dim embedding
-    ),
-  ),
-}));
-```
-
 ## Test Coverage Verification
 
 ### Run Coverage Report
@@ -315,89 +260,16 @@ npm run test:coverage
 }
 ```
 
-## Common Testing Mistakes to Avoid
+## Edge Cases You MUST Test
 
-### ❌ WRONG: Testing Implementation Details
-
-```typescript
-// Don't test internal state
-expect(component.state.count).toBe(5);
-```
-
-### ✅ CORRECT: Test User-Visible Behavior
-
-```typescript
-// Test what users see
-expect(screen.getByText("Count: 5")).toBeInTheDocument();
-```
-
-### ❌ WRONG: Brittle Selectors
-
-```typescript
-// Breaks easily
-await page.click(".css-class-xyz");
-```
-
-### ✅ CORRECT: Semantic Selectors
-
-```typescript
-// Resilient to changes
-await page.click('button:has-text("Submit")');
-await page.click('[data-testid="submit-button"]');
-```
-
-### ❌ WRONG: No Test Isolation
-
-```typescript
-// Tests depend on each other
-test("creates user", () => {
-  /* ... */
-});
-test("updates same user", () => {
-  /* depends on previous test */
-});
-```
-
-### ✅ CORRECT: Independent Tests
-
-```typescript
-// Each test sets up its own data
-test("creates user", () => {
-  const user = createTestUser();
-  // Test logic
-});
-
-test("updates user", () => {
-  const user = createTestUser();
-  // Update logic
-});
-```
-
-## Continuous Testing
-
-### Watch Mode During Development
-
-```bash
-npm test -- --watch
-# Tests run automatically on file changes
-```
-
-### Pre-Commit Hook
-
-```bash
-# Runs before every commit
-npm test && npm run lint
-```
-
-### CI/CD Integration
-
-```yaml
-# GitHub Actions
-- name: Run Tests
-  run: npm test -- --coverage
-- name: Upload Coverage
-  uses: codecov/codecov-action@v3
-```
+1. **Null/Undefined**: What if input is null?
+2. **Empty**: What if array/string is empty?
+3. **Invalid Types**: What if wrong type passed?
+4. **Boundaries**: Min/max values
+5. **Errors**: Network failures, database errors
+6. **Race Conditions**: Concurrent operations
+7. **Large Data**: Performance with 10k+ items
+8. **Special Characters**: Unicode, emojis, SQL characters
 
 ## Best Practices
 
@@ -420,7 +292,3 @@ npm test && npm run lint
 - Fast test execution (< 30s for unit tests)
 - E2E tests cover critical user flows
 - Tests catch bugs before production
-
----
-
-**Remember**: Tests are not optional. They are the safety net that enables confident refactoring, rapid development, and production reliability.
