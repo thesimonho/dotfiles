@@ -31,6 +31,10 @@ Before marking work complete:
 
 # Git Workflow
 
+## Pre Commit
+
+Run the /verification skill before committing.
+
 ## Commit Message Format
 
 ```
@@ -48,29 +52,6 @@ When creating PRs:
 1. Analyze full commit history of the branch (not just latest commit)
 2. Use `git diff [base-branch]...HEAD` to see all changes
 3. Draft comprehensive PR summary
-
-## Feature Implementation Workflow
-
-1. **Plan First**
-   - Use **planner** agent to create implementation plan
-   - Identify dependencies and risks
-   - Break down into phases
-
-2. **TDD Approach**
-   - Use **tdd-guide** agent
-   - Write tests first (RED)
-   - Implement to pass tests (GREEN)
-   - Refactor (IMPROVE)
-   - Verify 80%+ coverage
-
-3. **Code Review**
-   - Use **code-reviewer** agent immediately after writing code
-   - Address CRITICAL and HIGH issues
-   - Fix MEDIUM issues when possible
-
-4. **Commit & Push**
-   - Detailed commit messages
-   - Follow conventional commits format
 
 # Security Guidelines
 
@@ -125,26 +106,26 @@ Test Types:
 
 Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
 
+Use **tdd-workflow** skill
+
 Workflow:
 
 1. Write test first (RED)
-2. Run test - it should FAIL
-3. Write minimal implementation (GREEN)
-4. Run test - it should PASS
-5. Refactor (IMPROVE)
-6. Verify coverage (80%+)
+1. Run test - it should FAIL
+1. Write minimal implementation (GREEN)
+1. Run test - it should PASS
+1. Refactor (IMPROVE)
+1. Verify coverage (80%+)
 
 ## Troubleshooting Test Failures
 
-1. Use **tdd-guide** agent/skill
-2. Check test isolation
-3. Verify mocks are correct
-4. Fix implementation, not tests (unless tests are wrong)
+1. Check test isolation
+2. Verify mocks are correct
+3. Fix implementation, not tests (unless tests are wrong)
 
 ## Agent Support
 
-- **tdd-guide** - Use PROACTIVELY for new features, enforces write-tests-first
-- **e2e-runner** - Playwright E2E testing specialist
+- **playwright-runner** - Playwright E2E testing specialist
 
 # Workflow
 

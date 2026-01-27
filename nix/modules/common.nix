@@ -26,7 +26,10 @@ let
     pkgs.nixfmt-rfc-style
     pkgs.pay-respects
     pkgs.scc
+    pkgs.semgrep
     pkgsUnstable.snitch
+    pkgs.trivy
+    pkgs.trufflehog
     pkgs.tmux
     pkgs.uv
     pkgs.zellij

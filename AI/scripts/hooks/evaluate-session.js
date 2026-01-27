@@ -11,20 +11,20 @@
  * - UserPromptSubmit runs every message (heavy, adds latency)
  */
 
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 const {
   getLearnedSkillsDir,
   ensureDir,
   readFile,
   countInFile,
-  log
-} = require('../lib/utils');
+  log,
+} = require("../lib/utils");
 
 async function main() {
   // Get script directory to find config
   const scriptDir = __dirname;
-  const configFile = path.join(scriptDir, '..', '..', 'skills', 'continuous-learning', 'config.json');
+  const configFile = path.join(scriptDir, "config.json");
 
   // Default configuration
   let minSessionLength = 10;
@@ -39,7 +39,10 @@ async function main() {
 
       if (config.learned_skills_path) {
         // Handle ~ in path
-        learnedSkillsPath = config.learned_skills_path.replace(/^~/, require('os').homedir());
+        learnedSkillsPath = config.learned_skills_path.replace(
+          /^~/,
+          require("os").homedir(),
+        );
       }
     } catch {
       // Invalid config, use defaults
@@ -61,18 +64,22 @@ async function main() {
 
   // Skip short sessions
   if (messageCount < minSessionLength) {
-    log(`[ContinuousLearning] Session too short (${messageCount} messages), skipping`);
+    log(
+      `[ContinuousLearning] Session too short (${messageCount} messages), skipping`,
+    );
     process.exit(0);
   }
 
   // Signal to Claude that session should be evaluated for extractable patterns
-  log(`[ContinuousLearning] Session has ${messageCount} messages - evaluate for extractable patterns`);
+  log(
+    `[ContinuousLearning] Session has ${messageCount} messages - evaluate for extractable patterns. Learnable patterns include: 1) how specific errors were resolved, 2) patterns from user corrects, 3) solutions to framework/library quirks, 4) project specific conventions.`,
+  );
   log(`[ContinuousLearning] Save learned skills to: ${learnedSkillsPath}`);
 
   process.exit(0);
 }
 
-main().catch(err => {
-  console.error('[ContinuousLearning] Error:', err.message);
+main().catch((err) => {
+  console.error("[ContinuousLearning] Error:", err.message);
   process.exit(0);
 });

@@ -1,3 +1,10 @@
+---
+name: learn
+description: Extract reusable patterns from the current session and save them as skills.
+disable-model-invocation: true
+user-invocable: true
+---
+
 # /learn - Extract Reusable Patterns
 
 Analyze the current session and extract any patterns worth saving as skills.
