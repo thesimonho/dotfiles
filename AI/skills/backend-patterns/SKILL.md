@@ -1,6 +1,7 @@
 ---
 name: backend-patterns
 description: Backend architecture patterns, API design, database optimization, and server-side best practices.
+user-invocable: false
 ---
 
 # Backend Development Patterns

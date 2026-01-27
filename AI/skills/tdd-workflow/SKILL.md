@@ -1,6 +1,7 @@
 ---
 name: tdd-workflow
 description: Proactively use this skill when implementing features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.
+user-invocable: false
 ---
 
 # Test-Driven Development Workflow

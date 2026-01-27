@@ -1,6 +1,7 @@
 ---
 name: coding-standards
 description: Universal coding standards, best practices, and patterns.
+user-invocable: false
 ---
 
 # Coding Standards & Best Practices
