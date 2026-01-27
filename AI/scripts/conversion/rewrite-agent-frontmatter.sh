@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 # Mutates SKILL.md files in-place
 # Only touches files that contain `skills:` in frontmatter
 
