@@ -2,24 +2,24 @@
 # UserPromptSubmit hook that forces explicit skill evaluation
 
 cat <<'EOF'
-INSTRUCTION: MANDATORY SKILL ACTIVATION SEQUENCE
+INSTRUCTION: MANDATORY AGENT AND SKILL ACTIVATION SEQUENCE
 
 Step 1 - EVALUATE (do this in your response):
 For each skill in <available_skills> and agent in <available_agents>, state: [skill/agent-name] - YES/NO - [reason]
 
-Step 2 - ACTIVATE (do this immediately after Step 1):
-IF any agents are YES → Use Task(agent-name) and pass this task to EACH relevant agent NOW. Once all agents have been called and given their task, you can skip to End.
-IF no agents are YES → State "No agents needed" and proceed
+Step 2 - DECIDE (do this immediately after Step 1):
+If any agents are YES then JUMP to Step 3.
+If all agents are NO then JUMP to Step 4.
 
-Next, for skills:
+Step 3 - ACTIVATE AGENTS:
+Determine the correct sequence of agents to activate and which <YES_skills> each agent needs.
+Use Task(agent-name) to call EACH relevant agent. Give them the task and this instruction "Use <chosen_skills> to complete <task>" NOW.
+Then SKIP Step 4 and 5. Jump straight to Step 6 NOW. do NOT activate skills or implement yourself - delegate to the agents.
+
+Step 4 - ACTIVATE SKILLS:
 IF any skills are YES → Use Skill(skill-name) tool for EACH relevant skill NOW
-IF no skills are YES → State "No skills needed" and proceed
-
-Step 3 - IMPLEMENT:
-Only after Step 2 is complete, proceed with implementation.
-
-CRITICAL: You MUST call Task()/Skill() tool in Step 2. Do NOT skip to implementation.
-The evaluation (Step 1) is WORTHLESS unless you ACTIVATE (Step 2) the agents/skills.
+CRITICAL: You MUST call Skill() tool in Step 4. Do NOT skip to implementation.
+The evaluation (Step 1) is WORTHLESS unless you ACTIVATE (Step 4) the skills.
 
 Example of correct sequence:
 - research: NO - not a research task
@@ -30,7 +30,9 @@ Example of correct sequence:
 > Skill(svelte5-runes)
 > Skill(sveltekit-structure)
 
-[THEN and ONLY THEN start implementation]
+Step 5 - IMPLEMENT:
+ONLY after Step 4 is complete, proceed with implementation.
 
-End.
+Step 6 - CONSOLIDATE:
+Process the agent results OR implementation results, decide on the best course of action.
 EOF
