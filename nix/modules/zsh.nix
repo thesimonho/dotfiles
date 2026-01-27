@@ -47,7 +47,7 @@ in
       ls = "eza";
       la = "ls -la";
       ll = "ls -l";
-      lt = "ls --tree";
+      lt = "ls --tree --level=2 -D";
       lg = "lazygit";
       ld = "lazydocker";
       lj = "lazyjournal";
