@@ -415,7 +415,6 @@ Parameter 'market' implicitly has an 'any' type.
 - Code needs refactoring (use refactor-cleaner)
 - Architectural changes needed (use architect)
 - New features required (use planner)
-- Tests failing (use tdd-guide)
 - Security issues found (use security-reviewer)
 
 ## Build Error Priority Levels

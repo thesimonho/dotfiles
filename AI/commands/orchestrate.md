@@ -13,7 +13,7 @@ Sequential agent workflow for complex tasks.
 Full feature implementation workflow:
 
 ```
-planner -> tdd-guide -> code-reviewer -> security-reviewer
+planner -> build -> code-reviewer -> security-reviewer
 ```
 
 ### bugfix
@@ -21,7 +21,7 @@ planner -> tdd-guide -> code-reviewer -> security-reviewer
 Bug investigation and fix workflow:
 
 ```
-explorer -> tdd-guide -> code-reviewer
+explorer -> build -> code-reviewer
 ```
 
 ### refactor
@@ -89,16 +89,14 @@ Executes:
    - Analyzes requirements
    - Creates implementation plan
    - Identifies dependencies
-   - Output: `HANDOFF: planner -> tdd-guide`
+   - Output: `HANDOFF: planner -> build`
 
-2. **TDD Guide Agent**
-   - Reads planner handoff
-   - Writes tests first
-   - Implements to pass tests
-   - Output: `HANDOFF: tdd-guide -> code-reviewer`
+2. **Build**
+   - Implement the provided plan using TDD
+   - Output: `HANDOFF: build -> code-reviewer`
 
 3. **Code Reviewer Agent**
-   - Reviews implementation
+   - Invoke agent to review implementation
    - Checks for issues
    - Suggests improvements
    - Output: `HANDOFF: code-reviewer -> security-reviewer`
@@ -125,7 +123,6 @@ SUMMARY
 AGENT OUTPUTS
 -------------
 Planner: [summary]
-TDD Guide: [summary]
 Code Reviewer: [summary]
 Security Reviewer: [summary]
 
@@ -177,7 +174,7 @@ $ARGUMENTS:
 ## Custom Workflow Example
 
 ```
-/orchestrate custom "architect,tdd-guide,code-reviewer" "Redesign caching layer"
+/orchestrate custom "architect,code-reviewer" "Redesign caching layer"
 ```
 
 ## Tips
