@@ -1,6 +1,6 @@
 ---
-name: architect
-description: Software architecture specialist for system design, scalability, and technical decision-making. Use PROACTIVELY when planning big features, refactoring large systems, or making architectural decisions.
+name: architect-reviewer
+description: Software architecture specialist for system design, scalability, and technical decision-making. Use PROACTIVELY when planning big features, refactoring large systems, or making architectural decisions. Can be called concurrently with other reviewers.
 tools: Read, Grep, Glob, WebSearch
 model: opus
 color: purple

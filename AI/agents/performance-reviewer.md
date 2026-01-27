@@ -1,6 +1,6 @@
 ---
 name: performance-reviewer
-description: Reviews implementation for issues that negatively impact performance. Use proactively when fixing slow code and poor performance.
+description: Reviews implementation for issues that negatively impact performance. Use proactively when fixing slow code and poor performance. Can be called concurrently with other reviewers.
 tools: Read, Glob, Grep, TodoWrite, WebSearch
 model: opus
 color: pink
