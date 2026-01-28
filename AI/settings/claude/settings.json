@@ -30,6 +30,16 @@
   },
   "model": "sonnet",
   "hooks": {
+    "Setup": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "*",
@@ -37,6 +47,15 @@
           {
             "type": "command",
             "command": "node ~/.claude/scripts/hooks/evaluate-session.js"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
           }
         ]
       }
@@ -59,6 +78,52 @@
             "command": "node ~/.claude/scripts/hooks/session-end.js"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hooks/skill-forced-eval.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -77,6 +142,14 @@
           {
             "type": "command",
             "command": "node ~/.claude/scripts/hooks/suggest-compact.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
           }
         ]
       }
@@ -110,6 +183,44 @@
             "command": "node -e \"const fs=require('fs');let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path;if(p&&fs.existsSync(p)){const c=fs.readFileSync(p,'utf8');const lines=c.split('\\n');const matches=[];lines.forEach((l,idx)=>{if(/console\\.log/.test(l))matches.push((idx+1)+': '+l.trim())});if(matches.length){console.error('[Hook] WARNING: console.log found in '+p);matches.slice(0,5).forEach(m=>console.error(m));console.error('[Hook] Remove console.log before committing')}}console.log(d)})\""
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -121,25 +232,30 @@
             "command": "node ~/.claude/scripts/hooks/pre-compact.js"
           }
         ]
-      }
-    ],
-    "UserPromptSubmit": [
+      },
       {
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/scripts/hooks/skill-forced-eval.sh"
+            "command": "~/.claude/scripts/logger.sh"
           }
         ]
       }
     ],
     "Stop": [
       {
-        "matcher": "*",
         "hooks": [
           {
             "type": "command",
             "command": "node ~/.claude/scripts/hooks/evaluate-session.js"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/logger.sh"
           }
         ]
       }
