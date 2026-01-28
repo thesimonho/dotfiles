@@ -53,6 +53,11 @@ return {
     },
   },
   {
+    "spacedentist/resolve.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {},
+  },
+  {
     "pwntester/octo.nvim",
     enabled = false,
     event = "LazyFile",

@@ -181,6 +181,9 @@ in
         fetch = {
           writeCommitGraph = true;
         };
+        merge = {
+          conflictStyle = "zdiff3";
+        };
       };
     };
     home-manager = {
