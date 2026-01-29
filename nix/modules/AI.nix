@@ -85,6 +85,14 @@ let
 in
 {
   home = {
+    sessionVariables = {
+      CLAUDE_CODE_ENABLE_TELEMETRY = 1;
+      OTEL_METRICS_EXPORTER = "otlp";
+      OTEL_LOGS_EXPORTER = "otlp";
+      OTEL_EXPORTER_OTLP_PROTOCOL = "grpc";
+      OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317";
+      OTEL_EXPORTER_OTLP_HEADERS = "";
+    };
     packages = [
       pkgsUnstable.claude-code
       pkgsUnstable.claude-code-acp
