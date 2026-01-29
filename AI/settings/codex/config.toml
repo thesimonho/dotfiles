@@ -28,3 +28,6 @@ trace_exporter = { otlp-grpc = {
   headers = { "x-otlp-meta" = "abc123" }
 }}
 
+[notice]
+hide_full_access_warning = true
+
