@@ -60,7 +60,7 @@ vim.keymap.set("n", "<leader><tab>n", "<cmd>tabedit<cr>", { desc = "New Tab" })
 vim.keymap.set("n", "<leader><tab>D", "<cmd>tabonly<cr>", { desc = "Close Other Tabs" })
 
 -- Terminals
-vim.keymap.set({ "t", "i" }, "<esc>", "<C-\\><C-n>", { silent = true })
+vim.keymap.set({ "i" }, "<esc>", "<C-\\><C-n>", { silent = true })
 vim.keymap.set({ "t", "i" }, "<C-h>", "<C-\\><C-n><C-w>h", { silent = true })
 vim.keymap.set({ "t", "i" }, "<C-j>", "<C-\\><C-n><C-w>j", { silent = true })
 vim.keymap.set({ "t", "i" }, "<C-k>", "<C-\\><C-n><C-w>k", { silent = true })
