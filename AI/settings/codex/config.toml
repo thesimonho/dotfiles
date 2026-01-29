@@ -14,3 +14,17 @@ command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
 env = { DEFAULT_MINIMUM_TOKENS = "6000" }
 
+[otel]
+log_user_prompt = true 
+environment = "dev"
+exporter = {
+  otlp-grpc = {
+    endpoint = "http://localhost:4317",
+    headers = { "x-otlp-meta" = "abc123" }
+  }
+}
+trace_exporter = { otlp-grpc = {
+  endpoint = "http://localhost:4317",
+  headers = { "x-otlp-meta" = "abc123" }
+}}
+
