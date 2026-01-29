@@ -1,0 +1,224 @@
+# ============================================
+# TMUX CONFIGURATION
+# Key table-based workflow with Super+w/t/p modes
+# ============================================
+
+# ============================================
+# Core Settings
+# ============================================
+
+# Use 256 colors with true color support
+set -s extended-keys on
+set -g default-terminal "tmux-256color"
+set -as terminal-features 'xterm*:extkeys'
+set -ga terminal-overrides ",xterm-256color:Tc:extkeys"
+# set -ga terminal-features ",ghostty:RGB:extkeys"
+# set -ga terminal-overrides ",ghostty:Tc:extkeys"
+
+# Enable mouse for clicking and scrolling
+set -g mouse on
+
+# Start window and pane numbering at 1
+set -g base-index 1
+setw -g pane-base-index 1
+
+# Renumber windows when one is closed
+set -g renumber-windows on
+
+# Large scrollback buffer
+set -g history-limit 50000
+
+# Display messages for 2 seconds
+set -g display-time 2000
+
+# Refresh status bar every 5 seconds
+set -g status-interval 5
+
+# Focus events for terminal
+set -g focus-events on
+
+# No delay for escape key (better for Vim)
+set -sg escape-time 0
+
+# ============================================
+# Key Table Mode System
+# Ctrl-Space + w = Window/Pane mode
+# Ctrl-Space + t = Tab mode
+# Ctrl-Space + p = Session/Project mode
+# ============================================
+
+# Set Ctrl-Space as prefix
+unbind C-b
+set -g prefix C-Space
+bind C-Space send-prefix
+
+# ============================================
+# WINDOW/PANE MODE (Ctrl-Space + w)
+# For managing splits/panes within a tab
+# ============================================
+
+# Enter window mode with Ctrl-Space + w
+bind w switch-client -T window_mode \; set -g status-right '#[bg=#b967ff fg=#ffffff bold] ◆ WINDOW MODE #[default]'
+
+# Splits (exit mode after creation)
+bind -T window_mode v split-window -h -c "#{pane_current_path}" \; switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+bind -T window_mode s split-window -v -c "#{pane_current_path}" \; switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# Close pane (exit mode)
+bind -T window_mode d kill-pane \; switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# Navigate panes (stay in mode)
+bind -T window_mode h select-pane -L \; switch-client -T window_mode
+bind -T window_mode j select-pane -D \; switch-client -T window_mode
+bind -T window_mode k select-pane -U \; switch-client -T window_mode
+bind -T window_mode l select-pane -R \; switch-client -T window_mode
+
+# Resize panes (stay in mode)
+bind -T window_mode H resize-pane -L 5 \; switch-client -T window_mode
+bind -T window_mode J resize-pane -D 5 \; switch-client -T window_mode
+bind -T window_mode K resize-pane -U 5 \; switch-client -T window_mode
+bind -T window_mode L resize-pane -R 5 \; switch-client -T window_mode
+
+# Maximize/zoom pane (stay in mode)
+bind -T window_mode m resize-pane -Z \; switch-client -T window_mode
+
+# Exit mode with Escape or Enter
+bind -T window_mode ? display-popup -w 100 -h 30 "tmux list-keys -T window_mode" 
+bind -T window_mode Escape switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+bind -T window_mode Enter switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# ============================================
+# TAB MODE (Ctrl-Space + t)
+# For managing tabs/windows
+# ============================================
+
+# Enter tab mode with Ctrl-Space + t
+bind t switch-client -T tab_mode \; set -g status-right '#[bg=#00d9ff fg=#ffffff bold] ◆ TAB MODE #[default]'
+
+# New tab (exit mode)
+bind -T tab_mode n new-window -c "#{pane_current_path}" \; switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# Close tab (exit mode)
+bind -T tab_mode d kill-window \; switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# Rename tab (exit mode)
+bind -T tab_mode r command-prompt -I "#W" "rename-window '%%'" \; switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# Navigate tabs (stay in mode)
+bind -T tab_mode h previous-window \; switch-client -T tab_mode
+bind -T tab_mode l next-window \; switch-client -T tab_mode
+
+# Jump to specific tab (stay in mode)
+bind -T tab_mode 1 select-window -t 1 \; switch-client -T tab_mode
+bind -T tab_mode 2 select-window -t 2 \; switch-client -T tab_mode
+bind -T tab_mode 3 select-window -t 3 \; switch-client -T tab_mode
+bind -T tab_mode 4 select-window -t 4 \; switch-client -T tab_mode
+bind -T tab_mode 5 select-window -t 5 \; switch-client -T tab_mode
+bind -T tab_mode 6 select-window -t 6 \; switch-client -T tab_mode
+bind -T tab_mode 7 select-window -t 7 \; switch-client -T tab_mode
+bind -T tab_mode 8 select-window -t 8 \; switch-client -T tab_mode
+bind -T tab_mode 9 select-window -t 9 \; switch-client -T tab_mode
+
+# Exit mode with Escape or Enter
+bind -T tab_mode ? display-popup -w 100 -h 30 "tmux list-keys -T tab_mode"
+bind -T tab_mode Escape switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+bind -T tab_mode Enter switch-client -T root \; set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# ============================================
+# Quick Actions (no mode required)
+# ============================================
+
+# Reload config (Ctrl-Space + r)
+bind r source-file ~/dotfiles/tmux/tmux.conf \; display "Config reloaded!"
+
+# ============================================
+# Copy Mode (Vim-style)
+# ============================================
+# Use Vim key bindings in copy mode
+setw -g mode-keys vi
+
+# Enter copy mode (Ctrl-Space + [)
+bind y copy-mode
+
+# Vim-style selection and copy
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+bind -T copy-mode-vi Escape send-keys -X cancel
+
+# ============================================
+# Status Bar - "Super Tasty" Dark Theme
+# ============================================
+# Status bar position
+set -g status-position bottom
+
+# Status bar colors - Deep charcoal background
+set -g status-style 'bg=#1a1a2e fg=#eaeaea'
+
+# Left side - Session name with mode indicator
+set -g status-left-length 40
+set -g status-left '#[bg=#00d9ff fg=#1a1a2e bold] #S #[default] '
+
+# Right side - Date and time (or mode indicator)
+set -g status-right-length 50
+set -g status-right '#[bg=#00d9ff fg=#1a1a2e bold] %Y-%m-%d │ %H:%M #[default]'
+
+# Window status - Inactive windows
+setw -g window-status-style 'fg=#6c757d bg=#1a1a2e'
+setw -g window-status-format ' #I:#W '
+
+# Window status - Active window (vibrant purple)
+setw -g window-status-current-style 'fg=#ffffff bg=#b967ff bold'
+setw -g window-status-current-format ' #I:#W '
+
+# Window separator
+setw -g window-status-separator '│'
+
+# Message styling
+set -g message-style 'bg=#00d9ff fg=#1a1a2e bold'
+
+# Pane border colors
+set -g pane-border-style 'fg=#6c757d'
+set -g pane-active-border-style 'fg=#b967ff'
+
+# ============================================
+# Plugins (TPM - Tmux Plugin Manager)
+# ============================================
+# Plugin list
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'omerxx/tmux-sessionx'
+
+# Plugin settings
+
+# tmux-resurrect: restore pane contents
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-nvim 'session'
+
+# tmux-continuum: auto-save sessions every 15 minutes
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
+
+# tmux-sessionx: fuzzy finder for sessions/projects
+set -g @sessionx-prefix on
+set -g @sessionx-bind 'p'
+set -g @sessionx-window-height '85%'
+set -g @sessionx-window-width '75%'
+set -g @sessionx-zoxide-mode 'on'
+set -g @sessionx-fzf-builtin-tmux 'off'
+set -g @sessionx-custom-paths '~/dotfiles,~/Projects'
+set -g @sessionx-custom-paths-subdirectories 'false'
+set -g @sessionx-filter-current 'false'
+set -g @sessionx-preview-enabled 'true'
+set -g @sessionx-preview-ratio '65%'
+
+# ============================================
+# Initialize TPM (keep at bottom)
+# ============================================
+# Auto-install TPM if not present
+if "test ! -d ~/.config/tmux/plugins/tpm" \
+   "run 'git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm && ~/.config/tmux/plugins/tpm/bin/install_plugins'"
+
+# Initialize TPM (must be last line)
+run '~/.config/tmux/plugins/tpm/tpm'
