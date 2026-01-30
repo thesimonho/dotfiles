@@ -20,7 +20,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.dial" },
     { import = "lazyvim.plugins.extras.editor.snacks_picker" },
     { import = "lazyvim.plugins.extras.test.core" },
-    { import = "lazyvim.plugins.extras.util.octo" },
     { import = "lazyvim.plugins.extras.vscode", enabled = os_utils.has_executable("code") },
     -- languages
     { import = "lazyvim.plugins.extras.lang.docker", enabled = os_utils.has_executable("docker") },
