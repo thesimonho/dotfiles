@@ -1,5 +1,5 @@
 model = "gpt-5.2-codex"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 approval_policy = "on-request"
 project_doc_fallback_filenames = ["CLAUDE.md"]
@@ -12,15 +12,10 @@ web_search = "cached"
 network_access = true
 
 [features]
-shell_tool = true
-unified_exec = false
+unified_exec = true
 shell_snapshot = true
-apply_patch_freeform = true
-exec_policy = true
-remote_compaction = true
-remote_models = true
-child_agents_md = true
-undo = true
+collab = true
+steer = true
 
 [otel]
 log_user_prompt = true 

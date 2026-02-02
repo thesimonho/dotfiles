@@ -44,13 +44,14 @@ For each module:
 
 ```
 Structure:
-docs/CODEMAPS/
+docs/codemaps/
 ├── INDEX.md              # Overview of all areas
 ├── frontend.md           # Frontend structure
 ├── backend.md            # Backend/API structure
 ├── database.md           # Database schema
 ├── integrations.md       # External services
-└── workers.md            # Background jobs
+├── workers.md            # Background jobs
+└── ...and more...
 ```
 
 ### 4. Codemap Format
@@ -100,7 +101,7 @@ Links to other codemaps that interact with this area
 ```
 Files to update:
 - README.md - Project overview, setup instructions
-- docs/GUIDES/*.md - Feature guides, tutorials
+- docs/guides/*.md - Feature guides, tutorials
 - package.json - Descriptions, scripts docs
 - API documentation - Endpoint specs
 ```
@@ -116,7 +117,7 @@ Files to update:
 
 ## Example Project-Specific Codemaps
 
-### Frontend Codemap (docs/CODEMAPS/frontend.md)
+### Frontend Codemap (docs/codemaps/frontend.md)
 
 ```markdown
 # Frontend Architecture
@@ -157,7 +158,7 @@ User → Markets Page → API Route → Supabase → Redis (optional) → Respon
 - Tailwind CSS 3.4.1 - Styling
 ```
 
-### Backend Codemap (docs/CODEMAPS/backend.md)
+### Backend Codemap (docs/codemaps/backend.md)
 
 ```markdown
 # Backend Architecture
@@ -186,7 +187,7 @@ API Route → Supabase Query → Redis (cache) → Response
 - OpenAI - Embeddings
 ```
 
-### Integrations Codemap (docs/CODEMAPS/integrations.md)
+### Integrations Codemap (docs/codemaps/integrations.md)
 
 ```markdown
 # External Integrations
@@ -252,7 +253,7 @@ npm run build
 
 ## Architecture
 
-See [docs/CODEMAPS/INDEX.md](docs/CODEMAPS/INDEX.md) for detailed architecture.
+See [docs/codemaps/INDEX.md](docs/codemaps/INDEX.md) for detailed architecture.
 
 ### Key Directories
 
@@ -267,9 +268,9 @@ See [docs/CODEMAPS/INDEX.md](docs/CODEMAPS/INDEX.md) for detailed architecture.
 
 ## Documentation
 
-- [Setup Guide](docs/GUIDES/setup.md)
-- [API Reference](docs/GUIDES/api.md)
-- [Architecture](docs/CODEMAPS/INDEX.md)
+- [Setup Guide](docs/guides/setup.md)
+- [API Reference](docs/guides/api.md)
+- [Architecture](docs/codemaps/INDEX.md)
 
 ## Contributing
 
@@ -289,18 +290,18 @@ Regenerated codemaps and updated documentation to reflect current codebase state
 
 ### Changes
 
-- Updated docs/CODEMAPS/\* from current code structure
+- Updated docs/codemaps/\* from current code structure
 - Refreshed README.md with latest setup instructions
-- Updated docs/GUIDES/\* with current API endpoints
+- Updated docs/guides/\* with current API endpoints
 - Added X new modules to codemaps
 - Removed Y obsolete documentation sections
 
 ### Generated Files
 
-- docs/CODEMAPS/INDEX.md
-- docs/CODEMAPS/frontend.md
-- docs/CODEMAPS/backend.md
-- docs/CODEMAPS/integrations.md
+- docs/codemaps/INDEX.md
+- docs/codemaps/frontend.md
+- docs/codemaps/backend.md
+- docs/codemaps/integrations.md
 
 ### Verification
 
@@ -313,7 +314,7 @@ Regenerated codemaps and updated documentation to reflect current codebase state
 
 🟢 LOW - Documentation only, no code changes
 
-See docs/CODEMAPS/INDEX.md for complete architecture overview.
+See docs/codemaps/INDEX.md for complete architecture overview.
 ```
 
 ## Maintenance Schedule
