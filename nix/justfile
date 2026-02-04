@@ -1,0 +1,15 @@
+FLAKE_DIR := "."
+
+update:
+    nix flake update
+
+switch host:
+    @if [ ! -f "$HOME/.ssh/ssh_identity" ] || [ ! -f "$HOME/.ssh/ssh_identity.pub" ]; then \
+      echo "Warning: Missing ~/.ssh/ssh_identity or ~/.ssh/ssh_identity.pub"; \
+      exit 1; \
+    fi
+    @echo "==> Applying host {{ host }} using flake at {{ FLAKE_DIR }}"
+    nix run --accept-flake-config "{{ FLAKE_DIR }}#hm" -- switch --flake "{{ FLAKE_DIR }}#{{ host }}" -b backup
+
+clean:
+    nix-collect-garbage -d
