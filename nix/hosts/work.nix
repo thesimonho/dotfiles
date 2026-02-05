@@ -25,6 +25,7 @@ in
   home = {
     username = "simon.ho";
     homeDirectory = "/Users/simon.ho";
+    sessionPath = [ "/usr/local/bin" ];
     packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 
@@ -69,4 +70,6 @@ in
       };
     };
   };
+
+  ai.gpuVendor = lib.mkDefault "none";
 }
