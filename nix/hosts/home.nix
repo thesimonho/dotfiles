@@ -57,4 +57,6 @@
       };
     };
   };
+
+  ai.gpuVendor = lib.mkForce "nvidia";
 }

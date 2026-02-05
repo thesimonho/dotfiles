@@ -7,8 +7,21 @@
   ...
 }:
 let
-  system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
+  gpuVendor = config.ai.gpuVendor;
+  ollamaPackage =
+    if gpuVendor == "nvidia" then
+      if builtins.hasAttr "ollama-cuda" pkgsUnstable then
+        pkgsUnstable."ollama-cuda"
+      else
+        pkgsUnstable.ollama
+    else if gpuVendor == "amd" then
+      if builtins.hasAttr "ollama-rocm" pkgsUnstable then
+        pkgsUnstable."ollama-rocm"
+      else
+        pkgsUnstable.ollama
+    else
+      null;
 
   claudeMappings = [
     {
@@ -84,48 +97,61 @@ let
   );
 in
 {
-  home = {
-    sessionVariables = {
-      CLAUDE_CODE_ENABLE_TELEMETRY = 1;
-      OTEL_METRICS_EXPORTER = "otlp";
-      OTEL_LOGS_EXPORTER = "otlp";
-      OTEL_EXPORTER_OTLP_PROTOCOL = "grpc";
-      OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317";
-      OTEL_EXPORTER_OTLP_HEADERS = "";
-    };
-    packages = [
-      pkgsUnstable.claude-code
-      pkgsUnstable.claude-code-acp
-      pkgsUnstable.codex
-      pkgsUnstable.codex-acp
+  options.ai.gpuVendor = lib.mkOption {
+    type = lib.types.enum [
+      "none"
+      "nvidia"
+      "amd"
     ];
+    default = "none";
+    description = "GPU vendor for selecting Ollama package variants.";
   };
 
-  # Generate agents.md file
-  home.activation.generateAgentsMd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    ${generateAgentsMd}
-  '';
-
-  # symlinks
-  home.file = {
-    ".codex/AGENTS.md" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
-      force = true;
+  config = {
+    home = {
+      sessionVariables = {
+        CLAUDE_CODE_ENABLE_TELEMETRY = 1;
+        OTEL_METRICS_EXPORTER = "otlp";
+        OTEL_LOGS_EXPORTER = "otlp";
+        OTEL_EXPORTER_OTLP_PROTOCOL = "grpc";
+        OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317";
+        OTEL_EXPORTER_OTLP_HEADERS = "";
+      };
+      packages = [
+        pkgsUnstable.claude-code
+        pkgsUnstable.claude-code-acp
+        pkgsUnstable.codex
+        pkgsUnstable.codex-acp
+      ]
+      ++ lib.optionals (ollamaPackage != null) [ ollamaPackage ];
     };
-    ".codex/config.toml" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
-      force = true;
-    };
-  }
-  // mkClaudeLinks ".claude"
-  // mkClaudeLinks ".claude-2"
-  // mkCodexStaticSkills; # Static skills (from AI/skills)
 
-  home.activation.generateCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    export AGENTS_ROOT="${dotfiles}/AI/agents"
-    export SKILLS_OUTPUT="$HOME/.codex/skills"
-    export AWK_BIN="${pkgs.gawk}/bin/awk"
-    $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
-    $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
-  '';
+    # Generate agents.md file
+    home.activation.generateAgentsMd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      ${generateAgentsMd}
+    '';
+
+    # symlinks
+    home.file = {
+      ".codex/AGENTS.md" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
+        force = true;
+      };
+      ".codex/config.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
+        force = true;
+      };
+    }
+    // mkClaudeLinks ".claude"
+    // mkClaudeLinks ".claude-2"
+    // mkCodexStaticSkills; # Static skills (from AI/skills)
+
+    home.activation.generateCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      export AGENTS_ROOT="${dotfiles}/AI/agents"
+      export SKILLS_OUTPUT="$HOME/.codex/skills"
+      export AWK_BIN="${pkgs.gawk}/bin/awk"
+      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
+      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
+    '';
+  };
 }
