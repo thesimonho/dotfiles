@@ -12,6 +12,15 @@ M = {
       },
     },
   },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "markdown",
+        "markdown_inline",
+      },
+    },
+  },
   { -- formatters
     "stevearc/conform.nvim",
     opts = {

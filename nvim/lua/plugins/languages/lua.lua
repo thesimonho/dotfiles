@@ -1,5 +1,29 @@
 return {
   {
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "stylua",
+      },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "lua",
+      },
+    },
+  },
+  { -- formatters
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+      },
+    },
+  },
+  {
     "mfussenegger/nvim-dap",
     keys = {
       {
@@ -9,22 +33,6 @@ return {
         end,
         desc = "Start Nvim Lua Server",
         ft = "lua",
-      },
-    },
-  },
-  {
-    "mason-org/mason.nvim",
-    opts = {
-      ensure_installed = {
-        "stylua",
-      },
-    },
-  },
-  { -- formatters
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        lua = { "stylua" },
       },
     },
   },

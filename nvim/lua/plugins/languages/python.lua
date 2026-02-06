@@ -18,6 +18,14 @@ M = {
       },
     },
   },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "python",
+      },
+    },
+  },
   { -- formatters
     "stevearc/conform.nvim",
     opts = {

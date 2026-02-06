@@ -53,11 +53,26 @@ return {
     "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
+        -- lsp
+        "vue-language-server",
         -- linters
         "eslint_d",
         -- formatters
         "prettierd",
         "prettier",
+      },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "css",
+        "html",
+        "rst",
+        "scss",
+        "tsx",
+        "vue",
       },
     },
   },
