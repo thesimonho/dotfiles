@@ -167,6 +167,9 @@ in
         user = {
           name = "Simon Ho";
         };
+        init = {
+          defaultBranch = "main";
+        };
         core = {
           autocrlf = "input";
         };
