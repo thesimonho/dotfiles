@@ -33,6 +33,9 @@ M.basic_binds = {
 	},
 	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 
+	{ key = "h", mods = "SUPER", action = act.ActivateTabRelative(-1), desc = "" },
+	{ key = "l", mods = "SUPER", action = act.ActivateTabRelative(1), desc = "" },
+
 	-- font size
 	{ key = "=", mods = "CTRL", action = act.IncreaseFontSize },
 	{ key = "-", mods = "CTRL", action = act.DecreaseFontSize },
