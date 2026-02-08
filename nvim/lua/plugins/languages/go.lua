@@ -25,9 +25,45 @@ return {
     "mfussenegger/nvim-lint",
     opts = {
       linters_by_ft = {
-        -- go = { "golangcilint" }, -- BUG: linter doesnt run, and takes LSP out when it tries
+        go = { "golangcilint" }, -- BUG: linter doesnt run, and takes LSP out when it tries
       },
     },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "go",
+      },
+    },
+  },
+  {
+    "folke/snacks.nvim",
+    ft = { "go", "gomod" },
+    config = function(_, opts)
+      require("snacks").setup(opts)
+
+      local function open_pkg_go_dev_under_cursor()
+        local line = vim.api.nvim_get_current_line()
+        local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+
+        for s, e in line:gmatch('()"[^"]+"()') do
+          if col >= s and col <= e then
+            local path = line:sub(s + 1, e - 2)
+            vim.ui.open(("https://pkg.go.dev/%s"):format(path))
+            return
+          end
+        end
+
+        vim.notify("Put cursor inside an import path string", vim.log.levels.INFO)
+      end
+
+      local Snacks = require("snacks")
+      Snacks.keymap.set("n", "gh", open_pkg_go_dev_under_cursor, {
+        desc = "Open Go docs for import",
+        ft = { "go", "gomod" },
+      })
+    end,
   },
   {
     "leoluz/nvim-dap-go",
