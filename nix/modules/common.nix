@@ -16,6 +16,7 @@ let
     ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
       doCheck = false;
     }))
+    pkgs.glow
     pkgs.just
     pkgs.lazydocker
     pkgs.lazygit
