@@ -207,28 +207,45 @@ ensure_kde() {
 # Ensure Nix is installed + flakes are enabled
 # ------------------------------------------------------
 ensure_nix() {
+  # 1. Install Nix if missing
   if command -v nix >/dev/null 2>&1; then
     echo "==> Nix already installed."
   else
-    echo "==> Installing Nix..."
-    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
+    echo "==> Installing Nix (multi-user daemon)..."
+
+    # Official installer defaults to daemon on macOS
+    sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
+
+    # Defensive: fail fast if install didn’t succeed
+    if ! command -v nix >/dev/null 2>&1; then
+      echo "ERROR: Nix install failed or nix not on PATH" >&2
+      return 1
+    fi
   fi
 
+  # 2. Enable flakes (user-scoped, safe on multi-user)
   mkdir -p "$HOME/.config/nix"
   NIXCONF="$HOME/.config/nix/nix.conf"
-  if ! grep -q "experimental-features" "$NIXCONF" 2>/dev/null; then
+
+  if ! grep -q "^experimental-features" "$NIXCONF" 2>/dev/null; then
     echo "==> Enabling flakes in $NIXCONF"
     printf "experimental-features = nix-command flakes\n" >>"$NIXCONF"
   fi
 
+  # 3. Source Nix environment (daemon-first, single-user fallback)
   set +u
-  if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
-    # single-user install
-    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
-  elif [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
-    # multi-user install
+
+  if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  elif [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+    # Legacy single-user install (Linux or old macOS)
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  else
+    echo "ERROR: Unable to locate Nix environment script" >&2
+    set -u
+    return 1
   fi
+
   set -u
 }
 
