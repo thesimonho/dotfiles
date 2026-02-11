@@ -33,13 +33,35 @@ HOST=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --repo) REPO_URL="$2"; shift 2 ;;
-    --dir) REPO_DIR="$2"; shift 2 ;;
-    --host) HOST="$2"; shift 2 ;;
-    --branch) BRANCH="$2"; shift 2 ;;
-    --flake-subdir) FLAKE_SUBDIR="$2"; shift 2 ;;
-    -h|--help) usage; exit 0 ;;
-    *) echo "Unknown arg: $1" >&2; usage; exit 1 ;;
+  --repo)
+    REPO_URL="$2"
+    shift 2
+    ;;
+  --dir)
+    REPO_DIR="$2"
+    shift 2
+    ;;
+  --host)
+    HOST="$2"
+    shift 2
+    ;;
+  --branch)
+    BRANCH="$2"
+    shift 2
+    ;;
+  --flake-subdir)
+    FLAKE_SUBDIR="$2"
+    shift 2
+    ;;
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown arg: $1" >&2
+    usage
+    exit 1
+    ;;
   esac
 done
 
@@ -65,7 +87,10 @@ nix_cmd() {
 }
 
 detect_pkgmgr() {
-  [[ "$OS" == "Linux" ]] || { echo "none"; return 0; }
+  [[ "$OS" == "Linux" ]] || {
+    echo "none"
+    return 0
+  }
   if command -v apt-get >/dev/null 2>&1; then
     echo "apt"
   elif command -v dnf >/dev/null 2>&1; then
@@ -80,10 +105,10 @@ detect_pkgmgr() {
 pkg_update() {
   [[ "$OS" == "Linux" ]] || return 0
   case "$(detect_pkgmgr)" in
-    apt) sudo apt-get update -y ;;
-    dnf) : ;; # typically not required
-    pacman) sudo pacman -Sy ;;
-    none) echo "No supported Linux package manager found." >&2 ;;
+  apt) sudo apt-get update -y ;;
+  dnf) : ;; # typically not required
+  pacman) sudo pacman -Sy ;;
+  none) echo "No supported Linux package manager found." >&2 ;;
   esac
 }
 
@@ -92,30 +117,78 @@ pkg_install() {
   local pm
   pm="$(detect_pkgmgr)"
   case "$pm" in
-    apt) sudo apt-get install -y "$@" ;;
-    dnf) sudo dnf install -y "$@" ;;
-    pacman) sudo pacman -S --noconfirm --needed "$@" ;;
-    none)
-      echo "No supported package manager found. Please install: $*" >&2
-      return 1
-      ;;
+  apt) sudo apt-get install -y "$@" ;;
+  dnf) sudo dnf install -y "$@" ;;
+  pacman) sudo pacman -S --noconfirm --needed "$@" ;;
+  none)
+    echo "No supported package manager found. Please install: $*" >&2
+    return 1
+    ;;
   esac
 }
 
 restart_nix_daemon() {
   case "$OS" in
-    Darwin)
-      echo "==> Restarting nix-daemon (macOS)"
-      sudo launchctl kickstart -k system/org.nixos.nix-daemon
-      ;;
-    Linux)
-      echo "==> Restarting nix-daemon (Linux)"
-      if command -v systemctl >/dev/null 2>&1; then
-        sudo systemctl restart nix-daemon.service 2>/dev/null || true
-        sudo systemctl restart nix-daemon 2>/dev/null || true
-      fi
-      ;;
+  Darwin)
+    echo "==> Restarting nix-daemon (macOS)"
+    sudo launchctl kickstart -k system/org.nixos.nix-daemon
+    ;;
+  Linux)
+    echo "==> Restarting nix-daemon (Linux)"
+    if command -v systemctl >/dev/null 2>&1; then
+      sudo systemctl restart nix-daemon.service 2>/dev/null || true
+      sudo systemctl restart nix-daemon 2>/dev/null || true
+    fi
+    ;;
   esac
+}
+
+ensure_line_in_nix_conf() {
+  # Ensures a key=value line exists in /etc/nix/nix.conf, replacing any existing key line.
+  # Args:
+  #   $1: key (e.g., "experimental-features")
+  #   $2: value (e.g., "nix-command flakes")
+  local key="$1"
+  local value="$2"
+  local conf="/etc/nix/nix.conf"
+
+  sudo mkdir -p /etc/nix
+  sudo touch "$conf"
+
+  if sudo grep -Eq "^\s*${key}\s*=" "$conf"; then
+    # Replace the first matching line only
+    sudo sed -i "0,/^\s*${key}\s*=.*/s//${key} = ${value}/" "$conf"
+  else
+    echo "${key} = ${value}" | sudo tee -a "$conf" >/dev/null
+  fi
+}
+
+ensure_experimental_features() {
+  # Merge required experimental features into /etc/nix/nix.conf without duplicating.
+  local conf="/etc/nix/nix.conf"
+  local required=("nix-command" "flakes")
+
+  sudo mkdir -p /etc/nix
+  sudo touch "$conf"
+
+  local current=""
+  current="$(sudo sed -nE 's/^\s*experimental-features\s*=\s*(.*)$/\1/p' "$conf" | head -n1 || true)"
+
+  local merged="$current"
+  for feat in "${required[@]}"; do
+    if [[ " $merged " != *" $feat "* ]]; then
+      merged="${merged:+$merged }$feat"
+    fi
+  done
+
+  merged="${merged:-nix-command flakes}"
+  ensure_line_in_nix_conf "experimental-features" "$merged"
+}
+
+ensure_trusted_users() {
+  # On a single-person workstation, trusting your user reduces annoying multi-user restrictions.
+  local user="${SUDO_USER:-$USER}"
+  ensure_line_in_nix_conf "trusted-users" "root $user"
 }
 
 # -----------------------------
@@ -129,19 +202,19 @@ ensure_git() {
 
   echo "==> Installing git..."
   case "$OS" in
-    Linux)
-      pkg_install git || return 1
-      ;;
-    Darwin)
-      if ! xcode-select -p >/dev/null 2>&1; then
-        echo "==> Installing Xcode Command Line Tools (for git)..."
-        xcode-select --install || true
-      fi
-      ;;
-    *)
-      echo "Unsupported OS: $OS" >&2
-      return 1
-      ;;
+  Linux)
+    pkg_install git || return 1
+    ;;
+  Darwin)
+    if ! xcode-select -p >/dev/null 2>&1; then
+      echo "==> Installing Xcode Command Line Tools (for git)..."
+      xcode-select --install || true
+    fi
+    ;;
+  *)
+    echo "Unsupported OS: $OS" >&2
+    return 1
+    ;;
   esac
 
   if ! command -v git >/dev/null 2>&1; then
@@ -176,17 +249,17 @@ ensure_kde() {
 
   # Detect KDE Plasma
   if [[ "${XDG_CURRENT_DESKTOP:-}" == *kde* ]] ||
-     [[ "${DESKTOP_SESSION:-}" == *plasma* ]] ||
-     [[ "${KDE_FULL_SESSION:-}" == "true" ]]; then
+    [[ "${DESKTOP_SESSION:-}" == *plasma* ]] ||
+    [[ "${KDE_FULL_SESSION:-}" == "true" ]]; then
 
     echo "==> KDE detected; installing KDE utilities"
     case "$(detect_pkgmgr)" in
-      apt) pkg_install ksshaskpass partitionmanager flatpak-kcm ;;
-      dnf) pkg_install ksshaskpass kde-partitionmanager ;;
-      pacman) pkg_install ksshaskpass partitionmanager flatpak-kcm ;;
-      *)
-        echo "Unsupported package manager; install KDE utilities manually" >&2
-        ;;
+    apt) pkg_install ksshaskpass partitionmanager flatpak-kcm ;;
+    dnf) pkg_install ksshaskpass kde-partitionmanager ;;
+    pacman) pkg_install ksshaskpass partitionmanager flatpak-kcm ;;
+    *)
+      echo "Unsupported package manager; install KDE utilities manually" >&2
+      ;;
     esac
   fi
 }
@@ -200,18 +273,18 @@ ensure_nix() {
   else
     echo "==> Installing Nix (daemon/multi-user)..."
     case "$OS" in
-      Darwin)
-        # Official installer defaults to daemon on macOS.
-        sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
-        ;;
-      Linux)
-        # Force daemon mode on Linux too.
-        sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
-        ;;
-      *)
-        echo "Unsupported OS: $OS" >&2
-        return 1
-        ;;
+    Darwin)
+      # Official installer defaults to daemon on macOS.
+      sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install)
+      ;;
+    Linux)
+      # Force daemon mode on Linux too.
+      sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+      ;;
+    *)
+      echo "Unsupported OS: $OS" >&2
+      return 1
+      ;;
     esac
   fi
 
@@ -220,21 +293,11 @@ ensure_nix() {
     return 1
   fi
 
-  # Enable flakes in daemon config (authoritative for multi-user)
-  local conf="/etc/nix/nix.conf"
-  if ! grep -Eq '^\s*experimental-features\s*=.*\bnix-command\b' "$conf" 2>/dev/null; then
-    echo "==> Enabling flakes in $conf"
-    echo "experimental-features = nix-command flakes" | sudo tee -a "$conf" >/dev/null
-    restart_nix_daemon || true
-  fi
-
-  # Optional: user-scoped config too (nice-to-have)
-  mkdir -p "$HOME/.config/nix"
-  local user_conf="$HOME/.config/nix/nix.conf"
-  if ! grep -Eq '^\s*experimental-features\s*=' "$user_conf" 2>/dev/null; then
-    echo "==> Enabling flakes in $user_conf"
-    echo "experimental-features = nix-command flakes" >>"$user_conf"
-  fi
+  # Daemon config is authoritative in multi-user mode.
+  echo "==> Ensuring daemon config enables flakes and trusts current user"
+  ensure_experimental_features
+  ensure_trusted_users
+  restart_nix_daemon || true
 }
 
 # -----------------------------
@@ -295,9 +358,9 @@ main() {
   pkg_update || true
 
   ensure_git
+  ensure_flatpak
   ensure_kde
   ensure_nix
-  ensure_flatpak
   sync_repo
 
   apply_host "$HOST"

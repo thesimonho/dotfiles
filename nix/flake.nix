@@ -33,10 +33,10 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-  agenix = {
-    url = "github:ryantm/agenix";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
   };
 
@@ -101,12 +101,9 @@
           pkgsUnstable = unstableFor "aarch64-darwin";
         };
         modules = [
-          inputs.nix-flatpak.homeManagerModules.nix-flatpak
-          inputs.plasma-manager.homeModules.plasma-manager
           agenix.homeManagerModules.default
           ./hosts/work.nix
           ./modules/common.nix
-          ./modules/kde.nix
           ./modules/ssh.nix
           ./modules/AI.nix
           { home.stateVersion = "25.05"; } # dont touch this
