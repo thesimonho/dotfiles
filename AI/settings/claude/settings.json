@@ -161,5 +161,6 @@
       }
     }
   },
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "model": "sonnet"
 }
