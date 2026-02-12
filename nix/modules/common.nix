@@ -81,35 +81,6 @@ in
     packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 
-  services.flatpak = lib.mkIf isLinux {
-    enable = true;
-    uninstallUnmanaged = true;
-    remotes = [
-      {
-        name = "flathub";
-        location = "https://flathub.org/repo/flathub.flatpakrepo";
-      }
-    ];
-    update = {
-      onActivation = true;
-      auto = {
-        enable = true;
-        onCalendar = "weekly";
-      };
-    };
-    packages = [
-      # "org.inkscape.Inkscape"
-      # "org.gimp.GIMP"
-      # "com.google.Chrome"
-      "org.deskflow.deskflow"
-      "com.ranfdev.DistroShelf"
-      "it.mijorus.gearlever"
-      "com.jeffser.Alpaca"
-      "com.jeffser.Alpaca.Plugins.Ollama"
-      "com.visualstudio.code"
-    ];
-  };
-
   # ---------------------------------------------------------------------------
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------

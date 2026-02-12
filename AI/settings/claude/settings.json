@@ -28,6 +28,7 @@
     ],
     "defaultMode": "default"
   },
+  "model": "sonnet",
   "hooks": {
     "SessionStart": [
       {
@@ -153,14 +154,6 @@
     "hookify@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true
   },
-  "extraKnownMarketplaces": {
-    "artificial-jellybeans": {
-      "source": {
-        "source": "github",
-        "repo": "thesimonho/artificial-jellybeans"
-      }
-    }
-  },
-  "effortLevel": "medium",
-  "model": "sonnet"
+  "extraKnownMarketplaces": {},
+  "effortLevel": "medium"
 }

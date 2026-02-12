@@ -97,6 +97,12 @@ let
   );
 in
 {
+  options.ai.enableSymlinks = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+    description = "Whether to create AI dotfile symlinks (Claude, Codex config).";
+  };
+
   options.ai.gpuVendor = lib.mkOption {
     type = lib.types.enum [
       "none"
@@ -127,31 +133,37 @@ in
     };
 
     # Generate agents.md file
-    home.activation.generateAgentsMd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      ${generateAgentsMd}
-    '';
+    home.activation.generateAgentsMd = lib.mkIf config.ai.enableSymlinks (
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ${generateAgentsMd}
+      ''
+    );
 
     # symlinks
-    home.file = {
-      ".codex/AGENTS.md" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
-        force = true;
-      };
-      ".codex/config.toml" = {
-        source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
-        force = true;
-      };
-    }
-    // mkClaudeLinks ".claude"
-    // mkClaudeLinks ".claude-2"
-    // mkCodexStaticSkills; # Static skills (from AI/skills)
+    home.file = lib.mkIf config.ai.enableSymlinks (
+      {
+        ".codex/AGENTS.md" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
+          force = true;
+        };
+        ".codex/config.toml" = {
+          source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
+          force = true;
+        };
+      }
+      // mkClaudeLinks ".claude"
+      // mkClaudeLinks ".claude-2"
+      // mkCodexStaticSkills
+    );
 
-    home.activation.generateCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      export AGENTS_ROOT="${dotfiles}/AI/agents"
-      export SKILLS_OUTPUT="$HOME/.codex/skills"
-      export AWK_BIN="${pkgs.gawk}/bin/awk"
-      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
-      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
-    '';
+    home.activation.generateCodexSkills = lib.mkIf config.ai.enableSymlinks (
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        export AGENTS_ROOT="${dotfiles}/AI/agents"
+        export SKILLS_OUTPUT="$HOME/.codex/skills"
+        export AWK_BIN="${pkgs.gawk}/bin/awk"
+        $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
+        $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
+      ''
+    );
   };
 }
