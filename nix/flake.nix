@@ -101,6 +101,7 @@
           pkgsUnstable = unstableFor "aarch64-darwin";
         };
         modules = [
+          inputs.nix-flatpak.homeManagerModules.nix-flatpak
           agenix.homeManagerModules.default
           ./hosts/work.nix
           ./modules/common.nix
