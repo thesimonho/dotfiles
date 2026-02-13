@@ -73,5 +73,6 @@ in
     };
   };
 
+  ai.claudeTargetDir = lib.mkDefault ".claude2";
   ai.gpuVendor = lib.mkDefault "none";
 }

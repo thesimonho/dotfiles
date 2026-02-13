@@ -97,10 +97,10 @@ let
   );
 in
 {
-  options.ai.enableSymlinks = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
-    description = "Whether to create AI dotfile symlinks (Claude, Codex config).";
+  options.ai.claudeTargetDir = lib.mkOption {
+    type = lib.types.str;
+    default = ".claude";
+    description = "Target directory for Claude symlinks (e.g. .claude or .claude2).";
   };
 
   options.ai.gpuVendor = lib.mkOption {
@@ -133,14 +133,12 @@ in
     };
 
     # Generate agents.md file
-    home.activation.generateAgentsMd = lib.mkIf config.ai.enableSymlinks (
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        ${generateAgentsMd}
-      ''
-    );
+    home.activation.generateAgentsMd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      ${generateAgentsMd}
+    '';
 
     # symlinks
-    home.file = lib.mkIf config.ai.enableSymlinks (
+    home.file =
       {
         ".codex/AGENTS.md" = {
           source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
@@ -151,19 +149,15 @@ in
           force = true;
         };
       }
-      // mkClaudeLinks ".claude"
-      // mkClaudeLinks ".claude-2"
-      // mkCodexStaticSkills
-    );
+      // mkClaudeLinks config.ai.claudeTargetDir
+      // mkCodexStaticSkills;
 
-    home.activation.generateCodexSkills = lib.mkIf config.ai.enableSymlinks (
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        export AGENTS_ROOT="${dotfiles}/AI/agents"
-        export SKILLS_OUTPUT="$HOME/.codex/skills"
-        export AWK_BIN="${pkgs.gawk}/bin/awk"
-        $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
-        $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
-      ''
-    );
+    home.activation.generateCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      export AGENTS_ROOT="${dotfiles}/AI/agents"
+      export SKILLS_OUTPUT="$HOME/.codex/skills"
+      export AWK_BIN="${pkgs.gawk}/bin/awk"
+      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
+      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
+    '';
   };
 }

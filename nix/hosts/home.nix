@@ -82,6 +82,6 @@
     };
   };
 
-  ai.enableSymlinks = true;
+  ai.claudeTargetDir = lib.mkForce ".claude";
   ai.gpuVendor = lib.mkForce "nvidia";
 }
