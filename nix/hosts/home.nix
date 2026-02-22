@@ -42,7 +42,6 @@
       "com.jeffser.Alpaca"
       "com.jeffser.Alpaca.Plugins.Ollama"
       "com.visualstudio.code"
-      "com.google.AndroidStudio"
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
       "com.dropbox.Client"
