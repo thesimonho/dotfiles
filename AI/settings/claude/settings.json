@@ -150,9 +150,7 @@
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
-    "postgres-best-practices@supabase-agent-skills": true,
-    "hookify@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true
+    "chrome-devtools-mcp@chrome-devtools-plugins": true
   },
   "extraKnownMarketplaces": {},
   "effortLevel": "medium"

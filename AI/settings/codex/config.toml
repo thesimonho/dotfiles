@@ -1,4 +1,4 @@
-model = "gpt-5.2-codex"
+model = "gpt-5.3-codex"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 approval_policy = "on-request"
@@ -7,6 +7,7 @@ hide_agent_reasoning = false
 show_raw_agent_reasoning = true
 disable_paste_burst = false
 web_search = "cached"
+personality = "friendly"
 
 [sandbox_workspace_write]
 network_access = true
@@ -14,8 +15,9 @@ network_access = true
 [features]
 unified_exec = true
 shell_snapshot = true
-collab = true
 steer = true
+apps = true
+multi_agent = true
 
 [otel]
 log_user_prompt = true 
@@ -33,6 +35,7 @@ trace_exporter = { otlp-grpc = {
 
 [notice]
 hide_full_access_warning = true
+hide_rate_limit_model_nudge = true
 
 [projects]
 [projects."~/Projects"]
@@ -41,4 +44,13 @@ trust_level = "trusted"
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp"]
-env = { DEFAULT_MINIMUM_TOKENS = "6000" }
+
+[mcp_servers.context7.env]
+DEFAULT_MINIMUM_TOKENS = "6000"
+
+[mcp_servers.chrome-devtools]
+command = "npx"
+args = ["-y", "chrome-devtools-mcp@latest", "--no-usage-statistics", "--headless=true", "--isolated=true"]
+
+[tui]
+status_line = ["model-with-reasoning", "context-used", "used-tokens", "five-hour-limit", "weekly-limit"]
