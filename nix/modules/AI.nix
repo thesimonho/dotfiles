@@ -124,10 +124,8 @@ in
         OTEL_EXPORTER_OTLP_HEADERS = "";
       };
       packages = [
-        pkgsUnstable.claude-code
-        pkgsUnstable.claude-code-acp
-        pkgsUnstable.codex
-        pkgsUnstable.codex-acp
+        inputs.claude-code.packages.${pkgs.system}.default
+        inputs.codex-cli-nix.packages.${pkgs.system}.default
       ]
       ++ lib.optionals (ollamaPackage != null) [ ollamaPackage ];
     };
@@ -138,19 +136,18 @@ in
     '';
 
     # symlinks
-    home.file =
-      {
-        ".codex/AGENTS.md" = {
-          source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
-          force = true;
-        };
-        ".codex/config.toml" = {
-          source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
-          force = true;
-        };
-      }
-      // mkClaudeLinks config.ai.claudeTargetDir
-      // mkCodexStaticSkills;
+    home.file = {
+      ".codex/AGENTS.md" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
+        force = true;
+      };
+      ".codex/config.toml" = {
+        source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
+        force = true;
+      };
+    }
+    // mkClaudeLinks config.ai.claudeTargetDir
+    // mkCodexStaticSkills;
 
     home.activation.generateCodexSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       export AGENTS_ROOT="${dotfiles}/AI/agents"
