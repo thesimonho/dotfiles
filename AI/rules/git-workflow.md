@@ -38,4 +38,5 @@ When merging or creating PRs:
 1. Use the /verification skill first to make sure no build errors come up
 1. Analyze full commit history of the branch (not just latest commit)
 1. Use `git diff [base-branch]...HEAD` to see all changes
-1. Draft comprehensive PR summary
+
+Once you have merged your feature branch, make sure you delete the local branch
