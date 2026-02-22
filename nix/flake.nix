@@ -9,8 +9,14 @@
     stalled-download-timeout = 300;
     warn-dirty = false;
 
-    extra-substituters = [ ];
-    extra-trusted-public-keys = [ ];
+    extra-substituters = [
+      "https://codex-cli.cachix.org"
+      "https://claude-code.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
+      "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+    ];
     extra-experimental-features = [
       "nix-command"
       "flakes"
@@ -21,8 +27,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
-
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,6 +36,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
+
+    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
+    claude-code.url = "github:sadjow/claude-code-nix";
 
     agenix = {
       url = "github:ryantm/agenix";
