@@ -7,6 +7,7 @@
   ...
 }:
 let
+  system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
   gpuVendor = config.ai.gpuVendor;
   ollamaPackage =
@@ -124,8 +125,8 @@ in
         OTEL_EXPORTER_OTLP_HEADERS = "";
       };
       packages = [
-        inputs.claude-code.packages.${pkgs.system}.default
-        inputs.codex-cli-nix.packages.${pkgs.system}.default
+        inputs.claude-code.packages.${system}.default
+        inputs.codex-cli-nix.packages.${system}.default
       ]
       ++ lib.optionals (ollamaPackage != null) [ ollamaPackage ];
     };
