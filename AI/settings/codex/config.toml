@@ -19,24 +19,6 @@ steer = true
 apps = true
 multi_agent = true
 
-[otel]
-log_user_prompt = true 
-environment = "dev"
-exporter = {
-  otlp-grpc = {
-    endpoint = "http://localhost:4317",
-    headers = { "x-otlp-meta" = "abc123" }
-  }
-}
-trace_exporter = { otlp-grpc = {
-  endpoint = "http://localhost:4317",
-  headers = { "x-otlp-meta" = "abc123" }
-}}
-
-[notice]
-hide_full_access_warning = true
-hide_rate_limit_model_nudge = true
-
 [projects]
 [projects."~/Projects"]
 trust_level = "trusted"
@@ -50,7 +32,18 @@ DEFAULT_MINIMUM_TOKENS = "6000"
 
 [mcp_servers.chrome-devtools]
 command = "npx"
-args = ["-y", "chrome-devtools-mcp@latest", "--no-usage-statistics", "--headless=true", "--isolated=true"]
+args = [
+  "-y",
+  "chrome-devtools-mcp@latest",
+  "--no-usage-statistics",
+  "--isolated=true",
+]
 
 [tui]
-status_line = ["model-with-reasoning", "context-used", "used-tokens", "five-hour-limit", "weekly-limit"]
+status_line = [
+  "model-with-reasoning",
+  "context-used",
+  "used-tokens",
+  "five-hour-limit",
+  "weekly-limit",
+]
