@@ -158,6 +158,10 @@ in
         merge = {
           conflictStyle = "zdiff3";
         };
+        credential = {
+          helper = "${pkgs.gh}/bin/gh auth git-credential";
+          useHttpPath = true;
+        };
       };
     };
     home-manager = {
