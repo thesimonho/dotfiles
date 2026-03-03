@@ -65,13 +65,6 @@
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------
   programs = {
-    gh = {
-      hosts = {
-        "github.com" = {
-          user = lib.mkForce "thesimonho";
-        };
-      };
-    };
     git = {
       settings = {
         user = {

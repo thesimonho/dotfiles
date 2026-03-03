@@ -16,6 +16,8 @@ let
     ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
       doCheck = false;
     }))
+    pkgs.gh
+    pkgs.gh-dash
     pkgs.glow
     pkgs.just
     pkgs.lazydocker
@@ -122,10 +124,6 @@ in
     };
     fzf = {
       enable = true;
-    };
-    gh = {
-      enable = true;
-      gitCredentialHelper.enable = true;
     };
     git = {
       enable = true;
