@@ -47,13 +47,6 @@ in
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------
   programs = {
-    gh = {
-      hosts = {
-        "github.com" = {
-          user = "simon@sprungstudios.com";
-        };
-      };
-    };
     git = {
       settings = {
         user = {

@@ -48,6 +48,7 @@ in
       la = "ls -la";
       ll = "ls -l";
       lt = "ls --tree --level=2 -D";
+      lgh = "gh-dash";
       lg = "lazygit";
       ld = "lazydocker";
       lj = "lazyjournal";
