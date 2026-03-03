@@ -18,14 +18,10 @@
       "mcp__plugin_context7_context7__resolve-library-id",
       "mcp__plugin_context7_context7__query-docs",
       "Skill(playwright-skill)",
-      "Skill(vercel-react-best-practices)"
+      "Skill(vercel-react-best-practices)",
+      "mcp__pencil"
     ],
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)",
-      "Read(./config/credentials.json)"
-    ],
+    "deny": ["Read(./secrets/**)", "Read(./config/credentials.json)"],
     "defaultMode": "default"
   },
   "model": "sonnet",
@@ -155,3 +151,4 @@
   "extraKnownMarketplaces": {},
   "effortLevel": "medium"
 }
+
