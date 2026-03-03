@@ -70,32 +70,50 @@ return {
         "!terminal",
       },
       lazy_load = true,
-      user_default_options = {
-        names = true,
-        names_opts = {
-          lowercase = true, -- name:lower(), highlight `blue` and `red`
-          camelcase = true, -- name, highlight `Blue` and `Red`
-          uppercase = true, -- name:upper(), highlight `BLUE` and `RED`
-          strip_digits = true, -- ignore names with digits,
+      options = {
+        parsers = {
+          names = {
+            enable = true,
+            lowercase = true,
+            camelcase = true,
+            uppercase = true,
+            strip_digits = true,
+          },
+          hex = {
+            default = false, -- default value for format keys (see above)
+            rgb = true, -- #RGB
+            rgba = true, -- #RGBA
+            rrggbb = true, -- #RRGGBB
+            rrggbbaa = true, -- #RRGGBBAA
+            aarrggbb = true, -- 0xAARRGGBB
+          },
+          rgb = { enable = true },
+          hsl = { enable = true },
+          oklch = { enable = true },
+          tailwind = {
+            enable = true,
+            lsp = true,
+            update_names = true,
+          },
+          sass = {
+            enable = true,
+            parsers = { css = true },
+            variable_pattern = "^%$([%w_-]+)",
+          },
+          xterm = { enable = true },
         },
-        RGB = true, -- #RGB hex codes
-        RGBA = true, -- #RGBA hex codes
-        RRGGBB = true, -- #RRGGBB hex codes
-        RRGGBBAA = true, -- #RRGGBBAA hex codes
-        AARRGGBB = true, -- 0xAARRGGBB hex codes
-        rgb_fn = true, -- CSS rgb() and rgba() functions
-        hsl_fn = true, -- CSS hsl() and hsla() functions
-        oklch_fn = true, -- CSS oklch() function
-        tailwind = "both",
-        tailwind_opts = {
-          update_names = true, -- update tailwind names from LSP results.
+        display = {
+          mode = "virtualtext", -- "background"|"foreground"|"virtualtext"
+          background = {
+            bright_fg = "#000000",
+            dark_fg = "#ffffff",
+          },
+          virtualtext = {
+            char = "󰝤",
+            position = "before", -- "eol"|"before"|"after"
+            hl_mode = "foreground",
+          },
         },
-        sass = { enable = true, parsers = { "css" } }, -- Enable sass colors
-        xterm = true, -- Enable xterm 256-color codes (#xNN, \e[38;5;NNNm)
-        mode = "virtualtext",
-        virtualtext = "󰝤",
-        virtualtext_inline = "before",
-        virtualtext_mode = "foreground",
         always_update = true,
       },
     },
