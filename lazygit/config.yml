@@ -155,6 +155,20 @@ customCommands:
     description: 'Fetch and prune remote branches'
     loadingText: 'Fetching and pruning remote...'
     output: log
+  - key: "c"
+    context: "remoteBranches"
+    description: 'Checkout pull request'
+    loadingText: "Checking out GitHub Pull Request..."
+    command: "gh pr checkout {{.Form.PullRequestNumber}}"
+    prompts:
+      - type: "menuFromCommand"
+        title: "Which PR do you want to check out?"
+        key: "PullRequestNumber"
+        command: >-
+          gh pr list --json number,title,headRefName,updatedAt --template '{{`{{range .}}{{printf "#%v: %s - %s (%s)\\n" .number .title .headRefName (timeago .updatedAt)}}{{end}}`}}'
+        filter: '#(?P<number>[0-9]+): (?P<title>.+) - (?P<ref_name>[^ ]+).*'
+        valueFormat: '{{.number}}'
+        labelFormat: '{{"#" | green | bold}}{{.number | green | bold}} {{.title}}'
   - key: 'S'
     context: 'remoteBranches'
     description: 'Sync branch with selected upstream'
