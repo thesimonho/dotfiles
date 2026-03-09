@@ -10,7 +10,7 @@ Before ANY commit:
 - [ ] XSS prevention (sanitized HTML)
 - [ ] CSRF protection enabled
 - [ ] Authentication/authorization verified
-- [ ] Rate limiting on all endpoints
+- [ ] Rate limiting on endpoints
 - [ ] Error messages don't leak sensitive data
 
 ## Secret Management

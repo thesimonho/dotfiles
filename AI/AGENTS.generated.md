@@ -1,5 +1,15 @@
 # Coding Style
 
+## General
+
+Adopt a "sentence readable" approach:
+
+- Code should read like a sentence
+- Prefer descriptive names over short names
+- Long names are perfectly acceptable
+- Use `isX` and `hasX` naming conventions for boolean checks
+- Declare more variables to avoid nested or long expressions
+
 ## File Organization
 
 MANY SMALL FILES > FEW LARGE FILES:
@@ -19,7 +29,7 @@ MANY SMALL FILES > FEW LARGE FILES:
 Before marking work complete:
 
 - [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
+- [ ] Functions are small (<30 lines)
 - [ ] Functions have docstrings
 - [ ] Files are focused (<800 lines)
 - [ ] Use early returns
@@ -48,30 +58,44 @@ Naming convention: `<type>/<description>`, where type is one of the conventional
 
 ## Committing
 
-Run type checks and linters before committing
+### Conventional commits
 
-Commit your work in small, logical chunks that are easy to review and revert if needed
-
-### Commit Message Format
+Every commit message follows the conventional commit format:
 
 ```
-<type>: <description>
-
-<optional body>
+<type>: <short description>
 ```
 
-Use conventional commit types
+Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`, `ci`
+
+Keep the subject line under 70 characters. Add a body only when the "why" isn't obvious from the subject.
+
+### Small, logical commits
+
+Commit in small, focused chunks — each commit should be one logical change that is easy to review and revert.
+
+- Commit at each green phase of TDD (test + implementation together)
+- Don't bundle unrelated changes in a single commit
+- Don't commit half-finished work that breaks the build
+
+### Never Commit
+
+- Secrets, API keys, passwords, or tokens
+- `.env` files (these belong in `.gitignore`)
+- Large binary files without good reason
 
 ## Pull Request/Merge Workflow
 
-When merging or creating PRs:
+When pushing, merging or creating PRs:
 
-1. Use the /verification skill first to make sure no build errors come up
-1. Analyze full commit history of the branch (not just latest commit)
-1. Use `git diff [base-branch]...HEAD` to see all changes
-1. Use a fast-forward merge strategy if possible
+1. All changes are committed
+2. The branch is up to date with main (rebase if needed)
+3. Verification has passed (lint, type-check, tests, build)
+4. Analyze full commit history of the branch (not just latest commit)
+5. Use `git diff [base-branch]...HEAD` to see all changes
+6. Use a fast-forward merge strategy if possible
 
-Once you have merged your feature branch, make sure you delete the local branch
+Once you have merged your branch, make sure you delete the local branch
 
 # Security Guidelines
 
@@ -85,7 +109,7 @@ Before ANY commit:
 - [ ] XSS prevention (sanitized HTML)
 - [ ] CSRF protection enabled
 - [ ] Authentication/authorization verified
-- [ ] Rate limiting on all endpoints
+- [ ] Rate limiting on endpoints
 - [ ] Error messages don't leak sensitive data
 
 ## Secret Management
@@ -111,6 +135,36 @@ If security issue found:
 3. Use **security-reviewer** agent
 4. Fix CRITICAL issues before continuing
 5. Review entire codebase for similar issues
+
+# Shell Command Hygiene
+
+Run each shell command as a **separate, simple Bash call**. Do not chain commands with `&&`, `||`, `;`, or pipes when each part is an independently meaningful operation.
+
+This is critical — the permissions system matches against the beginning of each Bash call. Compound commands will be blocked.
+
+This applies to all shell commands, including `git`, `npm`, `go`, etc.
+
+## Rules
+
+- **One operation per Bash call:** `git add`, `git commit`, `git push`, `npm run test`, etc. — each is its own tool call
+- **Do not chain:** `git add . && git commit -m "msg"` will be blocked. Use two separate calls.
+- **Do not wrap:** No subshells, inline scripts, or heredocs around git commands
+- **Pipelines are fine** when the pipe is integral to the command (e.g., `git log --oneline | head -20`)
+
+## Examples
+
+```bash
+# CORRECT — separate calls
+git add .
+# (separate Bash call)
+git commit -m "feat: add user avatar"
+
+# WRONG — chained
+git add . && git commit -m "feat: add user avatar"
+
+# WRONG — subshell
+sh -c 'git add . && git commit -m "feat: add user avatar"'
+```
 
 # Testing Requirements
 

@@ -1,3 +1,5 @@
+model = "gpt-5.3-codex"
+model_reasoning_effort = "medium"
 [sandbox_workspace_write]
 network_access = true
 
