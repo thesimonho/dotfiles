@@ -66,9 +66,7 @@ in
       CASE_SENSITIVE = "false";
       HIST_STAMPS = "yyyy-mm-dd";
     };
-    profileExtra = ''
-      export VIRTUAL_ENV_DISABLE_PROMPT=1
-    '';
+    profileExtra = "";
     initContent = lib.mkMerge [
       # 100: dawn of time
       (lib.mkOrder 100 ''
@@ -131,11 +129,6 @@ in
       # 1000: general config
       (lib.mkOrder 1000 ''
         autoload zmv  # regex mv
-
-        # hooks
-        chpwd() {
-          eza --icons=always --group-directories-first --hyperlink
-        }
 
         # keybinds
         function open_file_manager() {
