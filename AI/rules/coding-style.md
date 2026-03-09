@@ -1,5 +1,15 @@
 # Coding Style
 
+## General
+
+Adopt a "sentence readable" approach:
+
+- Code should read like a sentence
+- Prefer descriptive names over short names
+- Long names are perfectly acceptable
+- Use `isX` and `hasX` naming conventions for boolean checks
+- Declare more variables to avoid nested or long expressions
+
 ## File Organization
 
 MANY SMALL FILES > FEW LARGE FILES:
@@ -19,7 +29,7 @@ MANY SMALL FILES > FEW LARGE FILES:
 Before marking work complete:
 
 - [ ] Code is readable and well-named
-- [ ] Functions are small (<50 lines)
+- [ ] Functions are small (<30 lines)
 - [ ] Functions have docstrings
 - [ ] Files are focused (<800 lines)
 - [ ] Use early returns

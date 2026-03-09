@@ -17,27 +17,41 @@ Naming convention: `<type>/<description>`, where type is one of the conventional
 
 ## Committing
 
-Run type checks and linters before committing
+### Conventional commits
 
-Commit your work in small, logical chunks that are easy to review and revert if needed
-
-### Commit Message Format
+Every commit message follows the conventional commit format:
 
 ```
-<type>: <description>
-
-<optional body>
+<type>: <short description>
 ```
 
-Use conventional commit types
+Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`, `ci`
+
+Keep the subject line under 70 characters. Add a body only when the "why" isn't obvious from the subject.
+
+### Small, logical commits
+
+Commit in small, focused chunks — each commit should be one logical change that is easy to review and revert.
+
+- Commit at each green phase of TDD (test + implementation together)
+- Don't bundle unrelated changes in a single commit
+- Don't commit half-finished work that breaks the build
+
+### Never Commit
+
+- Secrets, API keys, passwords, or tokens
+- `.env` files (these belong in `.gitignore`)
+- Large binary files without good reason
 
 ## Pull Request/Merge Workflow
 
-When merging or creating PRs:
+When pushing, merging or creating PRs:
 
-1. Use the /verification skill first to make sure no build errors come up
-1. Analyze full commit history of the branch (not just latest commit)
-1. Use `git diff [base-branch]...HEAD` to see all changes
-1. Use a fast-forward merge strategy if possible
+1. All changes are committed
+2. The branch is up to date with main (rebase if needed)
+3. Verification has passed (lint, type-check, tests, build)
+4. Analyze full commit history of the branch (not just latest commit)
+5. Use `git diff [base-branch]...HEAD` to see all changes
+6. Use a fast-forward merge strategy if possible
 
-Once you have merged your feature branch, make sure you delete the local branch
+Once you have merged your branch, make sure you delete the local branch
