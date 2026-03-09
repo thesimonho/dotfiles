@@ -39,8 +39,6 @@
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
       "it.mijorus.gearlever"
-      "com.jeffser.Alpaca"
-      "com.jeffser.Alpaca.Plugins.Ollama"
       "com.visualstudio.code"
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
