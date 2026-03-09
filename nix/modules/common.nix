@@ -196,7 +196,7 @@ in
             show_env = false;
             show_tools = false;
           };
-          python.uv_venv_auto = true;
+          python.uv_venv_auto = "create|source";
         };
       };
     };
