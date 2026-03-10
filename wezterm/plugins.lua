@@ -107,7 +107,7 @@ if enabled.resurrect then
 	M.resurrect.state_manager.periodic_save({
 		interval_seconds = 10 * 60,
 		save_workspaces = true,
-		save_windows = true,
+		save_windows = false,
 		save_tabs = true,
 	})
 
