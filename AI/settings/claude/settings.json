@@ -88,15 +88,18 @@
     "command": "sh ~/.claude/statusline/statusline.sh",
     "padding": 0
   },
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "chrome-devtools-mcp@chrome-devtools-plugins": true
-  },
+  "enabledPlugins": {},
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
       "source": {
         "source": "github",
         "repo": "thesimonho/artificial-jellybeans"
+      }
+    },
+    "chrome-devtools-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "ChromeDevTools/chrome-devtools-mcp"
       }
     }
   },
@@ -134,5 +137,6 @@
     ]
   },
   "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "voiceEnabled": true
 }
