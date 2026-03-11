@@ -356,7 +356,7 @@ secrets/
 
 ```bash
 cd nix/secrets
-agenix -e <name>.age
+agenix -e <name>.age -i ~/.ssh/ssh_identity
 ```
 
 ### Add new secret to config
