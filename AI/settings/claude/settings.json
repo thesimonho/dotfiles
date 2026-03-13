@@ -132,5 +132,5 @@
   },
   "alwaysThinkingEnabled": true,
   "voiceEnabled": true,
-  "skipDangerousModePermissionPrompt": true
+  "model": "opus"
 }
