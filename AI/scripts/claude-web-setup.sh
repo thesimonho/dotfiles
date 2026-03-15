@@ -10,6 +10,8 @@ REPO_URL="https://github.com/thesimonho/dotfiles.git"
 DOTFILES_DIR="$HOME/dotfiles"
 CLAUDE_DIR="$HOME/.claude"
 
+echo "Starting Claude Code web setup..."
+
 # Clone the repo (shallow clone for speed)
 if [ ! -d "$DOTFILES_DIR/.git" ]; then
   git clone --depth 1 "$REPO_URL" "$DOTFILES_DIR"
@@ -22,20 +24,16 @@ mkdir -p "$CLAUDE_DIR"
 
 # These mirror the claudeMappings in nix/modules/AI.nix
 # (minus statusline — not supported in web UI)
-declare -A LINKS=(
-  ["agents"]="AI/agents"
-  ["hooks"]="AI/hooks"
-  ["rules"]="AI/rules"
-  ["scripts"]="AI/scripts"
-  ["skills"]="AI/skills"
-  ["settings.json"]="AI/settings/claude/settings.json"
-)
+NAMES="agents hooks rules scripts skills settings.json"
+PATHS="AI/agents AI/hooks AI/rules AI/scripts AI/skills AI/settings/claude/settings.json"
 
-for name in "${!LINKS[@]}"; do
-  source_path="$DOTFILES_DIR/${LINKS[$name]}"
+set -- $PATHS
+for name in $NAMES; do
+  source_path="$DOTFILES_DIR/$1"
   target_path="$CLAUDE_DIR/$name"
+  shift
 
-  # Remove existing symlink or file (but not directories with real content)
+  # Remove existing symlink
   if [ -L "$target_path" ]; then
     rm "$target_path"
   fi
