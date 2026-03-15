@@ -10,9 +10,9 @@ Test Types:
 
 ## Test-Driven Development
 
-Only applies when a testing framework is already configured - do not set up testing infrastructure unprompted.
+If a testing framework has been set up, you must always use test-driven development. But do not set up a new testing framework unprompted.
 
-Use **tdd-workflow** skill
+Use **tdd-workflow** skill to help you.
 
 Workflow:
 
@@ -28,7 +28,3 @@ Workflow:
 1. Check test isolation
 2. Verify mocks are correct
 3. Fix implementation, not tests (unless tests are wrong)
-
-## Agent Support
-
-- **playwright-runner** - Playwright E2E testing specialist
