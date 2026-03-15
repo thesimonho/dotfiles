@@ -117,16 +117,16 @@ in
         addKeysToAgent = "true";
         forwardAgent = true;
         identitiesOnly = true;
-        identityFile = "${sshDir}/${meta.secrets.sprung.file}";
+        identityFile = "${sshDir}/${meta.secrets.personal.file}";
       };
-      "personal-github.com" = {
+      "work-github.com" = {
         hostname = "ssh.github.com";
         port = 443;
         user = "git";
         addKeysToAgent = "true";
         forwardAgent = true;
         identitiesOnly = true;
-        identityFile = "${sshDir}/${meta.secrets.personal.file}";
+        identityFile = "${sshDir}/${meta.secrets.sprung.file}";
       };
     };
   };

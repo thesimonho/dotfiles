@@ -78,7 +78,10 @@ in
       NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
       CHROME_EXECUTABLE = "google-chrome-stable";
     };
-    sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
+    sessionPath = [
+      "${config.home.homeDirectory}/.npm-global/bin"
+      "${config.home.homeDirectory}/.local/share/nvim/mason/bin"
+    ];
     shell.enableShellIntegration = true;
     packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
