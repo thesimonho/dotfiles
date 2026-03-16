@@ -24,6 +24,12 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 - Minor stylistic nitpicks can be noted as an aside
 - Stop and ask before making significant changes
 
+## When debugging
+
+- Run unit tests to help keep you on track
+- Use logging freely to identify root cause, but make sure to remove logging before committing
+- When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
+
 ## Code Intelligence
 
 Prefer LSP over Grep/Glob/Read for code navigation:

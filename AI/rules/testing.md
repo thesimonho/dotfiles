@@ -10,7 +10,7 @@ Test Types:
 
 ## Test-Driven Development
 
-If a testing framework has been set up, you must always use test-driven development. But do not set up a new testing framework unprompted.
+If a testing framework has been set up, you must _always_ use test-driven development. But do not set up a new testing framework unprompted.
 
 Use **tdd-workflow** skill to help you.
 
