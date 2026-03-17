@@ -41,6 +41,7 @@
 
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     claude-code.url = "github:sadjow/claude-code-nix";
+    peon-ping.url = "github:PeonPing/peon-ping";
 
     agenix = {
       url = "github:ryantm/agenix";

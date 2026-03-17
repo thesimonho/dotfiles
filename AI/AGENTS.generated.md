@@ -178,7 +178,7 @@ Test Types:
 
 ## Test-Driven Development
 
-If a testing framework has been set up, you must always use test-driven development. But do not set up a new testing framework unprompted.
+If a testing framework has been set up, you must _always_ use test-driven development. But do not set up a new testing framework unprompted.
 
 Use **tdd-workflow** skill to help you.
 
@@ -222,6 +222,12 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 - Focus on: bugs, security, performance, architectural concerns
 - Minor stylistic nitpicks can be noted as an aside
 - Stop and ask before making significant changes
+
+## When debugging
+
+- Run unit tests to help keep you on track
+- Use logging freely to identify root cause, but make sure to remove logging before committing
+- When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
 
 ## Code Intelligence
 
