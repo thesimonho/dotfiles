@@ -42,7 +42,7 @@
         ]
       },
       {
-        "matcher": "tool in [\"Write\", \"Edit\", \"MultiEdit\"]",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
@@ -71,11 +71,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "tool in [\"Write\", \"Edit\", \"MultiEdit\"]",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Reminder: run linter, formatter, and type checker. Ensure file is no more than 800 lines long.' >&2"
+            "command": "echo 'Doublecheck: did you run linter/formatter/type check? Did you keep functions small? Is the file shorter than 800 lines? Were any tests needed?' >&2"
           }
         ]
       }
