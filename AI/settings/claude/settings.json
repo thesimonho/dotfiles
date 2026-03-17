@@ -25,10 +25,12 @@
       "Skill(playwright-skill)",
       "Skill(vercel-react-best-practices)"
     ],
-    "deny": ["Read(./env*)", "Read(./*credentials.*)"],
+    "deny": [
+      "Read(./env*)",
+      "Read(./*credentials.*)"
+    ],
     "defaultMode": "default"
   },
-  "model": "opus",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -71,11 +73,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Doublecheck: did you run linter/formatter/type check? Did you keep functions small? Is the file shorter than 800 lines? Were any tests needed?' >&2"
+            "command": "echo '⚠️ Doublecheck: did you run linter/formatter/type check? Did you keep functions small? Is the file shorter than 800 lines? Were any tests needed?' >&2"
           }
         ]
       }
@@ -170,7 +172,6 @@
         ]
       }
     ],
-
     "PreCompact": [
       {
         "matcher": "",
@@ -219,12 +220,18 @@
         "registry.shadcn.com",
         "*.context7.com"
       ],
-      "allowUnixSockets": ["$SSH_AUTH_SOCK"]
+      "allowUnixSockets": [
+        "$SSH_AUTH_SOCK"
+      ]
     },
     "filesystem": {
-      "allowWrite": ["//tmp"]
+      "allowWrite": [
+        "//tmp"
+      ]
     },
-    "excludedCommands": ["docker"]
+    "excludedCommands": [
+      "docker"
+    ]
   },
   "alwaysThinkingEnabled": true,
   "voiceEnabled": true
