@@ -28,3 +28,5 @@ Workflow:
 1. Check test isolation
 2. Verify mocks are correct
 3. Fix implementation, not tests (unless tests are wrong)
+
+Important: if you come across a test failure that isn't within your current scope of work, you must inform the orchestrator to create a new worktree to fix the issue. Do not just pass over it.
