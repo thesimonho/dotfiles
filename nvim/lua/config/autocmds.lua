@@ -47,8 +47,7 @@ local root_group = vim.api.nvim_create_augroup("AutoRoot", {})
 vim.api.nvim_create_autocmd("BufEnter", {
   group = root_group,
   callback = function()
-    local patterns = { ".git", "package.json", "setup.py" }
-    local root = fs.find_root(0, patterns)
+    local root = Snacks.git.get_root()
     if root == nil then
       return
     end
