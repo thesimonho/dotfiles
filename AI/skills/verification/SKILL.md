@@ -7,28 +7,40 @@ description: A comprehensive verification system. Use proactively after completi
 
 ## Verification Phases
 
-Execute verification in this exact order:
+### 1. Build Check
 
-1. **Build Check**
-   - Run the build command for this project
-   - If it fails, report errors and STOP
+- Run the build command for this project
+- If it fails, report errors and STOP
 
-2. **Type Check**
-   - Run type checker
-   - Report all errors with file:line
+---
 
-3. **Lint Check**
-   - Run linter
-   - Report errors
+Then spawn the following as **parallel background tasks**:
 
-4. **Test Suite**
-   - Run all tests
-   - Report pass/fail count
-   - Report coverage percentage
+### 2. Type Check
 
-5. **Console.log Audit**
-   - Search for console.log in source files
-   - Report locations
+- Run type checker
+- Report all errors with `file:line`
+
+### 3. Lint Check
+
+- Run linter
+- Report all errors with `file:line`
+
+### 4. Formatter
+
+- Run formatter
+
+### 5. Test Suite
+
+- Run all available tests (unit, integration, e2e)
+- Report pass/fail count
+- Report coverage percentage
+
+### 6. Usage Test
+
+- Run the actual app in a real-world scenario (use the CLI, use agent browser to interact with the app, etc.)
+- Test the feature to confirm it works and no issues are found
+- Report blockers, UX issues, unexpected side effects, and bugs
 
 ## Output Format
 
