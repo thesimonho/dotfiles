@@ -32,6 +32,8 @@ Always create a plan first. Have the plan and spec reviewed before proceeding wi
 
 ## Code Intelligence
 
+For an LSP-centric workflow, you should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale errors.
+
 Prefer LSP over Grep/Glob/Read for code navigation:
 
 - `goToDefinition` / `goToImplementation` to jump to source
@@ -41,11 +43,8 @@ Prefer LSP over Grep/Glob/Read for code navigation:
 - `hover` for type info without reading the file
 - `incomingCalls` / `outgoingCalls` for call hierarchy
 
-Before renaming or changing a function signature, use
-`findReferences` to find all call sites first.
+Before renaming or changing a function signature, use `findReferences` to find all call sites first.
 
-Use Grep/Glob only for text/pattern searches (comments,
-strings, config values) where LSP doesn't help.
+Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
 
-After writing or editing code, check LSP diagnostics before
-moving on. Fix any type errors or missing imports immediately.
+After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately.
