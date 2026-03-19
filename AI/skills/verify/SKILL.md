@@ -1,6 +1,6 @@
 ---
-name: verification
-description: A comprehensive verification system. Use proactively after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring
+name: verify
+description: A checklist of post-work verification steps. Use proactively after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring
 ---
 
 # Verification Skill
@@ -39,6 +39,7 @@ Then spawn the following as **parallel background tasks**:
 ### 6. Usage Test
 
 - Run the actual app in a real-world scenario (use the CLI, use agent browser to interact with the app, etc.)
+- One example of this is the `/dogfood` skill
 - Test the feature to confirm it works and no issues are found
 - Report blockers, UX issues, unexpected side effects, and bugs
 
