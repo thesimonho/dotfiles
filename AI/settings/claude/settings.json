@@ -25,7 +25,10 @@
       "Skill(playwright-skill)",
       "Skill(vercel-react-best-practices)"
     ],
-    "deny": ["Read(./env*)", "Read(./*credentials.*)"],
+    "deny": [
+      "Read(./env*)",
+      "Read(./*credentials.*)"
+    ],
     "defaultMode": "default"
   },
   "enableAllProjectMcpServers": true,
@@ -217,13 +220,20 @@
         "registry.shadcn.com",
         "*.context7.com"
       ],
-      "allowUnixSockets": ["$SSH_AUTH_SOCK"]
+      "allowUnixSockets": [
+        "$SSH_AUTH_SOCK"
+      ]
     },
     "filesystem": {
-      "allowWrite": ["//tmp"]
+      "allowWrite": [
+        "//tmp"
+      ]
     },
-    "excludedCommands": ["docker"]
+    "excludedCommands": [
+      "docker"
+    ]
   },
   "alwaysThinkingEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "skipDangerousModePermissionPrompt": true
 }
