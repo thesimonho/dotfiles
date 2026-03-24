@@ -98,8 +98,6 @@ let
   );
 in
 {
-  imports = [ inputs.peon-ping.homeManagerModules.default ];
-
   options.ai.claudeTargetDir = lib.mkOption {
     type = lib.types.str;
     default = ".claude";
@@ -159,29 +157,5 @@ in
       $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/build-codex-skills.sh}
       $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
     '';
-
-    # Peon Ping - AI agent sound notifications
-    programs.peon-ping = {
-      enable = true;
-      package = inputs.peon-ping.packages.${system}.default;
-      settings = {
-        default_pack = "peon";
-        volume = 0.6;
-        enabled = true;
-        desktop_notifications = false;
-        suppress_subagent_complete = true;
-        meeting_detect = true;
-        categories = {
-          "session.start" = true;
-          "task.complete" = true;
-          "task.error" = true;
-          "input.required" = true;
-          "resource.limit" = true;
-          "user.spam" = true;
-        };
-      };
-      installPacks = [ "peon" ];
-      enableZshIntegration = true;
-    };
   };
 }

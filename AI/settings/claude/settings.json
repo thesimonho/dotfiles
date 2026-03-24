@@ -25,10 +25,7 @@
       "Skill(playwright-skill)",
       "Skill(vercel-react-best-practices)"
     ],
-    "deny": [
-      "Read(./env*)",
-      "Read(./*credentials.*)"
-    ],
+    "deny": ["Read(./env*)", "Read(./*credentials.*)"],
     "defaultMode": "default"
   },
   "enableAllProjectMcpServers": true,
@@ -85,104 +82,49 @@
     "SessionStart": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10
-          }
-        ]
+        "hooks": []
       }
     ],
     "SessionEnd": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ],
     "SubagentStart": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ],
     "UserPromptSubmit": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ],
     "Stop": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ],
     "Notification": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ],
     "PermissionRequest": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ],
     "PreCompact": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.openpeon/peon.sh",
-            "timeout": 10,
-            "async": true
-          }
-        ]
+        "hooks": []
       }
     ]
   },
@@ -204,6 +146,7 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
+    "excludedCommands": ["git", "docker"],
     "network": {
       "allowedDomains": [
         "*.npmjs.org",
@@ -220,18 +163,11 @@
         "registry.shadcn.com",
         "*.context7.com"
       ],
-      "allowUnixSockets": [
-        "$SSH_AUTH_SOCK"
-      ]
+      "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser"]
     },
     "filesystem": {
-      "allowWrite": [
-        "//tmp"
-      ]
-    },
-    "excludedCommands": [
-      "docker"
-    ]
+      "allowWrite": ["//tmp", "~/.cache/go-build/"]
+    }
   },
   "alwaysThinkingEnabled": true,
   "voiceEnabled": true,
