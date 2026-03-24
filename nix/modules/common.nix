@@ -16,8 +16,8 @@ let
     ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
       doCheck = false;
     }))
+    pkgs.devcontainer
     pkgs.gh
-    pkgs.gh-dash
     pkgs.glow
     pkgs.just
     pkgs.lazydocker
