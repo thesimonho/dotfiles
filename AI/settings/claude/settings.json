@@ -146,7 +146,6 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
-    "excludedCommands": ["git", "docker"],
     "network": {
       "allowedDomains": [
         "*.npmjs.org",
@@ -167,7 +166,8 @@
     },
     "filesystem": {
       "allowWrite": ["//tmp", "~/.cache/go-build/"]
-    }
+    },
+    "excludedCommands": ["git", "docker"]
   },
   "alwaysThinkingEnabled": true,
   "voiceEnabled": true,
