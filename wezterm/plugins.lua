@@ -8,7 +8,7 @@ local utils = require("utils")
 local enabled = {
 	tabline = true,
 	workspace = true,
-	resurrect = false,
+	resurrect = true,
 	dev_containers = false,
 }
 
