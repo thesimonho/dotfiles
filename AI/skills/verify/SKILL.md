@@ -5,6 +5,8 @@ description: A checklist of post-work verification steps. Use proactively after 
 
 # Verification Skill
 
+Start by running the /simplify skill over your changes.
+
 ## Verification Phases
 
 ### 1. Build Check
@@ -64,26 +66,3 @@ Issues to Fix:
 1. ...
 2. ...
 ```
-
-## Continuous Mode
-
-For long sessions, run verification every 15 minutes or after major changes:
-
-```markdown
-Set a mental checkpoint:
-
-- After completing each function
-- After finishing a component
-- Before moving to next task
-
-Run: /verification
-```
-
-## Arguments
-
-$ARGUMENTS can be:
-
-- `quick` - Only build + types
-- `full` - All checks (default)
-- `pre-commit` - Checks relevant for commits
-- `pre-pr` - Full checks plus security scan
