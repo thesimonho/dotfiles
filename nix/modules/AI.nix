@@ -12,10 +12,9 @@ let
   gpuVendor = config.ai.gpuVendor;
   ollamaPackage =
     if gpuVendor == "nvidia" then
-      if builtins.hasAttr "ollama-cuda" pkgsUnstable then
-        pkgsUnstable."ollama-cuda"
-      else
-        pkgsUnstable.ollama
+      # Use plain ollama instead of ollama-cuda — it detects CUDA at runtime,
+      # and ollama-cuda is rarely cached by Hydra (requires full source build).
+      pkgsUnstable.ollama
     else if gpuVendor == "amd" then
       if builtins.hasAttr "ollama-rocm" pkgsUnstable then
         pkgsUnstable."ollama-rocm"
