@@ -41,7 +41,13 @@ Before marking work complete:
 
 # Git Workflow
 
+## Worktree
+
+If you are starting in a new worktree, check what languages, runtimes, dependencies, etc. you need to install and get those up and running first. Some may already be available, but not all.
+
 ## Branch Workflow
+
+You cannot push directly to main, don't even try.
 
 Always start your work in a new branch created from the currently checked out branch
 
@@ -136,36 +142,6 @@ If security issue found:
 4. Fix CRITICAL issues before continuing
 5. Review entire codebase for similar issues
 
-# Shell Command Hygiene
-
-Run each shell command as a **separate, simple Bash call**. Do not chain commands with `&&`, `||`, `;`, or pipes when each part is an independently meaningful operation.
-
-This is critical — the permissions system matches against the beginning of each Bash call. Compound commands will be blocked.
-
-This applies to all shell commands, including `git`, `npm`, `go`, etc.
-
-## Rules
-
-- **One operation per Bash call:** `git add`, `git commit`, `git push`, `npm run test`, etc. — each is its own tool call
-- **Do not chain:** `git add . && git commit -m "msg"` will be blocked. Use two separate calls.
-- **Do not wrap:** No subshells, inline scripts, or heredocs around git commands
-- **Pipelines are fine** when the pipe is integral to the command (e.g., `git log --oneline | head -20`)
-
-## Examples
-
-```bash
-# CORRECT — separate calls
-git add .
-# (separate Bash call)
-git commit -m "feat: add user avatar"
-
-# WRONG — chained
-git add . && git commit -m "feat: add user avatar"
-
-# WRONG — subshell
-sh -c 'git add . && git commit -m "feat: add user avatar"'
-```
-
 # Testing Requirements
 
 ## Minimum Test Coverage: 80%
@@ -206,6 +182,7 @@ Important: if you come across a test failure that isn't within your current scop
 - Create README.md files for subdirectories/submodules when nuance and detail is needed for that section.
 - When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
 - Keep repo/subdirectory README.md and project AGENTS.md/CLAUDE.md files up to date when making significant changes.
+- You MUST keep doc websites, public APIs, and other documentation up to date.
 - You MUST reference the docs/codemaps/ directory when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
 
 ## Planning
