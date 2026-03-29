@@ -1,6 +1,12 @@
 # Git Workflow
 
+## Worktree
+
+If you are starting in a new worktree, check what languages, runtimes, dependencies, etc. you need to install and get those up and running first. Some may already be available, but not all.
+
 ## Branch Workflow
+
+You cannot push directly to main, don't even try.
 
 Always start your work in a new branch created from the currently checked out branch
 
