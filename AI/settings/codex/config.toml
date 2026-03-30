@@ -1,4 +1,4 @@
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "medium"
 [sandbox_workspace_write]
 network_access = true
@@ -11,6 +11,9 @@ apps = true
 multi_agent = true
 
 [projects."~/Projects"]
+trust_level = "trusted"
+
+[projects."/home/simon/Projects/warden"]
 trust_level = "trusted"
 
 [mcp_servers.context7]
@@ -36,3 +39,9 @@ show_raw_agent_reasoning = true
 disable_paste_burst = false
 web_search = "cached"
 personality = "friendly"
+
+[plugins."github@openai-curated"]
+enabled = true
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
