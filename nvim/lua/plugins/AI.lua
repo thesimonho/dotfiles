@@ -107,20 +107,27 @@ end, { desc = "Yank and open chat" })
 local M = {
   {
     "supermaven-inc/supermaven-nvim",
-    dependencies = { "folke/snacks.nvim" },
-    event = "InsertEnter",
+    event = "LazyFile",
     init = function()
-      require("snacks")
-        .toggle({
-          name = "AI Completions",
-          get = function()
-            return require("supermaven-nvim.api").is_running() or false
-          end,
-          set = function()
-            require("supermaven-nvim.api").toggle()
-          end,
-        })
-        :map("<leader>ux")
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        once = true,
+        callback = function()
+          vim.schedule(function()
+            require("snacks")
+              .toggle({
+                name = "AI Suggestions",
+                get = function()
+                  return require("supermaven-nvim.api").is_running() or false
+                end,
+                set = function()
+                  require("supermaven-nvim.api").toggle()
+                end,
+              })
+              :map("<leader>ul")
+          end)
+        end,
+      })
     end,
     opts = {
       keymaps = {
