@@ -183,11 +183,11 @@ Important: if you come across a test failure that isn't within your current scop
 - When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
 - Keep repo/subdirectory README.md and project AGENTS.md/CLAUDE.md files up to date when making significant changes.
 - You MUST keep doc websites, public APIs, and other documentation up to date.
-- You MUST reference the docs/codemaps/ directory when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
+- You MUST reference the docs/codemaps/README.md when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
 
 ## Planning
 
-Always create a plan first. Have the plan and spec reviewed before proceeding with implementation.
+Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
 
 ## When Uncertain
 
@@ -225,5 +225,5 @@ Before renaming or changing a function signature, use `findReferences` to find a
 
 Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
 
-After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately.
+After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately, even if they're not in your domain.
 
