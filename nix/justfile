@@ -1,5 +1,5 @@
 FLAKE_DIR := "."
-
+[private]
 _nix := "nix --extra-experimental-features 'nix-command flakes'"
 
 update:
@@ -17,5 +17,13 @@ switch host:
     {{ _nix }} run --accept-flake-config "{{ FLAKE_DIR }}#hm" -- \
       switch --flake "{{ FLAKE_DIR }}#{{ host }}" -b backup
 
+    just clean
+
 clean:
-    {{ _nix }} collect-garbage -d
+    @echo "==> Cleaning up old generations"
+    {{ _nix }} profile wipe-history --older-than 14d || true
+    nix-collect-garbage --delete-older-than 14d || true
+
+optimise:
+    @echo "==> Optimising and deduplicating nix store"
+    {{ _nix }} store optimise
