@@ -50,8 +50,8 @@ let
     }
 
     {
-      name = "statusline";
-      source = "${dotfiles}/AI/settings/claude/statusline";
+      name = "statusline.sh";
+      source = "${dotfiles}/AI/settings/claude/statusline.sh";
     }
     {
       name = "settings.json";
