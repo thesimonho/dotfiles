@@ -9,13 +9,7 @@
     "pr": ""
   },
   "permissions": {
-    "allow": [
-      "Bash(ls:*)",
-      "Bash(npm run *)",
-      "WebSearch",
-      "WebFetch",
-      "mcp__plugin_context7_context7__query-docs"
-    ],
+    "allow": ["Bash(ls:*)", "Bash(npm run *)", "WebSearch", "WebFetch"],
     "deny": [],
     "defaultMode": "default"
   },
@@ -90,8 +84,12 @@
     ],
     "UserPromptSubmit": [
       {
-        "matcher": "",
-        "hooks": []
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'First, write a list of every available agent/skill. For each one, say Yes or No based on whether it is useful to the provided task. Call the relevant (Yes) ones immediately.' >&2"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -157,9 +155,9 @@
       "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser"]
     },
     "filesystem": {
-      "allowWrite": ["//tmp", "~/.cache/go-build/"]
+      "allowWrite": ["/tmp", "~/.cache/go-build/"]
     },
-    "excludedCommands": ["git", "docker"]
+    "excludedCommands": ["docker"]
   },
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true
