@@ -25,6 +25,10 @@ vim.api.nvim_del_keymap("n", "<leader>gL")
 vim.api.nvim_del_keymap("n", "<leader>sG")
 vim.api.nvim_del_keymap("n", "<leader>sW")
 vim.api.nvim_del_keymap("n", "<leader><tab>o")
+vim.api.nvim_del_keymap("n", "<C-/>")
+vim.api.nvim_del_keymap("n", "<C-_>")
+vim.api.nvim_del_keymap("t", "<C-/>")
+vim.api.nvim_del_keymap("t", "<C-_>")
 
 -- General
 vim.keymap.set("i", "kj", "<esc>")
