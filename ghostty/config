@@ -23,6 +23,8 @@ link-url = true
 link-previews = true
 
 initial-window = false
+tab-inherit-working-directory = true
+split-inherit-working-directory = true
 window-theme = system
 window-subtitle = working-directory
 window-save-state = always
@@ -31,7 +33,7 @@ window-theme = system
 window-padding-x = 0
 window-padding-y = 0
 window-padding-balance = true
-window-inherit-working-directory = true
+window-inherit-working-directory = false
 window-show-tab-bar = auto
 
 clipboard-read = allow
@@ -39,7 +41,6 @@ clipboard-write = allow
 clipboard-trim-trailing-spaces = true
 clipboard-paste-protection = true
 clipboard-paste-bracketed-safe = true
-
 copy-on-select = false
 
 right-click-action = context-menu
@@ -52,3 +53,6 @@ linux-cgroup = always
 linux-cgroup-hard-fail = false
 
 macos-option-as-alt = true
+
+notify-on-command-finish = unfocused
+notify-on-command-finish-action = bell,notify
