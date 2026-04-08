@@ -42,8 +42,9 @@ clipboard-trim-trailing-spaces = true
 clipboard-paste-protection = true
 clipboard-paste-bracketed-safe = true
 copy-on-select = false
-
+cursor-click-to-move = true
 right-click-action = context-menu
+mouse-reporting = true
 
 quit-after-last-window-closed = false
 
@@ -53,6 +54,7 @@ linux-cgroup = always
 linux-cgroup-hard-fail = false
 
 macos-option-as-alt = true
+shell-integration-features = true
 
 notify-on-command-finish = unfocused
 notify-on-command-finish-action = bell,notify
