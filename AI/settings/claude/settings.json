@@ -9,7 +9,13 @@
     "pr": ""
   },
   "permissions": {
-    "allow": ["Bash(ls:*)", "Bash(npm run *)", "WebSearch", "WebFetch"],
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(npm:run *)",
+      "Bash(gh:*)",
+      "WebSearch",
+      "WebFetch"
+    ],
     "deny": [],
     "defaultMode": "default"
   },
@@ -139,18 +145,14 @@
       "allowedDomains": [
         "auth.docker.io",
         "*.npmjs.org",
-        "github.com",
         "*.github.com",
         "*.githubusercontent.com",
         "*.golang.org",
         "api.anthropic.com",
-        "sentry.io",
         "*.sentry.io",
-        "o*.ingest.sentry.io",
         "*.playwright.dev",
         "playwright.azureedge.net",
-        "registry.shadcn.com",
-        "*.context7.com"
+        "registry.shadcn.com"
       ],
       "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser"]
     },
