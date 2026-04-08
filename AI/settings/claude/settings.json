@@ -128,7 +128,9 @@
     "command": "sh ~/.claude/statusline.sh",
     "padding": 0
   },
-  "enabledPlugins": {},
+  "enabledPlugins": {
+    "dodo@artificial-jellybeans": true
+  },
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
       "source": {
