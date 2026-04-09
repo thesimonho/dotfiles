@@ -1,6 +1,6 @@
 # Agenix secret decryption and age tooling.
-# Reads secret declarations from secrets/meta.nix and decrypts them on activation.
-# SSH keys → ~/.ssh/, everything else → ~/.secrets/
+# Reads from secrets/meta.nix and decrypts secrets on activation.
+# Identity SSH keys → ~/.ssh/, GPG secret keys → ~/.secrets/, other secrets → ~/.secrets/
 {
   config,
   pkgs,
@@ -14,30 +14,55 @@ let
   secretsDir = "${config.home.homeDirectory}/.secrets";
   meta = import ../secrets/meta.nix;
 
-  # SSH keys get placed in ~/.ssh with strict permissions
-  mkSshSecret = name: info: {
-    name = name;
-    value = {
-      file = builtins.toPath "${../secrets}/${info.file}.age";
-      path = "${sshDir}/${info.file}";
-      mode = "600";
-      symlink = false;
-    };
-  };
-  sshSecrets = lib.mapAttrs' mkSshSecret (lib.filterAttrs (name: info: info.sshKey) meta.secrets);
+  # SSH keys from identities → ~/.ssh/
+  sshSecrets = lib.mapAttrs' (
+    name: id: {
+      name = "identity-ssh-${name}";
+      value = {
+        file = builtins.toPath "${../secrets}/${id.sshKeyFile}.age";
+        path = "${sshDir}/${id.sshKeyFile}";
+        mode = "600";
+        symlink = false;
+      };
+    }
+  ) meta.identities;
 
-  # Non-SSH secrets get placed in ~/.secrets
-  mkOtherSecret = name: info: {
-    name = name;
-    value = {
-      file = builtins.toPath "${../secrets}/${info.file}.age";
-      path = "${secretsDir}/${info.file}";
-      symlink = false;
-    };
-  };
-  otherSecrets = lib.mapAttrs' mkOtherSecret (
-    lib.filterAttrs (name: info: !info.sshKey) meta.secrets
-  );
+  # GPG secrets from identities → ~/.secrets/
+  gpgKeySecrets = lib.mapAttrs' (
+    name: id: {
+      name = "identity-gpg-key-${name}";
+      value = {
+        file = builtins.toPath "${../secrets}/${id.gpg.secretFile}.age";
+        path = "${secretsDir}/${id.gpg.secretFile}";
+        mode = "600";
+        symlink = false;
+      };
+    }
+  ) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? secretFile) meta.identities);
+
+  gpgRevocationSecrets = lib.mapAttrs' (
+    name: id: {
+      name = "identity-gpg-rev-${name}";
+      value = {
+        file = builtins.toPath "${../secrets}/${id.gpg.revocationFile}.age";
+        path = "${secretsDir}/${id.gpg.revocationFile}";
+        mode = "600";
+        symlink = false;
+      };
+    }
+  ) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? revocationFile) meta.identities);
+
+  # Non-identity secrets → ~/.secrets/
+  otherSecrets = lib.mapAttrs' (
+    name: info: {
+      name = name;
+      value = {
+        file = builtins.toPath "${../secrets}/${info.file}.age";
+        path = "${secretsDir}/${info.file}";
+        symlink = false;
+      };
+    }
+  ) meta.secrets;
 in
 {
   home.packages = with pkgs; [
@@ -46,7 +71,7 @@ in
   ];
 
   age = {
-    identityPaths = [ "${sshDir}/ssh_identity" ];
-    secrets = sshSecrets // otherSecrets;
+    identityPaths = [ "${secretsDir}/age_identity" ];
+    secrets = sshSecrets // gpgKeySecrets // gpgRevocationSecrets // otherSecrets;
   };
 }

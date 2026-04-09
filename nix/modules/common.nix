@@ -11,6 +11,36 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
+  meta = import ../secrets/meta.nix;
+
+  # Generate git identity config files from meta.nix identities
+  gitIdentityFiles = lib.mapAttrs' (
+    name: id: {
+      name = "git/identity-${name}";
+      value = {
+        text =
+          ''
+            [user]
+              email = ${id.email}
+          ''
+          + lib.optionalString (id.gpg != null && id.gpg.sign) ''
+              signingKey = ${id.gpg.keyId}
+            [commit]
+              gpgSign = true
+            [tag]
+              gpgSign = true
+          '';
+      };
+    }
+  ) meta.identities;
+
+  # Generate includeIf rules that route git identity based on remote URL
+  gitIncludes = lib.mapAttrsToList (
+    name: id: {
+      condition = "hasconfig:remote.*.url:${id.remotePattern}";
+      path = "${config.xdg.configHome}/git/identity-${name}";
+    }
+  ) meta.identities;
 
   sharedPackages = [
     ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
@@ -63,11 +93,7 @@ in
     "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
     "/var/lib/flatpak/exports/share"
   ];
-  xdg.configFile = {
-    "environment.d/20-flatpak.conf" = lib.mkIf isLinux {
-      text = "XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share";
-    };
-  };
+  # flatpak env is set here; identity files and symlinks are below
 
   home = {
     sessionVariables = {
@@ -136,6 +162,7 @@ in
       maintenance = {
         enable = true;
       };
+      includes = gitIncludes;
       settings = {
         user = {
           name = "Simon Ho";
@@ -164,6 +191,15 @@ in
         credential = {
           helper = "${pkgs.gh}/bin/gh auth git-credential";
           useHttpPath = true;
+        };
+        url = {
+          "ssh://git@github.com/" = {
+            insteadOf = [
+              "https://github.com/"
+              "https://www.github.com/"
+              "http://www.github.com/"
+            ];
+          };
         };
       };
     };
@@ -349,8 +385,11 @@ in
     };
   };
 
-  # symlinks
-  xdg.configFile = {
+  # config files: git identity configs, flatpak env, and symlinks
+  xdg.configFile = gitIdentityFiles // {
+    "environment.d/20-flatpak.conf" = lib.mkIf isLinux {
+      text = "XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share";
+    };
     "nvim" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/nvim";
       force = true;
