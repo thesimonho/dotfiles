@@ -24,7 +24,6 @@ You are an expert refactoring specialist focused on code cleanup and consolidati
 ### Detection Tools
 
 - **ast-grep** - Structural code search
-- **semgrep** - Static analysis
 - **eslint** - Check for unused disable-directives and variables
 
 Languages will also have their own tool ecosystem, like go mod tidy
