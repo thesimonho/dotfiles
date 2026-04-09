@@ -25,6 +25,9 @@ in
   programs.gpg = {
     enable = true;
     publicKeys = gpgPublicKeys;
+    settings = {
+      quiet = true;
+    };
   };
 
   services.gpg-agent = {

@@ -35,12 +35,16 @@ let
   ) meta.identities;
 
   # Generate includeIf rules that route git identity based on remote URL
-  gitIncludes = lib.mapAttrsToList (
-    name: id: {
-      condition = "hasconfig:remote.*.url:${id.remotePattern}";
-      path = "${config.xdg.configHome}/git/identity-${name}";
-    }
-  ) meta.identities;
+  # Each identity can have multiple patterns (SSH and HTTPS)
+  gitIncludes = lib.concatLists (
+    lib.mapAttrsToList (
+      name: id:
+      map (pattern: {
+        condition = "hasconfig:remote.*.url:${pattern}";
+        path = "${config.xdg.configHome}/git/identity-${name}";
+      }) id.remotePatterns
+    ) meta.identities
+  );
 
   sharedPackages = [
     ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
@@ -191,15 +195,6 @@ in
         credential = {
           helper = "${pkgs.gh}/bin/gh auth git-credential";
           useHttpPath = true;
-        };
-        url = {
-          "ssh://git@github.com/" = {
-            insteadOf = [
-              "https://github.com/"
-              "https://www.github.com/"
-              "http://www.github.com/"
-            ];
-          };
         };
       };
     };
