@@ -1,51 +1,19 @@
+# SSH agent, key loading, and host configuration.
+# Secret key decryption is handled by secrets.nix — this module consumes the decrypted keys.
 {
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
 
 let
   isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
   sshDir = "${config.home.homeDirectory}/.ssh";
   meta = import ../secrets/meta.nix;
-
-  # Generate SSH keys
-  mkSshSecret = name: info: {
-    name = name;
-    value = {
-      file = builtins.toPath "${../secrets}/${info.file}.age";
-      path = "${sshDir}/${info.file}";
-      mode = "600";
-      symlink = false;
-    };
-  };
-  sshSecrets = lib.mapAttrs' mkSshSecret (lib.filterAttrs (name: info: info.sshKey) meta.secrets);
-
-  # Generate age secret config for other secrets
-  mkOtherSecret = name: info: {
-    name = name;
-    value = {
-      file = builtins.toPath "${../secrets}/${info.file}.age";
-      path = "${config.home.homeDirectory}/.secrets/${info.file}";
-      symlink = false;
-    };
-  };
-  otherSecrets = lib.mapAttrs' mkOtherSecret (
-    lib.filterAttrs (name: info: !info.sshKey) meta.secrets
-  );
 in
 {
-  home = {
-    packages = with pkgs; [
-      age
-      inputs.agenix.packages.${stdenv.hostPlatform.system}.default
-    ];
-  };
-
-  # set ssh env variables
+  # SSH environment variables
   xdg.configFile = {
     "environment.d/ssh.conf" = lib.mkIf isLinux {
       text = ''
@@ -56,7 +24,7 @@ in
     };
   };
 
-  # script to discover and add keys (id_xxx)
+  # Script to discover and add keys (id_xxx)
   home.file.".local/bin/ssh-add-keys".text = ''
     #!/usr/bin/env bash
     set -euo pipefail
@@ -78,7 +46,7 @@ in
   '';
   home.file.".local/bin/ssh-add-keys".executable = true;
 
-  # service to add keys on login
+  # Service to add keys on login
   systemd.user.services.ssh-add-keys = lib.mkIf isLinux {
     Unit = {
       Description = "Load SSH keys into agent";
@@ -129,10 +97,6 @@ in
         identityFile = "${sshDir}/${meta.secrets.sprung.file}";
       };
     };
-  };
-  age = {
-    identityPaths = [ "${sshDir}/ssh_identity" ];
-    secrets = sshSecrets // otherSecrets;
   };
 
   # https://github.com/nix-community/home-manager/issues/322

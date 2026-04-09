@@ -6,6 +6,9 @@
   ...
 }:
 
+let
+  meta = import ../secrets/meta.nix;
+in
 {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
@@ -68,7 +71,10 @@
       settings = {
         user = {
           email = lib.mkForce "simonho.ubc@gmail.com";
+          signingKey = meta.publicKeys.gpgKeyId;
         };
+        commit.gpgSign = true;
+        tag.gpgSign = true;
       };
     };
   };
