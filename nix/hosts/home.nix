@@ -57,6 +57,14 @@
           "xdg-videos"
         ];
       };
+      "eu.betterbird.Betterbird".Context = {
+        filesystems = [
+          "~/.gnupg:ro"
+        ];
+        sockets = [
+          "gpg-agent"
+        ];
+      };
     };
   };
 
