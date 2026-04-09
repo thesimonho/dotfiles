@@ -51,11 +51,6 @@ in
       lg = "lazygit";
       ld = "lazydocker";
       lj = "lazyjournal";
-      loc = "scc";
-      cloc = "scc";
-      sloc = "scc";
-      ss = "snitch";
-      netstat = "snitch";
       vim = "nvim";
       bw = lib.mkIf isLinux "flatpak run --command=bw com.bitwarden.desktop";
     };

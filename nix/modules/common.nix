@@ -16,6 +16,7 @@ let
     ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
       doCheck = false;
     }))
+    pkgs.ast-grep
     pkgs.devcontainer
     pkgs.gh
     pkgs.glow
@@ -29,9 +30,7 @@ let
     pkgs.nixd
     pkgs.nixfmt-rfc-style
     pkgs.pay-respects
-    pkgs.scc
     pkgs.semgrep
-    pkgsUnstable.snitch
     pkgs.trivy
     pkgs.trufflehog
     pkgs.tmux
