@@ -1,6 +1,10 @@
 { pkgs, lib, ... }:
 
 lib.mkIf pkgs.stdenv.isLinux {
+  # Re-enable pinentry's KWallet integration
+  # (disabled by default to prevent deadlock when KWallet uses GPG encryption — safe with blowfish)
+  home.sessionVariables.PINENTRY_KDE_USE_WALLET = "1";
+
   xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".text = ''
     [D-BUS Service]
     Name=org.freedesktop.secrets

@@ -31,9 +31,11 @@ in
     enable = true;
     enableExtraSocket = true;
     grabKeyboardAndMouse = true;
+    noAllowExternalCache = false; # Allow pinentry-qt to save passphrases in KWallet
     pinentry.package = if isLinux then pkgs.pinentry-qt else pkgs.pinentry_mac;
     defaultCacheTtl = 86400; # 24 hours
     maxCacheTtl = 604800; # 7 days
+    extraConfig = "allow-preset-passphrase";
   };
 
   # Import agenix-decrypted secret keys into the GPG keyring on activation
