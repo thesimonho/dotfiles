@@ -79,7 +79,9 @@ make_bar() {
     local char
     [ "$i" -le "$filled" ] && char="▓" || char="░"
     if [ "$marker_pos" -gt 0 ] && [ "$i" -eq "$marker_pos" ]; then
-      printf "%s" "▒"
+      local marker_color=""
+      [ "$filled" -ge "$marker_pos" ] && marker_color="$RED"
+      printf "%b▒%b" "$marker_color" "${marker_color:+$color}"
     else
       printf "%s" "$char"
     fi
@@ -148,7 +150,7 @@ duration=$(apply_color "$BRIGHT_BLUE" "$(format_duration "$duration_ms")")
 cost=$(apply_color "$BRIGHT_BLUE" "\$$(echo "$cost_usd" | awk '{printf "%.2f", $1}')")
 
 five_hr_reset_str=$(format_epoch "$five_hr_resets" "%-I%p" | tr '[:upper:]' '[:lower:]')
-seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a %-I%p" | tr '[:upper:]' '[:lower:]')
+seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a/%-I%p" | sed 's/^\(.\)/\U\1/' | sed 's|/\(.*\)|/\L\1|')
 
 context_bar="$(make_bar "ctx" "$ctx_pct") ${ctx_pct}%${RESET}"
 
