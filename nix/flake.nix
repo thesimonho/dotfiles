@@ -98,6 +98,8 @@
           ./hosts/home.nix
           ./modules/common.nix
           ./modules/kde.nix
+          ./modules/secrets.nix
+          ./modules/gpg.nix
           ./modules/ssh.nix
           ./modules/AI.nix
           { home.stateVersion = "25.05"; } # dont touch this
@@ -114,6 +116,8 @@
           agenix.homeManagerModules.default
           ./hosts/work.nix
           ./modules/common.nix
+          ./modules/secrets.nix
+          ./modules/gpg.nix
           ./modules/ssh.nix
           ./modules/AI.nix
           { home.stateVersion = "25.05"; } # dont touch this
