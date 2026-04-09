@@ -1,5 +1,5 @@
 # GPG key management and agent configuration.
-# Public key and secret key are sourced from secrets/meta.nix and agenix respectively.
+# Keys are derived from identities in secrets/meta.nix that have gpg config.
 # Pinentry integrates with the system keyring (KWallet on Linux, Keychain on macOS).
 {
   config,
@@ -10,18 +10,21 @@
 
 let
   isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
   meta = import ../secrets/meta.nix;
+
+  # Collect GPG public keys from all identities that have GPG config
+  gpgIdentities = lib.filterAttrs (name: id: id.gpg != null) meta.identities;
+  gpgPublicKeys = lib.mapAttrsToList (
+    name: id: {
+      text = id.gpg.publicKey;
+      trust = "ultimate";
+    }
+  ) gpgIdentities;
 in
 {
   programs.gpg = {
     enable = true;
-    publicKeys = [
-      {
-        text = meta.publicKeys.gpg;
-        trust = "ultimate";
-      }
-    ];
+    publicKeys = gpgPublicKeys;
   };
 
   services.gpg-agent = {
@@ -33,13 +36,22 @@ in
     maxCacheTtl = 604800; # 7 days
   };
 
-  # Import the agenix-decrypted secret key into the GPG keyring on activation
+  # Import agenix-decrypted secret keys into the GPG keyring on activation
   home.activation = {
-    importGpgSecretKey = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      secretKeyFile="$HOME/.secrets/gpg-secret"
-      if [ -f "$secretKeyFile" ]; then
-        run ${pkgs.gnupg}/bin/gpg --batch --import "$secretKeyFile" 2>/dev/null || true
-      fi
-    '';
+    importGpgSecretKey = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+      let
+        importCommands = lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (
+            name: id: ''
+              secretKeyFile="$HOME/.secrets/${id.gpg.secretFile}"
+              if [ -f "$secretKeyFile" ]; then
+                run ${pkgs.gnupg}/bin/gpg --batch --import "$secretKeyFile" 2>&1 || true
+              fi
+            ''
+          ) gpgIdentities
+        );
+      in
+      importCommands
+    );
   };
 }

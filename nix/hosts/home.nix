@@ -6,9 +6,6 @@
   ...
 }:
 
-let
-  meta = import ../secrets/meta.nix;
-in
 {
   # ---------------------------------------------------------------------------
   # Shared packages and environment
@@ -59,22 +56,6 @@ in
           "xdg-pictures"
           "xdg-videos"
         ];
-      };
-    };
-  };
-
-  # ---------------------------------------------------------------------------
-  # Program configurations (home manager modules)
-  # ---------------------------------------------------------------------------
-  programs = {
-    git = {
-      settings = {
-        user = {
-          email = lib.mkForce "simonho.ubc@gmail.com";
-          signingKey = meta.publicKeys.gpgKeyId;
-        };
-        commit.gpgSign = true;
-        tag.gpgSign = true;
       };
     };
   };

@@ -9,8 +9,8 @@ show:
     {{ _nix }} flake show {{ FLAKE_DIR }}
 
 switch host:
-    @if [ ! -f "$HOME/.ssh/ssh_identity" ] || [ ! -f "$HOME/.ssh/ssh_identity.pub" ]; then \
-      echo "Warning: Missing ~/.ssh/ssh_identity or ~/.ssh/ssh_identity.pub"; \
+    @if [ ! -f "$HOME/.secrets/age_identity" ]; then \
+      echo "Error: Missing ~/.secrets/age_identity — restore from Bitwarden"; \
       exit 1; \
     fi
     @echo "==> Applying host {{ host }} using flake at {{ FLAKE_DIR }}"

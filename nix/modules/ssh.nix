@@ -1,5 +1,6 @@
 # SSH agent, key loading, and host configuration.
-# Secret key decryption is handled by secrets.nix — this module consumes the decrypted keys.
+# Match blocks are derived from identities in secrets/meta.nix.
+# Secret key decryption is handled by secrets.nix.
 {
   config,
   pkgs,
@@ -11,6 +12,22 @@ let
   isLinux = pkgs.stdenv.isLinux;
   sshDir = "${config.home.homeDirectory}/.ssh";
   meta = import ../secrets/meta.nix;
+
+  # Derive SSH match blocks from identities
+  identityMatchBlocks = lib.mapAttrs' (
+    name: id: {
+      name = id.sshHost;
+      value = {
+        hostname = id.sshProxyHost;
+        port = id.sshPort;
+        user = "git";
+        addKeysToAgent = "true";
+        forwardAgent = true;
+        identitiesOnly = true;
+        identityFile = "${sshDir}/${id.sshKeyFile}";
+      };
+    }
+  ) meta.identities;
 in
 {
   # SSH environment variables
@@ -24,27 +41,23 @@ in
     };
   };
 
-  # Script to discover and add keys (id_xxx)
-  home.file.".local/bin/ssh-add-keys".text = ''
-    #!/usr/bin/env bash
-    set -euo pipefail
-    shopt -s nullglob
-
-    keys=("${sshDir}"/id_*)
-    filtered=()
-    for k in "''${keys[@]}"; do
-      [[ "$k" == *.pub ]] && continue
-      [[ -f "$k" ]] || continue
-      filtered+=("$k")
-    done
-
-    ((''${#filtered[@]})) || exit 0
-
-    for k in "''${filtered[@]}"; do
-      ${pkgs.openssh}/bin/ssh-add -q "$k" </dev/null || true
-    done
-  '';
-  home.file.".local/bin/ssh-add-keys".executable = true;
+  # Add identity SSH keys to the agent
+  home.file.".local/bin/ssh-add-keys" = {
+    executable = true;
+    text =
+      let
+        addCommands = lib.concatStringsSep "\n" (
+          lib.mapAttrsToList (
+            name: id: ''[ -f "${sshDir}/${id.sshKeyFile}" ] && ${pkgs.openssh}/bin/ssh-add -q "${sshDir}/${id.sshKeyFile}" </dev/null || true''
+          ) meta.identities
+        );
+      in
+      ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        ${addCommands}
+      '';
+  };
 
   # Service to add keys on login
   systemd.user.services.ssh-add-keys = lib.mkIf isLinux {
@@ -77,31 +90,11 @@ in
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
-      "github.com" = {
-        hostname = "ssh.github.com";
-        port = 443;
-        user = "git";
-        addKeysToAgent = "true";
-        forwardAgent = true;
-        identitiesOnly = true;
-        identityFile = "${sshDir}/${meta.secrets.personal.file}";
-      };
-      "work-github.com" = {
-        hostname = "ssh.github.com";
-        port = 443;
-        user = "git";
-        addKeysToAgent = "true";
-        forwardAgent = true;
-        identitiesOnly = true;
-        identityFile = "${sshDir}/${meta.secrets.sprung.file}";
-      };
-    };
+    matchBlocks = identityMatchBlocks;
   };
 
   # https://github.com/nix-community/home-manager/issues/322
   home.file = {
-    # home-manager wrongly thinks it doesn't manage (and thus shouldn't clobber) this file due to the activation script
     ".ssh/config".force = true;
   };
   home.activation = {
