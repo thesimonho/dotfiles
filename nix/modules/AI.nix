@@ -48,11 +48,6 @@ let
       name = "skills";
       source = "${dotfiles}/AI/skills";
     }
-
-    {
-      name = "statusline.sh";
-      source = "${dotfiles}/AI/settings/claude/statusline.sh";
-    }
     {
       name = "settings.json";
       source = "${dotfiles}/AI/settings/claude/settings.json";
