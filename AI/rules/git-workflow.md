@@ -6,7 +6,7 @@ If you are starting in a new worktree, check what languages, runtimes, dependenc
 
 ## Branch Workflow
 
-You cannot push directly to main, don't even try.
+You _cannot_ push directly to main, don't even try.
 
 Always start your work in a new branch created from the currently checked out branch
 
@@ -22,6 +22,8 @@ Naming convention: `<type>/<description>`, where type is one of the conventional
 - ci: CI related changes
 
 ## Committing
+
+The first line of a commit message should be a description of your your changed. Then the extended commit message needs to explain _why_ you changed it along with any necessary context.
 
 ### Conventional commits
 
@@ -39,7 +41,6 @@ Keep the subject line under 70 characters. Add a body only when the "why" isn't 
 
 Commit in small, focused chunks — each commit should be one logical change that is easy to review and revert.
 
-- Commit at each green phase of TDD (test + implementation together)
 - Don't bundle unrelated changes in a single commit
 - Don't commit half-finished work that breaks the build
 
