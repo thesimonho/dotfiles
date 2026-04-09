@@ -36,6 +36,7 @@
       # "org.inkscape.Inkscape"
       # "org.gimp.GIMP"
       # "com.google.Chrome"
+      "com.bitwarden.desktop"
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
       "it.mijorus.gearlever"
