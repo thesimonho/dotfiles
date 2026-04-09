@@ -125,8 +125,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "sh ~/.claude/statusline.sh",
-    "padding": 0
+    "command": "sh ~/dotfiles/AI/settings/claude/statusline.sh"
   },
   "enabledPlugins": {
     "dodo@artificial-jellybeans": true

@@ -1,11 +1,39 @@
 #!/bin/bash
 
-# Colors
+# Colors - foreground
+BLACK="\033[0;30m"
 RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+BLUE="\033[0;34m"
 MAGENTA="\033[0;35m"
-BRIGHT_BLUE="\033[0;94m"
-BRIGHT_YELLOW="\033[0;93m"
+CYAN="\033[0;36m"
+WHITE="\033[0;37m"
+BRIGHT_BLACK="\033[0;90m"
+BRIGHT_RED="\033[0;91m"
 BRIGHT_GREEN="\033[0;92m"
+BRIGHT_YELLOW="\033[0;93m"
+BRIGHT_BLUE="\033[0;94m"
+BRIGHT_MAGENTA="\033[0;95m"
+BRIGHT_CYAN="\033[0;96m"
+BRIGHT_WHITE="\033[0;97m"
+# Colors - background
+BG_BLACK="\033[40m"
+BG_RED="\033[41m"
+BG_GREEN="\033[42m"
+BG_YELLOW="\033[43m"
+BG_BLUE="\033[44m"
+BG_MAGENTA="\033[45m"
+BG_CYAN="\033[46m"
+BG_WHITE="\033[47m"
+BG_BRIGHT_BLACK="\033[100m"
+BG_BRIGHT_RED="\033[101m"
+BG_BRIGHT_GREEN="\033[102m"
+BG_BRIGHT_YELLOW="\033[103m"
+BG_BRIGHT_BLUE="\033[104m"
+BG_BRIGHT_MAGENTA="\033[105m"
+BG_BRIGHT_CYAN="\033[106m"
+BG_BRIGHT_WHITE="\033[107m"
 RESET="\033[0m"
 
 input=$(cat)
@@ -30,9 +58,10 @@ make_bar() {
   local label="$1"
   local pct="${2:-0}"
   local color_override="$3"
+  local marker_pct="$4"
   local width=10
   local filled=$((pct * width / 100))
-  local empty=$((width - filled))
+  local marker_pos=$((marker_pct > 0 ? (marker_pct * width + 50) / 100 : 0))
 
   local color
   if [ -n "$color_override" ]; then
@@ -46,8 +75,15 @@ make_bar() {
   fi
 
   printf "%s %s[" "$label" "$color"
-  printf "█%.0s" $(seq 1 "$filled")
-  printf "░%.0s" $(seq 1 "$empty")
+  for ((i = 1; i <= width; i++)); do
+    local char
+    [ "$i" -le "$filled" ] && char="▓" || char="░"
+    if [ "$marker_pos" -gt 0 ] && [ "$i" -eq "$marker_pos" ]; then
+      printf "%s" "▒"
+    else
+      printf "%s" "$char"
+    fi
+  done
   printf "]"
 }
 elapsed_pct() {
@@ -121,13 +157,13 @@ if [ -n "$five_hr_resets" ]; then
   five_hr_elapsed=$(elapsed_pct "$five_hr_resets" 18000)
   five_hr_color=$(pace_color "$five_hr_pct" "$five_hr_elapsed")
 fi
-five_hour_bar="$(make_bar "5h" "$five_hr_pct" "$five_hr_color") ${five_hr_pct}%${five_hr_reset_str:+ ($five_hr_reset_str)}${RESET}"
+five_hour_bar="$(make_bar "5h" "$five_hr_pct" "$five_hr_color" "$five_hr_elapsed") ${five_hr_pct}%${five_hr_reset_str:+ ($five_hr_reset_str)}${RESET}"
 
 seven_day_color=""
 if [ -n "$seven_day_resets" ]; then
   seven_day_elapsed=$(elapsed_pct "$seven_day_resets" 604800)
   seven_day_color=$(pace_color "$seven_day_pct" "$seven_day_elapsed")
 fi
-seven_day_bar="$(make_bar "7d" "$seven_day_pct" "$seven_day_color") ${seven_day_pct}%${seven_day_reset_str:+ ($seven_day_reset_str)}${RESET}"
+seven_day_bar="$(make_bar "7d" "$seven_day_pct" "$seven_day_color" "$seven_day_elapsed") ${seven_day_pct}%${seven_day_reset_str:+ ($seven_day_reset_str)}${RESET}"
 
 echo -e "${model}  |  ${duration} ${cost}  |  ${context_bar}  -  ${five_hour_bar}  -  ${seven_day_bar}"
