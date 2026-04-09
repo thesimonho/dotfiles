@@ -155,10 +155,14 @@
         "playwright.azureedge.net",
         "registry.shadcn.com"
       ],
-      "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser"]
+      "allowUnixSockets": [
+        "$SSH_AUTH_SOCK",
+        "/run/user/1000/agent-browser",
+        "/run/user/1000/gnupg/S.gpg-agent"
+      ]
     },
     "filesystem": {
-      "allowWrite": ["/tmp", "~/.cache/go-build/"]
+      "allowWrite": ["/tmp", "~/.gnupg", "~/.cache/go-build/"]
     },
     "excludedCommands": ["docker"]
   },

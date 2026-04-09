@@ -59,7 +59,7 @@ new-identity = {
   sshHost = "github.com";
   sshProxyHost = "ssh.github.com";
   sshPort = 443;
-  remotePattern = "git@github.com:*/**";
+  remotePatterns = [ "git@github.com:*/**" "https://github.com/**" ];
   gpg = null;  # or { keyId = "..."; sign = true; publicKey = "..."; secretFile = "..."; revocationFile = "..."; };
 };
 ```

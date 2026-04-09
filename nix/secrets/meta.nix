@@ -14,7 +14,10 @@
       sshHost = "github.com";
       sshProxyHost = "ssh.github.com";
       sshPort = 443;
-      remotePattern = "git@github.com:*/**";
+      remotePatterns = [
+        "git@github.com:*/**"
+        "https://github.com/**"
+      ];
       gpg = {
         keyId = "1A3DBCCFA37493B1";
         sign = true;
@@ -43,7 +46,9 @@
       sshHost = "work-github.com";
       sshProxyHost = "ssh.github.com";
       sshPort = 443;
-      remotePattern = "git@work-github.com:*/**";
+      remotePatterns = [
+        "git@work-github.com:*/**"
+      ];
       gpg = null;
     };
   };
