@@ -60,8 +60,8 @@ make_bar() {
   local color_override="$3"
   local marker_pct="$4"
   local width=10
-  local filled=$((pct * width / 100))
-  local marker_pos=$((marker_pct > 0 ? (marker_pct * width + 50) / 100 : 0))
+  local filled=$(( pct > 0 ? (pct * width + 99) / 100 : 0 ))
+  local marker_pos=$(( marker_pct > 0 ? (marker_pct * width + 99) / 100 : 0 ))
 
   local color
   if [ -n "$color_override" ]; then
@@ -78,9 +78,9 @@ make_bar() {
   for ((i = 1; i <= width; i++)); do
     local char
     [ "$i" -le "$filled" ] && char="▓" || char="░"
-    if [ "$marker_pos" -gt 0 ] && [ "$i" -eq "$marker_pos" ]; then
+    if [ "$marker_pos" -gt 0 ] && [ "$i" -eq "$marker_pos" ] && { [ "$filled" -ne "$marker_pos" ] || [ "$pct" -gt "$marker_pct" ]; }; then
       local marker_color=""
-      [ "$filled" -ge "$marker_pos" ] && marker_color="$RED"
+      [ "$pct" -gt "$marker_pct" ] && marker_color="$RED"
       printf "%b▒%b" "$marker_color" "${marker_color:+$color}"
     else
       printf "%s" "$char"
