@@ -155,7 +155,7 @@
       ]
     },
     "filesystem": {
-      "allowWrite": ["/tmp"]
+      "allowWrite": ["/tmp", "~/.gnupg"]
     },
     "excludedCommands": ["docker", "git"]
   },

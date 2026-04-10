@@ -42,6 +42,11 @@
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     claude-code.url = "github:sadjow/claude-code-nix";
 
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -94,6 +99,7 @@
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
           inputs.plasma-manager.homeModules.plasma-manager
           agenix.homeManagerModules.default
+          inputs.nix-index-database.homeModules.nix-index
           ./hosts/work.nix
           ./hosts/home.nix
           ./modules/common.nix
@@ -114,6 +120,7 @@
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
           agenix.homeManagerModules.default
+          inputs.nix-index-database.homeModules.nix-index
           ./hosts/work.nix
           ./modules/common.nix
           ./modules/secrets.nix
