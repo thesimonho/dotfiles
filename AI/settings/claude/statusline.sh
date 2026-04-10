@@ -22,14 +22,15 @@ RESET="\033[0m"
 
 # ─── Config ───────────────────────────────────────────────────────────────────
 
-# Rate limit pacing thresholds.
-# If you've used 80% of your quota but only 50% of the period has passed,
-# you're burning too fast. These thresholds control when the bar turns
-# yellow or red based on how long your remaining quota would last.
-# Example: RUNWAY_RED=30 means "warn red if remaining quota only covers
-# 30% of the time left in the period" — i.e. you'll run out well before reset.
-RUNWAY_RED=30
-RUNWAY_YELLOW=60
+# Burn rate thresholds — how fast you're spending tokens relative to how many you have  remaining.
+# 1.0 = perfect pace. spending at the rate you should be to cover your usage
+# 1.5 = too fast. spending 50% faster than sustainable
+# 2.0 = way too fast. spending twice as fast as sustainable
+BURN_YELLOW=1.25 # bar turns yellow
+BURN_RED=1.5     # bar turns red
+
+FIVE_HOURS=18000  # 5 * 60 * 60
+SEVEN_DAYS=604800 # 7 * 24 * 60 * 60
 
 AUTH_CACHE_DIR="/tmp/claude-statusline"
 mkdir -p "$AUTH_CACHE_DIR"
@@ -122,14 +123,12 @@ make_bar() {
 
   printf "%s %s[" "$label" "$color"
   for ((i = 1; i <= width; i++)); do
-    local char
-    [ "$i" -le "$filled" ] && char="▓" || char="░"
-    if [ "$marker_pos" -gt 0 ] && [ "$i" -eq "$marker_pos" ] && { [ "$filled" -ne "$marker_pos" ] || [ "$pct" -gt "$marker_pct" ]; }; then
-      local marker_color=""
-      [ "$pct" -gt "$marker_pct" ] && marker_color="$RED"
-      printf "%b▒%b" "$marker_color" "${marker_color:+$color}"
+    if [ "$marker_pos" -gt 0 ] && [ "$i" -eq "$marker_pos" ]; then
+      printf "▒"
+    elif [ "$i" -le "$filled" ]; then
+      printf "▓"
     else
-      printf "%s" "$char"
+      printf "░"
     fi
   done
   printf "]"
@@ -148,19 +147,23 @@ elapsed_pct() {
   fi
 }
 
+# Convert burn rate thresholds (e.g. 1.5) to integer x100 for bash math
+BURN_YELLOW_I=$(echo "$BURN_YELLOW" | awk '{printf "%d", $1 * 100}')
+BURN_RED_I=$(echo "$BURN_RED" | awk '{printf "%d", $1 * 100}')
+
 pace_color() {
   local usage_pct="$1" time_elapsed_pct="$2"
   local remaining=$((100 - time_elapsed_pct))
   local remaining_usage=$((100 - usage_pct))
-  local runway
-  if [ "$remaining" -le 0 ]; then
-    echo ""
+  if [ "$remaining" -le 0 ] || [ "$remaining_usage" -le 0 ]; then
+    echo "$RED"
     return
   fi
-  runway=$((remaining_usage * 100 / remaining))
-  if [ "$runway" -le "$RUNWAY_RED" ]; then
+  # burn_rate = (time_remaining / quota_remaining), scaled by 100
+  local burn_rate=$((remaining * 100 / remaining_usage))
+  if [ "$burn_rate" -ge "$BURN_RED_I" ]; then
     echo "$RED"
-  elif [ "$runway" -le "$RUNWAY_YELLOW" ]; then
+  elif [ "$burn_rate" -ge "$BURN_YELLOW_I" ]; then
     echo "$BRIGHT_YELLOW"
   else
     echo "$BRIGHT_GREEN"
@@ -214,7 +217,7 @@ context_bar="$(make_bar "ctx" "$ctx_pct") ${ctx_pct}%${RESET}"
 five_hr_reset_str=$(format_epoch "$five_hr_resets" "%-I%p" | tr '[:upper:]' '[:lower:]')
 five_hr_color=""
 if [ -n "$five_hr_resets" ]; then
-  five_hr_elapsed=$(elapsed_pct "$five_hr_resets" 18000)
+  five_hr_elapsed=$(elapsed_pct "$five_hr_resets" $FIVE_HOURS)
   five_hr_color=$(pace_color "$five_hr_pct" "$five_hr_elapsed")
 fi
 five_hour_bar="$(make_bar "5h" "$five_hr_pct" "$five_hr_color" "$five_hr_elapsed") ${five_hr_pct}%${five_hr_reset_str:+ ($five_hr_reset_str)}${RESET}"
@@ -222,7 +225,7 @@ five_hour_bar="$(make_bar "5h" "$five_hr_pct" "$five_hr_color" "$five_hr_elapsed
 seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a/%-I%p" | sed 's/^\(.\)/\U\1/' | sed 's|/\(.*\)|/\L\1|')
 seven_day_color=""
 if [ -n "$seven_day_resets" ]; then
-  seven_day_elapsed=$(elapsed_pct "$seven_day_resets" 604800)
+  seven_day_elapsed=$(elapsed_pct "$seven_day_resets" $SEVEN_DAYS)
   seven_day_color=$(pace_color "$seven_day_pct" "$seven_day_elapsed")
 fi
 seven_day_bar="$(make_bar "7d" "$seven_day_pct" "$seven_day_color" "$seven_day_elapsed") ${seven_day_pct}%${seven_day_reset_str:+ ($seven_day_reset_str)}${RESET}"
