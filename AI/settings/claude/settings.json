@@ -125,7 +125,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "sh ~/dotfiles/AI/settings/claude/statusline.sh"
+    "command": "bash ~/dotfiles/AI/settings/claude/statusline.sh"
   },
   "enabledPlugins": {
     "dodo@artificial-jellybeans": true
@@ -144,16 +144,9 @@
     "autoAllowBashIfSandboxed": true,
     "network": {
       "allowedDomains": [
-        "auth.docker.io",
-        "*.npmjs.org",
         "*.github.com",
         "*.githubusercontent.com",
-        "*.golang.org",
-        "api.anthropic.com",
-        "*.sentry.io",
-        "*.playwright.dev",
-        "playwright.azureedge.net",
-        "registry.shadcn.com"
+        "*.anthropic.com"
       ],
       "allowUnixSockets": [
         "$SSH_AUTH_SOCK",
@@ -162,9 +155,9 @@
       ]
     },
     "filesystem": {
-      "allowWrite": ["/tmp", "~/.gnupg", "~/.cache/go-build/"]
+      "allowWrite": ["/tmp"]
     },
-    "excludedCommands": ["docker"]
+    "excludedCommands": ["docker", "git"]
   },
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true

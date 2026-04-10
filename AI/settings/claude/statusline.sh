@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Colors - foreground
+# ─── Colors ───────────────────────────────────────────────────────────────────
+
 BLACK="\033[0;30m"
 RED="\033[0;31m"
 GREEN="\033[0;32m"
@@ -17,51 +18,96 @@ BRIGHT_BLUE="\033[0;94m"
 BRIGHT_MAGENTA="\033[0;95m"
 BRIGHT_CYAN="\033[0;96m"
 BRIGHT_WHITE="\033[0;97m"
-# Colors - background
-BG_BLACK="\033[40m"
-BG_RED="\033[41m"
-BG_GREEN="\033[42m"
-BG_YELLOW="\033[43m"
-BG_BLUE="\033[44m"
-BG_MAGENTA="\033[45m"
-BG_CYAN="\033[46m"
-BG_WHITE="\033[47m"
-BG_BRIGHT_BLACK="\033[100m"
-BG_BRIGHT_RED="\033[101m"
-BG_BRIGHT_GREEN="\033[102m"
-BG_BRIGHT_YELLOW="\033[103m"
-BG_BRIGHT_BLUE="\033[104m"
-BG_BRIGHT_MAGENTA="\033[105m"
-BG_BRIGHT_CYAN="\033[106m"
-BG_BRIGHT_WHITE="\033[107m"
 RESET="\033[0m"
 
-input=$(cat)
-NOW=$(date +%s)
+# ─── Config ───────────────────────────────────────────────────────────────────
 
-# Pace thresholds: runway is "how much of remaining time your remaining quota covers" (100 = perfect pace)
-# Raise them to be more aggressive (warn earlier), lower them to be more relaxed.
-RUNWAY_RED=30    # quota lasts <30% of remaining time
-RUNWAY_YELLOW=60 # quota lasts <60% of remaining time
+# Rate limit pacing thresholds.
+# If you've used 80% of your quota but only 50% of the period has passed,
+# you're burning too fast. These thresholds control when the bar turns
+# yellow or red based on how long your remaining quota would last.
+# Example: RUNWAY_RED=30 means "warn red if remaining quota only covers
+# 30% of the time left in the period" — i.e. you'll run out well before reset.
+RUNWAY_RED=30
+RUNWAY_YELLOW=60
 
-# Helpers
+AUTH_CACHE_DIR="/tmp/claude-statusline"
+mkdir -p "$AUTH_CACHE_DIR"
+AUTH_TTL=43200 # 12 hours
+
+# ─── Layout helpers ───────────────────────────────────────────────────────────
+
+visible_len() {
+  printf '%b' "$1" |
+    sed $'s/\x1b\\][0-9]*;[^\a]*\a//g' |
+    sed $'s/\x1b\\[[0-9;]*m//g' |
+    sed 's/\\033\\[[0-9;]*m//g' |
+    wc -L
+}
+
+justify_segments() {
+  local target_len="$1"
+  shift
+  local segments=("$@")
+  local count=${#segments[@]}
+
+  local total_content=0
+  for seg in "${segments[@]}"; do
+    total_content=$((total_content + $(visible_len "$seg")))
+  done
+
+  local separators=$((count - 1))
+  local total_gap=$((target_len - total_content - separators))
+  [ "$total_gap" -lt 0 ] && total_gap=0
+  [ "$separators" -le 0 ] && separators=1
+  local gap_each=$((total_gap / separators))
+  local gap_extra=$((total_gap % separators))
+
+  for ((i = 0; i < count; i++)); do
+    printf '%b' "${segments[$i]}"
+    if [ "$i" -lt $((count - 1)) ]; then
+      local g=$gap_each
+      [ "$i" -lt "$gap_extra" ] && g=$((g + 1))
+      local left_pad=$((g / 2))
+      local right_pad=$((g - left_pad))
+      printf "%*s${BLACK}•${RESET}%*s" "$left_pad" "" "$right_pad" ""
+    fi
+  done
+}
+
+# ─── Formatting helpers ───────────────────────────────────────────────────────
+
 apply_color() {
   local color=$1
   shift
   echo -e "${color}$*${RESET}"
 }
+
 format_duration() {
   local seconds=$(($1 / 1000))
-  printf "%dm%ds" "$((seconds / 60))" "$((seconds % 60))"
+  printf "%dm %ds" "$((seconds / 60))" "$((seconds % 60))"
 }
+
+format_epoch() {
+  local epoch="$1" fmt="$2"
+  [[ -z "$epoch" ]] && return
+  if date -r 0 &>/dev/null 2>&1; then
+    date -r "$epoch" "+$fmt" # macOS
+  else
+    date -d "@${epoch}" "+$fmt" # Linux
+  fi
+}
+
+# Rate limit helpers
+
 make_bar() {
   local label="$1"
   local pct="${2:-0}"
   local color_override="$3"
   local marker_pct="$4"
   local width=10
-  local filled=$(( pct > 0 ? (pct * width + 99) / 100 : 0 ))
-  local marker_pos=$(( marker_pct > 0 ? (marker_pct * width + 99) / 100 : 0 ))
+  local filled=$((pct > 0 ? (pct * width + 99) / 100 : 0))
+  local marker_pos=$((marker_pct > 0 ? (marker_pct * width + 99) / 100 : 0))
 
   local color
   if [ -n "$color_override" ]; then
@@ -88,6 +134,7 @@ make_bar() {
   done
   printf "]"
 }
+
 elapsed_pct() {
   local resets_at="$1" period_secs="$2"
   local start=$((resets_at - period_secs))
@@ -100,15 +147,13 @@ elapsed_pct() {
     echo $((elapsed * 100 / period_secs))
   fi
 }
+
 pace_color() {
   local usage_pct="$1" time_elapsed_pct="$2"
   local remaining=$((100 - time_elapsed_pct))
   local remaining_usage=$((100 - usage_pct))
-  # How much of remaining time would your remaining quota last?
-  # runway 100 = perfect pace, 50 = quota lasts half the remaining time, 0 = already exhausted
   local runway
   if [ "$remaining" -le 0 ]; then
-    # Period is over, just use threshold fallback
     echo ""
     return
   fi
@@ -121,18 +166,13 @@ pace_color() {
     echo "$BRIGHT_GREEN"
   fi
 }
-format_epoch() {
-  local epoch="$1" fmt="$2"
-  [[ -z "$epoch" ]] && return
-  # macOS uses date -r, Linux uses date -d @
-  if date -r 0 &>/dev/null 2>&1; then
-    date -r "$epoch" "+$fmt"
-  else
-    date -d "@${epoch}" "+$fmt"
-  fi
-}
 
-# Parse all values in a single jq call
+# ─── Data ─────────────────────────────────────────────────────────────────────
+
+input=$(cat)
+NOW=$(date +%s)
+
+# Parse statusline JSON
 eval "$(echo "$input" | jq -r '
   @sh "model_name=\(.model.display_name)",
   @sh "duration_ms=\(.cost.total_duration_ms)",
@@ -141,19 +181,37 @@ eval "$(echo "$input" | jq -r '
   @sh "five_hr_pct=\(.rate_limits.five_hour.used_percentage // 0 | floor)",
   @sh "seven_day_pct=\(.rate_limits.seven_day.used_percentage // 0 | floor)",
   @sh "five_hr_resets=\(.rate_limits.five_hour.resets_at // empty)",
-  @sh "seven_day_resets=\(.rate_limits.seven_day.resets_at // empty)"
+  @sh "seven_day_resets=\(.rate_limits.seven_day.resets_at // empty)",
+  @sh "cwd=\(.cwd // empty)",
+  @sh "session_id=\(.session_id // empty)"
 ')"
 
-# Format values
+# Account email (cached per session)
+auth_cache="${AUTH_CACHE_DIR}/auth-${session_id}"
+if [ ! -f "$auth_cache" ] || [ $((NOW - $(stat -c %Y "$auth_cache" 2>/dev/null || echo 0))) -gt $AUTH_TTL ]; then
+  claude auth status --json 2>/dev/null >"$auth_cache" &
+fi
+account_email=$(jq -r '.email // empty' "$auth_cache" 2>/dev/null)
+
+# ─── Format segments ─────────────────────────────────────────────────────────
+
+# identity & session
+account="${account_email:+${BRIGHT_MAGENTA}${account_email}${RESET}}"
+short_cwd="${cwd/#$HOME/\~}"
+session_short="${session_id:0:8}"
 model=$(apply_color "$RED" "$model_name")
-duration=$(apply_color "$BRIGHT_BLUE" "$(format_duration "$duration_ms")")
-cost=$(apply_color "$BRIGHT_BLUE" "\$$(echo "$cost_usd" | awk '{printf "%.2f", $1}')")
+remote_url=$(git remote get-url origin 2>/dev/null | sed 's/git@github.com:/https:\/\/github.com\//' | sed 's/\.git$//')
+if [ -n "$remote_url" ]; then
+  repo_name=$(echo "$remote_url" | sed 's|.*/\([^/]*/[^/]*\)$|\1|')
+  repo_link="${CYAN}🌐 \e]8;;${remote_url}\a${repo_name}\e]8;;\a${RESET}"
+fi
+duration=$(apply_color "$BRIGHT_BLUE" "⏳ $(format_duration "$duration_ms")")
+cost=$(apply_color "$BRIGHT_BLUE" "💰 \$$(echo "$cost_usd" | awk '{printf "%.2f", $1}')")
 
-five_hr_reset_str=$(format_epoch "$five_hr_resets" "%-I%p" | tr '[:upper:]' '[:lower:]')
-seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a/%-I%p" | sed 's/^\(.\)/\U\1/' | sed 's|/\(.*\)|/\L\1|')
-
+# usage
 context_bar="$(make_bar "ctx" "$ctx_pct") ${ctx_pct}%${RESET}"
 
+five_hr_reset_str=$(format_epoch "$five_hr_resets" "%-I%p" | tr '[:upper:]' '[:lower:]')
 five_hr_color=""
 if [ -n "$five_hr_resets" ]; then
   five_hr_elapsed=$(elapsed_pct "$five_hr_resets" 18000)
@@ -161,6 +219,7 @@ if [ -n "$five_hr_resets" ]; then
 fi
 five_hour_bar="$(make_bar "5h" "$five_hr_pct" "$five_hr_color" "$five_hr_elapsed") ${five_hr_pct}%${five_hr_reset_str:+ ($five_hr_reset_str)}${RESET}"
 
+seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a/%-I%p" | sed 's/^\(.\)/\U\1/' | sed 's|/\(.*\)|/\L\1|')
 seven_day_color=""
 if [ -n "$seven_day_resets" ]; then
   seven_day_elapsed=$(elapsed_pct "$seven_day_resets" 604800)
@@ -168,4 +227,29 @@ if [ -n "$seven_day_resets" ]; then
 fi
 seven_day_bar="$(make_bar "7d" "$seven_day_pct" "$seven_day_color" "$seven_day_elapsed") ${seven_day_pct}%${seven_day_reset_str:+ ($seven_day_reset_str)}${RESET}"
 
-echo -e "${model}  |  ${duration} ${cost}  |  ${context_bar}  -  ${five_hour_bar}  -  ${seven_day_bar}"
+# ─── Output ───────────────────────────────────────────────────────────────────
+
+if [ -n "$account_email" ]; then
+  line1=("${account}" "${CYAN}${short_cwd}${RESET}")
+else
+  line1=("${CYAN}${short_cwd}${RESET}")
+fi
+[ -n "$repo_link" ] && line1+=("${repo_link}")
+line1+=("${BRIGHT_BLUE}${session_short}${RESET}" "${duration} | ${cost}")
+line2=("${model}" "${context_bar}" "${five_hour_bar}" "${seven_day_bar}")
+
+# Match both lines to the wider one
+width1=0
+for s in "${line1[@]}"; do width1=$((width1 + $(visible_len "$s"))); done
+width2=0
+for s in "${line2[@]}"; do width2=$((width2 + $(visible_len "$s"))); done
+seps1=$(((${#line1[@]} - 1) * 3))
+seps2=$(((${#line2[@]} - 1) * 3))
+target1=$((width1 + seps1))
+target2=$((width2 + seps2))
+target=$((target1 > target2 ? target1 : target2))
+
+justify_segments "$target" "${line1[@]}"
+echo
+justify_segments "$target" "${line2[@]}"
+echo
