@@ -177,6 +177,26 @@
         "type": "github"
       }
     },
+    "nix-index-database": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775365369,
+        "narHash": "sha256-DgH5mveLoau20CuTnaU5RXZWgFQWn56onQ4Du2CqYoI=",
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "rev": "cef5cf82671e749ac87d69aadecbb75967e6f6c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1775732571,
@@ -271,6 +291,7 @@
         "codex-cli-nix": "codex-cli-nix",
         "home-manager": "home-manager_2",
         "nix-flatpak": "nix-flatpak",
+        "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager"

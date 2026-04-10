@@ -158,7 +158,7 @@ in
 
       # 1500: final init
       (lib.mkOrder 1500 ''
-        eval "$(pay-respects zsh --alias fuck)"
+        eval "$(pay-respects zsh --alias fuck --nocnf)"
       '')
     ];
     plugins = [
