@@ -29,10 +29,6 @@ let
       source = "${dotfiles}/AI/agents";
     }
     {
-      name = "commands";
-      source = "${dotfiles}/AI/commands";
-    }
-    {
       name = "hooks";
       source = "${dotfiles}/AI/hooks";
     }
