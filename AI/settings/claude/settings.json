@@ -65,7 +65,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '⚠️ Doublecheck: did you run linter/formatter/type check? Did you keep functions small? Is the file shorter than 800 lines? Were any tests needed?' >&2"
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"You just edited a file. Run the project formatter and linter on it now. Also check: functions < 30 lines, functions have docstrings, file < 800 lines, no console.log, no hardcoded values (use existing types/const).\"}}'"
           }
         ]
       }
@@ -90,12 +90,7 @@
     ],
     "UserPromptSubmit": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo 'First, write a list of every available agent/skill. For each one, say Yes or No based on whether it is useful to the provided task. Call the relevant (Yes) ones immediately.' >&2"
-          }
-        ]
+        "hooks": []
       }
     ],
     "Stop": [
@@ -150,18 +145,21 @@
       ],
       "allowUnixSockets": [
         "$SSH_AUTH_SOCK",
-        "/run/user/1000/agent-browser"
+        "/run/user/1000/agent-browser",
+        "~/.gnupg/S.gpg-agent"
       ]
     },
     "filesystem": {
       "allowWrite": [
-        "/tmp"
+        "/tmp",
+        "~/.gnupg"
       ]
     },
     "excludedCommands": [
       "docker:*"
     ]
   },
+  "advisorModel": "opus",
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true
 }
