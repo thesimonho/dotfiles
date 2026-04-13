@@ -97,6 +97,7 @@ in
   home = {
     sessionVariables = {
       EDITOR = "nvim";
+      VISUAL = "nvim";
       LANG = "en_US.UTF-8";
       COLORTERM = "truecolor";
       NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
