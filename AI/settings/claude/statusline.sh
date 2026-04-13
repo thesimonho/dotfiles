@@ -32,9 +32,9 @@ BURN_RED=1.5     # bar turns red
 FIVE_HOURS=18000  # 5 * 60 * 60
 SEVEN_DAYS=604800 # 7 * 24 * 60 * 60
 
+AUTH_TTL=3600 # 1 hour
 AUTH_CACHE_DIR="/tmp/claude-statusline"
 mkdir -p "$AUTH_CACHE_DIR"
-AUTH_TTL=43200 # 12 hours
 
 # ─── Layout helpers ───────────────────────────────────────────────────────────
 
