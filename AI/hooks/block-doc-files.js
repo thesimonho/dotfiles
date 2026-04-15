@@ -31,6 +31,4 @@ process.stdin.on("end", () => {
     );
     process.exit(1);
   }
-
-  console.log(input);
 });

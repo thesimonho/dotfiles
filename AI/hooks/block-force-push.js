@@ -21,6 +21,4 @@ process.stdin.on('end', () => {
     console.error('[Hook] Rewriting remote history must be done manually');
     process.exit(1);
   }
-
-  console.log(input);
 });

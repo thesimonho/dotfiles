@@ -28,6 +28,4 @@ process.stdin.on('end', () => {
     console.error('[Hook] Build and dependency directories must not be manually modified');
     process.exit(1);
   }
-
-  console.log(input);
 });

@@ -95,6 +95,8 @@ Commit in small, focused chunks — each commit should be one logical change tha
 
 ## Pull Request/Merge Workflow
 
+Important: each PR should be small, focused, and self-contained. Do NOT bundle multiple issues into a single PR. If multiple issues come up, create a branch, start a subagent on the issue, or make a note of it.
+
 When pushing, merging or creating PRs:
 
 1. All changes are committed
