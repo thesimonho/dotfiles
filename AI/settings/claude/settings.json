@@ -65,7 +65,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"You just edited a file. Run the project formatter and linter on it now. Also check: functions < 30 lines, functions have docstrings, file < 800 lines, no console.log, no hardcoded values (use existing types/const).\"}}'"
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"You just edited a file. Run the project formatter and linter on it now. Also check: functions < 30 lines, functions have docstrings, file < 800 lines, no hardcoded values (use existing types/const).\"}}'"
           }
         ]
       }
