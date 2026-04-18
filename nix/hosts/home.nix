@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   pkgs,
   pkgsUnstable,
@@ -13,9 +14,14 @@
   home = {
     username = lib.mkForce "simon";
     homeDirectory = lib.mkForce "/home/simon";
-    packages = [ pkgs.stripe-cli ];
+    sessionVariables = {
+      ANDROID_HOME = "${config.home.homeDirectory}/Android/Sdk";
+    };
+    packages = [
+      pkgs.android-tools
+      pkgs.stripe-cli
+    ];
   };
-
   services.flatpak = {
     enable = true;
     uninstallUnmanaged = true;
