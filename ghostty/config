@@ -1,4 +1,6 @@
 config-file = keybindings
+custom-shader = shaders/cursor_warp.glsl
+custom-shader = shaders/ripple_rectangle_cursor.glsl
 
 font-family = CaskaydiaCove Nerd Font
 font-style = SemiLight
