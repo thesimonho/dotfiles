@@ -5,12 +5,27 @@ return {
     "olimorris/persisted.nvim",
     lazy = false,
     init = function()
+      local group = vim.api.nvim_create_augroup("PersistedHooks", {})
+
       -- save barbar buffer order before saving session
       vim.api.nvim_create_autocmd({ "User" }, {
         pattern = "PersistedSavePre",
-        group = vim.api.nvim_create_augroup("PersistedHooks", {}),
+        group = group,
         callback = function()
           vim.api.nvim_exec_autocmds("User", { pattern = "SessionSavePre" })
+        end,
+      })
+
+      -- persisted skips autostart when nvim is launched with args (e.g. `nvim .`),
+      -- so first-time visits to a project never register the VimLeavePre save hook.
+      -- force-start after VimEnter when cwd is an allowed dir.
+      vim.api.nvim_create_autocmd("VimEnter", {
+        group = group,
+        callback = function()
+          local persisted = require("persisted")
+          if not vim.g.persisting and persisted.allowed_dir() then
+            persisted.start()
+          end
         end,
       })
     end,
