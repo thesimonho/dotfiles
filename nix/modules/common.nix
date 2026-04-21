@@ -14,25 +14,22 @@ let
   meta = import ../secrets/meta.nix;
 
   # Generate git identity config files from meta.nix identities
-  gitIdentityFiles = lib.mapAttrs' (
-    name: id: {
-      name = "git/identity-${name}";
-      value = {
-        text =
-          ''
-            [user]
-              email = ${id.email}
-          ''
-          + lib.optionalString (id.gpg != null && id.gpg.sign) ''
-              signingKey = ${id.gpg.keyId}
-            [commit]
-              gpgSign = true
-            [tag]
-              gpgSign = true
-          '';
-      };
-    }
-  ) meta.identities;
+  gitIdentityFiles = lib.mapAttrs' (name: id: {
+    name = "git/identity-${name}";
+    value = {
+      text = ''
+        [user]
+          email = ${id.email}
+      ''
+      + lib.optionalString (id.gpg != null && id.gpg.sign) ''
+          signingKey = ${id.gpg.keyId}
+        [commit]
+          gpgSign = true
+        [tag]
+          gpgSign = true
+      '';
+    };
+  }) meta.identities;
 
   # Generate includeIf rules that route git identity based on remote URL
   # Each identity can have multiple patterns (SSH and HTTPS)
@@ -67,9 +64,7 @@ let
     pkgs.semgrep
     pkgs.trivy
     pkgs.trufflehog
-    pkgs.tmux
     pkgs.uv
-    pkgs.zellij
     # cmake
     # docker
     # nerd-fonts.caskaydia-cove
@@ -403,14 +398,6 @@ in
     };
     "fzf" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/fzf";
-      force = true;
-    };
-    "tmux/tmux.conf" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/tmux/tmux.conf";
-      force = true;
-    };
-    "zellij" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/zellij";
       force = true;
     };
     "starship.toml" = {
