@@ -66,6 +66,8 @@ Naming convention: `<type>/<description>`, where type is one of the conventional
 
 The first line of a commit message should be a description of your your changed. Then the extended commit message needs to explain _why_ you changed it along with any necessary context.
 
+GPG sign your commits if possible.
+
 ### Conventional commits
 
 Every commit message follows the conventional commit format:
