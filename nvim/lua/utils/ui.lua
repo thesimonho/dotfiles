@@ -16,21 +16,16 @@ end
 
 M.load_project_session = function(dir)
   vim.fn.chdir(dir)
-  local session_loaded = false
-  vim.api.nvim_create_autocmd("SessionLoadPost", {
-    once = true,
-    callback = function()
-      session_loaded = true
-    end,
-  })
 
-  -- fallback to picker
-  vim.defer_fn(function()
-    if not session_loaded then
-      Snacks.picker.files({ root = false, hidden = true, dirs = { dir } })
-    end
-  end, 100)
-  pcall(require("persisted").load)
+  local persisted = require("persisted")
+  local session = persisted.current()
+  local has_session = session and vim.fn.filereadable(session) ~= 0
+
+  if has_session then
+    pcall(persisted.load)
+  else
+    Snacks.picker.files({ root = false, hidden = true, dirs = { dir } })
+  end
 end
 
 return M
