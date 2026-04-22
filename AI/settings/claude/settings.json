@@ -17,7 +17,7 @@
       "WebFetch"
     ],
     "deny": [],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
   "enableAllProjectMcpServers": true,
   "hooks": {
@@ -156,10 +156,13 @@
       ]
     },
     "excludedCommands": [
-      "docker:*"
+      "docker:*",
+      "git:*"
     ]
   },
+  "effortLevel": "medium",
   "advisorModel": "opus",
-  "voiceEnabled": true,
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
 }
