@@ -200,7 +200,7 @@ account_email=$(jq -r '.email // empty' "$auth_cache" 2>/dev/null)
 
 # identity & session
 account="${account_email:+${BRIGHT_MAGENTA}${account_email}${RESET}}"
-short_cwd="${cwd/#$HOME/\~}"
+short_cwd="${cwd/#$HOME/~}"
 session_short="${session_id:0:8}"
 model=$(apply_color "$RED" "$model_name")
 remote_url=$(git remote get-url origin 2>/dev/null | sed 's/git@github.com:/https:\/\/github.com\//' | sed 's/\.git$//')
@@ -222,7 +222,7 @@ if [ -n "$five_hr_resets" ]; then
 fi
 five_hour_bar="$(make_bar "5h" "$five_hr_pct" "$five_hr_color" "$five_hr_elapsed") ${five_hr_pct}%${five_hr_reset_str:+ ($five_hr_reset_str)}${RESET}"
 
-seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a/%-I%p" | sed 's/^\(.\)/\U\1/' | sed 's|/\(.*\)|/\L\1|')
+seven_day_reset_str=$(format_epoch "$seven_day_resets" "%a/%-I%p" | awk -F/ '{printf "%s%s/%s", toupper(substr($1,1,1)), substr($1,2), tolower($2)}')
 seven_day_color=""
 if [ -n "$seven_day_resets" ]; then
   seven_day_elapsed=$(elapsed_pct "$seven_day_resets" $SEVEN_DAYS)
