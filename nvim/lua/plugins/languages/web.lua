@@ -55,11 +55,6 @@ return {
       ensure_installed = {
         -- lsp
         "vue-language-server",
-        -- linters
-        "oxlint",
-        -- formatters
-        "prettierd",
-        "prettier",
       },
     },
   },
@@ -73,30 +68,6 @@ return {
         "scss",
         "tsx",
         "vue",
-      },
-    },
-  },
-  { -- formatters
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        javascript = { "prettierd", "prettier", stop_after_first = true },
-        javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-        typescript = { "prettierd", "prettier", stop_after_first = true },
-        typescriptreact = { "prettierd", "prettier", stop_after_first = true },
-        vue = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
-  },
-  { -- linters
-    "mfussenegger/nvim-lint",
-    opts = {
-      linters_by_ft = {
-        javascript = { "oxlint" },
-        javascriptreact = { "oxlint" },
-        typescript = { "oxlint" },
-        typescriptreact = { "oxlint" },
-        vue = { "oxlint" },
       },
     },
   },

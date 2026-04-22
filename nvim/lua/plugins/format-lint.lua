@@ -6,9 +6,9 @@ return {
     },
     opts = {
       ensure_installed = {
+        -- lint
+        "shellcheck",
         -- formatters
-        "prettierd",
-        "prettier",
         "yamlfmt",
       },
     },
@@ -32,17 +32,8 @@ return {
             },
           },
         },
-        prettierd = {
-          options = {
-            ext_parsers = {
-              qmd = "markdown",
-            },
-          },
-        },
       },
       formatters_by_ft = {
-        graphql = { "prettierd", "prettier", stop_after_first = true },
-        json = { "prettierd", "prettier", stop_after_first = true },
         yaml = { "yamlfmt" },
       },
     },

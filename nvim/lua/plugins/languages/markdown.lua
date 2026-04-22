@@ -5,8 +5,6 @@ M = {
       ensure_installed = {
         -- linters
         "markdownlint",
-        -- formatters
-        "prettierd",
         -- lsp
         "mdx-analyzer",
       },
@@ -25,8 +23,8 @@ M = {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        markdown = { "prettierd", "markdownlint" },
-        ["markdown.mdx"] = { "prettierd", "markdownlint" },
+        markdown = { "oxfmt" },
+        ["markdown.mdx"] = { "oxfmt" },
       },
     },
   },
@@ -43,7 +41,7 @@ M = {
     ft = "markdown",
     keys = {
       { "<leader>cp", ft = "markdown", vim.NIL },
-      { "<localleader>p", ft = "markdown", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
+      { "<localleader>m", ft = "markdown", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" },
     },
   },
   {
