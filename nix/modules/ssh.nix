@@ -14,20 +14,18 @@ let
   meta = import ../secrets/meta.nix;
 
   # Derive SSH match blocks from identities
-  identityMatchBlocks = lib.mapAttrs' (
-    name: id: {
-      name = id.sshHost;
-      value = {
-        hostname = id.sshProxyHost;
-        port = id.sshPort;
-        user = "git";
-        addKeysToAgent = "true";
-        forwardAgent = true;
-        identitiesOnly = true;
-        identityFile = "${sshDir}/${id.sshKeyFile}";
-      };
-    }
-  ) meta.identities;
+  identityMatchBlocks = lib.mapAttrs' (name: id: {
+    name = id.sshHost;
+    value = {
+      hostname = id.sshProxyHost;
+      port = id.sshPort;
+      user = "git";
+      addKeysToAgent = "true";
+      forwardAgent = true;
+      identitiesOnly = true;
+      identityFile = "${sshDir}/${id.sshKeyFile}";
+    };
+  }) meta.identities;
 in
 {
   # SSH environment variables
@@ -39,24 +37,6 @@ in
         SSH_ASKPASS_REQUIRE=prefer
       '';
     };
-  };
-
-  # Add identity SSH keys to the agent
-  home.file.".local/bin/ssh-add-keys" = {
-    executable = true;
-    text =
-      let
-        addCommands = lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
-            name: id: ''[ -f "${sshDir}/${id.sshKeyFile}" ] && ${pkgs.openssh}/bin/ssh-add -q "${sshDir}/${id.sshKeyFile}" </dev/null || true''
-          ) meta.identities
-        );
-      in
-      ''
-        #!/usr/bin/env bash
-        set -euo pipefail
-        ${addCommands}
-      '';
   };
 
   # Service to add keys on login
@@ -93,10 +73,39 @@ in
     matchBlocks = identityMatchBlocks;
   };
 
-  # https://github.com/nix-community/home-manager/issues/322
-  home.file = {
-    ".ssh/config".force = true;
-  };
+  # All home.file definitions
+  # - ssh-add-keys script (loads identities into the ssh-agent)
+  # - ~/.ssh/config force flag (see https://github.com/nix-community/home-manager/issues/322)
+  # - ~/.ssh/<key>.pub materialized from meta.nix
+  home.file = lib.mkMerge [
+    {
+      ".ssh/config".force = true;
+      ".local/bin/ssh-add-keys" = {
+        executable = true;
+        text =
+          let
+            addCommands = lib.concatStringsSep "\n" (
+              lib.mapAttrsToList (
+                name: id:
+                ''[ -f "${sshDir}/${id.sshKeyFile}" ] && ${pkgs.openssh}/bin/ssh-add -q "${sshDir}/${id.sshKeyFile}" </dev/null || true''
+              ) meta.identities
+            );
+          in
+          ''
+            #!/usr/bin/env bash
+            set -euo pipefail
+            ${addCommands}
+          '';
+      };
+    }
+    (lib.mapAttrs' (name: id: {
+      name = ".ssh/${id.sshKeyFile}.pub";
+      value = {
+        text = id.sshPublicKey + "\n";
+      };
+    }) (lib.filterAttrs (_: id: (id.sshPublicKey or "") != "") meta.identities))
+  ];
+
   home.activation = {
     fixSshPermissions = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       run install -d -m 0700 "$HOME/.ssh"
