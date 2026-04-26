@@ -77,8 +77,10 @@ Write plans into the project's TODO.md or a dedicated planning document. Section
    - What it achieves (summary)
    - Detailed bullets with files, functions, implementation guidance
    - Verification checkpoint (tests pass, lint clean)
-   - Run `/simplify`
-   - Update docs/codemaps
+   - Make sure you bake the following into the end of each individual phase of the plan:
+     - Write any new tests that are needed
+     - Run documentation update skills
+     - Run `/simplify` over the phase to clean up
 3. **Future** — out of scope but noted for later
 
 ## What you don't do
