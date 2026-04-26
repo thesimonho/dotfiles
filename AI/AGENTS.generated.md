@@ -147,6 +147,20 @@ If security issue found:
 4. Fix CRITICAL issues before continuing
 5. Review entire codebase for similar issues
 
+# Subagents
+
+Spawn subagents to isolate context, parallelize independent work, or offload bulk mechanical tasks. Don't spawn when the parent needs the reasoning, when synthesis requires holding things together, or when spawn overhead dominates.
+
+Pick the cheapest model that can do the subtask well. For example, Claude Code models:
+
+- Haiku: bulk mechanical work, no judgment
+- Sonnet: scoped research, code exploration, in-scope synthesis
+- Opus: subtasks needing real planning or tradeoffs
+
+If a subagent realizes it needs a higher tier than itself, return to the parent.
+
+Parent owns final output and cross-spawn synthesis. User instructions override.
+
 # Testing Requirements
 
 ## Core Principle
@@ -215,9 +229,15 @@ If you encounter a failing test outside your current scope, inform the orchestra
 - You MUST keep doc websites, public APIs, and other documentation up to date.
 - You MUST reference the docs/codemaps/README.md when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
 
+## Rules vs docs/
+
+`.claude/rules/*.md` are path-gated imperative directives — kept under ~30 lines each, no prose. They tell agents what to do / not do. Background, references, decision, and explanations live in `docs/`. When trimming a rule, move the "why" to the relevant `docs/` file (or create a new one).
+
 ## Planning
 
 Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
+
+Do NOT reference plan files in code comments, rules files, or docs/ reference files.
 
 ## When Uncertain
 
