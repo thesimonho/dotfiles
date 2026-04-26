@@ -2,7 +2,11 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "CLAUDE_CODE_NO_FLICKER": "1",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
+    "CLAUDE_CODE_DISABLE_FAST_MODE": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
   "attribution": {
     "commit": "",
@@ -11,14 +15,20 @@
   "permissions": {
     "allow": [
       "Bash(ls:*)",
-      "Bash(npm:run *)",
       "Bash(gh:*)",
+      "Bash(npm run:*)",
+      "Bash(oxlint:*)",
+      "Bash(oxfmt:*)",
+      "Bash(git *)",
+      "Bash(curl *)",
       "WebSearch",
-      "WebFetch"
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs"
     ],
     "deny": [],
-    "defaultMode": "auto"
+    "defaultMode": "default"
   },
+  "model": "sonnet",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -57,6 +67,15 @@
             "command": "node ~/.claude/hooks/check-conventional-commit.js"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -65,7 +84,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"You just edited a file. Run the project formatter and linter on it now. Also check: functions < 30 lines, functions have docstrings, file < 800 lines, no hardcoded values (use existing types/const).\"}}'"
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Reminder (no need to respond): Run the project formatter, typechecker, linter. Also check: functions < 30 lines, functions have docstrings, file < 800 lines, no hardcoded values (use existing types/const).\"}}'"
           }
         ]
       }
@@ -138,31 +157,22 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "network": {
-      "allowedDomains": [
-        "*.github.com",
-        "*.githubusercontent.com",
-        "*.anthropic.com"
-      ],
-      "allowUnixSockets": [
-        "$SSH_AUTH_SOCK",
-        "/run/user/1000/agent-browser",
-        "~/.gnupg/S.gpg-agent"
-      ]
+      "allowedDomains": ["*.github.com", "*.githubusercontent.com", "*.anthropic.com"],
+      "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser", "~/.gnupg/S.gpg-agent"]
     },
     "filesystem": {
-      "allowWrite": [
-        "/tmp",
-        "~/.gnupg"
-      ]
+      "allowWrite": ["/tmp", "~/.gnupg"]
     },
-    "excludedCommands": [
-      "docker:*",
-      "git:*"
-    ]
+    "excludedCommands": ["docker:*", "git:*"]
   },
   "effortLevel": "medium",
   "advisorModel": "opus",
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
-  "voiceEnabled": true
+  "preferredNotifChannel": "auto",
+  "teammateMode": "auto",
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": false,
+  "useAutoModeDuringPlan": true,
+  "voiceEnabled": true,
+  "disableBypassPermissionsMode": false
 }

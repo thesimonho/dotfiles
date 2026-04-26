@@ -8,9 +8,15 @@
 - You MUST keep doc websites, public APIs, and other documentation up to date.
 - You MUST reference the docs/codemaps/README.md when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
 
+## Rules vs docs/
+
+`.claude/rules/*.md` are path-gated imperative directives — kept under ~30 lines each, no prose. They tell agents what to do / not do. Background, references, decision, and explanations live in `docs/`. When trimming a rule, move the "why" to the relevant `docs/` file (or create a new one).
+
 ## Planning
 
 Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
+
+Do NOT reference plan files in code comments, rules files, or docs/ reference files.
 
 ## When Uncertain
 
