@@ -3,8 +3,7 @@
   "env": {
     "CLAUDE_CODE_NO_FLICKER": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "80",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "40",
     "CLAUDE_CODE_DISABLE_FAST_MODE": "1",
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
@@ -19,8 +18,9 @@
       "Bash(npm run:*)",
       "Bash(oxlint:*)",
       "Bash(oxfmt:*)",
-      "Bash(git *)",
-      "Bash(curl *)",
+      "Bash(git:*)",
+      "Bash(curl:*)",
+      "Bash(rtk:*)",
       "WebSearch",
       "mcp__context7__resolve-library-id",
       "mcp__context7__query-docs"
@@ -28,7 +28,6 @@
     "deny": [],
     "defaultMode": "default"
   },
-  "model": "sonnet",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
