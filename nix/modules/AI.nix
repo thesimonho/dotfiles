@@ -9,6 +9,8 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
+
+  llmAgents = inputs.llm-agents.packages.${system};
   gpuVendor = config.ai.gpuVendor;
   ollamaPackage =
     if gpuVendor == "nvidia" then
@@ -106,17 +108,14 @@ in
 
   config = {
     home = {
-      sessionVariables = {
-        CLAUDE_CODE_ENABLE_TELEMETRY = 1;
-        OTEL_METRICS_EXPORTER = "otlp";
-        OTEL_LOGS_EXPORTER = "otlp";
-        OTEL_EXPORTER_OTLP_PROTOCOL = "grpc";
-        OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317";
-        OTEL_EXPORTER_OTLP_HEADERS = "";
-      };
+      sessionVariables = { };
       packages = [
-        inputs.claude-code.packages.${system}.default
-        inputs.codex-cli-nix.packages.${system}.default
+        llmAgents.claude-code
+        llmAgents.codex
+        llmAgents.pi
+        llmAgents.skills
+        llmAgents.agent-browser
+        llmAgents.rtk
       ]
       ++ lib.optionals (ollamaPackage != null) [ ollamaPackage ];
     };
