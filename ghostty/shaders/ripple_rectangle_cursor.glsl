@@ -1,7 +1,7 @@
 // https://github.com/sahaj-b/ghostty-cursor-shaders
 // CONFIGURATION
-const float DURATION = 0.25;               // How long the ripple animates (seconds)
-const float MAX_SIZE = 0.05;             // Max radius in normalized coords (0.5 = 1/4 screen height)
+const float DURATION = 0.2;               // How long the ripple animates (seconds)
+const float MAX_SIZE = 0.01;             // Max radius in normalized coords (0.5 = 1/4 screen height)
 const float RING_THICKNESS = 0.01;             // Ring width in normalized coords
 const float CURSOR_WIDTH_CHANGE_THRESHOLD = 0.5; // Triggers ripple if cursor width changes by this fraction
 vec4 COLOR = iCurrentCursorColor; // change to iCurrentCursorColor for your cursor's color
