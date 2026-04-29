@@ -9,14 +9,8 @@
     stalled-download-timeout = 300;
     warn-dirty = false;
 
-    extra-substituters = [
-      "https://codex-cli.cachix.org"
-      "https://claude-code.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "codex-cli.cachix.org-1:1Br3H1hHoRYG22n//cGKJOk3cQXgYobUel6O8DgSing="
-      "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
-    ];
+    extra-substituters = [ ];
+    extra-trusted-public-keys = [ ];
     extra-experimental-features = [
       "nix-command"
       "flakes"
@@ -39,8 +33,7 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
-    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
-    claude-code.url = "github:sadjow/claude-code-nix";
+    llm-agents.url = "github:numtide/llm-agents.nix";
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
