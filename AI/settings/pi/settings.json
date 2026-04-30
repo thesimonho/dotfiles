@@ -1,0 +1,14 @@
+{
+  "defaultThinkingLevel": "medium",
+  "hideThinkingBlock": false,
+  "showHardwareCursor": false,
+  "warnings": {
+    "anthropicExtraUsage": true
+  },
+  "lastChangelogVersion": "0.70.6",
+  "defaultProvider": "llama-cpp",
+  "defaultModel": "qwen3.6-35b",
+  "steeringMode": "all",
+  "followUpMode": "all",
+  "transport": "auto"
+}
