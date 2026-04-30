@@ -18,6 +18,10 @@
     "npm:@aliou/pi-guardrails",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-web-access",
-    "npm:pi-lens"
+    "npm:pi-lens",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-intercom",
+    "npm:pi-subagents",
+    "npm:context-mode"
   ]
 }
