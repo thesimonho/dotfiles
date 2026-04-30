@@ -75,5 +75,5 @@
   };
 
   ai.claudeTargetDir = lib.mkForce ".claude";
-  ai.gpuVendor = lib.mkForce "nvidia";
+  ai.gpuBackend = lib.mkForce "cuda";
 }
