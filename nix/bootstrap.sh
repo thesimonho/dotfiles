@@ -106,7 +106,7 @@ pkg_update() {
   [[ "$OS" == "Linux" ]] || return 0
   case "$(detect_pkgmgr)" in
   apt) sudo apt-get update -y ;;
-  dnf) : ;; # typically not required
+  dnf) sudo dnf install -y xz @development-tools ;;
   pacman) sudo pacman -Sy ;;
   none) echo "No supported Linux package manager found." >&2 ;;
   esac
