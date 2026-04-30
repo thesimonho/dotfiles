@@ -2,8 +2,9 @@ FLAKE_DIR := "."
 [private]
 _nix := "nix --extra-experimental-features 'nix-command flakes'"
 
-update:
-    {{ _nix }} flake update
+# Update all flake inputs, or a subset: `just update llm-agents nixpkgs`
+update *inputs:
+    {{ _nix }} flake update {{ inputs }}
 
 show:
     {{ _nix }} flake show {{ FLAKE_DIR }}
