@@ -1,6 +1,7 @@
 local agents = {
   { cmd = "claude", label = "Claude Code" },
   { cmd = "codex", label = "Codex" },
+  { cmd = "pi", label = "Pi" },
 }
 local available_agents = {}
 local open_agents = {}

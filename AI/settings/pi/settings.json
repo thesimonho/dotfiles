@@ -10,5 +10,14 @@
   "defaultModel": "qwen3.6-35b",
   "steeringMode": "all",
   "followUpMode": "all",
-  "transport": "auto"
+  "transport": "auto",
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "packages": [
+    "npm:@aliou/pi-guardrails",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-web-access",
+    "npm:pi-lens"
+  ]
 }
