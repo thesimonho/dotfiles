@@ -9,8 +9,14 @@
     stalled-download-timeout = 300;
     warn-dirty = false;
 
-    extra-substituters = [ ];
-    extra-trusted-public-keys = [ ];
+    extra-substituters = [
+      "https://cache.numtide.com"
+      "https://cuda-maintainers.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+    ];
     extra-experimental-features = [
       "nix-command"
       "flakes"
@@ -56,12 +62,31 @@
       ...
     }:
     let
+      # CUDA: narrow to the actual GPU's compute capability so CUDA-using
+      # packages don't compile for ~7 archs. UPDATE ON GPU UPGRADE.
+      # Reference (consumer NVIDIA):
+      #   Ampere     RTX 30xx / A-series        "8.6"
+      #   Ada        RTX 40xx                   "8.9"
+      #   Hopper     H100                       "9.0"
+      #   Blackwell  RTX 50xx                   "12.0"
+      # Full list: https://developer.nvidia.com/cuda-gpus
+      cudaCapabilities = [ "8.6" ];
+
+      nixpkgsConfig =
+        system:
+        {
+          allowUnfree = true;
+        }
+        // lib.optionalAttrs (system == "x86_64-linux") {
+          inherit cudaCapabilities;
+        };
+
       pkgsFor =
         system:
         import nixpkgs {
           inherit system;
           overlays = [ ];
-          config.allowUnfree = true;
+          config = nixpkgsConfig system;
         };
 
       unstableFor =
@@ -69,8 +94,10 @@
         import nixpkgs-unstable {
           inherit system;
           overlays = [ ];
-          config.allowUnfree = true;
+          config = nixpkgsConfig system;
         };
+
+      lib = nixpkgs.lib;
     in
     {
       apps.x86_64-linux.hm = {
