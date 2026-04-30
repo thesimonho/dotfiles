@@ -1,4 +1,4 @@
-model = "gpt-5.4"
+model = "gpt-5.5"
 model_reasoning_effort = "medium"
 [sandbox_workspace_write]
 network_access = true
@@ -14,6 +14,9 @@ multi_agent = true
 trust_level = "trusted"
 
 [projects."/home/simon/Projects/warden"]
+trust_level = "trusted"
+
+[projects."/home/simon/Projects/scribble"]
 trust_level = "trusted"
 
 [mcp_servers.context7]
@@ -39,6 +42,9 @@ show_raw_agent_reasoning = true
 disable_paste_burst = false
 web_search = "cached"
 personality = "friendly"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 1
 
 [plugins."github@openai-curated"]
 enabled = true
