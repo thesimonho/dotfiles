@@ -65,12 +65,12 @@ let
     pkgs.trivy
     pkgs.trufflehog
     pkgs.uv
+    pkgs.nerd-fonts.caskaydia-cove
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.symbols-only
     # cmake
     # docker
-    # nerd-fonts.caskaydia-cove
-    # nerd-fonts.fira-code
-    # nerd-fonts.jetbrains-mono
-    # nerd-fonts.symbols-only
   ];
   linuxPackages = lib.optionals isLinux [
     pkgs.wl-clipboard
