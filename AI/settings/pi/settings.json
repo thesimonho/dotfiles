@@ -1,13 +1,13 @@
 {
   "defaultThinkingLevel": "medium",
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "showHardwareCursor": false,
   "warnings": {
     "anthropicExtraUsage": true
   },
   "lastChangelogVersion": "0.70.6",
-  "defaultProvider": "llama-cpp",
-  "defaultModel": "qwen3.6-35b",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
   "steeringMode": "all",
   "followUpMode": "all",
   "transport": "auto",
@@ -23,5 +23,6 @@
     "npm:pi-intercom",
     "npm:pi-subagents",
     "npm:context-mode"
-  ]
+  ],
+  "theme": "dark"
 }
