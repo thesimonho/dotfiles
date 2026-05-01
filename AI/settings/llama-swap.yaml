@@ -16,8 +16,11 @@ models:
       --temperature 0.6
       --top-p 0.95
       --top-k 20
+      --min-p 0.0
       --repeat-penalty 1.0
-      --presence-penalty 0.0
+      --presence-penalty 1.5
+      --chat-template-kwargs '{"preserve_thinking": true}'
+      --jinja
   # 35B MoE, 3B active per token. 256 experts, 9 active.
   # UD-Q4_K_XL ≈ 22 GB on disk, but ~90% of weights are expert tensors.
   # Tuned config (12 GB 3080 Ti, April 2026 sweep):
@@ -40,8 +43,11 @@ models:
       --temperature 0.6
       --top-p 0.95
       --top-k 20
+      --min-p 0.0
       --repeat-penalty 1.0
-      --presence-penalty 0.0
+      --presence-penalty 1.5
+      --chat-template-kwargs '{"preserve_thinking": true}'
+      --jinja
   # 27B dense (not MoE), 64 layers. Fallback if 35B MoE is unstable.
   # UD-IQ3_M ≈ 10.8 GB — fits fully in 12 GB VRAM with KV-cache headroom.
   # Step up to UD-Q3_K_XL (14.5 GB) or UD-Q4_K_XL (17.6 GB) by lowering
@@ -58,5 +64,8 @@ models:
       --temperature 0.6
       --top-p 0.95
       --top-k 20
+      --min-p 0.0
       --repeat-penalty 1.0
-      --presence-penalty 0.0
+      --presence-penalty 1.5
+      --chat-template-kwargs '{"preserve_thinking": true}'
+      --jinja
