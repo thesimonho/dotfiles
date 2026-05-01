@@ -21,7 +21,6 @@ keybind = super+w>d=close_surface
 keybind = super+w>==equalize_splits
 keybind = super+w>m=toggle_split_zoom
 
-keybind = ctrl+t=new_tab
 keybind = super+t>n=new_tab
 keybind = super+t>d=close_tab
 keybind = super+h=previous_tab
