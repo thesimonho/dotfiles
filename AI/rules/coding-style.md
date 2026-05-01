@@ -35,6 +35,5 @@ Before marking work complete:
 - [ ] Use early returns
 - [ ] No deep nesting (>4 levels)
 - [ ] Proper error handling
-- [ ] No console.log statements
 - [ ] No hardcoded values
 - [ ] No mutation (immutable patterns used)
