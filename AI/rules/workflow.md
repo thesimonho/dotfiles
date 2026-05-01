@@ -16,6 +16,8 @@
 
 Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
 
+If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
+
 Do NOT reference plan files in code comments, rules files, or docs/ reference files.
 
 ## When Uncertain
