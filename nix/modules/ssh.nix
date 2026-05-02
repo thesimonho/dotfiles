@@ -12,6 +12,7 @@ let
   isLinux = pkgs.stdenv.isLinux;
   sshDir = "${config.home.homeDirectory}/.ssh";
   meta = import ../secrets/meta.nix;
+  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
 
   # Derive SSH match blocks from identities
   identityMatchBlocks = lib.mapAttrs' (name: id: {
@@ -25,7 +26,7 @@ let
       identitiesOnly = true;
       identityFile = "${sshDir}/${id.sshKeyFile}";
     };
-  }) meta.identities;
+  }) selectedIdentities;
 in
 {
   # SSH environment variables
@@ -88,7 +89,7 @@ in
               lib.mapAttrsToList (
                 name: id:
                 ''[ -f "${sshDir}/${id.sshKeyFile}" ] && ${pkgs.openssh}/bin/ssh-add -q "${sshDir}/${id.sshKeyFile}" </dev/null || true''
-              ) meta.identities
+              ) selectedIdentities
             );
           in
           ''
@@ -103,7 +104,7 @@ in
       value = {
         text = id.sshPublicKey + "\n";
       };
-    }) (lib.filterAttrs (_: id: (id.sshPublicKey or "") != "") meta.identities))
+    }) (lib.filterAttrs (_: id: (id.sshPublicKey or "") != "") selectedIdentities))
   ];
 
   home.activation = {

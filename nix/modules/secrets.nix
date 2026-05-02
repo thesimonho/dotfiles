@@ -14,6 +14,9 @@ let
   secretsDir = "${config.home.homeDirectory}/.secrets";
   meta = import ../secrets/meta.nix;
 
+  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
+  selectedSecrets = lib.filterAttrs (name: _: lib.elem name config.my.secrets) meta.secrets;
+
   # SSH keys from identities → ~/.ssh/
   sshSecrets = lib.mapAttrs' (
     name: id: {
@@ -25,7 +28,7 @@ let
         symlink = false;
       };
     }
-  ) meta.identities;
+  ) selectedIdentities;
 
   # GPG secrets from identities → ~/.secrets/
   gpgKeySecrets = lib.mapAttrs' (
@@ -38,7 +41,7 @@ let
         symlink = false;
       };
     }
-  ) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? secretFile) meta.identities);
+  ) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? secretFile) selectedIdentities);
 
   gpgRevocationSecrets = lib.mapAttrs' (
     name: id: {
@@ -50,7 +53,7 @@ let
         symlink = false;
       };
     }
-  ) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? revocationFile) meta.identities);
+  ) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? revocationFile) selectedIdentities);
 
   # Non-identity secrets → ~/.secrets/
   otherSecrets = lib.mapAttrs' (
@@ -62,7 +65,7 @@ let
         symlink = false;
       };
     }
-  ) meta.secrets;
+  ) selectedSecrets;
 in
 {
   home.packages = with pkgs; [
