@@ -108,6 +108,28 @@
         };
 
       lib = nixpkgs.lib;
+
+      # Modules every host imports unconditionally. Each one is a no-op
+      # until its host opts in via my.* options.
+      sharedModules = [
+        inputs.nix-flatpak.homeManagerModules.nix-flatpak
+        inputs.plasma-manager.homeModules.plasma-manager
+        agenix.homeManagerModules.default
+        inputs.nix-index-database.homeModules.nix-index
+        ./modules/system.nix
+        ./modules/apps.nix
+        ./modules/common.nix
+        ./modules/git.nix
+        ./modules/mise.nix
+        ./modules/yazi.nix
+        ./modules/nvim.nix
+        ./modules/kde.nix
+        ./modules/secrets.nix
+        ./modules/gpg.nix
+        ./modules/ssh.nix
+        ./modules/ai
+        { home.stateVersion = "25.05"; } # dont touch this
+      ];
     in
     {
       apps.x86_64-linux.hm = {
@@ -131,26 +153,9 @@
             hostName = "home";
           };
         };
-        modules = [
-          inputs.nix-flatpak.homeManagerModules.nix-flatpak
-          inputs.plasma-manager.homeModules.plasma-manager
-          agenix.homeManagerModules.default
-          inputs.nix-index-database.homeModules.nix-index
+        modules = sharedModules ++ [
           ./hosts/work.nix
           ./hosts/home.nix
-          ./modules/system.nix
-          ./modules/apps.nix
-          ./modules/common.nix
-          ./modules/git.nix
-          ./modules/mise.nix
-          ./modules/yazi.nix
-          ./modules/nvim.nix
-          ./modules/kde.nix
-          ./modules/secrets.nix
-          ./modules/gpg.nix
-          ./modules/ssh.nix
-          ./modules/ai
-          { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
       homeConfigurations."work" = home-manager.lib.homeManagerConfiguration {
@@ -165,23 +170,8 @@
             hostName = "work";
           };
         };
-        modules = [
-          inputs.nix-flatpak.homeManagerModules.nix-flatpak
-          agenix.homeManagerModules.default
-          inputs.nix-index-database.homeModules.nix-index
+        modules = sharedModules ++ [
           ./hosts/work.nix
-          ./modules/system.nix
-          ./modules/apps.nix
-          ./modules/common.nix
-          ./modules/git.nix
-          ./modules/mise.nix
-          ./modules/yazi.nix
-          ./modules/nvim.nix
-          ./modules/secrets.nix
-          ./modules/gpg.nix
-          ./modules/ssh.nix
-          ./modules/ai
-          { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
     };

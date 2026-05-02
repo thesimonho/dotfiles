@@ -9,10 +9,20 @@
 }:
 
 let
-  isLinux = pkgs.stdenv.isLinux;
   meta = import ../secrets/meta.nix;
 
   selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
+
+  # Pick a pinentry that fits the host's DE / OS. KDE → Qt; macOS → Keychain
+  # bridge; everything else → curses (works in any TTY).
+  pinentryFor =
+    { os, desktop }:
+    if desktop == "kde" then
+      pkgs.pinentry-qt
+    else if os == "darwin" then
+      pkgs.pinentry_mac
+    else
+      pkgs.pinentry-curses;
 
   # Collect GPG public keys from selected identities that have GPG config
   gpgIdentities = lib.filterAttrs (name: id: id.gpg != null) selectedIdentities;
@@ -37,7 +47,10 @@ in
     enableExtraSocket = true;
     grabKeyboardAndMouse = true;
     noAllowExternalCache = false; # Allow pinentry-qt to save passphrases in KWallet
-    pinentry.package = if isLinux then pkgs.pinentry-qt else pkgs.pinentry_mac;
+    pinentry.package = pinentryFor {
+      os = config.my.os;
+      desktop = config.my.desktop;
+    };
     defaultCacheTtl = 86400; # 24 hours
     maxCacheTtl = 604800; # 7 days
     extraConfig = "allow-preset-passphrase";
