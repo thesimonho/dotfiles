@@ -12,8 +12,10 @@ let
   isLinux = pkgs.stdenv.isLinux;
   meta = import ../secrets/meta.nix;
 
-  # Collect GPG public keys from all identities that have GPG config
-  gpgIdentities = lib.filterAttrs (name: id: id.gpg != null) meta.identities;
+  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
+
+  # Collect GPG public keys from selected identities that have GPG config
+  gpgIdentities = lib.filterAttrs (name: id: id.gpg != null) selectedIdentities;
   gpgPublicKeys = lib.mapAttrsToList (
     name: id: {
       text = id.gpg.publicKey;

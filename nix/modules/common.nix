@@ -12,6 +12,7 @@ let
   system = pkgs.stdenv.hostPlatform.system;
   dotfiles = "${config.home.homeDirectory}/dotfiles";
   meta = import ../secrets/meta.nix;
+  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
 
   # Generate git identity config files from meta.nix identities
   gitIdentityFiles = lib.mapAttrs' (name: id: {
@@ -29,7 +30,7 @@ let
           gpgSign = true
       '';
     };
-  }) meta.identities;
+  }) selectedIdentities;
 
   # Generate includeIf rules that route git identity based on remote URL
   # Each identity can have multiple patterns (SSH and HTTPS)
@@ -40,7 +41,7 @@ let
         condition = "hasconfig:remote.*.url:${pattern}";
         path = "${config.xdg.configHome}/git/identity-${name}";
       }) id.remotePatterns
-    ) meta.identities
+    ) selectedIdentities
   );
 
   sharedPackages = [
