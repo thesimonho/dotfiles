@@ -76,7 +76,6 @@ let
     programs.* config. Add new tools here, not in hosts.
   */
   catalog = {
-    # ---- baseline: universal CLI dev tools (programs) ----
     bat = {
       program = {
         name = "bat";
@@ -147,7 +146,6 @@ let
       bundles = [ "baseline" ];
     };
 
-    # ---- baseline: universal CLI dev tools (packages) ----
     ast-grep = {
       package = pkgs.ast-grep;
       bundles = [ "baseline" ];
@@ -201,7 +199,6 @@ let
       bundles = [ "linux-utils" ];
     };
 
-    # ---- security-tools ----
     semgrep = {
       package = pkgs.semgrep;
       bundles = [ "security-tools" ];
@@ -215,7 +212,6 @@ let
       bundles = [ "security-tools" ];
     };
 
-    # ---- fonts ----
     nerd-fonts-caskaydia-cove = {
       package = pkgs.nerd-fonts.caskaydia-cove;
       bundles = [ "fonts" ];
@@ -233,13 +229,11 @@ let
       bundles = [ "fonts" ];
     };
 
-    # ---- creative ----
     ffmpeg-full = {
       package = ffmpegFull;
       bundles = [ "creative" ];
     };
 
-    # ---- communication (flatpaks) ----
     bitwarden = {
       flatpak.id = "com.bitwarden.desktop";
       bundles = [ "communication" ];
@@ -287,7 +281,6 @@ let
       bundles = [ "communication" ];
     };
 
-    # ---- desktop (other flatpak apps) ----
     distroshelf = {
       flatpak.id = "com.ranfdev.DistroShelf";
       bundles = [ "desktop" ];
@@ -301,13 +294,11 @@ let
       bundles = [ "desktop" ];
     };
 
-    # ---- mobile-dev ----
     android-tools = {
       package = pkgs.android-tools;
       bundles = [ "mobile-dev" ];
     };
 
-    # ---- cloud ----
     awscli2 = {
       package = pkgs.awscli2;
       bundles = [ "cloud" ];
@@ -317,7 +308,8 @@ let
       bundles = [ "cloud" ];
     };
 
-    # ---- darwin-only desktop apps ----
+    # darwin-only; opt in via my.apps.enabled (no bundle so Linux hosts
+    # composing work-macbook.nix don't pull pkgs.slack natively).
     slack-darwin = {
       package = pkgs.slack;
       bundles = [ ];

@@ -6,8 +6,7 @@
 }:
 
 let
-  meta = import ../secrets/meta.nix;
-  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
+  selectedIdentities = config.my._identities;
 
   # Generate git identity config files from selected identities
   gitIdentityFiles = lib.mapAttrs' (name: id: {

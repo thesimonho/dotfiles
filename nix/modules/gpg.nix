@@ -9,23 +9,20 @@
 }:
 
 let
-  meta = import ../secrets/meta.nix;
+  selectedIdentities = config.my._identities;
 
-  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
-
-  # Pick a pinentry that fits the host's DE / OS. KDE → Qt; macOS → Keychain
-  # bridge; everything else → curses (works in any TTY).
+  # Pinentry by (DE, OS). KDE → Qt + KWallet; macOS → Keychain bridge;
+  # other Linux → curses (works in any TTY without DE assumptions).
+  pinentryByDesktop = {
+    kde = pkgs.pinentry-qt;
+  };
+  pinentryByOs = {
+    darwin = pkgs.pinentry_mac;
+  };
   pinentryFor =
-    { os, desktop }:
-    if desktop == "kde" then
-      pkgs.pinentry-qt
-    else if os == "darwin" then
-      pkgs.pinentry_mac
-    else
-      pkgs.pinentry-curses;
+    { os, desktop }: pinentryByDesktop.${desktop} or pinentryByOs.${os} or pkgs.pinentry-curses;
 
-  # Collect GPG public keys from selected identities that have GPG config
-  gpgIdentities = lib.filterAttrs (name: id: id.gpg != null) selectedIdentities;
+  gpgIdentities = lib.filterAttrs (_: id: id.gpg != null) selectedIdentities;
   gpgPublicKeys = lib.mapAttrsToList (name: id: {
     text = id.gpg.publicKey;
     trust = "ultimate";

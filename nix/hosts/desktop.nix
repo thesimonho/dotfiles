@@ -1,20 +1,10 @@
-{
-  config,
-  inputs,
-  pkgs,
-  pkgsUnstable,
-  lib,
-  ...
-}:
+{ config, ... }:
 
 {
   my = {
     os = "arch";
     desktop = "kde";
-    gpu = {
-      backend = "cuda";
-      cuda.capabilities = [ "8.6" ];
-    };
+    gpu.backend = "cuda";
     identities = [
       "personal"
       "sprung"

@@ -39,7 +39,7 @@ let
       }) staticSkillNames
     );
 in
-{
+lib.mkIf (config.my.ai.bundles != [ ]) {
   home.activation.generateAgentsMd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     ${generateAgentsMd}
   '';
