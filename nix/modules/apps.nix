@@ -66,27 +66,77 @@ let
     };
   };
 
-  ffmpegFull = (pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
-    doCheck = false;
-  });
-
   /*
     The full app catalog. Each entry is a typed app spec; the dispatcher
     below turns enabled entries into home.packages, services.flatpak.*, and
     programs.* config. Add new tools here, not in hosts.
   */
   catalog = {
+    android-tools = {
+      package = pkgs.android-tools;
+      bundles = [ "mobile-dev" ];
+    };
+    ast-grep = {
+      package = pkgs.ast-grep;
+      bundles = [ "baseline" ];
+    };
+    awscli2 = {
+      package = pkgs.awscli2;
+      bundles = [ "cloud" ];
+    };
     bat = {
       program = {
         name = "bat";
       };
       bundles = [ "baseline" ];
     };
+    betterbird = {
+      flatpak = {
+        id = "eu.betterbird.Betterbird";
+        overrides.Context = {
+          filesystems = [ "~/.gnupg:ro" ];
+          sockets = [ "gpg-agent" ];
+        };
+      };
+      bundles = [ "communication" ];
+    };
+    bitwarden = {
+      flatpak.id = "com.bitwarden.desktop";
+      bundles = [ "communication" ];
+    };
     carapace = {
       program = {
         name = "carapace";
       };
       bundles = [ "baseline" ];
+    };
+    deskflow = {
+      flatpak.id = "org.deskflow.deskflow";
+      bundles = [ "communication" ];
+    };
+    devcontainer = {
+      package = pkgs.devcontainer;
+      bundles = [ "baseline" ];
+    };
+    discord = {
+      flatpak = {
+        id = "com.discordapp.Discord";
+        overrides.Context.filesystems = [
+          "xdg-documents"
+          "xdg-download"
+          "xdg-pictures"
+          "xdg-videos"
+        ];
+      };
+      bundles = [ "communication" ];
+    };
+    distroshelf = {
+      flatpak.id = "com.ranfdev.DistroShelf";
+      bundles = [ "desktop" ];
+    };
+    dropbox = {
+      flatpak.id = "com.dropbox.Client";
+      bundles = [ "communication" ];
     };
     eza = {
       program = {
@@ -115,44 +165,21 @@ let
       };
       bundles = [ "baseline" ];
     };
+    ffmpeg = {
+      package = (pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
+        doCheck = false;
+      });
+      bundles = [ "creative" ];
+    };
     fzf = {
       program = {
         name = "fzf";
       };
       bundles = [ "baseline" ];
     };
-    ripgrep = {
-      program = {
-        name = "ripgrep";
-      };
-      bundles = [ "baseline" ];
-    };
-    starship = {
-      program = {
-        name = "starship";
-      };
-      bundles = [ "baseline" ];
-    };
-    tealdeer = {
-      program = {
-        name = "tealdeer";
-      };
-      bundles = [ "baseline" ];
-    };
-    zoxide = {
-      program = {
-        name = "zoxide";
-      };
-      bundles = [ "baseline" ];
-    };
-
-    ast-grep = {
-      package = pkgs.ast-grep;
-      bundles = [ "baseline" ];
-    };
-    devcontainer = {
-      package = pkgs.devcontainer;
-      bundles = [ "baseline" ];
+    gearlever = {
+      flatpak.id = "it.mijorus.gearlever";
+      bundles = [ "desktop" ];
     };
     gh = {
       package = pkgs.gh;
@@ -178,40 +205,6 @@ let
       package = pkgs.lazyjournal;
       bundles = [ "baseline" ];
     };
-    nixd = {
-      package = pkgs.nixd;
-      bundles = [ "baseline" ];
-    };
-    nixfmt = {
-      package = pkgs.nixfmt-rfc-style;
-      bundles = [ "baseline" ];
-    };
-    pay-respects = {
-      package = pkgs.pay-respects;
-      bundles = [ "baseline" ];
-    };
-    uv = {
-      package = pkgs.uv;
-      bundles = [ "baseline" ];
-    };
-    wl-clipboard = {
-      package = pkgs.wl-clipboard;
-      bundles = [ "linux-utils" ];
-    };
-
-    semgrep = {
-      package = pkgs.semgrep;
-      bundles = [ "security-tools" ];
-    };
-    trivy = {
-      package = pkgs.trivy;
-      bundles = [ "security-tools" ];
-    };
-    trufflehog = {
-      package = pkgs.trufflehog;
-      bundles = [ "security-tools" ];
-    };
-
     nerd-fonts-caskaydia-cove = {
       package = pkgs.nerd-fonts.caskaydia-cove;
       bundles = [ "fonts" ];
@@ -228,43 +221,29 @@ let
       package = pkgs.nerd-fonts.symbols-only;
       bundles = [ "fonts" ];
     };
-
-    ffmpeg-full = {
-      package = ffmpegFull;
-      bundles = [ "creative" ];
+    nixd = {
+      package = pkgs.nixd;
+      bundles = [ "baseline" ];
     };
-
-    bitwarden = {
-      flatpak.id = "com.bitwarden.desktop";
-      bundles = [ "communication" ];
+    nixfmt = {
+      package = pkgs.nixfmt-rfc-style;
+      bundles = [ "baseline" ];
     };
-    discord = {
-      flatpak = {
-        id = "com.discordapp.Discord";
-        overrides.Context.filesystems = [
-          "xdg-documents"
-          "xdg-download"
-          "xdg-pictures"
-          "xdg-videos"
-        ];
+    pay-respects = {
+      package = pkgs.pay-respects;
+      bundles = [ "baseline" ];
+    };
+    ripgrep = {
+      program = {
+        name = "ripgrep";
       };
-      bundles = [ "communication" ];
+      bundles = [ "baseline" ];
     };
-    betterbird = {
-      flatpak = {
-        id = "eu.betterbird.Betterbird";
-        overrides.Context = {
-          filesystems = [ "~/.gnupg:ro" ];
-          sockets = [ "gpg-agent" ];
-        };
-      };
-      bundles = [ "communication" ];
+    semgrep = {
+      package = pkgs.semgrep;
+      bundles = [ "security-tools" ];
     };
-    dropbox = {
-      flatpak.id = "com.dropbox.Client";
-      bundles = [ "communication" ];
-    };
-    slack-flatpak = {
+    slack = {
       flatpak = {
         id = "com.slack.Slack";
         overrides.Context.filesystems = [
@@ -276,47 +255,56 @@ let
       };
       bundles = [ "communication" ];
     };
-    deskflow = {
-      flatpak.id = "org.deskflow.deskflow";
-      bundles = [ "communication" ];
-    };
-
-    distroshelf = {
-      flatpak.id = "com.ranfdev.DistroShelf";
-      bundles = [ "desktop" ];
-    };
-    gearlever = {
-      flatpak.id = "it.mijorus.gearlever";
-      bundles = [ "desktop" ];
-    };
-    vscode-flatpak = {
-      flatpak.id = "com.visualstudio.code";
-      bundles = [ "desktop" ];
-    };
-
-    android-tools = {
-      package = pkgs.android-tools;
-      bundles = [ "mobile-dev" ];
-    };
-
-    awscli2 = {
-      package = pkgs.awscli2;
-      bundles = [ "cloud" ];
-    };
-    stripe-cli = {
-      package = pkgs.stripe-cli;
-      bundles = [ "cloud" ];
-    };
-
     # darwin-only; opt in via my.apps.enabled.
     slack-darwin = {
       package = pkgs.slack;
       bundles = [ ];
     };
-
+    starship = {
+      program = {
+        name = "starship";
+      };
+      bundles = [ "baseline" ];
+    };
+    stripe-cli = {
+      package = pkgs.stripe-cli;
+      bundles = [ "cloud" ];
+    };
+    tealdeer = {
+      program = {
+        name = "tealdeer";
+      };
+      bundles = [ "baseline" ];
+    };
     terraform = {
       bundles = [ "cloud" ];
       shellAliases.tf = "terraform";
+    };
+    trivy = {
+      package = pkgs.trivy;
+      bundles = [ "security-tools" ];
+    };
+    trufflehog = {
+      package = pkgs.trufflehog;
+      bundles = [ "security-tools" ];
+    };
+    uv = {
+      package = pkgs.uv;
+      bundles = [ "baseline" ];
+    };
+    vscode = {
+      flatpak.id = "com.visualstudio.code";
+      bundles = [ "desktop" ];
+    };
+    wl-clipboard = {
+      package = pkgs.wl-clipboard;
+      bundles = [ "linux-utils" ];
+    };
+    zoxide = {
+      program = {
+        name = "zoxide";
+      };
+      bundles = [ "baseline" ];
     };
   };
 
