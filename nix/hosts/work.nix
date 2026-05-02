@@ -19,6 +19,17 @@ let
   ];
 in
 {
+  my = {
+    os = lib.mkDefault "darwin";
+    desktop = lib.mkDefault "none";
+    gpu.backend = lib.mkDefault "metal";
+    identities = lib.mkDefault [
+      "personal"
+      "sprung"
+    ];
+    secrets = lib.mkDefault [ "api-keys" ];
+  };
+
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------

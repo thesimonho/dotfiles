@@ -122,6 +122,7 @@
           inputs.nix-index-database.homeModules.nix-index
           ./hosts/work.nix
           ./hosts/home.nix
+          ./modules/system.nix
           ./modules/common.nix
           ./modules/kde.nix
           ./modules/secrets.nix
@@ -142,6 +143,7 @@
           agenix.homeManagerModules.default
           inputs.nix-index-database.homeModules.nix-index
           ./hosts/work.nix
+          ./modules/system.nix
           ./modules/common.nix
           ./modules/secrets.nix
           ./modules/gpg.nix
