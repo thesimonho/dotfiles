@@ -21,6 +21,7 @@
     ];
     secrets = [ "api-keys" ];
     browser.executable = "google-chrome-stable";
+    mise.trustedPaths = [ "/run/media/Projects" ];
     apps = {
       bundles = [
         "baseline"

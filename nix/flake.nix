@@ -141,6 +141,10 @@
           ./modules/system.nix
           ./modules/apps.nix
           ./modules/common.nix
+          ./modules/git.nix
+          ./modules/mise.nix
+          ./modules/yazi.nix
+          ./modules/nvim.nix
           ./modules/kde.nix
           ./modules/secrets.nix
           ./modules/gpg.nix
@@ -169,6 +173,10 @@
           ./modules/system.nix
           ./modules/apps.nix
           ./modules/common.nix
+          ./modules/git.nix
+          ./modules/mise.nix
+          ./modules/yazi.nix
+          ./modules/nvim.nix
           ./modules/secrets.nix
           ./modules/gpg.nix
           ./modules/ssh.nix
