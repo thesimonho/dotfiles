@@ -26,6 +26,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -40,11 +44,6 @@
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
     llm-agents.url = "github:numtide/llm-agents.nix";
-
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -70,31 +69,42 @@
       #   Hopper     H100                       "9.0"
       #   Blackwell  RTX 50xx                   "12.0"
       # Full list: https://developer.nvidia.com/cuda-gpus
-      cudaCapabilities = [ "8.6" ];
+      #
+      # Module evaluation can't feed into pkgs (pkgs is constructed before
+      # modules evaluate), so capabilities live here keyed by host name.
+      hostCudaCapabilities = {
+        home = [ "8.6" ];
+      };
 
       nixpkgsConfig =
-        system:
+        hostName:
         {
           allowUnfree = true;
         }
-        // lib.optionalAttrs (system == "x86_64-linux") {
-          inherit cudaCapabilities;
+        // lib.optionalAttrs (hostCudaCapabilities ? ${hostName}) {
+          cudaCapabilities = hostCudaCapabilities.${hostName};
         };
 
       pkgsFor =
-        system:
+        {
+          system,
+          hostName,
+        }:
         import nixpkgs {
           inherit system;
           overlays = [ ];
-          config = nixpkgsConfig system;
+          config = nixpkgsConfig hostName;
         };
 
       unstableFor =
-        system:
+        {
+          system,
+          hostName,
+        }:
         import nixpkgs-unstable {
           inherit system;
           overlays = [ ];
-          config = nixpkgsConfig system;
+          config = nixpkgsConfig hostName;
         };
 
       lib = nixpkgs.lib;
@@ -110,10 +120,16 @@
       };
 
       homeConfigurations."home" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor "x86_64-linux";
+        pkgs = pkgsFor {
+          system = "x86_64-linux";
+          hostName = "home";
+        };
         extraSpecialArgs = {
           inherit inputs;
-          pkgsUnstable = unstableFor "x86_64-linux";
+          pkgsUnstable = unstableFor {
+            system = "x86_64-linux";
+            hostName = "home";
+          };
         };
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
@@ -128,15 +144,21 @@
           ./modules/secrets.nix
           ./modules/gpg.nix
           ./modules/ssh.nix
-          ./modules/AI.nix
+          ./modules/ai
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };
       homeConfigurations."work" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor "aarch64-darwin";
+        pkgs = pkgsFor {
+          system = "aarch64-darwin";
+          hostName = "work";
+        };
         extraSpecialArgs = {
           inherit inputs;
-          pkgsUnstable = unstableFor "aarch64-darwin";
+          pkgsUnstable = unstableFor {
+            system = "aarch64-darwin";
+            hostName = "work";
+          };
         };
         modules = [
           inputs.nix-flatpak.homeManagerModules.nix-flatpak
@@ -148,7 +170,7 @@
           ./modules/secrets.nix
           ./modules/gpg.nix
           ./modules/ssh.nix
-          ./modules/AI.nix
+          ./modules/ai
           { home.stateVersion = "25.05"; } # dont touch this
         ];
       };

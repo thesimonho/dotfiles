@@ -24,6 +24,14 @@ in
     ];
     secrets = [ "api-keys" ];
     browser.executable = "google-chrome-stable";
+    ai = {
+      bundles = [
+        "cli-agents"
+        "tooling"
+        "local-models"
+      ];
+      claude.targetDir = ".claude";
+    };
   };
 
   # ---------------------------------------------------------------------------
@@ -94,6 +102,4 @@ in
     };
   };
 
-  ai.claudeTargetDir = lib.mkForce ".claude";
-  ai.gpuBackend = lib.mkForce "cuda";
 }
