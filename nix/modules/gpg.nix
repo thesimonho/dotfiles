@@ -26,12 +26,10 @@ let
 
   # Collect GPG public keys from selected identities that have GPG config
   gpgIdentities = lib.filterAttrs (name: id: id.gpg != null) selectedIdentities;
-  gpgPublicKeys = lib.mapAttrsToList (
-    name: id: {
-      text = id.gpg.publicKey;
-      trust = "ultimate";
-    }
-  ) gpgIdentities;
+  gpgPublicKeys = lib.mapAttrsToList (name: id: {
+    text = id.gpg.publicKey;
+    trust = "ultimate";
+  }) gpgIdentities;
 in
 {
   programs.gpg = {
@@ -61,14 +59,12 @@ in
     importGpgSecretKey = lib.hm.dag.entryAfter [ "linkGeneration" ] (
       let
         importCommands = lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (
-            name: id: ''
-              secretKeyFile="$HOME/.secrets/${id.gpg.secretFile}"
-              if [ -f "$secretKeyFile" ]; then
-                run ${pkgs.gnupg}/bin/gpg --batch --import "$secretKeyFile" 2>&1 || true
-              fi
-            ''
-          ) gpgIdentities
+          lib.mapAttrsToList (name: id: ''
+            secretKeyFile="$HOME/.secrets/${id.gpg.secretFile}"
+            if [ -f "$secretKeyFile" ]; then
+              run ${pkgs.gnupg}/bin/gpg --batch --import "$secretKeyFile" 2>&1 || true
+            fi
+          '') gpgIdentities
         );
       in
       importCommands
