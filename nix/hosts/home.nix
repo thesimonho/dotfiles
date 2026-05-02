@@ -7,7 +7,25 @@
   ...
 }:
 
+let
+  isArch = builtins.pathExists /etc/arch-release;
+in
 {
+  my = {
+    os = "arch";
+    desktop = "kde";
+    gpu = {
+      backend = "cuda";
+      cuda.capabilities = [ "8.6" ];
+    };
+    identities = [
+      "personal"
+      "sprung"
+    ];
+    secrets = [ "api-keys" ];
+    browser.executable = "google-chrome-stable";
+  };
+
   # ---------------------------------------------------------------------------
   # Shared packages and environment
   # ---------------------------------------------------------------------------
@@ -45,7 +63,9 @@
       "com.bitwarden.desktop"
       "org.deskflow.deskflow"
       "com.ranfdev.DistroShelf"
+    ] ++ lib.optionals (!isArch) [
       "it.mijorus.gearlever"
+    ] ++ [
       "com.visualstudio.code"
       "com.bitwarden.desktop"
       "com.discordapp.Discord"
