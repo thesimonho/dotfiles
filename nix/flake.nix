@@ -113,9 +113,8 @@
       # until its host opts in via my.* options.
       sharedModules = [
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
-        inputs.plasma-manager.homeModules.plasma-manager
-        agenix.homeManagerModules.default
         inputs.nix-index-database.homeModules.nix-index
+        agenix.homeManagerModules.default
         ./modules/system.nix
         ./modules/apps.nix
         ./modules/common.nix
