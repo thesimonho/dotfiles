@@ -154,7 +154,6 @@
           };
         };
         modules = sharedModules ++ [
-          ./hosts/work-macbook.nix
           ./hosts/desktop.nix
         ];
       };
