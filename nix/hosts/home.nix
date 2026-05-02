@@ -47,8 +47,8 @@
   };
 
   home = {
-    username = lib.mkForce "simon";
-    homeDirectory = lib.mkForce "/home/simon";
+    username = "simon";
+    homeDirectory = "/home/simon";
     sessionVariables = {
       ANDROID_HOME = "${config.home.homeDirectory}/Android/Sdk";
     };

@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   pkgs,
   pkgsUnstable,
@@ -36,9 +37,9 @@
   };
 
   home = {
-    username = "simon.ho";
-    homeDirectory = "/Users/simon.ho";
-    sessionPath = [ "/usr/local/bin" ];
+    username = lib.mkDefault "simon.ho";
+    homeDirectory = lib.mkDefault "/Users/simon.ho";
+    sessionPath = lib.mkIf (config.my.os == "darwin") [ "/usr/local/bin" ];
   };
 
   programs = {

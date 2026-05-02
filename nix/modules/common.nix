@@ -1,12 +1,11 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 
 let
-  isLinux = pkgs.stdenv.isLinux;
+  isLinux = config.my.os != "darwin";
   dotfiles = config.my.dotfilesPath;
 in
 {

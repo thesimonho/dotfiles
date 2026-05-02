@@ -5,8 +5,7 @@
   ...
 }:
 let
-  isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = config.my.os != "darwin";
 in
 {
   programs.zsh = {

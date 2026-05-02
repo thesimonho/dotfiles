@@ -1,6 +1,6 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
-lib.mkIf pkgs.stdenv.isLinux {
+lib.mkIf (config.my.desktop == "kde") {
   # Re-enable pinentry's KWallet integration
   # (disabled by default to prevent deadlock when KWallet uses GPG encryption — safe with blowfish)
   home.sessionVariables.PINENTRY_KDE_USE_WALLET = "1";
