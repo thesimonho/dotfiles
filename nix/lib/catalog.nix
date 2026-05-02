@@ -52,6 +52,11 @@ in
             default = { };
             description = "home.activation entries merged when this entry is enabled.";
           };
+          shellAliases = mkOption {
+            type = types.attrsOf types.str;
+            default = { };
+            description = "Shell aliases merged into programs.zsh.shellAliases when this entry is enabled.";
+          };
         }
         // extraOptions;
       }

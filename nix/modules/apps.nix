@@ -308,11 +308,15 @@ let
       bundles = [ "cloud" ];
     };
 
-    # darwin-only; opt in via my.apps.enabled (no bundle so Linux hosts
-    # composing work-macbook.nix don't pull pkgs.slack natively).
+    # darwin-only; opt in via my.apps.enabled.
     slack-darwin = {
       package = pkgs.slack;
       bundles = [ ];
+    };
+
+    terraform = {
+      bundles = [ "cloud" ];
+      shellAliases.tf = "terraform";
     };
   };
 
@@ -352,6 +356,8 @@ let
       }
     ) (lib.attrValues flatpakEntries)
   );
+
+  mergedShellAliases = lib.foldl' (acc: e: acc // e.shellAliases) { } (lib.attrValues enabledEntries);
 in
 {
   options.my.apps = {
@@ -375,13 +381,15 @@ in
 
   config = {
     assertions = lib.mapAttrsToList (name: e: {
-      assertion = e.package != null || e.flatpak != null || e.program != null;
-      message = "App catalog entry '${name}' must set at least one of package / flatpak / program.";
+      assertion = e.package != null || e.flatpak != null || e.program != null || e.shellAliases != { };
+      message = "App catalog entry '${name}' must contribute at least one of package / flatpak / program / shellAliases.";
     }) resolvedCatalog;
 
     home.packages = lib.mapAttrsToList (_: e: e.package) packageEntries;
 
-    programs = programsConfig;
+    programs = programsConfig // {
+      zsh.shellAliases = mergedShellAliases;
+    };
 
     services.flatpak = mkIf (isLinux && hasAnyFlatpak) {
       enable = true;

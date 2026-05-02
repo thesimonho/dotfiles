@@ -1,45 +1,35 @@
-{ config, lib, ... }:
-
 {
   my = {
-    os = lib.mkDefault "darwin";
-    desktop = lib.mkDefault "none";
-    gpu.backend = lib.mkDefault "metal";
-    identities = lib.mkDefault [
+    os = "darwin";
+    desktop = "none";
+    gpu.backend = "metal";
+    identities = [
       "personal"
       "sprung"
     ];
-    secrets = lib.mkDefault [ "api-keys" ];
+    secrets = [ "api-keys" ];
     apps = {
-      bundles = lib.mkDefault [
+      bundles = [
         "baseline"
         "security-tools"
         "fonts"
         "cloud"
       ];
-      enabled = lib.mkDefault [ "slack-darwin" ];
+      enabled = [ "slack-darwin" ];
     };
     ai = {
-      bundles = lib.mkDefault [
+      bundles = [
         "cli-agents"
         "tooling"
         "local-models"
       ];
-      claude.targetDir = lib.mkDefault ".claude2";
+      claude.targetDir = ".claude2";
     };
   };
 
   home = {
-    username = lib.mkDefault "simon.ho";
-    homeDirectory = lib.mkDefault "/Users/simon.ho";
-    sessionPath = lib.mkIf (config.my.os == "darwin") [ "/usr/local/bin" ];
-  };
-
-  programs = {
-    zsh = {
-      shellAliases = {
-        tf = "terraform";
-      };
-    };
+    username = "simon.ho";
+    homeDirectory = "/Users/simon.ho";
+    sessionPath = [ "/usr/local/bin" ];
   };
 }
