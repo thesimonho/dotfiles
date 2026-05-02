@@ -13,15 +13,15 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") --host NAME [--repo URL] [--dir PATH] [--branch BRANCH] [--flake-subdir NAME]
 
-  --host    Flake output host (required, e.g., home, work)
+  --host    Flake output host (required, e.g., desktop, work-macbook)
   --repo    Git repo URL (default: $REPO_URL_DEFAULT)
   --dir     Local checkout directory (default: $REPO_DIR_DEFAULT)
   --branch  Git branch to checkout (default: $BRANCH_DEFAULT)
   --flake-subdir  Subdirectory under the repo that contains flake.nix (default: $FLAKE_SUBDIR_DEFAULT)
 
 Examples:
-  $(basename "$0") --host home
-  $(basename "$0") --host work --repo https://github.com/thesimonho/dotfiles
+  $(basename "$0") --host desktop
+  $(basename "$0") --host work-macbook --repo https://github.com/thesimonho/dotfiles
 EOF
 }
 
@@ -66,7 +66,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$HOST" ]]; then
-  echo "Error: --host is required (e.g., --host home or --host work)" >&2
+  echo "Error: --host is required (e.g., --host desktop or --host work-macbook)" >&2
   usage
   exit 1
 fi

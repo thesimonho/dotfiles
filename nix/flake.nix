@@ -73,7 +73,7 @@
       # Module evaluation can't feed into pkgs (pkgs is constructed before
       # modules evaluate), so capabilities live here keyed by host name.
       hostCudaCapabilities = {
-        home = [ "8.6" ];
+        desktop = [ "8.6" ];
       };
 
       nixpkgsConfig =
@@ -141,37 +141,37 @@
         program = "${home-manager.packages.aarch64-darwin.home-manager}/bin/home-manager";
       };
 
-      homeConfigurations."home" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."desktop" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor {
           system = "x86_64-linux";
-          hostName = "home";
+          hostName = "desktop";
         };
         extraSpecialArgs = {
           inherit inputs;
           pkgsUnstable = unstableFor {
             system = "x86_64-linux";
-            hostName = "home";
+            hostName = "desktop";
           };
         };
         modules = sharedModules ++ [
-          ./hosts/work.nix
-          ./hosts/home.nix
+          ./hosts/work-macbook.nix
+          ./hosts/desktop.nix
         ];
       };
-      homeConfigurations."work" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations."work-macbook" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor {
           system = "aarch64-darwin";
-          hostName = "work";
+          hostName = "work-macbook";
         };
         extraSpecialArgs = {
           inherit inputs;
           pkgsUnstable = unstableFor {
             system = "aarch64-darwin";
-            hostName = "work";
+            hostName = "work-macbook";
           };
         };
         modules = sharedModules ++ [
-          ./hosts/work.nix
+          ./hosts/work-macbook.nix
         ];
       };
     };
