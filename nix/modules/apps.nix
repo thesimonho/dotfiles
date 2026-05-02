@@ -180,18 +180,6 @@ let
       package = pkgs.lazyjournal;
       bundles = [ "baseline" ];
     };
-    luarocks = {
-      package = pkgs.lua54Packages.luarocks;
-      bundles = [ "baseline" ];
-    };
-    neovim = {
-      package = pkgs.neovim;
-      bundles = [ "baseline" ];
-    };
-    ninja = {
-      package = pkgs.ninja;
-      bundles = [ "baseline" ];
-    };
     nixd = {
       package = pkgs.nixd;
       bundles = [ "baseline" ];
