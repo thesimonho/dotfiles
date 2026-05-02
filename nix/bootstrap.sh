@@ -242,29 +242,6 @@ ensure_flatpak() {
 }
 
 # -----------------------------
-# KDE utilities (Linux only)
-# -----------------------------
-ensure_kde() {
-  [[ "$OS" == "Linux" ]] || return 0
-
-  # Detect KDE Plasma
-  if [[ "${XDG_CURRENT_DESKTOP:-}" == *kde* ]] ||
-    [[ "${DESKTOP_SESSION:-}" == *plasma* ]] ||
-    [[ "${KDE_FULL_SESSION:-}" == "true" ]]; then
-
-    echo "==> KDE detected; installing KDE utilities"
-    case "$(detect_pkgmgr)" in
-    apt) pkg_install ksshaskpass partitionmanager flatpak-kcm ;;
-    dnf) pkg_install ksshaskpass kde-partitionmanager ;;
-    pacman) pkg_install ksshaskpass partitionmanager flatpak-kcm ;;
-    *)
-      echo "Unsupported package manager; install KDE utilities manually" >&2
-      ;;
-    esac
-  fi
-}
-
-# -----------------------------
 # Nix (multi-user/daemon)
 # -----------------------------
 ensure_nix() {
@@ -354,16 +331,24 @@ maybe_mise_install() {
   fi
 }
 
+run_post_setup() {
+  local script="$FLAKE_DIR/post-setup.sh"
+  if [[ -x "$script" ]]; then
+    echo "==> Running $script"
+    bash "$script"
+  fi
+}
+
 main() {
   pkg_update || true
 
   ensure_git
   ensure_flatpak
-  ensure_kde
   ensure_nix
   sync_repo
 
   apply_host "$HOST"
+  run_post_setup
   ensure_nix_zsh_shell
   maybe_mise_install
 
