@@ -12,10 +12,8 @@
 let
   sshDir = "${config.home.homeDirectory}/.ssh";
   secretsDir = "${config.home.homeDirectory}/.secrets";
-  meta = import ../secrets/meta.nix;
-
-  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
-  selectedSecrets = lib.filterAttrs (name: _: lib.elem name config.my.secrets) meta.secrets;
+  selectedIdentities = config.my._identities;
+  selectedSecrets = config.my._secrets;
 
   # SSH keys from identities → ~/.ssh/
   sshSecrets = lib.mapAttrs' (name: id: {

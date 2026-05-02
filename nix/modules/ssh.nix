@@ -11,8 +11,7 @@
 let
   isLinux = config.my.os != "darwin";
   sshDir = "${config.home.homeDirectory}/.ssh";
-  meta = import ../secrets/meta.nix;
-  selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
+  selectedIdentities = config.my._identities;
 
   # Derive SSH match blocks from identities
   identityMatchBlocks = lib.mapAttrs' (name: id: {

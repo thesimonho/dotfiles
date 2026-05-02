@@ -2,6 +2,7 @@
 
 let
   inherit (lib) mkOption types;
+  meta = import ../secrets/meta.nix;
 in
 {
   /*
@@ -29,24 +30,16 @@ in
       description = "Desktop environment. Darwin hosts always set this to \"none\".";
     };
 
-    gpu = {
-      backend = mkOption {
-        type = types.enum [
-          "none"
-          "cuda"
-          "rocm"
-          "vulkan"
-          "metal"
-        ];
-        default = "none";
-        description = "GPU backend used by AI / compute modules.";
-      };
-      cuda.capabilities = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = [ "8.6" ];
-        description = "CUDA compute capabilities to compile for. Empty unless backend = cuda.";
-      };
+    gpu.backend = mkOption {
+      type = types.enum [
+        "none"
+        "cuda"
+        "rocm"
+        "vulkan"
+        "metal"
+      ];
+      default = "none";
+      description = "GPU backend used by AI / compute modules.";
     };
 
     dotfilesPath = mkOption {
@@ -77,6 +70,21 @@ in
       default = null;
       example = "google-chrome-stable";
       description = "Default browser binary, set as CHROME_EXECUTABLE.";
+    };
+
+    # Internal: identities/secrets resolved against meta.nix. Modules read
+    # these instead of refiltering meta.identities themselves.
+    _identities = mkOption {
+      type = types.attrs;
+      internal = true;
+      readOnly = true;
+      default = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
+    };
+    _secrets = mkOption {
+      type = types.attrs;
+      internal = true;
+      readOnly = true;
+      default = lib.filterAttrs (name: _: lib.elem name config.my.secrets) meta.secrets;
     };
   };
 }

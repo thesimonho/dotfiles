@@ -1,11 +1,4 @@
-{
-  config,
-  inputs,
-  pkgs,
-  pkgsUnstable,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 
 {
   my = {
