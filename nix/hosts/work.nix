@@ -6,18 +6,6 @@
   ...
 }:
 
-let
-  isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
-
-  sharedPackages = [
-    pkgs.awscli2
-  ];
-  linuxPackages = lib.optionals isLinux [ ];
-  darwinPackages = lib.optionals isDarwin [
-    pkgs.slack
-  ];
-in
 {
   my = {
     os = lib.mkDefault "darwin";
@@ -28,6 +16,15 @@ in
       "sprung"
     ];
     secrets = lib.mkDefault [ "api-keys" ];
+    apps = {
+      bundles = lib.mkDefault [
+        "baseline"
+        "security-tools"
+        "fonts"
+        "cloud"
+      ];
+      enabled = lib.mkDefault [ "slack-darwin" ];
+    };
     ai = {
       bundles = lib.mkDefault [
         "cli-agents"
@@ -38,33 +35,12 @@ in
     };
   };
 
-  # ---------------------------------------------------------------------------
-  # Shared packages and environment
-  # ---------------------------------------------------------------------------
   home = {
     username = "simon.ho";
     homeDirectory = "/Users/simon.ho";
     sessionPath = [ "/usr/local/bin" ];
-    packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 
-  services.flatpak = lib.mkIf isLinux {
-    packages = [ "com.slack.Slack" ];
-    overrides = {
-      "com.slack.Slack".Context = {
-        filesystems = [
-          "xdg-documents"
-          "xdg-download"
-          "xdg-pictures"
-          "xdg-videos"
-        ];
-      };
-    };
-  };
-
-  # ---------------------------------------------------------------------------
-  # Program configurations (home manager modules)
-  # ---------------------------------------------------------------------------
   programs = {
     zsh = {
       shellAliases = {
@@ -72,5 +48,4 @@ in
       };
     };
   };
-
 }

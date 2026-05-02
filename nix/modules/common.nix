@@ -8,13 +8,11 @@
 }:
 let
   isLinux = pkgs.stdenv.isLinux;
-  isDarwin = pkgs.stdenv.isDarwin;
-  system = pkgs.stdenv.hostPlatform.system;
-  dotfiles = "${config.home.homeDirectory}/dotfiles";
+  dotfiles = config.my.dotfilesPath;
   meta = import ../secrets/meta.nix;
   selectedIdentities = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
 
-  # Generate git identity config files from meta.nix identities
+  # Generate git identity config files from selected identities
   gitIdentityFiles = lib.mapAttrs' (name: id: {
     name = "git/identity-${name}";
     value = {
@@ -43,57 +41,14 @@ let
       }) id.remotePatterns
     ) selectedIdentities
   );
-
-  sharedPackages = [
-    ((pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
-      doCheck = false;
-    }))
-    pkgs.ast-grep
-    pkgs.devcontainer
-    pkgs.gh
-    pkgs.glow
-    pkgs.just
-    pkgs.lazydocker
-    pkgs.lazygit
-    pkgs.lazyjournal
-    pkgs.lua54Packages.luarocks
-    pkgs.neovim
-    pkgs.ninja
-    pkgs.nixd
-    pkgs.nixfmt-rfc-style
-    pkgs.pay-respects
-    pkgs.semgrep
-    pkgs.trivy
-    pkgs.trufflehog
-    pkgs.uv
-    pkgs.nerd-fonts.caskaydia-cove
-    pkgs.nerd-fonts.fira-code
-    pkgs.nerd-fonts.jetbrains-mono
-    pkgs.nerd-fonts.symbols-only
-    # cmake
-    # docker
-  ];
-  linuxPackages = lib.optionals isLinux [
-    pkgs.wl-clipboard
-  ];
-  darwinPackages = lib.optionals isDarwin [ ];
 in
 {
-  # ---------------------------------------------------------------------------
-  # Shared packages and environment
-  # ---------------------------------------------------------------------------
   imports = [ ./zsh.nix ];
   targets.genericLinux.enable = isLinux;
   fonts.fontconfig.enable = true;
 
   xdg.enable = true;
   xdg.autostart.enable = true;
-
-  xdg.systemDirs.data = lib.mkIf isLinux [
-    "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
-    "/var/lib/flatpak/exports/share"
-  ];
-  # flatpak env is set here; identity files and symlinks are below
 
   home = {
     sessionVariables = {
@@ -102,7 +57,9 @@ in
       LANG = "en_US.UTF-8";
       COLORTERM = "truecolor";
       NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
-      CHROME_EXECUTABLE = "google-chrome-stable";
+    }
+    // lib.optionalAttrs (config.my.browser.executable != null) {
+      CHROME_EXECUTABLE = config.my.browser.executable;
     };
     sessionPath = [
       "${config.home.homeDirectory}/.npm-global/bin"
@@ -110,51 +67,12 @@ in
       "${config.home.homeDirectory}/.local/bin"
     ];
     shell.enableShellIntegration = true;
-    packages = sharedPackages ++ linuxPackages ++ darwinPackages;
   };
 
   # ---------------------------------------------------------------------------
   # Program configurations (home manager modules)
   # ---------------------------------------------------------------------------
   programs = {
-    bat = {
-      enable = true;
-    };
-    carapace = {
-      enable = true;
-    };
-    eza = {
-      enable = true;
-      colors = "always";
-      icons = "always";
-      extraOptions = [
-        "--hyperlink"
-        "--group-directories-first"
-        "--header"
-      ];
-      theme = {
-        filekinds = {
-          symlink = {
-            is_italic = true;
-          };
-        };
-        symlink_path = {
-          is_italic = true;
-        };
-        broken_symlink_path = {
-          is_italic = true;
-        };
-        broken_path_overlay = {
-          is_italic = true;
-        };
-      };
-    };
-    fd = {
-      enable = true;
-    };
-    fzf = {
-      enable = true;
-    };
     git = {
       enable = true;
       lfs = {
@@ -231,26 +149,17 @@ in
         };
       };
     };
-    ripgrep = {
-      enable = true;
-    };
-    starship = {
-      enable = true;
-    };
-    tealdeer = {
-      enable = true;
-    };
     yazi = {
       enable = true;
       initLua = ''
         require("git"):setup()
         th.git = th.git or {}
-        th.git.modified_sign = " "
-        th.git.deleted_sign = " "
-        th.git.added_sign = " "
+        th.git.modified_sign = " "
+        th.git.deleted_sign = " "
+        th.git.added_sign = " "
         th.git.untracked_sign = "󰞋 "
         th.git.ignored_sign = "󰿠 "
-        th.git.updated_sign = " "
+        th.git.updated_sign = " "
 
         require("full-border"):setup {
           type = ui.Border.ROUNDED,
@@ -372,16 +281,10 @@ in
         toggle-pane = pkgs.yaziPlugins.toggle-pane;
       };
     };
-    zoxide = {
-      enable = true;
-    };
   };
 
-  # config files: git identity configs, flatpak env, and symlinks
+  # config files: git identity configs and dotfile symlinks
   xdg.configFile = gitIdentityFiles // {
-    "environment.d/20-flatpak.conf" = lib.mkIf isLinux {
-      text = "XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share";
-    };
     "nvim" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/nvim";
       force = true;
