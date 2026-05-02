@@ -6,9 +6,11 @@ _nix := "nix --extra-experimental-features 'nix-command flakes'"
 update *inputs:
     {{ _nix }} flake update {{ inputs }}
 
+# Show flake outputs (homeConfigurations, apps, etc.)
 show:
     {{ _nix }} flake show {{ FLAKE_DIR }}
 
+# Apply a host configuration: `just switch desktop`
 switch host:
     @if [ ! -f "$HOME/.secrets/age_identity" ]; then \
       echo "Error: Missing ~/.secrets/age_identity — restore from Bitwarden"; \
@@ -20,11 +22,23 @@ switch host:
 
     just clean
 
+# Build a host configuration without activating it: `just build desktop`
+build host:
+    {{ _nix }} build --no-link "{{ FLAKE_DIR }}#homeConfigurations.{{ host }}.activationPackage"
+
+# Closure diff between current activation and a fresh build: `just diff desktop`
+diff host:
+    {{ _nix }} store diff-closures \
+      "$HOME/.local/state/home-manager/gcroots/current-home" \
+      "$({{ _nix }} build --no-link --print-out-paths "{{ FLAKE_DIR }}#homeConfigurations.{{ host }}.activationPackage")"
+
+# Wipe nix profile and GC entries older than 14 days
 clean:
     @echo "==> Cleaning up old generations"
     {{ _nix }} profile wipe-history --older-than 14d || true
     nix-collect-garbage --delete-older-than 14d || true
 
+# Deduplicate the nix store (slow, run occasionally)
 optimise:
     @echo "==> Optimising and deduplicating nix store"
     {{ _nix }} store optimise
