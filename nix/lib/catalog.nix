@@ -68,9 +68,9 @@ in
       enabled,
     }:
     let
-      taggedNames = lib.filter (
-        name: lib.any (b: lib.elem b catalog.${name}.bundles) bundles
-      ) (lib.attrNames catalog);
+      taggedNames = lib.filter (name: lib.any (b: lib.elem b catalog.${name}.bundles) bundles) (
+        lib.attrNames catalog
+      );
     in
     lib.unique (taggedNames ++ enabled);
 }

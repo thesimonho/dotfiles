@@ -343,7 +343,10 @@ let
   programsConfig = lib.listToAttrs (
     lib.mapAttrsToList (_: e: {
       name = e.program.name;
-      value = { enable = true; } // e.program.settings;
+      value = {
+        enable = true;
+      }
+      // e.program.settings;
     }) programEntries
   );
 

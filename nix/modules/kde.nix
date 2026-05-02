@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 lib.mkIf (config.my.desktop == "kde") {
   # Re-enable pinentry's KWallet integration
