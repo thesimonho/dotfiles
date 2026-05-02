@@ -28,6 +28,14 @@ in
       "sprung"
     ];
     secrets = lib.mkDefault [ "api-keys" ];
+    ai = {
+      bundles = lib.mkDefault [
+        "cli-agents"
+        "tooling"
+        "local-models"
+      ];
+      claude.targetDir = lib.mkDefault ".claude2";
+    };
   };
 
   # ---------------------------------------------------------------------------
@@ -65,6 +73,4 @@ in
     };
   };
 
-  ai.claudeTargetDir = lib.mkDefault ".claude2";
-  ai.gpuBackend = lib.mkDefault "metal";
 }
