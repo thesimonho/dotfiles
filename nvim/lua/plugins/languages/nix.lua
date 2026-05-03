@@ -26,14 +26,23 @@ return {
                 command = { "nixfmt" },
               },
               nixpkgs = {
-                expr = "import (builtins.getFlake(toString ./.)).inputs.nixpkgs { }",
+                expr = string.format(
+                  'import (builtins.getFlake "git+file://%s/dotfiles?dir=nix").inputs.nixpkgs { }',
+                  os.getenv("HOME")
+                ),
               },
               options = {
-                home = {
-                  expr = '(builtins.getFlake(toString ./.)).homeConfigurations."home".options',
+                desktop = {
+                  expr = string.format(
+                    '(builtins.getFlake "git+file://%s/dotfiles?dir=nix").homeConfigurations.desktop.options',
+                    os.getenv("HOME")
+                  ),
                 },
-                work = {
-                  expr = '(builtins.getFlake(toString ./.)).homeConfigurations."work".options',
+                ["work-macbook"] = {
+                  expr = string.format(
+                    '(builtins.getFlake "git+file://%s/dotfiles?dir=nix").homeConfigurations.work-macbook.options',
+                    os.getenv("HOME")
+                  ),
                 },
               },
             },
