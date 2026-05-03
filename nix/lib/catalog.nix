@@ -42,6 +42,11 @@ in
             default = { };
             description = "home.file entries merged when this entry is enabled.";
           };
+          xdgConfigFiles = mkOption {
+            type = types.attrs;
+            default = { };
+            description = "xdg.configFile entries merged when this entry is enabled.";
+          };
           services = mkOption {
             type = types.attrs;
             default = { };
@@ -61,6 +66,14 @@ in
         // extraOptions;
       }
     );
+
+  /*
+    Merge a per-entry attrset field across enabled catalog entries via
+    right-biased attribute union. Use for fields whose values are flat
+    attrsets (files, sessionVariables, shellAliases, etc.).
+  */
+  mergeField =
+    { entries, field }: lib.foldl' (acc: e: acc // e.${field}) { } (lib.attrValues entries);
 
   /*
     Resolve the set of catalog entry names a host wants:

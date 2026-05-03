@@ -14,6 +14,11 @@ in
     pkgs.lua54Packages.luarocks
   ];
 
+  home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
   # Mason installs LSP/formatters/etc. under this dir; ensure they're on PATH.
   home.sessionPath = [
     "${config.home.homeDirectory}/.local/share/nvim/mason/bin"

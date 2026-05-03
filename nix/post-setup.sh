@@ -17,7 +17,6 @@ install_arch() {
     kio-gdrive
     extra/kde-graphics-meta
     extra/kde-system-meta
-    docker
     shelly
   )
   if is_kde; then
@@ -30,7 +29,6 @@ install_fedora() {
   local pkgs=(
     dolphin-plugins
     kio-gdrive
-    docker
   )
   if is_kde; then
     pkgs+=(ksshaskpass kde-partitionmanager)

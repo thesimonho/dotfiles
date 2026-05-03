@@ -11,26 +11,30 @@
     ];
     secrets = [ "api-keys" ];
     browser.executable = "google-chrome-stable";
-    mise.trustedPaths = [ "/run/media/Projects" ];
+    mise.trustedPaths = [ "~/Projects" ];
+
     apps = {
       bundles = [
-        "baseline"
-        "security-tools"
+        "cli"
+        "security"
         "fonts"
         "communication"
-        "desktop"
-        "mobile-dev"
-        "creative"
+        "dev"
         "cloud"
-        "linux-utils"
       ];
-      enabled = [ ];
+      enabled = [
+        "android-tools"
+        "bitwarden"
+        "ffmpeg"
+        "glow"
+        "wl-clipboard"
+      ];
     };
     ai = {
       bundles = [
-        "cli-agents"
-        "tooling"
-        "local-models"
+        "agents"
+        "cli"
+        "skills"
       ];
       claude.targetDir = ".claude";
     };

@@ -116,8 +116,9 @@
         inputs.nix-index-database.homeModules.nix-index
         agenix.homeManagerModules.default
         ./modules/system.nix
-        ./modules/apps.nix
+        ./modules/apps
         ./modules/common.nix
+        ./modules/zsh.nix
         ./modules/git.nix
         ./modules/mise.nix
         ./modules/yazi.nix
@@ -129,6 +130,25 @@
         ./modules/ai
         { home.stateVersion = "25.05"; } # dont touch this
       ];
+      mkHost =
+        { name, system }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgsFor {
+            inherit system;
+            hostName = name;
+          };
+          extraSpecialArgs = {
+            inherit inputs;
+            pkgsUnstable = unstableFor {
+              inherit system;
+              hostName = name;
+            };
+          };
+          modules = sharedModules ++ [
+            ./hosts/${name}.nix
+            { my.hostName = name; }
+          ];
+        };
     in
     {
       apps.x86_64-linux.hm = {
@@ -140,37 +160,14 @@
         program = "${home-manager.packages.aarch64-darwin.home-manager}/bin/home-manager";
       };
 
-      homeConfigurations."desktop" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor {
-          system = "x86_64-linux";
-          hostName = "desktop";
-        };
-        extraSpecialArgs = {
-          inherit inputs;
-          pkgsUnstable = unstableFor {
-            system = "x86_64-linux";
-            hostName = "desktop";
-          };
-        };
-        modules = sharedModules ++ [
-          ./hosts/desktop.nix
-        ];
+      # List of available hosts
+      homeConfigurations.desktop = mkHost {
+        name = "desktop";
+        system = "x86_64-linux";
       };
-      homeConfigurations."work-macbook" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor {
-          system = "aarch64-darwin";
-          hostName = "work-macbook";
-        };
-        extraSpecialArgs = {
-          inherit inputs;
-          pkgsUnstable = unstableFor {
-            system = "aarch64-darwin";
-            hostName = "work-macbook";
-          };
-        };
-        modules = sharedModules ++ [
-          ./hosts/work-macbook.nix
-        ];
+      homeConfigurations.work-macbook = mkHost {
+        name = "work-macbook";
+        system = "aarch64-darwin";
       };
     };
 }

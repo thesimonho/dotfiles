@@ -8,20 +8,28 @@
       "sprung"
     ];
     secrets = [ "api-keys" ];
+    mise.trustedPaths = [ "~/Projects" ];
+
     apps = {
       bundles = [
-        "baseline"
-        "security-tools"
+        "cli"
+        "security"
         "fonts"
+        "communication"
+        "dev"
         "cloud"
       ];
-      enabled = [ "slack-darwin" ];
+      enabled = [
+        "slack-darwin"
+        "ffmpeg"
+        "glow"
+      ];
     };
     ai = {
       bundles = [
-        "cli-agents"
-        "tooling"
-        "local-models"
+        "agents"
+        "cli"
+        "skills"
       ];
       claude.targetDir = ".claude2";
     };
