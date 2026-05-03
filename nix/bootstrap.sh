@@ -106,7 +106,7 @@ pkg_update() {
   [[ "$OS" == "Linux" ]] || return 0
   case "$(detect_pkgmgr)" in
   apt) sudo apt-get update -y ;;
-  dnf) sudo dnf install -y xz @development-tools ;;
+  dnf) sudo dnf check-update -y || true ;;
   pacman) sudo pacman -Sy ;;
   none) echo "No supported Linux package manager found." >&2 ;;
   esac
@@ -138,6 +138,29 @@ restart_nix_daemon() {
     if command -v systemctl >/dev/null 2>&1; then
       sudo systemctl restart nix-daemon.service 2>/dev/null || true
       sudo systemctl restart nix-daemon 2>/dev/null || true
+    fi
+    ;;
+  esac
+}
+
+# Prereqs needed before Nix can be installed. Can't go through the
+# nix-managed catalog because nix isn't running yet.
+#   - Fedora: xz (installer extracts .xz tarball), @development-tools
+#     (empirically needed on minimal Fedora/WSL images)
+#   - macOS: Xcode CLT (provides system git used by installer + ours)
+ensure_nix_prereqs() {
+  case "$OS" in
+  Linux)
+    case "$(detect_pkgmgr)" in
+    dnf)
+      sudo dnf install -y xz @development-tools
+      ;;
+    esac
+    ;;
+  Darwin)
+    if ! xcode-select -p >/dev/null 2>&1; then
+      echo "==> Installing Xcode Command Line Tools..."
+      xcode-select --install || true
     fi
     ;;
   esac
@@ -206,10 +229,7 @@ ensure_git() {
     pkg_install git || return 1
     ;;
   Darwin)
-    if ! xcode-select -p >/dev/null 2>&1; then
-      echo "==> Installing Xcode Command Line Tools (for git)..."
-      xcode-select --install || true
-    fi
+    # Xcode CLT (which provides git) is installed by ensure_nix_prereqs.
     ;;
   *)
     echo "Unsupported OS: $OS" >&2
@@ -341,6 +361,7 @@ run_post_setup() {
 
 main() {
   pkg_update || true
+  ensure_nix_prereqs
 
   ensure_git
   ensure_flatpak
@@ -349,6 +370,7 @@ main() {
 
   apply_host "$HOST"
   run_post_setup
+
   ensure_nix_zsh_shell
   maybe_mise_install
 
