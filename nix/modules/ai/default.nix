@@ -11,7 +11,10 @@ let
   inherit (lib) mkOption types;
   system = pkgs.stdenv.hostPlatform.system;
 
-  catalog = import ./catalog.nix { inherit inputs pkgsUnstable system; };
+  catalogData = import ./catalog.nix { inherit inputs pkgsUnstable system; };
+  inherit (catalogData) bundleNames;
+  catalog = catalogData.entries;
+
   catalogLib = import ../../lib/catalog.nix { inherit lib; };
 
   enabledNames = catalogLib.resolveEnabled {
@@ -20,12 +23,6 @@ let
     enabled = config.my.ai.enabled;
   };
   enabledEntries = lib.filterAttrs (n: _: lib.elem n enabledNames) catalog;
-
-  bundleNames = [
-    "cli-agents"
-    "local-models"
-    "tooling"
-  ];
 in
 {
   imports = [
@@ -38,10 +35,10 @@ in
     bundles = mkOption {
       type = types.listOf (types.enum bundleNames);
       default = [ ];
-      description = "AI bundles to enable on this host (cli-agents / local-models / tooling).";
+      description = "AI bundles to enable on this host (agents / cli / etc.)";
     };
     enabled = mkOption {
-      type = types.listOf types.str;
+      type = types.listOf (types.enum (lib.attrNames catalog));
       default = [ ];
       description = "Individually enabled AI catalog entries (in addition to bundles).";
     };

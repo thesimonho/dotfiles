@@ -12,6 +12,11 @@ in
     neutral default ("none" / empty) so a host that sets nothing gets nothing.
   */
   options.my = {
+    hostName = mkOption {
+      type = types.str;
+      description = "Flake homeConfigurations key for this host (e.g. \"desktop\").";
+    };
+
     os = mkOption {
       type = types.enum [
         "arch"

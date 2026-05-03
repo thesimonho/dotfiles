@@ -1,7 +1,6 @@
 # nix config
 
-Cross-platform Home Manager flake. Two hosts today; adding a third means
-one new file in `hosts/` and a few options.
+Cross-platform Home Manager flake.
 
 ## Layout
 
@@ -12,25 +11,30 @@ nix/
   post-setup.sh            # OS-native packages HM can't manage (KDE userland, docker, …)
   justfile                 # `just switch`, `just build`, `just diff`, `just clean`
   lib/
-    catalog.nix            # mkCatalogType / resolveEnabled helpers
+    catalog.nix            # mkCatalogType / resolveEnabled / mergeField
   hosts/
     desktop.nix            # arch + KDE + CUDA workstation
     work-macbook.nix       # aarch64-darwin + metal
   modules/
     system.nix             # my.* identity options surface
-    apps.nix               # unified app catalog (flatpak / package / program)
-    common.nix             # universal HM infrastructure (~50 lines)
-    git.nix mise.nix yazi.nix nvim.nix kde.nix gpg.nix ssh.nix zsh.nix
+    apps/
+      default.nix          # dispatcher + flatpak/program-specific wiring
+      catalog.nix          # bundleNames + entries (data only)
+    ai/
+      default.nix          # AI dispatcher
+      catalog.nix          # bundleNames + entries
+      {claude,llama,shared}.nix
+    <tool>.nix             # config for larger tools (git, mise, ssh, …)
+    common.nix             # universal HM infrastructure
     secrets.nix            # agenix wiring, filtered by my.identities / my.secrets
-    ai/                    # AI domain: catalog + claude link tree + llama.cpp
   secrets/                 # age-encrypted, identity registry in meta.nix
 ```
 
 ## How to add a tool
 
 1. **Trivial** (just a flatpak id, just a package, just `programs.X.enable`):
-   add an entry to `modules/apps.nix` catalog. Tag it with the right
-   bundle (`baseline`, `security-tools`, `communication`, …).
+   add an entry to `modules/apps/catalog.nix`. Tag it with the right
+   bundle (`cli`, `dev`, `security`, `fonts`, `communication`, `cloud`).
 2. **Substantial config** (extensions, services, identity wiring): write
    a dedicated module `modules/<tool>.nix`, add it to `sharedModules`.
 3. **Joins a domain** (AI, future "k8s" or similar): add to that
@@ -59,6 +63,8 @@ SSH key, GPG config, git email, and remote URL patterns. A host opts in
 to identities via `my.identities = [ ... ]`. Modules `secrets`, `gpg`,
 `ssh`, `git` filter to that list — a host that lists no identities
 decrypts none.
+
+See `secrets/README.md` for more details.
 
 ## Validation
 
