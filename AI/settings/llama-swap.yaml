@@ -21,13 +21,6 @@ models:
       --presence-penalty 1.5
       --chat-template-kwargs '{"preserve_thinking": true}'
       --jinja
-  # 35B MoE, 3B active per token. 256 experts, 9 active.
-  # UD-Q4_K_XL ≈ 22 GB on disk, but ~90% of weights are expert tensors.
-  # Tuned config (12 GB 3080 Ti, April 2026 sweep):
-  #   - 256k native ctx with q4 KV cache → 34 tok/s gen, ~500 MB headroom
-  #   - All 32 expert layers on CPU (--n-cpu-moe 32); pulling them onto
-  #     GPU only buys ~3-5 tok/s and forces ctx down below 96k
-  #   - flash-attn + KV quantization are the real wins, not MoE shuffling
   "qwen3.6-35b":
     cmd: |
       llama-server
@@ -36,7 +29,7 @@ models:
       --port ${PORT}
       --n-gpu-layers 999
       --n-cpu-moe 30
-      --ctx-size 65536
+      --ctx-size 131072
       --cache-type-k q8_0
       --cache-type-v q8_0
       --flash-attn auto
@@ -44,27 +37,8 @@ models:
       --top-p 0.95
       --top-k 20
       --min-p 0.0
-      --repeat-penalty 1.0
-      --presence-penalty 1.5
-      --chat-template-kwargs '{"preserve_thinking": true}'
-      --jinja
-  # 27B dense (not MoE), 64 layers. Fallback if 35B MoE is unstable.
-  # UD-IQ3_M ≈ 10.8 GB — fits fully in 12 GB VRAM with KV-cache headroom.
-  # Step up to UD-Q3_K_XL (14.5 GB) or UD-Q4_K_XL (17.6 GB) by lowering
-  # --n-gpu-layers (e.g. 48 / 40) to spill some layers to CPU; quality
-  # gain is modest, throughput drop is significant for dense models.
-  "qwen3.6-27b":
-    cmd: |
-      llama-server
-      -hf unsloth/Qwen3.6-27B-GGUF:UD-IQ3_XXS
-      --mmproj ${mmproj-dir}/Qwen3.6-27B-GGUF/mmproj-F16.gguf
-      --port ${PORT}
-      --n-gpu-layers 999
-      --ctx-size 32768
-      --temperature 0.6
-      --top-p 0.95
-      --top-k 20
-      --min-p 0.0
+      --reasoning-budget 16384
+      --reasoning-budget-message
       --repeat-penalty 1.0
       --presence-penalty 1.5
       --chat-template-kwargs '{"preserve_thinking": true}'
