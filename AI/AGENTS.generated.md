@@ -35,7 +35,6 @@ Before marking work complete:
 - [ ] Use early returns
 - [ ] No deep nesting (>4 levels)
 - [ ] Proper error handling
-- [ ] No console.log statements
 - [ ] No hardcoded values
 - [ ] No mutation (immutable patterns used)
 
@@ -236,6 +235,8 @@ If you encounter a failing test outside your current scope, inform the orchestra
 ## Planning
 
 Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
+
+If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 
 Do NOT reference plan files in code comments, rules files, or docs/ reference files.
 
