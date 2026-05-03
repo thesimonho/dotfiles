@@ -31,6 +31,8 @@ Thumbs.db
 auth.json
 id_rsa*
 id_ed25519*
+age_identity
+**/age_identity
 
 # Packages
 node_modules/
