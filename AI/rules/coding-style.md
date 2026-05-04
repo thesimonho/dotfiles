@@ -22,6 +22,7 @@ MANY SMALL FILES > FEW LARGE FILES:
 ## Comments
 
 - Write docstrings. Conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
+- Write comments for complex code that is difficult to understand, not for obvious code
 - Comments explain why, not what - provide enough context for someone to write tests against intended behaviour
 
 ## Code Quality Checklist
