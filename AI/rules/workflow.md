@@ -1,5 +1,14 @@
 # Workflow
 
+## Core Principles
+
+These are the core principles you must follow for your work:
+
+1. Don't assume. Don't hide confusion. Surface tradeoffs.
+2. Minimum code that solves the problem. Nothing speculative.
+3. Touch only what you must. Clean up only your own mess.
+4. Define success criteria. Loop until verified.
+
 Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex).
 
 ## Planning
@@ -30,22 +39,3 @@ Delete the plan file after the work is complete.
 - Run unit tests to help keep you on track
 - Use logging freely to identify root cause, but make sure to remove logging before committing
 - When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
-
-## Code Intelligence
-
-For an LSP-centric workflow, you should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale errors.
-
-Prefer LSP over Grep/Glob/Read for code navigation:
-
-- `goToDefinition` / `goToImplementation` to jump to source
-- `findReferences` to see all usages across the codebase
-- `workspaceSymbol` to find where something is defined
-- `documentSymbol` to list all symbols in a file
-- `hover` for type info without reading the file
-- `incomingCalls` / `outgoingCalls` for call hierarchy
-
-Before renaming or changing a function signature, use `findReferences` to find all call sites first.
-
-Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
-
-After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately, even if they're not in your domain.

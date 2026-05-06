@@ -132,6 +132,7 @@ Keep it concise and immediately useful.
 Create an appropriate .gitignore for the language/framework
 
 - Choose the correct template from <https://github.com/github/gitignore>
+- Add common files/directories for agent CLIs like Claude Code, OpenAI Codex, and pi.
 
 Alternatively:
 
