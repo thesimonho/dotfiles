@@ -22,6 +22,7 @@ MANY SMALL FILES > FEW LARGE FILES:
 ## Comments
 
 - Write docstrings. Conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
+- Write comments for complex code that is difficult to understand, not for obvious code
 - Comments explain why, not what - provide enough context for someone to write tests against intended behaviour
 
 ## Code Quality Checklist
@@ -37,6 +38,18 @@ Before marking work complete:
 - [ ] Proper error handling
 - [ ] No hardcoded values
 - [ ] No mutation (immutable patterns used)
+
+# Documentation
+
+- Create README.md files for subdirectories/submodules when nuance and detail is needed for that section.
+- When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
+- Keep repo/subdirectory README.md and project AGENTS.md/CLAUDE.md files up to date when making significant changes.
+- You MUST keep doc websites, public APIs, and other documentation up to date.
+- You MUST reference the docs/codemaps/README.md when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
+
+## Rules vs docs/
+
+`.claude/rules/*.md` are path-gated imperative directives — kept under ~30 lines each, no prose. They tell agents what to do / not do. Background, references, decision, and explanations live in `docs/`. When trimming a rule, move the "why" to the relevant `docs/` file (or create a new one).
 
 # Git Workflow
 
@@ -218,19 +231,86 @@ E2E tests verify a user can complete a real workflow start-to-finish, interactin
 
 If you encounter a failing test outside your current scope, inform the orchestrator to create a new worktree. Do not skip it.
 
+# Tools
+
+Use the right tool for the job - do not just resort to manual search and edits. Below are some examples of efficient tools for different tasks.
+
+## CLI
+
+[rtk](https://github.com/rtk-ai/rtk) is available for many Bash commands to help save tokens. It works by intercepting commands and compressing their output. In order to take advantage of this, you _must_ use the Bash tool to call these commands instead of builtin tools like Read, Grep, and Glob.
+
+Shortlist of commands that can be intercepted:
+
+`ls` List directory contents with token-optimized output (proxy to native ls)
+`tree` Directory tree with token-optimized output (proxy to native tree)
+`read` Read file with intelligent filtering
+`git` Git commands with compact output
+`gh` GitHub CLI (gh) commands with token-optimized output
+`find` Find files with compact tree output (accepts native find flags like -name, -type)
+`diff` Ultra-condensed diff (only changed lines)
+`log` Filter and deduplicate log output
+`grep` Compact grep - strips whitespace, truncates, groups by file
+`wget` Download with compact output (strips progress bars)
+`wc` Word/line/byte count with compact output (strips paths and padding)
+`npm` npm run with filtered output (strip boilerplate)
+`npx` npx with intelligent routing (tsc, eslint, prisma -> specialized filters)
+`curl` Curl with auto-JSON detection and schema output
+
+You can see the full list using `rtk --help`.
+
+## Code Intelligence
+
+For an LSP-centric workflow, you should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale errors.
+
+Prefer LSP over Grep/Glob/Read for code navigation:
+
+- `goToDefinition` / `goToImplementation` to jump to source
+- `findReferences` to see all usages across the codebase
+- `workspaceSymbol` to find where something is defined
+- `documentSymbol` to list all symbols in a file
+- `hover` for type info without reading the file
+- `incomingCalls` / `outgoingCalls` for call hierarchy
+
+Before renaming or changing a function signature, use `findReferences` to find all call sites first.
+
+Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
+
+After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately.
+
+## Structural Search
+
+Prefer structural matchers over regex when the pattern has syntactic shape (a call, a signature, an import, a JSX prop). They eliminate false positives from comments/strings and survive formatting changes.
+
+- `ast-grep` (`sg`) — pattern-based search/rewrite by AST. Use for: finding all call sites of a function with a specific argument shape, codemods, refactors that regex would mangle. Example: `sg -p 'console.log($$$)' -l ts`
+- `semgrep` — rules-based static analysis with taint tracking. Use for: security audits (injection, SSRF, secrets), enforcing project-specific anti-patterns, bulk lint rules across languages. Heavier than ast-grep but supports dataflow.
+- `tree-sitter` — the underlying parser. Use directly via `tree-sitter parse` when you need a raw syntax tree to script against, or when ast-grep's pattern DSL can't express what you need.
+
+Rule of thumb: regex for text, ast-grep for syntax, semgrep for semantics.
+
+## Data Wrangling
+
+For structured output (JSON/YAML/CSV/logs), pipe through a parser instead of grepping raw text.
+
+- `jq` — JSON filter/transform. Default for any JSON.
+- `yq` — same DSL as jq, for YAML/TOML/XML.
+- `gron` — flatten JSON to grep-able paths (`gron file.json | grep foo`). Great when you don't yet know the shape.
+
+## Codemaps
+
+Projects will usually have a `docs/codemaps/` directory. It acts as an index of the codebase to help you find the specific files that you're looking for based on their domain
+
 # Workflow
 
-## Documentation
+## Core Principles
 
-- Create README.md files for subdirectories/submodules when nuance and detail is needed for that section.
-- When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
-- Keep repo/subdirectory README.md and project AGENTS.md/CLAUDE.md files up to date when making significant changes.
-- You MUST keep doc websites, public APIs, and other documentation up to date.
-- You MUST reference the docs/codemaps/README.md when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
+These are the core principles you must follow for your work:
 
-## Rules vs docs/
+1. Don't assume. Don't hide confusion. Surface tradeoffs.
+2. Minimum code that solves the problem. Nothing speculative.
+3. Touch only what you must. Clean up only your own mess.
+4. Define success criteria. Loop until verified.
 
-`.claude/rules/*.md` are path-gated imperative directives — kept under ~30 lines each, no prose. They tell agents what to do / not do. Background, references, decision, and explanations live in `docs/`. When trimming a rule, move the "why" to the relevant `docs/` file (or create a new one).
+Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex).
 
 ## Planning
 
@@ -239,6 +319,8 @@ Always create a plan first. Call frank - he's good at planning. Have the plan an
 If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 
 Do NOT reference plan files in code comments, rules files, or docs/ reference files.
+
+Delete the plan file after the work is complete.
 
 ## When Uncertain
 
@@ -258,23 +340,4 @@ Do NOT reference plan files in code comments, rules files, or docs/ reference fi
 - Run unit tests to help keep you on track
 - Use logging freely to identify root cause, but make sure to remove logging before committing
 - When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
-
-## Code Intelligence
-
-For an LSP-centric workflow, you should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale errors.
-
-Prefer LSP over Grep/Glob/Read for code navigation:
-
-- `goToDefinition` / `goToImplementation` to jump to source
-- `findReferences` to see all usages across the codebase
-- `workspaceSymbol` to find where something is defined
-- `documentSymbol` to list all symbols in a file
-- `hover` for type info without reading the file
-- `incomingCalls` / `outgoingCalls` for call hierarchy
-
-Before renaming or changing a function signature, use `findReferences` to find all call sites first.
-
-Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
-
-After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately, even if they're not in your domain.
 

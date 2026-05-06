@@ -132,6 +132,12 @@
       package = pkgs.glow;
       bundles = [ ];
     };
+    gron = {
+      package = pkgs.gron;
+      bundles = [
+        "cli"
+      ];
+    };
     just = {
       package = pkgs.just;
       bundles = [
@@ -266,6 +272,12 @@
     wl-clipboard = {
       package = pkgs.wl-clipboard;
       bundles = [ ];
+    };
+    yq = {
+      package = pkgs.yq;
+      bundles = [
+        "cli"
+      ];
     };
     zoxide = {
       program = {
