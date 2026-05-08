@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgsPinned,
   lib,
   ...
 }:
@@ -16,7 +17,7 @@ let
     force = true;
   };
 
-  catalogData = import ./catalog.nix { inherit pkgs symlinkConfig; };
+  catalogData = import ./catalog.nix { inherit pkgs pkgsPinned symlinkConfig; };
   inherit (catalogData) bundleNames;
 
   flatpakOverrideType = types.submodule {

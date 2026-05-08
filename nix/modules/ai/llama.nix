@@ -1,6 +1,7 @@
 {
   config,
   pkgsUnstable,
+  pkgsPinned,
   lib,
   ...
 }:
@@ -25,7 +26,7 @@ let
   hostCudaDriver = "/usr/lib/libcuda.so.1";
 
   llamaCppPackage =
-    (pkgsUnstable.llama-cpp.override {
+    (pkgsPinned.llama-cpp.override {
       blasSupport = true;
       cudaSupport = gpuBackend == "cuda";
       rocmSupport = gpuBackend == "rocm";
@@ -33,7 +34,7 @@ let
       metalSupport = gpuBackend == "metal";
     }).overrideAttrs
       (oldAttrs: {
-        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgsUnstable.makeWrapper ];
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgsPinned.makeWrapper ];
         cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [ "-DGGML_NATIVE=ON" ];
         preConfigure = ''
           export NIX_ENFORCE_NO_NATIVE=0
@@ -53,7 +54,7 @@ in
 lib.mkIf enabled {
   home.packages = [
     llamaCppPackage
-    pkgsUnstable.llama-swap
+    pkgsPinned.llama-swap
   ];
 
   systemd.user.services.llama-swap = {
@@ -65,7 +66,7 @@ lib.mkIf enabled {
     Service = {
       Type = "simple";
       Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
-      ExecStart = "${pkgsUnstable.llama-swap}/bin/llama-swap --config ${dotfiles}/AI/settings/llama-swap.yaml --listen 127.0.0.1:9292 --watch-config";
+      ExecStart = "${pkgsPinned.llama-swap}/bin/llama-swap --config ${dotfiles}/AI/settings/llama-swap.yaml --listen 127.0.0.1:9292 --watch-config";
       Restart = "on-failure";
       RestartSec = 5;
     };

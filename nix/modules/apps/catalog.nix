@@ -1,4 +1,4 @@
-{ pkgs, symlinkConfig }:
+{ pkgs, pkgsPinned, symlinkConfig }:
 
 {
   bundleNames = [
@@ -108,7 +108,7 @@
       bundles = [ "cli" ];
     };
     ffmpeg = {
-      package = (pkgs.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
+      package = (pkgsPinned.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
         doCheck = false;
       });
       bundles = [ ];

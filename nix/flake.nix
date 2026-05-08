@@ -26,6 +26,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # Frozen nixpkgs for heavy rebuilds (llama-cpp, ffmpeg). Excluded from
+    # `just update`; bump explicitly with `just update-pinned`.
+    nixpkgs-pinned.url = "github:NixOS/nixpkgs/68a8af93ff4297686cb68880845e61e5e2e41d92";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -107,6 +110,17 @@
           config = nixpkgsConfig hostName;
         };
 
+      pinnedFor =
+        {
+          system,
+          hostName,
+        }:
+        import inputs.nixpkgs-pinned {
+          inherit system;
+          overlays = [ ];
+          config = nixpkgsConfig hostName;
+        };
+
       lib = nixpkgs.lib;
 
       # Modules every host imports unconditionally. Each one is a no-op
@@ -140,6 +154,10 @@
           extraSpecialArgs = {
             inherit inputs;
             pkgsUnstable = unstableFor {
+              inherit system;
+              hostName = name;
+            };
+            pkgsPinned = pinnedFor {
               inherit system;
               hostName = name;
             };
