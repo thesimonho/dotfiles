@@ -1,10 +1,27 @@
 FLAKE_DIR := "."
+
+# Inputs excluded from `just update` (heavy rebuilds). Bump explicitly.
+
+PINNED := "nixpkgs-pinned"
 [private]
 _nix := "nix --extra-experimental-features 'nix-command flakes'"
 
-# Update all flake inputs, or a subset: `just update llm-agents nixpkgs`
+# Update flake inputs (skips PINNED), or a subset: `just update llm-agents nixpkgs`
 update *inputs:
-    {{ _nix }} flake update {{ inputs }}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -n "{{ inputs }}" ]; then
+      {{ _nix }} flake update {{ inputs }}
+    else
+      all=$({{ _nix }} flake metadata --json | jq -r '.locks.nodes.root.inputs | keys[]')
+      to_update=$(comm -23 <(echo "$all" | sort) <(echo "{{ PINNED }}" | tr ' ' '\n' | sort))
+      echo "==> Updating: $(echo $to_update | tr '\n' ' ')"
+      {{ _nix }} flake update $to_update
+    fi
+
+# Bump pinned inputs to latest (e.g. nixpkgs-pinned tracks unstable HEAD)
+update-pinned:
+    {{ _nix }} flake update {{ PINNED }}
 
 # Show flake outputs (homeConfigurations, apps, etc.)
 show:
