@@ -172,12 +172,16 @@
   },
   "effortLevel": "medium",
   "advisorModel": "opus",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
   "skipDangerousModePermissionPrompt": true,
   "preferredNotifChannel": "auto",
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": false,
   "useAutoModeDuringPlan": true,
-  "voiceEnabled": true,
-  "disableBypassPermissionsMode": false
+  "disableBypassPermissionsMode": false,
+  "inputNeededNotifEnabled": true
 }
