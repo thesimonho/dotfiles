@@ -19,13 +19,13 @@
   },
   "permissions": {
     "allow": [
-      "Bash(ls:*)",
-      "Bash(gh:*)",
-      "Bash(npm run:*)",
+      "Bash(ls *)",
+      "Bash(gh *)",
+      "Bash(npm run *)",
       "Bash(oxlint *)",
       "Bash(oxfmt *)",
-      "Bash(git:*)",
-      "Bash(curl:*)",
+      "Bash(git *)",
+      "Bash(curl *)",
       "Bash(rtk *)",
       "WebSearch",
       "mcp__context7__resolve-library-id",
