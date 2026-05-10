@@ -188,6 +188,13 @@ return {
             ["f"] = "fuzzy_finder",
             ["F"] = "fuzzy_finder_directory",
             ["/"] = "",
+            ["O"] = "",
+            ["X"] = {
+              function(state)
+                require("lazy.util").open(state.tree:get_node().path, { system = true })
+              end,
+              desc = "open with system application",
+            },
           },
           fuzzy_finder_mappings = {
             ["<C-j>"] = "move_cursor_down",
