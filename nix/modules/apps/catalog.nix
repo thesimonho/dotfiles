@@ -1,4 +1,9 @@
-{ pkgs, pkgsPinned, symlinkConfig }:
+{
+  pkgs,
+  pkgsUnstable,
+  pkgsPinned,
+  symlinkConfig,
+}:
 
 {
   bundleNames = [
@@ -163,6 +168,13 @@
     lazyjournal = {
       package = pkgs.lazyjournal;
       bundles = [ "cli" ];
+    };
+    maestro = {
+      package = pkgsUnstable.maestro;
+      bundles = [
+        "cli"
+        "dev"
+      ];
     };
     nerd-fonts-caskaydia-cove = {
       package = pkgs.nerd-fonts.caskaydia-cove;
