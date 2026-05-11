@@ -19,6 +19,7 @@
   },
   "permissions": {
     "allow": [
+      "WebSearch",
       "Bash(ls *)",
       "Bash(gh *)",
       "Bash(npm run *)",
@@ -26,10 +27,13 @@
       "Bash(oxfmt *)",
       "Bash(git *)",
       "Bash(curl *)",
+      "Bash(just *)",
       "Bash(rtk *)",
-      "WebSearch",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__query-docs"
+      "Bash(rtk grep *)",
+      "Bash(rtk find *)",
+      "Bash(rtk read *)",
+      "mcp__context7__query-docs",
+      "mcp__context7__resolve-library-id"
     ],
     "deny": [],
     "defaultMode": "default"
@@ -162,13 +166,27 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "network": {
-      "allowedDomains": ["*.github.com", "*.githubusercontent.com", "*.anthropic.com"],
-      "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser", "~/.gnupg/S.gpg-agent"]
+      "allowedDomains": [
+        "*.github.com",
+        "*.githubusercontent.com",
+        "*.anthropic.com"
+      ],
+      "allowUnixSockets": [
+        "$SSH_AUTH_SOCK",
+        "/run/user/1000/agent-browser",
+        "~/.gnupg/S.gpg-agent"
+      ]
     },
     "filesystem": {
-      "allowWrite": ["/tmp", "~/.gnupg"]
+      "allowWrite": [
+        "/tmp",
+        "~/.gnupg"
+      ]
     },
-    "excludedCommands": ["docker:*", "git:*"]
+    "excludedCommands": [
+      "docker:*",
+      "git:*"
+    ]
   },
   "effortLevel": "medium",
   "advisorModel": "opus",
@@ -180,8 +198,8 @@
   "preferredNotifChannel": "auto",
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": false,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
   "useAutoModeDuringPlan": true,
-  "disableBypassPermissionsMode": false,
-  "inputNeededNotifEnabled": true
+  "disableBypassPermissionsMode": false
 }
