@@ -15,11 +15,13 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
 
+Plan files should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
+
 If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 
 Do NOT reference plan files in code comments, rules files, or docs/ reference files.
 
-Delete the plan file after the work is complete.
+Keep the plan file up to date, use Todo/Task list while working through it, delete the plan file after the work is complete.
 
 ## When Uncertain
 

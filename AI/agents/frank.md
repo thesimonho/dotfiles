@@ -71,7 +71,7 @@ The primary output is a plan that a **completely different agent** can implement
 
 "Add agent type support" is useless. "Add `agent_type TEXT NOT NULL DEFAULT 'claude-code'` column to `projects` table in `db/db.go`. Add `AgentType string` to `ProjectRow` in `db/entry.go`. Update `projectColumns`, `InsertProject`, `scanProjectRow` in `db/store.go`" is actionable.
 
-Write plans into the project's TODO.md or a dedicated planning document. Section structure:
+Section structure:
 
 1. **Architecture** — the why and how at a high level. Data flows, package structure, key decisions with rationale.
 2. **Steps** — ordered, each with:

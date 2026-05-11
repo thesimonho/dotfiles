@@ -35,8 +35,6 @@ Every commit message follows the conventional commit format:
 <type>: <short description>
 ```
 
-Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`, `ci`
-
 Keep the subject line under 70 characters. Add a body only when the "why" isn't obvious from the subject.
 
 ### Small, logical commits
