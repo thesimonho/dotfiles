@@ -51,6 +51,37 @@ Before marking work complete:
 
 `.claude/rules/*.md` are path-gated imperative directives — kept under ~30 lines each, no prose. They tell agents what to do / not do. Background, references, decision, and explanations live in `docs/`. When trimming a rule, move the "why" to the relevant `docs/` file (or create a new one).
 
+## Markdown vs HTML
+
+Pick the format based on the reader, not the author.
+
+- **Markdown** — for agent-facing docs: `README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/codemaps/**`, rule files. Linear text is what agents consume best.
+- **HTML** — for human-facing docs under `docs/plans/**` (implementation plans, specs).
+
+### Writing HTML plans
+
+When creating a plan under `docs/plans/`, write a single self-contained `.html` file (inline CSS, no external assets).
+
+Keep the HTML structure as simple as possible and well spaced. Don't use `<div>` `<span>` `<p>` tags unless you need to.
+
+Structure:
+
+- **TL;DR header** with summary/overview.
+- **Numbered sections** (`01`, `02`, …) — readers cite them as anchors.
+
+Freely use visual components to aid comprehension. Examples:
+
+- **Tables** for risks, trade-offs, decision matrices, content-to-structure mappings.
+- **Accordions** for collapsible sections. Sections that refer to completed/resolved work should be collapsed by default.
+- **Tabs** for different phases/major sections.
+- **Side-by-side blocks** for before/after, request/response, option1/option2.
+- **Mermaid diagrams** for paths, data flow, architecture. Caption them; label edges.
+- **Callouts** for trust boundaries, gotchas, open questions — visually distinct from prose.
+- **Chips** (`HIGH`, `MED`, `LOW`, `Completed`) as inline spans, not prose.
+- **Code blocks** with the file path as a header and `file:line` references back to source.
+
+Do NOT produce a wall of `<p>` tags. If the content would render the same in markdown, you picked the wrong format — find the spatial structure (table, diagram, side-by-side) before writing.
+
 # Git Workflow
 
 ## Worktree
@@ -87,8 +118,6 @@ Every commit message follows the conventional commit format:
 ```
 <type>: <short description>
 ```
-
-Types: `feat`, `fix`, `refactor`, `test`, `chore`, `docs`, `perf`, `ci`
 
 Keep the subject line under 70 characters. Add a body only when the "why" isn't obvious from the subject.
 
@@ -316,11 +345,13 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 Always create a plan first. Call frank - he's good at planning. Have the plan and spec reviewed before proceeding with implementation.
 
+Plan files should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
+
 If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 
 Do NOT reference plan files in code comments, rules files, or docs/ reference files.
 
-Delete the plan file after the work is complete.
+Keep the plan file up to date, use Todo/Task list while working through it, delete the plan file after the work is complete.
 
 ## When Uncertain
 
