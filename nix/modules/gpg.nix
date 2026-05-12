@@ -1,6 +1,9 @@
 # GPG key management and agent configuration.
 # Keys are derived from identities in secrets/meta.nix that have gpg config.
-# Pinentry integrates with the system keyring (KWallet on Linux, Keychain on macOS).
+# On macOS, pinentry-mac stores passphrases in Keychain. On Linux there
+# is no equivalent (no pinentry talks to gnome-keyring), so we rely on
+# long gpg-agent cache TTLs — enter the passphrase once per session,
+# then gpg-agent holds it in memory until logout/reboot.
 {
   config,
   pkgs,
@@ -41,13 +44,13 @@ in
     enable = true;
     enableExtraSocket = true;
     grabKeyboardAndMouse = true;
-    noAllowExternalCache = false; # Allow pinentry-qt to save passphrases in KWallet
+    noAllowExternalCache = false;
     pinentry.package = pinentryFor {
       os = config.my.os;
       desktop = config.my.desktop;
     };
-    defaultCacheTtl = 86400; # 24 hours
-    maxCacheTtl = 604800; # 7 days
+    defaultCacheTtl = 2592000; # 30 days
+    maxCacheTtl = 2592000; # 30 days
     extraConfig = "allow-preset-passphrase";
   };
 
