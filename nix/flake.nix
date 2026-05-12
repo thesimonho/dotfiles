@@ -187,5 +187,9 @@
         name = "work-macbook";
         system = "aarch64-darwin";
       };
+      homeConfigurations.work-wsl = mkHost {
+        name = "work-wsl";
+        system = "x86_64-linux";
+      };
     };
 }
