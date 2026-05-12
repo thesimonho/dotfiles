@@ -1,12 +1,12 @@
 local agents = {
-  { cmd = "claude", label = "Claude Code" },
-  { cmd = "codex", label = "Codex" },
-  { cmd = "pi", label = "Pi" },
+  { cmd = "claude --allow-dangerously-skip-permissions", bin = "claude", label = "Claude Code" },
+  { cmd = "codex", bin = "codex", label = "Codex" },
+  { cmd = "pi", bin = "pi", label = "Pi" },
 }
 local available_agents = {}
 local open_agents = {}
 for _, agent in ipairs(agents) do
-  if vim.fn.executable(agent.cmd) == 1 then
+  if vim.fn.executable(agent.bin) == 1 then
     available_agents[#available_agents + 1] = agent
   end
 end
