@@ -195,6 +195,7 @@
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
   "preferredNotifChannel": "auto",
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
