@@ -60,6 +60,7 @@
 
   outputs =
     inputs@{
+      self,
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
@@ -170,6 +171,18 @@
             { my.hostName = name; }
           ];
         };
+
+      checksLib = import ./lib/checks.nix {
+        inherit
+          lib
+          inputs
+          home-manager
+          sharedModules
+          pkgsFor
+          unstableFor
+          pinnedFor
+          ;
+      };
     in
     {
       apps.x86_64-linux.hm = {
@@ -194,5 +207,10 @@
         name = "work-wsl";
         system = "x86_64-linux";
       };
+
+      # `nix flake check` entries. Eval-only — forces module evaluation
+      # (catches bundle-rename mistakes, enum violations, failed assertions)
+      # without building heavy derivations like llama-cpp.
+      checks = checksLib.mkChecks self.homeConfigurations;
     };
 }

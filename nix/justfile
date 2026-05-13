@@ -28,6 +28,10 @@ update-pinned:
 show:
     {{ _nix }} flake show {{ FLAKE_DIR }}
 
+# Run flake.checks (eval-only — catches bundle/enum/assertion errors fast)
+check:
+    {{ _nix }} flake check --no-build {{ FLAKE_DIR }}
+
 # Apply a host configuration: `just switch desktop`
 switch host:
     @if [ ! -f "$HOME/.secrets/age_identity" ]; then \
