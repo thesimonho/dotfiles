@@ -13,7 +13,8 @@ update *inputs:
     if [ -n "{{ inputs }}" ]; then
       {{ _nix }} flake update {{ inputs }}
     else
-      all=$({{ _nix }} flake metadata --json | jq -r '.locks.nodes.root.inputs | keys[]')
+      all=$({{ _nix }} eval --raw --impure --expr \
+        'builtins.concatStringsSep "\n" (builtins.attrNames (builtins.getFlake (toString ./.)).inputs)')
       to_update=$(comm -23 <(echo "$all" | sort) <(echo "{{ PINNED }}" | tr ' ' '\n' | sort))
       echo "==> Updating: $(echo $to_update | tr '\n' ' ')"
       {{ _nix }} flake update $to_update
