@@ -10,24 +10,18 @@
       "sprung"
     ];
     secrets = [ "api-keys" ];
-    browser.executable = "google-chrome-stable";
     mise.trustedPaths = [ "~/Projects" ];
 
     apps = {
       bundles = [
         "cli"
         "security"
-        "fonts"
-        "communication"
         "dev"
         "cloud"
       ];
       enabled = [
-        "android-tools"
-        "bitwarden"
         "ffmpeg"
         "glow"
-        "wl-clipboard"
       ];
     };
     ai = {
@@ -36,15 +30,13 @@
         "cli"
         "skills"
       ];
-      claude.targetDir = ".claude";
+      claude.targetDir = ".claude2";
     };
   };
 
   home = {
     username = "simon";
     homeDirectory = "/home/simon";
-    sessionVariables = {
-      ANDROID_HOME = "${config.home.homeDirectory}/Android/Sdk";
-    };
+    sessionVariables = { };
   };
 }
