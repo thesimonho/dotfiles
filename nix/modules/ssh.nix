@@ -23,6 +23,7 @@
 
 let
   isLinux = config.my.os != "darwin";
+  isWSL = config.my.os == "wsl";
   sshDir = "${config.home.homeDirectory}/.ssh";
   selectedIdentities = config.my._identities;
   askpassPath = "${config.home.homeDirectory}/.local/bin/secret-askpass";
@@ -114,6 +115,20 @@ in
         SSH_ASKPASS_REQUIRE=prefer
       '';
     };
+  };
+
+  # WSL only: environment.d feeds `systemd --user`, and on a real DE
+  # plasma-startup re-exports those vars into the session so every shell
+  # inherits them. WSL has no such propagation step — terminals aren't
+  # children of systemd-user — so SSH_AUTH_SOCK/SSH_ASKPASS never reach
+  # the shell and ssh falls back to terminal prompts. Mirror the same
+  # values via home.sessionVariables → hm-session-vars.sh, which every
+  # shell sources on startup. XDG_RUNTIME_DIR is set by pam_systemd
+  # before this runs, so the path resolves correctly.
+  home.sessionVariables = lib.mkIf isWSL {
+    SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/ssh-agent.socket";
+    SSH_ASKPASS = askpassPath;
+    SSH_ASKPASS_REQUIRE = "prefer";
   };
 
   # openssh ssh-agent as a user systemd service. Not socket-activated:

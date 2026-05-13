@@ -2,7 +2,7 @@
 
 {
   my = {
-    os = "fedora";
+    os = "wsl";
     desktop = "none";
     gpu.backend = "cuda";
     identities = [
