@@ -175,6 +175,14 @@
       package = pkgs.lazyjournal;
       bundles = [ "cli" ];
     };
+    nh = {
+      package = pkgs.nh;
+      bundles = [ "cli" ];
+    };
+    nix-output-monitor = {
+      package = pkgs.nix-output-monitor;
+      bundles = [ "cli" ];
+    };
     nerd-fonts-caskaydia-cove = {
       package = pkgs.nerd-fonts.caskaydia-cove;
       bundles = [ "fonts" ];

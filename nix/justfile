@@ -39,26 +39,18 @@ switch host:
       exit 1; \
     fi
     @echo "==> Applying host {{ host }} using flake at {{ FLAKE_DIR }}"
-    {{ _nix }} run --accept-flake-config "{{ FLAKE_DIR }}#hm" -- \
-      switch --flake "{{ FLAKE_DIR }}#{{ host }}" -b backup
+    nh home switch -b backup -c {{ host }} {{ FLAKE_DIR }}
 
     just clean
 
-# Build a host configuration without activating it: `just build desktop`
+# Build a host activation package without activating; shows nvd diff vs current
 build host:
-    {{ _nix }} build --no-link "{{ FLAKE_DIR }}#homeConfigurations.{{ host }}.activationPackage"
+    nh home build -c {{ host }} {{ FLAKE_DIR }}
 
-# Closure diff between current activation and a fresh build: `just diff desktop`
-diff host:
-    {{ _nix }} store diff-closures \
-      "$HOME/.local/state/home-manager/gcroots/current-home" \
-      "$({{ _nix }} build --no-link --print-out-paths "{{ FLAKE_DIR }}#homeConfigurations.{{ host }}.activationPackage")"
-
-# Wipe nix profile and GC entries older than 14 days
+# Wipe nix profile and GC entries older than 14 days; keep min 3 generations
 clean:
     @echo "==> Cleaning up old generations"
-    {{ _nix }} profile wipe-history --older-than 14d || true
-    nix-collect-garbage --delete-older-than 14d || true
+    nh clean user --keep-since 14d --keep 3
 
 # Deduplicate the nix store (slow, run occasionally)
 optimise:
