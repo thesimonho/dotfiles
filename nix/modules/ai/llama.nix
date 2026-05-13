@@ -25,6 +25,11 @@ let
   # without polluting LD_LIBRARY_PATH (which would break BLAS linkage).
   hostCudaDriver = "/usr/lib/libcuda.so.1";
 
+  # nixos-25.11's darwin Hydra job set doesn't include llama-swap, and
+  # llama-cpp gets rebuilt locally anyway because of our cmakeFlags override.
+  # Both run test phases that are timing-sensitive (Go HTTP health checks /
+  # GGML kernels) and fail under build-sandbox CPU pressure. We skip checks
+  # so the from-source builds complete deterministically.
   llamaCppPackage =
     (pkgsPinned.llama-cpp.override {
       blasSupport = true;
@@ -34,6 +39,7 @@ let
       metalSupport = gpuBackend == "metal";
     }).overrideAttrs
       (oldAttrs: {
+        doCheck = false;
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgsPinned.makeWrapper ];
         cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [ "-DGGML_NATIVE=ON" ];
         preConfigure = ''
@@ -50,11 +56,13 @@ let
             done
           '';
       });
+
+  llamaSwapPackage = pkgsPinned.llama-swap.overrideAttrs (_: { doCheck = false; });
 in
 lib.mkIf enabled {
   home.packages = [
     llamaCppPackage
-    pkgsPinned.llama-swap
+    llamaSwapPackage
   ];
 
   systemd.user.services.llama-swap = {
@@ -66,7 +74,7 @@ lib.mkIf enabled {
     Service = {
       Type = "simple";
       Environment = [ "PATH=${config.home.profileDirectory}/bin" ];
-      ExecStart = "${pkgsPinned.llama-swap}/bin/llama-swap --config ${dotfiles}/AI/settings/llama-swap.yaml --listen 127.0.0.1:9292 --watch-config";
+      ExecStart = "${llamaSwapPackage}/bin/llama-swap --config ${dotfiles}/AI/settings/llama-swap.yaml --listen 127.0.0.1:9292 --watch-config";
       Restart = "on-failure";
       RestartSec = 5;
     };

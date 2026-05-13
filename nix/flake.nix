@@ -26,9 +26,12 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    # Frozen nixpkgs for heavy rebuilds (llama-cpp, ffmpeg). Excluded from
-    # `just update`; bump explicitly with `just update-pinned`.
-    nixpkgs-pinned.url = "github:NixOS/nixpkgs/68a8af93ff4297686cb68880845e61e5e2e41d92";
+    # Frozen nixpkgs for heavy rebuilds (llama-cpp, ffmpeg). Must reference a
+    # Hydra-built channel ref (nixos-* or nixpkgs-unstable) so darwin gets
+    # cache coverage for the transitive deps — a raw master commit has no
+    # darwin builds, which forces local recompiles and runs flaky test phases.
+    # Excluded from `just update`; bump explicitly with `just update-pinned`.
+    nixpkgs-pinned.url = "github:NixOS/nixpkgs/nixos-25.11";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
