@@ -22,8 +22,16 @@ in
         "arch"
         "darwin"
         "fedora"
+        "wsl"
       ];
-      description = "Host operating system. Drives package-manager and DE assumptions.";
+      description = ''
+        Host platform. Drives package-manager and DE assumptions.
+        `wsl` is its own value (rather than a flag on top of `fedora`)
+        because WSL hosts share almost nothing with native Linux at the
+        session/PAM/DE layer — modules branch on it directly. Distro-
+        level concerns inside WSL stay in post-setup.sh, which detects
+        the underlying distro from `/etc/*-release`.
+      '';
     };
 
     desktop = mkOption {
