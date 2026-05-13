@@ -143,6 +143,12 @@
         "cli"
       ];
     };
+    jq = {
+      package = pkgs.jq;
+      bundles = [
+        "cli"
+      ];
+    };
     just = {
       package = pkgs.just;
       bundles = [
