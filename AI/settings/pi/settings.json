@@ -5,7 +5,7 @@
   "warnings": {
     "anthropicExtraUsage": true
   },
-  "lastChangelogVersion": "0.72.1",
+  "lastChangelogVersion": "0.74.0",
   "defaultProvider": "llama-cpp",
   "defaultModel": "qwen3.6-35b",
   "steeringMode": "all",
