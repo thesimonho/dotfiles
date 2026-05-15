@@ -33,10 +33,6 @@ in
       package = llmAgents.pi;
       bundles = [ "agents" ];
     };
-    skills = {
-      package = llmAgents.skills;
-      bundles = [ "skills" ];
-    };
     agent-browser = {
       package = llmAgents.agent-browser;
       bundles = [ "skills" ];

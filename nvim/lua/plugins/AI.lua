@@ -1,6 +1,6 @@
 local agents = {
-  { cmd = "claude --allow-dangerously-skip-permissions", bin = "claude", label = "Claude Code" },
   { cmd = "codex", bin = "codex", label = "Codex" },
+  { cmd = "claude --allow-dangerously-skip-permissions", bin = "claude", label = "Claude Code" },
   { cmd = "pi", bin = "pi", label = "Pi" },
 }
 local available_agents = {}
