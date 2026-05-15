@@ -203,10 +203,10 @@ account_email=$(jq -r '.email // empty' "$auth_cache" 2>/dev/null)
 
 # identity & session
 account="${account_email:+${BRIGHT_MAGENTA}${account_email}${RESET}}"
-short_cwd="${cwd/#$HOME/~}"
+short_cwd=$(echo "$cwd" | awk -F/ '{n=NF; if (n>3) printf "/%s/%s/%s", $(n-2), $(n-1), $n; else print $0}')
 session_short="📄 ${session_id:0:8}"
 model=$(apply_color "$RED" "$model_name ($effort)")
-remote_url=$(git remote get-url origin 2>/dev/null | sed 's/git@github.com:/https:\/\/github.com\//' | sed 's/\.git$//')
+remote_url=$(git remote get-url origin 2>/dev/null | sed -E 's|^git@([^:]+):|https://\1/|' | sed 's/\.git$//')
 if [ -n "$remote_url" ]; then
   repo_name=$(echo "$remote_url" | sed 's|.*/\([^/]*/[^/]*\)$|\1|')
   repo_link="${CYAN}🌐 \e]8;;${remote_url}\a${repo_name}\e]8;;\a${RESET}"
