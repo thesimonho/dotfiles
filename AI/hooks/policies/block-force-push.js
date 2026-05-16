@@ -9,16 +9,17 @@
 
 // Matches: git push ... -f / --force / --force-with-lease
 const FORCE_PUSH = /git\s+push\b.*(\s-f\b|\s--force\b|\s--force-with-lease\b)/;
+const { block } = require("../lib/hook-response");
 
-let input = '';
-process.stdin.on('data', chunk => (input += chunk));
-process.stdin.on('end', () => {
+let input = "";
+process.stdin.on("data", (chunk) => (input += chunk));
+process.stdin.on("end", () => {
   const payload = JSON.parse(input);
-  const command = payload.tool_input?.command ?? '';
+  const command = payload.tool_input?.command ?? "";
 
   if (FORCE_PUSH.test(command)) {
-    console.error('[Hook] BLOCKED: Force push is not allowed');
-    console.error('[Hook] Rewriting remote history must be done manually');
-    process.exit(1);
+    block("Force push is not allowed", [
+      "Rewriting remote history must be done manually",
+    ]);
   }
 });

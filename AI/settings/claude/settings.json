@@ -46,7 +46,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/block-doc-files.js"
+            "command": "node ~/dotfiles/AI/hooks/policies/block-doc-files.js"
           }
         ]
       },
@@ -55,7 +55,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/block-build-dirs.js"
+            "command": "node ~/dotfiles/AI/hooks/policies/block-build-dirs.js"
           }
         ]
       },
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/block-force-push.js"
+            "command": "node ~/dotfiles/AI/hooks/policies/block-force-push.js"
           }
         ]
       },
@@ -73,7 +73,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/check-conventional-commit.js"
+            "command": "node ~/dotfiles/AI/hooks/policies/check-conventional-commit.js"
           }
         ]
       },
@@ -93,7 +93,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"Reminder (no need to respond): Run the project formatter, typechecker, linter. Also check: functions < 30 lines, functions have docstrings, file < 800 lines, no hardcoded values (use existing types/const).\"}}'"
+            "command": "node ~/dotfiles/AI/hooks/policies/post-edit-reminder.js"
           }
         ]
       }

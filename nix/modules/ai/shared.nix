@@ -73,6 +73,10 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
       force = true;
     };
+    ".codex/hooks.json" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/hooks.json";
+      force = true;
+    };
     ".pi/agent/AGENTS.md" = {
       source = config.lib.file.mkOutOfStoreSymlink generatedAgentsPath;
       force = true;
@@ -86,8 +90,7 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
       force = true;
     };
   }
-  // mkStaticSkillsFor ".claude/skills"
-  // mkStaticSkillsFor ".claude-2/skills"
+  // mkStaticSkillsFor "${config.my.ai.claude.targetDir}/skills"
   // mkStaticSkillsFor ".codex/skills"
   // mkStaticSkillsFor ".pi/agent/skills";
 
