@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
+const { execFileSync } = require("node:child_process");
 
 const sourceDirectory = process.env.AGENTS_SOURCE_DIR || path.resolve("AI/agents");
 const outputDirectory =
@@ -9,6 +11,7 @@ const outputDirectory =
 const codexSkillsDirectory =
   process.env.CODEX_SKILLS_DIR ||
   path.join(process.env.HOME || "~", ".codex", "skills");
+const yqBinary = process.env.YQ_BIN || "yq";
 
 const claudeDirectory = path.join(outputDirectory, "claude");
 const codexDirectory = path.join(outputDirectory, "codex");
@@ -28,98 +31,19 @@ function splitAgentFile(filePath) {
   }
 
   return {
-    frontmatter: parseSimpleYaml(match[1], filePath),
+    frontmatter: parseFrontmatter(match[1], filePath),
     body: match[2].trim(),
   };
 }
 
-function parseSimpleYaml(input, filePath) {
-  const root = {};
-  const stack = [{ indent: -1, value: root }];
-  let activeArray = null;
+function parseFrontmatter(input, filePath) {
+  try {
+    const json = yqFromContent(input, false);
 
-  const lines = input.split("\n");
-
-  for (const [index, rawLine] of lines.entries()) {
-    if (!rawLine.trim() || rawLine.trimStart().startsWith("#")) {
-      continue;
-    }
-
-    const indent = rawLine.match(/^ */)[0].length;
-    const line = rawLine.trim();
-
-    if (line.startsWith("- ")) {
-      if (!activeArray || indent <= activeArray.indent) {
-        fail(`${filePath}:${index + 1}: array item without an array key`);
-      }
-
-      activeArray.value.push(parseScalar(line.slice(2).trim()));
-      continue;
-    }
-
-    activeArray = null;
-
-    while (stack.length > 1 && indent <= stack.at(-1).indent) {
-      stack.pop();
-    }
-
-    const match = line.match(/^([A-Za-z0-9_-]+):(?:\s*(.*))?$/);
-    if (!match) {
-      fail(`${filePath}:${index + 1}: unsupported frontmatter line: ${line}`);
-    }
-
-    const [, key, rawValue = ""] = match;
-    const parent = stack.at(-1).value;
-
-    if (rawValue === "") {
-      const value = nextContentLineIsArray(lines, index);
-      parent[key] = value;
-
-      if (Array.isArray(value)) {
-        activeArray = { indent, value };
-      } else {
-        stack.push({ indent, value });
-      }
-
-      continue;
-    }
-
-    parent[key] = parseScalar(rawValue);
+    return JSON.parse(json) || {};
+  } catch (error) {
+    fail(`${filePath}: invalid YAML frontmatter: ${error.message}`);
   }
-
-  return root;
-}
-
-function nextContentLineIsArray(lines, currentIndex) {
-  for (const line of lines.slice(currentIndex + 1)) {
-    if (!line.trim() || line.trimStart().startsWith("#")) {
-      continue;
-    }
-
-    return line.trim().startsWith("- ") ? [] : {};
-  }
-
-  return {};
-}
-
-function parseScalar(value) {
-  if (value === "true") return true;
-  if (value === "false") return false;
-  if (/^\d+$/.test(value)) return Number(value);
-
-  const quotedMatch = value.match(/^["'](.*)["']$/);
-  if (quotedMatch) return quotedMatch[1];
-
-  const inlineArrayMatch = value.match(/^\[(.*)]$/);
-  if (inlineArrayMatch) {
-    return inlineArrayMatch[1]
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean)
-      .map(parseScalar);
-  }
-
-  return value;
 }
 
 function ensureRequiredFields(filePath, metadata) {
@@ -137,62 +61,10 @@ function writeClaudeAgent(fileName, metadata, body) {
     ...(metadata.claude || {}),
   };
 
-  const frontmatter = Object.entries(claudeMetadata)
-    .filter(([, value]) => value !== undefined && value !== null)
-    .map(([key, value]) => yamlLine(key, value))
-    .join("\n");
-
   fs.writeFileSync(
     path.join(claudeDirectory, fileName),
-    `---\n${frontmatter}\n---\n\n${body}\n`,
+    `---\n${yamlStringify(removeNullish(claudeMetadata))}---\n\n${body}\n`,
   );
-}
-
-function yamlLine(key, value) {
-  if (Array.isArray(value)) {
-    const items = value.map((item) => `  - ${yamlScalar(item)}`).join("\n");
-    return `${key}:\n${items}`;
-  }
-
-  if (isPlainObject(value)) {
-    return `${key}:\n${yamlObject(value, 2)}`;
-  }
-
-  return `${key}: ${yamlScalar(value)}`;
-}
-
-function yamlObject(object, indent) {
-  return Object.entries(object)
-    .map(([key, value]) => {
-      const padding = " ".repeat(indent);
-
-      if (Array.isArray(value)) {
-        const items = value
-          .map((item) => `${padding}  - ${yamlScalar(item)}`)
-          .join("\n");
-        return `${padding}${key}:\n${items}`;
-      }
-
-      if (isPlainObject(value)) {
-        return `${padding}${key}:\n${yamlObject(value, indent + 2)}`;
-      }
-
-      return `${padding}${key}: ${yamlScalar(value)}`;
-    })
-    .join("\n");
-}
-
-function yamlScalar(value) {
-  if (typeof value === "boolean" || typeof value === "number") {
-    return String(value);
-  }
-
-  const stringValue = String(value);
-  if (/[:#{}[\],&*?|\-<>=!%@`]/.test(stringValue)) {
-    return JSON.stringify(stringValue);
-  }
-
-  return stringValue;
 }
 
 function writeCodexAgent(fileName, metadata, body) {
@@ -204,20 +76,12 @@ function writeCodexAgent(fileName, metadata, body) {
     developer_instructions: body,
   };
 
-  const toml = [
-    ...Object.entries(codexAgent)
-      .filter(([, value]) => value !== undefined && value !== null)
-      .filter(([, value]) => !isPlainObject(value))
-      .map(([key, value]) => tomlLine(key, value)),
-    ...Object.entries(codexAgent)
-      .filter(([, value]) => isPlainObject(value))
-      .flatMap(([key, value]) => tomlObject(key, value)),
-    ...codexSkillConfig(codexMetadata.skills),
-  ].join("\n");
-
   fs.writeFileSync(
     path.join(codexDirectory, fileName.replace(/\.md$/, ".toml")),
-    `${toml}\n`,
+    `${tomlStringify({
+      ...removeNullish(codexAgent),
+      ...codexSkillConfig(codexMetadata.skills),
+    })}\n`,
   );
 }
 
@@ -228,14 +92,9 @@ function writePiAgent(fileName, metadata, body) {
     ...(metadata.pi || {}),
   };
 
-  const frontmatter = Object.entries(piMetadata)
-    .filter(([, value]) => value !== undefined && value !== null)
-    .map(([key, value]) => yamlLine(key, value))
-    .join("\n");
-
   fs.writeFileSync(
     path.join(piDirectory, fileName),
-    `---\n${frontmatter}\n---\n\n${body}\n`,
+    `---\n${yamlStringify(removeNullish(piMetadata))}---\n\n${body}\n`,
   );
 }
 
@@ -243,6 +102,40 @@ function without(object, excludedKeys) {
   return Object.fromEntries(
     Object.entries(object).filter(([key]) => !excludedKeys.includes(key)),
   );
+}
+
+function yamlStringify(object) {
+  return yqFromContent(JSON.stringify(object), true);
+}
+
+function yqFromContent(content, shouldEmitYaml) {
+  const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "agent-yq-"));
+  const tempFile = path.join(tempDirectory, "input");
+
+  try {
+    fs.writeFileSync(tempFile, content);
+    return execFileSync(
+      yqBinary,
+      [...(shouldEmitYaml ? ["-y"] : []), ".", tempFile],
+      { encoding: "utf8" },
+    );
+  } finally {
+    fs.rmSync(tempDirectory, { force: true, recursive: true });
+  }
+}
+
+function tomlStringify(object) {
+  const scalarEntries = Object.entries(object).filter(
+    ([, value]) => !isPlainObject(value),
+  );
+  const nestedEntries = Object.entries(object).filter(([, value]) =>
+    isPlainObject(value),
+  );
+
+  return [
+    ...scalarEntries.map(([key, value]) => tomlLine(key, value)),
+    ...nestedEntries.flatMap(([key, value]) => tomlObject(key, value)),
+  ].join("\n");
 }
 
 function tomlLine(key, value) {
@@ -293,15 +186,25 @@ function escapeTomlMultiline(value) {
 }
 
 function codexSkillConfig(skills) {
-  if (!skills) return [];
+  if (!skills) return {};
 
   const skillNames = Array.isArray(skills) ? skills : [skills];
-  return skillNames.flatMap((skillName) => [
-    "",
-    "[[skills.config]]",
-    `path = ${tomlValue(path.join(codexSkillsDirectory, skillName, "SKILL.md"))}`,
-    "enabled = true",
-  ]);
+  return {
+    skills: {
+      config: skillNames.map((skillName) => ({
+        path: path.join(codexSkillsDirectory, skillName, "SKILL.md"),
+        enabled: true,
+      })),
+    },
+  };
+}
+
+function removeNullish(object) {
+  return Object.fromEntries(
+    Object.entries(object).filter(
+      ([, value]) => value !== undefined && value !== null,
+    ),
+  );
 }
 
 function resetDirectory(directory) {

@@ -18,13 +18,13 @@ claude:
   color: orange
 codex:
   model: gpt-5.5
-  model_reasoning_effort: high
+  model_reasoning_effort: xhigh
   sandbox_mode: workspace-write
   nickname_candidates:
     - Frank
     - Planner
 pi:
-  thinking: high
+  thinking: xhigh
   tools:
     - read
     - write
