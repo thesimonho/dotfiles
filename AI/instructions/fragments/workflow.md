@@ -9,7 +9,7 @@ These are the core principles you must follow for your work:
 3. Touch only what you must. Clean up only your own mess.
 4. Define success criteria. Loop until verified.
 
-Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex).
+Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex, Claude Code).
 
 ## Planning
 

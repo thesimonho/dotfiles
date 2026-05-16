@@ -6,9 +6,11 @@
 - You MUST keep doc websites, public APIs, and other documentation up to date.
 - You MUST reference the docs/codemaps/README.md when trying to explore code or find a specific piece of code. They will quickly tell you where things are located. As a result, it is also important to keep these up to date.
 
-## Rules vs docs/
+## Agent Instructions vs docs/
 
-`.claude/rules/*.md` are path-gated imperative directives — kept under ~30 lines each, no prose. They tell agents what to do / not do. Background, references, decision, and explanations live in `docs/`. When trimming a rule, move the "why" to the relevant `docs/` file (or create a new one).
+Project-local agent instructions are imperative directives, not background prose. Prefer the project’s existing portable instruction surface (`AGENTS.md` or equivalent). Use Claude-specific `.claude/rules/*.md` when the project already uses Claude Code rules or the user asks for them.
+
+Keep imperative instruction files short and actionable. Background, references, decisions, and explanations live in `docs/`. When trimming an instruction, move the "why" to the relevant `docs/` file (or create a new one).
 
 ## Markdown vs HTML
 

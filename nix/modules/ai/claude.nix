@@ -15,7 +15,7 @@ let
     }
     {
       name = "rules";
-      source = "${dotfiles}/AI/rules";
+      source = "${dotfiles}/AI/instructions/fragments";
     }
     {
       name = "settings.json";

@@ -7,14 +7,16 @@
 
 let
   dotfiles = config.my.dotfilesPath;
+  instructionFragmentsPath = "${dotfiles}/AI/instructions/fragments";
+  generatedAgentsPath = "${dotfiles}/AI/instructions/AGENTS.generated.md";
 
   generateAgentsMd = pkgs.writeShellScript "generate-agents-md" ''
     {
-      for file in ${dotfiles}/AI/rules/*.md; do
+      for file in ${instructionFragmentsPath}/*.md; do
         cat "$file"
         echo ""
       done
-    } > ${dotfiles}/AI/AGENTS.generated.md
+    } > ${generatedAgentsPath}
   '';
 
   staticSkillsPath = ../../../AI/skills;
@@ -64,7 +66,7 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
 
   home.file = {
     ".codex/AGENTS.md" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
+      source = config.lib.file.mkOutOfStoreSymlink generatedAgentsPath;
       force = true;
     };
     ".codex/config.toml" = {
@@ -72,7 +74,7 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
       force = true;
     };
     ".pi/agent/AGENTS.md" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/AGENTS.generated.md";
+      source = config.lib.file.mkOutOfStoreSymlink generatedAgentsPath;
       force = true;
     };
     ".pi/agent/settings.json" = {
