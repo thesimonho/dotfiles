@@ -18,14 +18,6 @@ let
       source = "${dotfiles}/AI/rules";
     }
     {
-      name = "scripts";
-      source = "${dotfiles}/AI/scripts";
-    }
-    {
-      name = "skills";
-      source = "${dotfiles}/AI/skills";
-    }
-    {
       name = "settings.json";
       source = "${dotfiles}/AI/settings/claude/settings.json";
     }

@@ -84,6 +84,8 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
       force = true;
     };
   }
+  // mkStaticSkillsFor ".claude/skills"
+  // mkStaticSkillsFor ".claude-2/skills"
   // mkStaticSkillsFor ".codex/skills"
   // mkStaticSkillsFor ".pi/agent/skills";
 
