@@ -8,7 +8,7 @@
  */
 
 const path = require("path");
-const { block } = require("../lib/hook-response");
+const { block } = require("../../lib/hooks/hook-response");
 
 const BLOCKED_DIRS = ["dist", "build", ".next", "node_modules", ".git"];
 

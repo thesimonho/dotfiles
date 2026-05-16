@@ -24,7 +24,7 @@ const TYPES = [
   "revert",
 ];
 const CONVENTIONAL = new RegExp(`^(${TYPES.join("|")})(\\(.+\\))?(!)?:\\s.+`);
-const { block } = require("../lib/hook-response");
+const { block } = require("../../lib/hooks/hook-response");
 
 /**
  * Extract the commit message from a -m "..." or -m '...' flag.

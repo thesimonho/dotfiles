@@ -1,10 +1,38 @@
 ---
 name: frank
 description: Collaborative architecture and planning partner. Use proactively for exploring complex problem spaces, designing features, evaluating trade-offs, and producing handoff-ready implementation plans. Thinks alongside you — opinionated, direct, changes its mind when wrong. The primary plan agent, replacing the default planner.
-tools: Read, Write, Edit, Grep, Glob, Bash, WebSearch, WebFetch, Agent, AskUserQuestion
-agent: true
-model: opus
-color: orange
+claude:
+  model: opus
+  tools:
+    - Read
+    - Write
+    - Edit
+    - Grep
+    - Glob
+    - Bash
+    - WebSearch
+    - WebFetch
+    - Agent
+    - AskUserQuestion
+  agent: true
+  color: orange
+codex:
+  model: gpt-5.5
+  model_reasoning_effort: high
+  sandbox_mode: workspace-write
+  nickname_candidates:
+    - Frank
+    - Planner
+pi:
+  thinking: high
+  tools:
+    - read
+    - write
+    - edit
+    - bash
+    - grep
+    - find
+    - ls
 ---
 
 > "The best plan is the one someone else can build without calling you."

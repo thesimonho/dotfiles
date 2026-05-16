@@ -8,8 +8,8 @@
 let
   dotfiles = config.my.dotfilesPath;
   instructionFragmentsPath = "${dotfiles}/AI/instructions/fragments";
-  generatedAgentsPath = "${dotfiles}/AI/instructions/AGENTS.generated.md";
 
+  generatedAgentsPath = "${dotfiles}/AI/instructions/AGENTS.generated.md";
   generateAgentsMd = pkgs.writeShellScript "generate-agents-md" ''
     {
       for file in ${instructionFragmentsPath}/*.md; do
@@ -17,6 +17,15 @@ let
         echo ""
       done
     } > ${generatedAgentsPath}
+  '';
+
+  agentSourcesPath = "${dotfiles}/AI/agents";
+  generatedAgentOutputsPath = "${agentSourcesPath}/.generated";
+  generateAgentCliConfigs = pkgs.writeShellScript "generate-agent-cli-configs" ''
+    export AGENTS_SOURCE_DIR="${agentSourcesPath}"
+    export AGENTS_OUTPUT_DIR="${generatedAgentOutputsPath}"
+    export CODEX_SKILLS_DIR="$HOME/.codex/skills"
+    ${pkgs.nodejs}/bin/node ${dotfiles}/AI/lib/agents/generate-agent-configs.js
   '';
 
   staticSkillsPath = ../../../AI/skills;
@@ -64,9 +73,17 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
     ${generateAgentsMd}
   '';
 
+  home.activation.generateAgentCliConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${generateAgentCliConfigs}
+  '';
+
   home.file = {
     ".codex/AGENTS.md" = {
       source = config.lib.file.mkOutOfStoreSymlink generatedAgentsPath;
+      force = true;
+    };
+    ".codex/agents" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${generatedAgentOutputsPath}/codex";
       force = true;
     };
     ".codex/config.toml" = {
@@ -88,6 +105,10 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
       source = config.lib.file.mkOutOfStoreSymlink generatedAgentsPath;
       force = true;
     };
+    ".pi/agent/agents" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${generatedAgentOutputsPath}/pi";
+      force = true;
+    };
     ".pi/agent/settings.json" = {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/pi/settings.json";
       force = true;
@@ -100,14 +121,4 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
   // mkStaticSkillsFor "${config.my.ai.claude.targetDir}/skills"
   // mkStaticSkillsFor ".codex/skills"
   // mkStaticSkillsFor ".pi/agent/skills";
-
-  home.activation.generateAgentSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    export AGENTS_ROOT="${dotfiles}/AI/agents"
-    export AWK_BIN="${pkgs.gawk}/bin/awk"
-    for target in "$HOME/.codex/skills" "$HOME/.pi/agent/skills"; do
-      export SKILLS_OUTPUT="$target"
-      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../../AI/scripts/conversion/build-agent-skills.sh}
-      $DRY_RUN_CMD ${pkgs.bash}/bin/bash ${../../../AI/scripts/conversion/rewrite-agent-frontmatter.sh}
-    done
-  '';
 }

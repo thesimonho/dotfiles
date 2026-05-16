@@ -1,9 +1,30 @@
 ---
 name: performance-reviewer
 description: Reviews implementation for issues that negatively impact performance. Use proactively when fixing slow code and poor performance. Can be called concurrently with other reviewers.
-tools: Read, Glob, Grep, TodoWrite, WebSearch
-model: opus
-color: pink
+claude:
+  model: opus
+  tools:
+    - Read
+    - Glob
+    - Grep
+    - TodoWrite
+    - WebSearch
+  color: pink
+codex:
+  model: gpt-5.4
+  model_reasoning_effort: high
+  sandbox_mode: read-only
+  nickname_candidates:
+    - Profiler
+    - Meter
+pi:
+  thinking: high
+  tools:
+    - read
+    - grep
+    - find
+    - ls
+    - bash
 ---
 
 # Performance Reviewer

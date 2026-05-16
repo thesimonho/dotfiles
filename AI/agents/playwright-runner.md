@@ -1,10 +1,39 @@
 ---
 name: playwright-runner
 description: End-to-end testing specialist using Playwright. Use PROACTIVELY for generating, maintaining, and running E2E playwright tests. Manages test journeys, quarantines flaky tests, uploads artifacts (screenshots, videos, traces), and ensures critical user flows work.
-tools: Read, Write, Edit, Bash, Grep, Glob
-skills: playwright-skill
-model: sonnet
-color: red
+claude:
+  model: sonnet
+  tools:
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Grep
+    - Glob
+  skills:
+    - playwright-skill
+  color: red
+codex:
+  model: gpt-5.4
+  model_reasoning_effort: high
+  sandbox_mode: workspace-write
+  skills:
+    - agent-browser
+  nickname_candidates:
+    - Runner
+    - Browser
+pi:
+  thinking: high
+  tools:
+    - read
+    - write
+    - edit
+    - bash
+    - grep
+    - find
+    - ls
+  skills:
+    - agent-browser
 ---
 
 # Playwright Test Runner
