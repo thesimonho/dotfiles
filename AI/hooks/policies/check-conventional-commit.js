@@ -24,6 +24,7 @@ const TYPES = [
   "revert",
 ];
 const CONVENTIONAL = new RegExp(`^(${TYPES.join("|")})(\\(.+\\))?(!)?:\\s.+`);
+const { block } = require("../lib/hook-response");
 
 /**
  * Extract the commit message from a -m "..." or -m '...' flag.
@@ -44,13 +45,11 @@ process.stdin.on("end", () => {
   const command = payload.tool_input?.command ?? "";
 
   if (!/git\s+commit/.test(command)) {
-    console.log(input);
     return;
   }
 
   // --amend without -m: user is editing the existing message manually
   if (/--amend/.test(command) && !/-m\s/.test(command)) {
-    console.log(input);
     return;
   }
 
@@ -58,21 +57,16 @@ process.stdin.on("end", () => {
 
   // No -m flag: editor will open, allow through
   if (!message) {
-    console.log(input);
     return;
   }
 
   const firstLine = message.split("\n")[0];
 
   if (!CONVENTIONAL.test(firstLine)) {
-    console.error(
-      "[Hook] BLOCKED: Commit message does not follow conventional commit format",
-    );
-    console.error(`[Hook] Message: "${firstLine}"`);
-    console.error(`[Hook] Format:  type(scope)?: description`);
-    console.error(`[Hook] Types:   ${TYPES.join(", ")}`);
-    process.exit(1);
+    block("Commit message does not follow conventional commit format", [
+      `Message: "${firstLine}"`,
+      "Format:  type(scope)?: description",
+      `Types:   ${TYPES.join(", ")}`,
+    ]);
   }
-
-  console.log(input);
 });

@@ -10,10 +10,6 @@ let
       source = "${dotfiles}/AI/agents";
     }
     {
-      name = "hooks";
-      source = "${dotfiles}/AI/hooks";
-    }
-    {
       name = "rules";
       source = "${dotfiles}/AI/instructions/fragments";
     }

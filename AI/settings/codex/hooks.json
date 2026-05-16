@@ -1,0 +1,48 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/policies/block-doc-files.js",
+            "statusMessage": "Checking documentation file policy"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/policies/block-build-dirs.js",
+            "statusMessage": "Checking write target"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/policies/block-force-push.js",
+            "statusMessage": "Checking git push policy"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/policies/check-conventional-commit.js",
+            "statusMessage": "Checking commit message"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/policies/post-edit-reminder.js",
+            "statusMessage": "Adding verification reminder"
+          }
+        ]
+      }
+    ]
+  }
+}
