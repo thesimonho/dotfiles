@@ -6,12 +6,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/block-doc-files.js",
+            "command": "node ~/dotfiles/AI/hooks/block-doc-files.js",
             "statusMessage": "Checking documentation file policy"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/block-build-dirs.js",
+            "command": "node ~/dotfiles/AI/hooks/block-build-dirs.js",
             "statusMessage": "Checking write target"
           }
         ]
@@ -21,12 +21,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/block-force-push.js",
+            "command": "node ~/dotfiles/AI/hooks/block-force-push.js",
             "statusMessage": "Checking git push policy"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/check-conventional-commit.js",
+            "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js",
             "statusMessage": "Checking commit message"
           }
         ]
@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/post-edit-reminder.js",
+            "command": "node ~/dotfiles/AI/hooks/post-edit-reminder.js",
             "statusMessage": "Adding verification reminder"
           }
         ]

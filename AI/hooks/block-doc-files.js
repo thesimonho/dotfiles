@@ -9,7 +9,7 @@
  * .txt files are always blocked.
  */
 
-const { block } = require("../../lib/hooks/hook-response");
+const { block } = require("../lib/hooks/hook-response");
 
 const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
 const DOCS_DIR_MD = /^docs\//;
