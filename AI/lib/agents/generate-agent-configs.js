@@ -22,6 +22,21 @@ function fail(message) {
   process.exit(1);
 }
 
+function assertYqAvailable() {
+  try {
+    execFileSync(yqBinary, ["--version"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch (error) {
+    const configuredPath = process.env.YQ_BIN
+      ? `Configured YQ_BIN was: ${process.env.YQ_BIN}`
+      : "Set YQ_BIN or install yq on PATH.";
+
+    fail(`Unable to run yq, which is required for agent YAML parsing. ${configuredPath}`);
+  }
+}
+
 function splitAgentFile(filePath) {
   const content = fs.readFileSync(filePath, "utf8");
   const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
@@ -212,6 +227,7 @@ function resetDirectory(directory) {
   fs.mkdirSync(directory, { recursive: true });
 }
 
+assertYqAvailable();
 resetDirectory(claudeDirectory);
 resetDirectory(codexDirectory);
 resetDirectory(piDirectory);
