@@ -73,10 +73,17 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
       source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/config.toml";
       force = true;
     };
-    ".codex/hooks.json" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/hooks.json";
-      force = true;
-    };
+    /*
+      TODO: Codex writes hook trust decisions into ~/.codex/config.toml as
+            [hooks.state]. Since this repo is public and config.toml is tracked,
+            do not install hooks.json by default: enabling it forces either
+            repeated local trust prompts or committing machine-local approval state.
+            Revisit when Codex separates hook trust state from user config.
+    */
+    # ".codex/hooks.json" = {
+    #   source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/settings/codex/hooks.json";
+    #   force = true;
+    # };
     ".pi/agent/AGENTS.md" = {
       source = config.lib.file.mkOutOfStoreSymlink generatedAgentsPath;
       force = true;
