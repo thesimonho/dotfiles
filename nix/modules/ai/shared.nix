@@ -17,26 +17,44 @@ let
     } > ${dotfiles}/AI/AGENTS.generated.md
   '';
 
-  staticSkills = ../../../AI/skills;
-  staticSkillDirs = builtins.readDir staticSkills;
-  staticSkillNames = builtins.filter (name: staticSkillDirs.${name} == "directory") (
-    builtins.attrNames staticSkillDirs
-  );
+  staticSkillsPath = ../../../AI/skills;
+  externalSkillsPath = ../../../AI/skills/.agents/skills;
+
+  directoryNamesFor =
+    directory:
+    let
+      entries = builtins.readDir directory;
+    in
+    builtins.filter (name: entries.${name} == "directory") (builtins.attrNames entries);
+
+  customSkillNames = builtins.filter (name: name != ".agents") (directoryNamesFor staticSkillsPath);
+  externalSkillNames =
+    if builtins.pathExists externalSkillsPath then directoryNamesFor externalSkillsPath else [ ];
+
+  skillSources =
+    map (skillName: {
+      name = skillName;
+      source = "${dotfiles}/AI/skills/${skillName}";
+    }) customSkillNames
+    ++ map (skillName: {
+      name = skillName;
+      source = "${dotfiles}/AI/skills/.agents/skills/${skillName}";
+    }) externalSkillNames;
 
   /*
-    Build a `home.file` attrset that symlinks every static skill directory
-    under the given target (e.g. ".codex/skills" or ".pi/agent/skills").
+    Build a `home.file` attrset that symlinks every custom and externally
+    installed skill directory under the given target (e.g. ".codex/skills").
   */
   mkStaticSkillsFor =
     targetDir:
     builtins.listToAttrs (
-      map (skillName: {
-        name = "${targetDir}/${skillName}";
+      map (skill: {
+        name = "${targetDir}/${skill.name}";
         value = {
-          source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/AI/skills/${skillName}";
+          source = config.lib.file.mkOutOfStoreSymlink skill.source;
           force = true;
         };
-      }) staticSkillNames
+      }) skillSources
     );
 in
 lib.mkIf (config.my.ai.bundles != [ ]) {
