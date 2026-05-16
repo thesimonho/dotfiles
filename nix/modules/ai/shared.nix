@@ -25,6 +25,7 @@ let
     export AGENTS_SOURCE_DIR="${agentSourcesPath}"
     export AGENTS_OUTPUT_DIR="${generatedAgentOutputsPath}"
     export CODEX_SKILLS_DIR="$HOME/.codex/skills"
+    export YQ_BIN="${pkgs.yq}/bin/yq"
     ${pkgs.nodejs}/bin/node ${dotfiles}/AI/lib/agents/generate-agent-configs.js
   '';
 
