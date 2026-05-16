@@ -40,8 +40,7 @@ Then spawn the following as **parallel background tasks**:
 
 ### 6. Usage Test
 
-- Run the actual app in a real-world scenario (use the CLI, use agent browser to interact with the app, etc.)
-- One example of this is the `/dogfood` skill
+- Run the actual app in a real-world scenario (use the CLI, use agent browser skill to interact with the app, etc.)
 - Test the feature to confirm it works and no issues are found
 - Report blockers, UX issues, unexpected side effects, and bugs
 
