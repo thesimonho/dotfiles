@@ -31,7 +31,7 @@
         "cli"
         "skills"
       ];
-      claude.targetDir = ".claude2";
+      claude.targetDir = ".claude-2";
     };
   };
 

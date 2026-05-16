@@ -45,7 +45,7 @@ in
     claude.targetDir = mkOption {
       type = types.str;
       default = ".claude";
-      description = "Target directory for Claude symlinks (e.g. .claude or .claude2).";
+      description = "Target directory for Claude symlinks (e.g. .claude or .claude-2).";
     };
   };
 
