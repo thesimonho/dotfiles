@@ -57,6 +57,7 @@ nushell/api.env
 tmux/plugins
 
 # ai
+AI/instructions/AGENTS.generated.md
 AI/skills/.system
 AI/skills/learned
 .pi-lens
