@@ -26,8 +26,10 @@ let
 in
 {
   imports = [
-    ./shared.nix
-    ./claude.nix
+    ./instructions.nix
+    ./agents.nix
+    ./skills.nix
+    ./clients.nix
     ./llama.nix
   ];
 
@@ -41,11 +43,6 @@ in
       type = types.listOf (types.enum (lib.attrNames catalog));
       default = [ ];
       description = "Individually enabled AI catalog entries (in addition to bundles).";
-    };
-    claude.targetDir = mkOption {
-      type = types.str;
-      default = ".claude";
-      description = "Target directory for Claude symlinks (e.g. .claude or .claude-2).";
     };
   };
 

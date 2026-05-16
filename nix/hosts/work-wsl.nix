@@ -30,7 +30,16 @@
         "cli"
         "skills"
       ];
-      claude.targetDir = ".claude-2";
+      clients = {
+        claude = {
+          kind = "claude";
+          configDir = ".claude-2";
+        };
+        codex = {
+          kind = "codex";
+          configDir = ".codex";
+        };
+      };
     };
   };
 
