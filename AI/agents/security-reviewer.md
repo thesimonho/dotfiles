@@ -1,6 +1,7 @@
 ---
 name: security-reviewer
 description: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Flags secrets, SSRF, injection, unsafe crypto, and OWASP Top 10 vulnerabilities. Can be called concurrently with other reviewers.
+effort: high
 claude:
   model: opus
   tools:
@@ -14,14 +15,12 @@ claude:
     - security-best-practices
   color: red
 codex:
-  model: gpt-5.4
-  model_reasoning_effort: high
+  model: gpt-5.5
   sandbox_mode: read-only
   nickname_candidates:
     - Sentinel
     - Auditor
 pi:
-  thinking: high
   tools:
     - read
     - grep

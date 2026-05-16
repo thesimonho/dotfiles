@@ -1,6 +1,9 @@
 ---
 name: playwright-runner
 description: End-to-end testing specialist using Playwright. Use PROACTIVELY for generating, maintaining, and running E2E playwright tests. Manages test journeys, quarantines flaky tests, uploads artifacts (screenshots, videos, traces), and ensures critical user flows work.
+effort: high
+skills:
+  - agent-browser
 claude:
   model: sonnet
   tools:
@@ -10,20 +13,14 @@ claude:
     - Bash
     - Grep
     - Glob
-  skills:
-    - playwright-skill
   color: red
 codex:
-  model: gpt-5.4
-  model_reasoning_effort: high
+  model: gpt-5.5
   sandbox_mode: workspace-write
-  skills:
-    - agent-browser
   nickname_candidates:
     - Runner
     - Browser
 pi:
-  thinking: high
   tools:
     - read
     - write
@@ -32,8 +29,6 @@ pi:
     - grep
     - find
     - ls
-  skills:
-    - agent-browser
 ---
 
 # Playwright Test Runner
@@ -213,9 +208,7 @@ export class MarketsPage {
 
   async searchMarkets(query: string) {
     await this.searchInput.fill(query);
-    await this.page.waitForResponse((resp) =>
-      resp.url().includes("/api/markets/search"),
-    );
+    await this.page.waitForResponse((resp) => resp.url().includes("/api/markets/search"));
     await this.page.waitForLoadState("networkidle");
   }
 
@@ -335,8 +328,7 @@ test("semantic search returns relevant results", async ({ page }) => {
 
   // 3. Wait for API call
   await page.waitForResponse(
-    (resp) =>
-      resp.url().includes("/api/markets/search") && resp.status() === 200,
+    (resp) => resp.url().includes("/api/markets/search") && resp.status() === 200,
   );
 
   // 4. Verify results contain relevant markets
@@ -384,9 +376,7 @@ test("user can connect wallet", async ({ page, context }) => {
 
   // 5. Verify connection successful
   await expect(page.locator('[data-testid="wallet-address"]')).toBeVisible();
-  await expect(page.locator('[data-testid="wallet-address"]')).toContainText(
-    "0x1234",
-  );
+  await expect(page.locator('[data-testid="wallet-address"]')).toContainText("0x1234");
 });
 ```
 
@@ -398,9 +388,7 @@ test("authenticated user can create market", async ({ page }) => {
   await page.goto("/creator-dashboard");
 
   // Verify auth (or skip test if not authenticated)
-  const isAuthenticated = await page
-    .locator('[data-testid="user-menu"]')
-    .isVisible();
+  const isAuthenticated = await page.locator('[data-testid="user-menu"]').isVisible();
   test.skip(!isAuthenticated, "User not authenticated");
 
   // 1. Click create market button
@@ -408,9 +396,7 @@ test("authenticated user can create market", async ({ page }) => {
 
   // 2. Fill market form
   await page.locator('[data-testid="market-name"]').fill("Test Market");
-  await page
-    .locator('[data-testid="market-description"]')
-    .fill("This is a test market");
+  await page.locator('[data-testid="market-description"]').fill("This is a test market");
   await page.locator('[data-testid="market-end-date"]').fill("2025-12-31");
 
   // 3. Submit form

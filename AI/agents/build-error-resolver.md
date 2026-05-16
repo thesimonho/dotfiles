@@ -1,6 +1,7 @@
 ---
 name: build-error-resolver
 description: Build and TypeScript error resolution specialist. Use PROACTIVELY when build fails or type errors occur. Fixes build/type errors only with minimal diffs, no architectural edits. Focuses on getting the build green quickly.
+effort: high
 claude:
   model: opus
   tools:
@@ -12,14 +13,12 @@ claude:
     - Glob
   color: green
 codex:
-  model: gpt-5.4
-  model_reasoning_effort: high
+  model: gpt-5.5
   sandbox_mode: workspace-write
   nickname_candidates:
     - Builder
     - Resolver
 pi:
-  thinking: high
   tools:
     - read
     - write

@@ -24,7 +24,7 @@ let
   generateAgentCliConfigs = pkgs.writeShellScript "generate-agent-cli-configs" ''
     export AGENTS_SOURCE_DIR="${agentSourcesPath}"
     export AGENTS_OUTPUT_DIR="${generatedAgentOutputsPath}"
-    export CODEX_SKILLS_DIR="$HOME/.codex/skills"
+    export SHARED_SKILLS_DIR="$HOME/.agents/skills"
     export YQ_BIN="${pkgs.yq}/bin/yq"
     ${pkgs.nodejs}/bin/node ${dotfiles}/AI/lib/agents/generate-agent-configs.js
   '';
@@ -55,7 +55,7 @@ let
 
   /*
     Build a `home.file` attrset that symlinks every custom and externally
-    installed skill directory under the given target (e.g. ".codex/skills").
+    installed skill directory under the given target (e.g. ".agents/skills").
   */
   mkStaticSkillsFor =
     targetDir:
@@ -120,6 +120,5 @@ lib.mkIf (config.my.ai.bundles != [ ]) {
     };
   }
   // mkStaticSkillsFor "${config.my.ai.claude.targetDir}/skills"
-  // mkStaticSkillsFor ".codex/skills"
-  // mkStaticSkillsFor ".pi/agent/skills";
+  // mkStaticSkillsFor ".agents/skills";
 }
