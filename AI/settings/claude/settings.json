@@ -46,7 +46,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/block-doc-files.js"
+            "command": "node ~/dotfiles/AI/hooks/block-doc-files.js"
           }
         ]
       },
@@ -55,7 +55,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/block-build-dirs.js"
+            "command": "node ~/dotfiles/AI/hooks/block-build-dirs.js"
           }
         ]
       },
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/block-force-push.js"
+            "command": "node ~/dotfiles/AI/hooks/block-force-push.js"
           }
         ]
       },
@@ -73,7 +73,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/check-conventional-commit.js"
+            "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js"
           }
         ]
       },
@@ -93,7 +93,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/policies/post-edit-reminder.js"
+            "command": "node ~/dotfiles/AI/hooks/post-edit-reminder.js"
           }
         ]
       }

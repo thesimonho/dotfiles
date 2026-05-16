@@ -3,7 +3,7 @@
  * Hook: Remind agents to verify after editing files.
  */
 
-const { addContext } = require("../../lib/hooks/hook-response");
+const { addContext } = require("../lib/hooks/hook-response");
 
 addContext(
   "PostToolUse",
