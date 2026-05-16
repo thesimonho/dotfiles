@@ -6,8 +6,8 @@
     "anthropicExtraUsage": true
   },
   "lastChangelogVersion": "0.74.0",
-  "defaultProvider": "llama-cpp",
-  "defaultModel": "qwen3.6-35b",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
   "steeringMode": "all",
   "followUpMode": "all",
   "transport": "auto",
