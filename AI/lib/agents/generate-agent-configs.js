@@ -8,9 +8,9 @@ const { execFileSync } = require("node:child_process");
 const sourceDirectory = process.env.AGENTS_SOURCE_DIR || path.resolve("AI/agents");
 const outputDirectory =
   process.env.AGENTS_OUTPUT_DIR || path.join(sourceDirectory, ".generated");
-const codexSkillsDirectory =
-  process.env.CODEX_SKILLS_DIR ||
-  path.join(process.env.HOME || "~", ".codex", "skills");
+const sharedSkillsDirectory =
+  process.env.SHARED_SKILLS_DIR ||
+  path.join(process.env.HOME || "~", ".agents", "skills");
 const yqBinary = process.env.YQ_BIN || "yq";
 
 const claudeDirectory = path.join(outputDirectory, "claude");
@@ -70,11 +70,14 @@ function ensureRequiredFields(filePath, metadata) {
 }
 
 function writeClaudeAgent(fileName, metadata, body) {
-  const claudeMetadata = {
+  const skills = mergeSkills(metadata.skills, metadata.claude?.skills);
+  const claudeMetadata = normalizeCommaSeparatedFields({
     name: metadata.name,
     description: metadata.description,
-    ...(metadata.claude || {}),
-  };
+    ...without(metadata.claude || {}, ["skills"]),
+    ...defaultTargetField(metadata.claude, "effort", metadata.effort),
+    ...(skills.length > 0 ? { skills } : {}),
+  }, ["tools", "disallowedTools"]);
 
   fs.writeFileSync(
     path.join(claudeDirectory, fileName),
@@ -84,10 +87,16 @@ function writeClaudeAgent(fileName, metadata, body) {
 
 function writeCodexAgent(fileName, metadata, body) {
   const codexMetadata = metadata.codex || {};
+  const skills = mergeSkills(metadata.skills, codexMetadata.skills);
   const codexAgent = {
     name: metadata.name,
     description: metadata.description,
     ...without(codexMetadata, ["skills"]),
+    ...defaultTargetField(
+      codexMetadata,
+      "model_reasoning_effort",
+      metadata.effort,
+    ),
     developer_instructions: body,
   };
 
@@ -95,17 +104,20 @@ function writeCodexAgent(fileName, metadata, body) {
     path.join(codexDirectory, fileName.replace(/\.md$/, ".toml")),
     `${tomlStringify({
       ...removeNullish(codexAgent),
-      ...codexSkillConfig(codexMetadata.skills),
+      ...codexSkillConfig(skills),
     })}\n`,
   );
 }
 
 function writePiAgent(fileName, metadata, body) {
-  const piMetadata = {
+  const skills = mergeSkills(metadata.skills, metadata.pi?.skills);
+  const piMetadata = normalizeCommaSeparatedFields({
     name: metadata.name,
     description: metadata.description,
-    ...(metadata.pi || {}),
-  };
+    ...without(metadata.pi || {}, ["skills"]),
+    ...defaultTargetField(metadata.pi, "thinking", metadata.effort),
+    ...(skills.length > 0 ? { skills } : {}),
+  }, ["tools", "skills"]);
 
   fs.writeFileSync(
     path.join(piDirectory, fileName),
@@ -117,6 +129,35 @@ function without(object, excludedKeys) {
   return Object.fromEntries(
     Object.entries(object).filter(([key]) => !excludedKeys.includes(key)),
   );
+}
+
+function mergeSkills(...skillLists) {
+  const skillNames = skillLists.flatMap((skills) => {
+    if (!skills) return [];
+    return Array.isArray(skills) ? skills : [skills];
+  });
+
+  return [...new Set(skillNames)];
+}
+
+function defaultTargetField(targetMetadata, fieldName, value) {
+  if (!value || targetMetadata?.[fieldName] !== undefined) {
+    return {};
+  }
+
+  return { [fieldName]: value };
+}
+
+function normalizeCommaSeparatedFields(metadata, fieldNames) {
+  const normalizedMetadata = { ...metadata };
+
+  for (const fieldName of fieldNames) {
+    if (Array.isArray(normalizedMetadata[fieldName])) {
+      normalizedMetadata[fieldName] = normalizedMetadata[fieldName].join(", ");
+    }
+  }
+
+  return normalizedMetadata;
 }
 
 function yamlStringify(object) {
@@ -141,15 +182,21 @@ function yqFromContent(content, shouldEmitYaml) {
 
 function tomlStringify(object) {
   const scalarEntries = Object.entries(object).filter(
-    ([, value]) => !isPlainObject(value),
+    ([, value]) => !isPlainObject(value) && !isObjectArray(value),
   );
   const nestedEntries = Object.entries(object).filter(([, value]) =>
-    isPlainObject(value),
+    isPlainObject(value) || isObjectArray(value),
   );
 
   return [
     ...scalarEntries.map(([key, value]) => tomlLine(key, value)),
-    ...nestedEntries.flatMap(([key, value]) => tomlObject(key, value)),
+    ...nestedEntries.flatMap(([key, value]) => {
+      if (isObjectArray(value)) {
+        return value.flatMap((item) => tomlObject(key, item, true));
+      }
+
+      return tomlObject(key, value);
+    }),
   ].join("\n");
 }
 
@@ -174,21 +221,27 @@ function tomlValue(value) {
   return JSON.stringify(stringValue);
 }
 
-function tomlObject(prefix, object) {
+function tomlObject(prefix, object, isArrayTable = false) {
   const scalarEntries = Object.entries(object).filter(
-    ([, value]) => !isPlainObject(value),
+    ([, value]) => !isPlainObject(value) && !isObjectArray(value),
   );
-  const nestedEntries = Object.entries(object).filter(([, value]) =>
-    isPlainObject(value),
+  const nestedEntries = Object.entries(object).filter(
+    ([, value]) => isPlainObject(value) || isObjectArray(value),
   );
 
   return [
     "",
-    `[${prefix}]`,
+    isArrayTable ? `[[${prefix}]]` : `[${prefix}]`,
     ...scalarEntries.map(([key, value]) => tomlLine(key, value)),
-    ...nestedEntries.flatMap(([key, value]) =>
-      tomlObject(`${prefix}.${key}`, value),
-    ),
+    ...nestedEntries.flatMap(([key, value]) => {
+      if (isObjectArray(value)) {
+        return value.flatMap((item) =>
+          tomlObject(`${prefix}.${key}`, item, true),
+        );
+      }
+
+      return tomlObject(`${prefix}.${key}`, value);
+    }),
   ];
 }
 
@@ -196,18 +249,22 @@ function isPlainObject(value) {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+function isObjectArray(value) {
+  return Array.isArray(value) && value.every(isPlainObject);
+}
+
 function escapeTomlMultiline(value) {
   return value.replaceAll("\\", "\\\\").replaceAll('"""', '\\"\\"\\"');
 }
 
 function codexSkillConfig(skills) {
-  if (!skills) return {};
+  if (!skills || skills.length === 0) return {};
 
   const skillNames = Array.isArray(skills) ? skills : [skills];
   return {
     skills: {
       config: skillNames.map((skillName) => ({
-        path: path.join(codexSkillsDirectory, skillName, "SKILL.md"),
+        path: path.join(sharedSkillsDirectory, skillName, "SKILL.md"),
         enabled: true,
       })),
     },

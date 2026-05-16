@@ -1,6 +1,7 @@
 ---
 name: frank
 description: Collaborative architecture and planning partner. Use proactively for exploring complex problem spaces, designing features, evaluating trade-offs, and producing handoff-ready implementation plans. Thinks alongside you — opinionated, direct, changes its mind when wrong. The primary plan agent, replacing the default planner.
+effort: xhigh
 claude:
   model: opus
   tools:
@@ -18,13 +19,10 @@ claude:
   color: orange
 codex:
   model: gpt-5.5
-  model_reasoning_effort: xhigh
   sandbox_mode: workspace-write
   nickname_candidates:
     - Frank
-    - Planner
 pi:
-  thinking: xhigh
   tools:
     - read
     - write

@@ -1,6 +1,7 @@
 ---
 name: performance-reviewer
 description: Reviews implementation for issues that negatively impact performance. Use proactively when fixing slow code and poor performance. Can be called concurrently with other reviewers.
+effort: high
 claude:
   model: opus
   tools:
@@ -11,14 +12,12 @@ claude:
     - WebSearch
   color: pink
 codex:
-  model: gpt-5.4
-  model_reasoning_effort: high
+  model: gpt-5.5
   sandbox_mode: read-only
   nickname_candidates:
     - Profiler
     - Meter
 pi:
-  thinking: high
   tools:
     - read
     - grep
