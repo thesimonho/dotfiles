@@ -1,10 +1,39 @@
 ---
 name: cleaner
 description: Dead code cleanup and consolidation specialist. Use PROACTIVELY for removing unused code, duplicates, and refactoring. Runs analysis tools to identify dead code and safely removes it.
-tools: Read, Write, Edit, Bash, Grep, Glob
-skills: coding-standards
-model: sonnet
-color: red
+claude:
+  model: sonnet
+  tools:
+    - Read
+    - Write
+    - Edit
+    - Bash
+    - Grep
+    - Glob
+  skills:
+    - coding-standards
+  color: red
+codex:
+  model: gpt-5.4
+  model_reasoning_effort: medium
+  sandbox_mode: workspace-write
+  skills:
+    - coding-standards
+  nickname_candidates:
+    - Cleaner
+    - Pruner
+pi:
+  thinking: medium
+  tools:
+    - read
+    - write
+    - edit
+    - bash
+    - grep
+    - find
+    - ls
+  skills:
+    - coding-standards
 ---
 
 # Refactor & Dead Code Cleaner

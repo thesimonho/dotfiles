@@ -7,7 +7,7 @@ let
   claudeMappings = [
     {
       name = "agents";
-      source = "${dotfiles}/AI/agents";
+      source = "${dotfiles}/AI/agents/.generated/claude";
     }
     {
       name = "rules";

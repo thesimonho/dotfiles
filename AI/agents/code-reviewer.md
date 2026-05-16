@@ -1,10 +1,35 @@
 ---
 name: code-reviewer
 description: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code. MUST BE USED for all code changes. Can be called concurrently with other reviewers.
-tools: Read, Grep, Glob, Bash
-skills: coding-standards
-model: sonnet
-color: red
+claude:
+  model: sonnet
+  tools:
+    - Read
+    - Grep
+    - Glob
+    - Bash
+  skills:
+    - coding-standards
+  color: red
+codex:
+  model: gpt-5.4
+  model_reasoning_effort: high
+  sandbox_mode: read-only
+  skills:
+    - coding-standards
+  nickname_candidates:
+    - Reviewer
+    - Scout
+pi:
+  thinking: high
+  tools:
+    - read
+    - grep
+    - find
+    - ls
+    - bash
+  skills:
+    - coding-standards
 ---
 
 You are a senior code reviewer ensuring high standards of code quality and security.
