@@ -7,6 +7,12 @@
       "skillPath": "skills/agent-browser/SKILL.md",
       "computedHash": "228f87d57035100d9dc6efcfc05aafd4b6e3962adacaa04b8217ab2fadb15dc8"
     },
+    "dodo": {
+      "source": "thesimonho/dodo",
+      "sourceType": "github",
+      "skillPath": "skills/do/SKILL.md",
+      "computedHash": "a2d176c1b42dfa363b7888ad3caaf734aeda50092f6422df2740828b9930377d"
+    },
     "grill-with-docs": {
       "source": "mattpocock/skills",
       "sourceType": "github",
