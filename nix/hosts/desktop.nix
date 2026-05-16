@@ -36,7 +36,20 @@
         "cli"
         "skills"
       ];
-      claude.targetDir = ".claude";
+      clients = {
+        claude = {
+          kind = "claude";
+          configDir = ".claude";
+        };
+        codex = {
+          kind = "codex";
+          configDir = ".codex";
+        };
+        pi = {
+          kind = "pi";
+          configDir = ".pi";
+        };
+      };
     };
   };
 
