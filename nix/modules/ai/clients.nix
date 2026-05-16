@@ -73,7 +73,7 @@ in
             };
             configDir = mkOption {
               type = types.str;
-              description = "Home-relative config directory for this client.";
+              description = "Home-relative directory where this client config is installed.";
             };
           };
         }
