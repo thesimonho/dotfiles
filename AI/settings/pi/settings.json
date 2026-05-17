@@ -1,6 +1,6 @@
 {
   "defaultThinkingLevel": "medium",
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "showHardwareCursor": false,
   "warnings": {
     "anthropicExtraUsage": true
