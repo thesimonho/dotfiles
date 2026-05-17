@@ -19,11 +19,19 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-web-access",
     "npm:pi-lens",
-    "npm:@plannotator/pi-extension",
     "npm:pi-intercom",
     "npm:pi-subagents",
-    "npm:context-mode"
+    "npm:context-mode",
+    "npm:pi-bar",
+    "npm:pi-simplify",
+    "npm:pi-terminal-theme",
+    "npm:pi-mcp-adapter",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@juicesharp/rpiv-advisor",
+    "npm:pi-hermes-memory"
   ],
-  "theme": "dark",
-  "collapseChangelog": true
+  "theme": "terminal",
+  "collapseChangelog": true,
+  "quietStartup": true,
+  "enableSkillCommands": false
 }
