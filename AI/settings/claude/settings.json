@@ -76,15 +76,6 @@
             "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js"
           }
         ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
       }
     ],
     "PostToolUse": [
@@ -166,27 +157,13 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "network": {
-      "allowedDomains": [
-        "*.github.com",
-        "*.githubusercontent.com",
-        "*.anthropic.com"
-      ],
-      "allowUnixSockets": [
-        "$SSH_AUTH_SOCK",
-        "/run/user/1000/agent-browser",
-        "~/.gnupg/S.gpg-agent"
-      ]
+      "allowedDomains": ["*.github.com", "*.githubusercontent.com", "*.anthropic.com"],
+      "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser", "~/.gnupg/S.gpg-agent"]
     },
     "filesystem": {
-      "allowWrite": [
-        "/tmp",
-        "~/.gnupg"
-      ]
+      "allowWrite": ["/tmp", "~/.gnupg"]
     },
-    "excludedCommands": [
-      "docker:*",
-      "git:*"
-    ]
+    "excludedCommands": ["docker:*", "git:*"]
   },
   "effortLevel": "medium",
   "advisorModel": "opus",
