@@ -1,53 +1,42 @@
 model = "gpt-5.5"
-model_reasoning_effort = "medium"
-[sandbox_workspace_write]
-network_access = true
-
-[features]
-unified_exec = true
-shell_snapshot = true
-steer = true
-apps = true
-multi_agent = true
-
-[projects."~/Projects"]
-trust_level = "trusted"
-
-[projects."/home/simon/Projects/warden"]
-trust_level = "trusted"
-
-[projects."/home/simon/Projects/scribble"]
-trust_level = "trusted"
-
-[mcp_servers.context7]
-command = "npx"
-args = [ "-y", "@upstash/context7-mcp" ]
-
-[mcp_servers.context7.env]
-DEFAULT_MINIMUM_TOKENS = "6000"
-
-[mcp_servers.chrome-devtools]
-command = "npx"
-args = [ "-y", "chrome-devtools-mcp@latest", "--no-usage-statistics", "--isolated=true" ]
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "xhigh"
+hide_agent_reasoning = true
+show_raw_agent_reasoning = false
+approvals_reviewer = "guardian_subagent"
+personality = "friendly"
+commit_attribution = ""
+approval_policy = "on-request"
+cli_auth_credentials_store = "file"
+project_doc_fallback_filenames = ["CLAUDE.md"]
+sandbox_mode = "workspace-write"
+web_search ="live"
 
 [tui]
-status_line = [ "model-with-reasoning", "context-used", "used-tokens", "five-hour-limit", "weekly-limit" ]
-model = "gpt-5.3-codex"
-model_reasoning_effort = "medium"
-sandbox_mode = "workspace-write"
-approval_policy = "on-request"
-project_doc_fallback_filenames = [ "CLAUDE.md" ]
-hide_agent_reasoning = false
-show_raw_agent_reasoning = true
-disable_paste_burst = false
-web_search = "cached"
-personality = "friendly"
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "weekly-limit"]
+status_line_use_colors = true
+theme = "two-dark"
+session_picker_view = "dense"
 
 [tui.model_availability_nux]
-"gpt-5.5" = 1
+"gpt-5.5" = 4
+
+[features]
+fast_mode = false
+terminal_resize_reflow = true
+memories = true
+goals = true
+undo = true
+
+[plugins."codex-security@openai-curated"]
+enabled = true
 
 [plugins."github@openai-curated"]
 enabled = true
 
-[notice.model_migrations]
-"gpt-5.3-codex" = "gpt-5.4"
+[projects."/home/simon/dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/simon"]
+trust_level = "trusted"
+

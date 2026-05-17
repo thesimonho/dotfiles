@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simplify"
+  short_description: "Review recent changes with three agents"
+  default_prompt: "Use $simplify to review my recent code changes and return prioritized reuse, quality, and efficiency findings."
