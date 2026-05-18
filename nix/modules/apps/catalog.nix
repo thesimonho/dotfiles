@@ -298,6 +298,10 @@
         "cli"
       ];
     };
+    zed = {
+      flatpak.id = "dev.zed.Zed";
+      bundles = [ "dev" ];
+    };
     zoxide = {
       program = {
         name = "zoxide";
