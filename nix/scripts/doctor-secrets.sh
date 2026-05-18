@@ -8,7 +8,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 nix_eval_errors="$(mktemp)"
 trap 'rm -f "$nix_eval_errors"' EXIT
 
-source "$script_dir/lib/doctor-output.sh"
+source "$script_dir/doctor-output.sh"
 
 nix_eval_config() {
   if ! nix --extra-experimental-features 'nix-command flakes' \

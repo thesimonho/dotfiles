@@ -5,7 +5,7 @@ flake_dir="${1:-.}"
 host="${2:-desktop}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-source "$script_dir/lib/doctor-output.sh"
+source "$script_dir/doctor-output.sh"
 
 skill_report="$(./scripts/describe-skills.sh "$flake_dir" "$host" tsv)"
 problem_rows="$(printf '%s\n' "$skill_report" | awk -F '\t' 'NR > 1 && $3 != $4')"
