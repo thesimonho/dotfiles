@@ -6,6 +6,14 @@
 }:
 let
   isLinux = config.my.os != "darwin";
+  hostsPath = ../hosts;
+  hostEntries = builtins.readDir hostsPath;
+  hostNames = map (name: lib.removeSuffix ".nix" name) (
+    builtins.filter (name: lib.hasSuffix ".nix" name && hostEntries.${name} == "regular") (
+      builtins.attrNames hostEntries
+    )
+  );
+  zshWords = words: lib.concatMapStringsSep " " lib.escapeShellArg words;
 in
 {
   programs.zsh = {
@@ -159,6 +167,40 @@ in
       (lib.mkOrder 1500 ''
         eval "$(pay-respects zsh --alias fuck --nocnf)"
       '')
+
+      # 1600: project-specific completion enrichments after Carapace is loaded
+      (lib.mkIf (config.programs.carapace.enable && config.programs.carapace.enableZshIntegration) (
+        lib.mkOrder 1600 ''
+          _dotfiles_host_names=(${zshWords hostNames})
+          _dotfiles_describe_targets=(completions hosts skills ''${_dotfiles_host_names[@]})
+          _dotfiles_doctor_modules=(completions secrets skills)
+
+          _dotfiles_just_completion() {
+            local recipe="''${words[2]}"
+
+            if [[ $CURRENT -eq 3 ]]; then
+              case "$recipe" in
+                build|switch)
+                  _describe -t dotfiles-hosts 'dotfiles hosts' _dotfiles_host_names
+                  return
+                  ;;
+                describe)
+                  _describe -t dotfiles-describe-targets 'dotfiles describe targets' _dotfiles_describe_targets
+                  return
+                  ;;
+                doctor)
+                  _describe -t dotfiles-doctor-modules 'dotfiles doctor modules' _dotfiles_doctor_modules
+                  return
+                  ;;
+              esac
+            fi
+
+            _carapace_completer "$@"
+          }
+
+          compdef _dotfiles_just_completion just
+        ''
+      ))
     ];
     plugins = [
       {

@@ -28,20 +28,88 @@ update-pinned:
 show:
     {{ _nix }} flake show {{ FLAKE_DIR }}
 
+# Regenerate generated repo docs
+[private]
+docs:
+    ./scripts/write-skills-readme.sh
+
+# Describe dotfiles inventory: `just describe hosts`, `just describe desktop`, `just describe skills`
+describe target="hosts" detail="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    target="{{ target }}"
+
+    case "$target" in
+      hosts)
+        {{ _nix }} eval --json {{ FLAKE_DIR }}#homeConfigurations --apply 'configs: builtins.attrNames configs' | jq -r '.[]'
+        ;;
+      completions)
+        echo "carapace: $(command -v carapace || true)"
+        echo "bridges: ${CARAPACE_BRIDGES:-unset}"
+        echo "specs: ${XDG_CONFIG_HOME:-$HOME/.config}/carapace/specs"
+        zsh -ic 'for cmd in git just nix gh docker systemctl ssh; do print -r -- "$cmd -> ${_comps[$cmd]-unset}"; done' 2>/dev/null
+        ;;
+      skills)
+        ./scripts/describe-skills.sh {{ FLAKE_DIR }} "${detail:-desktop}"
+        ;;
+      *)
+        {{ _nix }} eval --json {{ FLAKE_DIR }}#homeConfigurations."$target".config --apply 'config: {
+          inherit (config.my) hostName os desktop identities secrets;
+          gpuBackend = config.my.gpu.backend;
+          appBundles = config.my.apps.bundles;
+          appEnabled = config.my.apps.enabled;
+          aiBundles = config.my.ai.bundles;
+          aiClients = builtins.attrNames config.my.ai.clients;
+        }' | jq .
+        ;;
+    esac
+
+# Run dotfiles diagnostics: `just doctor`, `just doctor secrets`
+doctor module="" detail="":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    module="{{ module }}"
+
+    case "$module" in
+      "")
+        just doctor completions
+        just doctor secrets "${detail:-desktop}"
+        just doctor skills "${detail:-desktop}"
+        ;;
+      completions)
+        if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+          printf '\033[1m==> completions\033[0m\n'
+        else
+          echo "==> completions"
+        fi
+        just describe completions
+        ;;
+      secrets)
+        ./scripts/doctor-secrets.sh {{ FLAKE_DIR }} "${detail:-desktop}"
+        ;;
+      skills)
+        ./scripts/doctor-skills.sh {{ FLAKE_DIR }} "${detail:-desktop}"
+        ;;
+      *)
+        echo "Unknown doctor module: $module" >&2
+        echo "Known modules: completions, secrets, skills" >&2
+        exit 1
+        ;;
+    esac
+
 # Run flake.checks (eval-only — catches bundle/enum/assertion errors fast)
-check:
+check: docs
     {{ _nix }} flake check --no-build {{ FLAKE_DIR }}
 
 # Apply a host configuration: `just switch desktop`
-switch host:
+switch host: docs
     @if [ ! -f "$HOME/.secrets/age_identity" ]; then \
       echo "Error: Missing ~/.secrets/age_identity — restore from Bitwarden"; \
       exit 1; \
     fi
     @echo "==> Applying host {{ host }} using flake at {{ FLAKE_DIR }}"
     nh home switch -b backup -c {{ host }} {{ FLAKE_DIR }}
-
-    just clean
+    @just clean
 
 # Build a host activation package without activating; shows nvd diff vs current
 build host:
