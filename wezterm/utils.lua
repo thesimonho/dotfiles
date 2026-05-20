@@ -16,6 +16,17 @@ M.is_dark = function()
 	return appearance:find("Dark") ~= nil
 end
 
+-- Returns the name of the default WSL distribution, or nil if none.
+-- Uses wezterm.default_wsl_domains() which mirrors `wsl --list --verbose`
+-- output order; the default distribution is always listed first.
+M.default_wsl_distro = function()
+	local domains = wezterm.default_wsl_domains()
+	if domains and domains[1] then
+		return domains[1].distribution
+	end
+	return nil
+end
+
 M.string_split = function(inputstr, sep)
 	if sep == nil then
 		sep = ","

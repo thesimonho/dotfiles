@@ -8,7 +8,14 @@ config.adjust_window_size_when_changing_font_size = false
 config.animation_fps = 60
 config.automatically_reload_config = true
 config.bold_brightens_ansi_colors = "BrightAndBold"
-config.color_scheme_dirs = { "~/.config/wezterm/colors" }
+local function load_local_scheme(name)
+	local scheme = wezterm.color.load_scheme(wezterm.config_dir .. "/colors/" .. name .. ".toml")
+	return scheme
+end
+config.color_schemes = {
+	["kanagawa-paper-ink"] = load_local_scheme("kanagawa-paper-ink"),
+	["kanagawa-paper-canvas"] = load_local_scheme("kanagawa-paper-canvas"),
+}
 config.color_scheme = utils.is_dark() and "kanagawa-paper-ink" or "kanagawa-paper-canvas"
 config.cursor_blink_rate = 0
 config.default_cursor_style = "SteadyBar"
@@ -60,13 +67,12 @@ local additional_shells = {}
 if utils.is_windows() then
 	config.font_size = 12
 	config.win32_system_backdrop = "Mica"
-	config.window_background_opacity = 0
-	config.default_prog = { "nu.exe" }
+	config.window_background_opacity = 0.9
+	local default_wsl = utils.default_wsl_distro()
+	if default_wsl then
+		config.default_domain = "WSL:" .. default_wsl
+	end
 	additional_shells = {
-		{
-			label = "nushell",
-			args = { "nu.exe" },
-		},
 		{
 			label = "PowerShell",
 			args = { "pwsh.exe" },
