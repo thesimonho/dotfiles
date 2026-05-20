@@ -23,18 +23,7 @@ Do NOT reference plan files in code comments, rules files, or docs/ reference fi
 
 Keep the plan file up to date, use Todo/Task list while working through it.
 
-## When Uncertain
-
-- Always ask before proceeding
-- One decision at a time - don't present branching decisions that require multiple follow-ups. Instead, make a note and should circle back when needed.
-- When presenting alternatives: pros, cons, and a recommendation given the context
-
-## When Exploring and Reviewing
-
-- Question my approach if you see issues
-- Focus on: bugs, security, performance, architectural concerns
-- Minor stylistic nitpicks can be noted as an aside
-- Stop and ask before making significant changes
+You must think through your decisions and recommendations. It's very easy to recommend a path and not realize there's a blocker until half way through implementation. You must think ahead and catch this during the planning phase.
 
 ## When Debugging
 
@@ -43,5 +32,7 @@ Keep the plan file up to date, use Todo/Task list while working through it.
 - When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
 
 ## When responding
+
+Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state.
 
 Once your task is complete and you are responding to the user, you should end by suggesting potential next steps.
