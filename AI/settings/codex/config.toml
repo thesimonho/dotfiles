@@ -17,7 +17,7 @@ status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-rem
 status_line_use_colors = true
 theme = "two-dark"
 session_picker_view = "dense"
-pet = "rocky"
+pet = "disabled"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
