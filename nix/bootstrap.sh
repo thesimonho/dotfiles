@@ -145,7 +145,7 @@ restart_nix_daemon() {
 
 # Prereqs needed before Nix can be installed. Can't go through the
 # nix-managed catalog because nix isn't running yet.
-#   - Fedora: xz (installer extracts .xz tarball), @development-tools
+#   - Fedora: xz (installer extracts .xz tarball), awk, @development-tools
 #     (empirically needed on minimal Fedora/WSL images)
 #   - macOS: Xcode CLT (provides system git used by installer + ours)
 ensure_nix_prereqs() {
@@ -153,7 +153,7 @@ ensure_nix_prereqs() {
   Linux)
     case "$(detect_pkgmgr)" in
     dnf)
-      sudo dnf install -y xz @development-tools
+      sudo dnf install -y xz gawk @development-tools
       ;;
     esac
     ;;
