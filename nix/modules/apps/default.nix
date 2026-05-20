@@ -18,7 +18,14 @@ let
     force = true;
   };
 
-  catalogData = import ./catalog.nix { inherit pkgs pkgsUnstable pkgsPinned symlinkConfig; };
+  catalogData = import ./catalog.nix {
+    inherit
+      pkgs
+      pkgsUnstable
+      pkgsPinned
+      symlinkConfig
+      ;
+  };
   inherit (catalogData) bundleNames;
 
   flatpakOverrideType = types.submodule {
@@ -79,6 +86,8 @@ let
 
   hasAnyFlatpak = flatpakEntries != { };
   isLinux = config.my.os != "darwin";
+  hasDesktop = config.my.desktop != "none";
+  flatpakActive = isLinux && hasDesktop && hasAnyFlatpak;
 
   programsConfig = lib.listToAttrs (
     lib.mapAttrsToList (_: e: {
@@ -154,7 +163,7 @@ in
       zsh.shellAliases = mergedShellAliases;
     };
 
-    services.flatpak = mkIf (isLinux && hasAnyFlatpak) {
+    services.flatpak = mkIf flatpakActive {
       enable = true;
       uninstallUnmanaged = true;
       remotes = [
@@ -174,14 +183,14 @@ in
       overrides = flatpakOverrides;
     };
 
-    xdg.systemDirs.data = mkIf (isLinux && hasAnyFlatpak) [
+    xdg.systemDirs.data = mkIf flatpakActive [
       "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
       "/var/lib/flatpak/exports/share"
     ];
 
     xdg.configFile =
       mergedXdgConfigFiles
-      // lib.optionalAttrs (isLinux && hasAnyFlatpak) {
+      // lib.optionalAttrs flatpakActive {
         "environment.d/20-flatpak.conf" = {
           text = "XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share";
         };
