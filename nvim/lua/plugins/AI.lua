@@ -95,6 +95,18 @@ vim.keymap.set({ "n", "i", "v", "t" }, "<C-.>", function()
   end)
 end, { noremap = true, silent = true })
 
+local function show_agent_terminal()
+  local t = open_agents[next(open_agents or {})]
+  if t and not t:is_open() then
+    t:open()
+  end
+end
+
+vim.keymap.set("v", "<leader>as", function()
+  vim.cmd("'<,'>ToggleTermSendVisualSelection 5")
+  show_agent_terminal()
+end, { noremap = true, silent = true, desc = "Send selection to agent terminal" })
+
 vim.keymap.set("n", "<leader>ac", function()
   vim.fn.system("xdg-open https://www.claude.ai")
 end, { desc = "Chat in browser" })
