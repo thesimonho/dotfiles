@@ -25,6 +25,11 @@ Keep the plan file up to date, use Todo/Task list while working through it.
 
 You must think through your decisions and recommendations. It's very easy to recommend a path and not realize there's a blocker until half way through implementation. You must think ahead and catch this during the planning phase.
 
+## When programming
+
+- Use TDD. Aim for 80% coverage.
+- Use the TDD skill to help you.
+
 ## When Debugging
 
 - Run unit tests to help keep you on track
@@ -33,6 +38,6 @@ You must think through your decisions and recommendations. It's very easy to rec
 
 ## When responding
 
-Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state.
+Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the /verify skill.
 
 Once your task is complete and you are responding to the user, you should end by suggesting potential next steps.

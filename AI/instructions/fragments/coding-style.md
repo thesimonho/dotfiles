@@ -19,22 +19,16 @@ MANY SMALL FILES > FEW LARGE FILES:
 - Extract utilities from large components
 - Organize by feature/domain, not by type
 
+## Functions
+
+- Small (<30 lines)
+- Use early returns
+- No deep nesting (>4 levels)
+- Proper error handling
+- No mutation (immutable patterns used)
+
 ## Comments
 
-- Write docstrings. Conventions: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
+- Write docstrings. Use existing codebase conventions, or these defaults: typescript/tsx (TSDoc), python (google docstrings), go (GoDoc)
 - Write comments for complex code that is difficult to understand, not for obvious code
 - Comments explain why, not what - provide enough context for someone to write tests against intended behaviour
-
-## Code Quality Checklist
-
-Before marking work complete:
-
-- [ ] Code is readable and well-named
-- [ ] Functions are small (<30 lines)
-- [ ] Functions have docstrings
-- [ ] Files are focused (<800 lines)
-- [ ] Use early returns
-- [ ] No deep nesting (>4 levels)
-- [ ] Proper error handling
-- [ ] No hardcoded values
-- [ ] No mutation (immutable patterns used)

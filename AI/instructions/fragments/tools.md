@@ -4,26 +4,21 @@ Use the right tool for the job - do not just resort to manual search and edits. 
 
 ## CLI
 
-[rtk](https://github.com/rtk-ai/rtk) is available for many Bash commands to help save tokens. It works by intercepting commands and compressing their output. In order to take advantage of this, you _must_ use the Bash tool to call these commands instead of builtin tools like Read, Grep, and Glob.
+[rtk](https://github.com/rtk-ai/rtk) is available for many Bash commands to help save tokens. It works by intercepting commands and compressing their output. In order to take advantage of this, you _must_ use the Bash tool instead of builtin tools like Read, Grep, and Glob.
 
-Shortlist of commands that can be intercepted:
+### Golden Rule
 
-`ls` List directory contents with token-optimized output (proxy to native ls)
-`tree` Directory tree with token-optimized output (proxy to native tree)
-`read` Read file with intelligent filtering
-`git` Git commands with compact output
-`gh` GitHub CLI (gh) commands with token-optimized output
-`find` Find files with compact tree output (accepts native find flags like -name, -type)
-`diff` Ultra-condensed diff (only changed lines)
-`log` Filter and deduplicate log output
-`grep` Compact grep - strips whitespace, truncates, groups by file
-`wget` Download with compact output (strips progress bars)
-`wc` Word/line/byte count with compact output (strips paths and padding)
-`npm` npm run with filtered output (strip boilerplate)
-`npx` npx with intelligent routing (tsc, eslint, prisma -> specialized filters)
-`curl` Curl with auto-JSON detection and schema output
+**Always prefix commands with `rtk`**. It is always safe to use - if there is no `rtk` variant, it will just fall back to the regular command.
 
-You can see the full list using `rtk --help`.
+**Important**: Even in command chains with `&&`, use `rtk`:
+
+```bash
+# ❌ Wrong
+git add . && git commit -m "msg" && git push
+
+# ✅ Correct
+rtk git add . && rtk git commit -m "msg" && rtk git push
+```
 
 ## Code Intelligence
 

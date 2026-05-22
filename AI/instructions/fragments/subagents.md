@@ -22,7 +22,7 @@ Models: Claude Sonnet, GPT5.5 medium reasoning
 
 ### Complex tasks
 
-Subtasks needing real planning or tradeoffs
+Subtasks needing real planning, decision making, or tradeoffs
 
 Models: Claude Opus, GPT5.5 high reasoning
 
