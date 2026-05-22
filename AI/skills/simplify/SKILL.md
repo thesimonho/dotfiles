@@ -88,6 +88,17 @@ Look for avoidable cost or runtime risk:
 - Unbounded collections, missing cleanup, event listener leaks, or subscription leaks.
 - Broad scans or full-file reads when the code only needs a narrow subset.
 
+Common performance issues:
+
+1. **Algorithmic Complexity**: O(n²) or worse where O(n) is possible
+2. **Database Queries**: N+1 queries, missing indexes, full table scans
+3. **Memory Usage**: Unbounded growth, large allocations, leaks
+4. **I/O Operations**: Synchronous blocking, missing batching
+5. **Caching**: Missing cache opportunities, invalidation issues
+6. **Network**: Excessive requests, missing compression, large payloads
+7. **Concurrency**: Lock contention, missing parallelization
+8. **Resource Management**: Connection pools, file handles, cleanup
+
 Ignore theoretical performance concerns unless they point to a concrete change in the reviewed code.
 
 ### 3. Aggregate Findings
