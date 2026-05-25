@@ -1,0 +1,119 @@
+# User-layer Codex execution policy.
+#
+# RTK is a command proxy. Use command_rule() for commands where direct and
+# `rtk`-prefixed forms should share the same approval policy.
+
+def _rtk_commands(commands):
+    return ["rtk " + command for command in commands]
+
+def command_rule(pattern, decision, justification = None, match = [], not_match = []):
+    prefix_rule(
+        pattern = pattern,
+        decision = decision,
+        justification = justification,
+        match = match,
+        not_match = not_match,
+    )
+
+    prefix_rule(
+        pattern = ["rtk"] + pattern,
+        decision = decision,
+        justification = justification,
+        match = _rtk_commands(match),
+        not_match = _rtk_commands(not_match),
+    )
+
+command_rule(
+    pattern = ["git"],
+    decision = "allow",
+    justification = "Git is part of the normal development workflow",
+    match = [
+        "git status --short",
+        "git checkout -b chore/example",
+    ],
+    not_match = [
+        "gh pr view 123",
+    ],
+)
+
+command_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Publishing branches should stay explicit",
+    match = [
+        "git push",
+        "git push origin HEAD",
+    ],
+    not_match = [
+        "git status --short",
+    ],
+)
+
+command_rule(
+    pattern = ["rm", "-rf"],
+    decision = "prompt",
+    justification = "Recursive deletion should stay explicit",
+    match = [
+        "rm -rf build",
+        "rm -rf .next",
+    ],
+    not_match = [
+        "rm file.txt",
+    ],
+)
+
+command_rule(
+    pattern = ["gh"],
+    decision = "prompt",
+    justification = "GitHub CLI is part of the normal development workflow",
+    match = [
+        "gh pr view 123",
+        "gh run list",
+    ],
+    not_match = [
+        "git status --short",
+    ],
+)
+
+command_rule(
+    pattern = ["npm", "run"],
+    decision = "allow",
+    justification = "Package scripts are part of the normal project verification workflow",
+    match = [
+        "npm run build",
+        "npm run lint",
+    ],
+    not_match = [
+        "npm install",
+    ],
+)
+
+command_rule(
+    pattern = [["oxlint", "oxfmt", "curl", "just"]],
+    decision = "allow",
+    justification = "Common project tooling is allowed by the Claude settings",
+    match = [
+        "oxlint .",
+        "oxfmt --check .",
+        "curl --version",
+        "just check",
+    ],
+    not_match = [
+        "npm run lint",
+    ],
+)
+
+command_rule(
+    pattern = [["ls", "grep", "find", "read"]],
+    decision = "allow",
+    justification = "Common inspection commands are safe to run without approval",
+    match = [
+        "ls -la",
+        "grep pattern file",
+        "find . -maxdepth 1",
+        "read README.md",
+    ],
+    not_match = [
+        "git status --short",
+    ],
+)

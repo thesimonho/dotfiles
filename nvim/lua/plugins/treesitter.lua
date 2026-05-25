@@ -16,6 +16,7 @@ return {
         "query",
         "regex",
         "sql",
+        "starlark",
         "toml",
         "vim",
         "vimdoc",

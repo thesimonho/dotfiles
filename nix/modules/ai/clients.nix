@@ -27,6 +27,7 @@ let
         "${client.configDir}/AGENTS.md" = mkSymlink generatedAgentsPath;
         "${client.configDir}/agents" = mkSymlink "${generatedAgentOutputsPath}/codex";
         "${client.configDir}/config.toml" = mkSymlink "${dotfiles}/AI/settings/codex/config.toml";
+        "${client.configDir}/rules" = mkSymlink "${dotfiles}/AI/settings/codex/rules";
         /*
           TODO: Codex writes hook trust decisions into ~/.codex/config.toml as
                 [hooks.state]. Since this repo is public and config.toml is tracked,
