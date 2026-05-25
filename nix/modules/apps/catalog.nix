@@ -41,7 +41,14 @@
       flatpak = {
         id = "eu.betterbird.Betterbird";
         overrides.Context = {
-          filesystems = [ "~/.gnupg:ro" ];
+          filesystems = [
+            "xdg-documents:ro"
+            "xdg-download"
+            "xdg-desktop:ro"
+            "xdg-pictures:ro"
+            "xdg-videos:ro"
+            "~/.gnupg:ro"
+          ];
           sockets = [ "gpg-agent" ];
         };
       };
@@ -69,10 +76,12 @@
       flatpak = {
         id = "com.discordapp.Discord";
         overrides.Context.filesystems = [
-          "xdg-documents"
+          "home:ro"
+          "xdg-documents:ro"
           "xdg-download"
-          "xdg-pictures"
-          "xdg-videos"
+          "xdg-desktop"
+          "xdg-pictures:ro"
+          "xdg-videos:ro"
         ];
       };
       bundles = [ "communication" ];
@@ -228,10 +237,12 @@
       flatpak = {
         id = "com.slack.Slack";
         overrides.Context.filesystems = [
-          "xdg-documents"
+          "home:ro"
+          "xdg-documents:ro"
           "xdg-download"
-          "xdg-pictures"
-          "xdg-videos"
+          "xdg-desktop"
+          "xdg-pictures:ro"
+          "xdg-videos:ro"
         ];
       };
       bundles = [ "communication" ];
