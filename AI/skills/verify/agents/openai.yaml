@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verify"
+  short_description: "Run post-work verification"
+  default_prompt: "Use $verify to check recent changes with the appropriate build, lint, test, and review steps."

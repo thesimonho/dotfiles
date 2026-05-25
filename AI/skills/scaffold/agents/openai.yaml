@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scaffold"
+  short_description: "Set up a new project"
+  default_prompt: "Use $scaffold to set up a new project in the current working directory with current best practices."
