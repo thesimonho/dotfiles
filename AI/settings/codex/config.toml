@@ -16,7 +16,7 @@ web_search ="live"
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "weekly-limit"]
 status_line_use_colors = true
 theme = "two-dark"
-session_picker_view = "dense"
+session_picker_view = "comfortable"
 pet = "disabled"
 
 [tui.model_availability_nux]
