@@ -37,6 +37,8 @@ Every commit message follows the conventional commit format:
 
 ### Small, logical commits
 
+Commit often. Frequent commits = easy bisects.
+
 Commit in small, focused chunks — each commit should be one logical change that is easy to review and revert.
 
 - Don't bundle unrelated changes in a single commit
