@@ -126,19 +126,12 @@ return {
   },
   {
     "nvim-neotest/neotest",
-    enabled = fs.has_in_project("vite.config.ts"),
     dependencies = {
       "marilari88/neotest-vitest",
     },
     opts = {
       adapters = {
         ["neotest-vitest"] = {},
-      },
-      summary = {
-        follow = true,
-      },
-      output = {
-        open_on_run = false,
       },
     },
   },
