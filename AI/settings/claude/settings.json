@@ -37,7 +37,7 @@
       "mcp__context7__resolve-library-id"
     ],
     "deny": [],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
   "enableAllProjectMcpServers": true,
   "hooks": {
@@ -172,13 +172,14 @@
     "enabled": true,
     "mode": "hold"
   },
+  "skipAutoPermissionPrompt": true,
   "skipDangerousModePermissionPrompt": true,
+  "disableBypassPermissionsMode": false,
   "theme": "auto",
   "preferredNotifChannel": "auto",
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "useAutoModeDuringPlan": true,
-  "disableBypassPermissionsMode": false
+  "useAutoModeDuringPlan": true
 }
