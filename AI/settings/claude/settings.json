@@ -166,20 +166,20 @@
     },
     "excludedCommands": ["docker:*", "git:*"]
   },
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "advisorModel": "opus",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "skipAutoPermissionPrompt": true,
   "skipDangerousModePermissionPrompt": true,
-  "disableBypassPermissionsMode": false,
   "theme": "auto",
   "preferredNotifChannel": "auto",
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "useAutoModeDuringPlan": true
+  "skipAutoPermissionPrompt": true,
+  "useAutoModeDuringPlan": true,
+  "disableBypassPermissionsMode": false
 }

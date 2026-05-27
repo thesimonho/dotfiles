@@ -5,7 +5,7 @@
   "warnings": {
     "anthropicExtraUsage": true
   },
-  "lastChangelogVersion": "0.74.0",
+  "lastChangelogVersion": "0.78.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "steeringMode": "all",
@@ -28,10 +28,11 @@
     "npm:pi-mcp-adapter",
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-advisor",
-    "npm:pi-hermes-memory"
+    "npm:pi-hermes-memory",
+    "npm:@ff-labs/pi-fff"
   ],
   "theme": "terminal",
   "collapseChangelog": true,
   "quietStartup": true,
-  "enableSkillCommands": false
+  "enableSkillCommands": true
 }
