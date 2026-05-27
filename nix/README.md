@@ -64,6 +64,12 @@ to identities via `my.identities = [ ... ]`. Modules `secrets`, `gpg`,
 `ssh`, `git` filter to that list — a host that lists no identities
 decrypts none.
 
+On Linux, both SSH key and GPG signing passphrases persist in libsecret
+(KWallet/gnome-keyring) and are re-injected into their agents at login —
+SSH via `ssh-add-keys` (`ssh.nix`), GPG via `gpg-preset-passphrases`
+(`gpg.nix`) — so neither re-prompts after a reboot. macOS uses Keychain
+instead.
+
 See `secrets/README.md` for more details.
 
 ## Validation
