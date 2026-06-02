@@ -33,6 +33,14 @@ in
       package = llmAgents.pi;
       bundles = [ "agents" ];
     };
+    claude-code-acp = {
+      package = llmAgents.claude-agent-acp;
+      bundles = [ "agents" ];
+    };
+    codex-acp = {
+      package = llmAgents.codex-acp;
+      bundles = [ "agents" ];
+    };
     agent-browser = {
       package = llmAgents.agent-browser;
       bundles = [ "skills" ];
