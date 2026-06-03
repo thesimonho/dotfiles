@@ -16,6 +16,7 @@ in
 
   home.sessionVariables = {
     EDITOR = "nvim";
+    NVIM_LOG_FILE = "${config.xdg.stateHome}/nvim/nvim.log";
     VISUAL = "nvim";
   };
 
