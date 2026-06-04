@@ -6,7 +6,7 @@ set -euo pipefail
 # -----------------------------
 REPO_URL_DEFAULT="https://github.com/thesimonho/dotfiles"
 REPO_DIR_DEFAULT="$HOME/dotfiles"
-BRANCH_DEFAULT="master"
+BRANCH_DEFAULT="main"
 FLAKE_SUBDIR_DEFAULT="nix"
 
 usage() {
@@ -178,12 +178,15 @@ ensure_line_in_nix_conf() {
   sudo mkdir -p /etc/nix
   sudo touch "$conf"
 
-  if sudo grep -Eq "^\s*${key}\s*=" "$conf"; then
-    # Replace the first matching line only
-    sudo sed -i "0,/^\s*${key}\s*=.*/s//${key} = ${value}/" "$conf"
-  else
-    echo "${key} = ${value}" | sudo tee -a "$conf" >/dev/null
-  fi
+  # Portable across GNU/BSD sed: strip any existing lines for this key, then append.
+  # (GNU sed's `0,/re/` range and BSD sed's mandatory `-i ''` extension diverge,
+  # so avoid in-place sed entirely here.)
+  local tmp
+  tmp="$(mktemp)"
+  sudo grep -Ev "^[[:space:]]*${key}[[:space:]]*=" "$conf" >"$tmp" || true
+  printf '%s = %s\n' "$key" "$value" >>"$tmp"
+  sudo install -m 0644 "$tmp" "$conf"
+  rm -f "$tmp"
 }
 
 ensure_experimental_features() {
@@ -195,7 +198,8 @@ ensure_experimental_features() {
   sudo touch "$conf"
 
   local current=""
-  current="$(sudo sed -nE 's/^\s*experimental-features\s*=\s*(.*)$/\1/p' "$conf" | head -n1 || true)"
+  # Use [[:space:]] instead of \s — BSD sed (macOS) does not honor \s.
+  current="$(sudo sed -nE 's/^[[:space:]]*experimental-features[[:space:]]*=[[:space:]]*(.*)$/\1/p' "$conf" | head -n1 || true)"
 
   local merged="$current"
   for feat in "${required[@]}"; do

@@ -115,7 +115,20 @@ switch host: docs
 build host:
     nh home build -c {{ host }} {{ FLAKE_DIR }}
 
+# On macOS Tahoe (26+) with MDM (Jamf/Intune/MDE), `nix store gc` fails with
+# EPERM on `.app` bundles carrying com.apple.macl / com.apple.provenance xattrs
+# — the daemon's chmod is refused, and MDM re-stamps the xattrs during
+# compliance scans so stripping them isn't durable. Profile pruning has already
+# happened by the time GC runs, so on macOS we tolerate the failure (leading
+# `-`) to keep `just switch` from reporting a false negative.
 # Wipe nix profile and GC entries older than 14 days; keep min 3 generations
+[macos]
+clean:
+    @echo "==> Cleaning up old generations"
+    @-nh clean user --keep-since 14d --keep 3 2>&1 | awk '!skip && /Performing garbage collection on the nix store/{print "==> Skipping nix store gc on Darwin (Tahoe+MDM xattr issue — see justfile comment)"; skip=1; next} !skip'
+
+# Wipe nix profile and GC entries older than 14 days; keep min 3 generations
+[linux]
 clean:
     @echo "==> Cleaning up old generations"
     nh clean user --keep-since 14d --keep 3
