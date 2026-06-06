@@ -1,6 +1,7 @@
 ---
 name: scaffold
 description: Set up new projects with frameworks or languages in the current working directory. Use when the user explicitly requests to scaffold, set up, initialize, or create a new project. Supports any language setup or framework. Proactively searches for latest versions and best practices, surfaces choices to the user when multiple options exist.
+model: haiku
 disable-model-invocation: false
 user-invocable: true
 ---

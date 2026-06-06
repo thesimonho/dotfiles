@@ -16,7 +16,7 @@ Start by running the /simplify skill over your changes.
 
 ---
 
-Then spawn the following as **parallel background tasks**:
+Then spawn the following as **parallel background tasks**. Use lighter models for simpler checks (e.g. haiku, Codex-Spark)
 
 ### 2. Type Check
 

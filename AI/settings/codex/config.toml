@@ -1,6 +1,6 @@
 model = "gpt-5.5"
-model_reasoning_effort = "high"
-plan_mode_reasoning_effort = "xhigh"
+model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "high"
 hide_agent_reasoning = true
 show_raw_agent_reasoning = false
 approvals_reviewer = "guardian_subagent"
@@ -52,4 +52,7 @@ trust_level = "trusted"
 trust_level = "trusted"
 
 [projects."/home/simon/Projects/babygrad"]
+trust_level = "trusted"
+
+[projects."/home/simon/Projects/Services/timelines"]
 trust_level = "trusted"
