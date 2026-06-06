@@ -23,7 +23,10 @@ in
         node = "24";
         python = "3.14.4";
         go = "1.25";
-        rust = "1.92";
+        rust = {
+          version = "stable";
+          targets = "i686-unknown-linux-gnu";
+        };
       };
       settings = {
         env_file = ".env";
