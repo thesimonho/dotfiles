@@ -70,7 +70,7 @@
     };
     devcontainer = {
       package = pkgs.devcontainer;
-      bundles = [ "dev" ];
+      bundles = [ ];
     };
     discord = {
       flatpak = {
