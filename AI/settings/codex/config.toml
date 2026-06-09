@@ -42,10 +42,10 @@ env_vars = ["CONTEXT7_API_KEY"]
 default_tools_approval_mode = "approve"
 startup_timeout_sec = 20
 
-[projects."/home/simon/dotfiles"]
+[projects."/home/simon"]
 trust_level = "trusted"
 
-[projects."/home/simon"]
+[projects."/home/simon/dotfiles"]
 trust_level = "trusted"
 
 [projects."/home/simon/Projects/scribble"]
@@ -54,5 +54,5 @@ trust_level = "trusted"
 [projects."/home/simon/Projects/babygrad"]
 trust_level = "trusted"
 
-[projects."/home/simon/Projects/Services/timelines"]
+[projects."/home/simon/Projects/timelines"]
 trust_level = "trusted"
