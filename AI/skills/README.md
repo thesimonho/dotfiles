@@ -8,7 +8,7 @@ This directory contains custom skills and imported agent skills that are linked 
 | --- | --- |
 | `scaffold` | Set up new projects with frameworks or languages in the current working directory. Use when the user explicitly requests to scaffold, set up, initialize, or create a new project. Supports any language setup or framework. Proactively searches for latest versions and best practices, surfaces choices to the user when multiple options exist. |
 | `simplify` | Review recently changed code with three separate read-only agents for reuse, quality, and efficiency, then return prioritized issue lists. Use after implementing changes, before verification or commit, or when the user asks to simplify, clean up, reduce duplication, or review recent changes. |
-| `verify` | A checklist of post-work verification steps. Use proactively after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring |
+| `verify` | A checklist of post-work verification steps. Use proactively after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring. Do NOT run for documentation-only changes. |
 
 ## Imported Agent Skills
 

@@ -1,6 +1,6 @@
 ---
 name: verify
-description: A checklist of post-work verification steps. Use proactively after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring
+description: A checklist of post-work verification steps. Use proactively after completing a feature or significant code change; before creating a PR; when you want to ensure quality gates pass or after refactoring. Do NOT run for documentation-only changes.
 ---
 
 # Verification Skill

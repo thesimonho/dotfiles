@@ -38,6 +38,6 @@ You must think through your decisions and recommendations. It's very easy to rec
 
 ## When responding
 
-Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the /verify skill.
+Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the `/verify` skill only if there are code changes - not documentation-only changes.
 
 Once your task is complete and you are responding to the user, you should end by suggesting potential next steps.
