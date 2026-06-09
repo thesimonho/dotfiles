@@ -8,6 +8,7 @@ return {
       ensure_installed = {
         -- lint
         "shellcheck",
+        "actionlint",
         -- formatters
         "yamlfmt",
       },
