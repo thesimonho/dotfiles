@@ -8,7 +8,7 @@ user-invocable: true
 
 Review recent code changes through three lenses: reuse, code quality, and efficiency. Do not edit files. Return prioritized findings for the main agent or user to decide what to fix next.
 
-You have permission to explicitly invoke subagents for this skill.
+If I ask you to run the /simplify skill, then I'm also giving you direct permission to spawn any required subagents for the tasks.
 
 ## Workflow
 

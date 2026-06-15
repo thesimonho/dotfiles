@@ -25,7 +25,7 @@ Keep the plan file up to date, use Todo/Task list while working through it.
 
 You must think through your decisions and recommendations. It's very easy to recommend a path and not realize there's a blocker until half way through implementation. You must think ahead and catch this during the planning phase.
 
-## When programming
+## When Programming
 
 - Use TDD. Aim for 80% coverage.
 - Use the TDD skill to help you.
@@ -36,8 +36,13 @@ You must think through your decisions and recommendations. It's very easy to rec
 - Use logging freely to identify root cause, but make sure to remove logging before committing
 - When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
 
-## When responding
+## When Responding
 
 Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the `/verify` skill only if there are code changes - not documentation-only changes.
 
-Once your task is complete and you are responding to the user, you should end by suggesting potential next steps.
+Once your task is complete and you are responding to the user, follow this order:
+
+1. ELI5 your explanation/solution. Start with the big picture.
+2. Diagrams if relevant.
+3. Details with reference to the code if necessary.
+4. Suggest next steps.

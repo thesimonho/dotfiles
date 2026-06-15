@@ -12,6 +12,9 @@ project_doc_fallback_filenames = ["CLAUDE.md"]
 sandbox_mode = "workspace-write"
 web_search ="live"
 
+[sandbox_workspace_write]
+writable_roots = ["/run/user/1000/agent-browser"]
+
 [tui]
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "weekly-limit"]
 status_line_use_colors = true
