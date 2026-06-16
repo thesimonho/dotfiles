@@ -13,12 +13,12 @@ return {
       },
       -- Auto-open the summary panel (right split) whenever a run starts
       consumers = {
-        auto_open_summary = function(client)
-          client.listeners.run = function()
-            require("neotest").summary.open()
-          end
-          return {}
-        end,
+        -- auto_open_summary = function(client)
+        --   client.listeners.run = function()
+        --     require("neotest").summary.open()
+        --   end
+        --   return {}
+        -- end,
       },
     },
   },
