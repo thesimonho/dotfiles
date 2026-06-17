@@ -181,5 +181,6 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
-  "disableBypassPermissionsMode": false
+  "disableBypassPermissionsMode": false,
+  "model": "opus[1m]"
 }
