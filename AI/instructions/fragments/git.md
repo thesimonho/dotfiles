@@ -25,7 +25,7 @@ Naming convention: `<type>/<shrot description>`, where type is one of the conven
 
 The first line of a commit message should be a description of your your changed (max 70 chars). Then the extended commit message needs to explain _why_ you changed it along with any necessary context.
 
-GPG sign your commits if possible.
+GPG sign your commits if possible. You might need to leave sandbox to do so.
 
 ### Conventional commits
 

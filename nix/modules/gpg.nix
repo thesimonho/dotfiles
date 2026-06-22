@@ -31,6 +31,7 @@
 let
   isLinux = config.my.os != "darwin";
   isWSL = config.my.os == "wsl";
+  isKde = config.my.desktop == "kde";
   selectedIdentities = config.my._identities;
 
   # Pinentry by (DE, OS). KDE → Qt + KWallet; macOS → Keychain bridge;
@@ -84,6 +85,7 @@ let
   # gpg-keys — inspect/clear stored passphrases (parallels ssh-keys).
   gpgKeysApp = pkgs.writeShellApplication {
     name = "gpg-keys";
+    runtimeInputs = [ gpgPresetDriverApp ];
     text = ''
       GPG_SIGNING_KEY_IDS=${lib.escapeShellArg signingKeyIds}
       ${builtins.readFile ../scripts/gpg-keys.sh}
@@ -118,6 +120,14 @@ in
   # binary socket-activates the agent. GNUPGHOME is pinned to match the
   # agent's own value so we preset into the same agent.
   #
+  # On KDE, also order after plasma-kwallet-pam.service (the PAM wallet unlock):
+  # it is pulled in by plasma-workspace.target, which is reached *after*
+  # graphical-session.target, so without this our unit can fire before the
+  # wallet unlock even launches and read an empty Secret Service. This only
+  # shrinks the window — plasma-kwallet-pam is Type=simple, so After= sequences
+  # us after the unlock *launches*, not after the wallet finishes opening; the
+  # lookup retry in gpg-preset.sh covers that async tail.
+  #
   # Excluded on WSL: graphical-session.target never fires there, so this unit
   # would install but never run. WSL drives the preset from the zsh
   # _preload_agent_once hook instead (the gpg-preset-driver binary is still
@@ -128,8 +138,9 @@ in
       After = [
         "gpg-agent.socket"
         "graphical-session.target"
-      ];
-      Wants = [ "gpg-agent.socket" ];
+      ]
+      ++ lib.optional isKde "plasma-kwallet-pam.service";
+      Wants = [ "gpg-agent.socket" ] ++ lib.optional isKde "plasma-kwallet-pam.service";
       PartOf = [ "graphical-session.target" ];
     };
     Service = {

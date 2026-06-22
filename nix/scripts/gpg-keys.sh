@@ -41,7 +41,10 @@ clear-one)
   secret-tool clear gpg-passphrase "$2"
   ;;
 reload)
-  systemctl --user start gpg-preset-passphrases.service
+  # Run the driver interactively so a missing passphrase can be (re)seeded via
+  # the GUI prompt. The systemd oneshot stays non-interactive (retry-then-defer,
+  # never a dialog), so this is the one path allowed to prompt.
+  GPG_PRESET_INTERACTIVE=1 gpg-preset-driver
   ;;
 *)
   echo "usage: gpg-keys [list|show [keyId]|clear|clear-one <keyId>|reload]" >&2

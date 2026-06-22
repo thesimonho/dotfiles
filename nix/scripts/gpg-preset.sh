@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 # Resolve + validate + store + preset ONE GPG signing passphrase. libsecret-
-# backed, GUI-prompt-on-miss; the argument is the GPG key id.
+# backed; the argument is the GPG key id. On the unattended login path it
+# retries the lookup (KWallet may still be mid-unlock) and never prompts. The
+# GUI prompt fires only when invoked interactively (GPG_PRESET_INTERACTIVE=1,
+# i.e. via `gpg-keys reload`).
 #
 # Unlike SSH's askpass, gpg-preset-passphrase does NOT validate the value it's
 # given, so we test-sign throwaway data first and never store or preset a value
@@ -65,11 +68,36 @@ if [ -z "$keygrip" ]; then
   exit 1
 fi
 
+# Read the stored passphrase, retrying briefly: the login oneshot races
+# KWallet's unlock and the Secret Service returns empty until the wallet
+# finishes opening. An interactive `gpg-keys reload` (GPG_PRESET_INTERACTIVE=1)
+# skips the wait — the wallet is already up — so its seed prompt is prompt.
+interactive="${GPG_PRESET_INTERACTIVE:-0}"
+if [ "$interactive" = 1 ]; then lookup_tries=1; else lookup_tries=15; fi
+
+lookup_passphrase() {
+  local i=0 val=""
+  while :; do
+    val=$(secret-tool lookup gpg-passphrase "$KEY_ID" 2>/dev/null || true)
+    [ -n "$val" ] && { printf '%s' "$val"; return 0; }
+    i=$((i + 1))
+    [ "$i" -ge "$lookup_tries" ] && return 1
+    sleep 1
+  done
+}
+
 newly_prompted=0
-passphrase=$(secret-tool lookup gpg-passphrase "$KEY_ID" 2>/dev/null || true)
-if [ -z "$passphrase" ]; then
+if passphrase=$(lookup_passphrase); then
+  :
+elif [ "$interactive" = 1 ]; then
   passphrase=$(prompt_gui) || exit 1
   newly_prompted=1
+else
+  # Unattended login: never pop a blocking dialog (that is the surprise prompt
+  # and the 60s unit timeout). Defer to the next interactive sign's pinentry or
+  # a manual `gpg-keys reload`.
+  notify "no stored passphrase for $KEY_ID (KWallet not ready?) — run \`gpg-keys reload\`"
+  exit 1
 fi
 
 attempts=0
