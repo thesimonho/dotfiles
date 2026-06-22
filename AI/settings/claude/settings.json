@@ -16,7 +16,8 @@
   },
   "attribution": {
     "commit": "",
-    "pr": ""
+    "pr": "",
+    "sessionUrl": false
   },
   "permissions": {
     "allow": [
@@ -39,6 +40,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -181,6 +183,5 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
-  "disableBypassPermissionsMode": false,
-  "model": "opus[1m]"
+  "disableBypassPermissionsMode": false
 }
