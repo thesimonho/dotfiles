@@ -25,6 +25,8 @@ Keep the plan file up to date, use Todo/Task list while working through it.
 
 You must think through your decisions and recommendations. It's very easy to recommend a path and not realize there's a blocker until half way through implementation. You must think ahead and catch this during the planning phase.
 
+If bringing in external libraries, you must first do a web search for the latest version, and check whether the dependency you want is the latest best practice for the ecosystem.
+
 ## When Programming
 
 - Use TDD. Aim for 80% coverage.
@@ -43,6 +45,6 @@ Before you finalize and respond to the user, you should make sure that your code
 Once your task is complete and you are responding to the user, follow this order:
 
 1. ELI5 your explanation/solution. Start with the big picture.
-2. Diagrams if relevant.
+2. Tables/diagrams if relevant.
 3. Details with reference to the code if necessary.
 4. Suggest next steps.
