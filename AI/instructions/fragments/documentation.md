@@ -11,6 +11,10 @@ Project-local agent instructions are imperative directives, not background prose
 
 Keep instruction files short and actionable. Background, references, decisions, and explanations live in `docs/`. When trimming an instruction, move the "why" to the relevant `docs/<file>` (or create a new one).
 
+## Agent auto-created memories
+
+After completing a substantial task, a big feature, or making roadmap adjustments, use a cheap and fast subagent to audit the project's auto-created memory files to make sure they're still relevant, up-to-date, and accurate.
+
 ## HTML plans
 
 When creating a plan under `docs/plans/`, write a single self-contained `.html` file (inline CSS, no external assets).
