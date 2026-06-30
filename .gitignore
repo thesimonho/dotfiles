@@ -42,5 +42,6 @@ node_modules/
 # ai
 AI/agents/.generated/
 AI/instructions/AGENTS.generated.md
+docs
 .pi
 .pi-lens
