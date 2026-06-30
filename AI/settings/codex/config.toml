@@ -59,3 +59,6 @@ trust_level = "trusted"
 
 [projects."/home/simon/Projects/timelines"]
 trust_level = "trusted"
+
+[projects."/home/simon/Projects/kanagawa-paper.nvim"]
+trust_level = "trusted"
