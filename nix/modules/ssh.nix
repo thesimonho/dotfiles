@@ -29,6 +29,7 @@
 let
   isLinux = config.my.os != "darwin";
   isWSL = config.my.os == "wsl";
+  isKde = config.my.desktop == "kde";
   sshDir = "${config.home.homeDirectory}/.ssh";
   selectedIdentities = config.my._identities;
 
@@ -134,11 +135,17 @@ in
       # DBUS_SESSION_BUS_ADDRESS/DISPLAY/WAYLAND_DISPLAY into the user
       # systemd env. Without it, our askpass can't reach the Secret
       # Service daemon and silently returns empty.
+      #
+      # plasma-kwallet-pam.service is best-effort narrowing only: this
+      # host's org.freedesktop.secrets is owned by ksecretd (PAM-unlocked
+      # independently), not kwalletd6, so this ordering doesn't guarantee
+      # readiness. SSH_ASKPASS_DEFER below is what actually covers the race.
       After = [
         "ssh-agent.service"
         "graphical-session.target"
-      ];
-      Wants = [ "ssh-agent.service" ];
+      ]
+      ++ lib.optional isKde "plasma-kwallet-pam.service";
+      Wants = [ "ssh-agent.service" ] ++ lib.optional isKde "plasma-kwallet-pam.service";
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
@@ -147,6 +154,10 @@ in
         "SSH_AUTH_SOCK=%t/ssh-agent.socket"
         "SSH_ASKPASS=${askpassPath}"
         "SSH_ASKPASS_REQUIRE=prefer"
+        # Tells secret-askpass.sh this is the unattended login preload:
+        # retry the lookup instead of popping a blocking dialog on a
+        # transient secrets-daemon-not-ready race.
+        "SSH_ASKPASS_DEFER=1"
       ];
       PassEnvironment = [
         "DISPLAY"
