@@ -294,6 +294,10 @@
         "dev"
       ];
     };
+    vivaldi = {
+      flatpak.id = "com.vivaldi.Vivaldi";
+      bundles = [ "communication" ];
+    };
     vscode = {
       flatpak.id = "com.visualstudio.code";
       bundles = [ "dev" ];
