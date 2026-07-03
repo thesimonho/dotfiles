@@ -47,7 +47,8 @@
             "xdg-desktop:ro"
             "xdg-pictures:ro"
             "xdg-videos:ro"
-            "~/.gnupg:ro"
+            "xdg-run/gnupg"
+            "~/.gnupg"
           ];
           sockets = [ "gpg-agent" ];
         };
