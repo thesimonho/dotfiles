@@ -2,7 +2,11 @@
 
 Use the right tool for the job - do not just resort to manual search and edits. Below are some examples of efficient tools for different tasks.
 
-## CLI
+## Scripts and Build Recipes
+
+More often than not, the project will have a `justfile` containing a set of recipes for common tasks. Check that first before running your own custom commands.
+
+## CLI commands
 
 [rtk](https://github.com/rtk-ai/rtk) is available for many Bash commands to help save tokens. It works by intercepting commands and compressing their output. In order to take advantage of this, you _must_ use the Bash tool instead of builtin tools like Read, Grep, and Glob.
 

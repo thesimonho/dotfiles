@@ -4,6 +4,7 @@
 - When working with subdirectories, make sure to first check if it has an associated README.md that provides more specific information.
 - Reference `/docs/codemaps/README.md`, if available, when trying find a specific piece of code. It will quickly tell you where things are located. As a result, it is also important to keep these up to date.
 - Keep `/docs`, READMEs, APIs, and other documentation up to date.
+- When creating markdown files, do not use hard line breaks; let text wrap naturally.
 
 ## Agent Instructions vs docs/
 
