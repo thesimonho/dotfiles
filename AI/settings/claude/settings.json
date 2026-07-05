@@ -40,7 +40,6 @@
     "deny": [],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -160,8 +159,16 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "network": {
-      "allowedDomains": ["*.github.com", "*.githubusercontent.com", "*.anthropic.com"],
-      "allowUnixSockets": ["$SSH_AUTH_SOCK", "/run/user/1000/agent-browser", "~/.gnupg/S.gpg-agent"]
+      "allowedDomains": [
+        "*.github.com",
+        "*.githubusercontent.com",
+        "*.anthropic.com"
+      ],
+      "allowUnixSockets": [
+        "$SSH_AUTH_SOCK",
+        "/run/user/1000/agent-browser",
+        "~/.gnupg/S.gpg-agent"
+      ]
     },
     "filesystem": {
       "allowWrite": ["/tmp", "~/.gnupg"]
