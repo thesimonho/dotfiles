@@ -31,7 +31,8 @@
 
 set -uo pipefail
 
-NOTES_DIR="${RESEARCH_DIR:-docs/deep-research}"
+BASE_DIR="${RESEARCH_DIR:-docs/deep-research}" # holds the HTML report(s)
+NOTES_DIR="$BASE_DIR/.tmp"                      # holds all interim notes
 REPORT=""
 EMIT_JSON=0
 CONCURRENCY=8
@@ -77,14 +78,15 @@ done
 
 [ -d "$NOTES_DIR" ] || die "notes dir '$NOTES_DIR' not found"
 
-# Auto-detect a report if none was named: the most recently written *.html in
-# the notes dir. Reports carry task-relevant names now, so there's no fixed
-# filename to look for — newest wins (that's the one the current run just wrote).
+# Auto-detect a report if none was named: the most recently written *.html at
+# the workspace top level (reports live there; notes live in .tmp/). Reports
+# carry task-relevant names now, so there's no fixed filename to look for —
+# newest wins (that's the one the current run just wrote).
 if [ -z "$REPORT" ]; then
   # ls -t for newest-first: the portable `find` equivalent needs GNU-only
   # -printf, and report slugs are controlled kebab-case (no odd filenames).
   # shellcheck disable=SC2012
-  REPORT=$(ls -t "$NOTES_DIR"/*.html 2>/dev/null | head -1 || true)
+  REPORT=$(ls -t "$BASE_DIR"/*.html 2>/dev/null | head -1 || true)
 fi
 
 SELF="$0"
@@ -135,9 +137,10 @@ extract_bare_hosts() {
     sed -E 's/^[^a-zA-Z0-9]+//; s/'"$TRAIL_CHARS"'+$//; s#^#https://#'
 }
 
-# query.md holds the verbatim user prompt (the question), not gathered evidence.
-# Exclude it: a URL the user pasted into the prompt must not satisfy the rule-2
-# cross-check unless a subagent actually fetched it and took notes on it.
+# Subagent WIP notes are markdown files in .tmp/; the gathered evidence lives
+# there. query.md (the verbatim user prompt) is deliberately excluded: a URL
+# the user pasted into the prompt must not satisfy the rule-2 cross-check unless
+# a subagent actually fetched it and took notes on it in its own notes file.
 noted_urls=$(find "$NOTES_DIR" -maxdepth 1 -type f -name '*.md' ! -name 'query.md' \
   -exec cat {} + 2>/dev/null | extract_urls 1 || true)
 

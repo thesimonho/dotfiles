@@ -32,7 +32,7 @@ Override the workspace location with `RESEARCH_DIR` if you run from elsewhere.
 
 ## The two rules everything else serves
 
-1. **Draft from notes, not open tabs.** Extract what matters from fetched pages into notes on disk, then write from the notes. Every claim traces to a named source.
+1. **Draft from notes, not open tabs.** Extract what matters from fetched pages into notes on disk (all interim files are markdown kept in the `.tmp/` scratch directory), then write from the notes. Every claim traces to a named source.
 2. **Only cite a page you actually fetched and took notes from** — never a search snippet or a URL from memory. `verify-links.sh` enforces this: any cited URL missing from your notes is flagged `UNSOURCED`.
 
 ## Light vs. full
@@ -58,7 +58,7 @@ The gates (`clock.sh`, `verify-links.sh`) use no model at all.
 
 If the user gave a budget, use it; otherwise default 10 min (light) / 20 min (full).
 
-Start the clock first. `clock.sh start` creates `docs/deep-research/`, **clears the previous run's notes** (at both start and end, so a crash can't leak), and drops a `.gitignore` so only the HTML report(s) are committable — prior reports survive.
+Start the clock first. `clock.sh start` creates `docs/deep-research/` and its `.tmp/` scratch dir, **clears the previous run's notes** (everything under `.tmp/`, at both start and end, so a crash can't leak), and drops a `.gitignore` that excludes `.tmp/` so only the HTML report(s) are committable — prior reports survive.
 
 ```bash
 "$SKILL_DIR/scripts/clock.sh" start 600                    # seconds; light 600, full 1200
@@ -73,7 +73,7 @@ Check **between gather rounds** and treat the printed verdict as an instruction 
 1. Restate **the actual question** in your own words. If ambiguous in a way that changes the research, ask ONE clarifying question; else state your interpretation and proceed.
 2. Define **what "done" looks like** — the sub-questions that fully answer the request.
 3. Note the **as-of date** (today).
-4. **Persist the verbatim question** to `docs/deep-research/query.md`. This is the anchor: hand it to every subagent (told to re-read before returning) and re-read it before synthesizing — the cheapest defense against parallel subagents drifting from the ask.
+4. **Persist the verbatim question** to `docs/deep-research/.tmp/query.md`. This is the anchor: hand it to every subagent (told to re-read before returning) and re-read it before synthesizing — the cheapest defense against parallel subagents drifting from the ask.
 
 ## Phase 1 — Plan
 
@@ -81,12 +81,12 @@ Decompose into 3–7 sub-questions (scale to budget — a 5-minute job gets 2–
 
 ## Phase 2 — Gather
 
-Dispatch **one subagent per sub-question, in parallel**, each handed `query.md` (re-read before returning). Each subagent:
+Dispatch **one subagent per sub-question, in parallel**, each handed `.tmp/query.md` (re-read before returning). Each subagent:
 
 1. Searches broad (1–3 words), then narrows with specifics.
 2. For scholarly/technical/medical questions, **queries citation-ranked APIs before web search** (they return primary work, not derivative commentary): Semantic Scholar (`api.semanticscholar.org/graph/v1/paper/search`), arXiv (`export.arxiv.org/api/query`), OpenAlex (`api.openalex.org/works`), PubMed (`eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi`).
 3. **Fetches the primary source** for anything that matters — snippets are too thin to cite.
-4. Writes rich notes to `docs/deep-research/<subquestion>.md`: the claim **and its evidence** (figures, versions, dates, the caveat that flips a verdict, a short quote where wording matters), plus source (title + URL), as-of date, one line on credibility. Capture too much — this file is the report's raw material, and the report can only be as detailed as its notes.
+4. Writes rich notes to `docs/deep-research/.tmp/<subquestion>.md` (the `.tmp/` scratch dir keeps the WIP collection uncommitted and separate from the report): the claim **and its evidence** (figures, versions, dates, the caveat that flips a verdict, a short quote where wording matters), plus source (title + URL), as-of date, one line on credibility. Capture too much — this file is the report's raw material, and the report can only be as detailed as its notes.
 5. Returns a brief headline summary **plus the notes-file path** — not raw pages. This keeps the gather-phase context clean without discarding the detail synthesis needs.
 6. Stops when new sources stop changing the answer, or its limit hits.
 
@@ -105,7 +105,7 @@ Working from notes, not the web:
 
 ## Phase 4 — Synthesize
 
-**Draft from the full note files — open and read every `docs/deep-research/*.md` first.** The return messages were headlines; the substance (figures, versions, gotchas, per-option detail) lives in the files. Synthesis reorganizes and analyzes that evidence around the decision — drafting from memory is the biggest cause of a thin report.
+**Draft from the full note files — open and read every `docs/deep-research/.tmp/*.md` first.** The return messages were headlines; the substance (figures, versions, gotchas, per-option detail) lives in the files. Synthesis reorganizes and analyzes that evidence around the decision — drafting from memory is the biggest cause of a thin report.
 
 **Preserve the decision-relevant specifics** — the numbers, versions, and verdict-flipping caveats. A report is better _organized_ than the notes, not thinner in substance; if a specific would change the reader's decision, it belongs in the report.
 
@@ -121,7 +121,7 @@ Attack your draft through five lenses (parallel subagents in full mode; yourself
 - **Depth** — which claims rest on a single/weak source or assumption? Label or substantiate them.
 - **Breadth** — what expected angle is missing? Name the gap even if the budget won't fill it.
 - **Fidelity** — diff the notes against the draft: did a decision-relevant specific get compressed out? If the report is a fraction of the notes' size, you summarized instead of synthesizing — restore it.
-- **Instruction-adherence** — re-read `query.md`. Does the draft answer _that_ question?
+- **Instruction-adherence** — re-read `.tmp/query.md`. Does the draft answer _that_ question?
 
 **Patch, don't regenerate** — targeted edits to the passages at fault; a full rewrite drops the good parts and reintroduces fixed errors. If something can't be fixed locally, surface it in Caveats. Don't skip this phase.
 
