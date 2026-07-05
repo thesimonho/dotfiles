@@ -20,7 +20,6 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 - Run unit tests to help keep you on track
 - Use logging freely to identify root cause, but make sure to remove logging before committing
-- When fixing frontend issues, make sure you proactively use the agent browser skill in headed mode
 
 ## When Responding
 

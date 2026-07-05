@@ -61,6 +61,24 @@ For structured output (JSON/YAML/CSV/logs), pipe through a parser instead of gre
 - `yq` — same DSL as jq, for YAML/TOML/XML.
 - `gron` — flatten JSON to grep-able paths (`gron file.json | grep foo`). Great when you don't yet know the shape.
 
+## Browser Use
+
+You have access to the agent-browser skill and CLI (it should already be installed; flag if it isn't). Use this when you need access to dev tools for a web app, or when you need to interact with a page (get content, fill fields, click elements, screenshot, etc).
+
+Quick start:
+
+```bash
+agent-browser open example.com
+agent-browser snapshot                    # Get accessibility tree with refs
+agent-browser click @e2                   # Click by ref from snapshot
+agent-browser fill @e3 "test@example.com" # Fill by ref
+agent-browser get text @e1                # Get text by ref
+agent-browser screenshot page.png
+agent-browser close
+```
+
+Run `agent-browser skills get core --full` for a full run guide and examples, if needed.
+
 ## Codemaps
 
 Projects will usually have a `docs/codemaps/` directory. It acts as an index of the codebase to help you find the specific files that you're looking for based on their domain
