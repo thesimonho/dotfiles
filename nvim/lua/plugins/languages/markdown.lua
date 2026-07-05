@@ -1,12 +1,25 @@
+-- Shared markdownlint rule config lives in `.markdownlint.yaml` next to this
+-- file. That location isn't on markdownlint-cli2's upward config search path, so
+-- point both the formatter and the linter at it explicitly.
+local markdownlintConfigPath = vim.fn.stdpath("config") .. "/lua/plugins/languages/.markdownlint.yaml"
+
 M = {
   {
     "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
-        -- linters
-        "markdownlint",
         -- lsp
         "mdx-analyzer",
+      },
+    },
+  },
+  { -- formatter: markdownlint-cli2 fixes in place, so pass the shared config
+    "stevearc/conform.nvim",
+    opts = {
+      formatters = {
+        ["markdownlint-cli2"] = {
+          prepend_args = { "--config", markdownlintConfigPath },
+        },
       },
     },
   },
@@ -16,23 +29,6 @@ M = {
       ensure_installed = {
         "markdown",
         "markdown_inline",
-      },
-    },
-  },
-  { -- formatters
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        markdown = { "oxfmt" },
-        ["markdown.mdx"] = { "oxfmt" },
-      },
-    },
-  },
-  { -- linters
-    "mfussenegger/nvim-lint",
-    opts = {
-      linters_by_ft = {
-        markdown = { "markdownlint" },
       },
     },
   },
@@ -46,9 +42,7 @@ M = {
   },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown" },
     opts = {
-      file_types = { "markdown" },
       render_modes = { "n", "c", "v", "t" },
       preset = "lazy",
       nested = false,
@@ -90,13 +84,13 @@ M = {
   },
 }
 
-local markdownlint = require("lint").linters.markdownlint
-markdownlint.args = {
-  "--disable",
-  "html",
-  "line_length",
-  "spelling",
-  "--", -- Required
+-- The extra lints with markdownlint-cli2; point it
+-- at the same shared config so the linter and formatter agree on rules.
+local markdownlintCli2 = require("lint").linters["markdownlint-cli2"]
+markdownlintCli2.args = {
+  "--config",
+  markdownlintConfigPath,
+  "-",
 }
 
 return M

@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json
+# Shared markdownlint rule config, referenced explicitly via `--config` from
+# markdown.lua (this location isn't on markdownlint-cli2's upward config search
+# path). YAML avoids the trailing-comma fight between prettier and jsonls that a
+# .jsonc config triggers on save.
+# Enable all rules by default, then turn off the ones we don't want.
+default: true
+# --- Taste: rules that flag valid stylistic choices ---
+
+# MD013: no line-length limit (we soft-wrap prose).
+line_length: false
+# MD033: allow inline HTML (<br>, <details>, etc.).
+html: false
+# MD041: files needn't start with a top-level heading (partials, frontmatter).
+first-line-heading: false
+# MD026: allow trailing punctuation in headings (e.g. "Why?").
+no-trailing-punctuation: false
+# MD024: allow duplicate headings under different parents, not globally.
+no-duplicate-heading:
+  siblings_only: true
+# --- Noise: prettier is the formatter and already fixes these on save, so
+# linting them just produces transient warnings prettier will resolve. ---
+
+# MD004: bullet character style.
+ul-style: false
+# MD007: nested unordered-list indent.
+ul-indent: false
+# MD012: multiple consecutive blank lines.
+no-multiple-blanks: false
+# MD029: ordered-list item numbering.
+ol-prefix: false
+# MD030: spaces after list markers.
+list-marker-space: false
+# MD046: code block style (indented vs fenced).
+code-block-style: false
+# MD048: code fence style (``` vs ~~~).
+code-fence-style: false
+# MD047: file should end with a single newline.
+single-trailing-newline: false
