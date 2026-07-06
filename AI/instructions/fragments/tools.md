@@ -26,7 +26,7 @@ rtk git add . && rtk git commit -m "msg" && rtk git push
 
 ## Code Intelligence
 
-For an LSP-centric workflow, you should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale errors.
+You should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale LSP errors.
 
 Prefer LSP over Grep/Glob/Read for code navigation:
 
@@ -42,6 +42,10 @@ Before renaming or changing a function signature, use `findReferences` to find a
 Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
 
 After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately.
+
+## Linting
+
+You can assume linters are installed and configured. Use them first when double checking your code rather than parsing manually. Examples: actionlint (GitHub workflows), hadolint (docker), shellcheck (shell), tflint (terraform), etc.
 
 ## Structural Search
 

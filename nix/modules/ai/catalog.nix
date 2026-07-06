@@ -5,6 +5,7 @@
 }:
 
 let
+  # https://github.com/numtide/llm-agents.nix
   llmAgents = inputs.llm-agents.packages.${system};
 in
 {
@@ -23,6 +24,10 @@ in
   entries = {
     claude-code = {
       package = llmAgents.claude-code;
+      bundles = [ "agents" ];
+    };
+    claude-desktop = {
+      package = llmAgents.claude-desktop;
       bundles = [ "agents" ];
     };
     codex = {
