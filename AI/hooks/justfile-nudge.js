@@ -56,6 +56,6 @@ process.stdin.on("end", () => {
 
   addContext(
     "PreToolUse",
-    "This project has a justfile — check `just --list` for a recipe before running custom commands (tools.md).",
+    "This project has a justfile — check `just --list` for a recipe before running custom commands.",
   );
 });

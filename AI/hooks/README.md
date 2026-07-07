@@ -25,7 +25,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `check-conventional-commit` | PreToolUse  | block  | conventional subject, max 70 chars (git.md)            |
 | `branch-guard`              | PreToolUse  | block  | no code edits on the default branch (git.md)           |
 | `block-debug-logging`       | PreToolUse  | block  | no leftover debug logging in a commit (workflow.md)    |
-| `scan-secrets`              | PreToolUse  | block  | no hardcoded credentials (security.md)                 |
+| `scan-secrets`              | PreToolUse  | block  | gitleaks scan of the commit diff (regex fallback)      |
 | `check-plan-filename`       | PreToolUse  | block  | plan files start with a `YYYYMMDD` stamp (planning.md) |
 | `memory-redirect`           | PreToolUse  | nudge  | prefer a hook over a memory for enforceable rules      |
 | `commit-format-nudge`       | PreToolUse  | nudge  | format changed files before committing (avoid churn)   |
@@ -78,11 +78,11 @@ echo '{"tool_input":{"file_path":"docs/roadmap.md"}}' | node AI/hooks/surface-fi
 
 ## Reviewed but intentionally not auto-applied
 
-- **Model tiering.** The default model is left unset (inherits the session choice — deliberately the user's), the planning agent is already pinned to opus, and `outputStyle: explanatory` matches the ELI5 preference. Subagent model selection is governed by `subagents.md`. Nothing here was safe to change without overriding deliberate config.
+- **Model tiering.** The default model is `sonnet` with `outputStyle: default`; heavier reasoning is delegated to an opus subagent (the planning agent is pinned to opus), nudged at spawn time by `task-delegation-nudge` rather than by a mid-session `/model` switch (which re-caches the whole conversation). A hook cannot set the model, so this stays a nudge, not enforcement.
 - **LLM arbitrator (residual judgment).** The plan's fallback for un-gateable, judgment-shaped residue. Deferred: it needs to shell out to a model and be verified live, which is a larger, separately-testable piece than the deterministic hooks.
 - **Path-scoped rules for Claude.** Scoping a fragment to `src/**` etc. via rule frontmatter would leak that frontmatter into Codex's concatenated `AGENTS.md`. It needs the generator to strip frontmatter per output first.
 - **Eval scorer.** Passive transcript grading (the §09 idea) belongs in the future MLflow/LangSmith-shaped eval suite, not here.
 
 ## Known papercut
 
-Several hooks scan written content (`scan-secrets`, `block-plan-references`), so documentation that _describes_ those patterns can trip them; write such docs with abstract descriptions or via a non-matched tool. A few PreToolUse nudges spawn a Node process per Bash/edit call; trim the broad matchers if latency becomes noticeable.
+Content-scanning hooks (`block-plan-references`, and `scan-secrets`' regex fallback) can trip on documentation that _describes_ the patterns they match; write such docs with abstract descriptions or via a non-matched tool. A few PreToolUse nudges spawn a Node process per Bash/edit call; trim the broad matchers if latency becomes noticeable.

@@ -104,6 +104,6 @@ process.stdin.on("end", () => {
 
   addContext(
     "PostToolUse",
-    `${target} is ${lineCount} lines — coding-style.md caps files at 800; consider extracting utilities into smaller files.`,
+    `${target} is ${lineCount} lines — over the 800-line cap; consider extracting utilities into smaller files.`,
   );
 });

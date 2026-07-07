@@ -118,6 +118,6 @@ process.stdin.on("end", () => {
 
   addContext(
     "PostToolUse",
-    `${target} looks hard-wrapped; documentation.md prefers letting prose wrap naturally (no hard line breaks).`,
+    `${target} looks hard-wrapped; prefer letting prose wrap naturally (no hard line breaks).`,
   );
 });

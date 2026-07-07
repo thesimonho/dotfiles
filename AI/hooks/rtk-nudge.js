@@ -74,6 +74,6 @@ process.stdin.on("end", () => {
 
   addContext(
     "PreToolUse",
-    `Prefix with \`rtk\` to save tokens (tools.md), e.g. \`rtk ${firstToken} ...\`.`,
+    `Prefix with \`rtk\` to save tokens, e.g. \`rtk ${firstToken} ...\`.`,
   );
 });

@@ -79,7 +79,7 @@ process.stdin.on("end", () => {
   const branchRef = currentBranchRef(payload.cwd ?? ".");
 
   if (branchRef && DEFAULT_BRANCH_REFS.includes(branchRef)) {
-    block("Start work in a feature branch, not on the default branch (git.md)", [
+    block("Start work in a feature branch, not on the default branch", [
       `Currently on: ${branchRef.replace("refs/heads/", "")}`,
       "Run: git checkout -b <type>/<short-desc>",
     ]);

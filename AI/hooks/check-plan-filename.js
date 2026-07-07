@@ -50,7 +50,7 @@ process.stdin.on("end", () => {
   }
 
   block(
-    "Plan files nested under docs/plans must start with a YYYYMMDD date stamp (see planning.md).",
+    "Plan files nested under docs/plans must start with a YYYYMMDD date stamp.",
     [`Target: ${target}`, "Example of a correctly named plan: 20260707-my-plan (dot) html"],
   );
 });

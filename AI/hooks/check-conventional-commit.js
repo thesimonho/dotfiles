@@ -83,7 +83,7 @@ process.stdin.on("end", () => {
   const subject = conventionalMatch[4];
 
   if (subject.length > MAX_SUBJECT_LENGTH) {
-    block("Commit subject exceeds the 70 character limit (git.md)", [
+    block("Commit subject exceeds the 70 character limit", [
       `Subject: "${subject}" (${subject.length} chars)`,
       "First line max 70 chars — move detail into the commit body instead",
     ]);

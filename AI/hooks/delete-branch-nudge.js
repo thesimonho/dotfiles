@@ -22,5 +22,5 @@ process.stdin.on("end", () => {
     return;
   }
 
-  addContext("PostToolUse", "Once merged, delete the local branch (git.md): git branch -d <name>.");
+  addContext("PostToolUse", "Once merged, delete the local branch: git branch -d <name>.");
 });

@@ -17,19 +17,19 @@ const { addContext } = require("../lib/hooks/hook-response");
 const LINTER_RULES = [
   {
     matches: (filePath) => /(^|\/)\.github\/workflows\/[^/]+\.ya?ml$/.test(filePath),
-    message: "Edited a GitHub workflow — run actionlint to validate (tools.md).",
+    message: "Edited a GitHub workflow — run actionlint to validate.",
   },
   {
     matches: (filePath) => /(^|\/)Dockerfile$|\.dockerfile$/.test(filePath),
-    message: "Edited a Dockerfile — run hadolint to validate (tools.md).",
+    message: "Edited a Dockerfile — run hadolint to validate.",
   },
   {
     matches: (filePath) => /\.(sh|bash)$/.test(filePath),
-    message: "Edited a shell script — run shellcheck to validate (tools.md).",
+    message: "Edited a shell script — run shellcheck to validate.",
   },
   {
     matches: (filePath) => /\.tf$/.test(filePath),
-    message: "Edited a Terraform file — run tflint to validate (tools.md).",
+    message: "Edited a Terraform file — run tflint to validate.",
   },
 ];
 

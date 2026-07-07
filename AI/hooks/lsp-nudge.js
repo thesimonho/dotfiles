@@ -27,6 +27,6 @@ process.stdin.on("end", () => {
 
   addContext(
     "PreToolUse",
-    "Searching for a symbol — prefer LSP (goToDefinition / findReferences / workspaceSymbol) over Grep/Glob for code navigation (tools.md); use Grep only for text/config.",
+    "Searching for a symbol — prefer LSP (goToDefinition / findReferences / workspaceSymbol) over Grep/Glob for code navigation; use Grep only for text/config.",
   );
 });

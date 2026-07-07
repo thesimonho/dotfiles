@@ -101,7 +101,7 @@ process.stdin.on("end", () => {
 
   if (offenders.length > 0) {
     block(
-      "Remove debug logging before committing (workflow.md)",
+      "Remove debug logging before committing",
       offenders.map(
         (addition) => `${addition.file}:${addition.lineNumber}: ${addition.text.trim()}`,
       ),
