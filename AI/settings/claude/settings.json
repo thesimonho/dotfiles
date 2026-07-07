@@ -148,15 +148,6 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/post-edit-reminder.js"
-          }
-        ]
-      },
-      {
         "matcher": "Read|Edit",
         "hooks": [
           {
