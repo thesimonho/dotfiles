@@ -109,6 +109,24 @@
             "command": "node ~/dotfiles/AI/hooks/lsp-nudge.js"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/branch-guard.js"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == \"Bash\" && tool_input.command matches \"git\\s+commit\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/block-debug-logging.js"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -145,6 +163,15 @@
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/lint-config-files.js"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == \"Bash\" && tool_input.command matches \"git\\s+merge|gh\\s+pr\\s+merge\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/delete-branch-nudge.js"
           }
         ]
       }
