@@ -98,6 +98,15 @@
             "command": "node ~/dotfiles/AI/hooks/post-edit-reminder.js"
           }
         ]
+      },
+      {
+        "matcher": "Read|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/surface-file-header.js"
+          }
+        ]
       }
     ],
     "SessionStart": [
