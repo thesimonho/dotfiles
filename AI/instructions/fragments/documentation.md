@@ -37,7 +37,3 @@ agent:
 Project-local agent instructions are imperative directives, not background prose. Prefer the project’s existing portable instruction surface (`AGENTS.md` or equivalent). Use Claude-specific `.claude/rules/*.md` when the project already uses Claude Code rules or the user asks for them.
 
 Keep instruction files short and actionable. Background, references, decisions, and explanations live in `docs/`. When trimming an instruction, move the "why" to the relevant `docs/<file>` (or create a new one).
-
-## Agent auto-created memories
-
-After completing a substantial task, a big feature, or making roadmap adjustments, use a cheap and fast subagent to audit the project's auto-created memory files to make sure they're still relevant, up-to-date, and accurate.

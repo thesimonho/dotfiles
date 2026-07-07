@@ -162,6 +162,10 @@
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/surface-file-header.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/surface-dir-readme.js"
           }
         ]
       },
