@@ -17,18 +17,31 @@ const CODE_FILE =
   /\.(js|jsx|ts|tsx|mjs|cjs|py|go|rs|dart|java|kt|rb|c|cc|cpp|h|hpp|nix|sh|lua|vue|svelte)$/i;
 
 /**
- * Staged file paths, or [] when nothing is staged or cwd is not a repo.
+ * Run a git command and return its output lines ([] on failure).
+ *
+ * @param {string} cwd
+ * @param {string[]} args
+ * @returns {string[]}
+ */
+function gitLines(cwd, args) {
+  try {
+    return execFileSync("git", args, { cwd, encoding: "utf8" }).split("\n").filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * The files this commit will include. Prefers the staged set; when nothing is
+ * staged yet — the `git add … && git commit` one-liner, where this hook runs
+ * before the add — it falls back to all uncommitted tracked changes vs HEAD.
  *
  * @param {string} cwd
  * @returns {string[]}
  */
-function stagedFiles(cwd) {
-  try {
-    const output = execFileSync("git", ["diff", "--cached", "--name-only"], { cwd, encoding: "utf8" });
-    return output.split("\n").filter(Boolean);
-  } catch {
-    return [];
-  }
+function committedFiles(cwd) {
+  const staged = gitLines(cwd, ["diff", "--cached", "--name-only"]);
+  return staged.length > 0 ? staged : gitLines(cwd, ["diff", "HEAD", "--name-only"]);
 }
 
 let input = "";
@@ -46,7 +59,7 @@ process.stdin.on("end", () => {
   }
 
   const cwd = payload.cwd ?? process.cwd();
-  const hasCodeChange = stagedFiles(cwd).some((file) => CODE_FILE.test(file));
+  const hasCodeChange = committedFiles(cwd).some((file) => CODE_FILE.test(file));
   if (!hasCodeChange) {
     return; // docs-only commit — no simplify pass needed
   }

@@ -60,15 +60,21 @@ function addedLinesFrom(diff) {
 }
 
 /**
- * Reads the currently staged diff. Returns "" when there is nothing staged
- * or the cwd is not a git repo, so callers can fail open silently.
+ * Reads the diff this commit will include. Prefers the staged diff; when nothing
+ * is staged yet — the `git add … && git commit` one-liner, where this hook runs
+ * before the add — it falls back to uncommitted tracked changes vs HEAD. Returns
+ * "" when the cwd is not a git repo, so callers fail open silently.
  *
  * @param {string} cwd
  * @returns {string}
  */
 function stagedDiff(cwd) {
   try {
-    return execFileSync("git", ["diff", "--cached", "--unified=0"], { cwd, encoding: "utf8" });
+    const staged = execFileSync("git", ["diff", "--cached", "--unified=0"], { cwd, encoding: "utf8" });
+    if (staged.trim()) {
+      return staged;
+    }
+    return execFileSync("git", ["diff", "HEAD", "--unified=0"], { cwd, encoding: "utf8" });
   } catch {
     return "";
   }
