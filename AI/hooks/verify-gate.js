@@ -1,35 +1,28 @@
 #!/usr/bin/env node
 /**
- * Hook: Verify Stop-gate — OBSERVE-ONLY phase.
+ * Hook: Verify Stop-reminder.
  *
- * At turn-end, if code changed this session and no verification ran after it, the
- * gate records what it *would* have blocked to an observe log. It does NOT block
- * yet — this phase measures the false-positive rate (e.g. stops to ask a
- * clarifying question) before blocking is armed. Wire under the Stop event.
+ * Verify-at-finish is the weakest measured behaviour. At turn-end, if code
+ * changed this session and no verify command ran after it, this surfaces an
+ * advisory reminder — it does NOT block. A soft reminder is deliberate: a hard
+ * block would force unnecessary compute on doc-only-adjacent turns and would
+ * halt in environments without the tools a full verify needs (e.g. Claude web
+ * with no browser). The model reads the reminder and decides. If measurement
+ * later shows it is ignored too often, escalate to a decision:block.
  *
- * To arm blocking later: on a would-block, emit exit code 2 with the reason
- * instead of only logging (respecting the stop_hook_active loop guard, already
- * handled below).
+ * Only fires when the project has a real toolchain. Wire under the Stop event.
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { addContext } = require("../lib/hooks/hook-response");
 const state = require("../lib/hooks/session-state");
 
-const OBSERVE_LOG = path.join(state.STATE_DIR, "..", "verify-observe.log");
-
-// A project has real verification tooling when one of these is present at cwd.
-const TOOLING_MARKERS = [
-  "justfile",
-  "Justfile",
-  "package.json",
-  "Cargo.toml",
-  "pyproject.toml",
-  "go.mod",
-];
+// A project has verification tooling when one of these is present at cwd.
+const TOOLING_MARKERS = ["justfile", "Justfile", "package.json", "Cargo.toml", "pyproject.toml", "go.mod"];
 
 /**
- * Whether the working directory has a verification toolchain worth gating on.
+ * Whether the working directory has a verification toolchain worth reminding on.
  *
  * @param {string} cwd
  * @returns {boolean}
@@ -38,38 +31,19 @@ function hasTooling(cwd) {
   return TOOLING_MARKERS.some((marker) => fs.existsSync(path.join(cwd, marker)));
 }
 
-/**
- * Append a would-block record to the observe log (best-effort).
- *
- * @param {string} cwd
- * @param {string} timestamp
- */
-function recordWouldBlock(cwd, timestamp) {
-  try {
-    fs.mkdirSync(path.dirname(OBSERVE_LOG), { recursive: true });
-    fs.appendFileSync(
-      OBSERVE_LOG,
-      `${timestamp}\t${cwd}\tcode changed but no verify ran after the last edit\n`,
-    );
-  } catch {
-    // observe-only telemetry must never break the stop
-  }
-}
-
 let input = "";
 process.stdin.on("data", (chunk) => (input += chunk));
 process.stdin.on("end", () => {
   const payload = JSON.parse(input);
-
-  if (payload.stop_hook_active) {
-    return; // loop guard: we already acted this turn
-  }
-
   const session = state.read(payload.session_id);
   const cwd = payload.cwd ?? process.cwd();
 
   if (session.dirty && hasTooling(cwd)) {
-    recordWouldBlock(cwd, new Date().toISOString());
+    addContext(
+      "Stop",
+      "Code changed this session and no verify command ran afterward. Run the " +
+        "project's verify recipe (e.g. `just verify`, `npm test`) before finishing " +
+        "— unless the remaining changes don't warrant it or this environment can't run it.",
+    );
   }
-  // OBSERVE-ONLY: never block. Exit 0.
 });
