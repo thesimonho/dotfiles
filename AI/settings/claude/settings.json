@@ -87,6 +87,28 @@
             "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/rtk-nudge.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/justfile-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/lsp-nudge.js"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -114,6 +136,15 @@
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/verify-track.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/lint-config-files.js"
           }
         ]
       }
