@@ -17,9 +17,11 @@
 
 const { block } = require("../lib/hooks/hook-response");
 
-// A plan reference: an explicit docs/plans/ path, or a date-stamped plan filename
-// like 20260703-1500-widget-jsx-rewrite.html / 20260704-animated-icons.md.
-const PLAN_REFERENCE = /docs\/plans\/|\b\d{8}(-\d{4})?-[\w.-]+\.(?:md|html)\b/;
+// A plan reference: a plan *file* under the plans directory, or a date-stamped
+// plan filename anywhere. Requiring a filename (not the bare directory) lets prose
+// mention the directory as a concept without tripping this block.
+const PLAN_REFERENCE =
+  /docs\/plans\/[\w.-]+\.(?:md|html)\b|\b\d{8}(-\d{4})?-[\w.-]+\.(?:md|html)\b/;
 
 // Targets that are *allowed* to reference plans: the plans themselves and their
 // archive. Everything else (code, rules, other docs) is not.

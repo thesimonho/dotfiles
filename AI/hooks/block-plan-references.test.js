@@ -68,6 +68,16 @@ const cases = [
     expect: 0,
   },
   {
+    name: "allows prose mentioning the plans directory without a filename",
+    payload: {
+      tool_input: {
+        file_path: "AI/hooks/README.md",
+        content: "Plans live in the docs/plans directory and get archived.",
+      },
+    },
+    expect: 0,
+  },
+  {
     name: "allows a plan editing/citing other plans (target under docs/plans/)",
     payload: {
       tool_input: {
