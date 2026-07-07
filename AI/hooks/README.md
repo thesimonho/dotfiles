@@ -46,7 +46,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 
 ## The `agent:` frontmatter convention
 
-A doc can carry directives for the agent in optional `agent:` frontmatter (parsed by `../lib/hooks/frontmatter.js`). Both fields are optional; a doc without it behaves normally.
+A doc can carry directives for the agent in optional `agent:` frontmatter (parsed by `../lib/hooks/frontmatter.js`). Both fields are optional; a doc without it behaves normally. This is general-purpose, not codemap-specific — a roadmap tracking `src/**`, or a vision doc tracking `docs/plans/**` purely to get re-read, are equally valid pairings. The example below is just the codemap case:
 
 ```yaml
 ---
@@ -58,7 +58,7 @@ agent:
 ```
 
 - `instruction` — `surface-file-header` re-emits it whenever the agent reads or edits the file, so the file's contract lands at the decision point instead of decaying up-context.
-- `on-change` (a glob or list of globs) — `coupling-gate` scans root-level and `docs/` markdown at turn-end; if a matching file changed this session but the declaring doc did not, it surfaces an advisory reminder (not a block). Dormant until a doc opts in.
+- `on-change` (a glob or list of globs) — `coupling-gate` scans root-level and `docs/` markdown at turn-end; if a matching file changed this session but the declaring doc did not, it surfaces an advisory reminder (not a block). Dormant until a doc opts in. The reminder can mean "update this doc" or just "re-read it" — whichever fits.
 
 ## Known papercut
 
