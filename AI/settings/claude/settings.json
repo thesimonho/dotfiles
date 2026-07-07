@@ -107,6 +107,15 @@
             "command": "node ~/dotfiles/AI/hooks/surface-file-header.js"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/verify-track.js"
+          }
+        ]
       }
     ],
     "SessionStart": [
@@ -135,7 +144,12 @@
     "Stop": [
       {
         "matcher": "",
-        "hooks": []
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/verify-gate.js"
+          }
+        ]
       }
     ],
     "Notification": [
