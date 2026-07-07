@@ -318,7 +318,7 @@
     },
     "excludedCommands": ["docker:*", "git:*"]
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "advisorModel": "opus",
   "voice": {
     "enabled": true,

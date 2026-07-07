@@ -38,6 +38,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `no-hard-linebreaks` | PostToolUse | nudge | flag hard-wrapped markdown (documentation.md) |
 | `delete-branch-nudge` | PostToolUse | nudge | delete the local branch after a merge (git.md) |
 | `compaction-nudge` | PostToolUse | nudge | `/compact` at a PR/merge/push boundary |
+| `task-delegation-nudge` | PostToolUse | nudge | pick model/agent at TaskCreate (once/session) |
 | `verify-gate` | Stop | nudge | verify-at-finish reminder when code changed |
 | `coupling-gate` | Stop | nudge | declared `agent.on-change` doc couplings |
 
