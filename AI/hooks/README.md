@@ -31,34 +31,46 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `rtk-nudge` | PreToolUse | nudge | prefix rtk-compressible commands (tools.md) |
 | `lsp-nudge` | PreToolUse | nudge | prefer LSP over Grep/Glob for symbols (tools.md) |
 | `justfile-nudge` | PreToolUse | nudge | check the justfile before custom build/test (tools.md) |
-| `surface-file-header` | PostToolUse | nudge | re-surface a file's own `<INSTRUCTION>` block |
+| `surface-file-header` | PostToolUse | nudge | re-surface a file's own `agent.instruction` |
 | `verify-track` | PostToolUse | state | record edits + verify runs for the gates |
 | `lint-config-files` | PostToolUse | nudge | run the matching linter after a config edit (tools.md) |
 | `check-file-size` | PostToolUse | nudge | flag a source file over 800 lines (coding-style.md) |
 | `no-hard-linebreaks` | PostToolUse | nudge | flag hard-wrapped markdown (documentation.md) |
 | `delete-branch-nudge` | PostToolUse | nudge | delete the local branch after a merge (git.md) |
 | `compaction-nudge` | PostToolUse | nudge | `/compact` at a PR/merge/push boundary |
-| `verify-gate` | Stop | observe | verify-at-finish (observe-only for now) |
-| `coupling-gate` | Stop | block | declared `when-changed` file couplings |
+| `verify-gate` | Stop | nudge | verify-at-finish reminder when code changed |
+| `coupling-gate` | Stop | nudge | declared `agent.on-change` doc couplings |
 
-## The `<INSTRUCTION>` convention
+## The `agent:` frontmatter convention
 
-Any file can carry directives for the agent inside an `<INSTRUCTION>...</INSTRUCTION>` block. `surface-file-header` re-emits that block whenever the agent reads or edits the file, so the file's contract lands at the decision point instead of decaying up-context. It works in any repo with no per-project config.
+A doc can carry directives for the agent in optional `agent:` frontmatter (parsed by `../lib/hooks/frontmatter.js`). Both fields are optional; a doc without it behaves normally.
 
-An instruction can also declare a coupling: `<INSTRUCTION when-changed="src/**">Clear completed items from the list below.</INSTRUCTION>`. If files matching the glob change in a session but the declaring file does not, `coupling-gate` blocks the turn once and surfaces the instruction — the deterministic answer to "shipped the code, never updated the roadmap". It is dormant until such a declaration exists, so it never fires on a project that has not opted in.
+```yaml
+---
+agent:
+  instruction: Update this codemap when the mapped directory changes.
+  on-change:
+    - "src/features/**"
+---
+```
+
+- `instruction` — `surface-file-header` re-emits it whenever the agent reads or edits the file, so the file's contract lands at the decision point instead of decaying up-context.
+- `on-change` (a glob or list of globs) — `coupling-gate` scans root-level and `docs/` markdown at turn-end; if a matching file changed this session but the declaring doc did not, it surfaces an advisory reminder (not a block). Dormant until a doc opts in.
+
+Frontmatter is chosen over an inline tag because it is trivially parseable and matches how the rest of the agent config (agents, memories, rules) declares metadata.
 
 ## Testing
 
-Every hook has a `<name>.test.js` beside it that pipes sample payloads through the hook and asserts exit code / output. They use only Node built-ins — no framework. Run them all:
+There is no committed test suite — these are dotfiles with no runner to keep one in sync. The hooks are kept small and single-purpose, and are exercised continuously by live use. Verify a change by piping a sample payload through the hook, e.g.:
 
 ```bash
-for t in AI/hooks/*.test.js; do node "$t" || echo "FAIL $t"; done
+echo '{"tool_input":{"file_path":"docs/roadmap.md"}}' | node AI/hooks/surface-file-header.js
 ```
 
 ## Phased rollout and arming
 
-- **`verify-gate` is observe-only.** It logs turns that would have been blocked (unverified code changes) to `verify-observe.log` under the state dir, instead of blocking, so the false-positive rate (e.g. stopping to ask a clarifying question) can be measured first. Arm it by having it exit 2 on a would-block once the log looks clean.
-- **`post-edit-reminder` is intentionally still wired.** It is the always-fires generic reminder the plan wants retired; retire it only once `verify-gate` is armed, so the verify nudge is never fully absent.
+- **The Stop hooks are soft reminders, not blocks.** `verify-gate` and `coupling-gate` inject advisory `additionalContext` — the model reads it and decides. This avoids forcing a full verify on doc-adjacent turns and avoids halting where the tools aren't available (e.g. Claude web). If measurement shows a reminder is ignored too often, escalate that one to a `decision:block`.
+- **`post-edit-reminder` is intentionally still wired.** It is the always-fires generic reminder the plan wants retired; retire it only once the verify reminder proves sufficient.
 - **Codex hooks stay disabled.** A one-time cloud routine in early September re-checks whether Codex has separated hook trust-state from committed config; re-enable the Codex wiring then.
 
 ## Reviewed but intentionally not auto-applied

@@ -2,34 +2,32 @@
 /**
  * Hook: Re-surface a file's own working-instructions when the agent touches it.
  *
- * A file can carry directives for how to work with it inside an
- * `<INSTRUCTION>...</INSTRUCTION>` block (e.g. a roadmap: "clear items as they
- * complete"). Those directives decay: the agent reads the file early, then
- * finishes the task many turns later with the instruction buried far up-context.
+ * A file can declare directives for how to work with it in optional `agent:`
+ * frontmatter:
  *
- * On every Read/Edit this hook re-emits any `<INSTRUCTION>` blocks as fresh
- * context, so the file's contract sits at the decision point rather than in a
- * stale tool result. It stays silent for the (vast majority of) files that carry
- * no such block, so it adds no noise.
+ *   ---
+ *   agent:
+ *     instruction: Remove items from this list as they are completed.
+ *   ---
+ *
+ * Those directives decay: the agent reads the file early, then finishes the task
+ * many turns later with the instruction buried far up-context. On every Read/Edit
+ * this hook re-emits the `agent.instruction` as fresh context, so the file's
+ * contract sits at the decision point. It stays silent for the (vast majority of)
+ * files that carry no such block, so it adds no noise.
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
 const { addContext } = require("../lib/hooks/hook-response");
+const { parseAgentFrontmatter } = require("../lib/hooks/frontmatter");
 
-// Files larger than this are skipped unread — instruction blocks live in small
-// hand-maintained files (roadmaps, READMEs), not large generated or binary ones.
+// Files larger than this are skipped unread — instruction frontmatter lives in
+// small hand-maintained files (roadmaps, READMEs, codemaps), not large ones.
 const MAX_BYTES = 256 * 1024;
 
-// Cap the surfaced text so a huge block can't flood context every time the file
-// is touched; the agent can re-read the file for the full detail.
+// Cap the surfaced text so a huge instruction can't flood context on every touch.
 const MAX_SURFACED_CHARS = 1500;
-
-// Match only well-formed tags: a bare <INSTRUCTION> or one carrying key="val"
-// attributes (e.g. when-changed="src/**", read by the coupling gate). Requiring
-// well-formed attributes avoids matching regex/source that merely mentions the
-// tag. Group 2 is the block text.
-const INSTRUCTION_BLOCK = /<INSTRUCTION((?:\s+[\w-]+="[^"]*")*)\s*>([\s\S]*?)<\/INSTRUCTION>/gi;
 
 /**
  * The file path a Read/Edit targeted, across Claude and Codex tool shapes.
@@ -60,23 +58,6 @@ function readSmallFile(absolutePath) {
   }
 }
 
-/**
- * Extract and join the text of every `<INSTRUCTION>` block in a document.
- *
- * @param {string} content
- * @returns {string}
- */
-function instructionsFrom(content) {
-  const blocks = [];
-  for (const match of content.matchAll(INSTRUCTION_BLOCK)) {
-    const text = match[2].trim();
-    if (text) {
-      blocks.push(text);
-    }
-  }
-  return blocks.join("\n\n");
-}
-
 let input = "";
 process.stdin.on("data", (chunk) => (input += chunk));
 process.stdin.on("end", () => {
@@ -93,19 +74,19 @@ process.stdin.on("end", () => {
     return;
   }
 
-  const instructions = instructionsFrom(content);
-  if (!instructions) {
+  const { instruction } = parseAgentFrontmatter(content);
+  if (!instruction) {
     return;
   }
 
   const relative = path.relative(cwd, absolute) || target;
   const surfaced =
-    instructions.length > MAX_SURFACED_CHARS
-      ? `${instructions.slice(0, MAX_SURFACED_CHARS)}\n…(truncated — re-read the file for the rest)`
-      : instructions;
+    instruction.length > MAX_SURFACED_CHARS
+      ? `${instruction.slice(0, MAX_SURFACED_CHARS)}…`
+      : instruction;
 
   addContext(
     "PostToolUse",
-    `Working-instructions declared in ${relative} — follow them before you finish:\n${surfaced}`,
+    `Working-instruction declared in ${relative} — follow it before you finish:\n${surfaced}`,
   );
 });
