@@ -84,6 +84,10 @@
           },
           {
             "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/verify-gate.js"
+          },
+          {
+            "type": "command",
             "command": "node ~/dotfiles/AI/hooks/scan-secrets.js"
           },
           {
@@ -256,10 +260,6 @@
       {
         "matcher": "",
         "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/verify-gate.js"
-          },
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/coupling-gate.js"

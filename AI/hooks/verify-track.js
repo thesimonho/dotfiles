@@ -2,9 +2,14 @@
 /**
  * Hook: Track whether code has changed since the last verification.
  *
- * Feeds the verify Stop-gate. On a code edit it marks the session "dirty"; when a
- * recognised verify command runs it marks it "clean" again. The gate reads that
- * flag at turn-end. Wire under PostToolUse for Edit|Write|MultiEdit|Bash.
+ * Feeds the verify pre-commit gate. On a code edit it marks the session
+ * "dirty"; when a recognised verify command runs it marks it "clean" again.
+ * The gate reads that flag right before a `git commit`. Wire under
+ * PostToolUse for Edit|Write|MultiEdit|Bash.
+ *
+ * Edits outside the project (scratchpad/tmp helper scripts, files above cwd) are
+ * ignored entirely — they're not project code and shouldn't demand a verify run
+ * or feed the coupling gate.
  */
 
 const path = require("node:path");
@@ -55,7 +60,10 @@ process.stdin.on("end", () => {
     return;
   }
   const cwd = payload.cwd ?? process.cwd();
-  const relative = path.relative(cwd, path.resolve(cwd, edited)) || edited;
+  const relative = path.relative(cwd, path.resolve(cwd, edited));
+  if (relative.startsWith("..")) {
+    return; // outside the project (e.g. a scratchpad helper script) — not project code
+  }
   const priorEdited = state.read(sessionId).edited ?? [];
   const patch = { edited: [...new Set([...priorEdited, relative])] };
   if (CODE_FILE.test(edited)) {

@@ -23,6 +23,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `block-plan-references`     | PreToolUse  | block  | no plan-file references in code/docs (planning.md)     |
 | `block-force-push`          | PreToolUse  | block  | never force-push (git.md)                              |
 | `check-conventional-commit` | PreToolUse  | block  | conventional subject, max 70 chars (git.md)            |
+| `verify-gate`               | PreToolUse  | nudge  | verify reminder on `git commit` when code changed      |
 | `branch-guard`              | PreToolUse  | block  | no code edits on the default branch (git.md)           |
 | `block-debug-logging`       | PreToolUse  | block  | no leftover debug logging in a commit (workflow.md)    |
 | `scan-secrets`              | PreToolUse  | block  | gitleaks scan of the commit diff (regex fallback)      |
@@ -34,14 +35,13 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)       |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md) |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`            |
-| `verify-track`              | PostToolUse | state  | record edits + verify runs for the gates               |
+| `verify-track`              | PostToolUse | state  | record edits + verify runs for verify-gate/coupling-gate |
 | `lint-config-files`         | PostToolUse | nudge  | run the matching linter after a config edit (tools.md) |
 | `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines (coding-style.md)    |
 | `no-hard-linebreaks`        | PostToolUse | nudge  | flag hard-wrapped markdown (documentation.md)          |
 | `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge (git.md)         |
 | `compaction-nudge`          | PostToolUse | nudge  | `/compact` at a PR/merge/push boundary                 |
 | `task-delegation-nudge`     | PostToolUse | nudge  | pick model/agent at TaskCreate (debounced 15m)         |
-| `verify-gate`               | Stop        | nudge  | verify-at-finish reminder when code changed            |
 | `coupling-gate`             | Stop        | nudge  | declared `agent.on-change` doc couplings               |
 
 ## The `agent:` frontmatter convention
