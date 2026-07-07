@@ -25,15 +25,10 @@
       "Bash(ls *)",
       "Bash(gh *)",
       "Bash(npm run *)",
-      "Bash(oxlint *)",
-      "Bash(oxfmt *)",
       "Bash(git *)",
       "Bash(curl *)",
       "Bash(just *)",
       "Bash(rtk *)",
-      "Bash(rtk grep *)",
-      "Bash(rtk find *)",
-      "Bash(rtk read *)",
       "mcp__context7__query-docs",
       "mcp__context7__resolve-library-id"
     ],
@@ -292,7 +287,8 @@
       }
     }
   },
-  "outputStyle": "explanatory",
+  "outputStyle": "default",
+  "model": "sonnet",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
@@ -313,7 +309,7 @@
     },
     "excludedCommands": ["docker:*", "git:*"]
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "advisorModel": "opus",
   "voice": {
     "enabled": true,
