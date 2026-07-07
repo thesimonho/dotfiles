@@ -73,8 +73,12 @@ let input = "";
 process.stdin.on("data", (chunk) => (input += chunk));
 process.stdin.on("end", () => {
   const payload = JSON.parse(input);
-  const sessionId = payload.session_id;
+  const command = payload.tool_input?.command ?? "";
+  if (!/git\s+commit/.test(command)) {
+    return; // the matcher is broad Bash; only nudge on commits
+  }
 
+  const sessionId = payload.session_id;
   if (state.read(sessionId).commitFormatNudged) {
     return; // already reminded this session
   }
