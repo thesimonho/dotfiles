@@ -60,29 +60,6 @@ agent:
 - `instruction` — `surface-file-header` re-emits it whenever the agent reads or edits the file, so the file's contract lands at the decision point instead of decaying up-context.
 - `on-change` (a glob or list of globs) — `coupling-gate` scans root-level and `docs/` markdown at turn-end; if a matching file changed this session but the declaring doc did not, it surfaces an advisory reminder (not a block). Dormant until a doc opts in.
 
-Frontmatter is chosen over an inline tag because it is trivially parseable and matches how the rest of the agent config (agents, memories, rules) declares metadata.
-
-## Testing
-
-There is no committed test suite — these are dotfiles with no runner to keep one in sync. The hooks are kept small and single-purpose, and are exercised continuously by live use. Verify a change by piping a sample payload through the hook, e.g.:
-
-```bash
-echo '{"tool_input":{"file_path":"docs/roadmap.md"}}' | node AI/hooks/surface-file-header.js
-```
-
-## Phased rollout and arming
-
-- **The Stop hooks are soft reminders, not blocks.** `verify-gate` and `coupling-gate` inject advisory `additionalContext` — the model reads it and decides. This avoids forcing a full verify on doc-adjacent turns and avoids halting where the tools aren't available (e.g. Claude web). If measurement shows a reminder is ignored too often, escalate that one to a `decision:block`.
-- **No always-fires per-edit reminder.** An earlier `post-edit-reminder` nagged "run the formatter/linter" on every edit — unactionable (formatting is editor-chosen and manual, with no CLI entrypoint) and pure fatigue. It was retired: file size is enforced by `check-file-size`, verification by `verify-gate` at Stop, and coding-style preferences live in the fragments.
-- **Codex hooks stay disabled.** A one-time cloud routine in early September re-checks whether Codex has separated hook trust-state from committed config; re-enable the Codex wiring then.
-
-## Reviewed but intentionally not auto-applied
-
-- **Model tiering.** The default model is `sonnet` with `outputStyle: default`; heavier reasoning is delegated to an opus subagent (the planning agent is pinned to opus), nudged at spawn time by `task-delegation-nudge` rather than by a mid-session `/model` switch (which re-caches the whole conversation). A hook cannot set the model, so this stays a nudge, not enforcement.
-- **LLM arbitrator (residual judgment).** The plan's fallback for un-gateable, judgment-shaped residue. Deferred: it needs to shell out to a model and be verified live, which is a larger, separately-testable piece than the deterministic hooks.
-- **Path-scoped rules for Claude.** Scoping a fragment to `src/**` etc. via rule frontmatter would leak that frontmatter into Codex's concatenated `AGENTS.md`. It needs the generator to strip frontmatter per output first.
-- **Eval scorer.** Passive transcript grading (the §09 idea) belongs in the future MLflow/LangSmith-shaped eval suite, not here.
-
 ## Known papercut
 
 Content-scanning hooks (`block-plan-references`, and `scan-secrets`' regex fallback) can trip on documentation that _describes_ the patterns they match; write such docs with abstract descriptions or via a non-matched tool. A few PreToolUse nudges spawn a Node process per Bash/edit call; trim the broad matchers if latency becomes noticeable.

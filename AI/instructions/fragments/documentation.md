@@ -18,10 +18,14 @@ An index (`docs/README.md`) maps only the **live** docs — don't enumerate arch
 
 ## File-scoped agent directives (frontmatter)
 
-A doc can carry optional `agent:` frontmatter that agent tooling reads. Both fields are optional; a doc without it behaves normally.
+A markdown doc can carry optional `agent:` frontmatter that agent tooling reads. Both fields are optional; a doc without it behaves normally.
+
+Add this to docs you create if the instruction can be scoped to a path.
 
 - `instruction` — a short directive re-surfaced whenever the file is read or edited (e.g. a roadmap's "remove items as they complete", a codemap's "update when the mapped directory changes").
-- `on-change` — a glob or list of globs; when a matching file changes in a session but this doc does not, the agent is reminded at turn-end. Use it to couple a codemap to its source directory, or the docs index to `docs/**`.
+- `on-change` — a glob or list of globs; when a matching file changes in a session but this doc does not, the agent is reminded at turn-end.
+
+Example: use it to couple a codemap to its source directory, or the docs index to `docs/**`:
 
 ```yaml
 ---
