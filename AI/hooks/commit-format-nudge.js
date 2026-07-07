@@ -15,7 +15,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { addContext } = require("../lib/hooks/hook-response");
-const state = require("../lib/hooks/session-state");
 
 // Formatter config markers → the tool to name in the nudge.
 const FORMATTER_CONFIGS = [
@@ -77,12 +76,6 @@ process.stdin.on("end", () => {
   if (!/git\s+commit/.test(command)) {
     return; // the matcher is broad Bash; only nudge on commits
   }
-
-  const sessionId = payload.session_id;
-  if (state.read(sessionId).commitFormatNudged) {
-    return; // already reminded this session
-  }
-  state.update(sessionId, { commitFormatNudged: true });
 
   const cwd = payload.cwd ?? process.cwd();
   const formatter = detectFormatter(cwd);

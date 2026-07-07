@@ -29,7 +29,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `check-plan-filename`       | PreToolUse  | block  | plan files start with a `YYYYMMDD` stamp (planning.md) |
 | `memory-redirect`           | PreToolUse  | nudge  | prefer a hook over a memory for enforceable rules      |
 | `commit-format-nudge`       | PreToolUse  | nudge  | format changed files before committing (avoid churn)   |
-| `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder on first commit (agent judges)      |
+| `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder on each commit (agent judges)       |
 | `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md)            |
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)       |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md) |
@@ -40,7 +40,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `no-hard-linebreaks`        | PostToolUse | nudge  | flag hard-wrapped markdown (documentation.md)          |
 | `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge (git.md)         |
 | `compaction-nudge`          | PostToolUse | nudge  | `/compact` at a PR/merge/push boundary                 |
-| `task-delegation-nudge`     | PostToolUse | nudge  | pick model/agent at TaskCreate (once/session)          |
+| `task-delegation-nudge`     | PostToolUse | nudge  | pick model/agent at TaskCreate (debounced 15m)         |
 | `verify-gate`               | Stop        | nudge  | verify-at-finish reminder when code changed            |
 | `coupling-gate`             | Stop        | nudge  | declared `agent.on-change` doc couplings               |
 

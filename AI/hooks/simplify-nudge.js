@@ -5,13 +5,13 @@
  * /simplify reviews recent code changes for reuse, quality, and efficiency; a
  * commit is the natural checkpoint. It deliberately does NOT inspect the diff or
  * guess which extensions count as "code" — a fight you can't win — and instead
- * fires once per session on a git commit and lets the agent judge: run /simplify
- * only if there were substantial code changes, skip otherwise. A hook can't
- * invoke a skill, so it reminds the agent to. Wire under PreToolUse for Bash.
+ * fires on every git commit and lets the agent judge: run /simplify only if there
+ * were substantial code changes, skip otherwise. It fires per commit rather than
+ * once per session because a session is reused across many work cycles. A hook
+ * can't invoke a skill, so it reminds the agent to. Wire under PreToolUse for Bash.
  */
 
 const { addContext } = require("../lib/hooks/hook-response");
-const state = require("../lib/hooks/session-state");
 
 let input = "";
 process.stdin.on("data", (chunk) => (input += chunk));
@@ -21,12 +21,6 @@ process.stdin.on("end", () => {
   if (!/git\s+commit/.test(command)) {
     return; // the matcher is broad Bash; only act on commits
   }
-
-  const sessionId = payload.session_id;
-  if (state.read(sessionId).simplifyNudged) {
-    return; // once per session
-  }
-  state.update(sessionId, { simplifyNudged: true });
 
   addContext(
     "PreToolUse",
