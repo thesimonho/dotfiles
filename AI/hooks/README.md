@@ -75,6 +75,7 @@ echo '{"tool_input":{"file_path":"docs/roadmap.md"}}' | node AI/hooks/surface-fi
 - **The Stop hooks are soft reminders, not blocks.** `verify-gate` and `coupling-gate` inject advisory `additionalContext` — the model reads it and decides. This avoids forcing a full verify on doc-adjacent turns and avoids halting where the tools aren't available (e.g. Claude web). If measurement shows a reminder is ignored too often, escalate that one to a `decision:block`.
 - **No always-fires per-edit reminder.** An earlier `post-edit-reminder` nagged "run the formatter/linter" on every edit — unactionable (formatting is editor-chosen and manual, with no CLI entrypoint) and pure fatigue. It was retired: file size is enforced by `check-file-size`, verification by `verify-gate` at Stop, and coding-style preferences live in the fragments.
 - **Codex hooks stay disabled.** A one-time cloud routine in early September re-checks whether Codex has separated hook trust-state from committed config; re-enable the Codex wiring then.
+- **`lsp-nudge` is unwired.** It nudges toward `goToDefinition`/`findReferences`, but a hook can't see the client's tool registry, so with no LSP plugins loaded in the client the nudge points at tools that don't exist. Re-add its `Grep|Glob` block to `settings.json` once LSP navigation is available.
 
 ## Reviewed but intentionally not auto-applied
 
