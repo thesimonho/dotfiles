@@ -127,6 +127,19 @@
             "command": "node ~/dotfiles/AI/hooks/block-debug-logging.js"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/scan-secrets.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/check-plan-filename.js"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -172,6 +185,19 @@
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/delete-branch-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/check-file-size.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/no-hard-linebreaks.js"
           }
         ]
       }
