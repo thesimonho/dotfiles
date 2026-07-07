@@ -124,6 +124,15 @@
         ]
       },
       {
+        "matcher": "tool == \"Bash\" && tool_input.command matches \"git\\s+commit\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/commit-format-nudge.js"
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
