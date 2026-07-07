@@ -140,6 +140,15 @@
             "command": "node ~/dotfiles/AI/hooks/check-plan-filename.js"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/memory-redirect.js"
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -198,6 +207,15 @@
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/no-hard-linebreaks.js"
+          }
+        ]
+      },
+      {
+        "matcher": "tool == \"Bash\" && tool_input.command matches \"gh\\s+pr\\s+(create|merge)|git\\s+merge|git\\s+push\"",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/compaction-nudge.js"
           }
         ]
       }
