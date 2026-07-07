@@ -213,6 +213,15 @@
             "command": "node ~/dotfiles/AI/hooks/compaction-nudge.js"
           }
         ]
+      },
+      {
+        "matcher": "TaskCreate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/task-delegation-nudge.js"
+          }
+        ]
       }
     ],
     "SessionStart": [
