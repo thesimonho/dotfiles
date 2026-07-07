@@ -35,6 +35,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
+  "model": "sonnet",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -290,7 +291,11 @@
     "command": "bash ~/dotfiles/AI/settings/claude/statusline.sh"
   },
   "enabledPlugins": {
-    "dodo@artificial-jellybeans": true
+    "dodo@artificial-jellybeans": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
@@ -301,7 +306,6 @@
     }
   },
   "outputStyle": "default",
-  "model": "sonnet",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
