@@ -25,7 +25,11 @@ const MAX_BYTES = 256 * 1024;
 // is touched; the agent can re-read the file for the full detail.
 const MAX_SURFACED_CHARS = 1500;
 
-const INSTRUCTION_BLOCK = /<INSTRUCTION>([\s\S]*?)<\/INSTRUCTION>/gi;
+// Match only well-formed tags: a bare <INSTRUCTION> or one carrying key="val"
+// attributes (e.g. when-changed="src/**", read by the coupling gate). Requiring
+// well-formed attributes avoids matching regex/source that merely mentions the
+// tag. Group 2 is the block text.
+const INSTRUCTION_BLOCK = /<INSTRUCTION((?:\s+[\w-]+="[^"]*")*)\s*>([\s\S]*?)<\/INSTRUCTION>/gi;
 
 /**
  * The file path a Read/Edit targeted, across Claude and Codex tool shapes.
@@ -65,7 +69,7 @@ function readSmallFile(absolutePath) {
 function instructionsFrom(content) {
   const blocks = [];
   for (const match of content.matchAll(INSTRUCTION_BLOCK)) {
-    const text = match[1].trim();
+    const text = match[2].trim();
     if (text) {
       blocks.push(text);
     }

@@ -7,6 +7,7 @@
  * flag at turn-end. Wire under PostToolUse for Edit|Write|MultiEdit|Bash.
  */
 
+const path = require("node:path");
 const state = require("../lib/hooks/session-state");
 
 const CODE_FILE =
@@ -47,9 +48,18 @@ process.stdin.on("end", () => {
     return;
   }
 
-  // Edit / Write / MultiEdit (or a Codex apply_patch carried on Bash is handled
-  // above via the command; here we cover the structured file tools).
-  if (CODE_FILE.test(editedPath(toolInput))) {
-    state.update(sessionId, { dirty: true });
+  // Edit / Write / MultiEdit. Record the path (for the coupling gate) and, for
+  // code files, flag the session dirty (for the verify gate).
+  const edited = editedPath(toolInput);
+  if (!edited) {
+    return;
   }
+  const cwd = payload.cwd ?? process.cwd();
+  const relative = path.relative(cwd, path.resolve(cwd, edited)) || edited;
+  const priorEdited = state.read(sessionId).edited ?? [];
+  const patch = { edited: [...new Set([...priorEdited, relative])] };
+  if (CODE_FILE.test(edited)) {
+    patch.dirty = true;
+  }
+  state.update(sessionId, patch);
 });

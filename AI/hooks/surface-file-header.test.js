@@ -93,10 +93,18 @@ test("surfaces every INSTRUCTION block in a file", () => {
   assert.match(surfaced, /Second rule/);
 });
 
+test("surfaces a block carrying a when-changed attribute", () => {
+  const coupled = fixture(
+    "coupled.md",
+    '<INSTRUCTION when-changed="src/**">Clear completed items.</INSTRUCTION>\n',
+  );
+  assert.match(surfacedFor(coupled), /Clear completed items/);
+});
+
 fs.rmSync(workdir, { recursive: true, force: true });
 
 if (failures > 0) {
   console.error(`\n${failures} failing`);
   process.exit(1);
 }
-console.log("\n4 passing");
+console.log("\n5 passing");
