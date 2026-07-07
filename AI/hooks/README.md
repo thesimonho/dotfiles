@@ -29,7 +29,7 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `check-plan-filename`       | PreToolUse  | block  | plan files start with a `YYYYMMDD` stamp (planning.md) |
 | `memory-redirect`           | PreToolUse  | nudge  | prefer a hook over a memory for enforceable rules      |
 | `commit-format-nudge`       | PreToolUse  | nudge  | format changed files before committing (avoid churn)   |
-| `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder on commits that touch code          |
+| `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder on first commit (agent judges)      |
 | `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md)            |
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)       |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md) |
