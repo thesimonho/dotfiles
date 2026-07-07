@@ -83,6 +83,10 @@
           },
           {
             "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/scan-secrets.js"
+          },
+          {
+            "type": "command",
             "command": "node ~/dotfiles/AI/hooks/simplify-nudge.js"
           }
         ]
@@ -139,10 +143,6 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/scan-secrets.js"
-          },
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/check-plan-filename.js"

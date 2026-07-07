@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 /**
- * Hook: Block hardcoded secrets from being written into the repo.
+ * Hook: Block secrets from entering a commit.
  *
- * security.md is explicit — "No hardcoded secrets (API keys, passwords, tokens).
- * Use environment variables instead." A leaked credential in a commit is expensive
- * to undo (rotation, history scrubbing), so this blocks at write-time rather than
- * relying on a later review to catch it.
+ * security.md is explicit — "No hardcoded secrets. Use environment variables
+ * instead." A leaked credential in history is expensive to undo (rotation,
+ * scrubbing), so this blocks at commit time, the point where content would enter
+ * history.
  *
- * Scans the content Edit/Write/MultiEdit would introduce, plus Bash commands that
- * carry a Codex apply_patch body (`*** Add File:` / `*** Update File:` followed by
- * `+`-prefixed lines), for known credential shapes and generic secret-assignment
- * patterns. Obvious placeholders (process.env, <angle brackets>, "xxx", "example",
- * etc.) are ignored so scaffolding and docs don't get flagged.
+ * It prefers gitleaks — the same scanner this repo already runs in CI
+ * (.github/workflows/gitleaks.yaml) — and falls back to a small built-in pattern
+ * set when gitleaks is not on PATH, so there is never a coverage gap and no hard
+ * dependency (e.g. a fresh worktree before the toolchain is installed). Non-agent
+ * commits (lazygit, manual) are covered by the same CI scan. Wire under
+ * PreToolUse for Bash; it self-filters to `git commit`.
  */
 
+const { execFileSync, spawnSync } = require("node:child_process");
 const { block } = require("../lib/hooks/hook-response");
 
 // Known credential shapes: provider-specific tokens whose format alone is a
@@ -39,34 +41,82 @@ const PLACEHOLDER_MARKERS =
   /process\.env|os\.environ|[<>]|xxx|example|changeme|your_|placeholder|redacted|\*\*\*\*/i;
 
 /**
- * The text a write would introduce, across Claude and Codex tool shapes.
+ * Run a git command, returning stdout or "" (so callers fail open on non-repos).
  *
- * @param {object} toolInput
+ * @param {string} cwd
+ * @param {string[]} args
  * @returns {string}
  */
-function writtenContentFrom(toolInput) {
-  const parts = [toolInput.content, toolInput.new_string, toolInput.command];
-  return parts.filter((part) => typeof part === "string").join("\n");
+function git(cwd, args) {
+  try {
+    return execFileSync("git", args, { cwd, encoding: "utf8" });
+  } catch {
+    return "";
+  }
 }
 
 /**
- * The single line a match occurred on, used to check for nearby placeholder
- * markers without letting an unrelated line's `process.env` mask a real secret
- * elsewhere in the same file.
+ * Which region a commit will include: the staged diff normally, or the unstaged
+ * working-tree diff for the `git add … && git commit` one-liner (this hook runs
+ * before the add, so nothing is staged yet). Returns the gitleaks flag and the
+ * matching `git diff` args, or null when there is nothing to scan.
  *
- * @param {string} content
- * @param {number} matchIndex
- * @returns {string}
+ * @param {string} cwd
+ * @returns {{gitleaksFlag: string, diffArgs: string[]}|null}
  */
-function lineContaining(content, matchIndex) {
-  const lineStart = content.lastIndexOf("\n", matchIndex) + 1;
-  const lineEndIndex = content.indexOf("\n", matchIndex);
-  const lineEnd = lineEndIndex === -1 ? content.length : lineEndIndex;
-  return content.slice(lineStart, lineEnd);
+function scanRegion(cwd) {
+  if (git(cwd, ["diff", "--cached", "--name-only"]).trim()) {
+    return { gitleaksFlag: "--staged", diffArgs: ["diff", "--cached", "--unified=0"] };
+  }
+  if (git(cwd, ["diff", "--name-only"]).trim()) {
+    return { gitleaksFlag: "--pre-commit", diffArgs: ["diff", "--unified=0"] };
+  }
+  return null;
 }
 
 /**
- * Find the first secret pattern that matches real (non-placeholder) content.
+ * Scan with gitleaks. Returns "clean", "leak" (with a report), or "unavailable"
+ * when gitleaks is absent or the CLI shape is unexpected, so the caller can fall
+ * back to the built-in patterns.
+ *
+ * @param {string} cwd
+ * @param {string} gitleaksFlag
+ * @returns {{status: "clean"}|{status: "leak", report: string}|{status: "unavailable"}}
+ */
+function runGitleaks(cwd, gitleaksFlag) {
+  const result = spawnSync(
+    "gitleaks",
+    ["git", gitleaksFlag, "--no-banner", "--redact"],
+    { cwd, encoding: "utf8" },
+  );
+  if (result.error) {
+    return { status: "unavailable" }; // not on PATH
+  }
+  if (result.status === 0) {
+    return { status: "clean" };
+  }
+  if (result.status === 1) {
+    return { status: "leak", report: (result.stdout || result.stderr || "").trim() };
+  }
+  return { status: "unavailable" }; // e.g. 126 unknown flag on an older CLI
+}
+
+/**
+ * The added (`+`) lines of a diff, for the built-in fallback scan.
+ *
+ * @param {string} diff
+ * @returns {string}
+ */
+function addedLines(diff) {
+  return diff
+    .split("\n")
+    .filter((line) => line.startsWith("+") && !line.startsWith("+++"))
+    .map((line) => line.slice(1))
+    .join("\n");
+}
+
+/**
+ * First built-in secret pattern matching real (non-placeholder) content.
  *
  * @param {string} content
  * @returns {{name: string}|null}
@@ -77,8 +127,9 @@ function firstRealSecretMatch(content) {
     if (!match) {
       continue;
     }
-
-    const line = lineContaining(content, match.index);
+    const lineStart = content.lastIndexOf("\n", match.index) + 1;
+    const lineEndIndex = content.indexOf("\n", match.index);
+    const line = content.slice(lineStart, lineEndIndex === -1 ? content.length : lineEndIndex);
     if (!PLACEHOLDER_MARKERS.test(line)) {
       return candidate;
     }
@@ -90,18 +141,35 @@ let input = "";
 process.stdin.on("data", (chunk) => (input += chunk));
 process.stdin.on("end", () => {
   const payload = JSON.parse(input);
-  const content = writtenContentFrom(payload.tool_input ?? {});
-  if (!content) {
+  const command = payload.tool_input?.command ?? "";
+  if (!/git\s+commit/.test(command)) {
+    return; // the matcher is broad Bash; only act on commits
+  }
+
+  const cwd = payload.cwd ?? process.cwd();
+  const region = scanRegion(cwd);
+  if (!region) {
+    return; // nothing staged or changed — let git handle the empty commit
+  }
+
+  const gitleaks = runGitleaks(cwd, region.gitleaksFlag);
+  if (gitleaks.status === "clean") {
+    return;
+  }
+  if (gitleaks.status === "leak") {
+    block("gitleaks detected a secret in this commit", [
+      "Remove it and use an environment variable or secret store instead.",
+      `See the file and rule with: gitleaks git ${region.gitleaksFlag} -v`,
+    ]);
     return;
   }
 
-  const found = firstRealSecretMatch(content);
-  if (!found) {
-    return;
+  // gitleaks unavailable — fall back to the built-in patterns on the diff.
+  const found = firstRealSecretMatch(addedLines(git(cwd, region.diffArgs)));
+  if (found) {
+    block("Hardcoded secret detected in commit (gitleaks not on PATH — built-in scan)", [
+      `Pattern: ${found.name}`,
+      "Remove it and use an environment variable instead.",
+    ]);
   }
-
-  block("Hardcoded secret detected in written content", [
-    `Pattern: ${found.name}`,
-    "security.md: no hardcoded secrets — use environment variables instead.",
-  ]);
 });
