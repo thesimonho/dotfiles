@@ -25,26 +25,22 @@
       "Bash(ls *)",
       "Bash(gh *)",
       "Bash(npm run *)",
-      "Bash(oxlint *)",
-      "Bash(oxfmt *)",
       "Bash(git *)",
       "Bash(curl *)",
       "Bash(just *)",
       "Bash(rtk *)",
-      "Bash(rtk grep *)",
-      "Bash(rtk find *)",
-      "Bash(rtk read *)",
       "mcp__context7__query-docs",
       "mcp__context7__resolve-library-id"
     ],
     "deny": [],
     "defaultMode": "auto"
   },
+  "model": "sonnet",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "tool == \"Write\" && (tool_input.file_path matches \"\\.(md|txt)$\")",
+        "matcher": "Write",
         "hooks": [
           {
             "type": "command",
@@ -62,7 +58,16 @@
         ]
       },
       {
-        "matcher": "tool == \"Bash\" && tool_input.command matches \"git\\s+push\"",
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/block-plan-references.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
@@ -71,22 +76,155 @@
         ]
       },
       {
-        "matcher": "tool == \"Bash\" && tool_input.command matches \"git\\s+commit\"",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/scan-secrets.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/simplify-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/rtk-nudge.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/justfile-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/lsp-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/branch-guard.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/block-debug-logging.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/commit-format-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/check-plan-filename.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/memory-redirect.js"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
+        "matcher": "Read|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/surface-file-header.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/verify-track.js"
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/post-edit-reminder.js"
+            "command": "node ~/dotfiles/AI/hooks/lint-config-files.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/delete-branch-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/check-file-size.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/no-hard-linebreaks.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/compaction-nudge.js"
+          }
+        ]
+      },
+      {
+        "matcher": "TaskCreate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/task-delegation-nudge.js"
           }
         ]
       }
@@ -117,7 +255,16 @@
     "Stop": [
       {
         "matcher": "",
-        "hooks": []
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/verify-gate.js"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/coupling-gate.js"
+          }
+        ]
       }
     ],
     "Notification": [
@@ -144,7 +291,11 @@
     "command": "bash ~/dotfiles/AI/settings/claude/statusline.sh"
   },
   "enabledPlugins": {
-    "dodo@artificial-jellybeans": true
+    "dodo@artificial-jellybeans": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
@@ -154,7 +305,7 @@
       }
     }
   },
-  "outputStyle": "explanatory",
+  "outputStyle": "default",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true,

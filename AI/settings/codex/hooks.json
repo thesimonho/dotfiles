@@ -32,17 +32,6 @@
         ]
       }
     ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/post-edit-reminder.js",
-            "statusMessage": "Adding verification reminder"
-          }
-        ]
-      }
-    ]
+    "PostToolUse": []
   }
 }

@@ -143,6 +143,13 @@
       package = pkgs.gh;
       bundles = [ "dev" ];
     };
+    gitleaks = {
+      package = pkgs.gitleaks;
+      bundles = [
+        "security"
+        "dev"
+      ];
+    };
     glow = {
       package = pkgs.glow;
       bundles = [ ];
