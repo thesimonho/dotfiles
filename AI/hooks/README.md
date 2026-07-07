@@ -33,7 +33,6 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)       |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md) |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`            |
-| `surface-dir-readme`        | PostToolUse | nudge  | inject a docs dir's nearest README when touched        |
 | `verify-track`              | PostToolUse | state  | record edits + verify runs for the gates               |
 | `lint-config-files`         | PostToolUse | nudge  | run the matching linter after a config edit (tools.md) |
 | `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines (coding-style.md)    |
