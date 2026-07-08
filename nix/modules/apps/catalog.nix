@@ -224,6 +224,9 @@
       package = pkgs.nixfmt-rfc-style;
       bundles = [ "cli" ];
     };
+    onlyoffice = {
+      flatpak.id = "org.onlyoffice.desktopeditors";
+    };
     pay-respects = {
       package = pkgs.pay-respects;
       bundles = [ "cli" ];

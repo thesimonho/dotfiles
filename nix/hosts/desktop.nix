@@ -27,6 +27,7 @@
         "bitwarden"
         "ffmpeg"
         "glow"
+        "onlyoffice"
         "wl-clipboard"
       ];
     };
