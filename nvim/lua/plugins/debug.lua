@@ -108,9 +108,10 @@ return {
   {
     "theHamsta/nvim-dap-virtual-text",
     opts = {
-      all_references = true,
+      all_references = false,
       highlight_changed_variables = true,
-      highlight_new_as_changed = false,
+      highlight_new_as_changed = true,
+      commented = true,
       virt_text_pos = "eol",
     },
   },
