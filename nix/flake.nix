@@ -51,6 +51,14 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    # Claude Desktop with the Cowork VM backend wired up (firmware/virtiofsd
+    # paths patched for non-Debian distros). numtide/llm-agents ships the same
+    # upstream binary but without this, so Cowork can't find OVMF on Arch.
+    claude-desktop-bin = {
+      url = "github:patrickjaja/claude-desktop-bin";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";

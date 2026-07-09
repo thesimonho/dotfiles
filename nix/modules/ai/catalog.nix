@@ -27,7 +27,14 @@ in
       bundles = [ "agents" ];
     };
     claude-desktop = {
-      package = llmAgents.claude-desktop;
+      # From claude-desktop-bin (not llm-agents): its build patches the Cowork
+      # VM probe to honour CLAUDE_OVMF_CODE_PATH / CLAUDE_VIRTIOFSD_PATH and
+      # wires OVMF + virtiofsd from nixpkgs. qemu = null drops the bundled qemu
+      # from the closure; the Cowork helper finds qemu-system-x86_64 on the
+      # session PATH instead (needs the host qemu package + kvm group).
+      package = inputs.claude-desktop-bin.packages.${system}.claude-desktop.override {
+        qemu = null;
+      };
       bundles = [ "agents" ];
     };
     codex = {
