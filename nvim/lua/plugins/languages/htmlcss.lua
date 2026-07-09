@@ -17,6 +17,7 @@ return {
         function()
           require("nvim-emmet").wrap_with_abbreviation()
         end,
+        ft = { "html", "css", "sass", "scss", "vue", "javascriptreact", "typescriptreact" },
         mode = { "n", "v" },
         desc = "Emmet Wrap",
       },
