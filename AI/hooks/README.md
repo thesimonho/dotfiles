@@ -35,14 +35,14 @@ Shared helpers live in `../lib/hooks/`: `hook-response.js` (block/addContext) an
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)       |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md) |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`            |
-| `verify-track`              | PostToolUse | state  | record edits + verify runs for verify-gate/coupling-gate |
+| `coupling-surface`          | PostToolUse | nudge  | first-touch reminder for a doc's `agent.on-change` area (once/session) |
+| `verify-track`              | PostToolUse | state  | record code edits + verify runs for verify-gate        |
 | `lint-config-files`         | PostToolUse | nudge  | run the matching linter after a config edit (tools.md) |
 | `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines (coding-style.md)    |
 | `no-hard-linebreaks`        | PostToolUse | nudge  | flag hard-wrapped markdown (documentation.md)          |
 | `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge (git.md)         |
 | `compaction-nudge`          | PostToolUse | nudge  | `/compact` at a PR/merge/push boundary                 |
 | `task-delegation-nudge`     | PostToolUse | nudge  | pick model/agent at TaskCreate (debounced 15m)         |
-| `coupling-gate`             | Stop        | nudge  | declared `agent.on-change` doc couplings               |
 
 ## The `agent:` frontmatter convention
 
@@ -58,7 +58,9 @@ agent:
 ```
 
 - `instruction` — `surface-file-header` re-emits it whenever the agent reads or edits the file, so the file's contract lands at the decision point instead of decaying up-context.
-- `on-change` (a glob or list of globs) — `coupling-gate` scans root-level and `docs/` markdown at turn-end; if a matching file changed this session but the declaring doc did not, it surfaces an advisory reminder (not a block). Dormant until a doc opts in. The reminder can mean "update this doc" or just "re-read it" — whichever fits.
+- `on-change` (a glob or list of globs) — `coupling-surface` fires the first time (per session) a file matching the glob is read/edited/written, surfacing the coupling's instruction before the area gets worked blind. Fires once per coupling per session, not on every touch. Dormant until a doc opts in.
+
+There used to be a companion commit-time "you forgot to update this doc" gate. It was removed: it couldn't tell a doc-worthy change from an irrelevant one, so every fix for its false positives added state without fixing the underlying unreliability. Surfacing the doc early is the reliable half — it's always a true statement, and an agent that's seen the doc is already positioned to update it as part of the work.
 
 ## Known papercut
 

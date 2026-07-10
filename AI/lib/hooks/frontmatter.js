@@ -1,7 +1,7 @@
 /**
  * Minimal reader for the `agent:` frontmatter block used by the surfacer and the
- * coupling gate. It is NOT a general YAML parser — it understands exactly the two
- * optional fields the hooks need:
+ * coupling-surface hooks. It is NOT a general YAML parser — it understands
+ * exactly the two optional fields the hooks need:
  *
  *   ---
  *   agent:

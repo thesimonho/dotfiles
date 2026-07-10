@@ -175,6 +175,15 @@
         ]
       },
       {
+        "matcher": "Read|Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/hooks/coupling-surface.js"
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write|MultiEdit|Bash",
         "hooks": [
           {
@@ -259,12 +268,7 @@
     "Stop": [
       {
         "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/coupling-gate.js"
-          }
-        ]
+        "hooks": []
       }
     ],
     "Notification": [

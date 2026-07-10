@@ -8,8 +8,7 @@
  * PostToolUse for Edit|Write|MultiEdit|Bash.
  *
  * Edits outside the project (scratchpad/tmp helper scripts, files above cwd) are
- * ignored entirely — they're not project code and shouldn't demand a verify run
- * or feed the coupling gate.
+ * ignored entirely — they're not project code and shouldn't demand a verify run.
  */
 
 const path = require("node:path");
@@ -53,10 +52,9 @@ process.stdin.on("end", () => {
     return;
   }
 
-  // Edit / Write / MultiEdit. Record the path (for the coupling gate) and, for
-  // code files, flag the session dirty (for the verify gate).
+  // Edit / Write / MultiEdit. Flag the session dirty for the verify gate.
   const edited = editedPath(toolInput);
-  if (!edited) {
+  if (!edited || !CODE_FILE.test(edited)) {
     return;
   }
   const cwd = payload.cwd ?? process.cwd();
@@ -64,10 +62,5 @@ process.stdin.on("end", () => {
   if (relative.startsWith("..")) {
     return; // outside the project (e.g. a scratchpad helper script) — not project code
   }
-  const priorEdited = state.read(sessionId).edited ?? [];
-  const patch = { edited: [...new Set([...priorEdited, relative])] };
-  if (CODE_FILE.test(edited)) {
-    patch.dirty = true;
-  }
-  state.update(sessionId, patch);
+  state.update(sessionId, { dirty: true });
 });
