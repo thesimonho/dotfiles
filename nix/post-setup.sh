@@ -58,6 +58,24 @@ install_fedora() {
   sudo dnf install -y "${pkgs[@]}"
 }
 
+# Debian/Ubuntu — the common WSL base. Package names differ from Fedora:
+# secret-tool ships in libsecret-tools, and the PAM module is
+# libpam-gnome-keyring (vs gnome-keyring-pam).
+install_debian() {
+  sudo apt-get update -y
+  local pkgs=(libsecret-tools zenity)
+  if ! is_wsl; then
+    pkgs+=(dolphin-plugins kio-gdrive)
+    if is_kde; then
+      pkgs+=(partitionmanager)
+    fi
+  fi
+  if ! is_kde; then
+    pkgs+=(gnome-keyring libpam-gnome-keyring)
+  fi
+  sudo apt-get install -y "${pkgs[@]}"
+}
+
 # Append a PAM directive to a file iff that exact line isn't already
 # present. Idempotent. Args: <file> <line>.
 pam_append() {
@@ -100,11 +118,52 @@ configure_pam_gnome_keyring() {
   fi
 }
 
+# Write /etc/wsl.conf on WSL hosts. nix (home-manager) can't manage this
+# root-owned file, so it lives here. We own the file wholesale — hand-edits
+# belong in this block. Takes effect only after `wsl --shutdown` from Windows.
+#   systemd=true            -> required by our systemd.user services (ssh/gpg)
+#   appendWindowsPath=false -> keep the huge Windows PATH out of WSL; the WSL
+#                              module re-adds System32 so wslview/clip.exe live
+#   automount metadata      -> real chmod/chown on /mnt/c
+#   user.default            -> boot straight into this user
+configure_wsl() {
+  local conf=/etc/wsl.conf
+  local desired
+  desired="$(
+    cat <<EOF
+# Managed by dotfiles post-setup.sh
+[boot]
+systemd=true
+
+[interop]
+appendWindowsPath=false
+
+[automount]
+options=metadata
+
+[user]
+default=$(id -un)
+EOF
+  )"
+  if [ -f "$conf" ] && [ "$(cat "$conf")" = "$desired" ]; then
+    return
+  fi
+  echo "$desired" | sudo tee "$conf" >/dev/null
+  echo "post-setup: wrote $conf — run 'wsl --shutdown' from Windows to apply."
+}
+
 main() {
+  # WSL config is distro-independent, so run it before the package branch
+  # (which `return`s early on an unrecognized distro like Ubuntu).
+  if is_wsl; then
+    configure_wsl
+  fi
   if [ -f /etc/arch-release ]; then
     install_arch
   elif [ -f /etc/fedora-release ]; then
     install_fedora
+  elif [ -f /etc/debian_version ]; then
+    install_debian
   else
     echo "post-setup: unrecognized OS, skipping system package install."
     return
