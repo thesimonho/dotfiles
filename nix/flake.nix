@@ -153,6 +153,7 @@
         ./modules/secrets.nix
         ./modules/gpg.nix
         ./modules/ssh.nix
+        ./modules/wsl.nix
         ./modules/ai
         { home.stateVersion = "25.05"; } # dont touch this
       ];

@@ -56,6 +56,14 @@ Lookup is by tool name; mechanism is a one-field edit (`flatpak` →
 4. Run `just build <name>` to verify, then
    `home-manager switch --flake .#<name>`.
 
+For a **WSL host** (`my.os = "wsl"`), the only step nix can't do is the
+Windows-side prerequisite — on a fresh machine run `wsl --install` in
+PowerShell first (installs the distro + reboots), then bootstrap inside it.
+Everything after that (browser bridge, WezTerm-config mirror to Windows) is
+owned by `modules/wsl.nix`; set `my.wsl.windowsUser` so the mirror knows the
+`C:\Users\<name>` target. Root-owned `/etc/wsl.conf` tweaks stay in
+`post-setup.sh`.
+
 ## Identity model
 
 `secrets/meta.nix` lists every identity (personal, sprung, …) with its
