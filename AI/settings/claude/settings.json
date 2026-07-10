@@ -295,7 +295,8 @@
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true
+    "lua-lsp@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
@@ -322,9 +323,15 @@
       ]
     },
     "filesystem": {
-      "allowWrite": ["/tmp", "~/.gnupg"]
+      "allowWrite": [
+        "/tmp",
+        "~/.gnupg"
+      ]
     },
-    "excludedCommands": ["docker:*", "git:*"]
+    "excludedCommands": [
+      "docker:*",
+      "git:*"
+    ]
   },
   "effortLevel": "high",
   "advisorModel": "opus",
