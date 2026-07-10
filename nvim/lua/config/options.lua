@@ -8,9 +8,15 @@ vim.g.maplocalleader = ","
 vim.g.ai_cmp = false -- show AI suggestions in cmp?
 
 -- set clipboard for local and terminal (via OSC52)
+-- WSL is included: there is no native X/Wayland clipboard, so route yanks
+-- through the terminal (WezTerm) via OSC52 instead of relying on win32yank.
 vim.schedule(function()
   vim.opt.clipboard:append("unnamedplus")
-  if vim.uv.os_getenv("SSH_CLIENT") ~= nil or vim.uv.os_getenv("SSH_TTY") ~= nil then
+  if
+    vim.uv.os_getenv("SSH_CLIENT") ~= nil
+    or vim.uv.os_getenv("SSH_TTY") ~= nil
+    or util_os.is_wsl()
+  then
     utils.set_osc52_clipboard()
   else
     util_os.is_wezterm_mux_server(function(is_server)

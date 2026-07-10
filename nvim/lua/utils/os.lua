@@ -10,6 +10,12 @@ M.is_windows = function()
   return vim.uv.os_uname().sysname == "Windows_NT"
 end
 
+--- Check if running under WSL (Windows Subsystem for Linux).
+--- WSL sets WSL_DISTRO_NAME for every process in the distro.
+M.is_wsl = function()
+  return vim.uv.os_getenv("WSL_DISTRO_NAME") ~= nil
+end
+
 --- Check if inside docker container
 M.is_container = function()
   if vim.fn.filereadable("/.dockerenv") then
