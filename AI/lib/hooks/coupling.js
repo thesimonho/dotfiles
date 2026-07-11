@@ -98,4 +98,26 @@ function discoverCouplings(cwd) {
   return couplings;
 }
 
-module.exports = { globToRegExp, discoverCouplings };
+/**
+ * Whether a cached coupling object still matches the shape this module
+ * currently produces. A session's coupling cache is a plain JSON snapshot with
+ * no version tag, so if the hook's code changes shape (a field renamed, etc.)
+ * mid-session, an older cached snapshot silently no longer matches what the
+ * reading code expects. This lets the caller detect that and re-discover
+ * instead of crashing on a missing/undefined field.
+ *
+ * @param {*} coupling
+ * @returns {boolean}
+ */
+function isValidCoupling(coupling) {
+  return (
+    typeof coupling === "object" &&
+    coupling !== null &&
+    typeof coupling.file === "string" &&
+    Array.isArray(coupling.globs) &&
+    coupling.globs.every((glob) => typeof glob === "string") &&
+    typeof coupling.instruction === "string"
+  );
+}
+
+module.exports = { globToRegExp, discoverCouplings, isValidCoupling };

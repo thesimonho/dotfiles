@@ -34,7 +34,7 @@
 const path = require("node:path");
 const { addContext } = require("../lib/hooks/hook-response");
 const state = require("../lib/hooks/session-state");
-const { globToRegExp, discoverCouplings } = require("../lib/hooks/coupling");
+const { globToRegExp, discoverCouplings, isValidCoupling } = require("../lib/hooks/coupling");
 
 /**
  * The file path a Read/Edit/Write/MultiEdit targeted, across Claude and Codex
@@ -66,7 +66,8 @@ process.stdin.on("end", () => {
   const session = state.read(sessionId);
   const isMarkdownEdit = payload.tool_name !== "Read" && relative.endsWith(".md");
   let couplings = session.couplings;
-  if (!couplings || isMarkdownEdit) {
+  const isStaleCache = !Array.isArray(couplings) || !couplings.every(isValidCoupling);
+  if (isStaleCache || isMarkdownEdit) {
     couplings = discoverCouplings(cwd);
     state.update(sessionId, { couplings });
   }
