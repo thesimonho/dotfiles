@@ -45,6 +45,10 @@ in
       package = llmAgents.pi;
       bundles = [ "agents" ];
     };
+    opencode = {
+      package = llmAgents.opencode;
+      bundles = [ "agents" ];
+    };
     claude-code-acp = {
       package = llmAgents.claude-agent-acp;
       bundles = [ "agents" ];
