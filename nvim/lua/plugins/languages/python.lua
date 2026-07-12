@@ -13,6 +13,24 @@ M = {
             pyright = {
               disableOrganizeImports = true, -- Using Ruff
             },
+            python = {
+              analysis = {
+                typeCheckingMode = "strict",
+                diagnosticMode = "workspace",
+                autoImportCompletions = true,
+                diagnosticSeverityOverrides = {
+                  reportMissingTypeStubs = "warning",
+                  reportUnknownMemberType = "warning",
+                  reportUnknownArgumentType = "warning",
+                  reportUnknownVariableType = "warning",
+                },
+                inlayHints = {
+                  variableTypes = true,
+                  functionReturnTypes = true,
+                  callArgumentNames = true,
+                },
+              },
+            },
           },
         },
       },
