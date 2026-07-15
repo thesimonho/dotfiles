@@ -154,6 +154,10 @@
       package = pkgs.glow;
       bundles = [ ];
     };
+    graphviz = {
+      package = pkgs.graphviz;
+      bundles = [ "cli" ];
+    };
     gron = {
       package = pkgs.gron;
       bundles = [
