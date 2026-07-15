@@ -11,7 +11,10 @@ let
   inherit (lib) mkOption types;
   system = pkgs.stdenv.hostPlatform.system;
 
-  catalogData = import ./catalog.nix { inherit inputs pkgsUnstable system; };
+  catalogData = import ./catalog.nix {
+    inherit inputs pkgsUnstable system;
+    inherit (pkgs.stdenv.hostPlatform) isLinux;
+  };
   inherit (catalogData) bundleNames;
   catalog = catalogData.entries;
 

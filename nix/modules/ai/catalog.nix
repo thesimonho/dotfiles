@@ -2,6 +2,7 @@
   inputs,
   pkgsUnstable,
   system,
+  isLinux,
 }:
 
 let
@@ -32,9 +33,18 @@ in
       # wires OVMF + virtiofsd from nixpkgs. qemu = null drops the bundled qemu
       # from the closure; the Cowork helper finds qemu-system-x86_64 on the
       # session PATH instead (needs the host qemu package + kvm group).
-      package = inputs.claude-desktop-bin.packages.${system}.claude-desktop.override {
-        qemu = null;
-      };
+      #
+      # Linux-only: the app drives a KVM/QEMU Cowork VM and claude-desktop-bin
+      # publishes no Darwin build, so on macOS hosts we set the package to null.
+      # The dispatcher (default.nix) filters null packages out, so this drops
+      # cleanly instead of throwing on the missing aarch64-darwin attribute.
+      package =
+        if isLinux then
+          inputs.claude-desktop-bin.packages.${system}.claude-desktop.override {
+            qemu = null;
+          }
+        else
+          null;
       bundles = [ "agents" ];
     };
     codex = {
