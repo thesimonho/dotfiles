@@ -23,10 +23,14 @@ const { block } = require("../lib/hooks/hook-response");
 const PLAN_REFERENCE =
   /docs\/plans\/[\w.-]+\.(?:md|html)\b|\b\d{8}(-\d{4})?-[\w.-]+\.(?:md|html)\b/;
 
-// Targets that are *allowed* to reference plans: the plans themselves and their
-// archive. Everything else (code, rules, other docs) is not.
+// Targets that are *allowed* to reference plans: the plans themselves, their
+// archive, and each project's top-level docs index. The index's whole job is to
+// link current plans (and it's expected to be kept live per its own on-change
+// instruction), so it isn't the kind of stale breadcrumb this hook guards against.
+// Everything else (code, rules, other docs) is not.
 const PLAN_TARGET = /(^|\/)docs\/plans\//;
 const ARCHIVE_TARGET = /(^|\/)archive\//;
+const DOCS_INDEX_TARGET = /(^|\/)docs\/README\.md$/;
 
 /**
  * Collect the file path a write targets, across Claude and Codex tool shapes.
@@ -68,8 +72,12 @@ process.stdin.on("end", () => {
   const toolInput = payload.tool_input ?? {};
 
   const target = targetPathFrom(toolInput);
-  if (PLAN_TARGET.test(target) || ARCHIVE_TARGET.test(target)) {
-    return; // a plan (or archived plan) may reference other plans
+  if (
+    PLAN_TARGET.test(target) ||
+    ARCHIVE_TARGET.test(target) ||
+    DOCS_INDEX_TARGET.test(target)
+  ) {
+    return; // a plan, an archived plan, or the docs index may reference plans
   }
 
   const content = writtenContentFrom(toolInput);
