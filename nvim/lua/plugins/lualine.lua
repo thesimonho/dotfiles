@@ -235,6 +235,12 @@ return {
       lualine_z = {
         {
           function()
+            return string.format("%d/%d", vim.fn.line("."), vim.fn.line("$"))
+          end,
+          padding = 0,
+        },
+        {
+          function()
             return utils.get_progress_char()
           end,
           color = function()
