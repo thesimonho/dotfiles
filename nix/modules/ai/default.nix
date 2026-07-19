@@ -22,15 +22,13 @@ let
   catalog = catalogData.entries;
 
   catalogLib = import ../../lib/catalog.nix { inherit lib; };
-  aiType = catalogLib.mkCatalogType { inherit bundleNames; };
-
-  hostContext = {
-    inherit system;
-    operatingSystem = config.my.os;
-    desktop = config.my.desktop;
-    gpuBackend = config.my.gpu.backend;
-    hasDesktop = config.my.desktop != "none";
+  hostContextLib = import ../../lib/host-context.nix;
+  aiType = catalogLib.mkCatalogType {
+    inherit bundleNames;
+    inherit (hostContextLib) requirementValues;
   };
+
+  hostContext = hostContextLib.fromConfig { inherit config pkgs; };
   selection = catalogLib.resolveCatalog {
     catalog = config.my.ai.catalog;
     bundles = config.my.ai.bundles;

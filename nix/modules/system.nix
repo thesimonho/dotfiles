@@ -3,6 +3,8 @@
 let
   inherit (lib) mkOption types;
   meta = import ../secrets/meta.nix;
+  hostContextLib = import ../lib/host-context.nix;
+  inherit (hostContextLib) requirementValues;
 in
 {
   /*
@@ -18,12 +20,7 @@ in
     };
 
     os = mkOption {
-      type = types.enum [
-        "arch"
-        "darwin"
-        "fedora"
-        "wsl"
-      ];
+      type = types.enum requirementValues.operatingSystems;
       description = ''
         Host platform. Drives package-manager and DE assumptions.
         `wsl` is its own value (rather than a flag on top of `fedora`)
@@ -35,22 +32,13 @@ in
     };
 
     desktop = mkOption {
-      type = types.enum [
-        "kde"
-        "none"
-      ];
+      type = types.enum requirementValues.desktops;
       default = "none";
       description = "Desktop environment. Darwin hosts always set this to \"none\".";
     };
 
     gpu.backend = mkOption {
-      type = types.enum [
-        "none"
-        "cuda"
-        "rocm"
-        "vulkan"
-        "metal"
-      ];
+      type = types.enum requirementValues.gpuBackends;
       default = "none";
       description = "GPU backend used by AI / compute modules.";
     };

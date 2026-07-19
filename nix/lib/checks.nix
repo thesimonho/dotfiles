@@ -9,6 +9,9 @@
 }:
 
 let
+  catalogLib = import ./catalog.nix { inherit lib; };
+  hostContextLib = import ./host-context.nix;
+
   /*
     Build a home-manager configuration from inline modules. Mirrors mkHost
     in flake.nix but takes modules directly instead of reading hosts/<name>.nix.
@@ -64,6 +67,92 @@ let
       pkgs.writeText "eval-check.json" digest;
 
   /*
+    Exercise catalog selection through its public interface. This keeps host
+    applicability and rejected-entry diagnostics stable independently of any
+    one domain dispatcher.
+  */
+  mkCatalogEngineCheck =
+    system:
+    let
+      pkgs = pkgsFor {
+        inherit system;
+        hostName = "_catalog-check";
+      };
+      result = catalogLib.resolveCatalog {
+        catalog.desktop = {
+          bundles = [ "agents" ];
+          requirements = {
+            systems = [ "x86_64-linux" ];
+            operatingSystems = [ ];
+            desktops = [ ];
+            hasDesktop = true;
+            gpuBackends = [ ];
+          };
+        };
+        bundles = [ "agents" ];
+        enabled = [ ];
+        hostContext = {
+          inherit system;
+          operatingSystem = "arch";
+          desktop = "none";
+          gpuBackend = "none";
+          hasDesktop = false;
+        };
+      };
+      digest = builtins.toJSON {
+        applicable = builtins.attrNames result.applicableEntries;
+        rejected = result.rejectedEntries.desktop.reasons;
+      };
+    in
+    assert result.applicableEntries == { };
+    assert result.rejectedEntries.desktop.reasons == [ "requires hasDesktop=true" ];
+    pkgs.writeText "catalog-engine-check.json" digest;
+
+  # Verify the shared requirement enums reject undeclared host identities.
+  mkCatalogTypeCheck =
+    system:
+    let
+      pkgs = pkgsFor {
+        inherit system;
+        hostName = "_catalog-type-check";
+      };
+      catalogType = catalogLib.mkCatalogType {
+        bundleNames = [ "test" ];
+        inherit (hostContextLib) requirementValues;
+      };
+      invalidCatalogEvaluation = builtins.tryEval (
+        builtins.deepSeq
+          (lib.evalModules {
+            modules = [
+              {
+                options.catalog = lib.mkOption { type = catalogType; };
+                config.catalog.invalid.requirements.operatingSystems = [ "undeclared-os" ];
+              }
+            ];
+          }).config.catalog
+          true
+      );
+    in
+    assert !invalidCatalogEvaluation.success;
+    pkgs.writeText "catalog-type-check.json" (builtins.toJSON { rejectsUnknownHostValues = true; });
+
+  mkCodexDesktopCheck =
+    {
+      system,
+      hmConfig,
+      expected,
+    }:
+    let
+      pkgs = pkgsFor {
+        inherit system;
+        hostName = "_codex-desktop-check";
+      };
+      actual = hmConfig.config.programs.codexDesktopLinux.enable;
+    in
+    assert actual == expected;
+    pkgs.writeText "codex-desktop-check.json" (builtins.toJSON { inherit actual expected; });
+
+  /*
     Synthetic host that enables every bundle. Catches catalog entries whose
     tagged bundle no real host happens to enable. Keep `apps.bundles` /
     `ai.bundles` in sync with the bundleNames lists in their catalogs.
@@ -107,11 +196,28 @@ in
   */
   mkChecks = homeConfigurations: {
     x86_64-linux = {
+      catalog-engine = mkCatalogEngineCheck "x86_64-linux";
+      catalog-types = mkCatalogTypeCheck "x86_64-linux";
+      codex-desktop = mkCodexDesktopCheck {
+        system = "x86_64-linux";
+        hmConfig = homeConfigurations.desktop;
+        expected = true;
+      };
+      codex-desktop-wsl = mkCodexDesktopCheck {
+        system = "x86_64-linux";
+        hmConfig = homeConfigurations.work-wsl;
+        expected = false;
+      };
       desktop = mkEvalCheck "x86_64-linux" homeConfigurations.desktop;
       work-wsl = mkEvalCheck "x86_64-linux" homeConfigurations.work-wsl;
       kitchen-sink = mkEvalCheck "x86_64-linux" kitchenSinkLinux;
     };
     aarch64-darwin = {
+      codex-desktop = mkCodexDesktopCheck {
+        system = "aarch64-darwin";
+        hmConfig = homeConfigurations.work-macbook;
+        expected = false;
+      };
       work-macbook = mkEvalCheck "aarch64-darwin" homeConfigurations.work-macbook;
     };
   };

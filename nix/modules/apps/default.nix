@@ -11,6 +11,7 @@ let
   inherit (lib) mkIf mkOption types;
 
   catalogLib = import ../../lib/catalog.nix { inherit lib; };
+  hostContextLib = import ../../lib/host-context.nix;
 
   dotfiles = config.my.dotfilesPath;
   symlinkConfig = name: {
@@ -45,6 +46,7 @@ let
 
   appType = catalogLib.mkCatalogType {
     inherit bundleNames;
+    inherit (hostContextLib) requirementValues;
     extraOptions.flatpak = mkOption {
       type = types.nullOr flatpakOverrideType;
       default = null;
@@ -52,13 +54,7 @@ let
   };
 
   resolvedCatalog = config.my.apps.catalog;
-  hostContext = {
-    system = pkgs.stdenv.hostPlatform.system;
-    operatingSystem = config.my.os;
-    desktop = config.my.desktop;
-    gpuBackend = config.my.gpu.backend;
-    hasDesktop = config.my.desktop != "none";
-  };
+  hostContext = hostContextLib.fromConfig { inherit config pkgs; };
   selection = catalogLib.resolveCatalog {
     catalog = resolvedCatalog;
     bundles = config.my.apps.bundles;

@@ -3,35 +3,37 @@
 let
   inherit (lib) mkOption types;
 
-  requirementType = types.submodule {
-    options = {
-      systems = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description = "Nix systems on which this catalog entry is available.";
-      };
-      operatingSystems = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description = "Host operating-system identities on which this entry is available.";
-      };
-      desktops = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description = "Desktop environments on which this entry is available.";
-      };
-      hasDesktop = mkOption {
-        type = types.nullOr types.bool;
-        default = null;
-        description = "Whether this entry requires a graphical desktop session.";
-      };
-      gpuBackends = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        description = "GPU backends on which this entry is available.";
+  requirementType =
+    requirementValues:
+    types.submodule {
+      options = {
+        systems = mkOption {
+          type = types.listOf (types.enum requirementValues.systems);
+          default = [ ];
+          description = "Nix systems on which this catalog entry is available.";
+        };
+        operatingSystems = mkOption {
+          type = types.listOf (types.enum requirementValues.operatingSystems);
+          default = [ ];
+          description = "Host operating-system identities on which this entry is available.";
+        };
+        desktops = mkOption {
+          type = types.listOf (types.enum requirementValues.desktops);
+          default = [ ];
+          description = "Desktop environments on which this entry is available.";
+        };
+        hasDesktop = mkOption {
+          type = types.nullOr types.bool;
+          default = null;
+          description = "Whether this entry requires a graphical desktop session.";
+        };
+        gpuBackends = mkOption {
+          type = types.listOf (types.enum requirementValues.gpuBackends);
+          default = [ ];
+          description = "GPU backends on which this entry is available.";
+        };
       };
     };
-  };
 
   contributionType = types.submodule {
     options = {
@@ -114,6 +116,7 @@ in
     {
       bundleNames,
       extraOptions ? { },
+      requirementValues,
     }:
     types.attrsOf (
       types.submodule {
@@ -124,7 +127,7 @@ in
             description = "Bundle tags that select this catalog entry.";
           };
           requirements = mkOption {
-            type = requirementType;
+            type = requirementType requirementValues;
             default = { };
             description = "Declarative host requirements for this catalog entry.";
           };

@@ -11,18 +11,20 @@ nix/
   post-setup.sh            # OS-native packages HM can't manage (KDE userland, docker, …)
   justfile                 # `just switch`, `just build`, `just diff`, `just clean`
   lib/
-    catalog.nix            # mkCatalogType / resolveEnabled / mergeField
+    catalog.nix            # typed catalog selection, applicability, and realization
+    host-context.nix       # shared host vocabulary for modules and catalogs
+    checks.nix             # host evaluations + catalog behavior checks
   hosts/
     desktop.nix            # arch + KDE + CUDA workstation
     work-macbook.nix       # aarch64-darwin + metal
   modules/
     system.nix             # my.* identity options surface
     apps/
-      default.nix          # dispatcher + flatpak/program-specific wiring
-      catalog.nix          # bundleNames + entries (data only)
+      default.nix          # catalog engine invocation + Flatpak adapter
+      catalog.nix          # bundles, requirements, and contributions
     ai/
-      default.nix          # AI dispatcher
-      catalog.nix          # bundleNames + entries
+      default.nix          # catalog engine invocation
+      catalog.nix          # AI packages and module-backed applications
       {claude,llama,shared}.nix
     <tool>.nix             # config for larger tools (git, mise, ssh, …)
     common.nix             # universal HM infrastructure
@@ -32,17 +34,32 @@ nix/
 
 ## How to add a tool
 
-1. **Trivial** (just a flatpak id, just a package, just `programs.X.enable`):
-   add an entry to `modules/apps/catalog.nix`. Tag it with the right
-   bundle (`cli`, `dev`, `security`, `fonts`, `communication`, `cloud`).
+1. **Trivial** (just a Flatpak ID, package, or Home Manager program): add an
+   entry to `modules/apps/catalog.nix`. Tag it with the right bundle (`cli`,
+   `dev`, `security`, `fonts`, `communication`, `cloud`) and place its Home
+   Manager values under `contributions`.
 2. **Substantial config** (extensions, services, identity wiring): write
-   a dedicated module `modules/<tool>.nix`, add it to `sharedModules`.
+   a dedicated module `modules/<tool>.nix`, add it to `sharedModules`, and let
+   the catalog contribute the typed option that activates it.
 3. **Joins a domain** (AI, future "k8s" or similar): add to that
    domain's catalog, or sibling file inside the domain directory.
 
 The lifecycle rule is complexity-based, not source-mechanism-based.
-Lookup is by tool name; mechanism is a one-field edit (`flatpak` →
-`package` → `program`).
+Domain `default.nix` files select applicable entries and invoke the shared
+realizer; they do not branch on application names.
+
+Every catalog entry has three shared sections:
+
+- `bundles` selects the entry through host bundle policy.
+- `requirements` constrains Nix system, operating system, desktop presence,
+  desktop environment, or GPU backend using values from `lib/host-context.nix`.
+- `contributions` adds packages, programs, user services, files, session
+  variables, aliases, or activation entries through Home Manager.
+
+Flatpak remains an apps-only adapter because no other catalog domain needs it.
+If the host model cannot express an applicability rule, extend
+`lib/host-context.nix` and the corresponding `my.*` option instead of adding a
+hostname check or arbitrary predicate to a catalog entry.
 
 ## How to add a host
 
