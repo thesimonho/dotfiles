@@ -1,0 +1,9 @@
+{
+  "extraPaths": [
+    ".",
+    "lib"
+  ],
+  "pythonVersion": "3.14",
+  "venv": ".venv",
+  "venvPath": "."
+}
