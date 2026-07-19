@@ -1,0 +1,59 @@
+set shell := ["zsh", "-cu"]
+set positional-arguments := true
+set tempdir := "/tmp"
+set working-directory := "../.."
+
+eval_python := "AI/evals/.venv/bin/python"
+mlflow_compose := "infra/compose/mlflow.yml"
+
+default:
+    @just --justfile AI/evals/justfile --list
+
+# Install the isolated eval harness dependencies.
+eval-setup:
+    python3 -m venv AI/evals/.venv
+    AI/evals/.venv/bin/pip install "mlflow[genai]==3.14.0"
+
+# Start MLflow and wait until it answers.
+eval-up: eval-up-mlflow eval-wait
+
+# Start the MLflow service.
+eval-up-mlflow:
+    docker compose -f {{ mlflow_compose }} up -d
+
+# Wait up to 60 seconds for MLflow to answer.
+eval-wait:
+    #!/usr/bin/env zsh
+    for attempt in {1..60}; do
+      if curl --fail --silent --output /dev/null http://127.0.0.1:5000; then
+        exit 0
+      fi
+      sleep 1
+    done
+    print -u2 "Timed out waiting for http://127.0.0.1:5000"
+    exit 1
+
+# Run the eval suite in MLflow. Pass runner flags directly to the recipe.
+eval-mlflow *args:
+    {{ eval_python }} AI/evals/run_mlflow_eval.py "$@"
+
+# Run the suite with the selected agent CLI.
+eval-run agent:
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}"
+
+# Show local service state.
+eval-status:
+    docker compose -f {{ mlflow_compose }} ps
+
+# Follow MLflow logs.
+eval-logs:
+    docker compose -f {{ mlflow_compose }} logs --follow --tail=100
+
+# Stop MLflow without deleting its data.
+eval-down:
+    docker compose -f {{ mlflow_compose }} down
+
+# Run local harness and Compose validation.
+eval-verify:
+    {{ eval_python }} -m compileall -q AI/evals
+    docker compose -f {{ mlflow_compose }} config --quiet

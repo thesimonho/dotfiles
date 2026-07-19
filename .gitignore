@@ -45,3 +45,12 @@ AI/instructions/AGENTS.generated.md
 docs
 .pi
 .pi-lens
+
+# Agent eval harness
+AI/evals/.venv/
+infra/compose/.env.*
+!infra/compose/.env.example
+!infra/compose/.env.*.example
+infra/compose/data/
+__pycache__/
+*.pyc
