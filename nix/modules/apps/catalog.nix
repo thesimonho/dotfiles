@@ -3,6 +3,7 @@
   pkgsUnstable,
   pkgsPinned,
   symlinkConfig,
+  codexCliPackage,
 }:
 
 {
@@ -64,6 +65,13 @@
         name = "carapace";
       };
       bundles = [ "cli" ];
+    };
+    codex-desktop = {
+      program = {
+        name = "codexDesktopLinux";
+        settings.cliPackage = codexCliPackage;
+      };
+      bundles = [ ];
     };
     deskflow = {
       flatpak.id = "org.deskflow.deskflow";

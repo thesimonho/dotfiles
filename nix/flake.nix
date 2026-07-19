@@ -51,6 +51,11 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    codex-desktop-linux = {
+      url = "github:ilysenko/codex-desktop-linux";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     # Claude Desktop with the Cowork VM backend wired up (firmware/virtiofsd
     # paths patched for non-Debian distros). numtide/llm-agents ships the same
     # upstream binary but without this, so Cowork can't find OVMF on Arch.
@@ -140,6 +145,7 @@
       sharedModules = [
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
         inputs.nix-index-database.homeModules.nix-index
+        inputs.codex-desktop-linux.homeManagerModules.default
         agenix.homeManagerModules.default
         ./modules/system.nix
         ./modules/apps

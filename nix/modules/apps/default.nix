@@ -3,6 +3,7 @@
   pkgs,
   pkgsUnstable,
   pkgsPinned,
+  inputs,
   lib,
   ...
 }:
@@ -25,6 +26,7 @@ let
       pkgsPinned
       symlinkConfig
       ;
+    codexCliPackage = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
   };
   inherit (catalogData) bundleNames;
 

@@ -25,6 +25,7 @@
       enabled = [
         "android-tools"
         "bitwarden"
+        "codex-desktop"
         "ffmpeg"
         "glow"
         "onlyoffice"
