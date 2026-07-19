@@ -40,6 +40,7 @@ node_modules/
 .devcontainer/.devpod-internal
 
 # ai
+AI/skills/.system
 AI/agents/.generated/
 AI/instructions/AGENTS.generated.md
 docs
