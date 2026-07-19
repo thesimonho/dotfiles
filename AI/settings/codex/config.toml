@@ -1,29 +1,70 @@
-model = "gpt-5.5"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "medium"
+model_verbosity = "low"
+model_reasoning_summary = "concise"
 plan_mode_reasoning_effort = "high"
-hide_agent_reasoning = true
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+
+hide_agent_reasoning = false
 show_raw_agent_reasoning = false
-approvals_reviewer = "guardian_subagent"
 personality = "pragmatic"
 commit_attribution = ""
-approval_policy = "on-request"
 cli_auth_credentials_store = "file"
 project_doc_fallback_filenames = ["CLAUDE.md"]
-sandbox_mode = "workspace-write"
-web_search ="live"
+web_search = "live"
 
-[sandbox_workspace_write]
-writable_roots = ["/run/user/1000/agent-browser"]
+default_permissions = "development"
+
+[permissions.development]
+description = "Main development profile"
+
+[permissions.development.filesystem]
+glob_scan_max_depth = 4
+":root" = "read"
+":tmpdir" = "write"
+":slash_tmp" = "write"
+"~/.gnupg" = "write"
+
+[permissions.development.filesystem.":workspace_roots"]
+"." = "write"
+".git" = "write"
+".agents" = "read"
+".codex" = "read"
+"**/.env" = "deny"
+"**/.env.*" = "deny"
+"**/*.env" = "deny"
+
+[permissions.development.network]
+enabled = true
+
+[permissions.development.network.domains]
+"localhost" = "allow"
+"127.0.0.1" = "allow"
+"::1" = "allow"
+"**.github.com" = "allow"
+"**.githubusercontent.com" = "allow"
+
+[permissions.development.network.unix_sockets]
+"/run/user/1000/agent-browser" = "allow"
+"/home/simon/.gnupg/S.gpg-agent" = "allow"
 
 [tui]
-status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "weekly-limit"]
+status_line = [
+  "model-with-reasoning",
+  "current-dir",
+  "git-branch",
+  "context-remaining",
+  "five-hour-limit",
+  "weekly-limit",
+]
 status_line_use_colors = true
-theme = "two-dark"
 session_picker_view = "comfortable"
-pet = "disabled"
+notifications = true
+notification_condition = "unfocused"
 
 [tui.model_availability_nux]
-"gpt-5.5" = 4
+"gpt-5.6-sol" = 4
 
 [features]
 fast_mode = false
@@ -31,6 +72,13 @@ terminal_resize_reflow = true
 memories = true
 goals = true
 undo = true
+
+[otel]
+environment = "workstation"
+log_user_prompt = true
+exporter = { otlp-grpc = { endpoint = "http://localhost:4317", headers = {} } }
+metrics_exporter = { otlp-grpc = { endpoint = "http://localhost:4317", headers = {} } }
+trace_exporter = { otlp-grpc = { endpoint = "http://localhost:4317", headers = {} } }
 
 [plugins."codex-security@openai-curated"]
 enabled = true
