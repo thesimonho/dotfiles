@@ -10,13 +10,10 @@
 let
   inherit (lib) mkOption types;
   system = pkgs.stdenv.hostPlatform.system;
-  isLinux = pkgs.stdenv.hostPlatform.isLinux;
-  codexCliPackage = inputs.llm-agents.packages.${system}.codex;
 
   catalogData = import ./catalog.nix {
     inherit
       inputs
-      isLinux
       pkgsUnstable
       system
       ;
@@ -25,15 +22,22 @@ let
   catalog = catalogData.entries;
 
   catalogLib = import ../../lib/catalog.nix { inherit lib; };
+  aiType = catalogLib.mkCatalogType { inherit bundleNames; };
 
-  enabledNames = catalogLib.resolveEnabled {
-    inherit catalog;
+  hostContext = {
+    inherit system;
+    operatingSystem = config.my.os;
+    desktop = config.my.desktop;
+    gpuBackend = config.my.gpu.backend;
+    hasDesktop = config.my.desktop != "none";
+  };
+  selection = catalogLib.resolveCatalog {
+    catalog = config.my.ai.catalog;
     bundles = config.my.ai.bundles;
     enabled = config.my.ai.enabled;
+    inherit hostContext;
   };
-  enabledEntries = lib.filterAttrs (n: _: lib.elem n enabledNames) catalog;
-  hasDesktop = config.my.desktop != "none";
-  isCodexDesktopEnabled = isLinux && hasDesktop && lib.elem "codex-desktop" enabledNames;
+  enabledEntries = selection.applicableEntries;
 in
 {
   imports = [
@@ -48,41 +52,28 @@ in
     bundles = mkOption {
       type = types.listOf (types.enum bundleNames);
       default = [ ];
-      description = "AI bundles to enable on this host (agents / cli / etc.)";
+      description = "AI bundles to enable on this host (agents / cli / etc.).";
     };
     enabled = mkOption {
       type = types.listOf (types.enum (lib.attrNames catalog));
       default = [ ];
       description = "Individually enabled AI catalog entries (in addition to bundles).";
     };
-  };
-
-  config = {
-    home.packages = lib.mapAttrsToList (_: e: e.package) (
-      lib.filterAttrs (_: e: e.package != null) enabledEntries
-    );
-
-    programs.codexDesktopLinux = lib.mkIf isCodexDesktopEnabled {
-      enable = true;
-      cliPackage = codexCliPackage;
-      computerUseUi.enable = true;
-      remoteControl = {
-        enable = true;
-        package = codexCliPackage;
-      };
-      linuxFeatures = [
-        "appshots"
-        "codex-wrapper-updater"
-        "directory-only-working-tree-watch"
-        "global-dictation"
-        "mcp-helper-reaper"
-        "node-repl-reaper"
-        "open-target-discovery"
-        "persistent-status-panel"
-        "pet-overlay"
-        "remote-control-ui"
-        "remote-mobile-control"
-      ];
+    catalog = mkOption {
+      type = aiType;
+      default = catalog;
+      internal = true;
+      description = "Internal resolved AI catalog.";
     };
   };
+
+  config = lib.mkMerge [
+    (catalogLib.realizeContributions enabledEntries)
+    {
+      assertions = lib.mapAttrsToList (name: entry: {
+        assertion = catalogLib.hasContributions entry;
+        message = "Applicable AI catalog entry '${name}' must contribute a package or Home Manager configuration.";
+      }) enabledEntries;
+    }
+  ];
 }
