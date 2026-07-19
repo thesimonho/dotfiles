@@ -13,7 +13,7 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 ## When Programming
 
-- Use TDD. Aim for 80% coverage.
+- Use TDD for big changes. Aim for 80% coverage.
 - Use the TDD skill to help you.
 
 ## When Debugging
@@ -23,7 +23,9 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 ## When Responding
 
-Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the `/verify` skill only if there are code changes - not documentation-only changes.
+- Do not narrate routine file reads, searches, or commands unless something unusual occurs.
+- Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the `/verify` skill only if there are code changes - not documentation-only changes.
+- Be extremely aware of the curse of knowledge. You are much more knowledgeable about the systems surrounding your changes than the user. Do not assume they remember the precise details of how they work.
 
 Once your task is complete and you are responding to the user, follow this order:
 

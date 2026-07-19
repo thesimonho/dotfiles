@@ -18,12 +18,12 @@ Models: Claude Haiku, GPT5.3 Codex Spark
 
 Scoped research, code exploration, in-scope synthesis
 
-Models: Claude Sonnet, GPT5.5 medium reasoning
+Models: Claude Sonnet, GPT medium reasoning
 
 ### Complex tasks
 
 Subtasks needing real planning, decision making, or tradeoffs
 
-Models: Claude Opus, GPT5.5 high reasoning
+Models: Claude Opus, GPT high reasoning
 
 Escalate to the highest reasoning level if the task is not resolved after a few attempts.
