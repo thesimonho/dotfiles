@@ -51,6 +51,12 @@ in
       package = llmAgents.codex;
       bundles = [ "agents" ];
     };
+    codex-desktop = {
+      # The AI dispatcher enables the upstream Home Manager module. Keeping
+      # this package null avoids installing the unwrapped desktop package.
+      package = null;
+      bundles = [ "agents" ];
+    };
     pi = {
       package = llmAgents.pi;
       bundles = [ "agents" ];
