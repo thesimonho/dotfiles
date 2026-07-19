@@ -1,3 +1,5 @@
 """Real evaluation cases configured for the agent harness."""
 
-CASES: tuple[dict[str, str], ...] = ()
+from evaluation_case import EvaluationCase
+
+CASES: tuple[EvaluationCase, ...] = ()

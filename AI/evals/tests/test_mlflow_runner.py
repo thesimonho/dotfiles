@@ -44,14 +44,22 @@ class MlflowRunnerTests(unittest.TestCase):
             ),
             patch.object(run_mlflow_eval, "AGENT_PROFILE", "codex"),
         ):
-            response = run_mlflow_eval.predict_fn("plain prompt")
+            response = run_mlflow_eval.predict_fn(
+                "plain prompt",
+                case_id="plain-response",
+                category="response-quality",
+            )
 
         self.assertEqual(response, "plain answer")
         self.assertEqual(
             update_current_trace.call_args_list,
             [
                 call(
-                    metadata={"agent.cli": "codex"},
+                    metadata={
+                        "agent.cli": "codex",
+                        "case_id": "plain-response",
+                        "category": "response-quality",
+                    },
                     request_preview="plain prompt",
                 ),
                 call(response_preview="plain answer"),
@@ -75,7 +83,11 @@ class MlflowRunnerTests(unittest.TestCase):
                 return_value=None,
             ),
         ):
-            run_mlflow_eval.predict_fn("plain prompt")
+            run_mlflow_eval.predict_fn(
+                "plain prompt",
+                case_id="plain-response",
+                category="response-quality",
+            )
 
         update_current_trace.assert_not_called()
 

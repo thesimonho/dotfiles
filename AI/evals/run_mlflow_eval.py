@@ -14,19 +14,29 @@ import mlflow.genai  # noqa: E402
 import mlflow_tracing  # noqa: E402
 import scoring  # noqa: E402
 from cases import CASES  # noqa: E402
+from mlflow.entities import Feedback  # noqa: E402
 from mlflow.genai import scorer  # noqa: E402
 from mlflow.tracking import MlflowClient  # noqa: E402
 from mlflow_agent_versions import MlflowAgentVersionRegistry  # noqa: E402
 from mlflow_config_registry import MlflowConfigurationRegistry  # noqa: E402
 from harness_environment import AGENT_ARGUMENT_CHOICES  # noqa: E402
-from mlflow_parameter_names import AGENT_CLI_FIELD  # noqa: E402
+from mlflow_parameter_names import (  # noqa: E402
+    AGENT_CLI_FIELD,
+    CASE_CATEGORY_FIELD,
+    CASE_ID_FIELD,
+)
 
 AGENT_PROFILE = "claude"
 
 
-def predict_fn(prompt: str) -> str:
+def predict_fn(prompt: str, case_id: str, category: str) -> str:
+    """Run one case while keeping its identity queryable on the trace."""
     _update_trace_preview(
-        metadata={AGENT_CLI_FIELD: AGENT_PROFILE},
+        metadata={
+            AGENT_CLI_FIELD: AGENT_PROFILE,
+            CASE_ID_FIELD: case_id,
+            CASE_CATEGORY_FIELD: category,
+        },
         request_preview=prompt,
     )
     response = agent.run_agent(prompt, profile=AGENT_PROFILE)
@@ -53,10 +63,15 @@ def _update_trace_preview(
 
 
 @scorer
-def tiered_score(inputs: dict, outputs: str, expectations: dict) -> bool:
+def evaluation_score(outputs: str, expectations: dict) -> Feedback:
+    """Return the case-selected metric with its scoring rationale."""
     case = {"tier": expectations["tier"], **expectations}
     passed, reason = scoring.score_case(outputs, case, profile=AGENT_PROFILE)
-    return passed
+    return Feedback(
+        name=expectations["metric_name"],
+        value=passed,
+        rationale=reason,
+    )
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -114,7 +129,7 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
     results = mlflow.genai.evaluate(
         data=dataset,
         predict_fn=predict_fn,
-        scorers=[tiered_score],
+        scorers=[evaluation_score],
         model_id=agent_version.model_id,
     )
     agent_version_registry.publish_configuration_evidence(

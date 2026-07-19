@@ -1,21 +1,35 @@
 """Push the git-tracked cases into MLflow's hosted evaluation dataset."""
 
+from typing import Any
+
+from evaluation_case import EvaluationCase
 from harness_identity import EVALUATION_DATASET_NAME
+from mlflow_parameter_names import CASE_CATEGORY_FIELD, CASE_ID_FIELD
 
 DATASET_NAME = EVALUATION_DATASET_NAME
 
 
-def mlflow_records(cases):
+def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
+    """Translate typed local cases into MLflow inputs and expectations."""
+    input_field_names = {"prompt", CASE_ID_FIELD, CASE_CATEGORY_FIELD}
     return [
         {
-            "inputs": {"prompt": case["prompt"]},
-            "expectations": {k: v for k, v in case.items() if k != "prompt"},
+            "inputs": {
+                "prompt": case["prompt"],
+                CASE_ID_FIELD: case[CASE_ID_FIELD],
+                CASE_CATEGORY_FIELD: case[CASE_CATEGORY_FIELD],
+            },
+            "expectations": {
+                name: value
+                for name, value in case.items()
+                if name not in input_field_names
+            },
         }
         for case in cases
     ]
 
 
-def sync_mlflow_dataset(cases, experiment_id):
+def sync_mlflow_dataset(cases: tuple[EvaluationCase, ...], experiment_id: str):
     from mlflow.genai.datasets import create_dataset, search_datasets
 
     existing = search_datasets(
@@ -35,7 +49,7 @@ def sync_mlflow_dataset(cases, experiment_id):
     return dataset
 
 
-def replace_dataset_records(dataset, cases) -> None:
+def replace_dataset_records(dataset: Any, cases: tuple[EvaluationCase, ...]) -> None:
     """Replace hosted rows so removed local cases cannot remain evaluable."""
     existing_records = dataset.to_df()
     existing_record_ids = (

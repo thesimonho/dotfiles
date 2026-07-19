@@ -28,6 +28,13 @@ MLflow creates or reuses one Agent Version for each `(agent CLI, manifest hash)`
 
 [`cases.py`](cases.py) is the git-tracked source of truth for real evaluation cases. No cases are configured yet. Until real cases are added, the runner exits with `no evaluation cases configured` before initializing MLflow or publishing any resource.
 
+Every case has a stable `case_id`, a filterable `category`, a `metric_name`, and the prompt sent to the agent. Tier-specific expectations are:
+
+- `output-quality` supplies a natural-language `rubric` to the selected CLI judge.
+- `output-contains` supplies an `expected_mention` for a deterministic final-response check.
+
+`output-contains` deliberately describes only response text. Tool calls, hooks, intermediate steps, and other execution telemetry remain the responsibility of the agent CLIs' OpenTelemetry exporters until the shared observability flow is decided.
+
 ## Running the harness
 
 The local [`justfile`](justfile) contains the supported workflow:
@@ -48,6 +55,9 @@ just eval-run codex
 just eval-mlflow --agent codex
 just eval-mlflow --agent codex --baseline-manifest-version 3
 
+# Send the evaluation to a remote MLflow server.
+MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex
+
 # Inspect services or follow logs.
 just eval-status
 just eval-logs
@@ -61,18 +71,20 @@ just eval-verify
 
 Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Both subprocesses run from the repository root so root-level instructions and trusted project configuration are discovered consistently. MLflow environment variables are removed from the subprocess environment, and each CLI call has a 30-minute timeout. Codex is explicitly launched with a read-only sandbox; Claude uses the effective permissions from the user's Claude configuration because the two CLIs do not expose an equivalent execution-policy interface.
 
-The local resource identities are:
+The resource identities are:
 
-- Tracking URI: `http://localhost:5000`
+- Default tracking URI: `http://localhost:5000`
 - Experiment: `agent-harness-evals`
 - Dataset: `agent-harness-cases`
 - Prompt namespace: `agent-harness--*`
+
+Set `MLFLOW_TRACKING_URI` in the harness environment to use another server. Agent subprocesses do not inherit that variable. The local Compose service and its `eval-up`, `eval-wait`, `eval-status`, `eval-logs`, and `eval-down` recipes always manage the loopback server; they are unnecessary when an external server is already running.
 
 The Compose service binds port 5000 to loopback and persists the SQLite database and artifacts under the ignored `infra/compose/data/mlflow` directory. The server image and Python dependency are both pinned to MLflow 3.14.0.
 
 ## Inspecting results
 
-Open <http://127.0.0.1:5000> and select **Evaluation runs** to compare aggregate metrics and individual request rows. The current scorer records `tiered_score` for every case and `tiered_score/mean` for the run.
+Open the configured MLflow server and select **Evaluation runs** to compare aggregate metrics and individual request rows. Each case chooses a descriptive metric name, and the corresponding feedback includes the scorer's rationale. MLflow aggregates cases that share a metric name.
 
 Open the underlying run for complete provenance:
 
@@ -90,8 +102,9 @@ Use these filters:
 - Evaluation Runs: ``params.`agent.cli` = 'codex'``
 - Trace UI: **Filters → Field → `agent.cli`**
 - Trace API: ``metadata.`agent.cli` = 'codex'``
+- Case trace: **Filters → Field → `case_id`** or **Field → `category`**
 
-`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. The harness deliberately emits no duplicate CLI tags.
+`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id` and `category` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.
 
 Independent single-turn cases do not belong under **Sessions**. If conversational cases are added later, assign one session ID per simulated conversation rather than one for the complete evaluation run.
 
@@ -104,6 +117,7 @@ The change note classifies added, removed, and modified components and includes 
 ## Layout
 
 - `cases.py` defines real evaluation inputs and expectations.
+- `lib/evaluation_case.py` defines the typed case contract.
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
 - `lib/agent.py` invokes the authenticated Codex or Claude CLI from the repository root.
 - `lib/configuration_components.py` discovers allowlisted configuration atoms.

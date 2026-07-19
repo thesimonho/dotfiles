@@ -4,6 +4,8 @@ import hashlib
 import re
 
 AGENT_CLI_FIELD = "agent.cli"
+CASE_ID_FIELD = "case_id"
+CASE_CATEGORY_FIELD = "category"
 
 
 def component_parameter_name(component_id: str) -> str:

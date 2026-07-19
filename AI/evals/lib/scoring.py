@@ -11,18 +11,22 @@ def score_output_quality(
     """LLM-judge tier: shells to the selected authenticated agent CLI."""
     judge_prompt = (
         f"Judge whether this output satisfies the rubric below. "
-        f"Reply with exactly the word PASS or the word FAIL, nothing else.\n\n"
+        f"Reply with PASS or FAIL on the first line, followed by one concise "
+        f"sentence explaining the verdict.\n\n"
         f"Rubric: {rubric}\nOutput: {output}"
     )
     verdict_raw = agent.run_judge(judge_prompt, profile=profile)
-    passed = "PASS" in verdict_raw.upper() and "FAIL" not in verdict_raw.upper()
-    return passed, verdict_raw[:200]
+    verdict = verdict_raw.strip().splitlines()[0].upper()
+    if verdict not in {"PASS", "FAIL"}:
+        raise RuntimeError("evaluation judge did not return PASS or FAIL")
+    return verdict == "PASS", verdict_raw[:1000]
 
 
-def score_trajectory(output: str, expected_mention: str) -> tuple[bool, str]:
-    """Deterministic tier: no LLM judge involved."""
+def score_expected_mention(output: str, expected_mention: str) -> tuple[bool, str]:
+    """Check the final response for required text without invoking a judge."""
     passed = expected_mention.lower() in output.lower()
-    return passed, f"looked for '{expected_mention}' in the raw output"
+    outcome = "contained" if passed else "did not contain"
+    return passed, f"final response {outcome} '{expected_mention}'"
 
 
 def score_case(
@@ -32,6 +36,6 @@ def score_case(
 ) -> tuple[bool, str]:
     if case["tier"] == "output-quality":
         return score_output_quality(output, case["rubric"], profile=profile)
-    if case["tier"] == "trajectory":
-        return score_trajectory(output, case["expected_mention"])
+    if case["tier"] == "output-contains":
+        return score_expected_mention(output, case["expected_mention"])
     raise ValueError(f"unknown tier: {case['tier']}")

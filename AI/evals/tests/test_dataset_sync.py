@@ -18,7 +18,16 @@ class DatasetSyncTests(unittest.TestCase):
 
         dataset_sync.replace_dataset_records(
             dataset,
-            ({"prompt": "2+2", "tier": "deterministic"},),
+            (
+                {
+                    "case_id": "arithmetic",
+                    "category": "correctness",
+                    "metric_name": "answer_correctness",
+                    "prompt": "2+2",
+                    "tier": "output-contains",
+                    "expected_mention": "4",
+                },
+            ),
         )
 
         self.assertEqual(dataset.deleted_record_ids, ["record-1", "record-2"])
@@ -26,8 +35,16 @@ class DatasetSyncTests(unittest.TestCase):
             dataset.merged_records,
             [
                 {
-                    "inputs": {"prompt": "2+2"},
-                    "expectations": {"tier": "deterministic"},
+                    "inputs": {
+                        "prompt": "2+2",
+                        "case_id": "arithmetic",
+                        "category": "correctness",
+                    },
+                    "expectations": {
+                        "metric_name": "answer_correctness",
+                        "tier": "output-contains",
+                        "expected_mention": "4",
+                    },
                 }
             ],
         )

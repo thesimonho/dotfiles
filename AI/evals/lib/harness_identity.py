@@ -1,6 +1,11 @@
 """Shared names that define agent-harness resources and ownership."""
 
-MLFLOW_TRACKING_URI = "http://localhost:5000"
+import os
+
+DEFAULT_MLFLOW_TRACKING_URI = "http://localhost:5000"
+MLFLOW_TRACKING_URI = (
+    os.environ.get("MLFLOW_TRACKING_URI", "").strip() or DEFAULT_MLFLOW_TRACKING_URI
+)
 MLFLOW_EXPERIMENT_NAME = "agent-harness-evals"
 EVALUATION_DATASET_NAME = "agent-harness-cases"
 PROMPT_NAMESPACE_PREFIX = "agent-harness--"
