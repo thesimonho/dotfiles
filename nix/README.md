@@ -61,6 +61,24 @@ If the host model cannot express an applicability rule, extend
 `lib/host-context.nix` and the corresponding `my.*` option instead of adding a
 hostname check or arbitrary predicate to a catalog entry.
 
+## Codex user configuration
+
+`AI/settings/codex/config.toml` is the declarative baseline for personal Codex
+settings. Codex CLI and Desktop share `~/.codex/config.toml` and both need to
+write machine-local state there, so Home Manager keeps that file writable
+instead of linking it into the repository.
+
+During activation, the Codex client adapter recursively merges the tracked
+baseline into the writable file. Tracked values win conflicts, while local-only
+values such as project trust, generated MCP helpers, marketplace metadata, and
+cache paths remain untouched. The adapter records the previously managed key
+paths under the XDG state directory so removing a tracked setting also removes
+its old local value.
+
+Run `just codex-config-apply` from `nix/` to apply tracked changes immediately
+without switching the full Home Manager profile. Settings changed through
+Codex remain local unless they are deliberately added to the tracked baseline.
+
 ## How to add a host
 
 1. Create `hosts/<name>.nix` declaring `my.os`, `my.desktop`,

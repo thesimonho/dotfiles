@@ -101,6 +101,10 @@ doctor module="" detail="":
 check: docs
     {{ _nix }} flake check --no-build {{ FLAKE_DIR }}
 
+# Apply tracked Codex preferences without switching the full Home Manager profile.
+codex-config-apply:
+    command codex-config-apply
+
 # Apply a host configuration: `just switch desktop`
 switch host: docs
     @if [ ! -f "$HOME/.secrets/age_identity" ]; then \
