@@ -37,10 +37,6 @@ eval-wait:
 eval-mlflow *args:
     {{eval_python}} AI/evals/run_mlflow_eval.py "$@"
 
-# Delete only the expendable local MLflow agent-harness history.
-eval-reset-mlflow:
-    {{eval_python}} AI/evals/reset_mlflow_harness.py --yes
-
 # Run the suite with the selected agent CLI.
 eval-run agent:
     just --justfile AI/evals/justfile eval-mlflow --agent "{{agent}}"

@@ -52,9 +52,6 @@ just eval-mlflow --agent codex --baseline-manifest-version 3
 just eval-status
 just eval-logs
 
-# Delete only harness-owned MLflow history.
-just eval-reset-mlflow
-
 # Stop MLflow while retaining its local data.
 just eval-down
 
@@ -104,10 +101,6 @@ The default comparison baseline is the manifest from the latest successfully att
 
 The change note classifies added, removed, and modified components and includes old and new prompt versions. To inspect exact text changes, open the changed component under Linked Prompts and compare its two prompt versions in the MLflow prompt UI.
 
-## Reset boundary
-
-`just eval-reset-mlflow` permanently deletes traces, runs, Agent Versions, the managed dataset, and prompts owned by the exact `agent-harness-evals` experiment and `agent-harness--*` namespace. It accepts only the local tracking endpoints, refuses to delete a dataset or prompt shared with another experiment, and verifies that owned inventories are empty afterward. It preserves the experiment record, unrelated experiments, unrelated prompts, and the backing volume.
-
 ## Layout
 
 - `cases.py` defines real evaluation inputs and expectations.
@@ -118,5 +111,4 @@ The change note classifies added, removed, and modified components and includes 
 - `lib/mlflow_config_registry.py` publishes and links prompts, run evidence, and trace provenance.
 - `lib/mlflow_agent_versions.py` resolves manifest-derived Agent Versions.
 - `lib/mlflow_configuration_evidence.py` renders shared run and Agent Version descriptions and artifacts.
-- `lib/mlflow_harness_reset.py` implements guarded local history cleanup.
 - `infra/compose/mlflow.yml` runs the pinned local MLflow server.
