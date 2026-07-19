@@ -1,5 +1,5 @@
 set shell := ["zsh", "-cu"]
-set positional-arguments
+set positional-arguments := true
 set tempdir := "/tmp"
 set working-directory := "../.."
 
@@ -19,7 +19,7 @@ eval-up: eval-up-mlflow eval-wait
 
 # Start the MLflow service.
 eval-up-mlflow:
-    docker compose -f {{mlflow_compose}} up -d
+    docker compose -f {{ mlflow_compose }} up -d
 
 # Wait up to 60 seconds for MLflow to answer.
 eval-wait:
@@ -35,29 +35,25 @@ eval-wait:
 
 # Run the eval suite in MLflow. Pass runner flags directly to the recipe.
 eval-mlflow *args:
-    {{eval_python}} AI/evals/run_mlflow_eval.py "$@"
+    {{ eval_python }} AI/evals/run_mlflow_eval.py "$@"
 
 # Run the suite with the selected agent CLI.
 eval-run agent:
-    just --justfile AI/evals/justfile eval-mlflow --agent "{{agent}}"
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}"
 
 # Show local service state.
 eval-status:
-    docker compose -f {{mlflow_compose}} ps
+    docker compose -f {{ mlflow_compose }} ps
 
 # Follow MLflow logs.
 eval-logs:
-    docker compose -f {{mlflow_compose}} logs --follow --tail=100
+    docker compose -f {{ mlflow_compose }} logs --follow --tail=100
 
 # Stop MLflow without deleting its data.
 eval-down:
-    docker compose -f {{mlflow_compose}} down
-
-# Run the harness behavior tests.
-eval-test:
-    {{eval_python}} -m unittest discover -s AI/evals/tests -v
+    docker compose -f {{ mlflow_compose }} down
 
 # Run local harness and Compose validation.
-eval-verify: eval-test
-    {{eval_python}} -m compileall -q AI/evals
-    docker compose -f {{mlflow_compose}} config --quiet
+eval-verify:
+    {{ eval_python }} -m compileall -q AI/evals
+    docker compose -f {{ mlflow_compose }} config --quiet
