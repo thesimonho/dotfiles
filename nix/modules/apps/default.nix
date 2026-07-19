@@ -8,7 +8,7 @@
 }:
 
 let
-  inherit (lib) mkOption types mkIf;
+  inherit (lib) mkIf mkOption types;
 
   catalogLib = import ../../lib/catalog.nix { inherit lib; };
 
@@ -27,6 +27,7 @@ let
       ;
   };
   inherit (catalogData) bundleNames;
+  catalog = catalogData.entries;
 
   flatpakOverrideType = types.submodule {
     options = {
@@ -42,87 +43,45 @@ let
     };
   };
 
-  programType = types.submodule {
-    options = {
-      name = mkOption {
-        type = types.str;
-        description = "home-manager program key (programs.<name>.enable = true).";
-      };
-      settings = mkOption {
-        type = types.attrs;
-        default = { };
-        description = "Extra options merged into programs.<name>.";
-      };
-    };
-  };
-
   appType = catalogLib.mkCatalogType {
     inherit bundleNames;
-    extraOptions = {
-      flatpak = mkOption {
-        type = types.nullOr flatpakOverrideType;
-        default = null;
-      };
-      program = mkOption {
-        type = types.nullOr programType;
-        default = null;
-      };
+    extraOptions.flatpak = mkOption {
+      type = types.nullOr flatpakOverrideType;
+      default = null;
     };
   };
-  catalog = catalogData.entries;
 
   resolvedCatalog = config.my.apps.catalog;
-
-  enabledNames = catalogLib.resolveEnabled {
+  hostContext = {
+    system = pkgs.stdenv.hostPlatform.system;
+    operatingSystem = config.my.os;
+    desktop = config.my.desktop;
+    gpuBackend = config.my.gpu.backend;
+    hasDesktop = config.my.desktop != "none";
+  };
+  selection = catalogLib.resolveCatalog {
     catalog = resolvedCatalog;
     bundles = config.my.apps.bundles;
     enabled = config.my.apps.enabled;
+    inherit hostContext;
   };
-  enabledEntries = lib.filterAttrs (n: _: lib.elem n enabledNames) resolvedCatalog;
+  enabledEntries = selection.applicableEntries;
 
-  packageEntries = lib.filterAttrs (_: e: e.package != null) enabledEntries;
-  flatpakEntries = lib.filterAttrs (_: e: e.flatpak != null) enabledEntries;
-  programEntries = lib.filterAttrs (_: e: e.program != null) enabledEntries;
-
+  flatpakEntries = lib.filterAttrs (_: entry: entry.flatpak != null) enabledEntries;
   hasAnyFlatpak = flatpakEntries != { };
   isLinux = config.my.os != "darwin";
-  hasDesktop = config.my.desktop != "none";
-  flatpakActive = isLinux && hasDesktop && hasAnyFlatpak;
+  flatpakActive = isLinux && hostContext.hasDesktop && hasAnyFlatpak;
 
-  programsConfig = lib.listToAttrs (
-    lib.mapAttrsToList (_: e: {
-      name = e.program.name;
-      value = {
-        enable = true;
-      }
-      // e.program.settings;
-    }) programEntries
-  );
-
-  flatpakIds = lib.mapAttrsToList (_: e: e.flatpak.id) flatpakEntries;
+  flatpakIds = lib.mapAttrsToList (_: entry: entry.flatpak.id) flatpakEntries;
   flatpakOverrides = lib.listToAttrs (
     lib.concatMap (
-      e:
-      lib.optional (e.flatpak.overrides != { }) {
-        name = e.flatpak.id;
-        value = e.flatpak.overrides;
+      entry:
+      lib.optional (entry.flatpak.overrides != { }) {
+        name = entry.flatpak.id;
+        value = entry.flatpak.overrides;
       }
     ) (lib.attrValues flatpakEntries)
   );
-
-  mergeField =
-    field:
-    catalogLib.mergeField {
-      entries = enabledEntries;
-      inherit field;
-    };
-
-  mergedShellAliases = mergeField "shellAliases";
-  mergedFiles = mergeField "files";
-  mergedXdgConfigFiles = mergeField "xdgConfigFiles";
-  mergedSessionVariables = mergeField "sessionVariables";
-  mergedServices = mergeField "services";
-  mergedActivation = mergeField "activation";
 in
 {
   options.my.apps = {
@@ -140,60 +99,48 @@ in
       type = appType;
       default = catalog;
       internal = true;
-      description = "Internal: the resolved app catalog.";
+      description = "Internal resolved app catalog.";
     };
   };
 
-  config = {
-    assertions = lib.mapAttrsToList (name: e: {
-      assertion = e.package != null || e.flatpak != null || e.program != null || e.shellAliases != { };
-      message = "App catalog entry '${name}' must contribute at least one of package / flatpak / program / shellAliases.";
-    }) resolvedCatalog;
+  config = lib.mkMerge [
+    (catalogLib.realizeContributions enabledEntries)
+    {
+      assertions = lib.mapAttrsToList (name: entry: {
+        assertion = catalogLib.hasContributions entry || entry.flatpak != null;
+        message = "App catalog entry '${name}' must contribute a package, Home Manager configuration, or Flatpak.";
+      }) resolvedCatalog;
 
-    home = {
-      packages = lib.mapAttrsToList (_: e: e.package) packageEntries;
-      file = mergedFiles;
-      sessionVariables = mergedSessionVariables;
-      activation = mergedActivation;
-    };
-
-    systemd.user.services = mergedServices;
-
-    programs = programsConfig // {
-      zsh.shellAliases = mergedShellAliases;
-    };
-
-    services.flatpak = mkIf flatpakActive {
-      enable = true;
-      uninstallUnmanaged = true;
-      remotes = [
-        {
-          name = "flathub";
-          location = "https://flathub.org/repo/flathub.flatpakrepo";
-        }
-      ];
-      update = {
-        onActivation = true;
-        auto = {
-          enable = true;
-          onCalendar = "weekly";
+      services.flatpak = mkIf flatpakActive {
+        enable = true;
+        uninstallUnmanaged = true;
+        remotes = [
+          {
+            name = "flathub";
+            location = "https://flathub.org/repo/flathub.flatpakrepo";
+          }
+        ];
+        update = {
+          onActivation = true;
+          auto = {
+            enable = true;
+            onCalendar = "weekly";
+          };
         };
+        packages = flatpakIds;
+        overrides = flatpakOverrides;
       };
-      packages = flatpakIds;
-      overrides = flatpakOverrides;
-    };
 
-    xdg.systemDirs.data = mkIf flatpakActive [
-      "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
-      "/var/lib/flatpak/exports/share"
-    ];
+      xdg.systemDirs.data = mkIf flatpakActive [
+        "${config.home.homeDirectory}/.local/share/flatpak/exports/share"
+        "/var/lib/flatpak/exports/share"
+      ];
 
-    xdg.configFile =
-      mergedXdgConfigFiles
-      // lib.optionalAttrs flatpakActive {
+      xdg.configFile = lib.mkIf flatpakActive {
         "environment.d/20-flatpak.conf" = {
           text = "XDG_DATA_DIRS=$XDG_DATA_DIRS:${config.home.homeDirectory}/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share";
         };
       };
-  };
+    }
+  ];
 }

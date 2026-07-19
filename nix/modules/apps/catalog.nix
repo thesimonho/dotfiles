@@ -17,24 +17,22 @@
 
   entries = {
     android-tools = {
-      package = pkgs.android-tools;
+      contributions.packages = [ pkgs.android-tools ];
       bundles = [ ];
     };
     ast-grep = {
-      package = pkgs.ast-grep;
+      contributions.packages = [ pkgs.ast-grep ];
       bundles = [ "dev" ];
     };
     awscli2 = {
-      package = pkgs.awscli2;
+      contributions.packages = [ pkgs.awscli2 ];
       bundles = [
         "dev"
         "cloud"
       ];
     };
     bat = {
-      program = {
-        name = "bat";
-      };
+      contributions.programs.bat.enable = true;
       bundles = [ "cli" ];
     };
     betterbird = {
@@ -60,9 +58,7 @@
       bundles = [ ];
     };
     carapace = {
-      program = {
-        name = "carapace";
-      };
+      contributions.programs.carapace.enable = true;
       bundles = [ "cli" ];
     };
     deskflow = {
@@ -70,7 +66,7 @@
       bundles = [ ];
     };
     devcontainer = {
-      package = pkgs.devcontainer;
+      contributions.packages = [ pkgs.devcontainer ];
       bundles = [ ];
     };
     discord = {
@@ -96,43 +92,39 @@
       bundles = [ ];
     };
     eza = {
-      program = {
-        name = "eza";
-        settings = {
-          colors = "always";
-          icons = "always";
-          extraOptions = [
-            "--hyperlink"
-            "--group-directories-first"
-            "--header"
-          ];
-          theme = {
-            filekinds.symlink.is_italic = true;
-            symlink_path.is_italic = true;
-            broken_symlink_path.is_italic = true;
-            broken_path_overlay.is_italic = true;
-          };
+      contributions.programs.eza = {
+        enable = true;
+        colors = "always";
+        icons = "always";
+        extraOptions = [
+          "--hyperlink"
+          "--group-directories-first"
+          "--header"
+        ];
+        theme = {
+          filekinds.symlink.is_italic = true;
+          symlink_path.is_italic = true;
+          broken_symlink_path.is_italic = true;
+          broken_path_overlay.is_italic = true;
         };
       };
       bundles = [ "cli" ];
     };
     fd = {
-      program = {
-        name = "fd";
-      };
+      contributions.programs.fd.enable = true;
       bundles = [ "cli" ];
     };
     ffmpeg = {
-      package = (pkgsPinned.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
-        doCheck = false;
-      });
+      contributions.packages = [
+        ((pkgsPinned.ffmpeg-full.override { withUnfree = true; }).overrideAttrs (_: {
+          doCheck = false;
+        }))
+      ];
       bundles = [ ];
     };
     fzf = {
-      program = {
-        name = "fzf";
-      };
-      xdgConfigFiles."fzf" = symlinkConfig "fzf";
+      contributions.programs.fzf.enable = true;
+      contributions.xdgConfigFiles."fzf" = symlinkConfig "fzf";
       bundles = [ "cli" ];
     };
     gearlever = {
@@ -140,109 +132,107 @@
       bundles = [ ];
     };
     gh = {
-      package = pkgs.gh;
+      contributions.packages = [ pkgs.gh ];
       bundles = [ "dev" ];
     };
     gitleaks = {
-      package = pkgs.gitleaks;
+      contributions.packages = [ pkgs.gitleaks ];
       bundles = [
         "security"
         "dev"
       ];
     };
     glow = {
-      package = pkgs.glow;
+      contributions.packages = [ pkgs.glow ];
       bundles = [ ];
     };
     graphviz = {
-      package = pkgs.graphviz;
+      contributions.packages = [ pkgs.graphviz ];
       bundles = [ "cli" ];
     };
     gron = {
-      package = pkgs.gron;
+      contributions.packages = [ pkgs.gron ];
       bundles = [
         "cli"
       ];
     };
     jq = {
-      package = pkgs.jq;
+      contributions.packages = [ pkgs.jq ];
       bundles = [
         "cli"
       ];
     };
     just = {
-      package = pkgs.just;
+      contributions.packages = [ pkgs.just ];
       bundles = [
         "cli"
         "dev"
       ];
     };
     lazydocker = {
-      package = pkgs.lazydocker;
+      contributions.packages = [ pkgs.lazydocker ];
       bundles = [
         "cli"
         "dev"
       ];
     };
     lazygit = {
-      package = pkgs.lazygit;
-      xdgConfigFiles."lazygit" = symlinkConfig "lazygit";
+      contributions.packages = [ pkgs.lazygit ];
+      contributions.xdgConfigFiles."lazygit" = symlinkConfig "lazygit";
       bundles = [
         "cli"
         "dev"
       ];
     };
     lazyjournal = {
-      package = pkgs.lazyjournal;
+      contributions.packages = [ pkgs.lazyjournal ];
       bundles = [ "cli" ];
     };
     nh = {
-      package = pkgs.nh;
+      contributions.packages = [ pkgs.nh ];
       bundles = [ "cli" ];
     };
     nix-output-monitor = {
-      package = pkgs.nix-output-monitor;
+      contributions.packages = [ pkgs.nix-output-monitor ];
       bundles = [ "cli" ];
     };
     nerd-fonts-caskaydia-cove = {
-      package = pkgs.nerd-fonts.caskaydia-cove;
+      contributions.packages = [ pkgs.nerd-fonts.caskaydia-cove ];
       bundles = [ "fonts" ];
     };
     nerd-fonts-fira-code = {
-      package = pkgs.nerd-fonts.fira-code;
+      contributions.packages = [ pkgs.nerd-fonts.fira-code ];
       bundles = [ "fonts" ];
     };
     nerd-fonts-jetbrains-mono = {
-      package = pkgs.nerd-fonts.jetbrains-mono;
+      contributions.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
       bundles = [ "fonts" ];
     };
     nerd-fonts-symbols-only = {
-      package = pkgs.nerd-fonts.symbols-only;
+      contributions.packages = [ pkgs.nerd-fonts.symbols-only ];
       bundles = [ "fonts" ];
     };
     nixd = {
-      package = pkgs.nixd;
+      contributions.packages = [ pkgs.nixd ];
       bundles = [ "cli" ];
     };
     nixfmt = {
-      package = pkgs.nixfmt-rfc-style;
+      contributions.packages = [ pkgs.nixfmt-rfc-style ];
       bundles = [ "cli" ];
     };
     onlyoffice = {
       flatpak.id = "org.onlyoffice.desktopeditors";
     };
     pay-respects = {
-      package = pkgs.pay-respects;
+      contributions.packages = [ pkgs.pay-respects ];
       bundles = [ "cli" ];
     };
     ripgrep = {
-      program = {
-        name = "ripgrep";
-      };
+      contributions.programs.ripgrep.enable = true;
       bundles = [ "cli" ];
     };
     semgrep = {
-      package = pkgs.semgrep;
+      contributions.packages = [ pkgs.semgrep ];
       bundles = [
         "security"
         "dev"
@@ -264,46 +254,42 @@
     };
     # darwin-only; opt in via my.apps.enabled.
     slack-darwin = {
-      package = pkgs.slack;
+      contributions.packages = [ pkgs.slack ];
       bundles = [ ];
     };
     starship = {
-      program = {
-        name = "starship";
-      };
-      xdgConfigFiles."starship.toml" = symlinkConfig "starship.toml";
+      contributions.programs.starship.enable = true;
+      contributions.xdgConfigFiles."starship.toml" = symlinkConfig "starship.toml";
       bundles = [ "cli" ];
     };
     stripe-cli = {
-      package = pkgs.stripe-cli;
+      contributions.packages = [ pkgs.stripe-cli ];
       bundles = [ "dev" ];
     };
     tealdeer = {
-      program = {
-        name = "tealdeer";
-      };
+      contributions.programs.tealdeer.enable = true;
       bundles = [ "cli" ];
     };
     terraform = {
       bundles = [ "cloud" ];
-      shellAliases.tf = "terraform";
+      contributions.shellAliases.tf = "terraform";
     };
     trivy = {
-      package = pkgs.trivy;
+      contributions.packages = [ pkgs.trivy ];
       bundles = [
         "security"
         "dev"
       ];
     };
     trufflehog = {
-      package = pkgs.trufflehog;
+      contributions.packages = [ pkgs.trufflehog ];
       bundles = [
         "security"
         "dev"
       ];
     };
     uv = {
-      package = pkgs.uv;
+      contributions.packages = [ pkgs.uv ];
       bundles = [
         "cli"
         "dev"
@@ -319,11 +305,11 @@
     };
     # Linux/Wayland-only; opt in via my.apps.enabled.
     wl-clipboard = {
-      package = pkgs.wl-clipboard;
+      contributions.packages = [ pkgs.wl-clipboard ];
       bundles = [ ];
     };
     yq = {
-      package = pkgs.yq;
+      contributions.packages = [ pkgs.yq ];
       bundles = [
         "cli"
       ];
@@ -333,9 +319,7 @@
       bundles = [ "dev" ];
     };
     zoxide = {
-      program = {
-        name = "zoxide";
-      };
+      contributions.programs.zoxide.enable = true;
       bundles = [ "cli" ];
     };
   };
