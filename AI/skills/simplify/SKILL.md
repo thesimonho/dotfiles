@@ -1,6 +1,6 @@
 ---
 name: simplify
-description: Review recently changed code with three separate read-only agents for reuse, quality, and efficiency, then return prioritized issue lists. Use after implementing changes, before verification or commit, or when the user asks to simplify, clean up, reduce duplication, or review recent changes.
+description: Review recently changed code with three separate read-only agents for reuse, quality, and efficiency, then return prioritized issue lists. Use after implementing multi-file changes, before commit, or when the user asks to simplify, clean up, reduce duplication, or review recent changes.
 user-invocable: true
 ---
 
