@@ -1,11 +1,10 @@
 model = "gpt-5.6-sol"
 model_reasoning_effort = "low"
-model_verbosity = "low"
 model_reasoning_summary = "concise"
+model_verbosity = "medium"
 plan_mode_reasoning_effort = "high"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
-
 hide_agent_reasoning = false
 show_raw_agent_reasoning = false
 personality = "pragmatic"
@@ -39,7 +38,7 @@ glob_scan_max_depth = 4
 enabled = true
 
 [permissions.development.network.domains]
-"localhost" = "allow"
+localhost = "allow"
 "127.0.0.1" = "allow"
 "::1" = "allow"
 "**.github.com" = "allow"
@@ -76,14 +75,47 @@ undo = true
 [otel]
 environment = "workstation"
 log_user_prompt = true
-exporter = { otlp-grpc = { endpoint = "http://localhost:4317", headers = {} } }
-metrics_exporter = { otlp-grpc = { endpoint = "http://localhost:4317", headers = {} } }
-trace_exporter = { otlp-grpc = { endpoint = "http://localhost:4317", headers = {} } }
+
+[otel.exporter.otlp-grpc]
+endpoint = "http://localhost:4317"
+
+[otel.exporter.otlp-grpc.headers]
+
+[otel.metrics_exporter.otlp-grpc]
+endpoint = "http://localhost:4317"
+
+[otel.metrics_exporter.otlp-grpc.headers]
+
+[otel.trace_exporter.otlp-grpc]
+endpoint = "http://localhost:4317"
+
+[otel.trace_exporter.otlp-grpc.headers]
 
 [plugins."codex-security@openai-curated"]
 enabled = true
 
 [plugins."github@openai-curated"]
+enabled = true
+
+[plugins."context7@claude-plugins-official"]
+enabled = true
+
+[plugins."gopls-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."pyright-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."typescript-lsp@claude-plugins-official"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."computer-use@openai-bundled"]
 enabled = true
 
 [mcp_servers.context7]
@@ -93,20 +125,13 @@ env_vars = ["CONTEXT7_API_KEY"]
 default_tools_approval_mode = "approve"
 startup_timeout_sec = 20
 
-[projects."/home/simon"]
-trust_level = "trusted"
-
-[projects."/home/simon/dotfiles"]
-trust_level = "trusted"
-
-[projects."/home/simon/Projects/scribble"]
-trust_level = "trusted"
-
-[projects."/home/simon/Projects/babygrad"]
-trust_level = "trusted"
-
-[projects."/home/simon/Projects/timelines"]
-trust_level = "trusted"
-
-[projects."/home/simon/Projects/kanagawa-paper.nvim"]
-trust_level = "trusted"
+[desktop]
+conversationDetailMode = "STEPS_COMMANDS"
+ambient-suggestions-enabled = true
+appshotDestination = "last-chat"
+selected-avatar-id = "rocky"
+followUpQueueMode = "steer"
+defaultTerminalLocation = "bottom"
+show-context-window-usage = true
+usePointerCursors = true
+enabled-reasoning-efforts = ["low", "medium", "high", "xhigh"]
