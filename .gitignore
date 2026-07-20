@@ -44,6 +44,10 @@ AI/skills/.system
 AI/agents/.generated/
 AI/instructions/AGENTS.generated.md
 docs
+!/docs/
+/docs/*
+!/docs/codemaps/
+!/docs/codemaps/**
 .pi
 .pi-lens
 
