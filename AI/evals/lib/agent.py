@@ -9,6 +9,8 @@ import os
 import shutil
 import subprocess
 
+from agent_environment import build_child_environment
+from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
 
 CLI_TIMEOUT_SECONDS = 1800
@@ -32,13 +34,19 @@ def resolve_agent_profile(requested_profile: str) -> str:
     raise RuntimeError("both Codex and Claude are installed; select one with --agent")
 
 
-def _call_claude(prompt: str, *, has_tools: bool) -> str:
+def _call_claude(
+    prompt: str,
+    context: AgentExecutionContext,
+    *,
+    has_tools: bool,
+) -> str:
     command = ["claude", "-p", prompt, "--output-format", "json"]
     if not has_tools:
         command.extend(["--tools", "", "--disable-slash-commands"])
     completed_process = _run_cli_command(
         command,
         "Claude",
+        context,
     )
     try:
         response = json.loads(completed_process.stdout)
@@ -53,7 +61,7 @@ def _call_claude(prompt: str, *, has_tools: bool) -> str:
     return response_text
 
 
-def _call_codex(prompt: str) -> str:
+def _call_codex(prompt: str, context: AgentExecutionContext) -> str:
     command = [
         "codex",
         "exec",
@@ -66,6 +74,7 @@ def _call_codex(prompt: str) -> str:
     completed_process = _run_cli_command(
         command,
         "Codex",
+        context,
     )
     if completed_process.returncode != 0:
         message = completed_process.stderr.strip() or "Codex CLI request failed"
@@ -88,15 +97,11 @@ def _json_lines(output: str) -> tuple[dict, ...]:
         raise RuntimeError("Codex returned invalid JSONL") from error
 
 
-def _child_environment() -> dict[str, str]:
-    return {
-        name: value
-        for name, value in os.environ.items()
-        if not name.startswith("MLFLOW_")
-    }
-
-
-def _run_cli_command(command: list[str], cli_name: str) -> subprocess.CompletedProcess:
+def _run_cli_command(
+    command: list[str],
+    cli_name: str,
+    context: AgentExecutionContext,
+) -> subprocess.CompletedProcess:
     """Run an authenticated agent CLI with a bounded execution time."""
     try:
         return subprocess.run(
@@ -105,7 +110,7 @@ def _run_cli_command(command: list[str], cli_name: str) -> subprocess.CompletedP
             text=True,
             check=False,
             cwd=str(REPOSITORY_ROOT),
-            env=_child_environment(),
+            env=build_child_environment(os.environ, context),
             timeout=CLI_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as error:
@@ -114,19 +119,27 @@ def _run_cli_command(command: list[str], cli_name: str) -> subprocess.CompletedP
         ) from error
 
 
-def run_agent(prompt: str, profile: str = "claude") -> str:
+def run_agent(
+    prompt: str,
+    context: AgentExecutionContext,
+    profile: str = "claude",
+) -> str:
     """Run one task through the selected authenticated agent CLI."""
     if profile == "codex":
-        return _call_codex(prompt)
+        return _call_codex(prompt, context)
     if profile == "claude":
-        return _call_claude(prompt, has_tools=True)
+        return _call_claude(prompt, context, has_tools=True)
     raise ValueError(f"unsupported agent profile: {profile}")
 
 
-def run_judge(prompt: str, profile: str = "claude") -> str:
+def run_judge(
+    prompt: str,
+    context: AgentExecutionContext,
+    profile: str = "claude",
+) -> str:
     """Judge one response through the selected authenticated agent CLI."""
     if profile == "codex":
-        return _call_codex(prompt)
+        return _call_codex(prompt, context)
     if profile == "claude":
-        return _call_claude(prompt, has_tools=False)
+        return _call_claude(prompt, context, has_tools=False)
     raise ValueError(f"unsupported agent profile: {profile}")

@@ -13,6 +13,8 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | File | Description |
 | --- | --- |
 | `agent.py` | Resolves Claude/Codex profiles and invokes their CLIs with isolated environments and timeouts |
+| `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process |
+| `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
 | `evaluation_case.py` | Typed case schemas for judge-scored and substring-scored evaluations |
 | `scoring.py` | Builds MLflow scorers and invokes the configured judge agent |
 | `dataset_sync.py` | Converts cases to MLflow records and replaces dataset contents |
@@ -26,12 +28,15 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `mlflow_configuration_evidence.py` | Attaches configuration provenance to evaluation runs |
 | `mlflow_parameter_names.py` | Central names for MLflow parameters, tags, and dataset fields |
 | `mlflow_tracing.py` | Configures trace capture around agent execution |
+| `mlflow_experiment_bootstrap.py` | Creates the shared experiment and atomically renders Alloy's runtime experiment ID |
 
 ## Key exports
 
 | Symbol | File | Description |
 | --- | --- | --- |
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI for a case or judge prompt |
+| `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, purpose, and evaluation role as OTEL resource attributes |
+| `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
 | `EvaluationCase` | `evaluation_case.py` | Union describing supported case shapes |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
 | `discover_agent_components()` | `configuration_components.py` | Enumerates provenance-bearing client configuration inputs |

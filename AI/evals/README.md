@@ -33,7 +33,20 @@ Every case has a stable `case_id`, a filterable `category`, a `metric_name`, and
 - `output-quality` supplies a natural-language `rubric` to the selected CLI judge.
 - `output-contains` supplies an `expected_mention` for a deterministic final-response check.
 
-`output-contains` deliberately describes only response text. Tool calls, hooks, intermediate steps, and other execution telemetry remain the responsibility of the agent CLIs' OpenTelemetry exporters until the shared observability flow is decided.
+`output-contains` deliberately describes only response text. Tool calls, hooks, and intermediate steps are exported separately by the agent CLIs as OpenTelemetry traces.
+
+## Agent telemetry flow
+
+Codex and Claude send OTLP/gRPC to the dedicated loopback receiver at `127.0.0.1:4327`. Alloy keeps only traces whose resource attributes include `telemetry.purpose=evaluation`, removes known account and authorization attributes, batches them, and exports them to the same MLflow experiment used by the eval harness. Logs and metrics have no configured Alloy output and are dropped. Traces from ordinary interactive agent use that lack the evaluation marker are also dropped for now.
+
+```text
+eval runner -> Codex or Claude -> OTLP :4327 -> Alloy -> MLflow /v1/traces
+normal use -> Codex or Claude -> OTLP :4327 -> Alloy -> drop
+```
+
+The separate port identifies agent traffic at ingress, but it is not the security or routing boundary. The immutable `telemetry.purpose=evaluation` resource attribute is what authorizes a trace for MLflow. Every eval process also receives `agent.cli`, `case_id`, `category`, and `evaluation.role`, allowing agent-under-test and judge traces to be distinguished without putting prompt or response text in resource attributes.
+
+MLflow trace storage should be treated as sensitive. Redaction is defense in depth for known identity fields, not a guarantee that span attributes or events contain no private content. Alloy's verbose debug exporter is intentionally absent because it would duplicate telemetry into container logs.
 
 ## Running the harness
 
@@ -45,7 +58,7 @@ cd AI/evals
 # Create the isolated Python environment.
 just eval-setup
 
-# Start the loopback-only MLflow server and wait until it answers.
+# Start loopback-only MLflow and Alloy, then wait until both answer.
 just eval-up
 
 # Run with this month's authenticated CLI.
@@ -69,18 +82,22 @@ just eval-down
 just eval-verify
 ```
 
-Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Both subprocesses run from the repository root so root-level instructions and trusted project configuration are discovered consistently. MLflow environment variables are removed from the subprocess environment, and each CLI call has a 30-minute timeout. Codex is explicitly launched with a read-only sandbox; Claude uses the effective permissions from the user's Claude configuration because the two CLIs do not expose an equivalent execution-policy interface.
+Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Both subprocesses run from the repository root so root-level instructions and trusted project configuration are discovered consistently. Each receives a least-privilege environment containing normal runtime essentials and its immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. Codex is explicitly launched with a read-only sandbox; Claude uses the effective permissions from the user's Claude configuration because the two CLIs do not expose an equivalent execution-policy interface.
 
 The resource identities are:
 
 - Default tracking URI: `http://localhost:5000`
+- Agent OTLP/gRPC receiver: `http://127.0.0.1:4327`
+- Alloy status endpoint: `http://127.0.0.1:12345`
 - Experiment: `agent-harness-evals`
 - Dataset: `agent-harness-cases`
 - Prompt namespace: `agent-harness--*`
 
-Set `MLFLOW_TRACKING_URI` in the harness environment to use another server. Agent subprocesses do not inherit that variable. The local Compose service and its `eval-up`, `eval-wait`, `eval-status`, `eval-logs`, and `eval-down` recipes always manage the loopback server; they are unnecessary when an external server is already running.
+Set `MLFLOW_TRACKING_URI` in the harness environment to use another server. Agent subprocesses do not inherit that variable. The local Compose services and their `eval-up`, `eval-status`, `eval-logs`, and `eval-down` recipes manage the loopback stack; they are unnecessary when the remote MLflow and Alloy services are already running.
 
-The Compose service binds port 5000 to loopback and persists the SQLite database and artifacts under the ignored `infra/compose/data/mlflow` directory. The server image and Python dependency are both pinned to MLflow 3.14.0.
+The Compose stack binds MLflow, Alloy, and OTLP ports to loopback. MLflow persists its SQLite database and artifacts under the ignored `infra/compose/data/mlflow` directory. `eval-up` starts MLflow first, creates or reuses the experiment, writes its ID to the ignored mode-`0600` `infra/compose/.env.mlflow-runtime`, and only then starts Alloy. The server image and Python dependency are pinned to MLflow 3.14.0; Alloy is pinned to 1.18.0.
+
+The local topology intentionally matches the first homelab stage. When MLflow and Alloy move to the homelab, the harness tracking URI and CLI OTLP endpoint change, but the evaluation attributes and Alloy routing policy do not. A later Tempo exporter can receive ordinary traces without changing the MLflow evaluation branch.
 
 ## Inspecting results
 
@@ -120,9 +137,13 @@ The change note classifies added, removed, and modified components and includes 
 - `lib/evaluation_case.py` defines the typed case contract.
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
 - `lib/agent.py` invokes the authenticated Codex or Claude CLI from the repository root.
+- `lib/agent_execution_context.py` defines immutable OTEL identity for agent-under-test and judge processes.
+- `lib/agent_environment.py` builds the least-privilege CLI subprocess environment.
+- `lib/mlflow_experiment_bootstrap.py` binds Alloy to the shared MLflow experiment.
 - `lib/configuration_components.py` discovers allowlisted configuration atoms.
 - `lib/configuration_manifest.py` builds complete manifests and baseline comparisons.
 - `lib/mlflow_config_registry.py` publishes and links prompts, run evidence, and trace provenance.
 - `lib/mlflow_agent_versions.py` resolves manifest-derived Agent Versions.
 - `lib/mlflow_configuration_evidence.py` renders shared run and Agent Version descriptions and artifacts.
-- `infra/compose/mlflow.yml` runs the pinned local MLflow server.
+- `infra/compose/mlflow.yml` runs the pinned local MLflow and Alloy services.
+- `infra/compose/alloy.config` filters, redacts, batches, and exports evaluation traces.

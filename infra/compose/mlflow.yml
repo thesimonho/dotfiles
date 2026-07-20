@@ -1,4 +1,23 @@
 services:
+  alloy:
+    image: grafana/alloy:v1.18.0
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    depends_on:
+      mlflow:
+        condition: service_started
+    env_file:
+      - path: .env.mlflow-runtime
+        required: false
+    ports:
+      - "127.0.0.1:4327:4327"
+      - "127.0.0.1:12345:12345"
+    volumes:
+      - ./alloy.config:/etc/alloy/config.alloy:ro
+
   mlflow:
     image: ghcr.io/mlflow/mlflow:v3.14.0
     command:
@@ -8,6 +27,8 @@ services:
       - 0.0.0.0
       - --port
       - "5000"
+      - --allowed-hosts
+      - "localhost:*,127.0.0.1:*,mlflow:5000"
       - --backend-store-uri
       - sqlite:///mlflow-data/mlflow.db
       - --artifacts-destination

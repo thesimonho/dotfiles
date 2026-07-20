@@ -48,17 +48,17 @@ environment = "workstation"
 log_user_prompt = true
 
 [otel.exporter.otlp-grpc]
-endpoint = "http://localhost:4317"
+endpoint = "http://localhost:4327"
 
 [otel.exporter.otlp-grpc.headers]
 
 [otel.metrics_exporter.otlp-grpc]
-endpoint = "http://localhost:4317"
+endpoint = "http://localhost:4327"
 
 [otel.metrics_exporter.otlp-grpc.headers]
 
 [otel.trace_exporter.otlp-grpc]
-endpoint = "http://localhost:4317"
+endpoint = "http://localhost:4327"
 
 [otel.trace_exporter.otlp-grpc.headers]
 

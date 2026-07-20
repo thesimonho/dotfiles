@@ -7,6 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import agent  # noqa: E402
+from agent_execution_context import AgentExecutionContext  # noqa: E402
 import configuration_components  # noqa: E402
 import dataset_sync  # noqa: E402
 import mlflow  # noqa: E402
@@ -39,7 +40,16 @@ def predict_fn(prompt: str, case_id: str, category: str) -> str:
         },
         request_preview=prompt,
     )
-    response = agent.run_agent(prompt, profile=AGENT_PROFILE)
+    response = agent.run_agent(
+        prompt,
+        AgentExecutionContext(
+            agent_cli=AGENT_PROFILE,
+            case_id=case_id,
+            category=category,
+            evaluation_role="agent-under-test",
+        ),
+        profile=AGENT_PROFILE,
+    )
     _update_trace_preview(response_preview=response)
     return response
 
@@ -63,10 +73,21 @@ def _update_trace_preview(
 
 
 @scorer
-def evaluation_score(outputs: str, expectations: dict) -> Feedback:
+def evaluation_score(inputs: dict, outputs: str, expectations: dict) -> Feedback:
     """Return the case-selected metric with its scoring rationale."""
     case = {"tier": expectations["tier"], **expectations}
-    passed, reason = scoring.score_case(outputs, case, profile=AGENT_PROFILE)
+    judge_context = AgentExecutionContext(
+        agent_cli=AGENT_PROFILE,
+        case_id=inputs["case_id"],
+        category=inputs["category"],
+        evaluation_role="judge",
+    )
+    passed, reason = scoring.score_case(
+        outputs,
+        case,
+        judge_context,
+        profile=AGENT_PROFILE,
+    )
     return Feedback(
         name=expectations["metric_name"],
         value=passed,
