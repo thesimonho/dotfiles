@@ -1,6 +1,5 @@
 {
   inputs,
-  pkgs,
   pkgsUnstable,
   system,
 }:
@@ -25,32 +24,20 @@ let
     "remote-control-ui"
     "remote-mobile-control"
   ];
+  # prevent the reaper scripts from adding their own entries into hooks.json
   codexDesktopPackage =
     if builtins.elem system linuxSystems then
-      let
-        basePackage = inputs.codex-desktop-linux.packages.${system}.codex-desktop.override {
-          enableComputerUseUi = true;
-          linuxFeatureIds = codexDesktopLinuxFeatures;
-        };
-      in
-      pkgs.symlinkJoin {
-        name = "${basePackage.name}-managed-reaper-hook";
-        paths = [ basePackage ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          launcher="$out/bin/codex-desktop"
-          rm -f "$launcher"
-          makeWrapper "${basePackage}/bin/codex-desktop" "$launcher" \
-            --set-default CODEX_MCP_HELPER_REAPER_DISABLE_HOOK "1"
-
-          desktopFile="$out/share/applications/codex-desktop.desktop"
-          desktopFileTarget="$(readlink -f "$desktopFile")"
-          rm -f "$desktopFile"
-          substitute "$desktopFileTarget" "$desktopFile" \
-            --replace-fail "${basePackage}/bin/codex-desktop" "$launcher"
-        '';
-        meta = basePackage.meta or { };
-      }
+      (inputs.codex-desktop-linux.packages.${system}.codex-desktop.override {
+        enableComputerUseUi = true;
+        linuxFeatureIds = codexDesktopLinuxFeatures;
+      }).overrideAttrs
+        (previousAttributes: {
+          postFixup = (previousAttributes.postFixup or "") + ''
+            reaperHookInstaller="$out/opt/codex-desktop/.codex-linux/mcp-helper-reaper/install-session-hook.sh"
+            substituteInPlace "$reaperHookInstaller" \
+              --replace-fail '[ "''${CODEX_MCP_HELPER_REAPER_DISABLE_HOOK:-}" = "1" ] && exit 0' 'exit 0'
+          '';
+        })
     else
       null;
 in
