@@ -24,12 +24,13 @@ glob_scan_max_depth = 4
 ":tmpdir" = "write"
 ":slash_tmp" = "write"
 "~/.gnupg" = "write"
+"~/.codex/memories" = "write"
 
 [permissions.development.filesystem.":workspace_roots"]
 "." = "write"
 ".git" = "write"
-".agents" = "read"
-".codex" = "read"
+".agents" = "write"
+".codex" = "write"
 "**/.env" = "deny"
 "**/.env.*" = "deny"
 "**/*.env" = "deny"
@@ -46,6 +47,7 @@ localhost = "allow"
 
 [permissions.development.network.unix_sockets]
 "/run/user/1000/agent-browser" = "allow"
+"/run/user/1000/systemd/private" = "allow"
 "/home/simon/.gnupg/S.gpg-agent" = "allow"
 
 [tui]
@@ -134,4 +136,6 @@ followUpQueueMode = "steer"
 defaultTerminalLocation = "bottom"
 show-context-window-usage = true
 usePointerCursors = true
-enabled-reasoning-efforts = ["low", "medium", "high", "xhigh"]
+preventSleepWhileRunning = true
+appearanceLightCodeThemeId = "catppuccin"
+appearanceDarkCodeThemeId = "catppuccin"
