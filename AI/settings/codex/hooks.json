@@ -125,6 +125,19 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/run-codex-mcp-helper-reaper.js",
+            "statusMessage": "Pruning stale Codex helper processes",
+            "timeout": 1
+          }
+        ]
+      }
     ]
   }
 }

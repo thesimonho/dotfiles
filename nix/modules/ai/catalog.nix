@@ -73,6 +73,7 @@ in
           "remote-mobile-control"
         ];
       };
+      contributions.sessionVariables.CODEX_MCP_HELPER_REAPER_DISABLE_HOOK = "1";
       bundles = [ "agents" ];
     };
     pi = {
