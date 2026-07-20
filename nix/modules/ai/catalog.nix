@@ -56,7 +56,7 @@ in
         cliPackage = llmAgents.codex;
         computerUseUi.enable = true;
         remoteControl = {
-          enable = true;
+          enable = false; # turning this on breaks QR code pairing for remote control
           package = llmAgents.codex;
         };
         linuxFeatures = [
