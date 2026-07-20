@@ -7,7 +7,6 @@ approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 hide_agent_reasoning = false
 show_raw_agent_reasoning = false
-personality = "pragmatic"
 commit_attribution = ""
 cli_auth_credentials_store = "file"
 project_doc_fallback_filenames = ["CLAUDE.md"]
@@ -17,6 +16,7 @@ sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
 writable_roots = ["/run/user/1000/agent-browser"]
+network_access = true
 
 [tui]
 status_line = [
@@ -41,6 +41,7 @@ terminal_resize_reflow = true
 memories = true
 goals = true
 undo = true
+prevent_idle_sleep = true
 
 [otel]
 environment = "workstation"
@@ -75,6 +76,8 @@ default_tools_approval_mode = "approve"
 startup_timeout_sec = 20
 
 [desktop]
+hotkey-window-projectless-default-enabled = true
+worktree-keep-count = 20
 conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = true
 appshotDestination = "last-chat"
@@ -86,3 +89,5 @@ usePointerCursors = true
 preventSleepWhileRunning = true
 appearanceLightCodeThemeId = "catppuccin"
 appearanceDarkCodeThemeId = "catppuccin"
+open-link-in-target-preference = "external-browser"
+open-local-url-in-target-preference = "external-browser"
