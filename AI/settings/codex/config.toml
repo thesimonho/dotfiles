@@ -1,3 +1,4 @@
+service_tier = "default"
 model = "gpt-5.6-sol"
 model_reasoning_effort = "low"
 model_reasoning_summary = "concise"
@@ -11,7 +12,6 @@ commit_attribution = ""
 cli_auth_credentials_store = "file"
 project_doc_fallback_filenames = ["CLAUDE.md"]
 web_search = "live"
-
 sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]

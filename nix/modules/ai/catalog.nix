@@ -1,5 +1,6 @@
 {
   inputs,
+  pkgs,
   pkgsUnstable,
   system,
 }:
@@ -11,6 +12,47 @@ let
     "aarch64-linux"
     "x86_64-linux"
   ];
+  codexDesktopLinuxFeatures = [
+    "appshots"
+    "codex-wrapper-updater"
+    "directory-only-working-tree-watch"
+    "global-dictation"
+    "mcp-helper-reaper"
+    "node-repl-reaper"
+    "open-target-discovery"
+    "persistent-status-panel"
+    "pet-overlay"
+    "remote-control-ui"
+    "remote-mobile-control"
+  ];
+  codexDesktopPackage =
+    if builtins.elem system linuxSystems then
+      let
+        basePackage = inputs.codex-desktop-linux.packages.${system}.codex-desktop.override {
+          enableComputerUseUi = true;
+          linuxFeatureIds = codexDesktopLinuxFeatures;
+        };
+      in
+      pkgs.symlinkJoin {
+        name = "${basePackage.name}-managed-reaper-hook";
+        paths = [ basePackage ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          launcher="$out/bin/codex-desktop"
+          rm -f "$launcher"
+          makeWrapper "${basePackage}/bin/codex-desktop" "$launcher" \
+            --set-default CODEX_MCP_HELPER_REAPER_DISABLE_HOOK "1"
+
+          desktopFile="$out/share/applications/codex-desktop.desktop"
+          desktopFileTarget="$(readlink -f "$desktopFile")"
+          rm -f "$desktopFile"
+          substitute "$desktopFileTarget" "$desktopFile" \
+            --replace-fail "${basePackage}/bin/codex-desktop" "$launcher"
+        '';
+        meta = basePackage.meta or { };
+      }
+    else
+      null;
 in
 {
   bundleNames = [
@@ -54,26 +96,12 @@ in
       contributions.programs.codexDesktopLinux = {
         enable = true;
         cliPackage = llmAgents.codex;
-        computerUseUi.enable = true;
+        package = codexDesktopPackage;
         remoteControl = {
           enable = false; # turning this on breaks QR code pairing for remote control
           package = llmAgents.codex;
         };
-        linuxFeatures = [
-          "appshots"
-          "codex-wrapper-updater"
-          "directory-only-working-tree-watch"
-          "global-dictation"
-          "mcp-helper-reaper"
-          "node-repl-reaper"
-          "open-target-discovery"
-          "persistent-status-panel"
-          "pet-overlay"
-          "remote-control-ui"
-          "remote-mobile-control"
-        ];
       };
-      contributions.sessionVariables.CODEX_MCP_HELPER_REAPER_DISABLE_HOOK = "1";
       bundles = [ "agents" ];
     };
     pi = {

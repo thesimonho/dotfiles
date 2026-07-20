@@ -14,6 +14,7 @@ let
   catalogData = import ./catalog.nix {
     inherit
       inputs
+      pkgs
       pkgsUnstable
       system
       ;
