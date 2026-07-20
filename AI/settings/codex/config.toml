@@ -13,42 +13,10 @@ cli_auth_credentials_store = "file"
 project_doc_fallback_filenames = ["CLAUDE.md"]
 web_search = "live"
 
-default_permissions = "development"
+sandbox_mode = "workspace-write"
 
-[permissions.development]
-description = "Main development profile"
-
-[permissions.development.filesystem]
-glob_scan_max_depth = 4
-":root" = "read"
-":tmpdir" = "write"
-":slash_tmp" = "write"
-"~/.gnupg" = "write"
-"~/.codex/memories" = "write"
-
-[permissions.development.filesystem.":workspace_roots"]
-"." = "write"
-".git" = "write"
-".agents" = "write"
-".codex" = "write"
-"**/.env" = "deny"
-"**/.env.*" = "deny"
-"**/*.env" = "deny"
-
-[permissions.development.network]
-enabled = true
-
-[permissions.development.network.domains]
-localhost = "allow"
-"127.0.0.1" = "allow"
-"::1" = "allow"
-"**.github.com" = "allow"
-"**.githubusercontent.com" = "allow"
-
-[permissions.development.network.unix_sockets]
-"/run/user/1000/agent-browser" = "allow"
-"/run/user/1000/systemd/private" = "allow"
-"/home/simon/.gnupg/S.gpg-agent" = "allow"
+[sandbox_workspace_write]
+writable_roots = ["/run/user/1000/agent-browser"]
 
 [tui]
 status_line = [
