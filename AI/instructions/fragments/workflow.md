@@ -13,8 +13,8 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 ## When Programming
 
-- Use TDD for big changes. Aim for 80% coverage.
-- Use the TDD skill to help you.
+- Use TDD for big changes (unless repo-specific rules specify otherwise). Aim for 80% coverage.
+  - Use the TDD skill to help you.
 
 ## When Debugging
 
