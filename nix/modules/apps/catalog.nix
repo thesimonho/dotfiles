@@ -220,6 +220,10 @@
       contributions.packages = [ pkgs.nixfmt-rfc-style ];
       bundles = [ "cli" ];
     };
+    nodejs = {
+      contributions.packages = [ pkgs.nodejs_24 ];
+      bundles = [ "cli" ];
+    };
     onlyoffice = {
       flatpak.id = "org.onlyoffice.desktopeditors";
     };

@@ -20,7 +20,6 @@ in
     package = pkgsUnstable.mise;
     globalConfig = {
       tools = {
-        node = "24";
         python = "3.14.4";
         go = "1.25";
         rust = {
