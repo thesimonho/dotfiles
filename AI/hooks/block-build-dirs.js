@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Block writes to build/output directories at the project root.
  *
@@ -8,7 +7,7 @@
  */
 
 const path = require("path");
-const { block } = require("../lib/hooks/hook-response");
+const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const BLOCKED_DIRS = ["dist", "build", ".next", "node_modules", ".git"];
 
@@ -34,10 +33,7 @@ function filePathsFrom(payload) {
   return paths;
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const cwd = payload.cwd ?? process.cwd();
 
   for (const filePath of filePathsFrom(payload)) {
@@ -46,10 +42,14 @@ process.stdin.on("end", () => {
     const topLevelDir = rel.split(path.sep)[0];
 
     if (BLOCKED_DIRS.includes(topLevelDir)) {
-      block(`Write to ${topLevelDir}/ is not allowed`, [
+      return block(`Write to ${topLevelDir}/ is not allowed`, [
         `File: ${filePath}`,
         "Build and dependency directories must not be manually modified",
       ]);
     }
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

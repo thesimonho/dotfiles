@@ -2,17 +2,37 @@
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-doc-files",
+            "statusMessage": "Checking documentation file policy"
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-doc-files.js",
-            "statusMessage": "Checking documentation file policy"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-build-dirs"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-build-dirs.js",
-            "statusMessage": "Checking write target"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-plan-references"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js branch-guard"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-plan-filename"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js memory-redirect"
           }
         ]
       },
@@ -21,17 +41,90 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-force-push.js",
-            "statusMessage": "Checking git push policy"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js",
-            "statusMessage": "Checking commit message"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-conventional-commit"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-gate"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js scan-secrets"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js simplify-nudge"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js rtk-nudge"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js justfile-nudge"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-debug-logging"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js commit-format-nudge"
           }
         ]
       }
     ],
-    "PostToolUse": []
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js surface-file-header"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js coupling-surface"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-track"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js lint-config-files"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-file-size"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js no-hard-linebreaks"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-track"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js delete-branch-nudge"
+          },
+          {
+            "type": "command",
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js compaction-nudge"
+          }
+        ]
+      }
+    ]
   }
 }

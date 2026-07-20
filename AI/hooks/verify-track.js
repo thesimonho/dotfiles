@@ -12,6 +12,7 @@
  */
 
 const path = require("node:path");
+const { doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
 
 const CODE_FILE =
@@ -37,10 +38,7 @@ function editedPath(toolInput) {
   return patched ? patched[1] : "";
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const sessionId = payload.session_id;
   const toolName = payload.tool_name ?? "";
   const toolInput = payload.tool_input ?? {};
@@ -49,18 +47,21 @@ process.stdin.on("end", () => {
     if (VERIFY_COMMAND.test(toolInput.command ?? "")) {
       state.update(sessionId, { dirty: false });
     }
-    return;
+    return doNothing();
   }
 
   // Edit / Write / MultiEdit. Flag the session dirty for the verify gate.
   const edited = editedPath(toolInput);
   if (!edited || !CODE_FILE.test(edited)) {
-    return;
+    return doNothing();
   }
   const cwd = payload.cwd ?? process.cwd();
   const relative = path.relative(cwd, path.resolve(cwd, edited));
   if (relative.startsWith("..")) {
-    return; // outside the project (e.g. a scratchpad helper script) — not project code
+    return doNothing(); // outside the project (e.g. a scratchpad helper script) — not project code
   }
   state.update(sessionId, { dirty: true });
-});
+  return doNothing();
+}
+
+module.exports = { evaluate };

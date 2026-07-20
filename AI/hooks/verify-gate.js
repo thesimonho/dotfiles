@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Verify pre-commit reminder.
  *
@@ -22,7 +21,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
 
 // A project has verification tooling when one of these is present at cwd.
@@ -38,25 +37,25 @@ function hasTooling(cwd) {
   return TOOLING_MARKERS.some((marker) => fs.existsSync(path.join(cwd, marker)));
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
 
   if (!/git\s+commit/.test(command)) {
-    return;
+    return doNothing();
   }
 
   const session = state.read(payload.session_id);
   const cwd = payload.cwd ?? process.cwd();
 
   if (session.dirty && hasTooling(cwd)) {
-    addContext(
-      "PreToolUse",
+    return addContext(
       "Code changed this session and no verify command ran afterward. Run the " +
         "project's verify recipe (e.g. `just verify`, `npm test`) before committing " +
         "— unless the remaining changes don't warrant it or this environment can't run it.",
     );
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

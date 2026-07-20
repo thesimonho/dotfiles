@@ -13,29 +13,27 @@
  * again. Wire under PostToolUse for the TaskCreate tool.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
 
 /** Re-nudge at most once per this window, to survive burst and session reuse. */
 const DEBOUNCE_MS = 15 * 60 * 1000;
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const sessionId = payload.session_id;
 
   const lastNudgedAt = state.read(sessionId).taskDelegationNudgedAt ?? 0;
   if (Date.now() - lastNudgedAt < DEBOUNCE_MS) {
-    return; // still inside the debounce window (same planning burst)
+    return doNothing(); // still inside the debounce window (same planning burst)
   }
   state.update(sessionId, { taskDelegationNudgedAt: Date.now() });
 
-  addContext(
-    "PostToolUse",
+  return addContext(
     "Planning: the model can't change cheaply mid-session, so pick it at spawn time. " +
       "With sonnet as the default, delegate heavy reasoning to an opus subagent (e.g. frank " +
       "for planning). If a task needs a specific agent or tier, note it on the task so it is " +
       "spawned deliberately rather than run inline.",
   );
-});
+}
+
+module.exports = { evaluate };

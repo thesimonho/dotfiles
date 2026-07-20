@@ -11,7 +11,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 // package-manager `run <script>` invocations for the common build/test/lint
 // tasks, plus bare invocations of the underlying tools those scripts wrap.
@@ -35,27 +35,25 @@ function hasJustfileIn(directory) {
   );
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
   const cwd = payload.cwd ?? process.cwd();
 
   if (ALREADY_USES_JUST.test(command)) {
-    return;
+    return doNothing();
   }
 
   if (!BUILD_TEST_LINT_COMMAND.test(command)) {
-    return;
+    return doNothing();
   }
 
   if (!hasJustfileIn(cwd)) {
-    return;
+    return doNothing();
   }
 
-  addContext(
-    "PreToolUse",
+  return addContext(
     "This project has a justfile — check `just --list` for a recipe before running custom commands.",
   );
-});
+}
+
+module.exports = { evaluate };

@@ -9,7 +9,7 @@
  * calls (curl, mkdir, echo, ...) where rtk has nothing to compress.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 // The first-token CLIs rtk knows how to compress, per tools.md.
 const RTK_COMPRESSIBLE_COMMANDS = new Set([
@@ -58,22 +58,22 @@ function alreadyUsesRtk(command) {
   return /(^|[\s;&|])rtk(\s|$)/.test(command);
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+/**
+ * @param {object} payload
+ * @returns {{ effect: string, message?: string }}
+ */
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
   if (!command || alreadyUsesRtk(command)) {
-    return;
+    return doNothing();
   }
 
   const firstToken = firstCommandTokenFrom(command);
   if (!RTK_COMPRESSIBLE_COMMANDS.has(firstToken)) {
-    return;
+    return doNothing();
   }
 
-  addContext(
-    "PreToolUse",
-    `Prefix with \`rtk\` to save tokens, e.g. \`rtk ${firstToken} ...\`.`,
-  );
-});
+  return addContext(`Prefix with \`rtk\` to save tokens, e.g. \`rtk ${firstToken} ...\`.`);
+}
+
+module.exports = { evaluate };

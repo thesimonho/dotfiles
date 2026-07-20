@@ -53,12 +53,8 @@ let
         files = {
           "${client.configDir}/AGENTS.md" = mkSymlink generatedAgentsPath;
           "${client.configDir}/agents" = mkSymlink "${generatedAgentOutputsPath}/codex";
+          "${client.configDir}/hooks.json" = mkSymlink "${dotfiles}/AI/settings/codex/hooks.json";
           "${client.configDir}/rules" = mkSymlink "${dotfiles}/AI/settings/codex/rules";
-          /*
-            Hooks remain opt-in. Their trust decisions can safely stay in the
-            writable local config without entering the tracked baseline.
-          */
-          # "${client.configDir}/hooks.json" = mkSymlink "${dotfiles}/AI/settings/codex/hooks.json";
         };
         skillsDir = null;
         packages = [ configApplyPackage ];

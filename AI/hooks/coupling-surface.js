@@ -32,7 +32,7 @@
  */
 
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
 const { globToRegExp, discoverCouplings, isValidCoupling } = require("../lib/hooks/coupling");
 
@@ -47,19 +47,16 @@ function targetPathFrom(toolInput) {
   return toolInput.file_path ?? toolInput.path ?? "";
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const target = targetPathFrom(payload.tool_input ?? {});
   if (!target) {
-    return;
+    return doNothing();
   }
 
   const cwd = payload.cwd ?? process.cwd();
   const relative = path.relative(cwd, path.resolve(cwd, target));
   if (relative.startsWith("..")) {
-    return; // outside the project
+    return doNothing(); // outside the project
   }
 
   const sessionId = payload.session_id;
@@ -85,7 +82,7 @@ process.stdin.on("end", () => {
   }
 
   if (toSurface.length === 0) {
-    return;
+    return doNothing();
   }
 
   state.update(sessionId, { surfacedCouplings: [...surfaced] });
@@ -95,8 +92,9 @@ process.stdin.on("end", () => {
       ? `${coupling.file}: ${coupling.instruction}`
       : `${coupling.file} tracks this area — read it if relevant.`,
   );
-  addContext(
-    "PostToolUse",
+  return addContext(
     `This file is tracked by a doc's on-change coupling — read it if you haven't:\n- ${lines.join("\n- ")}`,
   );
-});
+}
+
+module.exports = { evaluate };

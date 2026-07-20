@@ -9,24 +9,22 @@
  * shape this fires on.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 // A bare code identifier: letters/digits/underscore, optionally dotted
 // (e.g. `foo.bar`), with no spaces or regex metacharacters.
 const BARE_IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_.]*$/;
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const pattern = payload.tool_input?.pattern ?? "";
 
   if (!BARE_IDENTIFIER.test(pattern)) {
-    return;
+    return doNothing();
   }
 
-  addContext(
-    "PreToolUse",
+  return addContext(
     "Searching for a symbol — prefer LSP (goToDefinition / findReferences / workspaceSymbol) over Grep/Glob for code navigation; use Grep only for text/config.",
   );
-});
+}
+
+module.exports = { evaluate };

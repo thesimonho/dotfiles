@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Nudge toward hooks/rules over memory files for enforceable rules.
  *
@@ -11,7 +10,7 @@
  * audit the neighbouring memories for stale or superseded entries.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 /**
  * Whether the file path is a Markdown file under a `/memory/` directory.
@@ -23,17 +22,15 @@ function isMemoryMarkdownFile(filePath) {
   return filePath.includes("/memory/") && filePath.endsWith(".md");
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
-  const filePath = payload.tool_input?.file_path ?? "";
-  if (!isMemoryMarkdownFile(filePath)) {
-    return;
+function evaluate(payload) {
+  const filePaths = payload.tool_input?.file_paths ?? [payload.tool_input?.file_path].filter(Boolean);
+  if (!filePaths.some(isMemoryMarkdownFile)) {
+    return doNothing();
   }
 
-  addContext(
-    "PreToolUse",
+  return addContext(
     "Writing a memory: (1) if this is an ENFORCEABLE working rule (not just a fact to recall), prefer a deterministic hook/rule under AI/hooks or AI/instructions — hooks don't decay across context. (2) While here, audit the neighbouring memories in this directory and prune any that are now stale, superseded, or wrong.",
   );
-});
+}
+
+module.exports = { evaluate };

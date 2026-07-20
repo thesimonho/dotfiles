@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Block references to plan files from code, rules, and docs.
  *
@@ -15,7 +14,7 @@
  * (apply_patch command body) shapes.
  */
 
-const { block } = require("../lib/hooks/hook-response");
+const { block, doNothing } = require("../lib/hooks/policy-result");
 
 // A plan reference: a plan *file* under the plans directory, or a date-stamped
 // plan filename anywhere. Requiring a filename (not the bare directory) lets prose
@@ -65,10 +64,7 @@ function writtenContentFrom(toolInput) {
   return parts.filter((part) => typeof part === "string").join("\n");
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const toolInput = payload.tool_input ?? {};
 
   const target = targetPathFrom(toolInput);
@@ -77,15 +73,19 @@ process.stdin.on("end", () => {
     ARCHIVE_TARGET.test(target) ||
     DOCS_INDEX_TARGET.test(target)
   ) {
-    return; // a plan, an archived plan, or the docs index may reference plans
+    return doNothing(); // a plan, an archived plan, or the docs index may reference plans
   }
 
   const content = writtenContentFrom(toolInput);
   if (PLAN_REFERENCE.test(content)) {
-    block("Don't reference plan files from code or docs", [
+    return block("Don't reference plan files from code or docs", [
       `Target: ${target || "(unknown)"}`,
       "Plans under docs/plans/ are snapshots and get archived — the reference will rot.",
       "Put the rationale inline, or link a durable ADR under docs/ instead.",
     ]);
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

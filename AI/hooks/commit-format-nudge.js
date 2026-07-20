@@ -14,7 +14,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 // Formatter config markers → the tool to name in the nudge.
 const FORMATTER_CONFIGS = [
@@ -68,13 +68,10 @@ function detectFormatter(cwd) {
   return hasPrettierInPackageJson(cwd) ? "Prettier" : null;
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
   if (!/git\s+commit/.test(command)) {
-    return; // the matcher is broad Bash; only nudge on commits
+    return doNothing(); // the matcher is broad Bash; only nudge on commits
   }
 
   const cwd = payload.cwd ?? process.cwd();
@@ -83,8 +80,9 @@ process.stdin.on("end", () => {
     ? `to match the project's ${formatter} config`
     : "to match the surrounding code's conventions (indentation, quotes, spacing)";
 
-  addContext(
-    "PreToolUse",
+  return addContext(
     `Before committing: make sure changed files are formatted ${how}, so they don't reformat and churn on the next editor save.`,
   );
-});
+}
+
+module.exports = { evaluate };

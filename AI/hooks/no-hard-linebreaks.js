@@ -18,7 +18,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 const MIN_CONSECUTIVE_LINES = 3;
 const MIN_WRAP_WIDTH = 55;
@@ -93,13 +93,10 @@ function hasHardWrappedParagraph(content) {
   return false;
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const target = targetPathFrom(payload.tool_input ?? {});
   if (!/\.md$/.test(target)) {
-    return;
+    return doNothing();
   }
 
   const cwd = payload.cwd ?? process.cwd();
@@ -109,15 +106,16 @@ process.stdin.on("end", () => {
   try {
     content = fs.readFileSync(absolutePath, "utf8");
   } catch {
-    return;
+    return doNothing();
   }
 
   if (!hasHardWrappedParagraph(content)) {
-    return;
+    return doNothing();
   }
 
-  addContext(
-    "PostToolUse",
+  return addContext(
     `${target} looks hard-wrapped; prefer letting prose wrap naturally (no hard line breaks).`,
   );
-});
+}
+
+module.exports = { evaluate };

@@ -8,19 +8,18 @@
  * for) or a completed `gh pr merge`.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 const COMPLETED_MERGE = /git\s+merge\b.*--ff\b|gh\s+pr\s+merge\b/;
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
 
   if (!COMPLETED_MERGE.test(command)) {
-    return;
+    return doNothing();
   }
 
-  addContext("PostToolUse", "Once merged, delete the local branch: git branch -d <name>.");
-});
+  return addContext("Once merged, delete the local branch: git branch -d <name>.");
+}
+
+module.exports = { evaluate };

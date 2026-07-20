@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Block secrets from entering a commit.
  *
@@ -16,7 +15,7 @@
  */
 
 const { execFileSync, spawnSync } = require("node:child_process");
-const { block } = require("../lib/hooks/hook-response");
+const { block, doNothing } = require("../lib/hooks/policy-result");
 
 // Known credential shapes: provider-specific tokens whose format alone is a
 // strong enough signal to block without a nearby variable name.
@@ -137,39 +136,39 @@ function firstRealSecretMatch(content) {
   return null;
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
   if (!/git\s+commit/.test(command)) {
-    return; // the matcher is broad Bash; only act on commits
+    return doNothing(); // the matcher is broad Bash; only act on commits
   }
 
   const cwd = payload.cwd ?? process.cwd();
   const region = scanRegion(cwd);
   if (!region) {
-    return; // nothing staged or changed — let git handle the empty commit
+    return doNothing(); // nothing staged or changed — let git handle the empty commit
   }
 
   const gitleaks = runGitleaks(cwd, region.gitleaksFlag);
   if (gitleaks.status === "clean") {
-    return;
+    return doNothing();
   }
   if (gitleaks.status === "leak") {
-    block("gitleaks detected a secret in this commit", [
+    return block("gitleaks detected a secret in this commit", [
       "Remove it and use an environment variable or secret store instead.",
       `See the file and rule with: gitleaks git ${region.gitleaksFlag} -v`,
     ]);
-    return;
   }
 
   // gitleaks unavailable — fall back to the built-in patterns on the diff.
   const found = firstRealSecretMatch(addedLines(git(cwd, region.diffArgs)));
   if (found) {
-    block("Hardcoded secret detected in commit (gitleaks not on PATH — built-in scan)", [
+    return block("Hardcoded secret detected in commit (gitleaks not on PATH — built-in scan)", [
       `Pattern: ${found.name}`,
       "Remove it and use an environment variable instead.",
     ]);
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

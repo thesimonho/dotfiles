@@ -10,7 +10,7 @@
  * embedded in a Codex apply_patch command body.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 // Ordered path-shape -> linter-nudge rules. Order matters only in that the
 // first match wins; the shapes below don't overlap in practice.
@@ -51,19 +51,18 @@ function targetPathFrom(toolInput) {
   return patched ? patched[1] : "";
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const target = targetPathFrom(payload.tool_input ?? {});
   if (!target) {
-    return;
+    return doNothing();
   }
 
   const rule = LINTER_RULES.find((candidate) => candidate.matches(target));
   if (!rule) {
-    return;
+    return doNothing();
   }
 
-  addContext("PostToolUse", rule.message);
-});
+  return addContext(rule.message);
+}
+
+module.exports = { evaluate };

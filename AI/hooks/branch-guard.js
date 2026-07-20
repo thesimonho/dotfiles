@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Block code edits made directly on the default branch (git.md).
  *
@@ -9,7 +8,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { block } = require("../lib/hooks/hook-response");
+const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const DEFAULT_BRANCH_REFS = ["refs/heads/main", "refs/heads/master"];
 const CODE_EXTENSIONS = new Set([
@@ -47,12 +46,29 @@ const CODE_EXTENSIONS = new Set([
  */
 function currentBranchRef(cwd) {
   try {
-    const head = fs.readFileSync(path.join(cwd, ".git", "HEAD"), "utf8").trim();
+    const head = fs.readFileSync(path.join(gitMetadataPath(cwd), "HEAD"), "utf8").trim();
     const match = head.match(/^ref:\s+(refs\/heads\/.+)$/);
     return match ? match[1] : null;
   } catch {
     return null;
   }
+}
+
+/**
+ * Resolve the Git metadata directory for a checkout or linked worktree.
+ *
+ * @param {string} cwd
+ * @returns {string}
+ */
+function gitMetadataPath(cwd) {
+  const dotGitPath = path.join(cwd, ".git");
+  if (fs.statSync(dotGitPath).isDirectory()) {
+    return dotGitPath;
+  }
+
+  const gitDirectoryFile = fs.readFileSync(dotGitPath, "utf8").trim();
+  const gitDirectory = gitDirectoryFile.match(/^gitdir:\s+(.+)$/)?.[1];
+  return path.resolve(cwd, gitDirectory ?? ".git");
 }
 
 /**
@@ -66,22 +82,25 @@ function isCodeFile(filePath) {
   return CODE_EXTENSIONS.has(extension);
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
-  const filePath = payload.tool_input?.file_path ?? "";
+function evaluate(payload) {
+  const filePaths = payload.tool_input?.file_paths ?? [payload.tool_input?.file_path].filter(Boolean);
+  const codeFilePaths = filePaths.filter(isCodeFile);
 
-  if (!filePath || !isCodeFile(filePath)) {
-    return;
+  if (codeFilePaths.length === 0) {
+    return doNothing();
   }
 
   const branchRef = currentBranchRef(payload.cwd ?? ".");
 
   if (branchRef && DEFAULT_BRANCH_REFS.includes(branchRef)) {
-    block("Start work in a feature branch, not on the default branch", [
+    return block("Start work in a feature branch, not on the default branch", [
       `Currently on: ${branchRef.replace("refs/heads/", "")}`,
+      `Code files: ${codeFilePaths.join(", ")}`,
       "Run: git checkout -b <type>/<short-desc>",
     ]);
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

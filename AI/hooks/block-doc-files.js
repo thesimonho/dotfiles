@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Keep stray documentation files out of the repo.
  *
@@ -14,7 +13,7 @@
  */
 
 const path = require("node:path");
-const { block } = require("../lib/hooks/hook-response");
+const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
 const DOCS_DIR_MD = /^docs\//;
@@ -41,10 +40,7 @@ function filePathsFrom(payload) {
   return paths;
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const cwd = payload.cwd ?? process.cwd();
 
   for (const filePath of filePathsFrom(payload)) {
@@ -60,7 +56,11 @@ process.stdin.on("end", () => {
       isMd && (ALWAYS_ALLOWED_MD.test(relative) || DOCS_DIR_MD.test(relative));
 
     if (isTxt || (isMd && !isAllowed)) {
-      block(filePath, ["Allowed: README.md, CLAUDE.md, AGENTS.md, or docs/*.md"]);
+      return block(filePath, ["Allowed: README.md, CLAUDE.md, AGENTS.md, or docs/*.md"]);
     }
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

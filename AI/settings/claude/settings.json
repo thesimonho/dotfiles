@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-doc-files.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js block-doc-files"
           }
         ]
       },
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-build-dirs.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js block-build-dirs"
           }
         ]
       },
@@ -62,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-plan-references.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js block-plan-references"
           }
         ]
       },
@@ -71,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-force-push.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js block-force-push"
           }
         ]
       },
@@ -80,19 +80,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/check-conventional-commit.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js check-conventional-commit"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/verify-gate.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js verify-gate"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/scan-secrets.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js scan-secrets"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/simplify-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js simplify-nudge"
           }
         ]
       },
@@ -101,11 +101,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/rtk-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js rtk-nudge"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/justfile-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js justfile-nudge"
           }
         ]
       },
@@ -114,7 +114,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/lsp-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js lsp-nudge"
           }
         ]
       },
@@ -123,7 +123,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/branch-guard.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js branch-guard"
           }
         ]
       },
@@ -132,7 +132,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/block-debug-logging.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js block-debug-logging"
           }
         ]
       },
@@ -141,7 +141,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/commit-format-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js commit-format-nudge"
           }
         ]
       },
@@ -150,7 +150,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/check-plan-filename.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js check-plan-filename"
           }
         ]
       },
@@ -159,7 +159,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/memory-redirect.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js memory-redirect"
           }
         ]
       }
@@ -170,7 +170,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/surface-file-header.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js surface-file-header"
           }
         ]
       },
@@ -179,7 +179,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/coupling-surface.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js coupling-surface"
           }
         ]
       },
@@ -188,7 +188,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/verify-track.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js verify-track"
           }
         ]
       },
@@ -197,7 +197,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/lint-config-files.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js lint-config-files"
           }
         ]
       },
@@ -206,7 +206,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/delete-branch-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js delete-branch-nudge"
           }
         ]
       },
@@ -215,11 +215,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/check-file-size.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js check-file-size"
           },
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/no-hard-linebreaks.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js no-hard-linebreaks"
           }
         ]
       },
@@ -228,7 +228,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/compaction-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js compaction-nudge"
           }
         ]
       },
@@ -237,7 +237,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/dotfiles/AI/hooks/task-delegation-nudge.js"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js task-delegation-nudge"
           }
         ]
       }

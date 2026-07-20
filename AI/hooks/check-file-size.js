@@ -13,7 +13,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 const MAX_LINES = 800;
 
@@ -86,24 +86,22 @@ function lineCountOf(absolutePath) {
   }
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const target = targetPathFrom(payload.tool_input ?? {});
   if (!target || !isCodeFile(target)) {
-    return;
+    return doNothing();
   }
 
   const cwd = payload.cwd ?? process.cwd();
   const absolutePath = path.resolve(cwd, target);
   const lineCount = lineCountOf(absolutePath);
   if (lineCount === null || lineCount <= MAX_LINES) {
-    return;
+    return doNothing();
   }
 
-  addContext(
-    "PostToolUse",
+  return addContext(
     `${target} is ${lineCount} lines — over the 800-line cap; consider extracting utilities into smaller files.`,
   );
-});
+}
+
+module.exports = { evaluate };

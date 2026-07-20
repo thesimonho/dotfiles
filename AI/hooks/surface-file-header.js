@@ -19,7 +19,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const { parseAgentFrontmatter } = require("../lib/hooks/frontmatter");
 
 // Files larger than this are skipped unread — instruction frontmatter lives in
@@ -58,25 +58,22 @@ function readSmallFile(absolutePath) {
   }
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const target = targetPathFrom(payload.tool_input ?? {});
   if (!target) {
-    return;
+    return doNothing();
   }
 
   const cwd = payload.cwd ?? process.cwd();
   const absolute = path.resolve(cwd, target);
   const content = readSmallFile(absolute);
   if (content === null) {
-    return;
+    return doNothing();
   }
 
   const { instruction } = parseAgentFrontmatter(content);
   if (!instruction) {
-    return;
+    return doNothing();
   }
 
   const relative = path.relative(cwd, absolute) || target;
@@ -85,8 +82,9 @@ process.stdin.on("end", () => {
       ? `${instruction.slice(0, MAX_SURFACED_CHARS)}…`
       : instruction;
 
-  addContext(
-    "PostToolUse",
+  return addContext(
     `Working-instruction declared in ${relative} — follow it before you finish:\n${surfaced}`,
   );
-});
+}
+
+module.exports = { evaluate };

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * Hook: Block committing leftover debug logging (workflow.md).
  *
@@ -12,7 +11,7 @@
  */
 
 const { execFileSync } = require("node:child_process");
-const { block } = require("../lib/hooks/hook-response");
+const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const DEBUG_PATTERNS = [
   /debugger;/,
@@ -80,19 +79,16 @@ function stagedDiff(cwd) {
   }
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
 
   if (!/git\s+commit/.test(command)) {
-    return;
+    return doNothing();
   }
 
   const diff = stagedDiff(payload.cwd);
   if (!diff) {
-    return;
+    return doNothing();
   }
 
   const offenders = addedLinesFrom(diff)
@@ -100,11 +96,15 @@ process.stdin.on("end", () => {
     .filter((addition) => DEBUG_PATTERNS.some((pattern) => pattern.test(addition.text)));
 
   if (offenders.length > 0) {
-    block(
+    return block(
       "Remove debug logging before committing",
       offenders.map(
         (addition) => `${addition.file}:${addition.lineNumber}: ${addition.text.trim()}`,
       ),
     );
   }
-});
+
+  return doNothing();
+}
+
+module.exports = { evaluate };

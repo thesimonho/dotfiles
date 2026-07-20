@@ -8,7 +8,7 @@
  * that's the cue to suggest /compact or /clear before drift sets in.
  */
 
-const { addContext } = require("../lib/hooks/hook-response");
+const { addContext, doNothing } = require("../lib/hooks/policy-result");
 
 // Command shapes that mark a task boundary worth re-grounding after.
 const TASK_BOUNDARY_PATTERNS = [
@@ -28,17 +28,15 @@ function isTaskBoundaryCommand(command) {
   return TASK_BOUNDARY_PATTERNS.some((pattern) => pattern.test(command));
 }
 
-let input = "";
-process.stdin.on("data", (chunk) => (input += chunk));
-process.stdin.on("end", () => {
-  const payload = JSON.parse(input);
+function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
   if (!command || !isTaskBoundaryCommand(command)) {
-    return;
+    return doNothing();
   }
 
-  addContext(
-    "PostToolUse",
+  return addContext(
     "Task boundary reached (PR/merge/push). Good moment to /compact or /clear to re-ground context before the next task — long context is where standing instructions decay.",
   );
-});
+}
+
+module.exports = { evaluate };
