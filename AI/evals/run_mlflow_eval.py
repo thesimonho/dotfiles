@@ -2,12 +2,17 @@
 
 import argparse
 import sys
+import uuid
+from collections.abc import Callable
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import agent  # noqa: E402
-from agent_execution_context import AgentExecutionContext  # noqa: E402
+from agent_execution_context import (  # noqa: E402
+    AgentExecutionContext,
+    EvaluationRole,
+)
 import configuration_components  # noqa: E402
 import dataset_sync  # noqa: E402
 import mlflow  # noqa: E402
@@ -27,31 +32,42 @@ from mlflow_parameter_names import (  # noqa: E402
     CASE_ID_FIELD,
 )
 
-AGENT_PROFILE = "claude"
 
+def build_predict_fn(
+    profile: str,
+    execution_id: str,
+    manifest_id: str,
+) -> Callable[[str, str, str], str]:
+    """Build a predictor whose external traces share immutable run identity."""
 
-def predict_fn(prompt: str, case_id: str, category: str) -> str:
-    """Run one case while keeping its identity queryable on the trace."""
-    _update_trace_preview(
-        metadata={
-            AGENT_CLI_FIELD: AGENT_PROFILE,
-            CASE_ID_FIELD: case_id,
-            CASE_CATEGORY_FIELD: category,
-        },
-        request_preview=prompt,
-    )
-    response = agent.run_agent(
-        prompt,
-        AgentExecutionContext(
-            agent_cli=AGENT_PROFILE,
-            case_id=case_id,
-            category=category,
-            evaluation_role="agent-under-test",
-        ),
-        profile=AGENT_PROFILE,
-    )
-    _update_trace_preview(response_preview=response)
-    return response
+    def predict_fn(prompt: str, case_id: str, category: str) -> str:
+        """Run one case while keeping its identity queryable on the trace."""
+        _update_trace_preview(
+            metadata={
+                AGENT_CLI_FIELD: profile,
+                CASE_ID_FIELD: case_id,
+                CASE_CATEGORY_FIELD: category,
+                "evaluation.execution_id": execution_id,
+                "config.manifest_id": manifest_id,
+            },
+            request_preview=prompt,
+        )
+        response = agent.run_agent(
+            prompt,
+            _execution_context(
+                profile=profile,
+                case_id=case_id,
+                category=category,
+                role="agent-under-test",
+                execution_id=execution_id,
+                manifest_id=manifest_id,
+            ),
+            profile=profile,
+        )
+        _update_trace_preview(response_preview=response)
+        return response
+
+    return predict_fn
 
 
 def _update_trace_preview(
@@ -72,26 +88,53 @@ def _update_trace_preview(
         mlflow.update_current_trace(response_preview=response_preview)
 
 
-@scorer
-def evaluation_score(inputs: dict, outputs: str, expectations: dict) -> Feedback:
-    """Return the case-selected metric with its scoring rationale."""
-    case = {"tier": expectations["tier"], **expectations}
-    judge_context = AgentExecutionContext(
-        agent_cli=AGENT_PROFILE,
-        case_id=inputs["case_id"],
-        category=inputs["category"],
-        evaluation_role="judge",
-    )
-    passed, reason = scoring.score_case(
-        outputs,
-        case,
-        judge_context,
-        profile=AGENT_PROFILE,
-    )
-    return Feedback(
-        name=expectations["metric_name"],
-        value=passed,
-        rationale=reason,
+def build_evaluation_scorer(profile: str, execution_id: str, manifest_id: str):
+    """Build a scorer whose judge traces share the evaluation execution ID."""
+
+    @scorer
+    def evaluation_score(inputs: dict, outputs: str, expectations: dict) -> Feedback:
+        """Return the case-selected metric with its scoring rationale."""
+        case = {"tier": expectations["tier"], **expectations}
+        judge_context = _execution_context(
+            profile=profile,
+            case_id=inputs["case_id"],
+            category=inputs["category"],
+            role="judge",
+            execution_id=execution_id,
+            manifest_id=manifest_id,
+        )
+        passed, reason = scoring.score_case(
+            outputs,
+            case,
+            judge_context,
+            profile=profile,
+        )
+        return Feedback(
+            name=expectations["metric_name"],
+            value=passed,
+            rationale=reason,
+        )
+
+    return evaluation_score
+
+
+def _execution_context(
+    *,
+    profile: str,
+    case_id: str,
+    category: str,
+    role: EvaluationRole,
+    execution_id: str,
+    manifest_id: str,
+) -> AgentExecutionContext:
+    """Construct the shared immutable identity for an agent CLI process."""
+    return AgentExecutionContext(
+        agent_cli=profile,
+        case_id=case_id,
+        category=category,
+        evaluation_role=role,
+        evaluation_execution_id=execution_id,
+        config_manifest_id=manifest_id,
     )
 
 
@@ -119,20 +162,20 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             "no evaluation cases configured; add real cases to AI/evals/cases.py"
         )
 
-    global AGENT_PROFILE
-    AGENT_PROFILE = agent.resolve_agent_profile(arguments.agent)
+    agent_profile = agent.resolve_agent_profile(arguments.agent)
     mlflow_tracing.init()
     client = MlflowClient()
     registry = MlflowConfigurationRegistry(
         client,
         mlflow.genai,
-        profile=AGENT_PROFILE,
+        profile=agent_profile,
     )
-    components = configuration_components.discover_agent_components(AGENT_PROFILE)
+    components = configuration_components.discover_agent_components(agent_profile)
     publication = registry.prepare(
         components,
         baseline_version=arguments.baseline_manifest_version,
     )
+    execution_id = str(uuid.uuid4())
 
     experiment = mlflow.get_experiment_by_name(mlflow_tracing.EXPERIMENT_NAME)
     if experiment is None:
@@ -149,8 +192,18 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
 
     results = mlflow.genai.evaluate(
         data=dataset,
-        predict_fn=predict_fn,
-        scorers=[evaluation_score],
+        predict_fn=build_predict_fn(
+            agent_profile,
+            execution_id,
+            publication.manifest.manifest_id,
+        ),
+        scorers=[
+            build_evaluation_scorer(
+                agent_profile,
+                execution_id,
+                publication.manifest.manifest_id,
+            )
+        ],
         model_id=agent_version.model_id,
     )
     agent_version_registry.publish_configuration_evidence(
@@ -161,6 +214,8 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         results.run_id,
         publication,
         expected_trace_count=len(CASES),
+        external_trace_execution_id=execution_id,
+        expected_external_invocation_count=_external_invocation_count(),
     )
 
     print(results)
@@ -168,7 +223,14 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         f"configuration manifest: {publication.run_metadata['config_manifest_prompt']}"
     )
     print(f"agent version: {agent_version.model_id}")
+    print(f"evaluation execution: {execution_id}")
     print(publication.changes.summary)
+
+
+def _external_invocation_count() -> int:
+    """Count agent-under-test and LLM-judge CLI processes expected this run."""
+    judge_count = sum(case["tier"] == "output-quality" for case in CASES)
+    return len(CASES) + judge_count
 
 
 if __name__ == "__main__":

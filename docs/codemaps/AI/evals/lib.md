@@ -13,7 +13,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | File | Description |
 | --- | --- |
 | `agent.py` | Resolves Claude/Codex profiles and invokes their CLIs with isolated environments and timeouts |
-| `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process |
+| `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
 | `evaluation_case.py` | Typed case schemas for judge-scored and substring-scored evaluations |
 | `scoring.py` | Builds MLflow scorers and invokes the configured judge agent |
@@ -23,7 +23,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
 | `configuration_manifest.py` | Builds, serializes, compares, and summarizes configuration manifests |
 | `configuration_publication.py` | Describes published configuration evidence and prompt references |
-| `mlflow_config_registry.py` | Registers configuration components and manifests with MLflow |
+| `mlflow_config_registry.py` | Registers configuration components and manifests, links them to evaluation runs and native traces, and discovers external CLI traces by execution ID for prompt linking |
 | `mlflow_agent_versions.py` | Resolves current and prior agent configuration versions |
 | `mlflow_configuration_evidence.py` | Attaches configuration provenance to evaluation runs |
 | `mlflow_parameter_names.py` | Central names for MLflow parameters, tags, and dataset fields |
@@ -35,7 +35,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | Symbol | File | Description |
 | --- | --- | --- |
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI for a case or judge prompt |
-| `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, purpose, and evaluation role as OTEL resource attributes |
+| `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
 | `EvaluationCase` | `evaluation_case.py` | Union describing supported case shapes |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
@@ -46,6 +46,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 - **Used by**: `AI/evals/cases.py` and `AI/evals/run_mlflow_eval.py`.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
+- **Correlates traces by**: one `evaluation.execution_id` shared by agent and judge CLI invocations in a harness run, plus `config.manifest_id` for the exact published configuration. After evaluation, the registry uses the execution ID to find external OTLP traces and link the same prompt versions attached to the MLflow-native traces.
 
 ## Entry point
 

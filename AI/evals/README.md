@@ -46,6 +46,8 @@ normal use -> Codex or Claude -> OTLP :4327 -> Alloy -> drop
 
 The separate port identifies agent traffic at ingress, but it is not the security or routing boundary. The immutable `telemetry.purpose=evaluation` resource attribute is what authorizes a trace for MLflow. Every eval process also receives `agent.cli`, `case_id`, `category`, and `evaluation.role`, allowing agent-under-test and judge traces to be distinguished without putting prompt or response text in resource attributes.
 
+Each harness invocation generates one UUID as `evaluation.execution_id` and assigns it to every agent-under-test and judge CLI process in that invocation. This distinguishes repeated evaluations of the same case: `evaluation.execution_id` selects the run, `case_id` selects the case, and `evaluation.role` distinguishes the agent response from its judge. Every process also receives `config.manifest_id`, which identifies the exact profile-specific configuration manifest evaluated by that invocation.
+
 MLflow trace storage should be treated as sensitive. Redaction is defense in depth for known identity fields, not a guarantee that span attributes or events contain no private content. Alloy's verbose debug exporter is intentionally absent because it would duplicate telemetry into container logs.
 
 ## Running the harness
@@ -110,7 +112,9 @@ Open the underlying run for complete provenance:
 - **Overview → About this run** shows linked manifest and component prompts.
 - **Artifacts → configuration** contains `manifest.json` and `changes.txt`.
 
-The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and request trace links the manifest and all active component prompt versions. Trace request and response previews contain plain text instead of serialized JSON wrappers.
+The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and MLflow-native request trace links the manifest and all active component prompt versions. After evaluation finishes, the harness searches the shared experiment for external CLI traces with the invocation's `evaluation.execution_id`, waits for the expected agent and judge traces to become stable, and links the same prompt versions to those traces. The execution ID avoids accidentally linking traces from an earlier run of the same case, while `config.manifest_id` remains an independently queryable configuration identity on each external trace. Trace request and response previews contain plain text instead of serialized JSON wrappers.
+
+This external-trace correlation and prompt-linking path is installed preemptively. There are no real evaluation cases yet, so its full case-to-agent-to-judge end-to-end behavior cannot be verified until the first cases are added.
 
 Open **Agent versions** to inspect a complete manifest-backed configuration identity. Its Overview description lists the manifest and active component versions, and its `configuration/manifest.json` artifact preserves the complete immutable manifest. Baseline-relative changes belong to evaluation runs, so reusing an Agent Version never overwrites its evidence with a different run's comparison context.
 
@@ -120,8 +124,10 @@ Use these filters:
 - Trace UI: **Filters → Field → `agent.cli`**
 - Trace API: ``metadata.`agent.cli` = 'codex'``
 - Case trace: **Filters → Field → `case_id`** or **Field → `category`**
+- Evaluation invocation: **Filters → Field → `evaluation.execution_id`**
+- Configuration identity: **Filters → Field → `config.manifest_id`**
 
-`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id` and `category` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.
+`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id`, `category`, `evaluation.role`, `evaluation.execution_id`, and `config.manifest_id` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.
 
 Independent single-turn cases do not belong under **Sessions**. If conversational cases are added later, assign one session ID per simulated conversation rather than one for the complete evaluation run.
 

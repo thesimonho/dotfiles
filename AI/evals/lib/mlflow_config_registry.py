@@ -28,6 +28,8 @@ CONTENT_HASH_TAG = "eval.content_hash"
 LAST_EVALUATED_ALIAS = "last-evaluated"
 TRACE_LINK_ATTEMPTS = 5
 TRACE_LINK_RETRY_SECONDS = 0.2
+EXTERNAL_TRACE_LINK_ATTEMPTS = 30
+EXTERNAL_TRACE_LINK_RETRY_SECONDS = 1.0
 
 
 class MlflowConfigurationRegistry:
@@ -92,6 +94,8 @@ class MlflowConfigurationRegistry:
         run_id: str,
         publication: ConfigurationPublication,
         expected_trace_count: int | None = None,
+        external_trace_execution_id: str | None = None,
+        expected_external_invocation_count: int | None = None,
     ) -> None:
         """Make configuration provenance visible from the completed evaluation run."""
         self._client.log_param(
@@ -138,6 +142,13 @@ class MlflowConfigurationRegistry:
             prompt_versions,
             expected_trace_count,
         )
+        if external_trace_execution_id is not None:
+            self._link_prompts_to_external_traces(
+                experiment_id=self._client.get_run(run_id).info.experiment_id,
+                execution_id=external_trace_execution_id,
+                prompt_versions=prompt_versions,
+                expected_invocation_count=expected_external_invocation_count,
+            )
         self._client.set_prompt_alias(
             publication.manifest_prompt.name,
             LAST_EVALUATED_ALIAS,
@@ -166,6 +177,37 @@ class MlflowConfigurationRegistry:
         raise RuntimeError(
             "MLflow trace indexing did not expose the expected evaluation traces: "
             f"expected {expected_trace_count}, found {len(traces)}"
+        )
+
+    def _link_prompts_to_external_traces(
+        self,
+        *,
+        experiment_id: str,
+        execution_id: str,
+        prompt_versions: list[Any],
+        expected_invocation_count: int | None,
+    ) -> None:
+        """Link configuration prompts to CLI traces selected by execution ID."""
+        previous_trace_ids: set[str] = set()
+        for attempt in range(EXTERNAL_TRACE_LINK_ATTEMPTS):
+            traces = self._external_traces(experiment_id, execution_id)
+            trace_ids = {trace.info.trace_id for trace in traces}
+            has_expected_minimum = expected_invocation_count is None or (
+                len(trace_ids) >= expected_invocation_count
+            )
+            if has_expected_minimum and trace_ids == previous_trace_ids:
+                for trace_id in trace_ids:
+                    self._client.link_prompt_versions_to_trace(
+                        prompt_versions,
+                        trace_id,
+                    )
+                return
+            previous_trace_ids = trace_ids
+            if attempt < EXTERNAL_TRACE_LINK_ATTEMPTS - 1:
+                self._sleep(EXTERNAL_TRACE_LINK_RETRY_SECONDS)
+        raise RuntimeError(
+            "MLflow did not expose stable external CLI traces for evaluation "
+            f"execution {execution_id}: found {len(previous_trace_ids)}"
         )
 
     def _prompt_versions_for_publication(
@@ -200,6 +242,21 @@ class MlflowConfigurationRegistry:
             if not page_token:
                 return traces
             is_first_page = False
+
+    def _external_traces(self, experiment_id: str, execution_id: str) -> list[Any]:
+        """Return all external CLI traces tagged with one harness execution ID."""
+        return list(
+            self._client.search_traces(
+                locations=[experiment_id],
+                filter_string=(
+                    f"tags.`evaluation.execution_id` = '{execution_id}' AND "
+                    "tags.`telemetry.purpose` = 'evaluation'"
+                ),
+                max_results=1000,
+                include_spans=False,
+                flush=True,
+            )
+        )
 
     def _register_component(self, component: ConfigComponent):
         return self._register_or_reuse_prompt(

@@ -15,6 +15,8 @@ class AgentExecutionContext:
     case_id: str
     category: str
     evaluation_role: EvaluationRole
+    evaluation_execution_id: str
+    config_manifest_id: str
 
     def otel_resource_attributes(self) -> str:
         """Serialize safe resource attributes for the OTEL SDK environment."""
@@ -24,6 +26,8 @@ class AgentExecutionContext:
             "case_id": self.case_id,
             "category": self.category,
             "evaluation.role": self.evaluation_role,
+            "evaluation.execution_id": self.evaluation_execution_id,
+            "config.manifest_id": self.config_manifest_id,
         }
         return ",".join(
             f"{name}={quote(value, safe='-._~')}" for name, value in attributes.items()
