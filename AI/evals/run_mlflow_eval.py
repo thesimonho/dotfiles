@@ -37,10 +37,10 @@ def build_predict_fn(
     profile: str,
     execution_id: str,
     manifest_id: str,
-) -> Callable[[str, str, str], str]:
+) -> Callable[[str, str, str], dict[str, object]]:
     """Build a predictor whose external traces share immutable run identity."""
 
-    def predict_fn(prompt: str, case_id: str, category: str) -> str:
+    def predict_fn(prompt: str, case_id: str, category: str) -> dict[str, object]:
         """Run one case while keeping its identity queryable on the trace."""
         _update_trace_preview(
             metadata={
@@ -52,7 +52,7 @@ def build_predict_fn(
             },
             request_preview=prompt,
         )
-        response = agent.run_agent(
+        result = agent.run_agent(
             prompt,
             _execution_context(
                 profile=profile,
@@ -64,8 +64,13 @@ def build_predict_fn(
             ),
             profile=profile,
         )
-        _update_trace_preview(response_preview=response)
-        return response
+        _update_trace_preview(response_preview=result.response)
+        return {
+            "response": result.response,
+            "execution_evidence": {
+                "shell_commands": result.shell_commands,
+            },
+        }
 
     return predict_fn
 
@@ -92,9 +97,12 @@ def build_evaluation_scorer(profile: str, execution_id: str, manifest_id: str):
     """Build a scorer whose judge traces share the evaluation execution ID."""
 
     @scorer
-    def evaluation_score(inputs: dict, outputs: str, expectations: dict) -> Feedback:
-        """Return the case-selected metric with its scoring rationale."""
-        case = {"tier": expectations["tier"], **expectations}
+    def evaluation_score(
+        inputs: dict,
+        outputs: dict,
+        expectations: dict,
+    ) -> list[Feedback]:
+        """Return every response-derived metric applicable to this case."""
         judge_context = _execution_context(
             profile=profile,
             case_id=inputs["case_id"],
@@ -103,17 +111,27 @@ def build_evaluation_scorer(profile: str, execution_id: str, manifest_id: str):
             execution_id=execution_id,
             manifest_id=manifest_id,
         )
-        passed, reason = scoring.score_case(
-            outputs,
-            case,
+        metrics = tuple(
+            scoring.metric_from_mapping(metric) for metric in expectations["metrics"]
+        )
+        response_results = scoring.score_response_metrics(
+            outputs["response"],
+            metrics,
             judge_context,
             profile=profile,
         )
-        return Feedback(
-            name=expectations["metric_name"],
-            value=passed,
-            rationale=reason,
+        execution_results = scoring.score_execution_metrics(
+            tuple(outputs["execution_evidence"]["shell_commands"]),
+            metrics,
         )
+        return [
+            Feedback(
+                name=result.name,
+                value=result.value,
+                rationale=result.rationale,
+            )
+            for result in (*response_results, *execution_results)
+        ]
 
     return evaluation_score
 
@@ -229,7 +247,10 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
 
 def _external_invocation_count() -> int:
     """Count agent-under-test and LLM-judge CLI processes expected this run."""
-    judge_count = sum(case["tier"] == "output-quality" for case in CASES)
+    judge_count = sum(
+        any(metric["evaluator"] == "output-quality" for metric in case["metrics"])
+        for case in CASES
+    )
     return len(CASES) + judge_count
 
 

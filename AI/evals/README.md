@@ -26,14 +26,18 @@ MLflow creates or reuses one Agent Version for each `(agent CLI, manifest hash)`
 
 ## Evaluation cases
 
-[`cases.py`](cases.py) is the git-tracked source of truth for real evaluation cases. No cases are configured yet. Until real cases are added, the runner exits with `no evaluation cases configured` before initializing MLflow or publishing any resource.
+[`cases.py`](cases.py) is the git-tracked source of truth for real evaluation cases. Each case declares every applicable metric independently. Metric names are stable semantic dimensions shared across cases, while case-specific expected values stay in the metric declaration. Omitting a metric means it is not applicable; it is never interpreted as a failure.
 
-Every case has a stable `case_id`, a filterable `category`, a `metric_name`, and the prompt sent to the agent. Tier-specific expectations are:
+The first case asks the agent to query a noisy deployment inventory. It exercises reusable response and execution metrics without requiring a test repository:
 
-- `output-quality` supplies a natural-language `rubric` to the selected CLI judge.
-- `output-contains` supplies an `expected_mention` for a deterministic final-response check.
+- `answer_correct` requires all case-specific answer values.
+- `used_structured_parser` checks whether the normalized command stream invoked `jq`.
+- `all_shell_commands_prefixed` checks whether every agent-authored shell command starts with `rtk`.
+- `shell_command_count` reports an unthresholded diagnostic count.
 
-`output-contains` deliberately describes only response text. Tool calls, hooks, and intermediate steps are exported separately by the agent CLIs as OpenTelemetry traces.
+Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
+
+The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex command-execution items and Claude Bash tool-use blocks are normalized into agent-authored shell commands. The predictor returns final response and normalized execution evidence together, making both inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source; it proves execution and exposes runtime behavior but does not reliably include tool arguments.
 
 ## Agent telemetry flow
 
@@ -81,6 +85,7 @@ just eval-logs
 just eval-down
 
 # Run project checks.
+just eval-test
 just eval-verify
 ```
 
@@ -112,9 +117,9 @@ Open the underlying run for complete provenance:
 - **Overview → About this run** shows linked manifest and component prompts.
 - **Artifacts → configuration** contains `manifest.json` and `changes.txt`.
 
-The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and MLflow-native request trace links the manifest and all active component prompt versions. After evaluation finishes, the harness searches the shared experiment for external CLI traces with the invocation's `evaluation.execution_id`, waits for the expected agent and judge traces to become stable, and links the same prompt versions to those traces. The execution ID avoids accidentally linking traces from an earlier run of the same case, while `config.manifest_id` remains an independently queryable configuration identity on each external trace. Trace request and response previews contain plain text instead of serialized JSON wrappers.
+The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and MLflow-native request trace links the manifest and all active component prompt versions. After evaluation finishes, the harness searches the shared experiment for external CLI traces with the invocation's `evaluation.execution_id`, waits for the expected agent and judge traces to become stable, and links the same prompt versions to those traces. Search is paginated because a CLI invocation can emit many independent low-level OTEL traces. The execution ID avoids accidentally linking traces from an earlier run of the same case, while `config.manifest_id` remains an independently queryable configuration identity on each external trace. Trace request and response previews contain plain text instead of serialized JSON wrappers.
 
-This external-trace correlation and prompt-linking path is installed preemptively. There are no real evaluation cases yet, so its full case-to-agent-to-judge end-to-end behavior cannot be verified until the first cases are added.
+The MLflow-native case trace contains the final response plus normalized behavioral evidence used by scorers. The separately correlated CLI traces retain raw runtime telemetry. Keeping these sources distinct prevents transport-level OTEL details from being mistaken for complete instruction-adherence evidence.
 
 Open **Agent versions** to inspect a complete manifest-backed configuration identity. Its Overview description lists the manifest and active component versions, and its `configuration/manifest.json` artifact preserves the complete immutable manifest. Baseline-relative changes belong to evaluation runs, so reusing an Agent Version never overwrites its evidence with a different run's comparison context.
 
@@ -139,7 +144,9 @@ The change note classifies added, removed, and modified components and includes 
 
 ## Layout
 
-- `cases.py` defines real evaluation inputs and expectations.
+- `cases.py` defines real evaluation inputs and reusable metric declarations.
+- `fixtures/` contains small case inputs that do not require a disposable repository.
+- `tests/` covers case translation, metric scoring, CLI evidence normalization, and MLflow compatibility boundaries.
 - `lib/evaluation_case.py` defines the typed case contract.
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
 - `lib/agent.py` invokes the authenticated Codex or Claude CLI from the repository root.

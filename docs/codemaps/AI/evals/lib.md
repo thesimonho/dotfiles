@@ -12,11 +12,11 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 | File | Description |
 | --- | --- |
-| `agent.py` | Resolves Claude/Codex profiles and invokes their CLIs with isolated environments and timeouts |
+| `agent.py` | Invokes Claude/Codex with isolated environments and normalizes final responses plus shell-command evidence from their machine-readable streams |
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
-| `evaluation_case.py` | Typed case schemas for judge-scored and substring-scored evaluations |
-| `scoring.py` | Builds MLflow scorers and invokes the configured judge agent |
+| `evaluation_case.py` | Typed case and reusable response/execution metric declarations |
+| `scoring.py` | Evaluates independently named response and normalized execution-evidence metrics |
 | `dataset_sync.py` | Converts cases to MLflow records and replaces dataset contents |
 | `harness_environment.py` | Repository paths and supported agent profile constants |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
@@ -37,7 +37,8 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI for a case or judge prompt |
 | `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
-| `EvaluationCase` | `evaluation_case.py` | Union describing supported case shapes |
+| `EvaluationCase` / `EvaluationMetric` | `evaluation_case.py` | Describe a prompt and every independently applicable reusable metric |
+| `AgentResult` | `agent.py` | Pairs the final response with normalized behavioral evidence |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
 | `discover_agent_components()` | `configuration_components.py` | Enumerates provenance-bearing client configuration inputs |
 | `sync_mlflow_dataset()` | `dataset_sync.py` | Makes the remote dataset match local cases |

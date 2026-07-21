@@ -6,14 +6,24 @@ works with whichever monthly subscription is currently active.
 
 import json
 import os
+import shlex
 import shutil
 import subprocess
+from dataclasses import dataclass
 
 from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
 
 CLI_TIMEOUT_SECONDS = 1800
+
+
+@dataclass(frozen=True)
+class AgentResult:
+    """Final response paired with normalized behavioral evidence."""
+
+    response: str
+    shell_commands: tuple[str, ...]
 
 
 def resolve_agent_profile(requested_profile: str) -> str:
@@ -39,8 +49,15 @@ def _call_claude(
     context: AgentExecutionContext,
     *,
     has_tools: bool,
-) -> str:
-    command = ["claude", "-p", prompt, "--output-format", "json"]
+) -> AgentResult:
+    command = [
+        "claude",
+        "-p",
+        prompt,
+        "--output-format",
+        "stream-json",
+        "--verbose",
+    ]
     if not has_tools:
         command.extend(["--tools", "", "--disable-slash-commands"])
     completed_process = _run_cli_command(
@@ -48,20 +65,35 @@ def _call_claude(
         "Claude",
         context,
     )
-    try:
-        response = json.loads(completed_process.stdout)
-    except json.JSONDecodeError as error:
-        message = completed_process.stderr.strip() or "Claude returned invalid JSON"
-        raise RuntimeError(message) from error
-    response_text = response.get("result")
-    if completed_process.returncode != 0 or response.get("is_error"):
+    if completed_process.returncode != 0:
+        message = completed_process.stderr.strip() or "Claude CLI request failed"
+        raise RuntimeError(message)
+    return claude_result_from_output(completed_process.stdout)
+
+
+def claude_result_from_output(output: str) -> AgentResult:
+    """Normalize Claude stream JSON into response and Bash command evidence."""
+    events = _json_lines(output)
+    result_events = [event for event in events if event.get("type") == "result"]
+    if not result_events:
+        raise RuntimeError("Claude stream did not contain a result event")
+    result_event = result_events[-1]
+    response_text = result_event.get("result")
+    if result_event.get("is_error") or not isinstance(response_text, str):
         raise RuntimeError(response_text or "Claude CLI request failed")
-    if not isinstance(response_text, str):
-        raise RuntimeError("Claude JSON response did not contain result text")
-    return response_text
+    shell_commands = tuple(
+        content["input"]["command"]
+        for event in events
+        if event.get("type") == "assistant"
+        for content in event.get("message", {}).get("content", [])
+        if content.get("type") == "tool_use"
+        and content.get("name") == "Bash"
+        and isinstance(content.get("input", {}).get("command"), str)
+    )
+    return AgentResult(response=response_text, shell_commands=shell_commands)
 
 
-def _call_codex(prompt: str, context: AgentExecutionContext) -> str:
+def _call_codex(prompt: str, context: AgentExecutionContext) -> AgentResult:
     command = [
         "codex",
         "exec",
@@ -79,15 +111,40 @@ def _call_codex(prompt: str, context: AgentExecutionContext) -> str:
     if completed_process.returncode != 0:
         message = completed_process.stderr.strip() or "Codex CLI request failed"
         raise RuntimeError(message)
+    return codex_result_from_output(completed_process.stdout)
+
+
+def codex_result_from_output(output: str) -> AgentResult:
+    """Normalize Codex JSONL into response text and shell command evidence."""
+    events = _json_lines(output)
     messages = [
         event["item"]["text"]
-        for event in _json_lines(completed_process.stdout)
+        for event in events
         if event.get("type") == "item.completed"
         and event.get("item", {}).get("type") == "agent_message"
     ]
     if not messages:
         raise RuntimeError("Codex JSONL response did not contain an agent message")
-    return messages[-1]
+    shell_commands = tuple(
+        normalize_shell_command(event["item"]["command"])
+        for event in events
+        if event.get("type") == "item.completed"
+        and event.get("item", {}).get("type") == "command_execution"
+        and isinstance(event["item"].get("command"), str)
+    )
+    return AgentResult(response=messages[-1], shell_commands=shell_commands)
+
+
+def normalize_shell_command(command: str) -> str:
+    """Remove the CLI's shell launcher while preserving agent-authored syntax."""
+    try:
+        tokens = shlex.split(command)
+    except ValueError:
+        return command
+    if len(tokens) >= 3 and os.path.basename(tokens[0]) in {"bash", "sh", "zsh"}:
+        if tokens[1] in {"-c", "-lc"}:
+            return tokens[2]
+    return command
 
 
 def _json_lines(output: str) -> tuple[dict, ...]:
@@ -123,7 +180,7 @@ def run_agent(
     prompt: str,
     context: AgentExecutionContext,
     profile: str = "claude",
-) -> str:
+) -> AgentResult:
     """Run one task through the selected authenticated agent CLI."""
     if profile == "codex":
         return _call_codex(prompt, context)
@@ -139,7 +196,7 @@ def run_judge(
 ) -> str:
     """Judge one response through the selected authenticated agent CLI."""
     if profile == "codex":
-        return _call_codex(prompt, context)
+        return _call_codex(prompt, context).response
     if profile == "claude":
-        return _call_claude(prompt, context, has_tools=False)
+        return _call_claude(prompt, context, has_tools=False).response
     raise ValueError(f"unsupported agent profile: {profile}")

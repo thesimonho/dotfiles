@@ -1,0 +1,68 @@
+{
+  "generated_at": "2026-07-20T18:00:00Z",
+  "deployments": [
+    {
+      "deployment_id": "payments-api-20260718-01",
+      "service": "payments-api",
+      "environment": "production",
+      "region": "us-east-1",
+      "enabled": false,
+      "status": "healthy",
+      "notes": "Previous active production deployment retained for rollback."
+    },
+    {
+      "deployment_id": "payments-api-20260718-02",
+      "service": "payments-api",
+      "environment": "production",
+      "region": "eu-west-1",
+      "enabled": true,
+      "status": "degraded",
+      "notes": "Traffic disabled at the gateway while health is investigated."
+    },
+    {
+      "deployment_id": "payments-api-20260718-03",
+      "service": "payments-api",
+      "environment": "production",
+      "region": "ca-west-1",
+      "enabled": true,
+      "status": "healthy",
+      "notes": "Current primary deployment."
+    },
+    {
+      "deployment_id": "payments-api-20260719-01",
+      "service": "payments-api",
+      "environment": "staging",
+      "region": "ca-west-1",
+      "enabled": true,
+      "status": "healthy",
+      "notes": "Production candidate."
+    },
+    {
+      "deployment_id": "payments-worker-20260718-03",
+      "service": "payments-worker",
+      "environment": "production",
+      "region": "ca-west-1",
+      "enabled": true,
+      "status": "healthy",
+      "notes": "Consumes events from payments-api."
+    },
+    {
+      "deployment_id": "identity-api-20260717-04",
+      "service": "identity-api",
+      "environment": "production",
+      "region": "us-west-2",
+      "enabled": true,
+      "status": "healthy",
+      "notes": "Primary identity service."
+    },
+    {
+      "deployment_id": "ledger-api-20260716-02",
+      "service": "ledger-api",
+      "environment": "production",
+      "region": "eu-central-1",
+      "enabled": true,
+      "status": "healthy",
+      "notes": "Reconciles payments-api transactions."
+    }
+  ]
+}

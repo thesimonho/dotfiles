@@ -37,14 +37,20 @@ def sync_mlflow_dataset(cases: tuple[EvaluationCase, ...], experiment_id: str):
     )
     if len(existing) > 1:
         raise RuntimeError(f"multiple MLflow datasets named {DATASET_NAME}")
-    dataset = (
-        existing[0]
-        if existing
-        else create_dataset(
+    if existing:
+        dataset = existing[0]
+    else:
+        create_dataset(
             name=DATASET_NAME,
             experiment_id=[experiment_id],
         )
-    )
+        created = search_datasets(
+            experiment_ids=[experiment_id],
+            filter_string=f"name = '{DATASET_NAME}'",
+        )
+        if len(created) != 1:
+            raise RuntimeError(f"could not reload dataset named {DATASET_NAME}")
+        dataset = created[0]
     replace_dataset_records(dataset, cases)
     return dataset
 
@@ -59,4 +65,14 @@ def replace_dataset_records(dataset: Any, cases: tuple[EvaluationCase, ...]) -> 
     )
     if existing_record_ids:
         dataset.delete_records(existing_record_ids)
+    _prepare_empty_dataset(dataset)
     dataset.merge_records(mlflow_records(cases))
+
+
+def _prepare_empty_dataset(dataset: Any) -> None:
+    """Work around MLflow 3.14 treating a loaded empty cache as one record."""
+    mlflow_dataset = getattr(dataset, "_mlflow_dataset", None)
+    if mlflow_dataset is None:
+        return
+    if mlflow_dataset.records == []:
+        mlflow_dataset._records = None

@@ -245,18 +245,26 @@ class MlflowConfigurationRegistry:
 
     def _external_traces(self, experiment_id: str, execution_id: str) -> list[Any]:
         """Return all external CLI traces tagged with one harness execution ID."""
-        return list(
-            self._client.search_traces(
+        traces = []
+        page_token = None
+        is_first_page = True
+        while True:
+            page = self._client.search_traces(
                 locations=[experiment_id],
                 filter_string=(
                     f"tags.`evaluation.execution_id` = '{execution_id}' AND "
                     "tags.`telemetry.purpose` = 'evaluation'"
                 ),
-                max_results=1000,
+                max_results=100,
+                page_token=page_token,
                 include_spans=False,
-                flush=True,
+                flush=is_first_page,
             )
-        )
+            traces.extend(page)
+            page_token = getattr(page, "token", None)
+            if not page_token:
+                return traces
+            is_first_page = False
 
     def _register_component(self, component: ConfigComponent):
         return self._register_or_reuse_prompt(
@@ -305,7 +313,13 @@ class MlflowConfigurationRegistry:
                 LAST_EVALUATED_ALIAS,
             )
         except Exception as error:
-            if getattr(error, "error_code", None) == "RESOURCE_DOES_NOT_EXIST":
+            error_code = getattr(error, "error_code", None)
+            is_missing_resource = error_code == "RESOURCE_DOES_NOT_EXIST"
+            is_missing_alias = (
+                error_code == "INVALID_PARAMETER_VALUE"
+                and f"alias {LAST_EVALUATED_ALIAS} not found" in str(error)
+            )
+            if is_missing_resource or is_missing_alias:
                 return None
             raise
 

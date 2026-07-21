@@ -78,8 +78,13 @@ eval-logs:
 eval-down:
     docker compose -f {{ mlflow_compose }} down
 
+# Run behavior tests for the harness contracts.
+eval-test:
+    {{ eval_python }} -m unittest discover -s AI/evals/tests -v
+
 # Run local harness and Compose validation.
 eval-verify:
+    {{ eval_python }} -m unittest discover -s AI/evals/tests -v
     {{ eval_python }} -m compileall -q AI/evals
     docker compose -f {{ mlflow_compose }} config --quiet
     docker run --rm -e MLFLOW_EXPERIMENT_ID=1 -v "$PWD/infra/compose/alloy.config:/etc/alloy/config.alloy:ro" grafana/alloy:v1.18.0 validate /etc/alloy/config.alloy
