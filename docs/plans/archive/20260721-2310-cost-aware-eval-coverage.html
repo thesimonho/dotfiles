@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cost-aware eval coverage milestone</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.5; }
+    body { max-width: 72rem; margin: 0 auto; padding: 2rem; }
+    header, section { margin-bottom: 2.5rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #8886; padding: .65rem; text-align: left; vertical-align: top; }
+    code { background: #8882; padding: .1rem .3rem; }
+    .callout { border-left: .3rem solid #d68b00; padding: .75rem 1rem; background: #d68b0014; }
+    .chip { border: 1px solid currentColor; border-radius: 999px; padding: .1rem .5rem; font-size: .8rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>TL;DR — cost-aware eval coverage</h1>
+    <p>Add one reusable workflow scenario, a machine-readable fragment coverage catalog, and a no-execution campaign preview. Reuse the existing workload regression as the other workflow case. Run at most one treatment/control pair per workflow case initially, and repeat only if the paired evidence is ambiguous.</p>
+  </header>
+
+  <section>
+    <h2>01 — Success criteria</h2>
+    <table>
+      <thead><tr><th>Requirement</th><th>Observable result</th></tr></thead>
+      <tbody>
+        <tr><td>Bound suite growth</td><td>The active suite grows from four unique cases to five.</td></tr>
+        <tr><td>Reuse cases</td><td>The catalog maps fragments to applicable cases without duplicating case definitions.</td></tr>
+        <tr><td>Preview spend</td><td>A command reports selected cases, paired runs, and agent invocations without starting an agent.</td></tr>
+        <tr><td>Exercise workflow</td><td>Two realistic cases pressure narrow changes and preservation of unrelated state.</td></tr>
+        <tr><td>Preserve causal evidence</td><td>Each live comparison removes only <code>instruction/workflow</code> and verifies an identical workspace snapshot.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>02 — Public interfaces</h2>
+    <table>
+      <thead><tr><th>Interface</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>coverage_catalog.py</code></td><td>Declares fragment hypotheses, maturity, and applicable case IDs.</td></tr>
+        <tr><td><code>eval-plan &lt;agent&gt; &lt;component&gt; [repetitions]</code></td><td>Prints a zero-agent-call campaign preview and its projected usage.</td></tr>
+        <tr><td><code>eval-compare</code></td><td>Remains the explicit execution boundary for one treatment/control pair.</td></tr>
+      </tbody>
+    </table>
+    <aside class="callout"><strong>Budget boundary:</strong> planning a component never invokes an agent. Initial live validation is capped at two pairs, four agent-under-test invocations, unless a run fails for infrastructure reasons.</aside>
+  </section>
+
+  <section>
+    <h2>03 — Vertical implementation slices</h2>
+    <ol>
+      <li><span class="chip">RED → GREEN</span> Catalog validation rejects unknown and duplicate case references.</li>
+      <li><span class="chip">RED → GREEN</span> Campaign preview calculates unique cases, pairs, and agent invocations.</li>
+      <li><span class="chip">RED → GREEN</span> The overreach scenario rewards the narrow repair and penalizes tempting unrelated edits.</li>
+      <li><span class="chip">REFACTOR</span> Keep case lookup and metric declarations reusable without changing current run behavior.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>04 — Verification and live evidence</h2>
+    <table>
+      <thead><tr><th>Stage</th><th>Gate</th></tr></thead>
+      <tbody>
+        <tr><td>Static</td><td>Ruff, formatting, Pyright, diff check.</td></tr>
+        <tr><td>Automated</td><td>Harness tests, HomeOps fixture test, build, Compose and Alloy validation.</td></tr>
+        <tr><td>Budget</td><td>Preview reports two workflow cases, two pairs, and four agent invocations at one repetition.</td></tr>
+        <tr><td>Live</td><td>Run one pair per case; repeat only if the result cannot support a directional conclusion.</td></tr>
+        <tr><td>Operations</td><td>Inspect paired MLflow runs and traces, then stop MLflow and Alloy while retaining data.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>05 — Completed outcome</h2>
+    <details>
+      <summary><span class="chip">Completed</span> Four-call calibration result</summary>
+      <table>
+        <thead><tr><th>Observation</th><th>Decision</th></tr></thead>
+        <tbody>
+          <tr><td>The planner projected two pairs and four agent calls; execution used exactly that budget with no judges or repetitions.</td><td>Keep one repetition as the development default and require an explicit higher value.</td></tr>
+          <tr><td>Treatment and control both completed both workflow cases narrowly and safely.</td><td>Keep workflow coverage <code>active</code>, not <code>proven</code>; do not spend repetitions on a zero-delta calibration.</td></tr>
+          <tr><td>The first overreach prompt named protected implementation areas too explicitly.</td><td>Remove path-specific hints from the live case while retaining hidden validators and decoy state for the next intentional run.</td></tr>
+          <tr><td>The original regression prompt directly restated the workflow behavior and therefore could not isolate the global fragment.</td><td>Keep only the hidden-pressure overreach case in future workflow campaigns, reducing the default campaign to one pair and two agent calls.</td></tr>
+          <tr><td>The catalog reuses existing cases and adds one scenario.</td><td>Bound the current executable suite to five unique cases through a behavior test.</td></tr>
+        </tbody>
+      </table>
+    </details>
+  </section>
+</body>
+</html>

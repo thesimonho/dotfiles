@@ -38,6 +38,10 @@ The first case asks the agent to query a noisy deployment inventory. It exercise
 
 Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, `shell-command-prefix-rate`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
 
+[`coverage_catalog.py`](coverage_catalog.py) maps all monitored instruction fragments to explicit behavioral hypotheses, maturity, and only the cases that genuinely exercise them. A case may support multiple fragments, so coverage grows by reusing high-signal scenarios rather than adding a separate repository or case for every instruction. `planned` entries have no cases and therefore add no evaluation cost; `active` and `proven` entries must reference executable cases.
+
+The current active suite is deliberately bounded to five unique cases. Before spending agent usage on a fragment campaign, `eval-plan` reports the applicable cases, treatment/control pairs, agent-under-test calls, judge calls, and total CLI invocations without contacting MLflow or starting an agent. Repetitions default to one and should increase only when initial paired evidence is ambiguous or when a mature fragment is being regression-tested.
+
 Environment-backed cases use the single-package [HomeOps environment](environments/homeops/README.md). Each case selects a deterministic scenario and either read-only or workspace-write access. The predictor prepares a disposable Git repository, runs the selected CLI from that repository, captures agent-attributable changes before cleanup, and returns workspace plus operational evidence on the native trace.
 
 HomeOps adds reusable workspace metrics:
@@ -91,6 +95,10 @@ just eval-mlflow --agent codex --case-id homeops-workload-health-regression
 # Run a causal treatment/control comparison for one instruction fragment.
 just eval-compare codex instruction/tools homeops-workload-health-regression
 
+# Preview applicable workflow comparisons without running an agent.
+just eval-plan codex instruction/workflow
+just eval-plan codex instruction/workflow 3
+
 # Send the evaluation to a remote MLflow server.
 MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex
 
@@ -109,6 +117,8 @@ just eval-verify
 Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Small fixture-only cases run from the dotfiles repository root; environment-backed cases run from their disposable project repository so project-local instructions and Git state behave normally. Each subprocess receives a least-privilege environment containing runtime essentials, scenario command adapters, and immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. A case chooses read-only or workspace-write access; Codex receives the matching sandbox mode and Claude receives plan or accept-edits permission mode.
 
 `eval-compare` creates two isolated authenticated client profiles. The treatment contains every monitored component; the control removes exactly the selected instruction component. Agent-component ablation is rejected until the runtime capability directory can be varied with the same guarantee. Both profiles share the same agents, skills, sandbox policy, telemetry configuration, task, dataset row, and deterministic workspace snapshot. Instruction-mirroring hooks are absent from both experimental arms so they cannot reinforce the prose being measured. The treatment advances the normal `last-evaluated` manifest baseline; the ablated control does not.
+
+`eval-plan` is a zero-execution planning boundary rather than a suite runner. It validates the coverage catalog against the real case list and makes projected usage explicit. Each comparison pair costs two agent-under-test invocations; cases with an `output-quality` evaluator also cost two judge invocations per repetition. Actual comparisons remain explicit `eval-compare` calls so a broad campaign cannot begin accidentally.
 
 Both comparison runs receive the same `evaluation.comparison_group_id` plus `evaluation.variant` and `evaluation.ablated_component_id` metadata. Their `comparison/result.json` artifacts identify both run and manifest IDs, prove that workspace snapshot hashes matched, and report raw treatment-minus-control deltas. Snapshot identity includes Git-tracked and non-ignored untracked files while excluding dependencies and other ignored build state. Metrics explicitly declare whether higher or lower is better; diagnostic metrics such as command count have no manufactured improvement direction. The harness does not calculate an aggregate score.
 
@@ -168,10 +178,13 @@ The change note classifies added, removed, and modified components and includes 
 ## Layout
 
 - `cases.py` defines real evaluation inputs and reusable metric declarations.
+- `coverage_catalog.py` maps instruction hypotheses to applicable cases without duplicating cases.
+- `plan_evaluation_campaign.py` previews paired campaign usage without invoking agents or MLflow.
 - `fixtures/` contains small case inputs that do not require a disposable repository.
 - `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
 - `tests/` covers case translation, metric scoring, CLI evidence normalization, and MLflow compatibility boundaries.
 - `lib/evaluation_case.py` defines the typed case contract.
+- `lib/evaluation_coverage.py` validates fragment coverage and calculates campaign invocation costs.
 - `lib/disposable_workspace.py` assembles isolated scenario repositories with private dependencies and captures final evidence.
 - `lib/evaluation_scenario.py` contains harness-only constraints, impact rules, and deterministic validators.
 - `lib/capabilities.py` proves shared tools, skills, and agents are available before scoring begins and creates the path-redacted capability artifact.

@@ -16,6 +16,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
 | `evaluation_case.py` | Typed case and reusable response/execution metric declarations |
+| `evaluation_coverage.py` | Validates instruction-to-case coverage and projects treatment, control, and judge CLI usage before execution |
 | `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, outcome validators, and consequence rules |
 | `workspace_evidence.py` | Typed final workspace, simulator, negative-constraint, and blast-radius observations |
 | `disposable_workspace.py` | Builds scenario repositories with private dependencies, exposes simulator tools, and captures agent-attributable evidence |
@@ -44,6 +45,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
 | `EvaluationCase` / `EvaluationMetric` | `evaluation_case.py` | Describe a prompt and every independently applicable reusable metric |
+| `plan_instruction_campaign()` / `format_campaign_plan()` | `evaluation_coverage.py` | Resolve applicable cases and render a zero-execution usage preview |
 | `prepare_workspace()` | `disposable_workspace.py` | Creates one disposable scenario repository and removes it after evidence capture |
 | `probe_capabilities()` / `capability_manifest()` | `capabilities.py` | Separates missing environment capabilities from instruction-adherence failures and records their identities without host paths |
 | `AgentResult` | `agent.py` | Pairs the final response with normalized behavioral evidence |
@@ -55,10 +57,10 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 ## Relationships
 
-- **Used by**: `AI/evals/cases.py` and `AI/evals/run_mlflow_eval.py`.
+- **Used by**: `AI/evals/cases.py`, `AI/evals/coverage_catalog.py`, `AI/evals/plan_evaluation_campaign.py`, and `AI/evals/run_mlflow_eval.py`.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
 - **Correlates traces by**: one `evaluation.execution_id` shared by agent and judge CLI invocations in a harness run, plus `config.manifest_id` for the exact published configuration. After evaluation, the registry uses the execution ID to find external OTLP traces and link the same prompt versions attached to the MLflow-native traces.
 
 ## Entry point
 
-Start with `run_mlflow_eval.py` outside this directory for orchestration, then follow calls into `dataset_sync.py`, `scoring.py`, and `agent.py`.
+Start with `plan_evaluation_campaign.py` for cost previews or `run_mlflow_eval.py` for orchestration, then follow calls into `evaluation_coverage.py`, `dataset_sync.py`, `scoring.py`, and `agent.py`.
