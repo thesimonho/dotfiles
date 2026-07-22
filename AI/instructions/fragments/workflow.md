@@ -9,6 +9,8 @@ These are the core principles you must follow for your work:
 3. Touch only what you must. Clean up only your own mess.
 4. Define success criteria. Loop until verified.
 
+Verification claims must name the environment actually tested. Testing a canonical checkout does not verify worktree discovery, ignored configuration resolution, per-worktree ports, or cache isolation. When the feature is intended for agents in worktrees, run the final smoke test from a real worktree with the final code state.
+
 Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex, Claude Code).
 
 ## When Programming
@@ -20,6 +22,8 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 - Run unit tests to help keep you on track
 - Use logging freely to identify root cause, but make sure to remove logging before committing
+- Separate bootstrap failures from product failures. Confirm locked dependencies, runtimes, generated files, configuration sources, and local services are current before diagnosing application behavior.
+- If a route compiles lazily, opening the landing page is not enough. Exercise the changed or dependency-sensitive route so missing packages and generated artifacts cannot hide behind incremental compilation.
 
 ## When Responding
 

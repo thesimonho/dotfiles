@@ -124,11 +124,11 @@ This skill is review-only. Do not apply patches, run formatters, update tests, s
 
 If a finding has an obvious safe fix, describe it in the recommendation. Leave the workspace unchanged.
 
-Ask before taking on follow-up implementation, especially for broad architectural rewrites, public API changes, schema changes, behavior changes, dependency swaps, or large file moves.
+The orchestrator agent reading your report will implement any necessary fixes.
 
 ### 5. Report
 
-Close with a concise review report:
+Close with a review report:
 
 - What scope was reviewed.
 - Which three reviewers ran.
@@ -137,3 +137,5 @@ Close with a concise review report:
 - Confirmation that no files were changed.
 
 If all three reviewers find nothing worth raising, say the reviewed scope is clean for this rubric.
+
+The orchestrator agent will surface your findings to the user, and then take action on the important items.

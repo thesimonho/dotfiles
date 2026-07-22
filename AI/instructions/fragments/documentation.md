@@ -41,3 +41,12 @@ agent:
 Project-local agent instructions are imperative directives, not background prose. Prefer the project’s existing portable instruction surface (`AGENTS.md` or equivalent). Use Claude-specific `.claude/rules/*.md` when the project already uses Claude Code rules or the user asks for them.
 
 Keep instruction files short and actionable. Background, references, decisions, and explanations live in `docs/`. When trimming an instruction, move the "why" to the relevant `docs/<file>` (or create a new one).
+
+When a project supports agent worktrees, keep the imperative bootstrap sequence in `AGENTS.md` and put the detailed runbook in contributor docs. The runbook should identify:
+
+- The exact locked dependency-install command required for new or moved worktrees.
+- Which ignored configuration belongs to the canonical checkout and how worktrees consume it without copying or committing secrets.
+- Which local services are shared versus worktree-owned, including who may start, reset, migrate, or stop them.
+- How application ports, caches, build output, browser sessions, and verification artifacts avoid collisions.
+- The verification gate and the evidence required from a real worktree.
+- Known exceptions, such as branches that change a shared service's schema and therefore require an isolated instance.

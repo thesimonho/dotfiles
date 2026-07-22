@@ -108,7 +108,7 @@ Section structure:
    - Make sure you bake the following into the end of each individual phase of the plan:
      - Write any new tests that are needed
      - Run documentation update skills
-     - Run `/simplify` over the phase to clean up
+     - Run `/simplify` over the phase and act on relevant findings
 3. **Future** — out of scope but noted for later
 
 ## What you don't do

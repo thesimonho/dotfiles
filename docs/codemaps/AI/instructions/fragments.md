@@ -13,14 +13,14 @@ Source-of-truth Markdown sections assembled into generated agent instruction fil
 | File | Description |
 | --- | --- |
 | `coding-style.md` | Readable naming, small-file organization, function shape, and comment guidance |
-| `documentation.md` | Documentation lifecycle, codemap use, and file-scoped agent frontmatter |
-| `git.md` | Branching, conventional commits, focused commits, and merge requirements |
+| `documentation.md` | Documentation lifecycle, codemap use, file-scoped agent frontmatter, and worktree runbook expectations |
+| `git.md` | Worktree bootstrap and handoff, branching, conventional commits, focused commits, and merge requirements |
 | `images.md` | Repository and temporary storage rules for generated images |
 | `planning.md` | Plan review, filename, HTML structure, and dependency research rules |
 | `security.md` | Mandatory checks and the stop-and-escalate response protocol |
 | `subagents.md` | Delegation criteria and model tiers |
-| `tools.md` | Just, RTK, LSP, structural search, data parsing, browser, and codemap guidance |
-| `workflow.md` | Scope discipline, TDD/debugging guidance, verification, and response ordering |
+| `tools.md` | Just, RTK, LSP, structural search, data parsing, isolated local browser verification, and codemap guidance |
+| `workflow.md` | Scope discipline, TDD/debugging guidance, environment-accurate verification, and response ordering |
 
 ## Relationships
 

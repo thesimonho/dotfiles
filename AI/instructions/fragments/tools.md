@@ -83,6 +83,15 @@ agent-browser close
 
 Run `agent-browser skills get core --full` for a full run guide and examples, if needed.
 
+For local application verification:
+
+- Start the app with the repository's agent/development command and use the URL it prints. Do not assume port 3000 or reuse a server whose owning checkout is unknown.
+- Confirm the page is served by the intended worktree before drawing conclusions; concurrent checkouts may expose visually identical apps on different ports.
+- Use a worktree-scoped browser session. Test a semantic user flow, including authentication when relevant, and inspect console errors and failed network requests.
+- Exercise at least one meaningful read and write when the change depends on a backend, then restore test data unless the fixture is disposable.
+- Stop only the frontend and browser sessions owned by the current worktree. Leave documented shared services running.
+- Report the checkout, URL, route, user state, interaction, console/network result, and any screenshot or recording path. Do not report a canonical-checkout test as worktree evidence.
+
 ## Codemaps
 
 Projects will usually have a `docs/codemaps/` directory. It acts as an index of the codebase to help you find the specific files that you're looking for based on their domain
