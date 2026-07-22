@@ -8,10 +8,21 @@ from pathlib import Path
 EVAL_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(EVAL_ROOT / "lib"))
 
-from agent import claude_result_from_output, codex_result_from_output  # noqa: E402
+from agent import (  # noqa: E402
+    claude_result_from_output,
+    claude_sandbox_settings,
+    codex_result_from_output,
+    codex_sandbox_arguments,
+)
 
 
 class CodexResultTest(unittest.TestCase):
+    def test_disables_network_for_model_generated_commands(self) -> None:
+        self.assertEqual(
+            codex_sandbox_arguments(),
+            ("-c", "sandbox_workspace_write.network_access=false"),
+        )
+
     def test_extracts_final_response_and_shell_commands(self) -> None:
         events = (
             {
@@ -44,6 +55,18 @@ class CodexResultTest(unittest.TestCase):
 
 
 class ClaudeResultTest(unittest.TestCase):
+    def test_requires_native_sandbox_without_an_escape_hatch(self) -> None:
+        settings = claude_sandbox_settings((Path("/runtime/journal"),))
+
+        self.assertTrue(settings["sandbox"]["enabled"])
+        self.assertTrue(settings["sandbox"]["failIfUnavailable"])
+        self.assertFalse(settings["sandbox"]["allowUnsandboxedCommands"])
+        self.assertEqual(settings["sandbox"]["network"]["allowedDomains"], [])
+        self.assertEqual(
+            settings["sandbox"]["filesystem"]["allowWrite"],
+            ["/runtime/journal"],
+        )
+
     def test_extracts_bash_tool_use_from_stream_json(self) -> None:
         events = (
             {

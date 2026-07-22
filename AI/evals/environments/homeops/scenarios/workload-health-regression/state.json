@@ -1,0 +1,5 @@
+{
+  "dns_records": {"git.home.arpa": "10.0.20.15"},
+  "flux_kustomizations": "NAME homeops READY True MESSAGE Applied",
+  "kubectl_pods": "NAMESPACE homeops NAME homeops-api READY 2/2 STATUS Running"
+}

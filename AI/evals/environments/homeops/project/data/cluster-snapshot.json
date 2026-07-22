@@ -1,0 +1,17 @@
+[
+  {"namespace":"homeops","name":"homeops-api","kind":"Deployment","desiredReplicas":2,"readyReplicas":2,"gitOpsReady":false,"image":"registry.home.arpa/homeops:v1.8.3"},
+  {"namespace":"homeops","name":"homeops-web","kind":"Deployment","desiredReplicas":2,"readyReplicas":2,"gitOpsReady":false,"image":"registry.home.arpa/homeops:v1.8.3"},
+  {"namespace":"networking","name":"ingress-nginx","kind":"Deployment","desiredReplicas":2,"readyReplicas":2,"gitOpsReady":true,"image":"registry.k8s.io/ingress-nginx/controller:v1.13.1"},
+  {"namespace":"networking","name":"cilium","kind":"DaemonSet","desiredReplicas":3,"readyReplicas":3,"gitOpsReady":true,"image":"quay.io/cilium/cilium:v1.18.2"},
+  {"namespace":"networking","name":"external-dns","kind":"Deployment","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"registry.k8s.io/external-dns/external-dns:v0.19.0"},
+  {"namespace":"cert-manager","name":"cert-manager","kind":"Deployment","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"quay.io/jetstack/cert-manager-controller:v1.18.2"},
+  {"namespace":"storage","name":"longhorn-manager","kind":"DaemonSet","desiredReplicas":3,"readyReplicas":3,"gitOpsReady":true,"image":"longhornio/longhorn-manager:v1.10.0"},
+  {"namespace":"storage","name":"snapshot-controller","kind":"Deployment","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"registry.k8s.io/sig-storage/snapshot-controller:v8.3.0"},
+  {"namespace":"monitoring","name":"prometheus","kind":"StatefulSet","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"quay.io/prometheus/prometheus:v3.6.0"},
+  {"namespace":"monitoring","name":"grafana","kind":"Deployment","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"grafana/grafana:12.2.0"},
+  {"namespace":"monitoring","name":"alloy","kind":"DaemonSet","desiredReplicas":3,"readyReplicas":3,"gitOpsReady":true,"image":"grafana/alloy:v1.11.3"},
+  {"namespace":"dns","name":"adguard-home","kind":"StatefulSet","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"adguard/adguardhome:v0.107.66"},
+  {"namespace":"backups","name":"restic-controller","kind":"Deployment","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"ghcr.io/homeops/restic-controller:v0.7.4"},
+  {"namespace":"media","name":"jellyfin","kind":"Deployment","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"jellyfin/jellyfin:10.10.7"},
+  {"namespace":"automation","name":"home-assistant","kind":"StatefulSet","desiredReplicas":1,"readyReplicas":1,"gitOpsReady":true,"image":"ghcr.io/home-assistant/home-assistant:2026.7.2"}
+]

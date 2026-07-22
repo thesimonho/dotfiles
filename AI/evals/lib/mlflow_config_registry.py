@@ -192,11 +192,12 @@ class MlflowConfigurationRegistry:
         for attempt in range(EXTERNAL_TRACE_LINK_ATTEMPTS):
             traces = self._external_traces(experiment_id, execution_id)
             trace_ids = {trace.info.trace_id for trace in traces}
+            representative_trace_ids = representative_external_trace_ids(traces)
             has_expected_minimum = expected_invocation_count is None or (
-                len(trace_ids) >= expected_invocation_count
+                len(representative_trace_ids) >= expected_invocation_count
             )
             if has_expected_minimum and trace_ids == previous_trace_ids:
-                for trace_id in trace_ids:
+                for trace_id in representative_trace_ids:
                     self._client.link_prompt_versions_to_trace(
                         prompt_versions,
                         trace_id,
@@ -341,6 +342,18 @@ class MlflowConfigurationRegistry:
             page_token = getattr(page, "token", None)
             if not page_token:
                 return tuple(versions)
+
+
+def representative_external_trace_ids(traces: list[Any]) -> tuple[str, ...]:
+    """Select one latest trace for each logical case and evaluation role."""
+    representatives: dict[tuple[str | None, str | None], Any] = {}
+    for trace in traces:
+        tags = trace.info.tags
+        invocation_key = (tags.get("case_id"), tags.get("evaluation.role"))
+        current = representatives.get(invocation_key)
+        if current is None or trace.info.timestamp_ms > current.info.timestamp_ms:
+            representatives[invocation_key] = trace
+    return tuple(trace.info.trace_id for trace in representatives.values())
 
 
 def _registered_component(

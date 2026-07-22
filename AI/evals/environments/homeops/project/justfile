@@ -1,0 +1,28 @@
+set shell := ["zsh", "-cu"]
+
+default:
+    @just --list
+
+build:
+    npm run build
+
+check:
+    npm run check
+
+test:
+    npm test
+
+test-workloads:
+    npm run test:workloads
+
+dev:
+    npm run dev
+
+server:
+    npm run server
+
+cluster-status:
+    kubectl get pods -A
+
+gitops-status:
+    flux get kustomizations

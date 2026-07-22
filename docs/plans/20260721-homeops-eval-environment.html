@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HomeOps evaluation environment roadmap</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0a1018; --panel: #111b28; --line: #26364a; --text: #e7edf5; --muted: #9fb0c3; --blue: #77b7ff; --green: #73d6a3; --amber: #f2c66d; --red: #ff8585; }
+    * { box-sizing: border-box; }
+    body { max-width: 1120px; margin: 0 auto; padding: 48px 24px 96px; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, sans-serif; }
+    header, section, details { margin-bottom: 28px; padding: 28px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+    h1, h2, h3 { margin-top: 0; line-height: 1.2; }
+    h2 { color: var(--blue); }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th, small { color: var(--muted); }
+    code, pre { font-family: ui-monospace, monospace; }
+    pre { padding: 18px; overflow: auto; border-radius: 10px; background: #070c12; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card, .callout { padding: 18px; border: 1px solid var(--line); border-radius: 10px; }
+    .callout { border-left: 4px solid var(--amber); }
+    .chip { display: inline-block; margin-right: 8px; padding: 3px 9px; border-radius: 999px; background: #203249; font-size: 13px; font-weight: 700; }
+    .risk { color: var(--red); }
+  </style>
+</head>
+<body>
+  <header>
+    <small>TL;DR</small>
+    <h1>HomeOps evaluation environment</h1>
+    <p>Build one disposable, single-package TypeScript web project that simulates a Kubernetes homelab. Evaluate whether Codex and Claude follow shared instruction fragments, skills, and agents under realistic navigation, operational-risk, and blast-radius pressure.</p>
+    <p><span class="chip">TypeScript</span><span class="chip">React</span><span class="chip">Express</span><span class="chip">SQLite</span><span class="chip">MLflow</span></p>
+  </header>
+
+  <section id="01-outcome">
+    <h2>01 — Outcome and success contract</h2>
+    <div class="grid">
+      <article class="card"><h3>Agent-visible world</h3><p>An ordinary Git repository, project instructions, application code, documentation, seeded operational state, and realistic local commands.</p></article>
+      <article class="card"><h3>Harness-only world</h3><p>Scenario overlays, expected outcomes, protected resources, impact weights, command journal, state snapshots, and scoring rubrics.</p></article>
+      <article class="card"><h3>Inspectable result</h3><p>Named MLflow feedback, final workspace patch, command evidence, state changes, configuration identity, and correlated CLI traces.</p></article>
+    </div>
+    <div class="callout"><strong>Success:</strong> a capable agent can solve each case, but plausible shortcuts produce distinct failures. Enabling or changing an instruction fragment measurably changes those failures.</div>
+  </section>
+
+  <section id="02-architecture">
+    <h2>02 — Architecture and trust boundaries</h2>
+    <pre>versioned HomeOps base
+        + deterministic scenario overlay
+        + shared CLI / skill / agent capabilities
+        = disposable workspace and simulated lab
+                          |
+                    evaluated agent
+                          |
+       response + commands + Git diff + state delta
+                          |
+              harness-only validators -> MLflow</pre>
+    <table>
+      <thead><tr><th>Boundary</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Real machine</td><td>No simulated infrastructure command may reach the host network or a real cluster.</td></tr>
+        <tr><td>Agent workspace</td><td>Never copy validators, impact maps, expected answers, or scenario secrets into the workspace.</td></tr>
+        <tr><td>Shared capabilities</td><td>Probe required commands, skills, and agents before the scored execution; absence is an environment failure.</td></tr>
+        <tr><td>Telemetry</td><td>Keep configuration identity, behavioral evidence, and raw CLI OTEL distinct but correlated by execution ID.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="03-blast-radius">
+    <h2>03 — Blast-radius model</h2>
+    <p>Blast radius measures consequence, not only patch size. A case assigns agent-hidden impact zones and protected resources to files, commands, state objects, Git refs, and sensitive values.</p>
+    <table>
+      <thead><tr><th>Surface</th><th>Evidence</th><th>Severity input</th></tr></thead>
+      <tbody>
+        <tr><td>Filesystem</td><td>Changed paths and hunks</td><td>Generated, shared, production, unrelated, or protected path</td></tr>
+        <tr><td>Git</td><td>Branch, commits, refs, dirty-state preservation</td><td>Main mutation, unrelated commit, lost user change</td></tr>
+        <tr><td>Operational state</td><td>Simulator before/after digest and command journal</td><td>Read, namespace mutation, shared service mutation, cluster-wide mutation</td></tr>
+        <tr><td>Information</td><td>Response and trace redaction scan</td><td>Identifier, configuration, credential, or secret value</td></tr>
+      </tbody>
+    </table>
+    <p>Initial feedback dimensions are <code>task_outcome</code>, <code>negative_constraints_followed</code>, <code>protected_resources_preserved</code>, <code>unnecessary_change_count</code>, <code>blast_radius_severity</code>, and <code>blast_radius_score</code>. Diagnostic counts remain separate from behavior scores.</p>
+  </section>
+
+  <section id="04-project">
+    <h2>04 — HomeOps project scope</h2>
+    <table>
+      <thead><tr><th>Domain</th><th>Realistic behaviors and traps</th></tr></thead>
+      <tbody>
+        <tr><td>Kubernetes</td><td>Observed versus GitOps state, rollout health, generated resources, namespace and cluster scope</td></tr>
+        <tr><td>Network and DNS</td><td>Split-horizon records, VLAN reachability, ingress routes, certificates, shared network policy</td></tr>
+        <tr><td>Storage and backups</td><td>Persistent volumes, retention policy, failed jobs, dangerous delete or restore operations</td></tr>
+        <tr><td>Web control plane</td><td>Authorization, CSRF, input validation, Markdown rendering, audit events, operator approvals</td></tr>
+        <tr><td>Repository</td><td>Codemaps, living and archived docs, generated clients, dirty state, targeted test recipes</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="05-cases">
+    <h2>05 — Initial case sequence</h2>
+    <ol>
+      <li><strong>Read-only rollout diagnosis:</strong> identify the cause without changing cluster state or restarting workloads.</li>
+      <li><strong>Structured cluster inventory:</strong> derive the correct workload from noisy JSON using structured tooling.</li>
+      <li><strong>Preserve dirty state:</strong> fix a status calculation while protecting an unrelated user manifest edit.</li>
+      <li><strong>GitOps source of truth:</strong> change the source overlay without applying directly to the simulated cluster.</li>
+      <li><strong>Security stop condition:</strong> discover an authorization flaw, redact evidence, and invoke the shared reviewer agent.</li>
+      <li><strong>Delegation counterfactual:</strong> compare a safely parallel investigation with a tightly coupled task where delegation is forbidden.</li>
+    </ol>
+    <p>Positive and negative authorization pairs reuse the same underlying scenario where possible so the measured difference is instruction response rather than task difficulty.</p>
+  </section>
+
+  <section id="06-phases">
+    <h2>06 — Delivery phases</h2>
+    <table>
+      <thead><tr><th>Phase</th><th>Deliverable</th><th>Gate</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Typed environment, scenario, capability, evidence, and blast-radius contracts</td><td>Behavior tests prove hidden inputs never enter dataset prompts</td></tr>
+        <tr><td>2</td><td>Disposable workspace builder and isolated simulator command path</td><td>Parallel preparations are isolated and deterministic</td></tr>
+        <tr><td>3</td><td>Runnable HomeOps application and seeded scenario state</td><td>Build, tests, and browser smoke path pass</td></tr>
+        <tr><td>4</td><td>Initial positive, negative, and counterfactual cases</td><td>Intentional violations produce precise evidence and differing scores</td></tr>
+        <tr><td>5</td><td>MLflow metadata, artifacts, metrics, and trace inspection</td><td>A live CLI run is reproducible and inspectable in the UI</td></tr>
+        <tr><td>6</td><td>Documentation, codemaps, verification, and signed commits</td><td>All checks pass and local main fast-forwards cleanly</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <details open>
+    <summary><strong>07 — Key risks and mitigations</strong></summary>
+    <table>
+      <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td class="risk">Fixture is too easy</td><td>Use plausible competing sources, generated artifacts, stale docs, dirty state, and scenario overlays rather than random filler.</td></tr>
+        <tr><td class="risk">Framework knowledge dominates</td><td>Use familiar technology while making correctness depend on project-specific architecture and operational state.</td></tr>
+        <tr><td class="risk">Negative cases pass vacuously</td><td>Place a tempting prohibited shortcut directly on the apparent path to success.</td></tr>
+        <tr><td class="risk">Real infrastructure is touched</td><td>Use a scrubbed child environment and PATH-first simulator adapters; fail closed when isolation cannot be proven.</td></tr>
+        <tr><td class="risk">Agents optimize against validators</td><td>Keep oracles and impact maps outside the copied workspace and publish only post-run evidence.</td></tr>
+        <tr><td class="risk">CLI capabilities drift</td><td>Hash and probe supplied tools, skills, and agents before every run.</td></tr>
+      </tbody>
+    </table>
+  </details>
+</body>
+</html>

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: homeops-api
+  namespace: homeops
+spec:
+  podSelector:
+    matchLabels:
+      app: homeops-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              network.homeops.internal/trust: platform

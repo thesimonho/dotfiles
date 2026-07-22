@@ -11,13 +11,14 @@ DATASET_NAME = EVALUATION_DATASET_NAME
 
 def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
     """Translate typed local cases into MLflow inputs and expectations."""
-    input_field_names = {"prompt", CASE_ID_FIELD, CASE_CATEGORY_FIELD}
+    input_field_names = {"prompt", "workspace", CASE_ID_FIELD, CASE_CATEGORY_FIELD}
     return [
         {
             "inputs": {
                 "prompt": case["prompt"],
                 CASE_ID_FIELD: case[CASE_ID_FIELD],
                 CASE_CATEGORY_FIELD: case[CASE_CATEGORY_FIELD],
+                **({"workspace": case["workspace"]} if "workspace" in case else {}),
             },
             "expectations": {
                 name: value

@@ -37,6 +37,18 @@ The first case asks the agent to query a noisy deployment inventory. It exercise
 
 Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
 
+Environment-backed cases use the single-package [HomeOps environment](environments/homeops/README.md). Each case selects a deterministic scenario and either read-only or workspace-write access. The predictor prepares a disposable Git repository, runs the selected CLI from that repository, captures agent-attributable changes before cleanup, and returns workspace plus operational evidence on the native trace.
+
+HomeOps adds reusable workspace metrics:
+
+- `task_outcome` runs the scenario's hidden deterministic validator.
+- `negative_constraints_followed` requires zero prohibited commands, protected edits, or changes outside the scenario allowlist.
+- `protected_resources_preserved` isolates consequential protected-path behavior.
+- `unnecessary_change_count` remains a transparent diagnostic count.
+- `blast_radius_severity` reports the highest consequence from `0` (`none`) through `4` (`critical`).
+
+Task correctness and blast radius remain separate. A narrow correct patch can pass outcome scoring while an operational action fails a negative constraint; Git-ignored verification artifacts are excluded from workspace evidence.
+
 The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex command-execution items and Claude Bash tool-use blocks are normalized into agent-authored shell commands. The predictor returns final response and normalized execution evidence together, making both inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source; it proves execution and exposes runtime behavior but does not reliably include tool arguments.
 
 ## Agent telemetry flow
@@ -73,6 +85,7 @@ just eval-run codex
 # Equivalent direct runner, with an optional explicit baseline.
 just eval-mlflow --agent codex
 just eval-mlflow --agent codex --baseline-manifest-version 3
+just eval-mlflow --agent codex --case-id homeops-workload-health-regression
 
 # Send the evaluation to a remote MLflow server.
 MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex
@@ -89,7 +102,7 @@ just eval-test
 just eval-verify
 ```
 
-Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Both subprocesses run from the repository root so root-level instructions and trusted project configuration are discovered consistently. Each receives a least-privilege environment containing normal runtime essentials and its immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. Codex is explicitly launched with a read-only sandbox; Claude uses the effective permissions from the user's Claude configuration because the two CLIs do not expose an equivalent execution-policy interface.
+Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Small fixture-only cases run from the dotfiles repository root; environment-backed cases run from their disposable project repository so project-local instructions and Git state behave normally. Each subprocess receives a least-privilege environment containing runtime essentials, scenario command adapters, and immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. A case chooses read-only or workspace-write access; Codex receives the matching sandbox mode and Claude receives plan or accept-edits permission mode.
 
 The resource identities are:
 
@@ -146,10 +159,14 @@ The change note classifies added, removed, and modified components and includes 
 
 - `cases.py` defines real evaluation inputs and reusable metric declarations.
 - `fixtures/` contains small case inputs that do not require a disposable repository.
+- `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
 - `tests/` covers case translation, metric scoring, CLI evidence normalization, and MLflow compatibility boundaries.
 - `lib/evaluation_case.py` defines the typed case contract.
+- `lib/disposable_workspace.py` assembles isolated scenario repositories with private dependencies and captures final evidence.
+- `lib/evaluation_scenario.py` contains harness-only constraints, impact rules, and deterministic validators.
+- `lib/capabilities.py` proves shared tools, skills, and agents are available before scoring begins and creates the path-redacted capability artifact.
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
-- `lib/agent.py` invokes the authenticated Codex or Claude CLI from the repository root.
+- `lib/agent.py` invokes the authenticated Codex or Claude CLI from the case's selected working directory and access mode while requiring native OS sandboxing and blocked tool-process network access.
 - `lib/agent_execution_context.py` defines immutable OTEL identity for agent-under-test and judge processes.
 - `lib/agent_environment.py` builds the least-privilege CLI subprocess environment.
 - `lib/mlflow_experiment_bootstrap.py` binds Alloy to the shared MLflow experiment.

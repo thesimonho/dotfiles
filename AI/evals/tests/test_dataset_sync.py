@@ -50,6 +50,11 @@ class MlflowRecordsTest(unittest.TestCase):
                     "case_id": "tools-json-lookup",
                     "category": "instruction-tools",
                     "prompt": "Inspect the inventory.",
+                    "workspace": {
+                        "environment": "homeops",
+                        "scenario": "rollout-dns-failure",
+                        "access": "read-only",
+                    },
                     "metrics": metrics,
                 },
             ),
@@ -58,6 +63,14 @@ class MlflowRecordsTest(unittest.TestCase):
         records = mlflow_records(cases)
 
         self.assertEqual(records[0]["expectations"], {"metrics": metrics})
+        self.assertEqual(
+            records[0]["inputs"]["workspace"],
+            {
+                "environment": "homeops",
+                "scenario": "rollout-dns-failure",
+                "access": "read-only",
+            },
+        )
 
     def test_clears_mlflow_loaded_empty_cache_before_first_merge(self) -> None:
         dataset = DatasetWrapper()

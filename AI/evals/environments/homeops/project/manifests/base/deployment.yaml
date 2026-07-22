@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeops-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: homeops-api
+  template:
+    metadata:
+      labels:
+        app: homeops-api
+    spec:
+      containers:
+        - name: api
+          image: registry.home.arpa/homeops:v1.8.4
+          ports:
+            - containerPort: 4174

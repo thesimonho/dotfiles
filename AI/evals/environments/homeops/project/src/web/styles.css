@@ -1,0 +1,10 @@
+:root { color: #e8eef6; background: #071019; font-family: Inter, system-ui, sans-serif; }
+body { margin: 0; }
+.page-header, .panel { max-width: 1080px; margin: 0 auto; padding: 36px 24px; }
+.eyebrow { color: #77b7ff; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
+.workload-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; padding: 0; list-style: none; }
+.workload-card { padding: 20px; border: 1px solid #26384a; border-radius: 12px; background: #101c28; }
+.health { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.health-healthy { background: #174d39; }
+.health-degraded { background: #624a17; }
+.health-unavailable { background: #6b2929; }

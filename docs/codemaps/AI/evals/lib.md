@@ -12,11 +12,15 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 | File | Description |
 | --- | --- |
-| `agent.py` | Invokes Claude/Codex with isolated environments and normalizes final responses plus shell-command evidence from their machine-readable streams |
+| `agent.py` | Invokes Claude/Codex with fail-closed native sandbox settings and normalizes final responses plus shell-command evidence from their machine-readable streams |
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
 | `evaluation_case.py` | Typed case and reusable response/execution metric declarations |
-| `scoring.py` | Evaluates independently named response and normalized execution-evidence metrics |
+| `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, outcome validators, and consequence rules |
+| `workspace_evidence.py` | Typed final workspace, simulator, negative-constraint, and blast-radius observations |
+| `disposable_workspace.py` | Builds scenario repositories with private dependencies, exposes simulator tools, and captures agent-attributable evidence |
+| `capabilities.py` | Preflights and hashes shared CLI tools, skills, and agents and renders path-redacted MLflow evidence |
+| `scoring.py` | Evaluates independently named response, execution, workspace, and blast-radius metrics |
 | `dataset_sync.py` | Converts cases to MLflow records and replaces dataset contents |
 | `harness_environment.py` | Repository paths and supported agent profile constants |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
@@ -38,6 +42,8 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
 | `EvaluationCase` / `EvaluationMetric` | `evaluation_case.py` | Describe a prompt and every independently applicable reusable metric |
+| `prepare_workspace()` | `disposable_workspace.py` | Creates one disposable scenario repository and removes it after evidence capture |
+| `probe_capabilities()` / `capability_manifest()` | `capabilities.py` | Separates missing environment capabilities from instruction-adherence failures and records their identities without host paths |
 | `AgentResult` | `agent.py` | Pairs the final response with normalized behavioral evidence |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
 | `discover_agent_components()` | `configuration_components.py` | Enumerates provenance-bearing client configuration inputs |

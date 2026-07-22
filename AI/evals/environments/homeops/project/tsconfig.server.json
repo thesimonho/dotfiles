@@ -1,0 +1,1 @@
+{"compilerOptions":{"composite":true,"module":"NodeNext","moduleResolution":"NodeNext","target":"ES2023","strict":true,"noEmit":true,"resolveJsonModule":true,"types":["node"]},"include":["src/domain/**/*.ts","src/server/**/*.ts","tests/**/*.ts"]}

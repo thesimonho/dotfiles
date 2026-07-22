@@ -10,12 +10,15 @@ import shlex
 import shutil
 import subprocess
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Literal
 
 from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
 
 CLI_TIMEOUT_SECONDS = 1800
+type WorkspaceAccess = Literal["read-only", "workspace-write"]
 
 
 @dataclass(frozen=True)
@@ -49,7 +52,12 @@ def _call_claude(
     context: AgentExecutionContext,
     *,
     has_tools: bool,
+    workspace_path: Path = REPOSITORY_ROOT,
+    workspace_access: WorkspaceAccess = "read-only",
+    environment_overrides: dict[str, str] | None = None,
+    additional_writable_paths: tuple[Path, ...] = (),
 ) -> AgentResult:
+    sandbox_settings = claude_sandbox_settings(additional_writable_paths)
     command = [
         "claude",
         "-p",
@@ -57,6 +65,12 @@ def _call_claude(
         "--output-format",
         "stream-json",
         "--verbose",
+        "--permission-mode",
+        "plan" if workspace_access == "read-only" else "acceptEdits",
+        "--setting-sources",
+        "",
+        "--settings",
+        json.dumps(sandbox_settings),
     ]
     if not has_tools:
         command.extend(["--tools", "", "--disable-slash-commands"])
@@ -64,6 +78,8 @@ def _call_claude(
         command,
         "Claude",
         context,
+        workspace_path=workspace_path,
+        environment_overrides=environment_overrides,
     )
     if completed_process.returncode != 0:
         message = completed_process.stderr.strip() or "Claude CLI request failed"
@@ -93,20 +109,32 @@ def claude_result_from_output(output: str) -> AgentResult:
     return AgentResult(response=response_text, shell_commands=shell_commands)
 
 
-def _call_codex(prompt: str, context: AgentExecutionContext) -> AgentResult:
+def _call_codex(
+    prompt: str,
+    context: AgentExecutionContext,
+    *,
+    workspace_path: Path = REPOSITORY_ROOT,
+    workspace_access: WorkspaceAccess = "read-only",
+    environment_overrides: dict[str, str] | None = None,
+    additional_writable_paths: tuple[Path, ...] = (),
+) -> AgentResult:
     command = [
         "codex",
         "exec",
         "--ephemeral",
+        *codex_sandbox_arguments(),
         "--sandbox",
-        "read-only",
-        "--json",
-        prompt,
+        workspace_access,
     ]
+    for writable_path in additional_writable_paths:
+        command.extend(["--add-dir", str(writable_path)])
+    command.extend(["--json", prompt])
     completed_process = _run_cli_command(
         command,
         "Codex",
         context,
+        workspace_path=workspace_path,
+        environment_overrides=environment_overrides,
     )
     if completed_process.returncode != 0:
         message = completed_process.stderr.strip() or "Codex CLI request failed"
@@ -147,6 +175,31 @@ def normalize_shell_command(command: str) -> str:
     return command
 
 
+def codex_sandbox_arguments() -> tuple[str, str]:
+    """Disable network for commands inside Codex's native OS sandbox."""
+    return ("-c", "sandbox_workspace_write.network_access=false")
+
+
+def claude_sandbox_settings(
+    additional_writable_paths: tuple[Path, ...],
+) -> dict[str, Any]:
+    """Require Claude's OS sandbox and remove its unsandboxed escape hatch."""
+    return {
+        "sandbox": {
+            "enabled": True,
+            "failIfUnavailable": True,
+            "autoAllowBashIfSandboxed": True,
+            "allowUnsandboxedCommands": False,
+            "excludedCommands": [],
+            "filesystem": {
+                "allowWrite": [str(path) for path in additional_writable_paths],
+                "denyRead": ["~/.kube", "~/.aws", "~/.config/gcloud", "~/.ssh"],
+            },
+            "network": {"allowedDomains": []},
+        }
+    }
+
+
 def _json_lines(output: str) -> tuple[dict, ...]:
     try:
         return tuple(json.loads(line) for line in output.splitlines() if line.strip())
@@ -158,6 +211,9 @@ def _run_cli_command(
     command: list[str],
     cli_name: str,
     context: AgentExecutionContext,
+    *,
+    workspace_path: Path = REPOSITORY_ROOT,
+    environment_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess:
     """Run an authenticated agent CLI with a bounded execution time."""
     try:
@@ -166,8 +222,12 @@ def _run_cli_command(
             capture_output=True,
             text=True,
             check=False,
-            cwd=str(REPOSITORY_ROOT),
-            env=build_child_environment(os.environ, context),
+            cwd=str(workspace_path),
+            env=build_child_environment(
+                os.environ,
+                context,
+                overrides=environment_overrides,
+            ),
             timeout=CLI_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as error:
@@ -180,12 +240,31 @@ def run_agent(
     prompt: str,
     context: AgentExecutionContext,
     profile: str = "claude",
+    workspace_path: Path = REPOSITORY_ROOT,
+    workspace_access: WorkspaceAccess = "read-only",
+    environment_overrides: dict[str, str] | None = None,
+    additional_writable_paths: tuple[Path, ...] = (),
 ) -> AgentResult:
     """Run one task through the selected authenticated agent CLI."""
     if profile == "codex":
-        return _call_codex(prompt, context)
+        return _call_codex(
+            prompt,
+            context,
+            workspace_path=workspace_path,
+            workspace_access=workspace_access,
+            environment_overrides=environment_overrides,
+            additional_writable_paths=additional_writable_paths,
+        )
     if profile == "claude":
-        return _call_claude(prompt, context, has_tools=True)
+        return _call_claude(
+            prompt,
+            context,
+            has_tools=True,
+            workspace_path=workspace_path,
+            workspace_access=workspace_access,
+            environment_overrides=environment_overrides,
+            additional_writable_paths=additional_writable_paths,
+        )
     raise ValueError(f"unsupported agent profile: {profile}")
 
 

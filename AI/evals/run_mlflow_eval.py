@@ -1,9 +1,11 @@
 """Run the eval suite through MLflow with complete config provenance."""
 
 import argparse
+import os
 import sys
 import uuid
 from collections.abc import Callable
+from dataclasses import asdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
@@ -14,7 +16,18 @@ from agent_execution_context import (  # noqa: E402
     EvaluationRole,
 )
 import configuration_components  # noqa: E402
+from capabilities import (  # noqa: E402
+    REQUIRED_EVALUATION_AGENTS,
+    REQUIRED_EVALUATION_SKILLS,
+    REQUIRED_EVALUATION_TOOLS,
+    REQUIRED_HOMEOPS_TOOLS,
+    CapabilitySnapshot,
+    capability_manifest,
+    probe_capabilities,
+)
+from agent_environment import build_child_environment  # noqa: E402
 import dataset_sync  # noqa: E402
+from disposable_workspace import prepare_workspace  # noqa: E402
 import mlflow  # noqa: E402
 import mlflow.genai  # noqa: E402
 import mlflow_tracing  # noqa: E402
@@ -31,16 +44,22 @@ from mlflow_parameter_names import (  # noqa: E402
     CASE_CATEGORY_FIELD,
     CASE_ID_FIELD,
 )
+from evaluation_case import EvaluationCase, WorkspaceSpec  # noqa: E402
 
 
 def build_predict_fn(
     profile: str,
     execution_id: str,
     manifest_id: str,
-) -> Callable[[str, str, str], dict[str, object]]:
+) -> Callable[..., dict[str, object]]:
     """Build a predictor whose external traces share immutable run identity."""
 
-    def predict_fn(prompt: str, case_id: str, category: str) -> dict[str, object]:
+    def predict_fn(
+        prompt: str,
+        case_id: str,
+        category: str,
+        workspace: WorkspaceSpec | None = None,
+    ) -> dict[str, object]:
         """Run one case while keeping its identity queryable on the trace."""
         _update_trace_preview(
             metadata={
@@ -52,25 +71,48 @@ def build_predict_fn(
             },
             request_preview=prompt,
         )
-        result = agent.run_agent(
-            prompt,
-            _execution_context(
-                profile=profile,
-                case_id=case_id,
-                category=category,
-                role="agent-under-test",
-                execution_id=execution_id,
-                manifest_id=manifest_id,
-            ),
+        execution_context = _execution_context(
             profile=profile,
+            case_id=case_id,
+            category=category,
+            role="agent-under-test",
+            execution_id=execution_id,
+            manifest_id=manifest_id,
         )
+        if workspace is None:
+            result = agent.run_agent(prompt, execution_context, profile=profile)
+            workspace_evidence = None
+        else:
+            with prepare_workspace(
+                workspace["environment"],
+                workspace["scenario"],
+            ) as prepared_workspace:
+                result = agent.run_agent(
+                    prompt,
+                    execution_context,
+                    profile=profile,
+                    workspace_path=prepared_workspace.path,
+                    workspace_access=workspace["access"],
+                    environment_overrides=prepared_workspace.environment,
+                    additional_writable_paths=(
+                        prepared_workspace.additional_writable_paths
+                    ),
+                )
+                workspace_evidence = asdict(
+                    prepared_workspace.capture_evidence(
+                        shell_commands=result.shell_commands,
+                    )
+                )
         _update_trace_preview(response_preview=result.response)
-        return {
+        output = {
             "response": result.response,
             "execution_evidence": {
                 "shell_commands": result.shell_commands,
             },
         }
+        if workspace_evidence is not None:
+            output["workspace_evidence"] = workspace_evidence
+        return output
 
     return predict_fn
 
@@ -124,13 +166,18 @@ def build_evaluation_scorer(profile: str, execution_id: str, manifest_id: str):
             tuple(outputs["execution_evidence"]["shell_commands"]),
             metrics,
         )
+        workspace_results = (
+            scoring.score_workspace_metrics(outputs["workspace_evidence"], metrics)
+            if "workspace_evidence" in outputs
+            else []
+        )
         return [
             Feedback(
                 name=result.name,
                 value=result.value,
                 rationale=result.rationale,
             )
-            for result in (*response_results, *execution_results)
+            for result in (*response_results, *execution_results, *workspace_results)
         ]
 
     return evaluation_score
@@ -170,6 +217,12 @@ def parse_arguments() -> argparse.Namespace:
         type=int,
         help="Compare against this MLflow manifest prompt version instead of the latest.",
     )
+    parser.add_argument(
+        "--case-id",
+        action="append",
+        dest="case_ids",
+        help="Evaluate only this case ID without replacing the complete hosted dataset.",
+    )
     return parser.parse_args()
 
 
@@ -180,7 +233,12 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             "no evaluation cases configured; add real cases to AI/evals/cases.py"
         )
 
+    selected_cases = _selected_cases(arguments.case_ids)
     agent_profile = agent.resolve_agent_profile(arguments.agent)
+    capability_snapshots = _preflight_case_capabilities(
+        agent_profile,
+        selected_cases,
+    )
     mlflow_tracing.init()
     client = MlflowClient()
     registry = MlflowConfigurationRegistry(
@@ -207,14 +265,21 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         experiment_id,
     )
     dataset = dataset_sync.sync_mlflow_dataset(CASES, experiment_id)
+    evaluation_data = (
+        dataset_sync.mlflow_records(selected_cases) if arguments.case_ids else dataset
+    )
 
-    results = mlflow.genai.evaluate(
-        data=dataset,
-        predict_fn=build_predict_fn(
+    os.environ.setdefault("MLFLOW_GENAI_EVAL_SKIP_TRACE_VALIDATION", "true")
+    predict_function = mlflow.trace(
+        build_predict_fn(
             agent_profile,
             execution_id,
             publication.manifest.manifest_id,
-        ),
+        )
+    )
+    results = mlflow.genai.evaluate(
+        data=evaluation_data,
+        predict_fn=predict_function,
         scorers=[
             build_evaluation_scorer(
                 agent_profile,
@@ -228,12 +293,13 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         publication,
         agent_version,
     )
+    _publish_capability_evidence(client, results.run_id, capability_snapshots)
     registry.attach_to_run(
         results.run_id,
         publication,
-        expected_trace_count=len(CASES),
+        expected_trace_count=len(selected_cases),
         external_trace_execution_id=execution_id,
-        expected_external_invocation_count=_external_invocation_count(),
+        expected_external_invocation_count=_external_invocation_count(selected_cases),
     )
 
     print(results)
@@ -245,13 +311,91 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
     print(publication.changes.summary)
 
 
-def _external_invocation_count() -> int:
+def _selected_cases(case_ids: list[str] | None) -> tuple[EvaluationCase, ...]:
+    """Resolve focused case IDs while retaining the complete hosted dataset."""
+    if not case_ids:
+        return CASES
+    requested_case_ids = set(case_ids)
+    selected_cases = tuple(
+        case for case in CASES if case["case_id"] in requested_case_ids
+    )
+    missing_case_ids = requested_case_ids - {case["case_id"] for case in selected_cases}
+    if missing_case_ids:
+        raise ValueError(f"unknown evaluation case IDs: {', '.join(missing_case_ids)}")
+    return selected_cases
+
+
+def _preflight_case_capabilities(
+    profile: str,
+    cases: tuple[EvaluationCase, ...],
+) -> tuple[CapabilitySnapshot, ...]:
+    """Fail before MLflow evaluation when shared capabilities are unavailable."""
+    probe_context = _execution_context(
+        profile=profile,
+        case_id="environment-preflight",
+        category="environment-preflight",
+        role="agent-under-test",
+        execution_id="environment-preflight",
+        manifest_id="environment-preflight",
+    )
+    base_environment = build_child_environment(os.environ, probe_context)
+    snapshots = [
+        probe_capabilities(
+            profile,
+            base_environment,
+            required_tools=REQUIRED_EVALUATION_TOOLS,
+            required_skills=REQUIRED_EVALUATION_SKILLS,
+            required_agents=REQUIRED_EVALUATION_AGENTS,
+        )
+    ]
+    checked_environments = set()
+    for case in cases:
+        workspace = case.get("workspace")
+        if workspace is None:
+            continue
+        environment_identity = (workspace["environment"], workspace["scenario"])
+        if environment_identity in checked_environments:
+            continue
+        checked_environments.add(environment_identity)
+        with prepare_workspace(*environment_identity) as prepared_workspace:
+            child_environment = build_child_environment(
+                os.environ,
+                probe_context,
+                overrides=prepared_workspace.environment,
+            )
+            snapshots.append(
+                probe_capabilities(
+                    profile,
+                    child_environment,
+                    required_tools=(
+                        *REQUIRED_EVALUATION_TOOLS,
+                        *REQUIRED_HOMEOPS_TOOLS,
+                    ),
+                    required_skills=REQUIRED_EVALUATION_SKILLS,
+                    required_agents=REQUIRED_EVALUATION_AGENTS,
+                )
+            )
+    return tuple(snapshots)
+
+
+def _publish_capability_evidence(
+    client: MlflowClient,
+    run_id: str,
+    snapshots: tuple[CapabilitySnapshot, ...],
+) -> None:
+    """Attach path-redacted capability hashes to the inspectable MLflow run."""
+    manifest = capability_manifest(snapshots)
+    client.log_dict(run_id, manifest, "capabilities/manifest.json")
+    client.set_tag(run_id, "evaluation.capabilities_hash", manifest["manifest_hash"])
+
+
+def _external_invocation_count(cases: tuple[EvaluationCase, ...]) -> int:
     """Count agent-under-test and LLM-judge CLI processes expected this run."""
     judge_count = sum(
         any(metric["evaluator"] == "output-quality" for metric in case["metrics"])
-        for case in CASES
+        for case in cases
     )
-    return len(CASES) + judge_count
+    return len(cases) + judge_count
 
 
 if __name__ == "__main__":

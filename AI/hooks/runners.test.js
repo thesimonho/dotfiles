@@ -71,3 +71,17 @@ test("Codex apply_patch input reaches the shared file policy", () => {
   assert.equal(result.status, 2);
   assert.match(result.stderr, /stray\.md/);
 });
+
+test("Shared agent sources are allowed instruction files", () => {
+  const result = runPolicy("codex", "block-doc-files", {
+    cwd: "/workspace",
+    hook_event_name: "PreToolUse",
+    tool_name: "apply_patch",
+    tool_input: {
+      command: "*** Add File: AI/agents/security-reviewer.md\n+---\n+name: security-reviewer\n+---",
+    },
+  });
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+});

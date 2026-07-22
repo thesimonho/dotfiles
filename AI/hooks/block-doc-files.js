@@ -9,6 +9,7 @@
  * Inside the repo, allowed .md files are:
  *   - README.md, CLAUDE.md, AGENTS.md (anywhere in the tree)
  *   - Any .md file under docs/
+ *   - Direct shared agent and instruction-fragment sources under AI/
  * .txt files inside the repo are always blocked.
  */
 
@@ -17,6 +18,8 @@ const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
 const DOCS_DIR_MD = /^docs\//;
+const INSTRUCTION_SOURCE_MD =
+  /^AI\/(agents\/[^/]+|instructions\/fragments\/[^/]+)\.md$/;
 
 /**
  * Returns file paths from Claude and Codex tool inputs.
@@ -53,7 +56,10 @@ function evaluate(payload) {
     const isTxt = /\.txt$/.test(relative);
     const isMd = /\.md$/.test(relative);
     const isAllowed =
-      isMd && (ALWAYS_ALLOWED_MD.test(relative) || DOCS_DIR_MD.test(relative));
+      isMd &&
+      (ALWAYS_ALLOWED_MD.test(relative) ||
+        DOCS_DIR_MD.test(relative) ||
+        INSTRUCTION_SOURCE_MD.test(relative));
 
     if (isTxt || (isMd && !isAllowed)) {
       return block(filePath, ["Allowed: README.md, CLAUDE.md, AGENTS.md, or docs/*.md"]);

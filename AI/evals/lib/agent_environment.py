@@ -28,6 +28,7 @@ SAFE_ENVIRONMENT_VARIABLES = (
 def build_child_environment(
     parent_environment: Mapping[str, str],
     context: AgentExecutionContext,
+    overrides: Mapping[str, str] | None = None,
 ) -> dict[str, str]:
     """Return only runtime essentials plus explicitly named integrations."""
     allowed_names: set[str] = set(SAFE_ENVIRONMENT_VARIABLES)
@@ -37,6 +38,7 @@ def build_child_environment(
         for name in allowed_names
         if name in parent_environment
     }
+    child_environment.update(overrides or {})
     child_environment["OTEL_RESOURCE_ATTRIBUTES"] = context.otel_resource_attributes()
     return child_environment
 

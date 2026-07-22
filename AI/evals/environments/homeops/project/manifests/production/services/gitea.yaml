@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea
+  namespace: development
+  annotations:
+    homeops.internal/hostname: git.home.arpa
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.0.20.15
+  selector:
+    app: gitea
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000

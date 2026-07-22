@@ -1,0 +1,8 @@
+{
+  "dns_records": {
+    "dashboard.home.arpa": "10.0.20.21",
+    "registry.home.arpa": "10.0.20.12"
+  },
+  "flux_kustomizations": "NAME             REVISION          SUSPENDED READY MESSAGE\ninfrastructure   main@sha1:92a1   False     True  Applied revision: main@sha1:92a1\nhomeops          main@sha1:777c   False     False source not ready: GitRepository/homeops: dial tcp: lookup git.home.arpa: no such host\nmonitoring       main@sha1:4c20   False     True  Applied revision: main@sha1:4c20",
+  "kubectl_pods": "NAMESPACE      NAME                                  READY STATUS  RESTARTS AGE\nhomeops        homeops-api-75fd8588f6-7h9vk         1/1   Running 0        9d\nhomeops        homeops-api-75fd8588f6-nqj2f         1/1   Running 0        9d\nhomeops        homeops-web-669bdcbf74-mp8x4         1/1   Running 0        9d\nflux-system    source-controller-7c9d8c7f8f-v4kzp   1/1   Running 0        22d\nnetworking     external-dns-5c69998475-zl8mr        1/1   Running 0        14d"
+}

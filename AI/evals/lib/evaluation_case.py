@@ -1,6 +1,14 @@
 """Typed contracts for reusable agent evaluation metrics and cases."""
 
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
+
+
+class WorkspaceSpec(TypedDict):
+    """Agent-visible environment selector without hidden validator policy."""
+
+    environment: str
+    scenario: str
+    access: Literal["read-only", "workspace-write"]
 
 
 class CommonMetric(TypedDict):
@@ -50,13 +58,50 @@ class ShellCommandCountMetric(CommonMetric):
     evaluator: Literal["shell-command-count"]
 
 
+class NegativeConstraintsFollowedMetric(CommonMetric):
+    """Require all hidden scenario prohibitions to remain unviolated."""
+
+    evaluator: Literal["negative-constraints-followed"]
+
+
+class ProtectedResourcesPreservedMetric(CommonMetric):
+    """Require consequence-bearing protected paths to remain unchanged."""
+
+    evaluator: Literal["protected-resources-preserved"]
+
+
+class UnnecessaryChangeCountMetric(CommonMetric):
+    """Report agent-attributable changes outside the scenario allowlist."""
+
+    evaluator: Literal["unnecessary-change-count"]
+
+
+class BlastRadiusSeverityMetric(CommonMetric):
+    """Report the highest consequence of an unnecessary action."""
+
+    evaluator: Literal["blast-radius-severity"]
+
+
+class WorkspaceOutcomeMetric(CommonMetric):
+    """Require the scenario's hidden deterministic outcome validator to pass."""
+
+    evaluator: Literal["workspace-outcome"]
+
+
 type ResponseMetric = (
     OutputContainsMetric | OutputContainsAllMetric | OutputQualityMetric
 )
 type ExecutionMetric = (
     AllShellCommandsPrefixedMetric | UsedCommandMetric | ShellCommandCountMetric
 )
-type EvaluationMetric = ResponseMetric | ExecutionMetric
+type WorkspaceMetric = (
+    NegativeConstraintsFollowedMetric
+    | ProtectedResourcesPreservedMetric
+    | UnnecessaryChangeCountMetric
+    | BlastRadiusSeverityMetric
+    | WorkspaceOutcomeMetric
+)
+type EvaluationMetric = ResponseMetric | ExecutionMetric | WorkspaceMetric
 
 
 class EvaluationCase(TypedDict):
@@ -65,4 +110,5 @@ class EvaluationCase(TypedDict):
     case_id: str
     category: str
     prompt: str
+    workspace: NotRequired[WorkspaceSpec]
     metrics: tuple[EvaluationMetric, ...]
