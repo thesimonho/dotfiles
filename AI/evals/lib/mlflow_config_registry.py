@@ -96,6 +96,7 @@ class MlflowConfigurationRegistry:
         expected_trace_count: int | None = None,
         external_trace_execution_id: str | None = None,
         expected_external_invocation_count: int | None = None,
+        advance_baseline_alias: bool = True,
     ) -> None:
         """Make configuration provenance visible from the completed evaluation run."""
         self._client.log_param(
@@ -149,11 +150,12 @@ class MlflowConfigurationRegistry:
                 prompt_versions=prompt_versions,
                 expected_invocation_count=expected_external_invocation_count,
             )
-        self._client.set_prompt_alias(
-            publication.manifest_prompt.name,
-            LAST_EVALUATED_ALIAS,
-            publication.manifest_prompt.version,
-        )
+        if advance_baseline_alias:
+            self._client.set_prompt_alias(
+                publication.manifest_prompt.name,
+                LAST_EVALUATED_ALIAS,
+                publication.manifest_prompt.version,
+            )
 
     def _link_prompts_to_traces(
         self,

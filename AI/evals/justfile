@@ -66,6 +66,10 @@ eval-wait-alloy:
 eval-mlflow *args:
     {{ eval_python }} AI/evals/run_mlflow_eval.py "$@"
 
+# Compare full instructions with one component removed from the control arm.
+eval-compare agent component case_id:
+    {{ eval_python }} AI/evals/run_mlflow_eval.py --agent "{{ agent }}" --case-id "{{ case_id }}" --compare-component "{{ component }}"
+
 # Run the suite with the selected agent CLI.
 eval-run agent:
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}"

@@ -33,9 +33,10 @@ The first case asks the agent to query a noisy deployment inventory. It exercise
 - `answer_correct` requires all case-specific answer values.
 - `used_structured_parser` checks whether the normalized command stream invoked `jq`.
 - `all_shell_commands_prefixed` checks whether every agent-authored shell command starts with `rtk`.
+- `shell_command_prefix_rate` reports the fraction of executable command segments that start with `rtk`.
 - `shell_command_count` reports an unthresholded diagnostic count.
 
-Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
+Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, `shell-command-prefix-rate`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
 
 Environment-backed cases use the single-package [HomeOps environment](environments/homeops/README.md). Each case selects a deterministic scenario and either read-only or workspace-write access. The predictor prepares a disposable Git repository, runs the selected CLI from that repository, captures agent-attributable changes before cleanup, and returns workspace plus operational evidence on the native trace.
 
@@ -87,6 +88,9 @@ just eval-mlflow --agent codex
 just eval-mlflow --agent codex --baseline-manifest-version 3
 just eval-mlflow --agent codex --case-id homeops-workload-health-regression
 
+# Run a causal treatment/control comparison for one instruction fragment.
+just eval-compare codex instruction/tools homeops-workload-health-regression
+
 # Send the evaluation to a remote MLflow server.
 MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex
 
@@ -103,6 +107,10 @@ just eval-verify
 ```
 
 Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Small fixture-only cases run from the dotfiles repository root; environment-backed cases run from their disposable project repository so project-local instructions and Git state behave normally. Each subprocess receives a least-privilege environment containing runtime essentials, scenario command adapters, and immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. A case chooses read-only or workspace-write access; Codex receives the matching sandbox mode and Claude receives plan or accept-edits permission mode.
+
+`eval-compare` creates two isolated authenticated client profiles. The treatment contains every monitored component; the control removes exactly the selected instruction component. Agent-component ablation is rejected until the runtime capability directory can be varied with the same guarantee. Both profiles share the same agents, skills, sandbox policy, telemetry configuration, task, dataset row, and deterministic workspace snapshot. Instruction-mirroring hooks are absent from both experimental arms so they cannot reinforce the prose being measured. The treatment advances the normal `last-evaluated` manifest baseline; the ablated control does not.
+
+Both comparison runs receive the same `evaluation.comparison_group_id` plus `evaluation.variant` and `evaluation.ablated_component_id` metadata. Their `comparison/result.json` artifacts identify both run and manifest IDs, prove that workspace snapshot hashes matched, and report raw treatment-minus-control deltas. Snapshot identity includes Git-tracked and non-ignored untracked files while excluding dependencies and other ignored build state. Metrics explicitly declare whether higher or lower is better; diagnostic metrics such as command count have no manufactured improvement direction. The harness does not calculate an aggregate score.
 
 The resource identities are:
 
@@ -143,6 +151,8 @@ Use these filters:
 - Trace API: ``metadata.`agent.cli` = 'codex'``
 - Case trace: **Filters → Field → `case_id`** or **Field → `category`**
 - Evaluation invocation: **Filters → Field → `evaluation.execution_id`**
+- Paired comparison: **Filters → Field → `evaluation.comparison_group_id`**
+- Comparison arm: **Filters → Field → `evaluation.variant`**
 - Configuration identity: **Filters → Field → `config.manifest_id`**
 
 `agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id`, `category`, `evaluation.role`, `evaluation.execution_id`, and `config.manifest_id` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.

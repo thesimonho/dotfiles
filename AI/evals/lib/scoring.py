@@ -128,6 +128,21 @@ def score_execution_metrics(
                 if passed
                 else f"not every shell command used prefix '{prefix}'"
             )
+        elif metric["evaluator"] == "shell-command-prefix-rate":
+            prefix = metric["prefix"]
+            segments = tuple(
+                segment
+                for shell_command in shell_commands
+                for segment in _shell_segments(shell_command)
+            )
+            prefixed_segment_count = sum(
+                _first_executable(segment) == prefix for segment in segments
+            )
+            passed = prefixed_segment_count / len(segments) if segments else 0.0
+            rationale = (
+                f"{prefixed_segment_count} of {len(segments)} shell command "
+                f"segments used prefix '{prefix}'"
+            )
         elif metric["evaluator"] == "shell-command-count":
             passed = len(shell_commands)
             rationale = f"observed {passed} shell commands"

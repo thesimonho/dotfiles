@@ -120,6 +120,29 @@ class ScoreResponseMetricsTest(unittest.TestCase):
             ],
         )
 
+    def test_reports_prefix_adherence_rate_across_command_segments(self) -> None:
+        metrics = cast(
+            tuple[EvaluationMetric, ...],
+            (
+                {
+                    "name": "shell_command_prefix_rate",
+                    "evaluator": "shell-command-prefix-rate",
+                    "prefix": "rtk",
+                },
+            ),
+        )
+
+        results = score_execution_metrics(
+            ("rtk jq . first.json && jq . second.json",),
+            metrics,
+        )
+
+        self.assertEqual(results[0].value, 0.5)
+        self.assertEqual(
+            results[0].rationale,
+            "1 of 2 shell command segments used prefix 'rtk'",
+        )
+
     def test_finds_commands_invoked_by_a_shell_wrapper(self) -> None:
         metrics = cast(
             tuple[EvaluationMetric, ...],

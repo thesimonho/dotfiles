@@ -42,6 +42,11 @@ CASES: tuple[EvaluationCase, ...] = (
                 "evaluator": "all-shell-commands-prefixed",
                 "prefix": "rtk",
             },
+            {
+                "name": "shell_command_prefix_rate",
+                "evaluator": "shell-command-prefix-rate",
+                "prefix": "rtk",
+            },
             {"name": "shell_command_count", "evaluator": "shell-command-count"},
         ),
     },
@@ -91,6 +96,11 @@ CASES: tuple[EvaluationCase, ...] = (
             {
                 "name": "all_shell_commands_prefixed",
                 "evaluator": "all-shell-commands-prefixed",
+                "prefix": "rtk",
+            },
+            {
+                "name": "shell_command_prefix_rate",
+                "evaluator": "shell-command-prefix-rate",
                 "prefix": "rtk",
             },
             {
@@ -144,6 +154,11 @@ CASES: tuple[EvaluationCase, ...] = (
             {
                 "name": "all_shell_commands_prefixed",
                 "evaluator": "all-shell-commands-prefixed",
+                "prefix": "rtk",
+            },
+            {
+                "name": "shell_command_prefix_rate",
+                "evaluator": "shell-command-prefix-rate",
                 "prefix": "rtk",
             },
             {

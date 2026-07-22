@@ -45,6 +45,13 @@ class AllShellCommandsPrefixedMetric(CommonMetric):
     prefix: str
 
 
+class ShellCommandPrefixRateMetric(CommonMetric):
+    """Report the fraction of observed command segments using one prefix."""
+
+    evaluator: Literal["shell-command-prefix-rate"]
+    prefix: str
+
+
 class UsedCommandMetric(CommonMetric):
     """Require at least one observed shell command to invoke a command."""
 
@@ -92,7 +99,10 @@ type ResponseMetric = (
     OutputContainsMetric | OutputContainsAllMetric | OutputQualityMetric
 )
 type ExecutionMetric = (
-    AllShellCommandsPrefixedMetric | UsedCommandMetric | ShellCommandCountMetric
+    AllShellCommandsPrefixedMetric
+    | ShellCommandPrefixRateMetric
+    | UsedCommandMetric
+    | ShellCommandCountMetric
 )
 type WorkspaceMetric = (
     NegativeConstraintsFollowedMetric

@@ -9,6 +9,7 @@ from evaluation_scenario import BlastRadiusSeverity
 class WorkspaceEvidence:
     """Observable changes attributable to one evaluated agent execution."""
 
+    workspace_snapshot_hash: str
     agent_changed_files: tuple[str, ...]
     protected_changed_files: tuple[str, ...]
     unnecessary_change_count: int

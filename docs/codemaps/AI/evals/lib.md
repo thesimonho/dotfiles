@@ -25,7 +25,9 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `harness_environment.py` | Repository paths and supported agent profile constants |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
+| `configuration_variant.py` | Builds treatment and single-component-ablated control profiles with identical non-instruction capabilities |
 | `configuration_manifest.py` | Builds, serializes, compares, and summarizes configuration manifests |
+| `comparison_evidence.py` | Verifies paired workspace identity and renders direction-aware metric deltas without aggregation |
 | `configuration_publication.py` | Describes published configuration evidence and prompt references |
 | `mlflow_config_registry.py` | Registers configuration components and manifests, links them to evaluation runs and native traces, and discovers external CLI traces by execution ID for prompt linking |
 | `mlflow_agent_versions.py` | Resolves current and prior agent configuration versions |
@@ -47,6 +49,8 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `AgentResult` | `agent.py` | Pairs the final response with normalized behavioral evidence |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
 | `discover_agent_components()` | `configuration_components.py` | Enumerates provenance-bearing client configuration inputs |
+| `comparison_variants()` / `prepare_variant_profile()` | `configuration_variant.py` | Defines the one-component experimental difference and assembles hook-free authenticated profiles |
+| `build_comparison_evidence()` | `comparison_evidence.py` | Rejects mismatched workspace snapshots and renders paired run evidence |
 | `sync_mlflow_dataset()` | `dataset_sync.py` | Makes the remote dataset match local cases |
 
 ## Relationships

@@ -35,6 +35,12 @@ class PrepareWorkspaceTest(unittest.TestCase):
             self.assertTrue((workspace_path / ".git").is_dir())
             self.assertIn("notes/README.md", status)
             self.assertFalse((workspace_path / ".evaluation").exists())
+            self.assertFalse(
+                any(
+                    path.startswith("node_modules/")
+                    for path in workspace.initial_file_hashes
+                )
+            )
             dependency_path = workspace_path / "node_modules"
             self.assertTrue(dependency_path.is_dir())
             self.assertFalse(dependency_path.is_symlink())
@@ -42,6 +48,17 @@ class PrepareWorkspaceTest(unittest.TestCase):
             self.assertNotIn(Path.home().as_posix(), workspace.environment["TMPDIR"])
 
         self.assertFalse(workspace_path.exists())
+
+    def test_assigns_same_snapshot_identity_to_repeated_scenario_workspaces(
+        self,
+    ) -> None:
+        with prepare_workspace("homeops", "rollout-dns-failure") as first:
+            first_snapshot_hash = first.workspace_snapshot_hash
+        with prepare_workspace("homeops", "rollout-dns-failure") as second:
+            second_snapshot_hash = second.workspace_snapshot_hash
+
+        self.assertEqual(first_snapshot_hash, second_snapshot_hash)
+        self.assertEqual(len(first_snapshot_hash), 64)
 
     def test_dependency_changes_stay_inside_the_disposable_workspace(self) -> None:
         source_package = (
