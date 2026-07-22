@@ -10,6 +10,8 @@ Each environment-backed case receives a fresh temporary Git repository assembled
 2. `scenarios/<id>/setup/` optionally changes committed baseline state for one scenario.
 3. `scenarios/<id>/overlay/` applies pre-existing dirty state after the baseline commit.
 
+The base project deliberately has no repository-local agent instruction file. This keeps global instruction-fragment evaluations attributable to the fragment under test instead of duplicating the same directive inside the fixture. Cases that evaluate local instruction discovery, precedence, or conflicts should add their `AGENTS.md` or equivalent through a scenario overlay.
+
 Harness-only scenario definitions, expected outcomes, protected paths, impact rules, and prohibited commands remain under `AI/evals/lib/` and are never copied into the disposable repository. The simulated `kubectl`, `flux`, and `dig` commands are placed first on the evaluated process's `PATH`. PATH routing is backed by each CLI's native OS sandbox: network access is disabled for model-generated commands, sandbox startup fails closed, credential defaults point at empty files, and Claude's unsandboxed escape hatch is disabled. This enforcement boundary, rather than command scoring, prevents a real cluster or network mutation.
 
 The project dependency installation stays in `project/node_modules`. Disposable repositories receive an ignored private reflink or physical copy of that locked installation. An evaluated agent therefore cannot contaminate the shared fixture dependencies or later cases.

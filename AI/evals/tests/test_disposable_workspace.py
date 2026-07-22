@@ -31,6 +31,7 @@ class PrepareWorkspaceTest(unittest.TestCase):
             self.assertEqual(workspace.environment_name, "homeops")
             self.assertEqual(workspace.scenario_id, "rollout-dns-failure")
             self.assertTrue((workspace_path / "README.md").is_file())
+            self.assertFalse((workspace_path / "AGENTS.md").exists())
             self.assertTrue((workspace_path / ".git").is_dir())
             self.assertIn("notes/README.md", status)
             self.assertFalse((workspace_path / ".evaluation").exists())
