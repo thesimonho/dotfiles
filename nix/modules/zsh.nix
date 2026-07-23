@@ -211,6 +211,21 @@ in
         zle -N edit-command-line
         bindkey '^X^E' edit-command-line
 
+        # fzf's shell integration loads after zsh-autocomplete and claims Tab.
+        # Restore IDE-style menu controls after both integrations are ready:
+        # Tab enters/moves forward, Shift-Tab moves backward, and Enter inserts
+        # the selected completion without executing the command line.
+        bindkey -M main '^I' menu-select
+        bindkey -M main '^[[Z' reverse-menu-complete
+        bindkey -M main '^[[A' up-line-or-search
+        bindkey -M main '^[[B' down-line-or-select
+        bindkey -M main '^[OA' up-line-or-search
+        bindkey -M main '^[OB' down-line-or-select
+
+        bindkey -M menuselect '^I' forward-char
+        bindkey -M menuselect '^[[Z' backward-char
+        bindkey -M menuselect '^M' accept-line
+
         copy-command() {
           if command -v pbcopy &> /dev/null; then
             echo -n "$BUFFER" | pbcopy
