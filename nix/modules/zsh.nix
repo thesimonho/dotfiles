@@ -19,7 +19,9 @@ in
 {
   programs.zsh = {
     enable = true;
-    enableCompletion = true;
+    # zsh-autocomplete owns compinit so it can populate completion results
+    # asynchronously while the user types.
+    enableCompletion = false;
     enableVteIntegration = true;
     history.share = false;
     autosuggestion = {
@@ -158,25 +160,43 @@ in
         ''
       ))
 
-      # 550: before compinit — completion styles & fzf-tab zstyles
+      # 540: zsh-autocomplete must own compinit and load before compdef calls.
+      (lib.mkOrder 540 ''
+        source ${pkgs.zsh-autocomplete}/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+      '')
+
+      # 550: completion behavior before Oh My Zsh adds its completion defaults
       (lib.mkOrder 550 ''
         typeset -A ZSH_HIGHLIGHT_REGEXP
         ZSH_HIGHLIGHT_REGEXP+=('^rm .*' fg=red,bold)
 
-        zstyle ':completion:*:git-checkout:*' sort false
-        zstyle ':completion:*:descriptions' format '[%d]'
-        zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
-        zstyle ':completion:*' menu no
-
-        # fzf-tab styles
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 $realpath'
-        zstyle ':fzf-tab:*' use-fzf-default-opts yes
-        zstyle ':fzf-tab:*' switch-group '<' '>'
+        # Wait for a deliberate pause and enough input to avoid a noisy list
+        # while preserving the find-as-you-type experience.
+        zstyle ':autocomplete:*' delay 0.12
+        zstyle ':autocomplete:*' min-input 2
+        zstyle ':autocomplete:*' timeout 0.75
+        zstyle ':autocomplete:*:*' list-lines 10
       '')
 
       # 1000: general config
       (lib.mkOrder 1000 ''
         autoload zmv  # regex mv
+
+        # Apply the final completion palette after Oh My Zsh has installed its
+        # defaults. The selected row mirrors the active Kanagawa fzf palette.
+        if [[ "$IS_DAY" == "true" ]]; then
+          _completion_group_color='#977865'
+          _completion_selection_style='48;2;216;216;210;38;2;98;102;106'
+        else
+          _completion_group_color='#b6927b'
+          _completion_selection_style='48;2;42;42;55;38;2;220;215;186'
+        fi
+
+        zstyle ':completion:*:git-checkout:*' sort false
+        zstyle ':completion:*:descriptions' format "%F{$_completion_group_color}%B%d%b%f"
+        zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS} "ma=$_completion_selection_style"
+
+        unset _completion_group_color _completion_selection_style
 
         # keybinds
         function open_file_manager() {
@@ -250,15 +270,6 @@ in
       ))
     ];
     plugins = [
-      {
-        name = "fzf-tab";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "v1.3.0";
-          sha256 = "sha256-8atbysoOyCBW2OYKmdc91x9V/Mk3eyg3hvzvhJpQ32w=";
-        };
-      }
       {
         name = "dot-up";
         src = pkgs.fetchFromGitHub {
