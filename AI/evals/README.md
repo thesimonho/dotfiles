@@ -102,6 +102,9 @@ just eval-setup
 # Start loopback-only MLflow and Alloy, then wait until both answer.
 just eval-up
 
+# Start only MLflow and wait until it answers.
+just eval-up-mlflow
+
 # Run with this month's authenticated CLI.
 just eval-run codex
 

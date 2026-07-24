@@ -20,12 +20,12 @@ eval-homeops-setup:
     npm ci --prefix AI/evals/environments/homeops/project
 
 # Start MLflow, bind Alloy to the eval experiment, and wait for both services.
-eval-up: eval-up-mlflow eval-wait-mlflow eval-bootstrap-alloy eval-up-alloy eval-wait-alloy
+eval-up: eval-up-mlflow eval-bootstrap-alloy eval-up-alloy eval-wait-alloy
 
-# Start the MLflow service.
-[private]
+# Start the MLflow service and wait until it answers.
 eval-up-mlflow:
     docker compose -f {{ mlflow_compose }} up -d mlflow
+    just --justfile AI/evals/justfile eval-wait-mlflow
 
 # Wait up to 60 seconds for MLflow to answer.
 [private]
