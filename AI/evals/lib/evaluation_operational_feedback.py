@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from agent_event_contract import unobserved_evidence_requirements
 from mlflow.entities import Feedback
 
 
@@ -10,6 +11,7 @@ def operational_feedback(
     execution_evidence: dict[str, Any],
 ) -> list[Feedback]:
     """Expose diagnostics without assigning pass/fail thresholds."""
+    unobserved_required_evidence = _unobserved_required_evidence(execution_evidence)
     feedback = [
         Feedback(
             name="case_completion_seconds",
@@ -23,12 +25,12 @@ def operational_feedback(
         ),
         Feedback(
             name="evidence_contract_satisfied",
-            value=not execution_evidence["unobserved_required_evidence"],
+            value=not unobserved_required_evidence,
             rationale=(
                 "All must-observe evidence requirements were present."
-                if not execution_evidence["unobserved_required_evidence"]
+                if not unobserved_required_evidence
                 else "Missing must-observe evidence: "
-                + ", ".join(execution_evidence["unobserved_required_evidence"])
+                + ", ".join(unobserved_required_evidence)
             ),
         ),
         Feedback(
@@ -44,6 +46,19 @@ def operational_feedback(
     ]
     feedback.extend(_token_feedback(operational_evidence["token_usage"]))
     return feedback
+
+
+def _unobserved_required_evidence(
+    execution_evidence: dict[str, Any],
+) -> tuple[str, ...]:
+    """Return stored missing evidence or derive it for older trace outputs."""
+    stored_requirements = execution_evidence.get("unobserved_required_evidence")
+    if stored_requirements is not None:
+        return tuple(stored_requirements)
+    return unobserved_evidence_requirements(
+        execution_evidence["required_observed_evidence"],
+        execution_evidence["event_coverage"]["normalized_evidence_types"],
+    )
 
 
 def _token_feedback(token_usage: dict[str, Any]) -> list[Feedback]:

@@ -10,6 +10,7 @@
  *   - README.md, CLAUDE.md, AGENTS.md (anywhere in the tree)
  *   - Any .md file under docs/
  *   - Direct shared agent and instruction-fragment sources under AI/
+ *   - Files inside the disposable HomeOps evaluation environment
  * .txt files inside the repo are always blocked.
  */
 
@@ -20,6 +21,7 @@ const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
 const DOCS_DIR_MD = /^docs\//;
 const INSTRUCTION_SOURCE_MD =
   /^AI\/(agents\/[^/]+|instructions\/fragments\/[^/]+)\.md$/;
+const HOMEOPS_EVALUATION_ENVIRONMENT = /^AI\/evals\/environments\/homeops\//;
 
 /**
  * Returns file paths from Claude and Codex tool inputs.
@@ -50,6 +52,9 @@ function evaluate(payload) {
     const relative = path.relative(cwd, path.resolve(cwd, filePath));
     // Only police files inside the repo; scratch/temp files elsewhere are not ours.
     if (relative.startsWith("..") || path.isAbsolute(relative)) {
+      continue;
+    }
+    if (HOMEOPS_EVALUATION_ENVIRONMENT.test(relative)) {
       continue;
     }
 

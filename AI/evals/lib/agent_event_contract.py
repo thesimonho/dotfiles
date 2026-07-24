@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass
 from typing import Literal, cast
 
 type EvidenceRequirement = Literal[
     "agent.message",
+    "agent.definition-canary",
     "agent.model-selection",
     "agent.spawn",
     "token.usage",
@@ -21,6 +22,7 @@ SUPPORTED_EVIDENCE_BY_PROFILE: dict[str, frozenset[EvidenceRequirement]] = {
     "codex": frozenset(
         {
             "agent.message",
+            "agent.definition-canary",
             "agent.spawn",
             "token.usage",
             "tool.file-change",
@@ -31,6 +33,7 @@ SUPPORTED_EVIDENCE_BY_PROFILE: dict[str, frozenset[EvidenceRequirement]] = {
     ),
     "claude": frozenset(
         {
+            "agent.definition-canary",
             "agent.message",
             "agent.model-selection",
             "agent.spawn",
@@ -56,6 +59,14 @@ class AgentEventCoverage:
     def to_dict(self) -> dict[str, object]:
         """Render coverage as stable JSON-compatible evidence."""
         return asdict(self)
+
+
+def unobserved_evidence_requirements(
+    required_evidence: Iterable[str],
+    observed_evidence: Iterable[str],
+) -> tuple[str, ...]:
+    """Return must-observe evidence absent from one normalized event stream."""
+    return tuple(sorted(set(required_evidence) - set(observed_evidence)))
 
 
 def unsupported_evidence_requirements(

@@ -11,6 +11,8 @@ HIGHER_IS_BETTER_METRICS = {
     "answer_correct",
     "evidence_contract_satisfied",
     "negative_constraints_followed",
+    "planning_agent_definition_loaded",
+    "planning_agent_usage_appropriate",
     "protected_resources_preserved",
     "shell_command_prefix_rate",
     "task_outcome",

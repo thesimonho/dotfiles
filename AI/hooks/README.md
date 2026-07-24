@@ -20,7 +20,7 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 
 | Hook                        | Event       | Effect | Enforces                                                               |
 | --------------------------- | ----------- | ------ | ---------------------------------------------------------------------- |
-| `block-doc-files`           | PreToolUse  | block  | don't create stray `.md`/`.txt`                                        |
+| `block-doc-files`           | PreToolUse  | block  | don't create stray `.md`/`.txt`; ignore files inside the HomeOps fixture |
 | `block-build-dirs`          | PreToolUse  | block  | don't edit build output                                                |
 | `block-plan-references`     | PreToolUse  | block  | no plan-file references in code/docs (planning.md)                     |
 | `block-force-push`          | PreToolUse  | block  | never force-push (git.md)                                              |

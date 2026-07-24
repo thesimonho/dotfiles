@@ -67,6 +67,15 @@ class ShellCommandCountMetric(CommonMetric):
     evaluator: Literal["shell-command-count"]
 
 
+class EvidenceCountMetric(CommonMetric):
+    """Require normalized semantic evidence to occur within declared bounds."""
+
+    evaluator: Literal["evidence-count"]
+    evidence_type: EvidenceRequirement
+    minimum: NotRequired[int]
+    maximum: NotRequired[int]
+
+
 class NegativeConstraintsFollowedMetric(CommonMetric):
     """Require all hidden scenario prohibitions to remain unviolated."""
 
@@ -105,6 +114,7 @@ type ExecutionMetric = (
     | ShellCommandPrefixRateMetric
     | UsedCommandMetric
     | ShellCommandCountMetric
+    | EvidenceCountMetric
 )
 type WorkspaceMetric = (
     NegativeConstraintsFollowedMetric

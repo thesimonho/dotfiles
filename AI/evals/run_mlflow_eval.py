@@ -20,6 +20,7 @@ from agent_execution_context import (  # noqa: E402
 )
 from agent_event_contract import (  # noqa: E402
     EvidenceRequirement,
+    unobserved_evidence_requirements,
     validate_case_evidence_requirements,
 )
 import configuration_components  # noqa: E402
@@ -28,7 +29,9 @@ from comparison_evidence import (  # noqa: E402
     build_comparison_evidence,
 )
 from configuration_variant import (  # noqa: E402
+    ConfigurationVariant,
     comparison_variants,
+    new_agent_definition_canary,
     prepare_variant_profile,
 )
 from capabilities import (  # noqa: E402
@@ -127,6 +130,7 @@ class CompletedEvaluation:
 def build_predict_fn(
     identity: EvaluationIdentity,
     profile_environment: dict[str, str] | None = None,
+    agent_definition_canary: str | None = None,
     workspace_snapshots: WorkspaceSnapshotRecorder | None = None,
 ) -> Callable[..., dict[str, object]]:
     """Build a predictor whose external traces share immutable run identity."""
@@ -176,6 +180,7 @@ def build_predict_fn(
                     execution_context,
                     profile=identity.profile,
                     environment_overrides=profile_environment,
+                    agent_definition_canary=agent_definition_canary,
                 ),
                 evidence_requirements,
                 observed_evidence_requirements,
@@ -213,6 +218,7 @@ def build_predict_fn(
                         additional_writable_paths=(
                             prepared_workspace.additional_writable_paths
                         ),
+                        agent_definition_canary=agent_definition_canary,
                     ),
                     evidence_requirements,
                     observed_evidence_requirements,
@@ -235,6 +241,10 @@ def build_predict_fn(
                     workspace_stack.close()
         _update_trace_preview(response_preview=result.response)
         case_completion_seconds = time.perf_counter() - case_started_at
+        unobserved_required_evidence = unobserved_evidence_requirements(
+            observed_evidence_requirements,
+            result.event_coverage.normalized_evidence_types,
+        )
         output = {
             "response": result.response,
             "execution_evidence": {
@@ -243,6 +253,7 @@ def build_predict_fn(
                 "model_ids": result.model_ids,
                 "required_evidence": evidence_requirements,
                 "required_observed_evidence": observed_evidence_requirements,
+                "unobserved_required_evidence": unobserved_required_evidence,
                 "event_coverage": result.event_coverage.to_dict(),
             },
             "operational_evidence": {
@@ -312,6 +323,7 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
         execution_results = scoring.score_execution_metrics(
             tuple(outputs["execution_evidence"]["shell_commands"]),
             metrics,
+            tuple(outputs["execution_evidence"]["events"]),
         )
         workspace_results = (
             scoring.score_workspace_metrics(outputs["workspace_evidence"], metrics)
@@ -431,16 +443,23 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         )
         return
 
-    completed = _run_evaluation_arm(
-        client=client,
-        registry=registry,
-        profile=agent_profile,
+    treatment_variant = ConfigurationVariant(
+        name="treatment",
         components=components,
-        selected_cases=selected_cases,
-        evaluation_data=evaluation_data,
-        experiment_id=experiment_id,
-        baseline_manifest_version=arguments.baseline_manifest_version,
     )
+    with prepare_variant_profile(agent_profile, treatment_variant) as prepared_profile:
+        completed = _run_evaluation_arm(
+            client=client,
+            registry=registry,
+            profile=agent_profile,
+            components=components,
+            selected_cases=selected_cases,
+            evaluation_data=evaluation_data,
+            experiment_id=experiment_id,
+            baseline_manifest_version=arguments.baseline_manifest_version,
+            profile_environment=prepared_profile.environment,
+            agent_definition_canary=prepared_profile.agent_definition_canary,
+        )
     _print_completed_evaluation(completed)
 
 
@@ -463,8 +482,13 @@ def _run_component_comparison(
         component_id,
     )
     completed_by_variant: dict[str, CompletedEvaluation] = {}
+    agent_definition_canary = new_agent_definition_canary()
     for variant in (treatment_variant, control_variant):
-        with prepare_variant_profile(profile, variant) as prepared_profile:
+        with prepare_variant_profile(
+            profile,
+            variant,
+            agent_definition_canary=agent_definition_canary,
+        ) as prepared_profile:
             completed_by_variant[variant.name] = _run_evaluation_arm(
                 client=client,
                 registry=registry,
@@ -475,6 +499,7 @@ def _run_component_comparison(
                 experiment_id=experiment_id,
                 baseline_manifest_version=baseline_manifest_version,
                 profile_environment=prepared_profile.environment,
+                agent_definition_canary=prepared_profile.agent_definition_canary,
                 comparison_group_id=comparison_group_id,
                 comparison_variant=variant.name,
                 ablated_component_id=component_id,
@@ -517,6 +542,7 @@ def _run_evaluation_arm(
     experiment_id: str,
     baseline_manifest_version: int | None,
     profile_environment: dict[str, str] | None = None,
+    agent_definition_canary: str | None = None,
     comparison_group_id: str | None = None,
     comparison_variant: str | None = None,
     ablated_component_id: str | None = None,
@@ -549,6 +575,7 @@ def _run_evaluation_arm(
         build_predict_fn(
             identity,
             profile_environment=profile_environment,
+            agent_definition_canary=agent_definition_canary,
             workspace_snapshots=workspace_snapshots,
         )
     )

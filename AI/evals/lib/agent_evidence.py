@@ -98,6 +98,7 @@ class TokenUsage:
 
 def codex_evidence(
     events: tuple[dict[str, Any], ...],
+    agent_definition_canary: str | None = None,
 ) -> tuple[
     tuple[AgentEvent, ...],
     TokenUsage,
@@ -115,7 +116,14 @@ def codex_evidence(
         for item in completed_items
         if (normalized_event := _codex_item_event(item)) is not None
     )
-    agent_events = (*agent_events, *_codex_runtime_events(events))
+    agent_events = (
+        *agent_events,
+        *_codex_definition_canary_events(
+            completed_items,
+            agent_definition_canary,
+        ),
+        *_codex_runtime_events(events),
+    )
     usage_event = next(
         (
             event
@@ -134,6 +142,7 @@ def codex_evidence(
 def claude_evidence(
     events: tuple[dict[str, Any], ...],
     result_event: dict[str, Any],
+    agent_definition_canary: str | None = None,
 ) -> tuple[
     tuple[AgentEvent, ...],
     TokenUsage,
@@ -142,12 +151,15 @@ def claude_evidence(
 ]:
     """Normalize Claude tool-use blocks, result usage, and emitted model IDs."""
     tool_results = _claude_tool_results(events)
-    agent_events = tuple(
-        _claude_tool_event(content, tool_results)
-        for event in events
-        if event.get("type") == "assistant"
-        for content in event.get("message", {}).get("content", [])
-        if content.get("type") == "tool_use"
+    agent_events = (
+        *tuple(
+            _claude_tool_event(content, tool_results)
+            for event in events
+            if event.get("type") == "assistant"
+            for content in event.get("message", {}).get("content", [])
+            if content.get("type") == "tool_use"
+        ),
+        *_claude_definition_canary_events(events, agent_definition_canary),
     )
     token_usage = _claude_token_usage(result_event.get("usage", {}))
     model_ids = _claude_model_ids(events, result_event)
@@ -295,6 +307,102 @@ def _codex_runtime_events(
             )
         )
     return tuple(runtime_events)
+
+
+def _codex_definition_canary_events(
+    completed_items: tuple[dict[str, Any], ...],
+    expected_canary: str | None,
+) -> tuple[AgentEvent, ...]:
+    """Expose only an expected marker from completed child-agent messages."""
+    if expected_canary is None:
+        return ()
+    canary_events = []
+    observed_thread_ids = set()
+    for item in completed_items:
+        agent_states = item.get("agents_states")
+        if not isinstance(agent_states, dict):
+            continue
+        for thread_id, state in sorted(agent_states.items()):
+            if (
+                not isinstance(thread_id, str)
+                or thread_id in observed_thread_ids
+                or not isinstance(state, dict)
+            ):
+                continue
+            message = state.get("message")
+            if not isinstance(message, str) or not _has_exact_canary_footer(
+                message,
+                expected_canary,
+            ):
+                continue
+            observed_thread_ids.add(thread_id)
+            canary_events.append(
+                AgentEvent(
+                    category="agent",
+                    name="definition-canary",
+                    evidence_type="agent.definition-canary",
+                    status="completed",
+                    attributes=(("thread_id", _bounded(thread_id, 100)),),
+                )
+            )
+    return tuple(canary_events)
+
+
+def _claude_definition_canary_events(
+    events: tuple[dict[str, Any], ...],
+    expected_canary: str | None,
+) -> tuple[AgentEvent, ...]:
+    """Recognize an exact canary footer only in Agent or Task results."""
+    if expected_canary is None:
+        return ()
+    agent_tool_ids = {
+        content["id"]
+        for event in events
+        if event.get("type") == "assistant"
+        for content in event.get("message", {}).get("content", [])
+        if content.get("type") == "tool_use"
+        and content.get("name") in {"Agent", "Task"}
+        and isinstance(content.get("id"), str)
+    }
+    return tuple(
+        AgentEvent(
+            category="agent",
+            name="definition-canary",
+            evidence_type="agent.definition-canary",
+            status="completed",
+            attributes=(("tool_use_id", _bounded(tool_use_id, 100)),),
+        )
+        for event in events
+        if event.get("type") == "user"
+        for content in event.get("message", {}).get("content", [])
+        if content.get("type") == "tool_result"
+        and isinstance((tool_use_id := content.get("tool_use_id")), str)
+        and tool_use_id in agent_tool_ids
+        and _has_exact_canary_footer(
+            _claude_tool_result_text(content),
+            expected_canary,
+        )
+    )
+
+
+def _claude_tool_result_text(content: dict[str, Any]) -> str:
+    """Flatten only textual Claude tool-result content for exact matching."""
+    result_content = content.get("content")
+    if isinstance(result_content, str):
+        return result_content
+    if not isinstance(result_content, list):
+        return ""
+    return "\n".join(
+        block["text"]
+        for block in result_content
+        if isinstance(block, dict) and isinstance(block.get("text"), str)
+    )
+
+
+def _has_exact_canary_footer(message: str, expected_canary: str) -> bool:
+    """Require the opaque marker as the final unformatted response line."""
+    lines = tuple(line.strip() for line in message.splitlines() if line.strip())
+    return bool(lines) and lines[-1] == expected_canary
 
 
 def _codex_event_coverage(

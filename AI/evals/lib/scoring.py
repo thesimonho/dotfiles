@@ -98,6 +98,7 @@ def score_response_metrics(
 def score_execution_metrics(
     shell_commands: tuple[str, ...],
     metrics: tuple[EvaluationMetric, ...],
+    events: tuple[dict[str, Any], ...] = (),
 ) -> list[MetricResult]:
     """Score metrics whose evidence comes from normalized execution events."""
     results = []
@@ -146,6 +147,25 @@ def score_execution_metrics(
         elif metric["evaluator"] == "shell-command-count":
             passed = len(shell_commands)
             rationale = f"observed {passed} shell commands"
+        elif metric["evaluator"] == "evidence-count":
+            evidence_type = metric["evidence_type"]
+            observed_count = sum(
+                event.get("evidence_type") == evidence_type for event in events
+            )
+            minimum = metric.get("minimum", 0)
+            maximum = metric.get("maximum")
+            passed = observed_count >= minimum and (
+                maximum is None or observed_count <= maximum
+            )
+            expected_range = (
+                f"{minimum} or more"
+                if maximum is None
+                else f"{minimum} through {maximum}"
+            )
+            rationale = (
+                f"observed {observed_count} '{evidence_type}' events; "
+                f"expected {expected_range}"
+            )
         else:
             continue
         results.append(MetricResult(metric["name"], passed, rationale))

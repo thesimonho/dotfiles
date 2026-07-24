@@ -13,23 +13,24 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | File | Description |
 | --- | --- |
 | `agent.py` | Invokes Claude/Codex with fail-closed native sandbox settings and measures authenticated CLI subprocess duration |
-| `agent_evidence.py` | Normalizes tool and collaboration events, emitted model IDs, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
-| `agent_event_contract.py` | Defines semantic case evidence requirements, per-profile parser support, coverage evidence, and pre-execution validation |
+| `agent_evidence.py` | Normalizes tool and collaboration events, exact expected child-definition canaries, emitted model IDs, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
+| `agent_event_contract.py` | Defines semantic case evidence requirements, per-profile parser support, missing-observation calculation, coverage evidence, and pre-execution validation |
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
 | `evaluation_case.py` | Typed case and reusable response/execution metric declarations |
 | `evaluation_coverage.py` | Validates instruction-to-case coverage and projects treatment, control, and judge CLI usage before execution |
 | `evaluation_operational_feedback.py` | Produces universal timing, token, evidence-contract, and unknown-event feedback |
-| `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, outcome validators, and consequence rules |
+| `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, source/import-graph outcome validators, and consequence rules |
 | `workspace_evidence.py` | Typed final workspace, simulator, negative-constraint, and blast-radius observations |
 | `disposable_workspace.py` | Builds scenario repositories with private dependencies, exposes simulator tools, and captures agent-attributable evidence |
 | `capabilities.py` | Preflights and hashes shared CLI tools, skills, and agents and renders path-redacted MLflow evidence |
-| `scoring.py` | Evaluates independently named response, execution, workspace, and blast-radius metrics |
+| `scoring.py` | Evaluates independently named response, semantic-event, execution, workspace, and blast-radius metrics |
+| `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
 | `dataset_sync.py` | Converts cases to MLflow records and replaces dataset contents |
 | `harness_environment.py` | Repository paths and supported agent profile constants |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
-| `configuration_variant.py` | Builds treatment and single-component-ablated control profiles with identical non-instruction capabilities |
+| `configuration_variant.py` | Builds treatment and single-component-ablated control profiles with materialized custom-agent files and identical per-campaign definition canaries |
 | `configuration_manifest.py` | Builds, serializes, compares, and summarizes configuration manifests |
 | `comparison_evidence.py` | Verifies paired workspace identity and renders direction-aware metric deltas without aggregation |
 | `configuration_publication.py` | Describes published configuration evidence and prompt references |

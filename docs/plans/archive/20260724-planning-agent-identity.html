@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Planning-agent identity evaluation</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+    body { max-width: 980px; margin: 0 auto; padding: 48px 24px 80px; line-height: 1.55; }
+    header, section { background: #172033; border: 1px solid #334155; border-radius: 14px; margin-bottom: 20px; padding: 24px; }
+    h1, h2 { color: #f8fafc; margin-top: 0; }
+    h2 { display: flex; gap: 12px; }
+    h2 small { color: #5eead4; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; vertical-align: top; }
+    code, pre { font-family: ui-monospace, monospace; }
+    pre { background: #090f1d; border-radius: 10px; color: #99f6e4; overflow: auto; padding: 18px; }
+    .chip { background: #134e4a; border-radius: 999px; color: #ccfbf1; display: inline-block; font-size: .8rem; padding: 2px 9px; }
+    .callout { background: #292313; border-left: 4px solid #fbbf24; padding: 12px 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="chip">Implemented</span>
+    <h1>Prove that planning uses the configured Frank agent</h1>
+    Add a provider-neutral definition canary and a cost-bounded Codex planning campaign. A display nickname never counts as agent identity.
+  </header>
+
+  <section>
+    <h2><small>01</small> Trust boundary</h2>
+    <pre>copied frank definition + shared campaign nonce
+                    │
+                    ▼
+          configured child context
+                    │
+       child completion carries nonce
+                    │
+                    ▼
+spawned + completed + canary observed ── definition proven</pre>
+    <aside class="callout">The capability manifest proves which file was installed. The canary proves that the installed definition reached a completed child context. Neither a nickname nor parent narration is sufficient.</aside>
+  </section>
+
+  <section>
+    <h2><small>02</small> Case design</h2>
+    <table>
+      <thead><tr><th>Case</th><th>Pressure</th><th>Expected delegation</th></tr></thead>
+      <tbody>
+        <tr><td>Existing workload-health overreach</td><td>Narrow one-file correction amid distracting state</td><td>No planning-agent spawn</td></tr>
+        <tr><td>Maintenance visibility</td><td>Domain, API, web, and durable documentation change</td><td>Configured Frank spawns, completes, and returns the canary</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><small>03</small> Implementation</h2>
+    <ol>
+      <li>Copy capability directories into disposable profiles and instrument Frank without mutating the active configuration.</li>
+      <li>Normalize completed child messages into safe definition-canary evidence correlated with the child thread.</li>
+      <li>Add reusable evidence-count metrics with exact minimum and maximum bounds.</li>
+      <li>Reuse the existing light case and add one heavy HomeOps scenario.</li>
+      <li>Remove image coverage and make planning coverage explicitly partial where Codex cannot prove the child model.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><small>04</small> Verification</h2>
+    Formatter, lint, type checking, compilation, HomeOps build, Compose validation, and both provider campaign previews run without unit tests. Exact-footer parser smoke checks cover Codex and Claude, while the heavy scenario verifies API and banner wiring through their entry-point import graphs without executing agent-authored server code. The first live heavy run completed in 299.9 seconds with 1,526,455 total tokens but emitted no spawn or definition-canary evidence, correctly identifying a planning-instruction failure despite its long duration. The calibration also exposed and repaired a missing predictor field before final verification.
+  </section>
+</body>
+</html>

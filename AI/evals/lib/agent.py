@@ -79,6 +79,7 @@ def _call_claude(
     workspace_access: WorkspaceAccess = "read-only",
     environment_overrides: dict[str, str] | None = None,
     additional_writable_paths: tuple[Path, ...] = (),
+    agent_definition_canary: str | None = None,
 ) -> AgentResult:
     sandbox_settings = claude_sandbox_settings(additional_writable_paths)
     command = [
@@ -110,12 +111,14 @@ def _call_claude(
     return claude_result_from_output(
         completed_process.stdout,
         invocation_seconds=completed_process.invocation_seconds,
+        agent_definition_canary=agent_definition_canary,
     )
 
 
 def claude_result_from_output(
     output: str,
     invocation_seconds: float = 0.0,
+    agent_definition_canary: str | None = None,
 ) -> AgentResult:
     """Normalize Claude stream JSON into response and Bash command evidence."""
     events = _json_lines(output)
@@ -138,6 +141,7 @@ def claude_result_from_output(
     agent_events, token_usage, model_ids, event_coverage = claude_evidence(
         events,
         result_event,
+        agent_definition_canary,
     )
     return AgentResult(
         response=response_text,
@@ -158,6 +162,7 @@ def _call_codex(
     workspace_access: WorkspaceAccess = "read-only",
     environment_overrides: dict[str, str] | None = None,
     additional_writable_paths: tuple[Path, ...] = (),
+    agent_definition_canary: str | None = None,
 ) -> AgentResult:
     command = [
         "codex",
@@ -183,12 +188,14 @@ def _call_codex(
     return codex_result_from_output(
         completed_process.stdout,
         invocation_seconds=completed_process.invocation_seconds,
+        agent_definition_canary=agent_definition_canary,
     )
 
 
 def codex_result_from_output(
     output: str,
     invocation_seconds: float = 0.0,
+    agent_definition_canary: str | None = None,
 ) -> AgentResult:
     """Normalize Codex JSONL into response text and shell command evidence."""
     events = _json_lines(output)
@@ -207,7 +214,10 @@ def codex_result_from_output(
         and event.get("item", {}).get("type") == "command_execution"
         and isinstance(event["item"].get("command"), str)
     )
-    agent_events, token_usage, model_ids, event_coverage = codex_evidence(events)
+    agent_events, token_usage, model_ids, event_coverage = codex_evidence(
+        events,
+        agent_definition_canary,
+    )
     return AgentResult(
         response=messages[-1],
         shell_commands=shell_commands,
@@ -295,6 +305,7 @@ def run_agent(
     workspace_access: WorkspaceAccess = "read-only",
     environment_overrides: dict[str, str] | None = None,
     additional_writable_paths: tuple[Path, ...] = (),
+    agent_definition_canary: str | None = None,
 ) -> AgentResult:
     """Run one task through the selected authenticated agent CLI."""
     if profile == "codex":
@@ -305,6 +316,7 @@ def run_agent(
             workspace_access=workspace_access,
             environment_overrides=environment_overrides,
             additional_writable_paths=additional_writable_paths,
+            agent_definition_canary=agent_definition_canary,
         )
     if profile == "claude":
         return _call_claude(
@@ -315,6 +327,7 @@ def run_agent(
             workspace_access=workspace_access,
             environment_overrides=environment_overrides,
             additional_writable_paths=additional_writable_paths,
+            agent_definition_canary=agent_definition_canary,
         )
     raise ValueError(f"unsupported agent profile: {profile}")
 

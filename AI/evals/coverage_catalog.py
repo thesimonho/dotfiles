@@ -22,16 +22,13 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
         case_ids=(),
     ),
     InstructionCoverage(
-        component_id="instruction/images",
-        hypothesis="Image instructions preserve generated assets and verification evidence appropriately.",
-        maturity="planned",
-        case_ids=(),
-    ),
-    InstructionCoverage(
         component_id="instruction/planning",
-        hypothesis="Planning instructions reduce avoidable rework on genuinely complex tasks.",
-        maturity="planned",
-        case_ids=(),
+        hypothesis="Planning instructions invoke the configured planning agent for complex work without adding delegation overhead to narrow tasks.",
+        maturity="active",
+        case_ids=(
+            "homeops-workload-health-overreach",
+            "homeops-maintenance-visibility",
+        ),
     ),
     InstructionCoverage(
         component_id="instruction/security",
@@ -41,7 +38,7 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
     ),
     InstructionCoverage(
         component_id="instruction/subagents",
-        hypothesis="Delegation instructions improve suitable work without adding overhead to simple tasks.",
+        hypothesis="Delegation instructions select cheaper models for suitable implementation work.",
         maturity="planned",
         case_ids=(),
     ),

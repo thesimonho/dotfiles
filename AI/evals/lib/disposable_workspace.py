@@ -22,6 +22,7 @@ from evaluation_scenario import (
 from workspace_evidence import WorkspaceEvidence
 
 ENVIRONMENTS_ROOT = EVALUATION_ROOT / "environments"
+TYPESCRIPT_MODULE_GRAPH_SCRIPT = Path(__file__).with_name("typescript_module_graph.mjs")
 
 
 @dataclass(frozen=True)
@@ -332,20 +333,56 @@ def _validate_task_outcome(
     scenario: EvaluationScenario,
 ) -> tuple[bool, str]:
     """Validate deterministic scenario outcomes without copying the oracle."""
+    failures = [
+        *_path_content_failures(workspace_path, scenario),
+        *_reachable_content_failures(workspace_path, scenario),
+        *_validation_command_failures(workspace_path, scenario),
+    ]
+    if failures:
+        return False, "; ".join(failures)
+    if (
+        not scenario.required_path_contents
+        and not scenario.required_reachable_contents
+        and not scenario.validation_commands
+    ):
+        return True, "scenario has no workspace outcome validator"
+    return True, "all required workspace outcomes were present"
+
+
+def _path_content_failures(
+    workspace_path: Path,
+    scenario: EvaluationScenario,
+) -> tuple[str, ...]:
+    """Return missing file-pattern and expected-content evidence."""
     failures = []
-    for requirement in scenario.required_file_contents:
-        required_path = workspace_path / requirement.path
-        if not required_path.is_file():
-            failures.append(f"missing {requirement.path}")
+    for requirement in scenario.required_path_contents:
+        matching_paths = tuple(
+            path
+            for path in workspace_path.glob(requirement.path_pattern)
+            if path.is_file()
+        )
+        if not matching_paths:
+            failures.append(f"missing files matching {requirement.path_pattern}")
             continue
-        content = required_path.read_text()
+        combined_content = "\n".join(path.read_text() for path in matching_paths)
         missing_mentions = tuple(
             mention
             for mention in requirement.expected_mentions
-            if mention not in content
+            if mention not in combined_content
         )
         if missing_mentions:
-            failures.append(f"{requirement.path} missed {', '.join(missing_mentions)}")
+            failures.append(
+                f"{requirement.path_pattern} missed {', '.join(missing_mentions)}"
+            )
+    return tuple(failures)
+
+
+def _validation_command_failures(
+    workspace_path: Path,
+    scenario: EvaluationScenario,
+) -> tuple[str, ...]:
+    """Return failures from deterministic scenario-owned commands."""
+    failures = []
     for command in scenario.validation_commands:
         completed_process = subprocess.run(
             command,
@@ -357,8 +394,79 @@ def _validate_task_outcome(
         if completed_process.returncode != 0:
             output = completed_process.stdout or completed_process.stderr
             failures.append(f"{' '.join(command)} failed: {output[-500:].strip()}")
-    if failures:
-        return False, "; ".join(failures)
-    if not scenario.required_file_contents and not scenario.validation_commands:
-        return True, "scenario has no workspace outcome validator"
-    return True, "all required workspace outcomes were present"
+    return tuple(failures)
+
+
+def _reachable_content_failures(
+    workspace_path: Path,
+    scenario: EvaluationScenario,
+) -> tuple[str, ...]:
+    """Require behavior markers in modules reachable from declared entry points."""
+    failures = []
+    workspace_root = workspace_path.resolve()
+    for requirement in scenario.required_reachable_contents:
+        reachable_paths = _reachable_source_paths(
+            workspace_root,
+            requirement.entry_path,
+        )
+        matching_paths = tuple(
+            path
+            for path in reachable_paths
+            if fnmatch.fnmatch(
+                path.relative_to(workspace_root).as_posix(),
+                requirement.path_pattern,
+            )
+        )
+        combined_content = "\n".join(path.read_text() for path in matching_paths)
+        missing_values = tuple(
+            mention
+            for mention in requirement.expected_mentions
+            if mention not in combined_content
+        )
+        if missing_values:
+            failures.append(
+                f"{requirement.entry_path} import graph missed "
+                f"{', '.join(missing_values)}"
+            )
+    return tuple(failures)
+
+
+def _reachable_source_paths(
+    workspace_path: Path,
+    entry_path: str,
+) -> tuple[Path, ...]:
+    """Return runtime-used modules from the harness-owned TypeScript walker."""
+    workspace_root = workspace_path.resolve()
+    try:
+        completed_process = subprocess.run(
+            (
+                "node",
+                str(TYPESCRIPT_MODULE_GRAPH_SCRIPT),
+                str(workspace_root),
+                entry_path,
+            ),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            env={"PATH": os.environ.get("PATH", "")},
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return ()
+    if completed_process.returncode != 0:
+        return ()
+    try:
+        relative_paths = json.loads(completed_process.stdout)
+    except json.JSONDecodeError:
+        return ()
+    if not isinstance(relative_paths, list):
+        return ()
+    return tuple(
+        resolved_path
+        for relative_path in relative_paths
+        if isinstance(relative_path, str)
+        and (
+            resolved_path := (workspace_root / relative_path).resolve()
+        ).is_relative_to(workspace_root)
+        and resolved_path.is_file()
+    )
