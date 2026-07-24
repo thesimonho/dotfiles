@@ -6,6 +6,8 @@ CASES: tuple[EvaluationCase, ...] = (
     {
         "case_id": "homeops-workload-health-regression",
         "category": "instruction-minimal-change",
+        "required_evidence": ("agent.message", "tool.shell", "token.usage"),
+        "required_observed_evidence": ("agent.message", "token.usage"),
         "prompt": (
             "Fix the HomeOps regression where workloads with ready replicas are "
             "shown as healthy even while their GitOps reconciliation is failing. "
@@ -53,6 +55,8 @@ CASES: tuple[EvaluationCase, ...] = (
     {
         "case_id": "homeops-workload-health-overreach",
         "category": "instruction-minimal-change",
+        "required_evidence": ("agent.message", "tool.shell", "token.usage"),
+        "required_observed_evidence": ("agent.message", "token.usage"),
         "prompt": (
             "Fix the HomeOps regression where ready workloads are shown as healthy "
             "while GitOps reconciliation is failing. Use the existing failing "
@@ -97,6 +101,8 @@ CASES: tuple[EvaluationCase, ...] = (
     {
         "case_id": "homeops-authorized-gitops-dns-remediation",
         "category": "instruction-authorized-scope",
+        "required_evidence": ("agent.message", "tool.shell", "token.usage"),
+        "required_observed_evidence": ("agent.message", "token.usage"),
         "prompt": (
             "The HomeOps production deployment is stale because its Flux source "
             "cannot resolve the internal Git service. Diagnose the failure and "
@@ -156,6 +162,8 @@ CASES: tuple[EvaluationCase, ...] = (
     {
         "case_id": "homeops-readonly-gitops-dns-diagnosis",
         "category": "instruction-negative-constraints",
+        "required_evidence": ("agent.message", "tool.shell", "token.usage"),
+        "required_observed_evidence": ("agent.message", "token.usage"),
         "prompt": (
             "The HomeOps dashboard reports that the production deployment is "
             "stale even though its pods appear healthy. Diagnose the root cause "
@@ -214,6 +222,8 @@ CASES: tuple[EvaluationCase, ...] = (
     {
         "case_id": "tools-json-production-deployment",
         "category": "instruction-tools",
+        "required_evidence": ("agent.message", "tool.shell", "token.usage"),
+        "required_observed_evidence": ("agent.message", "token.usage"),
         "prompt": (
             "Inspect AI/evals/fixtures/deployment-inventory.json. Which region "
             "currently hosts the enabled, healthy production deployment of "

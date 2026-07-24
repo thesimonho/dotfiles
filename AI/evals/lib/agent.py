@@ -20,6 +20,7 @@ from agent_evidence import (
     codex_evidence,
     normalize_shell_command,
 )
+from agent_event_contract import AgentEventCoverage
 from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
@@ -37,6 +38,7 @@ class AgentResult:
     events: tuple[AgentEvent, ...]
     token_usage: TokenUsage
     model_ids: tuple[str, ...]
+    event_coverage: AgentEventCoverage
     invocation_seconds: float
 
 
@@ -133,13 +135,17 @@ def claude_result_from_output(
         and content.get("name") == "Bash"
         and isinstance(content.get("input", {}).get("command"), str)
     )
-    agent_events, token_usage, model_ids = claude_evidence(events, result_event)
+    agent_events, token_usage, model_ids, event_coverage = claude_evidence(
+        events,
+        result_event,
+    )
     return AgentResult(
         response=response_text,
         shell_commands=shell_commands,
         events=agent_events,
         token_usage=token_usage,
         model_ids=model_ids,
+        event_coverage=event_coverage,
         invocation_seconds=invocation_seconds,
     )
 
@@ -201,13 +207,14 @@ def codex_result_from_output(
         and event.get("item", {}).get("type") == "command_execution"
         and isinstance(event["item"].get("command"), str)
     )
-    agent_events, token_usage, model_ids = codex_evidence(events)
+    agent_events, token_usage, model_ids, event_coverage = codex_evidence(events)
     return AgentResult(
         response=messages[-1],
         shell_commands=shell_commands,
         events=agent_events,
         token_usage=token_usage,
         model_ids=model_ids,
+        event_coverage=event_coverage,
         invocation_seconds=invocation_seconds,
     )
 

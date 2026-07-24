@@ -13,11 +13,13 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | File | Description |
 | --- | --- |
 | `agent.py` | Invokes Claude/Codex with fail-closed native sandbox settings and measures authenticated CLI subprocess duration |
-| `agent_evidence.py` | Normalizes tool and collaboration events, emitted model IDs, shell commands, and provider-aware token usage from CLI event streams |
+| `agent_evidence.py` | Normalizes tool and collaboration events, emitted model IDs, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
+| `agent_event_contract.py` | Defines semantic case evidence requirements, per-profile parser support, coverage evidence, and pre-execution validation |
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
 | `evaluation_case.py` | Typed case and reusable response/execution metric declarations |
 | `evaluation_coverage.py` | Validates instruction-to-case coverage and projects treatment, control, and judge CLI usage before execution |
+| `evaluation_operational_feedback.py` | Produces universal timing, token, evidence-contract, and unknown-event feedback |
 | `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, outcome validators, and consequence rules |
 | `workspace_evidence.py` | Typed final workspace, simulator, negative-constraint, and blast-radius observations |
 | `disposable_workspace.py` | Builds scenario repositories with private dependencies, exposes simulator tools, and captures agent-attributable evidence |
@@ -50,8 +52,9 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `plan_instruction_campaign()` / `format_campaign_plan()` | `evaluation_coverage.py` | Resolve applicable cases and render a zero-execution usage preview |
 | `prepare_workspace()` | `disposable_workspace.py` | Creates one disposable scenario repository and removes it after evidence capture |
 | `probe_capabilities()` / `capability_manifest()` | `capabilities.py` | Separates missing environment capabilities from instruction-adherence failures and records their identities without host paths |
-| `AgentResult` | `agent.py` | Pairs the final response with normalized events, shell commands, models, token usage, and invocation duration |
+| `AgentResult` | `agent.py` | Pairs the final response with normalized events, parser coverage, shell commands, models, token usage, and invocation duration |
 | `AgentEvent` / `TokenUsage` | `agent_evidence.py` | Preserve comparable execution and usage dimensions without retaining arbitrary raw CLI payloads |
+| `AgentEventCoverage` / `validate_case_evidence_requirements()` | `agent_event_contract.py` | Distinguish parser support, observed evidence, intentionally ignored events, and unknown schema shapes before scoring |
 | `invoke_traced_agent()` | `mlflow_execution_trace.py` | Creates the readable `agent.invoke` subtree used as the primary instruction-adherence trace |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
 | `discover_agent_components()` | `configuration_components.py` | Enumerates provenance-bearing client configuration inputs |
@@ -63,6 +66,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 - **Used by**: `AI/evals/cases.py`, `AI/evals/coverage_catalog.py`, `AI/evals/plan_evaluation_campaign.py`, and `AI/evals/run_mlflow_eval.py`.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
+- **Validates cases by**: requiring semantic parser-support and must-observe declarations, then rejecting inconsistent or unsupported combinations before starting an agent.
 - **Correlates traces by**: one `evaluation.execution_id` shared by agent and judge CLI invocations in a harness run, plus `config.manifest_id` for the exact published configuration. The native trace owns the readable harness and CLI-event tree; after evaluation, the registry uses the execution ID to find separate raw OTLP traces and link the same prompt versions.
 
 ## Entry point

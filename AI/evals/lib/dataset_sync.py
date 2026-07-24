@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from agent_event_contract import EvidenceRequirement
 from evaluation_case import EvaluationCase
 from harness_identity import EVALUATION_DATASET_NAME
 from mlflow_parameter_names import CASE_CATEGORY_FIELD, CASE_ID_FIELD
@@ -11,11 +12,20 @@ DATASET_NAME = EVALUATION_DATASET_NAME
 
 def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
     """Translate typed local cases into MLflow inputs and expectations."""
-    input_field_names = {"prompt", "workspace", CASE_ID_FIELD, CASE_CATEGORY_FIELD}
+    input_field_names = {
+        "prompt",
+        "required_evidence",
+        "required_observed_evidence",
+        "workspace",
+        CASE_ID_FIELD,
+        CASE_CATEGORY_FIELD,
+    }
     return [
         {
             "inputs": {
                 "prompt": case["prompt"],
+                "required_evidence": _required_evidence(case),
+                "required_observed_evidence": _required_observed_evidence(case),
                 CASE_ID_FIELD: case[CASE_ID_FIELD],
                 CASE_CATEGORY_FIELD: case[CASE_CATEGORY_FIELD],
                 **({"workspace": case["workspace"]} if "workspace" in case else {}),
@@ -28,6 +38,30 @@ def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
         }
         for case in cases
     ]
+
+
+def _required_evidence(
+    case: EvaluationCase,
+) -> tuple[EvidenceRequirement, ...]:
+    """Reject undeclared evidence before publishing a hosted dataset row."""
+    requirements = case.get("required_evidence")
+    if not requirements:
+        raise ValueError(
+            f"case {case['case_id']} must declare at least one evidence requirement"
+        )
+    return requirements
+
+
+def _required_observed_evidence(
+    case: EvaluationCase,
+) -> tuple[EvidenceRequirement, ...]:
+    """Require an explicit observation policy even when absence is allowed."""
+    requirements = case.get("required_observed_evidence")
+    if not isinstance(requirements, tuple):
+        raise ValueError(
+            f"case {case['case_id']} must declare required_observed_evidence"
+        )
+    return requirements
 
 
 def sync_mlflow_dataset(cases: tuple[EvaluationCase, ...], experiment_id: str):

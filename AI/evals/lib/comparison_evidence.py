@@ -9,6 +9,7 @@ type MetricDirection = Literal["higher-is-better", "lower-is-better", "diagnosti
 HIGHER_IS_BETTER_METRICS = {
     "all_shell_commands_prefixed",
     "answer_correct",
+    "evidence_contract_satisfied",
     "negative_constraints_followed",
     "protected_resources_preserved",
     "shell_command_prefix_rate",

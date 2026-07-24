@@ -9,7 +9,7 @@ from collections.abc import Callable
 from contextlib import ExitStack
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -17,6 +17,10 @@ import agent  # noqa: E402
 from agent_execution_context import (  # noqa: E402
     AgentExecutionContext,
     EvaluationRole,
+)
+from agent_event_contract import (  # noqa: E402
+    EvidenceRequirement,
+    validate_case_evidence_requirements,
 )
 import configuration_components  # noqa: E402
 from comparison_evidence import (  # noqa: E402
@@ -57,6 +61,7 @@ from mlflow_parameter_names import (  # noqa: E402
     CASE_ID_FIELD,
 )
 from evaluation_case import EvaluationCase, WorkspaceSpec  # noqa: E402
+from evaluation_operational_feedback import operational_feedback  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -130,6 +135,8 @@ def build_predict_fn(
         prompt: str,
         case_id: str,
         category: str,
+        required_evidence: list[str] | tuple[str, ...],
+        required_observed_evidence: list[str] | tuple[str, ...],
         workspace: WorkspaceSpec | None = None,
     ) -> dict[str, object]:
         """Run one case while keeping its identity queryable on the trace."""
@@ -149,6 +156,19 @@ def build_predict_fn(
             category=category,
             role="agent-under-test",
         )
+        if not all(isinstance(requirement, str) for requirement in required_evidence):
+            raise TypeError("case evidence requirements must be strings")
+        evidence_requirements: tuple[EvidenceRequirement, ...] = tuple(
+            cast(EvidenceRequirement, requirement) for requirement in required_evidence
+        )
+        if not all(
+            isinstance(requirement, str) for requirement in required_observed_evidence
+        ):
+            raise TypeError("observed evidence requirements must be strings")
+        observed_evidence_requirements: tuple[EvidenceRequirement, ...] = tuple(
+            cast(EvidenceRequirement, requirement)
+            for requirement in required_observed_evidence
+        )
         if workspace is None:
             result = invoke_traced_agent(
                 lambda: agent.run_agent(
@@ -156,7 +176,9 @@ def build_predict_fn(
                     execution_context,
                     profile=identity.profile,
                     environment_overrides=profile_environment,
-                )
+                ),
+                evidence_requirements,
+                observed_evidence_requirements,
             )
             workspace_evidence = None
         else:
@@ -191,7 +213,9 @@ def build_predict_fn(
                         additional_writable_paths=(
                             prepared_workspace.additional_writable_paths
                         ),
-                    )
+                    ),
+                    evidence_requirements,
+                    observed_evidence_requirements,
                 )
                 with mlflow.start_span(
                     name="workspace.capture",
@@ -217,6 +241,9 @@ def build_predict_fn(
                 "shell_commands": result.shell_commands,
                 "events": tuple(event.to_dict() for event in result.events),
                 "model_ids": result.model_ids,
+                "required_evidence": evidence_requirements,
+                "required_observed_evidence": observed_evidence_requirements,
+                "event_coverage": result.event_coverage.to_dict(),
             },
             "operational_evidence": {
                 "case_completion_seconds": case_completion_seconds,
@@ -301,49 +328,13 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
         ]
         return [
             *behavioral_feedback,
-            *_operational_feedback(outputs["operational_evidence"]),
+            *operational_feedback(
+                outputs["operational_evidence"],
+                outputs["execution_evidence"],
+            ),
         ]
 
     return evaluation_score
-
-
-def _operational_feedback(evidence: dict[str, Any]) -> list[Feedback]:
-    """Expose universal time and token diagnostics without pass/fail thresholds."""
-    feedback = [
-        Feedback(
-            name="case_completion_seconds",
-            value=float(evidence["case_completion_seconds"]),
-            rationale="Harness-measured predictor wall-clock duration in seconds.",
-        ),
-        Feedback(
-            name="agent_invocation_seconds",
-            value=float(evidence["agent_invocation_seconds"]),
-            rationale="Harness-measured authenticated CLI subprocess duration in seconds.",
-        ),
-    ]
-    token_usage = evidence["token_usage"]
-    token_metric_names = {
-        "input_tokens": "input_token_count",
-        "uncached_input_tokens": "uncached_input_token_count",
-        "cached_input_tokens": "cached_input_token_count",
-        "cache_creation_input_tokens": "cache_creation_input_token_count",
-        "output_tokens": "output_token_count",
-        "reasoning_output_tokens": "reasoning_output_token_count",
-        "total_tokens": "total_token_count",
-    }
-    feedback.extend(
-        Feedback(
-            name=metric_name,
-            value=float(token_usage[token_name]),
-            rationale=(
-                f"Token usage reported or derived from {token_usage['source']}; "
-                "diagnostic only."
-            ),
-        )
-        for token_name, metric_name in token_metric_names.items()
-        if isinstance(token_usage.get(token_name), int)
-    )
-    return feedback
 
 
 def _execution_context(
@@ -406,6 +397,7 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
 
     selected_cases = _selected_cases(arguments.case_ids)
     agent_profile = agent.resolve_agent_profile(arguments.agent)
+    validate_case_evidence_requirements(agent_profile, selected_cases)
     mlflow_tracing.init()
     client = MlflowClient()
     registry = MlflowConfigurationRegistry(

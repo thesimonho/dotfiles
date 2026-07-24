@@ -38,11 +38,17 @@ The first case asks the agent to query a noisy deployment inventory. It exercise
 
 Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, `shell-command-prefix-rate`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
 
+Every executable case declares `required_evidence`, using semantic names such as `agent.message`, `tool.shell`, `agent.spawn`, `agent.model-selection`, and `token.usage`. It separately declares the subset in `required_observed_evidence` that must appear for the run to be trustworthy. Campaign previews and live runs validate these declarations against the selected CLI parser before contacting an agent. Missing, duplicate, inconsistent, or unsupported declarations fail before execution. This prevents a new case from silently assuming evidence that the harness does not capture; for example, a Codex case requiring `agent.model-selection` is rejected because Codex collaboration JSONL does not expose that field.
+
+Parser support and observed behavior are distinct. Actions that a negative case expects the agent to avoid belong only in `required_evidence`; their absence remains meaningful behavioral evidence for the case scorer. Evidence needed to make any judgment, such as the final message or token report, also belongs in `required_observed_evidence`. Missing must-observe evidence produces `evidence_contract_satisfied=false`.
+
 Every successfully completed predictor case also reports universal operational diagnostics that do not need to be declared in `cases.py`:
 
 - `case_completion_seconds` measures predictor wall-clock completion, including disposable workspace preparation and evidence capture.
 - `agent_invocation_seconds` isolates authenticated CLI subprocess time.
+- `evidence_contract_satisfied` reports whether every must-observe evidence requirement appeared.
 - `input_token_count`, `uncached_input_token_count`, `cached_input_token_count`, `cache_creation_input_token_count`, `output_token_count`, `reasoning_output_token_count`, and `total_token_count` are emitted when the selected CLI provides those dimensions.
+- `unknown_agent_event_type_count` reports distinct CLI event shapes that have no explicit parser classification.
 
 Unavailable token dimensions are retained as `null` in the case output and omitted from aggregate feedback rather than estimated. Each result identifies its CLI event source. Normalized input counts include cache-read and cache-creation input so the top-level input and total dimensions remain useful across providers, while the underlying cache dimensions remain separately inspectable. These diagnostics describe the agent-under-test predictor invocation. A separate LLM judge, when applicable, remains a separately correlated invocation and is not folded into these counts. The diagnostics have no pass threshold or improvement direction.
 
@@ -62,7 +68,7 @@ HomeOps adds reusable workspace metrics:
 
 Task correctness and blast radius remain separate. A narrow correct patch can pass outcome scoring while an operational action fails a negative constraint; Git-ignored verification artifacts are excluded from workspace evidence.
 
-The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. The predictor returns final response, normalized execution events, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Claude exposes model choices on relevant tool-use events. Codex exposes collaboration calls, receiver thread IDs, agent states, and status but does not expose the requested or actual collaboration model in its JSONL schema; a future Codex model-selection assessment must add another authoritative evidence source rather than infer it from unrelated raw spans. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source for lower-level diagnostics.
+The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. Each result records distinct observed raw event shapes, normalized semantic evidence, intentionally ignored shapes, and unknown shapes without storing arbitrary raw payloads. The predictor returns final response, normalized execution events, parser coverage, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Claude exposes model choices on relevant tool-use events. Codex exposes collaboration calls, receiver thread IDs, agent states, and status but does not expose the requested or actual collaboration model in its JSONL schema; a future Codex model-selection assessment must add another authoritative evidence source rather than infer it from unrelated raw spans. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source for lower-level diagnostics.
 
 ## Agent telemetry flow
 
@@ -172,7 +178,7 @@ predict_fn
 └── workspace.cleanup
 ```
 
-Fixture-only cases omit the workspace spans. `agent.invoke` records measured CLI duration, emitted model IDs, normalized token dimensions, and MLflow's standard chat token-usage attribute. Its tool and agent children are observation spans reconstructed from the completed machine-readable CLI stream: they expose normalized status and allowlisted arguments, but their near-zero span duration is not the original tool runtime. The final response and the same normalized evidence remain in the predictor output used by scorers.
+Fixture-only cases omit the workspace spans. `agent.invoke` records measured CLI duration, supported and must-observe requirements, normalized evidence types, unobserved must-observe requirements, unknown event types, emitted model IDs, normalized token dimensions, and MLflow's standard chat token-usage attribute. Its tool and agent children are observation spans reconstructed from the completed machine-readable CLI stream: they expose their semantic evidence type, normalized status, and allowlisted arguments, but their near-zero span duration is not the original tool runtime. The final response and the same normalized evidence remain in the predictor output used by scorers.
 
 The separately correlated CLI traces retain raw runtime and transport telemetry. They may appear as many independent trace roots because the upstream CLIs do not emit one causal hierarchy. Keeping those raw traces distinct preserves diagnostic detail without making them the main instruction-adherence surface.
 
@@ -208,6 +214,7 @@ The change note classifies added, removed, and modified components and includes 
 - `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
 - `tests/` covers case translation, metric scoring, CLI evidence normalization, and MLflow compatibility boundaries.
 - `lib/evaluation_case.py` defines the typed case contract.
+- `lib/agent_event_contract.py` defines semantic evidence requirements, per-profile parser support, coverage evidence, and fail-before-execution validation.
 - `lib/evaluation_coverage.py` validates fragment coverage and calculates campaign invocation costs.
 - `lib/disposable_workspace.py` assembles isolated scenario repositories with private dependencies and captures final evidence.
 - `lib/evaluation_scenario.py` contains harness-only constraints, impact rules, and deterministic validators.
@@ -215,6 +222,7 @@ The change note classifies added, removed, and modified components and includes 
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
 - `lib/agent.py` invokes the authenticated Codex or Claude CLI from the case's selected working directory and access mode while requiring native OS sandboxing and blocked tool-process network access.
 - `lib/agent_evidence.py` normalizes CLI tool, collaboration, model, and provider-aware token evidence without retaining arbitrary raw event payloads.
+- `lib/evaluation_operational_feedback.py` renders universal timing, token, evidence-contract, and parser-coverage feedback.
 - `lib/agent_execution_context.py` defines immutable OTEL identity for agent-under-test and judge processes.
 - `lib/agent_environment.py` builds the least-privilege CLI subprocess environment.
 - `lib/mlflow_experiment_bootstrap.py` binds Alloy to the shared MLflow experiment.

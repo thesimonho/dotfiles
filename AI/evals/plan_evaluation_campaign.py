@@ -9,6 +9,7 @@ sys.path.insert(0, str(EVALUATION_ROOT / "lib"))
 sys.path.insert(0, str(EVALUATION_ROOT))
 
 from cases import CASES  # noqa: E402
+from agent_event_contract import validate_case_evidence_requirements  # noqa: E402
 from coverage_catalog import INSTRUCTION_COVERAGE  # noqa: E402
 from evaluation_coverage import (  # noqa: E402
     format_campaign_plan,
@@ -34,6 +35,9 @@ def main() -> None:
         coverage=INSTRUCTION_COVERAGE,
         cases=CASES,
     )
+    planned_case_ids = set(plan.case_ids)
+    planned_cases = tuple(case for case in CASES if case["case_id"] in planned_case_ids)
+    validate_case_evidence_requirements(arguments.agent, planned_cases)
     print(format_campaign_plan(plan, agent_profile=arguments.agent))
 
 

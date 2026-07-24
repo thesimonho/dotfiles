@@ -7,8 +7,45 @@ import shlex
 from dataclasses import asdict, dataclass
 from typing import Any, Literal
 
+from agent_event_contract import AgentEventCoverage
+
 type EvidenceValue = str | int | float | bool
 type AgentEventCategory = Literal["agent", "runtime", "tool"]
+
+_KNOWN_CODEX_COLLABORATION_TOOLS = {
+    "close_agent",
+    "send_input",
+    "spawn_agent",
+    "wait",
+}
+_KNOWN_CLAUDE_TOOLS = {
+    "Agent",
+    "AskUserQuestion",
+    "Bash",
+    "Edit",
+    "EnterPlanMode",
+    "ExitPlanMode",
+    "Glob",
+    "Grep",
+    "KillShell",
+    "LSP",
+    "MultiEdit",
+    "NotebookEdit",
+    "Read",
+    "Skill",
+    "Task",
+    "TaskCreate",
+    "TaskGet",
+    "TaskList",
+    "TaskOutput",
+    "TaskStop",
+    "TaskUpdate",
+    "TodoWrite",
+    "ToolSearch",
+    "WebFetch",
+    "WebSearch",
+    "Write",
+}
 
 
 @dataclass(frozen=True)
@@ -17,6 +54,7 @@ class AgentEvent:
 
     category: AgentEventCategory
     name: str
+    evidence_type: str
     status: str
     attributes: tuple[tuple[str, EvidenceValue], ...] = ()
 
@@ -25,6 +63,7 @@ class AgentEvent:
         return {
             "category": self.category,
             "name": self.name,
+            "evidence_type": self.evidence_type,
             "status": self.status,
             "attributes": dict(self.attributes),
         }
@@ -59,7 +98,12 @@ class TokenUsage:
 
 def codex_evidence(
     events: tuple[dict[str, Any], ...],
-) -> tuple[tuple[AgentEvent, ...], TokenUsage, tuple[str, ...]]:
+) -> tuple[
+    tuple[AgentEvent, ...],
+    TokenUsage,
+    tuple[str, ...],
+    AgentEventCoverage,
+]:
     """Normalize Codex JSONL items, turn usage, and any emitted model IDs."""
     completed_items = tuple(
         event["item"]
@@ -71,6 +115,7 @@ def codex_evidence(
         for item in completed_items
         if (normalized_event := _codex_item_event(item)) is not None
     )
+    agent_events = (*agent_events, *_codex_runtime_events(events))
     usage_event = next(
         (
             event
@@ -82,13 +127,19 @@ def codex_evidence(
     )
     token_usage = _codex_token_usage(usage_event["usage"] if usage_event else {})
     model_ids = _model_ids_from_events(events)
-    return agent_events, token_usage, model_ids
+    coverage = _codex_event_coverage(events, agent_events, token_usage)
+    return agent_events, token_usage, model_ids, coverage
 
 
 def claude_evidence(
     events: tuple[dict[str, Any], ...],
     result_event: dict[str, Any],
-) -> tuple[tuple[AgentEvent, ...], TokenUsage, tuple[str, ...]]:
+) -> tuple[
+    tuple[AgentEvent, ...],
+    TokenUsage,
+    tuple[str, ...],
+    AgentEventCoverage,
+]:
     """Normalize Claude tool-use blocks, result usage, and emitted model IDs."""
     tool_results = _claude_tool_results(events)
     agent_events = tuple(
@@ -100,7 +151,8 @@ def claude_evidence(
     )
     token_usage = _claude_token_usage(result_event.get("usage", {}))
     model_ids = _claude_model_ids(events, result_event)
-    return agent_events, token_usage, model_ids
+    coverage = _claude_event_coverage(events, agent_events, token_usage)
+    return agent_events, token_usage, model_ids, coverage
 
 
 def normalize_shell_command(command: str) -> str:
@@ -169,6 +221,7 @@ def _codex_item_event(item: dict[str, Any]) -> AgentEvent | None:
     return AgentEvent(
         category=category,
         name=name,
+        evidence_type=_codex_item_evidence_type(item_type, item),
         status=_item_status(item),
         attributes=tuple(attributes.items()),
     )
@@ -179,6 +232,16 @@ def _codex_item_name(item_type: str, item: dict[str, Any]) -> str:
         return "shell"
     if item_type == "file_change":
         return "apply_patch"
+    if item_type == "collab_tool_call":
+        collaboration_names = {
+            "close_agent": "close",
+            "send_input": "send",
+            "spawn_agent": "spawn",
+            "wait": "wait",
+        }
+        tool = item.get("tool")
+        if isinstance(tool, str):
+            return collaboration_names.get(tool, tool)
     server = item.get("server")
     tool = item.get("tool")
     if isinstance(server, str) and isinstance(tool, str):
@@ -187,6 +250,144 @@ def _codex_item_name(item_type: str, item: dict[str, Any]) -> str:
         return tool
     name = item.get("name")
     return name if isinstance(name, str) else item_type
+
+
+def _codex_item_evidence_type(item_type: str, item: dict[str, Any]) -> str:
+    if item_type == "collab_tool_call":
+        return (
+            "agent.spawn"
+            if item.get("tool") == "spawn_agent"
+            else "agent.collaboration"
+        )
+    evidence_types = {
+        "command_execution": "tool.shell",
+        "error": "runtime.error",
+        "file_change": "tool.file-change",
+        "mcp_tool_call": "tool.mcp",
+        "web_search": "tool.web-search",
+    }
+    return evidence_types.get(item_type, "tool.other")
+
+
+def _codex_runtime_events(
+    events: tuple[dict[str, Any], ...],
+) -> tuple[AgentEvent, ...]:
+    runtime_events = []
+    for event in events:
+        event_type = event.get("type")
+        if event_type == "error":
+            message = event.get("message")
+        elif event_type == "turn.failed":
+            error = event.get("error")
+            message = error.get("message") if isinstance(error, dict) else None
+        else:
+            continue
+        attributes = (
+            (("message", _bounded(message)),) if isinstance(message, str) else ()
+        )
+        runtime_events.append(
+            AgentEvent(
+                category="runtime",
+                name="error",
+                evidence_type="runtime.error",
+                status="failed",
+                attributes=attributes,
+            )
+        )
+    return tuple(runtime_events)
+
+
+def _codex_event_coverage(
+    events: tuple[dict[str, Any], ...],
+    agent_events: tuple[AgentEvent, ...],
+    token_usage: TokenUsage,
+) -> AgentEventCoverage:
+    known_top_level_types = {
+        "error",
+        "item.completed",
+        "item.started",
+        "item.updated",
+        "thread.started",
+        "turn.completed",
+        "turn.failed",
+        "turn.started",
+    }
+    known_item_types = {
+        "agent_message",
+        "collab_tool_call",
+        "command_execution",
+        "error",
+        "file_change",
+        "mcp_tool_call",
+        "reasoning",
+        "todo_list",
+        "web_search",
+    }
+    event_keys = tuple(_codex_event_key(event) for event in events)
+    unknown_event_types = {
+        event_key
+        for event, event_key in zip(events, event_keys, strict=True)
+        if event.get("type") not in known_top_level_types
+        or (
+            str(event.get("type", "")).startswith("item.")
+            and _codex_item_type(event) not in known_item_types
+        )
+        or _codex_collaboration_tool_is_unknown(event)
+    }
+    intentionally_ignored = {
+        event_key
+        for event, event_key in zip(events, event_keys, strict=True)
+        if event.get("type") in {"thread.started", "turn.started"}
+        or (
+            event.get("type") in {"item.started", "item.updated"}
+            and _codex_item_type(event) in known_item_types
+            and not _codex_collaboration_tool_is_unknown(event)
+        )
+        or (
+            event.get("type") == "item.completed"
+            and _codex_item_type(event) in {"reasoning", "todo_list"}
+        )
+    }
+    normalized_evidence_types = {event.evidence_type for event in agent_events}
+    if any(event_key == "item.completed.agent_message" for event_key in event_keys):
+        normalized_evidence_types.add("agent.message")
+    if token_usage.available_counts():
+        normalized_evidence_types.add("token.usage")
+    return AgentEventCoverage(
+        observed_event_types=tuple(sorted(set(event_keys))),
+        normalized_evidence_types=tuple(sorted(normalized_evidence_types)),
+        intentionally_ignored_event_types=tuple(sorted(intentionally_ignored)),
+        unknown_event_types=tuple(sorted(unknown_event_types)),
+    )
+
+
+def _codex_event_key(event: dict[str, Any]) -> str:
+    event_type = event.get("type")
+    if not isinstance(event_type, str):
+        return "<missing-type>"
+    item_type = _codex_item_type(event)
+    if item_type is None:
+        return event_type
+    item = event.get("item")
+    tool = item.get("tool") if isinstance(item, dict) else None
+    if item_type == "collab_tool_call" and isinstance(tool, str):
+        return f"{event_type}.{item_type}.{_bounded(tool, 100)}"
+    return f"{event_type}.{item_type}"
+
+
+def _codex_item_type(event: dict[str, Any]) -> str | None:
+    item = event.get("item")
+    item_type = item.get("type") if isinstance(item, dict) else None
+    return item_type if isinstance(item_type, str) else None
+
+
+def _codex_collaboration_tool_is_unknown(event: dict[str, Any]) -> bool:
+    """Detect new collaboration operations without treating their payload as evidence."""
+    if _codex_item_type(event) != "collab_tool_call":
+        return False
+    item = event.get("item")
+    tool = item.get("tool") if isinstance(item, dict) else None
+    return tool not in _KNOWN_CODEX_COLLABORATION_TOOLS
 
 
 def _item_status(item: dict[str, Any]) -> str:
@@ -276,9 +477,10 @@ def _claude_tool_event(
     tool_results: dict[str, str],
 ) -> AgentEvent:
     tool_name = content.get("name")
-    name = tool_name if isinstance(tool_name, str) else "unknown"
+    source_name = tool_name if isinstance(tool_name, str) else "unknown"
+    name = "spawn" if source_name in {"Agent", "Task"} else source_name
     category: AgentEventCategory = (
-        "agent" if "agent" in name.lower() or name == "Task" else "tool"
+        "agent" if "agent" in source_name.lower() or name == "spawn" else "tool"
     )
     tool_input = content.get("input")
     attributes = (
@@ -289,7 +491,7 @@ def _claude_tool_event(
         if isinstance(tool_input, dict)
         else {}
     )
-    if name == "Bash" and isinstance(tool_input, dict):
+    if source_name == "Bash" and isinstance(tool_input, dict):
         command = tool_input.get("command")
         if isinstance(command, str):
             attributes["command"] = _bounded(normalize_shell_command(command))
@@ -302,9 +504,126 @@ def _claude_tool_event(
     return AgentEvent(
         category=category,
         name=name,
+        evidence_type=_claude_tool_evidence_type(source_name),
         status=status,
         attributes=tuple(attributes.items()),
     )
+
+
+def _claude_tool_evidence_type(name: str) -> str:
+    if name == "Bash":
+        return "tool.shell"
+    if name in {"Agent", "Task"} or "agent" in name.lower():
+        return "agent.spawn"
+    if name in {"Edit", "MultiEdit", "NotebookEdit", "Write"}:
+        return "tool.file-change"
+    if name in {"WebFetch", "WebSearch"}:
+        return "tool.web-search"
+    if name.startswith("mcp__"):
+        return "tool.mcp"
+    return "tool.other"
+
+
+def _claude_event_coverage(
+    events: tuple[dict[str, Any], ...],
+    agent_events: tuple[AgentEvent, ...],
+    token_usage: TokenUsage,
+) -> AgentEventCoverage:
+    known_top_level_types = {
+        "assistant",
+        "rate_limit_event",
+        "result",
+        "stream_event",
+        "system",
+        "user",
+    }
+    known_content_types = {
+        "redacted_thinking",
+        "text",
+        "thinking",
+        "tool_result",
+        "tool_use",
+    }
+    event_keys = tuple(
+        event_key for event in events for event_key in _claude_event_keys(event)
+    )
+    unknown_event_types = {
+        event_key
+        for event_key in event_keys
+        if _claude_event_key_is_unknown(
+            event_key,
+            known_top_level_types,
+            known_content_types,
+            _KNOWN_CLAUDE_TOOLS,
+        )
+    }
+    intentionally_ignored = {
+        event_key
+        for event_key in event_keys
+        if event_key in {"rate_limit_event", "stream_event", "system"}
+        or event_key.rsplit(".", maxsplit=1)[-1]
+        in {"redacted_thinking", "text", "thinking"}
+    }
+    normalized_evidence_types = {event.evidence_type for event in agent_events}
+    if any(event.get("type") == "result" for event in events):
+        normalized_evidence_types.add("agent.message")
+    if token_usage.available_counts():
+        normalized_evidence_types.add("token.usage")
+    if any(
+        event.evidence_type == "agent.spawn" and "model" in dict(event.attributes)
+        for event in agent_events
+    ):
+        normalized_evidence_types.add("agent.model-selection")
+    return AgentEventCoverage(
+        observed_event_types=tuple(sorted(set(event_keys))),
+        normalized_evidence_types=tuple(sorted(normalized_evidence_types)),
+        intentionally_ignored_event_types=tuple(sorted(intentionally_ignored)),
+        unknown_event_types=tuple(sorted(unknown_event_types)),
+    )
+
+
+def _claude_event_keys(event: dict[str, Any]) -> tuple[str, ...]:
+    event_type = event.get("type")
+    if not isinstance(event_type, str):
+        return ("<missing-type>",)
+    message = event.get("message")
+    content = message.get("content") if isinstance(message, dict) else None
+    if not isinstance(content, list):
+        return (event_type,)
+    content_keys = tuple(
+        _claude_content_key(event_type, content_block)
+        for content_block in content
+        if isinstance(content_block, dict)
+        and isinstance(content_block.get("type"), str)
+    )
+    return (event_type, *content_keys)
+
+
+def _claude_content_key(event_type: str, content: dict[str, Any]) -> str:
+    """Include bounded tool discriminators so new tool shapes cannot pass silently."""
+    content_type = content["type"]
+    if content_type != "tool_use":
+        return f"{event_type}.content.{content_type}"
+    tool_name = content.get("name")
+    if not isinstance(tool_name, str):
+        return f"{event_type}.content.tool_use.<missing-name>"
+    discriminator = "mcp" if tool_name.startswith("mcp__") else _bounded(tool_name, 100)
+    return f"{event_type}.content.tool_use.{discriminator}"
+
+
+def _claude_event_key_is_unknown(
+    event_key: str,
+    known_top_level_types: set[str],
+    known_content_types: set[str],
+    known_tool_names: set[str],
+) -> bool:
+    if ".content." not in event_key:
+        return event_key not in known_top_level_types
+    _, content_type = event_key.rsplit(".content.", maxsplit=1)
+    if content_type.startswith("tool_use."):
+        tool_name = content_type.removeprefix("tool_use.")
+        return tool_name != "mcp" and tool_name not in known_tool_names
+    return content_type not in known_content_types
 
 
 def _model_ids_from_events(events: tuple[dict[str, Any], ...]) -> tuple[str, ...]:

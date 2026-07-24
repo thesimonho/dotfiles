@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eval event evidence contracts</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; }
+    body { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; line-height: 1.55; }
+    header, section { background: #172033; border: 1px solid #334155; border-radius: 14px; margin-bottom: 20px; padding: 24px; }
+    h1, h2 { color: #f8fafc; margin-top: 0; }
+    h2 { display: flex; gap: 12px; }
+    h2 small { color: #5eead4; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; vertical-align: top; }
+    code, pre { font-family: ui-monospace, monospace; }
+    pre { background: #090f1d; border-radius: 10px; color: #99f6e4; overflow: auto; padding: 18px; }
+    .chip { background: #134e4a; border-radius: 999px; color: #ccfbf1; display: inline-block; font-size: .8rem; padding: 2px 9px; }
+    .callout { background: #292313; border-left: 4px solid #fbbf24; padding: 12px 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="chip">Implemented</span>
+    <h1>Make event evidence an explicit case contract</h1>
+    Every new eval case must name the agent evidence it relies on. The harness rejects unsupported CLI/profile combinations before spending an agent call and records parser coverage so newly introduced CLI event shapes cannot disappear silently.
+  </header>
+
+  <section>
+    <h2><small>01</small> Success criteria</h2>
+    <table>
+      <thead><tr><th>Invariant</th><th>Evidence</th></tr></thead>
+      <tbody>
+        <tr><td>Cases declare dependencies</td><td><code>required_evidence</code> and its must-observe subset are mandatory at campaign, run, and hosted-dataset validation boundaries.</td></tr>
+        <tr><td>Unsupported cases fail before execution</td><td>The selected CLI profile advertises semantic parser capabilities and preflight reports unsupported case requirements.</td></tr>
+        <tr><td>Schema drift is visible</td><td>Each result stores observed, normalized, intentionally ignored, and unknown event-type sets.</td></tr>
+        <tr><td>Absence has explicit meaning</td><td>Missing must-observe evidence fails the evidence contract; supported-only evidence can remain absent when the case is testing restraint.</td></tr>
+        <tr><td>Cost stays bounded</td><td>Static checks and one fixture-backed, single-arm agent invocation verify the final trace and metrics.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2><small>02</small> Contract flow</h2>
+    <pre>case.required_evidence + required_observed_evidence
+        │
+        ├── unsupported by selected CLI ── fail preflight, zero agent calls
+        │
+        └── supported
+              │
+              ├── must observe ── missing evidence fails the evidence contract
+              └── support only ── absence can be meaningful agent behavior
+
+CLI JSONL ── classify ── observed / normalized / ignored / unknown
+                                                      │
+                                                      └── MLflow trace + diagnostic metric</pre>
+    <aside class="callout">Unknown means the CLI schema changed or the parser lacks an explicit classification. It is diagnostic rather than an automatic behavioral failure, because a lifecycle event may be harmless while still requiring harness maintenance.</aside>
+  </section>
+
+  <section>
+    <h2><small>03</small> Implementation</h2>
+    <ol>
+      <li>Define a shared semantic evidence vocabulary and per-profile support matrix.</li>
+      <li>Add mandatory support and must-observe requirements to runtime, campaign, dataset, and case boundaries.</li>
+      <li>Classify Codex and Claude JSONL event shapes and tool discriminators without retaining raw payloads.</li>
+      <li>Attach coverage to <code>AgentResult</code>, predictor output, and <code>agent.invoke</code>.</li>
+      <li>Emit evidence-contract status and <code>unknown_agent_event_type_count</code> as universal metrics.</li>
+      <li>Document how future cases select requirements and how unsupported model-selection evidence is surfaced.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><small>04</small> Verification</h2>
+    Formatter, lint, type checking, compilation, HomeOps build, Compose validation, and the campaign preview passed without running unit tests. Codex fixture run <code>d40b88f7259f4facac090b75b2471ab8</code> produced native trace <code>tr-97f3113e3d52293f4fcbfb4d0aaf7ad9</code> with a readable agent/tool subtree, parser coverage, timing, token usage, and a zero-valued unknown-event diagnostic. The final must-observe distinction was added after that bounded live run and verified through the static gates rather than spending a second agent invocation.
+  </section>
+</body>
+</html>

@@ -2,6 +2,8 @@
 
 from typing import Literal, NotRequired, TypedDict
 
+from agent_event_contract import EvidenceRequirement
+
 
 class WorkspaceSpec(TypedDict):
     """Agent-visible environment selector without hidden validator policy."""
@@ -120,5 +122,7 @@ class EvaluationCase(TypedDict):
     case_id: str
     category: str
     prompt: str
+    required_evidence: NotRequired[tuple[EvidenceRequirement, ...]]
+    required_observed_evidence: NotRequired[tuple[EvidenceRequirement, ...]]
     workspace: NotRequired[WorkspaceSpec]
     metrics: tuple[EvaluationMetric, ...]
