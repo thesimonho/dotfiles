@@ -1,0 +1,20 @@
+# https://tabby.tabbyml.com/docs/welcome/ 
+name: tabby
+services:
+  tabby:
+    restart: unless-stopped
+    image: registry.tabbyml.com/tabbyml/tabby
+    command: serve --model Qwen2.5-Coder-1.5B --device cuda
+    volumes:
+      - "$HOME/.tabby:/data"
+      - "$HOME/dotfiles:/repositories/dotfiles:ro"
+      - "$HOME/Projects:/repositories/Projects:ro"
+    ports:
+      - 127.0.0.1:8080:8080
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

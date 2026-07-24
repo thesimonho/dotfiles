@@ -119,7 +119,28 @@ end, { desc = "Yank and open chat" })
 
 local M = {
   {
+    "TabbyML/vim-tabby",
+    lazy = false,
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      {
+        "mason-org/mason.nvim",
+        opts = {
+          ensure_installed = {
+            "tabby-agent",
+          },
+        },
+      },
+    },
+    init = function()
+      vim.g.tabby_agent_start_command = { "tabby-agent", "--stdio" }
+      vim.g.tabby_inline_completion_trigger = "auto"
+      vim.g.tabby_inline_completion_keybinding_accept = "<M-l>"
+    end,
+  },
+  {
     "supermaven-inc/supermaven-nvim",
+    enabled = false,
     event = "LazyFile",
     init = function()
       vim.api.nvim_create_autocmd("User", {
