@@ -15,6 +15,7 @@ eval-setup: eval-homeops-setup
     AI/evals/.venv/bin/pip install "mlflow[genai]==3.14.0"
 
 # Install the locked single-package HomeOps web application dependencies.
+[private]
 eval-homeops-setup:
     npm ci --prefix AI/evals/environments/homeops/project
 
@@ -22,10 +23,12 @@ eval-homeops-setup:
 eval-up: eval-up-mlflow eval-wait-mlflow eval-bootstrap-alloy eval-up-alloy eval-wait-alloy
 
 # Start the MLflow service.
+[private]
 eval-up-mlflow:
     docker compose -f {{ mlflow_compose }} up -d mlflow
 
 # Wait up to 60 seconds for MLflow to answer.
+[private]
 eval-wait-mlflow:
     #!/usr/bin/env zsh
     for attempt in {1..60}; do
@@ -38,6 +41,7 @@ eval-wait-mlflow:
     exit 1
 
 # Create the experiment and write Alloy's ignored runtime environment file.
+[private]
 eval-bootstrap-alloy:
     #!/usr/bin/env zsh
     if [[ ! -x "{{ eval_python }}" ]]; then
@@ -47,10 +51,12 @@ eval-bootstrap-alloy:
     {{ eval_python }} AI/evals/lib/mlflow_experiment_bootstrap.py
 
 # Start Alloy after its MLflow experiment ID is available.
+[private]
 eval-up-alloy:
     docker compose -f {{ mlflow_compose }} up -d alloy
 
 # Wait up to 60 seconds for Alloy to report ready.
+[private]
 eval-wait-alloy:
     #!/usr/bin/env zsh
     for attempt in {1..60}; do
