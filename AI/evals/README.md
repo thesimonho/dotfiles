@@ -38,6 +38,14 @@ The first case asks the agent to query a noisy deployment inventory. It exercise
 
 Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, `shell-command-prefix-rate`, and `shell-command-count`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
 
+Every successfully completed predictor case also reports universal operational diagnostics that do not need to be declared in `cases.py`:
+
+- `case_completion_seconds` measures predictor wall-clock completion, including disposable workspace preparation and evidence capture.
+- `agent_invocation_seconds` isolates authenticated CLI subprocess time.
+- `input_token_count`, `uncached_input_token_count`, `cached_input_token_count`, `cache_creation_input_token_count`, `output_token_count`, `reasoning_output_token_count`, and `total_token_count` are emitted when the selected CLI provides those dimensions.
+
+Unavailable token dimensions are retained as `null` in the case output and omitted from aggregate feedback rather than estimated. Each result identifies its CLI event source. Normalized input counts include cache-read and cache-creation input so the top-level input and total dimensions remain useful across providers, while the underlying cache dimensions remain separately inspectable. These diagnostics describe the agent-under-test predictor invocation. A separate LLM judge, when applicable, remains a separately correlated invocation and is not folded into these counts. The diagnostics have no pass threshold or improvement direction.
+
 [`coverage_catalog.py`](coverage_catalog.py) maps all monitored instruction fragments to explicit behavioral hypotheses, maturity, and only the cases that genuinely exercise them. A case may support multiple fragments, so coverage grows by reusing high-signal scenarios rather than adding a separate repository or case for every instruction. `planned` entries have no cases and therefore add no evaluation cost; `active` and `proven` entries must reference executable cases.
 
 The current active suite is deliberately bounded to five unique cases. Before spending agent usage on a fragment campaign, `eval-plan` reports the applicable cases, treatment/control pairs, agent-under-test calls, judge calls, and total CLI invocations without contacting MLflow or starting an agent. Repetitions default to one and should increase only when initial paired evidence is ambiguous or when a mature fragment is being regression-tested.
@@ -54,7 +62,7 @@ HomeOps adds reusable workspace metrics:
 
 Task correctness and blast radius remain separate. A narrow correct patch can pass outcome scoring while an operational action fails a negative constraint; Git-ignored verification artifacts are excluded from workspace evidence.
 
-The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex command-execution items and Claude Bash tool-use blocks are normalized into agent-authored shell commands. The predictor returns final response and normalized execution evidence together, making both inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source; it proves execution and exposes runtime behavior but does not reliably include tool arguments.
+The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. The predictor returns final response, normalized execution events, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Claude exposes model choices on relevant tool-use events. Codex exposes collaboration calls, receiver thread IDs, agent states, and status but does not expose the requested or actual collaboration model in its JSONL schema; a future Codex model-selection assessment must add another authoritative evidence source rather than infer it from unrelated raw spans. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source for lower-level diagnostics.
 
 ## Agent telemetry flow
 
@@ -65,7 +73,7 @@ eval runner -> Codex or Claude -> OTLP :4327 -> Alloy -> MLflow /v1/traces
 normal use -> Codex or Claude -> OTLP :4327 -> Alloy -> drop
 ```
 
-The separate port identifies agent traffic at ingress, but it is not the security or routing boundary. The immutable `telemetry.purpose=evaluation` resource attribute is what authorizes a trace for MLflow. Every eval process also receives `agent.cli`, `case_id`, `category`, and `evaluation.role`, allowing agent-under-test and judge traces to be distinguished without putting prompt or response text in resource attributes.
+The separate port identifies agent traffic at ingress, but it is not the security or routing boundary. The immutable `telemetry.purpose=evaluation` resource attribute is what authorizes a trace for MLflow. Ordinary day-to-day agent telemetry lacks that marker and is dropped by this MLflow route. Every eval process also receives `agent.cli`, `case_id`, `category`, and `evaluation.role`, allowing agent-under-test and judge traces to be distinguished without putting prompt or response text in resource attributes.
 
 Each harness invocation generates one UUID as `evaluation.execution_id` and assigns it to every agent-under-test and judge CLI process in that invocation. This distinguishes repeated evaluations of the same case: `evaluation.execution_id` selects the run, `case_id` selects the case, and `evaluation.role` distinguishes the agent response from its judge. Every process also receives `config.manifest_id`, which identifies the exact profile-specific configuration manifest evaluated by that invocation.
 
@@ -150,7 +158,23 @@ Open the underlying run for complete provenance:
 
 The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and MLflow-native request trace links the manifest and all active component prompt versions. After evaluation finishes, the harness searches the shared experiment for external CLI traces with the invocation's `evaluation.execution_id`, waits for the expected agent and judge traces to become stable, and links the same prompt versions to those traces. Search is paginated because a CLI invocation can emit many independent low-level OTEL traces. The execution ID avoids accidentally linking traces from an earlier run of the same case, while `config.manifest_id` remains an independently queryable configuration identity on each external trace. Trace request and response previews contain plain text instead of serialized JSON wrappers.
 
-The MLflow-native case trace contains the final response plus normalized behavioral evidence used by scorers. The separately correlated CLI traces retain raw runtime telemetry. Keeping these sources distinct prevents transport-level OTEL details from being mistaken for complete instruction-adherence evidence.
+The MLflow-native case trace is the primary instruction-adherence view. Its `predict_fn` root contains:
+
+```text
+predict_fn
+├── workspace.prepare
+├── agent.invoke
+│   ├── tool.shell
+│   ├── tool.apply_patch
+│   ├── tool.<mcp-name>
+│   └── agent.<collaboration-call>
+├── workspace.capture
+└── workspace.cleanup
+```
+
+Fixture-only cases omit the workspace spans. `agent.invoke` records measured CLI duration, emitted model IDs, normalized token dimensions, and MLflow's standard chat token-usage attribute. Its tool and agent children are observation spans reconstructed from the completed machine-readable CLI stream: they expose normalized status and allowlisted arguments, but their near-zero span duration is not the original tool runtime. The final response and the same normalized evidence remain in the predictor output used by scorers.
+
+The separately correlated CLI traces retain raw runtime and transport telemetry. They may appear as many independent trace roots because the upstream CLIs do not emit one causal hierarchy. Keeping those raw traces distinct preserves diagnostic detail without making them the main instruction-adherence surface.
 
 Open **Agent versions** to inspect a complete manifest-backed configuration identity. Its Overview description lists the manifest and active component versions, and its `configuration/manifest.json` artifact preserves the complete immutable manifest. Baseline-relative changes belong to evaluation runs, so reusing an Agent Version never overwrites its evidence with a different run's comparison context.
 
@@ -190,9 +214,11 @@ The change note classifies added, removed, and modified components and includes 
 - `lib/capabilities.py` proves shared tools, skills, and agents are available before scoring begins and creates the path-redacted capability artifact.
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
 - `lib/agent.py` invokes the authenticated Codex or Claude CLI from the case's selected working directory and access mode while requiring native OS sandboxing and blocked tool-process network access.
+- `lib/agent_evidence.py` normalizes CLI tool, collaboration, model, and provider-aware token evidence without retaining arbitrary raw event payloads.
 - `lib/agent_execution_context.py` defines immutable OTEL identity for agent-under-test and judge processes.
 - `lib/agent_environment.py` builds the least-privilege CLI subprocess environment.
 - `lib/mlflow_experiment_bootstrap.py` binds Alloy to the shared MLflow experiment.
+- `lib/mlflow_execution_trace.py` renders normalized CLI evidence as child spans beneath the MLflow-native case trace.
 - `lib/configuration_components.py` discovers allowlisted configuration atoms.
 - `lib/configuration_manifest.py` builds complete manifests and baseline comparisons.
 - `lib/mlflow_config_registry.py` publishes and links prompts, run evidence, and trace provenance.

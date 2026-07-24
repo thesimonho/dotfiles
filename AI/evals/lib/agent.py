@@ -6,13 +6,20 @@ works with whichever monthly subscription is currently active.
 
 import json
 import os
-import shlex
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
+from agent_evidence import (
+    AgentEvent,
+    TokenUsage,
+    claude_evidence,
+    codex_evidence,
+    normalize_shell_command,
+)
 from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
@@ -27,6 +34,20 @@ class AgentResult:
 
     response: str
     shell_commands: tuple[str, ...]
+    events: tuple[AgentEvent, ...]
+    token_usage: TokenUsage
+    model_ids: tuple[str, ...]
+    invocation_seconds: float
+
+
+@dataclass(frozen=True)
+class CompletedAgentProcess:
+    """Completed CLI process paired with harness-measured wall-clock time."""
+
+    returncode: int
+    stdout: str
+    stderr: str
+    invocation_seconds: float
 
 
 def resolve_agent_profile(requested_profile: str) -> str:
@@ -84,10 +105,16 @@ def _call_claude(
     if completed_process.returncode != 0:
         message = completed_process.stderr.strip() or "Claude CLI request failed"
         raise RuntimeError(message)
-    return claude_result_from_output(completed_process.stdout)
+    return claude_result_from_output(
+        completed_process.stdout,
+        invocation_seconds=completed_process.invocation_seconds,
+    )
 
 
-def claude_result_from_output(output: str) -> AgentResult:
+def claude_result_from_output(
+    output: str,
+    invocation_seconds: float = 0.0,
+) -> AgentResult:
     """Normalize Claude stream JSON into response and Bash command evidence."""
     events = _json_lines(output)
     result_events = [event for event in events if event.get("type") == "result"]
@@ -106,7 +133,15 @@ def claude_result_from_output(output: str) -> AgentResult:
         and content.get("name") == "Bash"
         and isinstance(content.get("input", {}).get("command"), str)
     )
-    return AgentResult(response=response_text, shell_commands=shell_commands)
+    agent_events, token_usage, model_ids = claude_evidence(events, result_event)
+    return AgentResult(
+        response=response_text,
+        shell_commands=shell_commands,
+        events=agent_events,
+        token_usage=token_usage,
+        model_ids=model_ids,
+        invocation_seconds=invocation_seconds,
+    )
 
 
 def _call_codex(
@@ -139,10 +174,16 @@ def _call_codex(
     if completed_process.returncode != 0:
         message = completed_process.stderr.strip() or "Codex CLI request failed"
         raise RuntimeError(message)
-    return codex_result_from_output(completed_process.stdout)
+    return codex_result_from_output(
+        completed_process.stdout,
+        invocation_seconds=completed_process.invocation_seconds,
+    )
 
 
-def codex_result_from_output(output: str) -> AgentResult:
+def codex_result_from_output(
+    output: str,
+    invocation_seconds: float = 0.0,
+) -> AgentResult:
     """Normalize Codex JSONL into response text and shell command evidence."""
     events = _json_lines(output)
     messages = [
@@ -160,19 +201,15 @@ def codex_result_from_output(output: str) -> AgentResult:
         and event.get("item", {}).get("type") == "command_execution"
         and isinstance(event["item"].get("command"), str)
     )
-    return AgentResult(response=messages[-1], shell_commands=shell_commands)
-
-
-def normalize_shell_command(command: str) -> str:
-    """Remove the CLI's shell launcher while preserving agent-authored syntax."""
-    try:
-        tokens = shlex.split(command)
-    except ValueError:
-        return command
-    if len(tokens) >= 3 and os.path.basename(tokens[0]) in {"bash", "sh", "zsh"}:
-        if tokens[1] in {"-c", "-lc"}:
-            return tokens[2]
-    return command
+    agent_events, token_usage, model_ids = codex_evidence(events)
+    return AgentResult(
+        response=messages[-1],
+        shell_commands=shell_commands,
+        events=agent_events,
+        token_usage=token_usage,
+        model_ids=model_ids,
+        invocation_seconds=invocation_seconds,
+    )
 
 
 def codex_sandbox_arguments() -> tuple[str, str]:
@@ -214,10 +251,11 @@ def _run_cli_command(
     *,
     workspace_path: Path = REPOSITORY_ROOT,
     environment_overrides: dict[str, str] | None = None,
-) -> subprocess.CompletedProcess:
+) -> CompletedAgentProcess:
     """Run an authenticated agent CLI with a bounded execution time."""
+    invocation_started_at = time.perf_counter()
     try:
-        return subprocess.run(
+        completed_process = subprocess.run(
             command,
             capture_output=True,
             text=True,
@@ -229,6 +267,12 @@ def _run_cli_command(
                 overrides=environment_overrides,
             ),
             timeout=CLI_TIMEOUT_SECONDS,
+        )
+        return CompletedAgentProcess(
+            returncode=completed_process.returncode,
+            stdout=completed_process.stdout,
+            stderr=completed_process.stderr,
+            invocation_seconds=time.perf_counter() - invocation_started_at,
         )
     except subprocess.TimeoutExpired as error:
         raise RuntimeError(

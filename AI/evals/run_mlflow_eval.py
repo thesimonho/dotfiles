@@ -3,8 +3,10 @@
 import argparse
 import os
 import sys
+import time
 import uuid
 from collections.abc import Callable
+from contextlib import ExitStack
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
@@ -40,6 +42,7 @@ from disposable_workspace import prepare_workspace  # noqa: E402
 import mlflow  # noqa: E402
 import mlflow.genai  # noqa: E402
 import mlflow_tracing  # noqa: E402
+from mlflow_execution_trace import invoke_traced_agent  # noqa: E402
 import scoring  # noqa: E402
 from cases import CASES  # noqa: E402
 from mlflow.entities import Feedback  # noqa: E402
@@ -130,6 +133,7 @@ def build_predict_fn(
         workspace: WorkspaceSpec | None = None,
     ) -> dict[str, object]:
         """Run one case while keeping its identity queryable on the trace."""
+        case_started_at = time.perf_counter()
         _update_trace_preview(
             metadata={
                 AGENT_CLI_FIELD: identity.profile,
@@ -146,49 +150,88 @@ def build_predict_fn(
             role="agent-under-test",
         )
         if workspace is None:
-            result = agent.run_agent(
-                prompt,
-                execution_context,
-                profile=identity.profile,
-                environment_overrides=profile_environment,
+            result = invoke_traced_agent(
+                lambda: agent.run_agent(
+                    prompt,
+                    execution_context,
+                    profile=identity.profile,
+                    environment_overrides=profile_environment,
+                )
             )
             workspace_evidence = None
         else:
-            with prepare_workspace(
-                workspace["environment"],
-                workspace["scenario"],
-            ) as prepared_workspace:
+            workspace_stack = ExitStack()
+            try:
+                with mlflow.start_span(
+                    name="workspace.prepare",
+                    span_type="CHAIN",
+                ):
+                    prepared_workspace = workspace_stack.enter_context(
+                        prepare_workspace(
+                            workspace["environment"],
+                            workspace["scenario"],
+                        )
+                    )
                 if workspace_snapshots is not None:
                     workspace_snapshots.record(
                         case_id,
                         prepared_workspace.workspace_snapshot_hash,
                     )
-                result = agent.run_agent(
-                    prompt,
-                    execution_context,
-                    profile=identity.profile,
-                    workspace_path=prepared_workspace.path,
-                    workspace_access=workspace["access"],
-                    environment_overrides={
-                        **(profile_environment or {}),
-                        **prepared_workspace.environment,
-                    },
-                    additional_writable_paths=(
-                        prepared_workspace.additional_writable_paths
-                    ),
-                )
-                workspace_evidence = asdict(
-                    prepared_workspace.capture_evidence(
-                        shell_commands=result.shell_commands,
+                result = invoke_traced_agent(
+                    lambda: agent.run_agent(
+                        prompt,
+                        execution_context,
+                        profile=identity.profile,
+                        workspace_path=prepared_workspace.path,
+                        workspace_access=workspace["access"],
+                        environment_overrides={
+                            **(profile_environment or {}),
+                            **prepared_workspace.environment,
+                        },
+                        additional_writable_paths=(
+                            prepared_workspace.additional_writable_paths
+                        ),
                     )
                 )
+                with mlflow.start_span(
+                    name="workspace.capture",
+                    span_type="CHAIN",
+                ) as capture_span:
+                    workspace_evidence = asdict(
+                        prepared_workspace.capture_evidence(
+                            shell_commands=result.shell_commands,
+                        )
+                    )
+                    capture_span.set_outputs(workspace_evidence)
+            finally:
+                with mlflow.start_span(
+                    name="workspace.cleanup",
+                    span_type="CHAIN",
+                ):
+                    workspace_stack.close()
         _update_trace_preview(response_preview=result.response)
+        case_completion_seconds = time.perf_counter() - case_started_at
         output = {
             "response": result.response,
             "execution_evidence": {
                 "shell_commands": result.shell_commands,
+                "events": tuple(event.to_dict() for event in result.events),
+                "model_ids": result.model_ids,
+            },
+            "operational_evidence": {
+                "case_completion_seconds": case_completion_seconds,
+                "agent_invocation_seconds": result.invocation_seconds,
+                "token_usage": result.token_usage.to_dict(),
             },
         }
+        active_span = mlflow.get_current_active_span()
+        if active_span is not None:
+            active_span.set_attributes(
+                {
+                    "evaluation.case_completion_seconds": case_completion_seconds,
+                    "evaluation.agent_invocation_seconds": result.invocation_seconds,
+                }
+            )
         if workspace_evidence is not None:
             output["workspace_evidence"] = workspace_evidence
         return output
@@ -248,7 +291,7 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             if "workspace_evidence" in outputs
             else []
         )
-        return [
+        behavioral_feedback = [
             Feedback(
                 name=result.name,
                 value=result.value,
@@ -256,8 +299,51 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             )
             for result in (*response_results, *execution_results, *workspace_results)
         ]
+        return [
+            *behavioral_feedback,
+            *_operational_feedback(outputs["operational_evidence"]),
+        ]
 
     return evaluation_score
+
+
+def _operational_feedback(evidence: dict[str, Any]) -> list[Feedback]:
+    """Expose universal time and token diagnostics without pass/fail thresholds."""
+    feedback = [
+        Feedback(
+            name="case_completion_seconds",
+            value=float(evidence["case_completion_seconds"]),
+            rationale="Harness-measured predictor wall-clock duration in seconds.",
+        ),
+        Feedback(
+            name="agent_invocation_seconds",
+            value=float(evidence["agent_invocation_seconds"]),
+            rationale="Harness-measured authenticated CLI subprocess duration in seconds.",
+        ),
+    ]
+    token_usage = evidence["token_usage"]
+    token_metric_names = {
+        "input_tokens": "input_token_count",
+        "uncached_input_tokens": "uncached_input_token_count",
+        "cached_input_tokens": "cached_input_token_count",
+        "cache_creation_input_tokens": "cache_creation_input_token_count",
+        "output_tokens": "output_token_count",
+        "reasoning_output_tokens": "reasoning_output_token_count",
+        "total_tokens": "total_token_count",
+    }
+    feedback.extend(
+        Feedback(
+            name=metric_name,
+            value=float(token_usage[token_name]),
+            rationale=(
+                f"Token usage reported or derived from {token_usage['source']}; "
+                "diagnostic only."
+            ),
+        )
+        for token_name, metric_name in token_metric_names.items()
+        if isinstance(token_usage.get(token_name), int)
+    )
+    return feedback
 
 
 def _execution_context(

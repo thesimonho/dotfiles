@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eval execution trace normalization plan</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #111827; color: #e5e7eb; }
+    body { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; line-height: 1.55; }
+    header, section { border: 1px solid #374151; border-radius: 14px; padding: 24px; margin: 0 0 20px; background: #182235; }
+    h1, h2 { margin-top: 0; color: #f9fafb; }
+    h2 { display: flex; gap: 12px; align-items: baseline; }
+    h2 small { color: #67e8f9; font-variant-numeric: tabular-nums; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #374151; text-align: left; vertical-align: top; }
+    code, pre { font-family: ui-monospace, monospace; }
+    pre { padding: 18px; border-radius: 10px; overflow: auto; background: #0b1220; color: #bae6fd; }
+    .callout { border-left: 4px solid #fbbf24; padding: 12px 16px; background: #292313; }
+    .chip { display: inline-block; border-radius: 999px; padding: 2px 9px; background: #164e63; color: #cffafe; font-size: .8rem; }
+    details { margin-top: 12px; }
+    a { color: #67e8f9; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="chip">Implemented</span>
+    <h1>Make each eval case trace explain what the agent did</h1>
+    Add a harness-owned span tree beneath MLflow's native case trace while retaining the separate eval-only raw OTEL stream. Normalize CLI tool, model, timing, and token evidence so instruction-following assessments can inspect agent and subagent behavior without navigating hundreds of transport traces.
+  </header>
+
+  <section id="scope">
+    <h2><small>01</small> Scope and success</h2>
+    <table>
+      <thead><tr><th>Outcome</th><th>Acceptance evidence</th></tr></thead>
+      <tbody>
+        <tr><td>Readable causal trace</td><td>One <code>predict_fn</code> trace contains workspace preparation, agent invocation, normalized CLI events, evidence capture, and cleanup spans where applicable.</td></tr>
+        <tr><td>Agent-call evidence</td><td>Tool and collaboration events expose tool name, status, requested agent/model hints when emitted by the CLI, and safe summary fields.</td></tr>
+        <tr><td>Operational metrics</td><td>Every successfully completed predictor case records wall-clock completion seconds and available input, cached input, reasoning, output, and total tokens as diagnostic MLflow feedback.</td></tr>
+        <tr><td>Raw telemetry preserved</td><td>Alloy continues accepting only <code>telemetry.purpose=evaluation</code> traces on the dedicated receiver, redacting known identity fields, and forwarding the low-level stream.</td></tr>
+        <tr><td>Bounded validation cost</td><td>Static checks plus one selected single-arm agent eval; no treatment/control campaign and no judge unless the chosen case requires one.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="architecture">
+    <h2><small>02</small> Trace architecture</h2>
+    <pre>predict_fn
+├── workspace.prepare
+├── agent.invoke
+│   ├── tool.shell
+│   ├── tool.apply_patch
+│   └── agent.spawn
+├── workspace.capture
+└── workspace.cleanup
+
+Codex / Claude raw OTEL ── evaluation tag ── Alloy ── MLflow diagnostics</pre>
+    <aside class="callout">The logical execution ID remains the join key between the readable harness trace and raw runtime traces. Alloy is a routing and privacy boundary, not the place to reconstruct application semantics.</aside>
+  </section>
+
+  <section id="implementation">
+    <h2><small>03</small> Implementation sequence</h2>
+    <ol>
+      <li>Extend the CLI result contract with normalized events, token usage, usage source, and measured subprocess duration.</li>
+      <li>Parse Codex JSONL and Claude stream JSON conservatively. Preserve unknown or unavailable fields explicitly; deterministically derive documented totals but never estimate missing counts.</li>
+      <li>Create explicit MLflow child spans around harness phases and render normalized events as children of <code>agent.invoke</code>.</li>
+      <li>Return operational evidence with predictor output and emit universal diagnostic feedback for completion time and token dimensions.</li>
+      <li>Document the two trace layers and update the evaluation-library codemap.</li>
+    </ol>
+    <details>
+      <summary>Privacy and payload constraints</summary>
+      Store normalized names, status, durations, numeric usage, and summaries bounded to 1,000 characters. Do not duplicate complete prompts, responses, patches, command output, authentication material, or arbitrary raw CLI event payloads into child span attributes. Full normalized shell commands remain in the predictor output used by deterministic scorers.
+    </details>
+  </section>
+
+  <section id="verification">
+    <h2><small>04</small> Verification</h2>
+    Run Python compile, formatter/linter/type checks, Compose configuration validation, and the HomeOps build without invoking unit tests. Start the owned MLflow and Alloy services, run one cheap single-arm case, query the resulting trace through MLflow, and confirm nested span names plus duration/token feedback. Stop only services started for this verification.
+  </section>
+
+  <section id="risks">
+    <h2><small>05</small> Risks and decisions</h2>
+    <table>
+      <thead><tr><th>Risk</th><th>Decision</th></tr></thead>
+      <tbody>
+        <tr><td>CLI schemas differ or evolve</td><td>Use profile-specific adapters into a small shared contract and retain an explicit usage source/version.</td></tr>
+        <tr><td>Post-hoc spans misrepresent duration</td><td>Use MLflow's explicit nanosecond start/end APIs when source timing exists; otherwise label events as observations and store reported duration as an attribute.</td></tr>
+        <tr><td>Token totals are not comparable</td><td>Store dimensions separately, define total deterministically only from emitted fields, and disclose unavailable categories.</td></tr>
+        <tr><td>Raw OTEL volume remains noisy</td><td>Leave routing unchanged in this slice; normalized traces become the primary inspection surface while raw traces remain secondary diagnostics.</td></tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>
