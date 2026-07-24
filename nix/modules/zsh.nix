@@ -26,7 +26,7 @@ in
     history.share = false;
     autosuggestion = {
       enable = true;
-      highlight = "fg=244,underline";
+      highlight = "fg=244";
     };
     syntaxHighlighting = {
       enable = true;
@@ -172,10 +172,10 @@ in
 
         # Wait for a deliberate pause and enough input to avoid a noisy list
         # while preserving the find-as-you-type experience.
-        zstyle ':autocomplete:*' delay 0.12
+        zstyle ':autocomplete:*' delay 0.08
         zstyle ':autocomplete:*' min-input 2
         zstyle ':autocomplete:*' timeout 0.75
-        zstyle ':autocomplete:*:*' list-lines 10
+        zstyle ':autocomplete:*:*' list-lines 8
       '')
 
       # 1000: general config
@@ -183,18 +183,22 @@ in
         autoload zmv  # regex mv
 
         # Apply the final completion palette after Oh My Zsh has installed its
-        # defaults. The selected row mirrors the active Kanagawa fzf palette.
+        # defaults. Use the theme's cursor accent for an unmistakable selection.
         if [[ "$IS_DAY" == "true" ]]; then
           _completion_group_color='#977865'
-          _completion_selection_style='48;2;216;216;210;38;2;98;102;106'
+          _completion_selection_style='48;2;107;122;149;38;2;236;236;232;1'
         else
           _completion_group_color='#b6927b'
-          _completion_selection_style='48;2;42;42;55;38;2;220;215;186'
+          _completion_selection_style='48;2;196;178;138;38;2;31;31;40;1'
         fi
 
         zstyle ':completion:*:git-checkout:*' sort false
+        zstyle ':completion:*' verbose yes
+        zstyle ':completion:*' group-name ""
+        zstyle ':completion:*' list-separator "  "
         zstyle ':completion:*:descriptions' format "%F{$_completion_group_color}%B%d%b%f"
         zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS} "ma=$_completion_selection_style"
+        zstyle ':completion:*:*:*:*:default' menu no no-select
 
         unset _completion_group_color _completion_selection_style
 
@@ -211,10 +215,10 @@ in
         zle -N edit-command-line
         bindkey '^X^E' edit-command-line
 
-        # fzf's shell integration loads after zsh-autocomplete and claims Tab.
-        # Restore IDE-style menu controls after both integrations are ready:
-        # Tab enters/moves forward, Shift-Tab moves backward, and Enter inserts
-        # the selected completion without executing the command line.
+        # fzf's shell integration loads after zsh-autocomplete and claims Tab,
+        # so restore the completion menu's interaction contract after both load.
+        # Suggestions start unselected. Tab and Shift-Tab enter/cycle the menu,
+        # Enter inserts the selected item, and Escape dismisses the menu.
         bindkey -M main '^I' menu-select
         bindkey -M main '^[[Z' reverse-menu-complete
         bindkey -M main '^[[A' up-line-or-search
@@ -222,9 +226,10 @@ in
         bindkey -M main '^[OA' up-line-or-search
         bindkey -M main '^[OB' down-line-or-select
 
-        bindkey -M menuselect '^I' forward-char
-        bindkey -M menuselect '^[[Z' backward-char
+        bindkey -M menuselect '^I' menu-complete
+        bindkey -M menuselect '^[[Z' reverse-menu-complete
         bindkey -M menuselect '^M' accept-line
+        bindkey -M menuselect '^[' send-break
 
         copy-command() {
           if command -v pbcopy &> /dev/null; then
