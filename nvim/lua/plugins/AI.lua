@@ -107,16 +107,6 @@ vim.keymap.set("v", "<leader>as", function()
   show_agent_terminal()
 end, { noremap = true, silent = true, desc = "Send selection to agent terminal" })
 
-vim.keymap.set("n", "<leader>ac", function()
-  vim.fn.system("xdg-open https://www.claude.ai")
-end, { desc = "Chat in browser" })
-
-vim.keymap.set("v", "<leader>ac", function()
-  -- Yank to system clipboard (+ register)
-  vim.cmd('normal! "+y')
-  vim.fn.system("xdg-open https://www.claude.ai")
-end, { desc = "Yank and open chat" })
-
 local M = {
   {
     "TabbyML/vim-tabby",
