@@ -82,6 +82,148 @@ M = {
       },
     },
   },
+  {
+    "jakewvincent/mkdnflow.nvim",
+    depedencies = {
+      {
+        "saghen/blink.cmp",
+        opts = {
+          sources = {
+            default = { "lsp", "mkdnflow" },
+            providers = {
+              mkdnflow = {
+                name = "Mkdnflow",
+                module = "mkdnflow.completion.blink",
+              },
+            },
+          },
+        },
+      },
+    },
+    ft = { "markdown", "rmd" },
+    opts = {
+      modules = {
+        conceal = true,
+        yaml = true,
+        completion = true,
+      },
+      create_dirs = false,
+      silent = true,
+      path_resolution = {
+        sync_cwd = true,
+        update_on_navigate = true,
+      },
+      foldtext = {
+        object_count = true,
+        object_count_icon_set = "nerdfont",
+        line_count = true,
+        line_percentage = false,
+        word_count = false,
+        fill_chars = {
+          left_edge = "⣿",
+          right_edge = "⣿",
+          item_separator = " · ",
+          section_separator = "  //  ",
+          left_inside = " ┃",
+          right_inside = "┃ ",
+          middle = "⣿",
+        },
+      },
+      links = {
+        compact = false,
+        conceal = true,
+        auto_create = true,
+      },
+      to_do = {
+        highlight = true,
+        statuses = {
+          not_started = {
+            marker = " ",
+            highlight = {
+              marker = { link = "Conceal" },
+              content = { link = "Conceal" },
+            },
+            sort = { section = 2, position = "top" },
+          },
+          in_progress = {
+            marker = "-",
+            highlight = {
+              marker = { link = "WarningMsg" },
+              content = { bold = true },
+            },
+            sort = { section = 1, position = "bottom" },
+          },
+          complete = {
+            marker = { "X", "x" },
+            highlight = {
+              marker = { link = "String" },
+              content = { link = "Conceal" },
+            },
+            sort = { section = 3, position = "top" },
+          },
+        },
+        status_order = { "not_started", "in_progress", "complete" },
+        sort = {
+          on_status_change = true,
+          recursive = true,
+        },
+      },
+      tables = {
+        type = "pipe",
+        trim_whitespace = true,
+        format_on_move = true,
+        style = {
+          cell_padding = 1,
+          separator_padding = 1,
+          outer_pipes = true,
+          apply_alignment = true,
+        },
+      },
+      mappings = {
+        MkdnEnter = { { "n", "v" }, "<CR>" },
+        MkdnGoBack = { "n", "<BS>" },
+        MkdnGoForward = { "n", "<Del>" },
+        MkdnMoveSource = { "n", "<F2>" },
+        MkdnNextLink = false,
+        MkdnPrevLink = false,
+        MkdnFollowLink = false,
+        MkdnDestroyLink = { "n", "<M-CR>" },
+        MkdnTagSpan = { "v", "<M-CR>" },
+        MkdnYankAnchorLink = { "n", "yaa" },
+        MkdnYankFileAnchorLink = { "n", "yfa" },
+        MkdnNextHeading = { "n", "]]" },
+        MkdnPrevHeading = { "n", "[[" },
+        MkdnNextHeadingSame = { "n", "][" },
+        MkdnPrevHeadingSame = { "n", "[]" },
+        MkdnIncreaseHeading = { { "n", "v" }, "+" },
+        MkdnDecreaseHeading = { { "n", "v" }, "-" },
+        MkdnIncreaseHeadingOp = { { "n", "v" }, "g+" },
+        MkdnDecreaseHeadingOp = { { "n", "v" }, "g-" },
+        MkdnToggleToDo = { { "n", "v" }, "<Tab>" },
+        MkdnNewListItemBelowInsert = { "n", "o" },
+        MkdnNewListItemAboveInsert = { "n", "O" },
+        MkdnUpdateNumbering = { "n", "<leader>nn" },
+        MkdnTableNextCell = { "i", "<Tab>" },
+        MkdnTablePrevCell = { "i", "<S-Tab>" },
+        MkdnTableNextRow = false,
+        MkdnTablePrevRow = { "i", "<M-CR>" },
+        MkdnTableNewRowBelow = { "n", "<leader>ir" },
+        MkdnTableNewRowAbove = { "n", "<leader>iR" },
+        MkdnTableNewColAfter = { "n", "<leader>ic" },
+        MkdnTableNewColBefore = { "n", "<leader>iC" },
+        MkdnTableDeleteRow = { "n", "<leader>dr" },
+        MkdnTableDeleteCol = { "n", "<leader>dc" },
+        MkdnFoldSection = { "n", "<leader>f" },
+        MkdnUnfoldSection = { "n", "<leader>F" },
+        MkdnTab = false,
+        MkdnSTab = false,
+        MkdnIndentListItem = { "i", "<C-t>" },
+        MkdnDedentListItem = { "i", "<C-d>" },
+        MkdnCreateLink = false,
+        MkdnCreateLinkFromClipboard = { { "n", "v" }, "<leader>p" },
+      },
+    },
+  },
 }
 
 -- The extra lints with markdownlint-cli2; point it
