@@ -107,9 +107,174 @@ vim.keymap.set("v", "<leader>as", function()
   show_agent_terminal()
 end, { noremap = true, silent = true, desc = "Send selection to agent terminal" })
 
+local function set_tabby_lifecycle_state(lifecycle_state)
+  local is_ready = lifecycle_state == "ready"
+  vim.g.tabby_inline_completion_trigger = is_ready and "auto" or "manual"
+
+  if not is_ready then
+    -- Container startup can fail before lazy.nvim has sourced vim-tabby's autoload functions.
+    pcall(vim.fn["tabby#inline_completion#service#Clear"])
+    vim.lsp.enable("tabby", false)
+    return
+  end
+
+  vim.lsp.enable("tabby", true)
+end
+
+local tabby_lsp_init_options = {
+  clientCapabilities = {
+    textDocument = {
+      inlineCompletion = true,
+    },
+  },
+}
+
+local function trigger_tabby_attached_event()
+  vim.api.nvim_exec_autocmds("User", { pattern = "tabby_lsp_on_buffer_attached" })
+end
+
+local function configure_native_tabby_lsp()
+  vim.lsp.config("tabby", {
+    cmd = vim.g.tabby_agent_start_command,
+    root_markers = { ".git" },
+    init_options = tabby_lsp_init_options,
+    on_attach = trigger_tabby_attached_event,
+  })
+end
+
+local function configure_legacy_tabby_lsp_bridge()
+  local lspconfig_configs = require("lspconfig.configs")
+  if not lspconfig_configs.tabby then
+    lspconfig_configs.tabby = {
+      default_config = {
+        name = "tabby",
+        cmd = vim.g.tabby_agent_start_command,
+        filetypes = { "*" },
+        root_dir = require("lspconfig.util").find_git_ancestor,
+        single_file_support = true,
+        autostart = false,
+        init_options = tabby_lsp_init_options,
+        on_attach = trigger_tabby_attached_event,
+      },
+    }
+  end
+end
+
+local function configure_tabby_lsp()
+  configure_native_tabby_lsp()
+  configure_legacy_tabby_lsp_bridge()
+end
+
+local tabby_container = require("utils.compose_service").new({
+  name = "Tabby",
+  compose_file = "~/dotfiles/AI/tabby.yaml",
+  service = "tabby",
+  docker_context = "default",
+  wait_for_health = true,
+  poll_timeout_ms = 120000,
+  on_state_change = set_tabby_lifecycle_state,
+})
+
+local is_cursortab_daemon_start_scheduled = false
+
+local function set_cursortab_lifecycle_state(lifecycle_state)
+  local has_cursortab_daemon, cursortab_daemon = pcall(require, "cursortab.daemon")
+  if not has_cursortab_daemon then
+    return
+  end
+
+  local is_ready = lifecycle_state == "ready"
+  cursortab_daemon.set_enabled(is_ready)
+  if is_ready then
+    if not is_cursortab_daemon_start_scheduled then
+      is_cursortab_daemon_start_scheduled = true
+      cursortab_daemon.force_start()
+    end
+    return
+  end
+
+  if lifecycle_state ~= "starting" then
+    is_cursortab_daemon_start_scheduled = false
+    cursortab_daemon.stop_daemon()
+  end
+end
+
+local cursortab_container = require("utils.compose_service").new({
+  name = "CursorTab",
+  compose_file = "~/dotfiles/AI/cursortab.yaml",
+  service = "cursortab",
+  docker_context = "default",
+  wait_for_health = true,
+  poll_timeout_ms = 600000,
+  session_scoped = true,
+  on_state_change = set_cursortab_lifecycle_state,
+})
+
+local cursortab_state_directory =
+  vim.fs.joinpath(vim.fn.stdpath("run"), "cursortab", string.format("nvim-%s", vim.fn.getpid()))
+
 local M = {
   {
+    "cursortab/cursortab.nvim",
+    lazy = false,
+    build = "cd server && go build",
+    init = function()
+      cursortab_container:set_running(true)
+
+      local cursortab_container_group = vim.api.nvim_create_augroup("cursortab_container", { clear = true })
+      vim.api.nvim_create_autocmd("FocusGained", {
+        group = cursortab_container_group,
+        callback = function()
+          cursortab_container:refresh()
+        end,
+        desc = "Refresh CursorTab container state",
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        once = true,
+        callback = function()
+          vim.defer_fn(function()
+            require("snacks")
+              .toggle({
+                name = "AI Suggestions",
+                get = function()
+                  return cursortab_container:is_enabled()
+                end,
+                set = function(is_enabled)
+                  cursortab_container:set_running(is_enabled)
+                end,
+              })
+              :map("<leader>ul")
+          end, 100)
+        end,
+      })
+    end,
+    opts = {
+      enabled = false,
+      state_dir = cursortab_state_directory,
+      keymaps = {
+        accept = "<M-l>",
+        partial_accept = false,
+      },
+      provider = {
+        type = "inline",
+        url = "http://127.0.0.1:8012",
+        model = "qwen3.5-0.8b",
+        context_size = 1024,
+        max_tokens = 32,
+        completion_timeout = 10000,
+        privacy_mode = true,
+      },
+    },
+    config = function(_, options)
+      is_cursortab_daemon_start_scheduled = true
+      require("cursortab").setup(options)
+    end,
+  },
+  {
     "TabbyML/vim-tabby",
+    enabled = false,
     lazy = false,
     dependencies = {
       "neovim/nvim-lspconfig",
@@ -126,6 +291,38 @@ local M = {
       vim.g.tabby_agent_start_command = { "tabby-agent", "--stdio" }
       vim.g.tabby_inline_completion_trigger = "auto"
       vim.g.tabby_inline_completion_keybinding_accept = "<M-l>"
+      configure_tabby_lsp()
+
+      tabby_container:set_running(true)
+
+      local tabby_container_group = vim.api.nvim_create_augroup("tabby_container", { clear = true })
+      vim.api.nvim_create_autocmd("FocusGained", {
+        group = tabby_container_group,
+        callback = function()
+          tabby_container:refresh()
+        end,
+        desc = "Refresh Tabby container state",
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VeryLazy",
+        once = true,
+        callback = function()
+          vim.schedule(function()
+            require("snacks")
+              .toggle({
+                name = "AI Suggestions",
+                get = function()
+                  return tabby_container:is_enabled()
+                end,
+                set = function(is_enabled)
+                  tabby_container:set_running(is_enabled)
+                end,
+              })
+              :map("<leader>ul")
+          end)
+        end,
+      })
     end,
   },
   {

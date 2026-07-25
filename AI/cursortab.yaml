@@ -1,0 +1,47 @@
+name: cursortab
+services:
+  cursortab:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda-b9445
+    command:
+      - -hf
+      - unsloth/Qwen3.5-0.8B-GGUF:Q8_0
+      - --alias
+      - qwen3.5-0.8b
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - --parallel
+      - "1"
+      - --ctx-size
+      - "2048"
+      - --no-mmproj
+      - --cache-type-k
+      - q4_0
+      - --cache-type-v
+      - q4_0
+      - --flash-attn
+      - auto
+    volumes:
+      - "$HOME/.cache/llama.cpp:/root/.cache/llama.cpp"
+      - "$HOME/.cache/huggingface:/root/.cache/huggingface"
+    ports:
+      - 127.0.0.1:8012:8080
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - --silent
+        - http://127.0.0.1:8080/health
+      interval: 2s
+      timeout: 2s
+      retries: 300
+      start_period: 10s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

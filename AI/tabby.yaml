@@ -1,4 +1,4 @@
-# https://tabby.tabbyml.com/docs/welcome/ 
+# https://tabby.tabbyml.com/docs/welcome/
 name: tabby
 services:
   tabby:
@@ -11,6 +11,17 @@ services:
       - "$HOME/Projects:/repositories/Projects:ro"
     ports:
       - 127.0.0.1:8080:8080
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - --fail
+        - --silent
+        - http://127.0.0.1:8080/metrics
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 10s
     deploy:
       resources:
         reservations:

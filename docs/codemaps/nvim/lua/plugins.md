@@ -14,7 +14,7 @@ Lazy.nvim plugin specifications organized primarily by user-facing feature. File
 
 | File group | Description |
 | --- | --- |
-| `AI.lua` | Embedded agent terminals, selection forwarding, and AI-related keymaps |
+| `AI.lua` | Embedded agent terminals, selection forwarding, shared-container CursorTab suggestions with per-Neovim local daemons, and the disabled Tabby alternative |
 | `lsp.lua`, `format-lint.lua`, `treesitter.lua`, `neotest.lua`, `debug.lua` | Language intelligence, formatting, syntax, testing, and debugging foundations |
 | `blink.lua`, `nvim-autopairs.lua`, `dial.lua`, `yanky.lua` | Completion and editing behavior |
 | `explorer.lua`, `buffers.lua`, `terminal.lua`, `snacks.lua` | Navigation, buffers, terminals, pickers, and utility UI |
