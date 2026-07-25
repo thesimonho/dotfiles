@@ -142,27 +142,52 @@ local function configure_native_tabby_lsp()
   })
 end
 
-local function configure_legacy_tabby_lsp_bridge()
-  local lspconfig_configs = require("lspconfig.configs")
-  if not lspconfig_configs.tabby then
-    lspconfig_configs.tabby = {
-      default_config = {
-        name = "tabby",
-        cmd = vim.g.tabby_agent_start_command,
-        filetypes = { "*" },
-        root_dir = require("lspconfig.util").find_git_ancestor,
-        single_file_support = true,
-        autostart = false,
-        init_options = tabby_lsp_init_options,
-        on_attach = trigger_tabby_attached_event,
-      },
-    }
-  end
-end
+local function configure_tabby_inline_completion_request()
+  local tabby_lsp = require("tabby.lsp.nvim_lsp")
 
-local function configure_tabby_lsp()
-  configure_native_tabby_lsp()
-  configure_legacy_tabby_lsp_bridge()
+  function tabby_lsp.request_inline_completion(params)
+    local client = vim.lsp.get_clients({ name = "tabby" })[1]
+    if not client then
+      return 0
+    end
+
+    local request_params = vim.lsp.util.make_position_params(0, client.offset_encoding)
+    request_params.context = { triggerKind = params.trigger_kind }
+
+    local request_id
+    _, request_id = client:request("textDocument/inlineCompletion", request_params, function(_, result)
+      vim.fn["tabby#lsp#nvim_lsp#CallInlineCompletionCallback"](request_id, result)
+    end)
+    return request_id
+  end
+
+  vim.cmd("let g:tabby_lsp_client = tabby#lsp#nvim_lsp#GetClient()")
+  vim.fn["tabby#inline_completion#Setup"]()
+
+  local function install_tabby_inline_completion()
+    vim.fn["tabby#inline_completion#Install"]()
+    vim.keymap.set("i", "<M-l>", function()
+      return vim.fn["tabby#inline_completion#service#Accept"]()
+    end, {
+      buffer = true,
+      expr = true,
+      replace_keycodes = true,
+      silent = true,
+      nowait = true,
+      desc = "Accept Tabby suggestion",
+    })
+  end
+
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "tabby_lsp_on_buffer_attached",
+    callback = install_tabby_inline_completion,
+    desc = "Install Tabby inline completion with Neovim keycode handling",
+  })
+
+  local is_tabby_attached = #vim.lsp.get_clients({ name = "tabby", bufnr = 0 }) > 0
+  if is_tabby_attached then
+    install_tabby_inline_completion()
+  end
 end
 
 local tabby_container = require("utils.compose_service").new({
@@ -172,6 +197,7 @@ local tabby_container = require("utils.compose_service").new({
   docker_context = "default",
   wait_for_health = true,
   poll_timeout_ms = 120000,
+  session_scoped = true,
   on_state_change = set_tabby_lifecycle_state,
 })
 
@@ -216,6 +242,7 @@ local cursortab_state_directory =
 local M = {
   {
     "cursortab/cursortab.nvim",
+    enabled = false,
     lazy = false,
     build = "cd server && go build",
     init = function()
@@ -274,10 +301,8 @@ local M = {
   },
   {
     "TabbyML/vim-tabby",
-    enabled = false,
-    lazy = false,
+    event = "VeryLazy",
     dependencies = {
-      "neovim/nvim-lspconfig",
       {
         "mason-org/mason.nvim",
         opts = {
@@ -288,10 +313,12 @@ local M = {
       },
     },
     init = function()
+      -- Use the upstream inline UI without its legacy nvim-lspconfig setup.
+      vim.g.loaded_tabby = 1
       vim.g.tabby_agent_start_command = { "tabby-agent", "--stdio" }
       vim.g.tabby_inline_completion_trigger = "auto"
       vim.g.tabby_inline_completion_keybinding_accept = "<M-l>"
-      configure_tabby_lsp()
+      configure_native_tabby_lsp()
 
       tabby_container:set_running(true)
 
@@ -324,6 +351,7 @@ local M = {
         end,
       })
     end,
+    config = configure_tabby_inline_completion_request,
   },
   {
     "supermaven-inc/supermaven-nvim",
