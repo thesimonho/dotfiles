@@ -188,6 +188,21 @@ function ComposeService:notify_progress(message)
   })
 end
 
+--- Keep an in-progress notification moving while a Compose command runs.
+--- @param generation integer
+--- @param lifecycle_state "starting"|"stopping"
+--- @param message string
+function ComposeService:animate_transition(generation, lifecycle_state, message)
+  if generation ~= self.transition_generation or self.lifecycle_state ~= lifecycle_state then
+    return
+  end
+
+  self:notify_progress(message)
+  vim.defer_fn(function()
+    self:animate_transition(generation, lifecycle_state, message)
+  end, self.poll_interval_ms)
+end
+
 --- Dismiss a completed transition without adding a success notification.
 function ComposeService:hide_progress()
   require("snacks.notifier").hide(self.notification_id)
@@ -352,6 +367,9 @@ function ComposeService:set_running(should_run)
   self.desired_running = should_run
   self:set_lifecycle_state(should_run and "starting" or "stopping")
   local arguments = should_run and { "up", "--detach", self.service } or { "stop", self.service }
+  if not should_run then
+    self:animate_transition(generation, "stopping", "Stopping")
+  end
   self:run(arguments, function(result)
     if generation ~= self.transition_generation then
       return
