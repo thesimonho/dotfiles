@@ -16,8 +16,8 @@ in
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    NVIM_LOG_FILE = "${config.xdg.stateHome}/nvim/nvim.log";
     VISUAL = "nvim";
+    NVIM_LOG_FILE = "${config.xdg.stateHome}/nvim/nvim.log";
   };
 
   # Mason installs LSP/formatters/etc. under this dir; ensure they're on PATH.
