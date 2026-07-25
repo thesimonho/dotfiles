@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -47,17 +46,15 @@ in
   };
 
   config = mkIf isWSL {
-    # Bridge Linux -> Windows default browser. `wslu` provides `wslview`, which
-    # hands URLs and paths to the Windows shell. Setting BROWSER makes every
-    # tool that shells out to it (nvim `gx`, gh, git web, xdg-open) open the
-    # Windows browser instead of failing silently.
-    home.packages = [ pkgs.wslu ];
-    home.sessionVariables.BROWSER = "wslview";
+    # Bridge Linux -> Windows through the Explorer executable provided by WSL
+    # itself. Setting BROWSER makes every tool that shells out to it (nvim
+    # `gx`, gh, git web, xdg-open) use the Windows default handler.
+    home.sessionVariables.BROWSER = "explorer.exe";
 
     home.shellAliases = {
-      # `open .` / `open <url>` — wslview resolves files, dirs, and URLs
-      # against the Windows default handler (Explorer, browser, etc.).
-      open = "wslview";
+      # `open .` / `open <url>` resolves files, dirs, and URLs against the
+      # Windows default handler (Explorer, browser, etc.).
+      open = "explorer.exe";
       # Shell <-> Windows clipboard. clip.exe copies; Get-Clipboard reads it
       # back (stripping the CR that PowerShell appends to each line).
       pbcopy = "clip.exe";
@@ -66,8 +63,8 @@ in
 
     # WSL prepends the entire Windows PATH by default; post-setup.sh disables
     # that (interop.appendWindowsPath=false) for speed and a clean completion
-    # namespace. Re-add only the dirs holding the binaries wslview and the
-    # clipboard aliases call: System32 (clip.exe, cmd.exe, rundll32.exe), the
+    # namespace. Re-add only the dirs holding the binaries the browser and
+    # clipboard aliases call: System32 (clip.exe, cmd.exe, explorer.exe), the
     # WindowsPowerShell dir (powershell.exe — NOT directly in System32), and
     # the Windows dir (explorer.exe). Harmless while appendWindowsPath is still
     # on; the sole Windows PATH source once it's off. Assumes drive C:.

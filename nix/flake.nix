@@ -24,21 +24,21 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Frozen nixpkgs for heavy rebuilds (llama-cpp, ffmpeg). Must reference a
     # Hydra-built channel ref (nixos-* or nixpkgs-unstable) so darwin gets
     # cache coverage for the transitive deps — a raw master commit has no
     # darwin builds, which forces local recompiles and runs flaky test phases.
     # Excluded from `just update`; bump explicitly with `just update-pinned`.
-    nixpkgs-pinned.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-pinned.url = "github:NixOS/nixpkgs/nixos-26.05";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     plasma-manager = {
@@ -203,10 +203,12 @@
       apps.x86_64-linux.hm = {
         type = "app";
         program = "${home-manager.packages.x86_64-linux.home-manager}/bin/home-manager";
+        meta.description = "Home Manager CLI";
       };
       apps.aarch64-darwin.hm = {
         type = "app";
         program = "${home-manager.packages.aarch64-darwin.home-manager}/bin/home-manager";
+        meta.description = "Home Manager CLI";
       };
 
       # List of available hosts

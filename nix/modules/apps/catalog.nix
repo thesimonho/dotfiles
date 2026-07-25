@@ -217,7 +217,7 @@
       bundles = [ "cli" ];
     };
     nixfmt = {
-      contributions.packages = [ pkgs.nixfmt-rfc-style ];
+      contributions.packages = [ pkgs.nixfmt ];
       bundles = [ "cli" ];
     };
     nodejs = {

@@ -33,17 +33,17 @@ let
   sshDir = "${config.home.homeDirectory}/.ssh";
   selectedIdentities = config.my._identities;
 
-  # Derive SSH match blocks from identities
-  identityMatchBlocks = lib.mapAttrs' (name: id: {
+  # Derive SSH settings from identities
+  identitySettings = lib.mapAttrs' (name: id: {
     name = id.sshHost;
     value = {
-      hostname = id.sshProxyHost;
-      port = id.sshPort;
-      user = "git";
-      addKeysToAgent = "true";
-      forwardAgent = true;
-      identitiesOnly = true;
-      identityFile = "${sshDir}/${id.sshKeyFile}";
+      HostName = id.sshProxyHost;
+      Port = id.sshPort;
+      User = "git";
+      AddKeysToAgent = "true";
+      ForwardAgent = true;
+      IdentitiesOnly = true;
+      IdentityFile = "${sshDir}/${id.sshKeyFile}";
     };
   }) selectedIdentities;
 
@@ -181,7 +181,7 @@ in
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = identityMatchBlocks;
+    settings = identitySettings;
   };
 
   # secret-askpass / ssh-add-keys / ssh-keys are installed via home.packages

@@ -3,6 +3,7 @@
 {
   programs.yazi = {
     enable = true;
+    shellWrapperName = "yy";
     initLua = ''
       require("git"):setup()
       th.git = th.git or {}
