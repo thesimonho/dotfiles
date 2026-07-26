@@ -18,7 +18,7 @@ local function create_agent_terminal(agent)
     count = 5, -- always set to terminal #5
     cmd = agent.cmd,
     display_name = agent.label,
-    direction = "float",
+    direction = "tab",
     close_on_exit = true,
     auto_scroll = false,
     hidden = true,
