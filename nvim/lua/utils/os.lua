@@ -1,5 +1,16 @@
 local M = {}
 
+--- Read the operating-system start time used to distinguish PID reuse.
+--- @param process_id number
+--- @return string|nil
+M.get_process_start_time = function(process_id)
+  local result = vim.system({ "ps", "-o", "lstart=", "-p", tostring(process_id) }, { text = true }):wait()
+  if result.code ~= 0 then
+    return nil
+  end
+  return require("utils.general").trim_string(result.stdout)
+end
+
 --- Check if the current OS is macOS
 M.is_darwin = function()
   return vim.uv.os_uname().sysname == "Darwin"

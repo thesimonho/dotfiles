@@ -2,20 +2,18 @@ local ServiceLifecycle = {}
 ServiceLifecycle.__index = ServiceLifecycle
 
 local default_spinner_frames = require("config.constants").spinner
+local fs = require("utils.fs")
+local os = require("utils.os")
 
-local function trim_output(output)
-  return (output or ""):gsub("^%s+", ""):gsub("%s+$", "")
-end
-
-local function get_process_start_time(process_id)
-  local result = vim.system({ "ps", "-o", "lstart=", "-p", tostring(process_id) }, { text = true }):wait()
-  return result.code == 0 and trim_output(result.stdout) or nil
-end
-
-local function get_script(script_name)
-  local module_path = debug.getinfo(1, "S").source:sub(2)
-  local nvim_directory = vim.fs.dirname(vim.fs.dirname(vim.fs.dirname(module_path)))
-  return vim.fs.joinpath(nvim_directory, "scripts", script_name)
+--- Wrap a command in the cross-process operation lock when one is configured.
+--- @param command string[]
+--- @param operation_lock string|nil
+--- @return string[]
+function ServiceLifecycle.with_operation_lock(command, operation_lock)
+  if not operation_lock then
+    return command
+  end
+  return { "sh", fs.config_path("scripts", "service-command.sh"), operation_lock, "--", unpack(command) }
 end
 
 --- Create lifecycle management around a service backend.
@@ -62,15 +60,22 @@ end
 
 function ServiceLifecycle:register_session()
   local process_id = vim.fn.getpid()
-  local process_start_time = get_process_start_time(process_id)
+  local process_start_time = os.get_process_start_time(process_id)
   if self.session_registered or not process_start_time then
     return
   end
 
   local session_directory = vim.fs.joinpath(vim.fn.stdpath("run"), "nvim-services", self.backend.key)
   local session_lease = vim.fs.joinpath(session_directory, process_id .. ".lease")
-  local registration =
-    vim.system({ "sh", get_script("service-register.sh"), session_directory, session_lease, process_start_time }):wait()
+  local registration = vim
+    .system({
+      "sh",
+      fs.config_path("scripts", "service-register.sh"),
+      session_directory,
+      session_lease,
+      process_start_time,
+    })
+    :wait()
   if registration.code ~= 0 then
     return
   end
@@ -97,7 +102,13 @@ function ServiceLifecycle:release_session()
   end
 
   self.session_registered = false
-  local command = { "sh", get_script("service-release.sh"), self.session_directory, self.session_lease, "--" }
+  local command = {
+    "sh",
+    fs.config_path("scripts", "service-release.sh"),
+    self.session_directory,
+    self.session_lease,
+    "--",
+  }
   vim.list_extend(command, self.backend:release_command())
   vim.fn.jobstart(command, { detach = true })
 end

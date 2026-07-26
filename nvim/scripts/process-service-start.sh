@@ -22,8 +22,7 @@ trap 'rm -f -- "$pid_file_buffer"; release_service_lock "$lock_directory"' EXIT
 if [ -f "$pid_file" ]; then
   existing_pid=$(sed -n '1p' "$pid_file")
   expected_start_time=$(sed -n '2p' "$pid_file")
-  actual_start_time=$(ps -o lstart= -p "$existing_pid" 2>/dev/null | sed 's/^[[:space:]]*//')
-  if [ -n "$actual_start_time" ] && [ "$actual_start_time" = "$expected_start_time" ]; then
+  if is_process_identity_current "$existing_pid" "$expected_start_time"; then
     exit 0
   fi
   rm -f -- "$pid_file"
@@ -38,7 +37,7 @@ process_id=$!
 process_start_time=""
 attempt=0
 while [ -z "$process_start_time" ] && [ "$attempt" -lt 20 ]; do
-  process_start_time=$(ps -o lstart= -p "$process_id" 2>/dev/null | sed 's/^[[:space:]]*//')
+  process_start_time=$(get_process_start_time "$process_id")
   attempt=$((attempt + 1))
   [ -n "$process_start_time" ] || sleep 0.05
 done

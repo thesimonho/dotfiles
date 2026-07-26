@@ -1,47 +1,29 @@
 local M = {}
+local fs = require("utils.fs")
+local general = require("utils.general")
+local os = require("utils.os")
+local ServiceLifecycle = require("utils.service_lifecycle")
 
-local function trim_output(output)
-  return (output or ""):gsub("%s+$", "")
-end
-
-local function get_script(script_name)
-  local module_path = debug.getinfo(1, "S").source:sub(2)
-  local nvim_directory = vim.fs.dirname(vim.fs.dirname(vim.fs.dirname(module_path)))
-  return vim.fs.joinpath(nvim_directory, "scripts", script_name)
-end
-
-local function get_process_start_time(process_id)
-  local result = vim.system({ "ps", "-o", "lstart=", "-p", tostring(process_id) }, { text = true }):wait()
-  return result.code == 0 and trim_output(result.stdout):gsub("^%s+", "") or nil
-end
-
-local function read_process_identity(pid_file)
-  if vim.fn.filereadable(pid_file) ~= 1 then
+local function read_process_identity(identity_file)
+  if vim.fn.filereadable(identity_file) ~= 1 then
     return nil, nil
   end
-  local lines = vim.fn.readfile(pid_file, "", 2)
+  local lines = vim.fn.readfile(identity_file, "", 2)
   return tonumber(lines[1]), lines[2]
 end
 
 local function is_owned_process_running(process_id, expected_start_time)
-  if not process_id then
+  if not process_id or not expected_start_time then
     return false
   end
   local succeeded, result = pcall(vim.uv.kill, process_id, 0)
-  return succeeded and result == 0 and get_process_start_time(process_id) == expected_start_time
-end
-
-local function absolute_path(path)
-  if not path then
-    return nil
-  end
-  return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
+  return succeeded and result == 0 and os.get_process_start_time(process_id) == expected_start_time
 end
 
 local function create_backend(options)
   local safe_name = options.name:lower():gsub("[^%w_.-]", "_")
-  local working_directory = absolute_path(options.cwd)
-  local log_file = absolute_path(options.log_file)
+  local working_directory = fs.absolute_path(options.cwd)
+  local log_file = fs.absolute_path(options.log_file)
   local identity_parts = { working_directory or "", unpack(options.command) }
   local environment_keys = vim.tbl_keys(options.environment or {})
   table.sort(environment_keys)
@@ -65,10 +47,15 @@ local function create_backend(options)
   }
 
   function backend:start(callback)
-    local command = { "sh", get_script("process-service-start.sh"), self.pid_file, self.log_file, self.cwd or "", "--" }
-    if self.operation_lock then
-      command = { "sh", get_script("service-command.sh"), self.operation_lock, "--", unpack(command) }
-    end
+    local command = {
+      "sh",
+      fs.config_path("scripts", "process-service-start.sh"),
+      self.pid_file,
+      self.log_file,
+      self.cwd or "",
+      "--",
+    }
+    command = ServiceLifecycle.with_operation_lock(command, self.operation_lock)
     if self.environment then
       table.insert(command, "env")
       for key, value in pairs(self.environment) do
@@ -87,10 +74,13 @@ local function create_backend(options)
   end
 
   function backend:stop(callback)
-    local command = { "sh", get_script("process-service-stop.sh"), self.pid_file, tostring(self.stop_timeout_ms) }
-    if self.operation_lock then
-      command = { "sh", get_script("service-command.sh"), self.operation_lock, "--", unpack(command) }
-    end
+    local command = {
+      "sh",
+      fs.config_path("scripts", "process-service-stop.sh"),
+      self.pid_file,
+      tostring(self.stop_timeout_ms),
+    }
+    command = ServiceLifecycle.with_operation_lock(command, self.operation_lock)
     vim.system(command, { text = true }, function(result)
       vim.schedule(function()
         if result.code == 0 then
@@ -102,7 +92,12 @@ local function create_backend(options)
   end
 
   function backend:release_command()
-    return { "sh", get_script("process-service-stop.sh"), self.pid_file, tostring(self.stop_timeout_ms) }
+    return {
+      "sh",
+      fs.config_path("scripts", "process-service-stop.sh"),
+      self.pid_file,
+      tostring(self.stop_timeout_ms),
+    }
   end
 
   function backend:read_status(callback)
@@ -124,7 +119,7 @@ local function create_backend(options)
         elseif is_owned_process_running(process_id, expected_start_time) then
           callback("starting")
         else
-          callback("failed", trim_output(result.stderr))
+          callback("failed", general.trim_string(result.stderr))
         end
       end)
     end)
@@ -147,7 +142,7 @@ function M.new(options)
     log_file = { options.log_file, "string", true },
     stop_timeout_ms = { options.stop_timeout_ms, "number", true },
   })
-  return require("utils.service_lifecycle").new(vim.tbl_extend("force", options, {
+  return ServiceLifecycle.new(vim.tbl_extend("force", options, {
     backend = create_backend(options),
   }))
 end

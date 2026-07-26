@@ -1,14 +1,6 @@
 local M = {}
-
-local function trim_output(output)
-  return (output or ""):gsub("%s+$", "")
-end
-
-local function get_command_script()
-  local module_path = debug.getinfo(1, "S").source:sub(2)
-  local nvim_directory = vim.fs.dirname(vim.fs.dirname(vim.fs.dirname(module_path)))
-  return vim.fs.joinpath(nvim_directory, "scripts", "service-command.sh")
-end
+local general = require("utils.general")
+local ServiceLifecycle = require("utils.service_lifecycle")
 
 local function compose_command(backend, arguments)
   local command = { "docker" }
@@ -34,7 +26,7 @@ local function create_backend(options)
   function backend:run(arguments, callback)
     local command = compose_command(self, arguments)
     if self.operation_lock and (arguments[1] == "up" or arguments[1] == "stop") then
-      command = { "sh", get_command_script(), self.operation_lock, "--", unpack(command) }
+      command = ServiceLifecycle.with_operation_lock(command, self.operation_lock)
     end
     vim.system(command, { text = true }, function(result)
       vim.schedule(function()
@@ -58,12 +50,12 @@ local function create_backend(options)
   function backend:read_status(callback)
     self:run({ "ps", "--all", "--format", "json", self.service }, function(result)
       if result.code ~= 0 then
-        local message = trim_output(result.stderr)
+        local message = general.trim_string(result.stderr)
         callback(nil, message ~= "" and message or "Unable to read Docker Compose service status")
         return
       end
 
-      local output = trim_output(result.stdout)
+      local output = general.trim_string(result.stdout)
       local has_status, status = pcall(vim.json.decode, output)
       status = output ~= "" and has_status and status or nil
       if not status then
@@ -93,7 +85,7 @@ function M.new(options)
     wait_for_health = { options.wait_for_health, "boolean", true },
   })
 
-  return require("utils.service_lifecycle").new(vim.tbl_extend("force", options, {
+  return ServiceLifecycle.new(vim.tbl_extend("force", options, {
     backend = create_backend(options),
   }))
 end

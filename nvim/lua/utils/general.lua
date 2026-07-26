@@ -3,6 +3,13 @@ local fs = require("utils.fs")
 
 local M = {}
 
+--- Trim leading and trailing whitespace from a string.
+--- @param value string|nil
+--- @return string
+M.trim_string = function(value)
+  return (value or ""):gsub("^%s+", ""):gsub("%s+$", "")
+end
+
 --- Get the number of splits in the current application window
 M.get_split_count = function()
   return vim.o.columns / vim.fn.winwidth(0)

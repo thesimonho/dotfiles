@@ -2,6 +2,23 @@ local os = require("utils.os")
 
 local M = {}
 
+--- Resolve a path to its normalized absolute form.
+--- @param path string|nil
+--- @return string|nil
+M.absolute_path = function(path)
+  if not path then
+    return nil
+  end
+  return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
+end
+
+--- Resolve a file shipped alongside the Neovim configuration.
+--- @param ... string
+--- @return string
+M.config_path = function(...)
+  return vim.fs.joinpath(vim.fn.stdpath("config"), ...)
+end
+
 -- Recursive function to find a directory containing the target
 M.find_parent_with_directory = function(start_path, target_dir)
   local target_path = vim.fn.fnamemodify(start_path, ":p") .. target_dir

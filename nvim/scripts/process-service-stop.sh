@@ -18,8 +18,7 @@ trap 'release_service_lock "$lock_directory"' EXIT
 process_id=$(sed -n '1p' "$pid_file")
 expected_start_time=$(sed -n '2p' "$pid_file")
 is_owned_process() {
-  actual_start_time=$(ps -o lstart= -p "$process_id" 2>/dev/null | sed 's/^[[:space:]]*//')
-  [ -n "$actual_start_time" ] && [ "$actual_start_time" = "$expected_start_time" ]
+  is_process_identity_current "$process_id" "$expected_start_time"
 }
 
 if ! is_owned_process; then

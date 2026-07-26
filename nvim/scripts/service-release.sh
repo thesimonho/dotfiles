@@ -30,8 +30,7 @@ for lease in "$session_directory"/*.lease; do
   process_id=${lease##*/}
   process_id=${process_id%.lease}
   expected_start_time=$(sed -n '1p' "$lease")
-  actual_start_time=$(ps -o lstart= -p "$process_id" 2>/dev/null | sed 's/^[[:space:]]*//')
-  if [ -z "$actual_start_time" ] || [ "$actual_start_time" != "$expected_start_time" ]; then
+  if ! is_process_identity_current "$process_id" "$expected_start_time"; then
     rm -f -- "$lease"
   fi
 done
