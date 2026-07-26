@@ -297,26 +297,45 @@ local function set_tabby_lifecycle_state(lifecycle_state)
   vim.lsp.enable("tabby", is_ready)
 end
 
-local tabby_container = require("utils.compose_service").new({
-  name = "Tabby",
-  compose_file = "~/dotfiles/AI/tabby.yaml",
-  service = "tabby",
-  docker_context = "default",
-  wait_for_health = true,
-  poll_timeout_ms = 120000,
-  session_scoped = true,
-  on_state_change = set_tabby_lifecycle_state,
-})
+local tabby_service
+if require("utils.os").is_darwin() then
+  tabby_service = require("utils.process_service").new({
+    name = "Tabby",
+    command = { "tabby", "serve", "--model", "Qwen2.5-Coder-1.5B", "--device", "metal" },
+    health_command = {
+      "curl",
+      "--fail",
+      "--silent",
+      "--max-time",
+      "5",
+      "http://127.0.0.1:8080/metrics",
+    },
+    poll_timeout_ms = 120000,
+    session_scoped = true,
+    on_state_change = set_tabby_lifecycle_state,
+  })
+else
+  tabby_service = require("utils.compose_service").new({
+    name = "Tabby",
+    compose_file = "~/dotfiles/AI/tabby.yaml",
+    service = "tabby",
+    docker_context = "default",
+    wait_for_health = true,
+    poll_timeout_ms = 120000,
+    session_scoped = true,
+    on_state_change = set_tabby_lifecycle_state,
+  })
+end
 
 local function configure_tabby_toggle()
   require("snacks")
     .toggle({
       name = "AI Suggestions",
       get = function()
-        return tabby_container:is_enabled()
+        return tabby_service:is_enabled()
       end,
       set = function(is_enabled)
-        tabby_container:set_running(is_enabled)
+        tabby_service:set_running(is_enabled)
       end,
     })
     :map("<leader>ul")
@@ -331,13 +350,13 @@ local M = {
     },
     init = function()
       configure_tabby_lsp()
-      tabby_container:set_running(true)
+      tabby_service:set_running(true)
 
       local tabby_container_group = vim.api.nvim_create_augroup("tabby_container", { clear = true })
       vim.api.nvim_create_autocmd("FocusGained", {
         group = tabby_container_group,
         callback = function()
-          tabby_container:refresh()
+          tabby_service:refresh()
         end,
         desc = "Refresh Tabby container state",
       })

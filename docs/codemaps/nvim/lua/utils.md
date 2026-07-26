@@ -17,7 +17,9 @@ Small reusable Lua modules that keep filesystem, Git, OS, UI, and color operatio
 | `general.lua` | Cross-feature editor helpers and shared actions |
 | `git.lua` | Repository status and Git-related buffer context helpers |
 | `os.lua` | Platform detection and executable/environment selection |
-| `compose_service.lua` | Asynchronous Docker Compose lifecycle, readiness polling, progress notifications, transition-safe desired-state reconciliation, and optional per-Neovim session leases |
+| `service_lifecycle.lua` | Backend-independent lifecycle state, readiness polling, progress notifications, optimistic reconciliation, and cross-platform Neovim session leases |
+| `compose_service.lua` | Docker Compose backend implementing start, stop, health status, and detached shutdown commands |
+| `process_service.lua` | Owned foreground-process backend with detached launch, PID identity checks, health commands, logs, and graceful shutdown |
 | `ui.lua` | UI composition and display helpers used by dashboard and pickers |
 
 ## Key exports
@@ -25,13 +27,14 @@ Small reusable Lua modules that keep filesystem, Git, OS, UI, and color operatio
 | Symbol group | File | Description |
 | --- | --- | --- |
 | `create_gradient()`, `color_num_to_hex()`, `nvim_get_hl_hex()` | `color.lua` | Color calculation and highlight conversion |
-| `ComposeService.new()` | `compose_service.lua` | Creates a reusable controller for one container-backed integration, optionally stopping it after the final Neovim session exits |
+| `ServiceLifecycle.new()` | `service_lifecycle.lua` | Wraps a lifecycle backend in the shared asynchronous controller |
+| `new()` | `compose_service.lua`, `process_service.lua` | Creates a Compose-backed or owned-process-backed service with the same consumer API |
 | Module tables | Other files | Domain-specific helpers imported as `utils.<domain>` |
 
 ## Relationships
 
 - **Used by**: `nvim/lua/config/` and feature/language modules under `nvim/lua/plugins/`.
-- **Depends on**: Neovim's Lua API, the local repository state for Git helpers, and `nvim/scripts/compose-service-release.sh` for detached final-session container shutdown.
+- **Depends on**: Neovim's Lua API, the local repository state for Git helpers, and `nvim/scripts/service-*.sh` plus `process-service-*.sh` for cross-process coordination and detached shutdown.
 
 ## Entry point
 
