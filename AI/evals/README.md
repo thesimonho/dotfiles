@@ -30,29 +30,21 @@ MLflow creates or reuses one Agent Version for each `(agent CLI, manifest hash)`
 
 [`cases.py`](cases.py) is the git-tracked source of truth for real evaluation cases. Each case declares every applicable metric independently. Metric names are stable semantic dimensions shared across cases, while case-specific expected values stay in the metric declaration. Omitting a metric means it is not applicable; it is never interpreted as a failure.
 
-The first case asks the agent to query a noisy deployment inventory. It exercises reusable response and execution metrics without requiring a test repository:
-
-- `answer_correct` requires all case-specific answer values.
-- `used_structured_parser` checks whether the normalized command stream invoked `jq`.
-- `all_shell_commands_prefixed` checks whether every agent-authored shell command starts with `rtk`.
-- `shell_command_prefix_rate` reports the fraction of executable command segments that start with `rtk`.
-- `shell_command_count` reports an unthresholded diagnostic count.
-
-Supported response evaluators are `output-contains`, `output-contains-all`, and `output-quality`. Supported execution evaluators are `used-command`, `all-shell-commands-prefixed`, `shell-command-prefix-rate`, `shell-command-count`, and `evidence-count`. The evidence-count evaluator applies reusable minimum and maximum bounds to semantic agent events such as `agent.spawn` and `agent.definition-canary`. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same metric name across every applicable dataset row without collapsing distinct behavioral dimensions into one score.
+The focused suite uses four HomeOps scenarios: a small debugging repair, an authorized GitOps remediation, a large planning and documentation change, and a read-only diagnosis. Cases emit only the agreed instruction assessments that their evidence can support: categorical `task_completion` and `workflow.unnecessary_blast_radius`, percentage-based `tools.rtk_usage_percent`, planning-agent usage where applicable, and required documentation updates for the maintenance case. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same assessment name across applicable dataset rows without inventing failures for inapplicable behavior.
 
 Every executable case declares `required_evidence`, using semantic names such as `agent.message`, `tool.shell`, `agent.spawn`, `agent.model-selection`, and `token.usage`. It separately declares the subset in `required_observed_evidence` that must appear for the run to be trustworthy. Campaign previews and live runs validate these declarations against the selected CLI parser before contacting an agent. Missing, duplicate, inconsistent, or unsupported declarations fail before execution. This prevents a new case from silently assuming evidence that the harness does not capture; for example, a Codex case requiring `agent.model-selection` is rejected because Codex collaboration JSONL does not expose that field.
 
-Parser support and observed behavior are distinct. Actions that a negative case expects the agent to avoid belong only in `required_evidence`; their absence remains meaningful behavioral evidence for the case scorer. Evidence needed to make any judgment, such as the final message or token report, also belongs in `required_observed_evidence`. Missing must-observe evidence produces `evidence_contract_satisfied=false`.
+Parser support and observed behavior are distinct. Actions that a negative case expects the agent to avoid belong only in `required_evidence`; their absence remains meaningful behavioral evidence for the case scorer. Evidence needed to make any judgment, such as the final message or token report, also belongs in `required_observed_evidence`. Missing must-observe evidence is listed in the `evaluation.unobserved_required_evidence` trace attribute.
 
 Disposable comparison profiles materialize custom-agent files rather than exposing the active agent directory through another symlink. Frank's copied definition receives a per-campaign opaque footer instruction that is identical in treatment and control. Codex reports completed child messages inside collaboration state, while Claude reports Agent or Task results through correlated tool-result blocks. The parsers expose `agent.definition-canary` only when the exact expected marker is the child's final unformatted line. The parent prompt and workspace never contain the footer, and arbitrary child text is not retained. A display nickname therefore cannot satisfy configured-agent identity.
 
-Every successfully completed predictor case also reports universal operational diagnostics that do not need to be declared in `cases.py`:
+Every predictor case retains operational diagnostics on its trace rather than reporting them as assessments:
 
-- `case_completion_seconds` measures predictor wall-clock completion, including disposable workspace preparation and evidence capture.
-- `agent_invocation_seconds` isolates authenticated CLI subprocess time.
-- `evidence_contract_satisfied` reports whether every must-observe evidence requirement appeared.
-- `input_token_count`, `uncached_input_token_count`, `cached_input_token_count`, `cache_creation_input_token_count`, `output_token_count`, `reasoning_output_token_count`, and `total_token_count` are emitted when the selected CLI provides those dimensions.
-- `unknown_agent_event_type_count` reports distinct CLI event shapes that have no explicit parser classification.
+- `evaluation.case_completion_seconds` on the case root measures predictor wall-clock completion, including disposable workspace preparation and evidence capture.
+- `evaluation.invocation_seconds` on `agent.invoke` isolates authenticated CLI subprocess time.
+- `evaluation.unobserved_required_evidence` lists must-observe evidence requirements that did not appear.
+- `evaluation.tokens.*` records each numeric token dimension supplied by the selected CLI.
+- `evaluation.unknown_event_type_count` reports distinct CLI event shapes that have no explicit parser classification.
 
 Unavailable token dimensions are retained as `null` in the case output and omitted from aggregate feedback rather than estimated. Each result identifies its CLI event source. Normalized input counts include cache-read and cache-creation input so the top-level input and total dimensions remain useful across providers, while the underlying cache dimensions remain separately inspectable. These diagnostics describe the agent-under-test predictor invocation. A separate LLM judge, when applicable, remains a separately correlated invocation and is not folded into these counts. The diagnostics have no pass threshold or improvement direction.
 
@@ -60,36 +52,21 @@ For planning cases, `agent_invocation_seconds` is useful corroborating evidence:
 
 [`coverage_catalog.py`](coverage_catalog.py) maps all monitored instruction fragments to explicit behavioral hypotheses, maturity, and only the cases that genuinely exercise them. A case may support multiple fragments, so coverage grows by reusing high-signal scenarios rather than adding a separate repository or case for every instruction. `planned` entries have no cases and therefore add no evaluation cost; `active` and `proven` entries must reference executable cases.
 
-The current active suite is deliberately bounded to six unique cases. Before spending agent usage on a fragment campaign, `eval-plan` reports the applicable cases, treatment/control pairs, agent-under-test calls, judge calls, and total CLI invocations without contacting MLflow or starting an agent. Repetitions default to one and should increase only when initial paired evidence is ambiguous or when a mature fragment is being regression-tested.
+The current active suite is deliberately bounded to four unique cases. Before spending agent usage on a fragment campaign, `eval-plan` reports the applicable cases, treatment/control pairs, agent-under-test calls, judge calls, and total CLI invocations without contacting MLflow or starting an agent. Repetitions default to one and should increase only when initial paired evidence is ambiguous or when a mature fragment is being regression-tested.
 
 Environment-backed cases use the single-package [HomeOps environment](environments/homeops/README.md). Each case selects a deterministic scenario and either read-only or workspace-write access. The predictor prepares a disposable Git repository, runs the selected CLI from that repository, captures agent-attributable changes before cleanup, and returns workspace plus operational evidence on the native trace.
 
-HomeOps adds reusable workspace metrics:
+HomeOps adds reusable workspace evidence for categorical `task_completion`, `workflow.unnecessary_blast_radius`, and any case-specific documentation obligations. Changed paths, prohibited commands, and validation details remain trace evidence supporting those assessments.
 
-- `task_outcome` runs the scenario's hidden deterministic validator.
-- `negative_constraints_followed` requires zero prohibited commands, protected edits, or changes outside the scenario allowlist.
-- `protected_resources_preserved` isolates consequential protected-path behavior.
-- `unnecessary_change_count` remains a transparent diagnostic count.
-- `blast_radius_severity` reports the highest consequence from `0` (`none`) through `4` (`critical`).
+Task correctness and blast radius remain separate. A narrow correct patch can be `COMPLETE` while an unnecessary operational action raises `workflow.unnecessary_blast_radius`; Git-ignored verification artifacts are excluded from workspace evidence.
 
-Task correctness and blast radius remain separate. A narrow correct patch can pass outcome scoring while an operational action fails a negative constraint; Git-ignored verification artifacts are excluded from workspace evidence.
-
-The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. Each result records distinct observed raw event shapes, normalized semantic evidence, intentionally ignored shapes, and unknown shapes without storing arbitrary raw payloads. The predictor returns final response, normalized execution events, parser coverage, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Claude exposes model choices on relevant tool-use events. Codex exposes collaboration calls, receiver thread IDs, agent states, and status but does not expose the requested or actual collaboration model in its JSONL schema; a future Codex model-selection assessment must add another authoritative evidence source rather than infer it from unrelated raw spans. Raw CLI OpenTelemetry remains a separate, correlated runtime trace source for lower-level diagnostics.
+The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. Each result records distinct observed raw event shapes, normalized semantic evidence, intentionally ignored shapes, and unknown shapes without storing arbitrary raw payloads. The predictor returns final response, normalized execution events, parser coverage, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. Claude exposes model choices on relevant tool-use events. Codex exposes collaboration calls, receiver thread IDs, agent states, and status but does not expose the requested or actual collaboration model in its JSONL schema; a future Codex model-selection assessment must add another authoritative evidence source rather than infer it from unrelated evidence.
 
 ## Agent telemetry flow
 
-Codex and Claude send OTLP/gRPC to the dedicated loopback receiver at `127.0.0.1:4327`. Alloy keeps only traces whose resource attributes include `telemetry.purpose=evaluation`, removes known account and authorization attributes, batches them, and exports them to the same MLflow experiment used by the eval harness. Logs and metrics have no configured Alloy output and are dropped. Traces from ordinary interactive agent use that lack the evaluation marker are also dropped for now.
+The harness creates one native MLflow trace per case. Its `agent.invoke` subtree contains normalized CLI events for commands, file changes, collaboration, configured-agent canaries, timing, token usage, models, parser coverage, and unknown event shapes. Raw Codex OTEL export is removed only from the disposable evaluation profile because its low-level runtime and transport instrumentation overwhelms the four useful case traces. The user's normal Codex profile is unchanged.
 
-```text
-eval runner -> Codex or Claude -> OTLP :4327 -> Alloy -> MLflow /v1/traces
-normal use -> Codex or Claude -> OTLP :4327 -> Alloy -> drop
-```
-
-The separate port identifies agent traffic at ingress, but it is not the security or routing boundary. The immutable `telemetry.purpose=evaluation` resource attribute is what authorizes a trace for MLflow. Ordinary day-to-day agent telemetry lacks that marker and is dropped by this MLflow route. Every eval process also receives `agent.cli`, `case_id`, `category`, and `evaluation.role`, allowing agent-under-test and judge traces to be distinguished without putting prompt or response text in resource attributes.
-
-Each harness invocation generates one UUID as `evaluation.execution_id` and assigns it to every agent-under-test and judge CLI process in that invocation. This distinguishes repeated evaluations of the same case: `evaluation.execution_id` selects the run, `case_id` selects the case, and `evaluation.role` distinguishes the agent response from its judge. Every process also receives `config.manifest_id`, which identifies the exact profile-specific configuration manifest evaluated by that invocation.
-
-MLflow trace storage should be treated as sensitive. Redaction is defense in depth for known identity fields, not a guarantee that span attributes or events contain no private content. Alloy's verbose debug exporter is intentionally absent because it would duplicate telemetry into container logs.
+Each harness invocation generates one UUID as `evaluation.execution_id`. Every case trace also records `agent.cli`, `agent.model`, `agent.effort`, `case_id`, `category`, and `config.manifest_id`, making repeated model and effort runs directly filterable without putting prompt or response text in resource attributes. `evaluation.role` is limited to the child CLI process resource identity.
 
 ## Running the harness
 
@@ -108,22 +85,22 @@ just eval-up
 just eval-up-mlflow
 
 # Run with this month's authenticated CLI.
-just eval-run codex
+just eval-run codex gpt-5.6-sol low
 
 # Equivalent direct runner, with an optional explicit baseline.
-just eval-mlflow --agent codex
-just eval-mlflow --agent codex --baseline-manifest-version 3
-just eval-mlflow --agent codex --case-id homeops-workload-health-regression
+just eval-mlflow --agent codex --model gpt-5.6-sol --effort low
+just eval-mlflow --agent codex --model gpt-5.6-sol --effort high --baseline-manifest-version 3
+just eval-mlflow --agent codex --model gpt-5.6-sol --effort low --case-id homeops-workload-health-overreach
 
 # Run a causal treatment/control comparison for one instruction fragment.
-just eval-compare codex instruction/tools homeops-workload-health-regression
+just eval-compare codex gpt-5.6-sol low instruction/tools homeops-workload-health-overreach
 
 # Preview applicable workflow comparisons without running an agent.
 just eval-plan codex instruction/workflow
 just eval-plan codex instruction/workflow 3
 
 # Send the evaluation to a remote MLflow server.
-MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex
+MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex gpt-5.6-sol low
 
 # Inspect services or follow logs.
 just eval-status
@@ -139,13 +116,13 @@ just eval-verify
 
 The recipe list exposes operator-facing workflows. Dependency-only setup, startup, and readiness recipes are private so `just --list` stays focused, but they remain callable by the public recipes that compose them.
 
-Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. Small fixture-only cases run from the dotfiles repository root; environment-backed cases run from their disposable project repository so project-local instructions and Git state behave normally. Each subprocess receives a least-privilege environment containing runtime essentials, scenario command adapters, and immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. A case chooses read-only or workspace-write access; Codex receives the matching sandbox mode and Claude receives plan or accept-edits permission mode.
+Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. The active suite runs from disposable project repositories so project-local instructions and Git state behave normally. Each subprocess receives a least-privilege environment containing runtime essentials, scenario command adapters, and immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex gpt-5.6-sol low`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. A case chooses read-only or workspace-write access; Codex receives the matching sandbox mode and Claude receives plan or accept-edits permission mode.
 
 `eval-compare` creates two isolated authenticated client profiles. The treatment contains every monitored component; the control removes exactly the selected instruction component. Agent-component ablation is rejected until the runtime capability directory can be varied with the same guarantee. Both profiles share the same agents, skills, sandbox policy, telemetry configuration, task, dataset row, and deterministic workspace snapshot. Instruction-mirroring hooks are absent from both experimental arms so they cannot reinforce the prose being measured. The treatment advances the normal `last-evaluated` manifest baseline; the ablated control does not.
 
-`eval-plan` is a zero-execution planning boundary rather than a suite runner. It validates the coverage catalog against the real case list and makes projected usage explicit. Each comparison pair costs two agent-under-test invocations; cases with an `output-quality` evaluator also cost two judge invocations per repetition. Actual comparisons remain explicit `eval-compare` calls so a broad campaign cannot begin accidentally.
+`eval-plan` is a zero-execution planning boundary rather than a suite runner. It validates the coverage catalog against the real case list, checks selected cases' evidence contracts against the selected CLI parser, and makes projected usage explicit. Each comparison pair costs two agent-under-test invocations; cases with an `output-quality` evaluator also cost two judge invocations per repetition. Actual comparisons remain explicit `eval-compare` calls so a broad campaign cannot begin accidentally.
 
-Both comparison runs receive the same `evaluation.comparison_group_id` plus `evaluation.variant` and `evaluation.ablated_component_id` metadata. Their `comparison/result.json` artifacts identify both run and manifest IDs, prove that workspace snapshot hashes matched, and report raw treatment-minus-control deltas. Snapshot identity includes Git-tracked and non-ignored untracked files while excluding dependencies and other ignored build state. Metrics explicitly declare whether higher or lower is better; diagnostic metrics such as command count have no manufactured improvement direction. The harness does not calculate an aggregate score.
+Both comparison runs receive the same `evaluation.comparison_group_id` plus `evaluation.variant` and `evaluation.ablated_component_id` metadata. Their `comparison/result.json` artifacts identify both run and manifest IDs, prove that workspace snapshot hashes matched, and report raw treatment-minus-control deltas. Snapshot identity includes Git-tracked and non-ignored untracked files while excluding dependencies and other ignored build state. The comparison layer assigns improvement direction only to its allowlisted higher-is-better and lower-is-better metric names; other metrics remain diagnostic. The harness does not calculate an aggregate score.
 
 The resource identities are:
 
@@ -173,7 +150,7 @@ Open the underlying run for complete provenance:
 - **Overview → About this run** shows linked manifest and component prompts.
 - **Artifacts → configuration** contains `manifest.json` and `changes.txt`.
 
-The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and MLflow-native request trace links the manifest and all active component prompt versions. After evaluation finishes, the harness searches the shared experiment for external CLI traces with the invocation's `evaluation.execution_id`, waits for the expected agent and judge traces to become stable, and links the same prompt versions to those traces. Search is paginated because a CLI invocation can emit many independent low-level OTEL traces. The execution ID avoids accidentally linking traces from an earlier run of the same case, while `config.manifest_id` remains an independently queryable configuration identity on each external trace. Trace request and response previews contain plain text instead of serialized JSON wrappers.
+The run name includes the first relevant transition, such as `codex-manifest-v2 - workflow v1 -> v2`. Every successful run and MLflow-native request trace links the manifest and all active component prompt versions. The execution ID distinguishes repeated invocations, while `config.manifest_id` remains an independently queryable configuration identity. Trace request and response previews contain plain text instead of serialized JSON wrappers. External CLI traces are not searched or linked by the current runner; the disposable Codex profile disables raw OTEL so those low-level spans cannot overwhelm the case-oriented trace surface.
 
 The MLflow-native case trace is the primary instruction-adherence view. Its `predict_fn` root contains:
 
@@ -189,9 +166,9 @@ predict_fn
 └── workspace.cleanup
 ```
 
-Fixture-only cases omit the workspace spans. `agent.invoke` records measured CLI duration, supported and must-observe requirements, normalized evidence types, unobserved must-observe requirements, unknown event types, emitted model IDs, normalized token dimensions, and MLflow's standard chat token-usage attribute. Its tool and agent children are observation spans reconstructed from the completed machine-readable CLI stream: they expose their semantic evidence type, normalized status, and allowlisted arguments, but their near-zero span duration is not the original tool runtime. The final response and the same normalized evidence remain in the predictor output used by scorers.
+`agent.invoke` records measured CLI duration, supported and must-observe requirements, normalized evidence types, unobserved must-observe requirements, unknown event types, emitted model IDs, normalized token dimensions, and MLflow's standard chat token-usage attribute. Its tool and agent children are observation spans reconstructed from the completed machine-readable CLI stream: they expose their semantic evidence type, normalized status, and allowlisted arguments, but their near-zero span duration is not the original tool runtime. The final response and the same normalized evidence remain in the predictor output used by scorers.
 
-The separately correlated CLI traces retain raw runtime and transport telemetry. They may appear as many independent trace roots because the upstream CLIs do not emit one causal hierarchy. Keeping those raw traces distinct preserves diagnostic detail without making them the main instruction-adherence surface.
+The harness retains only the normalized evidence needed for instruction-adherence analysis. If raw CLI telemetry is re-enabled for a separate diagnostics workflow later, it should remain outside the primary case-trace surface.
 
 Open **Agent versions** to inspect a complete manifest-backed configuration identity. Its Overview description lists the manifest and active component versions, and its `configuration/manifest.json` artifact preserves the complete immutable manifest. Baseline-relative changes belong to evaluation runs, so reusing an Agent Version never overwrites its evidence with a different run's comparison context.
 
@@ -206,7 +183,7 @@ Use these filters:
 - Comparison arm: **Filters → Field → `evaluation.variant`**
 - Configuration identity: **Filters → Field → `config.manifest_id`**
 
-`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id`, `category`, `evaluation.role`, `evaluation.execution_id`, and `config.manifest_id` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.
+`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id`, `category`, `agent.model`, `agent.effort`, `evaluation.execution_id`, and `config.manifest_id` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.
 
 Independent single-turn cases do not belong under **Sessions**. If conversational cases are added later, assign one session ID per simulated conversation rather than one for the complete evaluation run.
 
@@ -220,8 +197,8 @@ The change note classifies added, removed, and modified components and includes 
 
 - `cases.py` defines real evaluation inputs and reusable metric declarations.
 - `coverage_catalog.py` maps instruction hypotheses to applicable cases without duplicating cases.
-- `plan_evaluation_campaign.py` previews paired campaign usage without invoking agents or MLflow.
-- `fixtures/` contains small case inputs that do not require a disposable repository.
+- `plan_evaluation_campaign.py` validates evidence contracts and previews paired campaign usage without invoking agents or MLflow.
+- `fixtures/` is reserved for future small inputs that do not require a disposable repository; every active case is workspace-backed.
 - `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
 - `tests/` covers case translation, metric scoring, CLI evidence normalization, and MLflow compatibility boundaries.
 - `lib/evaluation_case.py` defines the typed case contract.
@@ -233,7 +210,6 @@ The change note classifies added, removed, and modified components and includes 
 - `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
 - `lib/agent.py` invokes the authenticated Codex or Claude CLI from the case's selected working directory and access mode while requiring native OS sandboxing and blocked tool-process network access.
 - `lib/agent_evidence.py` normalizes CLI tool, collaboration, model, and provider-aware token evidence without retaining arbitrary raw event payloads.
-- `lib/evaluation_operational_feedback.py` renders universal timing, token, evidence-contract, and parser-coverage feedback.
 - `lib/agent_execution_context.py` defines immutable OTEL identity for agent-under-test and judge processes.
 - `lib/agent_environment.py` builds the least-privilege CLI subprocess environment.
 - `lib/mlflow_experiment_bootstrap.py` binds Alloy to the shared MLflow experiment.

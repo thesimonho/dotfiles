@@ -120,6 +120,7 @@ def _prepare_codex_profile(
 ) -> None:
     """Copy Codex runtime identity and render only active prose instructions."""
     _copy_required_files(source_root, profile_root, ("auth.json", "config.toml"))
+    _remove_codex_otel_configuration(profile_root / "config.toml")
     _copy_optional_files(source_root, profile_root, ("installation_id",))
     _copy_required_directories(source_root, profile_root, ("agents",))
     _link_required_directories(source_root, profile_root, ("skills",))
@@ -129,6 +130,19 @@ def _prepare_codex_profile(
         agent_definition_canary,
     )
     (profile_root / "AGENTS.md").write_text(_instruction_document(variant))
+
+
+def _remove_codex_otel_configuration(config_path: Path) -> None:
+    """Keep native eval traces authoritative by disabling copied raw OTEL export."""
+    retained_lines = []
+    is_otel_section = False
+    for line in config_path.read_text().splitlines():
+        stripped_line = line.strip()
+        if stripped_line.startswith("[") and stripped_line.endswith("]"):
+            is_otel_section = stripped_line.startswith("[otel")
+        if not is_otel_section:
+            retained_lines.append(line)
+    config_path.write_text("\n".join(retained_lines).rstrip() + "\n")
 
 
 def _prepare_claude_profile(

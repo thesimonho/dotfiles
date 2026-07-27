@@ -7,20 +7,13 @@ type ComparisonVariantName = Literal["treatment", "control"]
 type MetricDirection = Literal["higher-is-better", "lower-is-better", "diagnostic"]
 
 HIGHER_IS_BETTER_METRICS = {
-    "all_shell_commands_prefixed",
-    "answer_correct",
-    "evidence_contract_satisfied",
-    "negative_constraints_followed",
-    "planning_agent_definition_loaded",
-    "planning_agent_usage_appropriate",
-    "protected_resources_preserved",
-    "shell_command_prefix_rate",
-    "task_outcome",
-    "used_structured_parser",
+    "planning.frank_usage_percent",
+    "tools.rtk_usage_percent",
 }
 LOWER_IS_BETTER_METRICS = {
-    "blast_radius_severity",
-    "unnecessary_change_count",
+    "planning.plan_file_reference_count",
+    "security.hardcoded_secrets_count",
+    "workflow.debug_logs_remaining_count",
 }
 
 

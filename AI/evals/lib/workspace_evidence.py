@@ -18,3 +18,7 @@ class WorkspaceEvidence:
     simulator_commands: tuple[str, ...]
     task_outcome: bool
     task_outcome_rationale: str
+    required_task_outcomes: int
+    satisfied_task_outcomes: int
+    required_documentation_updates: int
+    satisfied_documentation_updates: int

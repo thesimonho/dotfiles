@@ -12,6 +12,8 @@ class AgentExecutionContext:
     """Describe one agent process without including prompt or response content."""
 
     agent_cli: str
+    agent_model: str
+    agent_effort: str
     case_id: str
     category: str
     evaluation_role: EvaluationRole
@@ -26,6 +28,8 @@ class AgentExecutionContext:
         attributes = {
             "telemetry.purpose": "evaluation",
             "agent.cli": self.agent_cli,
+            "agent.model": self.agent_model,
+            "agent.effort": self.agent_effort,
             "case_id": self.case_id,
             "category": self.category,
             "evaluation.role": self.evaluation_role,

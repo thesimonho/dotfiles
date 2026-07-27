@@ -60,11 +60,12 @@ from mlflow_config_registry import MlflowConfigurationRegistry  # noqa: E402
 from harness_environment import AGENT_ARGUMENT_CHOICES  # noqa: E402
 from mlflow_parameter_names import (  # noqa: E402
     AGENT_CLI_FIELD,
+    AGENT_EFFORT_FIELD,
+    AGENT_MODEL_FIELD,
     CASE_CATEGORY_FIELD,
     CASE_ID_FIELD,
 )
 from evaluation_case import EvaluationCase, WorkspaceSpec  # noqa: E402
-from evaluation_operational_feedback import operational_feedback  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -72,6 +73,8 @@ class EvaluationIdentity:
     """Immutable run and comparison identity shared by traces and CLIs."""
 
     profile: str
+    model: str
+    effort: str
     execution_id: str
     manifest_id: str
     comparison_group_id: str | None = None
@@ -83,6 +86,8 @@ class EvaluationIdentity:
         metadata = {
             "evaluation.execution_id": self.execution_id,
             "config.manifest_id": self.manifest_id,
+            AGENT_MODEL_FIELD: self.model,
+            AGENT_EFFORT_FIELD: self.effort,
         }
         optional_metadata = {
             "evaluation.comparison_group_id": self.comparison_group_id,
@@ -133,7 +138,7 @@ def build_predict_fn(
     agent_definition_canary: str | None = None,
     workspace_snapshots: WorkspaceSnapshotRecorder | None = None,
 ) -> Callable[..., dict[str, object]]:
-    """Build a predictor whose external traces share immutable run identity."""
+    """Build a predictor whose native case traces share immutable run identity."""
 
     def predict_fn(
         prompt: str,
@@ -181,6 +186,8 @@ def build_predict_fn(
                     profile=identity.profile,
                     environment_overrides=profile_environment,
                     agent_definition_canary=agent_definition_canary,
+                    model=identity.model,
+                    effort=identity.effort,
                 ),
                 evidence_requirements,
                 observed_evidence_requirements,
@@ -219,6 +226,8 @@ def build_predict_fn(
                             prepared_workspace.additional_writable_paths
                         ),
                         agent_definition_canary=agent_definition_canary,
+                        model=identity.model,
+                        effort=identity.effort,
                     ),
                     evidence_requirements,
                     observed_evidence_requirements,
@@ -297,12 +306,12 @@ def _update_trace_preview(
 
 def build_evaluation_scorer(identity: EvaluationIdentity):
     """Build a scorer whose judge traces share the evaluation execution ID."""
+    metrics_by_case_id = {case["case_id"]: case["metrics"] for case in CASES}
 
     @scorer
     def evaluation_score(
         inputs: dict,
         outputs: dict,
-        expectations: dict,
     ) -> list[Feedback]:
         """Return every response-derived metric applicable to this case."""
         judge_context = _execution_context(
@@ -312,7 +321,8 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             role="judge",
         )
         metrics = tuple(
-            scoring.metric_from_mapping(metric) for metric in expectations["metrics"]
+            scoring.metric_from_mapping(metric)
+            for metric in metrics_by_case_id[inputs["case_id"]]
         )
         response_results = scoring.score_response_metrics(
             outputs["response"],
@@ -338,13 +348,7 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             )
             for result in (*response_results, *execution_results, *workspace_results)
         ]
-        return [
-            *behavioral_feedback,
-            *operational_feedback(
-                outputs["operational_evidence"],
-                outputs["execution_evidence"],
-            ),
-        ]
+        return behavioral_feedback
 
     return evaluation_score
 
@@ -359,6 +363,8 @@ def _execution_context(
     """Construct the shared immutable identity for an agent CLI process."""
     return AgentExecutionContext(
         agent_cli=identity.profile,
+        agent_model=identity.model,
+        agent_effort=identity.effort,
         case_id=case_id,
         category=category,
         evaluation_role=role,
@@ -378,6 +384,16 @@ def parse_arguments() -> argparse.Namespace:
         choices=AGENT_ARGUMENT_CHOICES,
         default="auto",
         help="Agent CLI and configuration profile to evaluate.",
+    )
+    parser.add_argument(
+        "--model",
+        required=True,
+        help="Exact model or CLI-supported model alias to evaluate.",
+    )
+    parser.add_argument(
+        "--effort",
+        required=True,
+        help="CLI-supported reasoning or effort level to evaluate.",
     )
     parser.add_argument(
         "--baseline-manifest-version",
@@ -440,6 +456,8 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             evaluation_data=evaluation_data,
             experiment_id=experiment_id,
             baseline_manifest_version=arguments.baseline_manifest_version,
+            model=arguments.model,
+            effort=arguments.effort,
         )
         return
 
@@ -457,6 +475,8 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             evaluation_data=evaluation_data,
             experiment_id=experiment_id,
             baseline_manifest_version=arguments.baseline_manifest_version,
+            model=arguments.model,
+            effort=arguments.effort,
             profile_environment=prepared_profile.environment,
             agent_definition_canary=prepared_profile.agent_definition_canary,
         )
@@ -474,6 +494,8 @@ def _run_component_comparison(
     evaluation_data: Any,
     experiment_id: str,
     baseline_manifest_version: int | None,
+    model: str,
+    effort: str,
 ) -> None:
     """Run full and single-component-ablated arms and publish paired deltas."""
     comparison_group_id = str(uuid.uuid4())
@@ -498,6 +520,8 @@ def _run_component_comparison(
                 evaluation_data=evaluation_data,
                 experiment_id=experiment_id,
                 baseline_manifest_version=baseline_manifest_version,
+                model=model,
+                effort=effort,
                 profile_environment=prepared_profile.environment,
                 agent_definition_canary=prepared_profile.agent_definition_canary,
                 comparison_group_id=comparison_group_id,
@@ -541,6 +565,8 @@ def _run_evaluation_arm(
     evaluation_data: Any,
     experiment_id: str,
     baseline_manifest_version: int | None,
+    model: str,
+    effort: str,
     profile_environment: dict[str, str] | None = None,
     agent_definition_canary: str | None = None,
     comparison_group_id: str | None = None,
@@ -552,6 +578,8 @@ def _run_evaluation_arm(
     capability_snapshots = _preflight_case_capabilities(
         profile,
         selected_cases,
+        model=model,
+        effort=effort,
         profile_environment=profile_environment,
     )
     publication = registry.prepare(
@@ -560,6 +588,8 @@ def _run_evaluation_arm(
     )
     identity = EvaluationIdentity(
         profile=profile,
+        model=model,
+        effort=effort,
         execution_id=str(uuid.uuid4()),
         manifest_id=publication.manifest.manifest_id,
         comparison_group_id=comparison_group_id,
@@ -594,10 +624,10 @@ def _run_evaluation_arm(
         results.run_id,
         publication,
         expected_trace_count=len(selected_cases),
-        external_trace_execution_id=identity.execution_id,
-        expected_external_invocation_count=_external_invocation_count(selected_cases),
         advance_baseline_alias=advance_baseline_alias,
     )
+    client.log_param(results.run_id, AGENT_MODEL_FIELD, identity.model)
+    client.log_param(results.run_id, AGENT_EFFORT_FIELD, identity.effort)
     if comparison_group_id is not None:
         _publish_comparison_arm_metadata(
             client,
@@ -690,11 +720,15 @@ def _selected_cases(case_ids: list[str] | None) -> tuple[EvaluationCase, ...]:
 def _preflight_case_capabilities(
     profile: str,
     cases: tuple[EvaluationCase, ...],
+    model: str,
+    effort: str,
     profile_environment: dict[str, str] | None = None,
 ) -> tuple[CapabilitySnapshot, ...]:
     """Fail before MLflow evaluation when shared capabilities are unavailable."""
     probe_identity = EvaluationIdentity(
         profile=profile,
+        model=model,
+        effort=effort,
         execution_id="environment-preflight",
         manifest_id="environment-preflight",
     )
@@ -760,15 +794,6 @@ def _publish_capability_evidence(
     manifest = capability_manifest(snapshots)
     client.log_dict(run_id, manifest, "capabilities/manifest.json")
     client.set_tag(run_id, "evaluation.capabilities_hash", manifest["manifest_hash"])
-
-
-def _external_invocation_count(cases: tuple[EvaluationCase, ...]) -> int:
-    """Count agent-under-test and LLM-judge CLI processes expected this run."""
-    judge_count = sum(
-        any(metric["evaluator"] == "output-quality" for metric in case["metrics"])
-        for case in cases
-    )
-    return len(cases) + judge_count
 
 
 if __name__ == "__main__":

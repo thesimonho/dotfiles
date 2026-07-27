@@ -80,6 +80,8 @@ def _call_claude(
     environment_overrides: dict[str, str] | None = None,
     additional_writable_paths: tuple[Path, ...] = (),
     agent_definition_canary: str | None = None,
+    model: str | None = None,
+    effort: str | None = None,
 ) -> AgentResult:
     sandbox_settings = claude_sandbox_settings(additional_writable_paths)
     command = [
@@ -96,6 +98,10 @@ def _call_claude(
         "--settings",
         json.dumps(sandbox_settings),
     ]
+    if model is not None:
+        command.extend(["--model", model])
+    if effort is not None:
+        command.extend(["--effort", effort])
     if not has_tools:
         command.extend(["--tools", "", "--disable-slash-commands"])
     completed_process = _run_cli_command(
@@ -163,6 +169,8 @@ def _call_codex(
     environment_overrides: dict[str, str] | None = None,
     additional_writable_paths: tuple[Path, ...] = (),
     agent_definition_canary: str | None = None,
+    model: str | None = None,
+    effort: str | None = None,
 ) -> AgentResult:
     command = [
         "codex",
@@ -172,6 +180,10 @@ def _call_codex(
         "--sandbox",
         workspace_access,
     ]
+    if model is not None:
+        command.extend(["--model", model])
+    if effort is not None:
+        command.extend(["--config", f'model_reasoning_effort="{effort}"'])
     for writable_path in additional_writable_paths:
         command.extend(["--add-dir", str(writable_path)])
     command.extend(["--json", prompt])
@@ -306,6 +318,8 @@ def run_agent(
     environment_overrides: dict[str, str] | None = None,
     additional_writable_paths: tuple[Path, ...] = (),
     agent_definition_canary: str | None = None,
+    model: str | None = None,
+    effort: str | None = None,
 ) -> AgentResult:
     """Run one task through the selected authenticated agent CLI."""
     if profile == "codex":
@@ -317,6 +331,8 @@ def run_agent(
             environment_overrides=environment_overrides,
             additional_writable_paths=additional_writable_paths,
             agent_definition_canary=agent_definition_canary,
+            model=model,
+            effort=effort,
         )
     if profile == "claude":
         return _call_claude(
@@ -328,6 +344,8 @@ def run_agent(
             environment_overrides=environment_overrides,
             additional_writable_paths=additional_writable_paths,
             agent_definition_canary=agent_definition_canary,
+            model=model,
+            effort=effort,
         )
     raise ValueError(f"unsupported agent profile: {profile}")
 
@@ -336,10 +354,18 @@ def run_judge(
     prompt: str,
     context: AgentExecutionContext,
     profile: str = "claude",
+    model: str | None = None,
+    effort: str | None = None,
 ) -> str:
     """Judge one response through the selected authenticated agent CLI."""
     if profile == "codex":
-        return _call_codex(prompt, context).response
+        return _call_codex(prompt, context, model=model, effort=effort).response
     if profile == "claude":
-        return _call_claude(prompt, context, has_tools=False).response
+        return _call_claude(
+            prompt,
+            context,
+            has_tools=False,
+            model=model,
+            effort=effort,
+        ).response
     raise ValueError(f"unsupported agent profile: {profile}")

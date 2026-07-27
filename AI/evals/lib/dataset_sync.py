@@ -33,7 +33,7 @@ def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
             "expectations": {
                 name: value
                 for name, value in case.items()
-                if name not in input_field_names
+                if name not in {*input_field_names, "metrics"}
             },
         }
         for case in cases

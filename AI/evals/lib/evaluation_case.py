@@ -40,6 +40,13 @@ class OutputContainsAllMetric(CommonMetric):
     expected_mentions: tuple[str, ...]
 
 
+class OutputCompletionMetric(CommonMetric):
+    """Classify task completion from deterministic response requirements."""
+
+    evaluator: Literal["output-completion"]
+    required_mentions: tuple[str, ...]
+
+
 class AllShellCommandsPrefixedMetric(CommonMetric):
     """Require every observed shell command to start with one prefix."""
 
@@ -76,6 +83,14 @@ class EvidenceCountMetric(CommonMetric):
     maximum: NotRequired[int]
 
 
+class EvidenceRequirementsPercentMetric(CommonMetric):
+    """Score required and forbidden semantic evidence opportunities."""
+
+    evaluator: Literal["evidence-requirements-percent"]
+    required_evidence_types: NotRequired[tuple[EvidenceRequirement, ...]]
+    forbidden_evidence_types: NotRequired[tuple[EvidenceRequirement, ...]]
+
+
 class NegativeConstraintsFollowedMetric(CommonMetric):
     """Require all hidden scenario prohibitions to remain unviolated."""
 
@@ -106,8 +121,23 @@ class WorkspaceOutcomeMetric(CommonMetric):
     evaluator: Literal["workspace-outcome"]
 
 
+class WorkspaceCompletionMetric(CommonMetric):
+    """Classify deterministic workspace task completion."""
+
+    evaluator: Literal["workspace-completion"]
+
+
+class RequiredDocumentationUpdatesMetric(CommonMetric):
+    """Score declared documentation obligations satisfied in the workspace."""
+
+    evaluator: Literal["required-documentation-updates-percent"]
+
+
 type ResponseMetric = (
-    OutputContainsMetric | OutputContainsAllMetric | OutputQualityMetric
+    OutputContainsMetric
+    | OutputContainsAllMetric
+    | OutputQualityMetric
+    | OutputCompletionMetric
 )
 type ExecutionMetric = (
     AllShellCommandsPrefixedMetric
@@ -115,6 +145,7 @@ type ExecutionMetric = (
     | UsedCommandMetric
     | ShellCommandCountMetric
     | EvidenceCountMetric
+    | EvidenceRequirementsPercentMetric
 )
 type WorkspaceMetric = (
     NegativeConstraintsFollowedMetric
@@ -122,6 +153,8 @@ type WorkspaceMetric = (
     | UnnecessaryChangeCountMetric
     | BlastRadiusSeverityMetric
     | WorkspaceOutcomeMetric
+    | WorkspaceCompletionMetric
+    | RequiredDocumentationUpdatesMetric
 )
 type EvaluationMetric = ResponseMetric | ExecutionMetric | WorkspaceMetric
 

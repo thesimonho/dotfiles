@@ -12,29 +12,29 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 | File | Description |
 | --- | --- |
-| `agent.py` | Invokes Claude/Codex with fail-closed native sandbox settings and measures authenticated CLI subprocess duration |
+| `agent.py` | Invokes Claude/Codex with explicit model, effort, fail-closed native sandbox settings, and measured authenticated CLI subprocess duration |
 | `agent_evidence.py` | Normalizes tool and collaboration events, exact expected child-definition canaries, emitted model IDs, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
 | `agent_event_contract.py` | Defines semantic case evidence requirements, per-profile parser support, missing-observation calculation, coverage evidence, and pre-execution validation |
-| `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including shared execution and configuration identities |
+| `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including execution, configuration, model, and effort identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
-| `evaluation_case.py` | Typed case and reusable response/execution metric declarations |
+| `shell_commands.py` | Splits compound shell evidence, locates executables after environment assignments, unwraps RTK, and follows nested shell commands |
+| `evaluation_case.py` | Typed case and reusable output, evidence, workspace, documentation, and execution metric declarations |
 | `evaluation_coverage.py` | Validates instruction-to-case coverage and projects treatment, control, and judge CLI usage before execution |
-| `evaluation_operational_feedback.py` | Produces universal timing, token, evidence-contract, and unknown-event feedback |
 | `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, source/import-graph outcome validators, and consequence rules |
-| `workspace_evidence.py` | Typed final workspace, simulator, negative-constraint, and blast-radius observations |
-| `disposable_workspace.py` | Builds scenario repositories with private dependencies, exposes simulator tools, and captures agent-attributable evidence |
+| `workspace_evidence.py` | Typed final workspace, simulator, documentation-update, negative-constraint, and blast-radius observations |
+| `disposable_workspace.py` | Builds scenario repositories, exposes simulator tools, and captures agent-attributable file and command evidence from compound shell invocations |
 | `capabilities.py` | Preflights and hashes shared CLI tools, skills, and agents and renders path-redacted MLflow evidence |
-| `scoring.py` | Evaluates independently named response, semantic-event, execution, workspace, and blast-radius metrics |
+| `scoring.py` | Evaluates categorical completion and blast radius plus independently named percentage metrics for tools, evidence, planning, and documentation |
 | `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
-| `dataset_sync.py` | Converts cases to MLflow records and replaces dataset contents |
+| `dataset_sync.py` | Converts cases to MLflow records without exposing metric definitions as dataset expectations, then replaces dataset contents |
 | `harness_environment.py` | Repository paths and supported agent profile constants |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
-| `configuration_variant.py` | Builds treatment and single-component-ablated control profiles with materialized custom-agent files and identical per-campaign definition canaries |
+| `configuration_variant.py` | Builds treatment and single-component-ablated control profiles, materializes custom-agent files, and removes copied Codex OTEL configuration so native eval traces remain authoritative |
 | `configuration_manifest.py` | Builds, serializes, compares, and summarizes configuration manifests |
-| `comparison_evidence.py` | Verifies paired workspace identity and renders direction-aware metric deltas without aggregation |
+| `comparison_evidence.py` | Verifies paired workspace identity and renders direction-aware deltas for the focused adherence metrics without aggregation |
 | `configuration_publication.py` | Describes published configuration evidence and prompt references |
-| `mlflow_config_registry.py` | Registers configuration components and manifests, links them to evaluation runs and native traces, and discovers external CLI traces by execution ID for prompt linking |
+| `mlflow_config_registry.py` | Registers configuration components and manifests and links them to evaluation runs and native traces |
 | `mlflow_agent_versions.py` | Resolves current and prior agent configuration versions |
 | `mlflow_configuration_evidence.py` | Attaches configuration provenance to evaluation runs |
 | `mlflow_parameter_names.py` | Central names for MLflow parameters, tags, and dataset fields |
@@ -46,9 +46,10 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 | Symbol | File | Description |
 | --- | --- | --- |
-| `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI for a case or judge prompt |
-| `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
+| `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model and effort for a case or judge prompt |
+| `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, model, effort, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
+| `shell_segments()` / `unwrapped_shell_invocations()` | `shell_commands.py` | Provide one command-parsing source of truth for tool-prefix and prohibited-action evidence |
 | `EvaluationCase` / `EvaluationMetric` | `evaluation_case.py` | Describe a prompt and every independently applicable reusable metric |
 | `plan_instruction_campaign()` / `format_campaign_plan()` | `evaluation_coverage.py` | Resolve applicable cases and render a zero-execution usage preview |
 | `prepare_workspace()` | `disposable_workspace.py` | Creates one disposable scenario repository and removes it after evidence capture |
@@ -59,7 +60,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `invoke_traced_agent()` | `mlflow_execution_trace.py` | Creates the readable `agent.invoke` subtree used as the primary instruction-adherence trace |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
 | `discover_agent_components()` | `configuration_components.py` | Enumerates provenance-bearing client configuration inputs |
-| `comparison_variants()` / `prepare_variant_profile()` | `configuration_variant.py` | Defines the one-component experimental difference and assembles hook-free authenticated profiles |
+| `comparison_variants()` / `prepare_variant_profile()` | `configuration_variant.py` | Defines the one-component experimental difference and assembles hook-free authenticated profiles with raw Codex OTEL disabled |
 | `build_comparison_evidence()` | `comparison_evidence.py` | Rejects mismatched workspace snapshots and renders paired run evidence |
 | `sync_mlflow_dataset()` | `dataset_sync.py` | Makes the remote dataset match local cases |
 
@@ -68,7 +69,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 - **Used by**: `AI/evals/cases.py`, `AI/evals/coverage_catalog.py`, `AI/evals/plan_evaluation_campaign.py`, and `AI/evals/run_mlflow_eval.py`.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
 - **Validates cases by**: requiring semantic parser-support and must-observe declarations, then rejecting inconsistent or unsupported combinations before starting an agent.
-- **Correlates traces by**: one `evaluation.execution_id` shared by agent and judge CLI invocations in a harness run, plus `config.manifest_id` for the exact published configuration. The native trace owns the readable harness and CLI-event tree; after evaluation, the registry uses the execution ID to find separate raw OTLP traces and link the same prompt versions.
+- **Correlates traces by**: one `evaluation.execution_id` shared by every case in a harness run, plus `config.manifest_id`, `agent.model`, and `agent.effort` for the exact evaluated configuration. The native trace owns the readable harness and normalized CLI-event tree.
 
 ## Entry point
 
