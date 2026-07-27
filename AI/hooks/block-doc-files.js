@@ -18,7 +18,7 @@ const path = require("node:path");
 const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
-const DOCS_DIR_MD = /^docs\//;
+const DOCS_DIR_MD = /(^|\/)docs\//;
 const INSTRUCTION_SOURCE_MD =
   /^AI\/(agents\/[^/]+|instructions\/fragments\/[^/]+)\.md$/;
 const HOMEOPS_EVALUATION_ENVIRONMENT = /^AI\/evals\/environments\/homeops\//;

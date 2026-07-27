@@ -2,6 +2,8 @@
 
 This harness measures whether changes to global Codex or Claude configuration improve agent behavior. It runs git-tracked evaluation cases through the selected authenticated CLI and records scores, traces, configuration provenance, prompt versions, and manifest-derived Agent Versions in a local MLflow 3.14.0 server.
 
+The human-facing feedback model and agreed assessment decisions are defined in [the assessment design](docs/assessment-design.md).
+
 Git commits and working-tree state are not configuration identity. Before an evaluation begins, the runner publishes every monitored file as an independently versioned MLflow prompt and publishes a manifest containing the complete component set. Uncommitted instruction edits therefore have durable, inspectable provenance without requiring a commit.
 
 ## Monitored configuration
