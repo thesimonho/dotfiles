@@ -27,6 +27,7 @@
         "bitwarden"
         "ffmpeg"
         "glow"
+        "master-pdf-editor"
         "onlyoffice"
         "wl-clipboard"
       ];

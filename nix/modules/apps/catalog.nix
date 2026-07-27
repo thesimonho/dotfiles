@@ -188,6 +188,10 @@
       contributions.packages = [ pkgs.lazyjournal ];
       bundles = [ "cli" ];
     };
+    master-pdf-editor = {
+      flatpak.id = "net.code_industry.MasterPDFEditor";
+      bundles = [ ];
+    };
     nh = {
       contributions.packages = [ pkgs.nh ];
       bundles = [ "cli" ];
