@@ -93,6 +93,8 @@ class MlflowConfigurationRegistry:
         self,
         run_id: str,
         publication: ConfigurationPublication,
+        agent_model: str,
+        agent_effort: str,
         expected_trace_count: int | None = None,
         external_trace_execution_id: str | None = None,
         expected_external_invocation_count: int | None = None,
@@ -126,7 +128,12 @@ class MlflowConfigurationRegistry:
         self._client.set_tag(
             run_id,
             "mlflow.runName",
-            _run_name(self._profile, publication),
+            _run_name(
+                self._profile,
+                agent_model,
+                agent_effort,
+                publication,
+            ),
         )
         self._client.log_dict(
             run_id,
@@ -407,9 +414,18 @@ def _tag_name(metadata_key: str) -> str:
     return f"eval.config.{suffix}"
 
 
-def _run_name(profile: str, publication: ConfigurationPublication) -> str:
+def _run_name(
+    profile: str,
+    model: str,
+    effort: str,
+    publication: ConfigurationPublication,
+) -> str:
     manifest_version = publication.manifest_prompt.version
-    return f"{profile}-manifest-v{manifest_version} - {_change_label(publication)}"
+    model_label = model.rsplit("-", maxsplit=1)[-1] or model
+    return (
+        f"{profile}-{model_label}-{effort}-manifest-v{manifest_version} - "
+        f"{_change_label(publication)}"
+    )
 
 
 def _change_label(publication: ConfigurationPublication) -> str:

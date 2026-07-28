@@ -600,6 +600,8 @@ def _run_evaluation_arm(
     registry.attach_to_run(
         results.run_id,
         publication,
+        agent_model=identity.model,
+        agent_effort=identity.effort,
         expected_trace_count=len(selected_cases),
         advance_baseline_alias=advance_baseline_alias,
     )
