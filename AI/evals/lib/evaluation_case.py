@@ -154,6 +154,7 @@ class PolicyMetric(CommonMetric, total=False):
         "function-limits-percent",
         "hardcoded-secrets-count",
         "critical-response-percent",
+        "subagent-compute-selection-percent",
     ]
     direct_commands: tuple[str, ...]
     just_recipes: tuple[str, ...]
@@ -163,6 +164,7 @@ class PolicyMetric(CommonMetric, total=False):
     allowed_commit_types: tuple[str, ...]
     critical_mentions: tuple[str, ...]
     critical_path: str
+    expected_selections: tuple[str, ...]
 
 
 type ResponseMetric = (
@@ -204,3 +206,4 @@ class EvaluationCase(TypedDict):
     required_observed_evidence: NotRequired[tuple[EvidenceRequirement, ...]]
     workspace: NotRequired[WorkspaceSpec]
     metrics: tuple[EvaluationMetric, ...]
+    agent_profiles: NotRequired[tuple[Literal["codex", "claude"], ...]]

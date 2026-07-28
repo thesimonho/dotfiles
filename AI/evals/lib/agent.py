@@ -24,6 +24,7 @@ from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
 from shell_commands import normalize_shell_command
+from codex_session_evidence import parent_thread_id, resolved_codex_subagents
 
 CLI_TIMEOUT_SECONDS = 1800
 type WorkspaceAccess = Literal["read-only", "workspace-write"]
@@ -175,7 +176,6 @@ def _call_codex(
     command = [
         "codex",
         "exec",
-        "--ephemeral",
         *codex_sandbox_arguments(),
         "--sandbox",
         workspace_access,
@@ -201,6 +201,9 @@ def _call_codex(
         completed_process.stdout,
         invocation_seconds=completed_process.invocation_seconds,
         agent_definition_canary=agent_definition_canary,
+        codex_home=Path(environment_overrides["CODEX_HOME"])
+        if environment_overrides and "CODEX_HOME" in environment_overrides
+        else None,
     )
 
 
@@ -208,6 +211,7 @@ def codex_result_from_output(
     output: str,
     invocation_seconds: float = 0.0,
     agent_definition_canary: str | None = None,
+    codex_home: Path | None = None,
 ) -> AgentResult:
     """Normalize Codex JSONL into response text and shell command evidence."""
     events = _json_lines(output)
@@ -229,6 +233,11 @@ def codex_result_from_output(
     agent_events, token_usage, model_ids, event_coverage = codex_evidence(
         events,
         agent_definition_canary,
+        resolved_subagents=(
+            resolved_codex_subagents(codex_home, parent_thread_id(events))
+            if codex_home is not None
+            else ()
+        ),
     )
     return AgentResult(
         response=messages[-1],

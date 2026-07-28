@@ -44,9 +44,9 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
     ),
     InstructionCoverage(
         component_id="instruction/subagents",
-        hypothesis="Delegation instructions select cheaper models for suitable implementation work.",
-        maturity="planned",
-        case_ids=(),
+        hypothesis="Delegation instructions select lighter compute for simple work and stronger compute for demanding work.",
+        maturity="active",
+        case_ids=("homeops-subagent-compute-selection",),
     ),
     InstructionCoverage(
         component_id="instruction/tools",

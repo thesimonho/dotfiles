@@ -22,6 +22,7 @@ def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
         "workspace",
         CASE_ID_FIELD,
         CASE_CATEGORY_FIELD,
+        "agent_profiles",
     }
     return [
         {

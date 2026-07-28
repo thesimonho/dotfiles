@@ -67,6 +67,7 @@ def plan_instruction_campaign(
     repetitions: int,
     coverage: tuple[InstructionCoverage, ...],
     cases: tuple[EvaluationCase, ...],
+    agent_profile: str | None = None,
 ) -> EvaluationCampaignPlan:
     """Resolve applicable cases and project paired comparison usage."""
     if repetitions < 1:
@@ -82,7 +83,14 @@ def plan_instruction_campaign(
 
     entry = matching_entries[0]
     cases_by_id = {case["case_id"]: case for case in cases}
-    selected_cases = tuple(cases_by_id[case_id] for case_id in entry.case_ids)
+    selected_cases = tuple(
+        cases_by_id[case_id]
+        for case_id in entry.case_ids
+        if agent_profile is None
+        or agent_profile
+        in cases_by_id[case_id].get("agent_profiles", ("codex", "claude"))
+    )
+    selected_case_ids = tuple(case["case_id"] for case in selected_cases)
     comparison_pairs = len(selected_cases) * repetitions
     judged_case_count = sum(
         any(metric["evaluator"] == "output-quality" for metric in case["metrics"])
@@ -92,7 +100,7 @@ def plan_instruction_campaign(
         component_id=entry.component_id,
         hypothesis=entry.hypothesis,
         maturity=entry.maturity,
-        case_ids=entry.case_ids,
+        case_ids=selected_case_ids,
         repetitions=repetitions,
         comparison_pairs=comparison_pairs,
         agent_under_test_invocations=comparison_pairs * 2,

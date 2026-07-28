@@ -52,7 +52,12 @@ import mlflow_tracing  # noqa: E402
 from mlflow_execution_trace import invoke_traced_agent  # noqa: E402
 from mlflow_trace_preview import update_trace_preview  # noqa: E402
 import scoring  # noqa: E402
-from cases import CASES, EVALUATION_SUITES, select_cases  # noqa: E402
+from cases import (  # noqa: E402
+    CASES,
+    EVALUATION_SUITES,
+    select_cases,
+    select_cases_for_profile,
+)
 from mlflow.entities import Feedback  # noqa: E402
 from mlflow.genai import scorer  # noqa: E402
 from mlflow.tracking import MlflowClient  # noqa: E402
@@ -428,8 +433,13 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             "no evaluation cases configured; add real cases to AI/evals/cases.py"
         )
 
-    selected_cases = select_cases(arguments.case_ids, arguments.suite)
     agent_profile = agent.resolve_agent_profile(arguments.agent)
+    requested_cases = select_cases(arguments.case_ids, arguments.suite)
+    selected_cases = select_cases_for_profile(
+        requested_cases,
+        agent_profile,
+        explicit_selection=bool(arguments.case_ids),
+    )
     validate_case_evidence_requirements(agent_profile, selected_cases)
     mlflow_tracing.init()
     client = MlflowClient()

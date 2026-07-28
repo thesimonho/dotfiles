@@ -334,6 +334,36 @@ def score_execution_metrics(
             passed, rationale = _score_worktree_lifecycle(events)
         elif metric["evaluator"] == "critical-response-percent":
             continue
+        elif metric["evaluator"] == "subagent-compute-selection-percent":
+            expected_selections = tuple(metric.get("expected_selections", ()))
+            observed_selections = tuple(
+                f"{attributes.get('model')}:{attributes.get('reasoning_effort')}"
+                for event in events
+                if event.get("evidence_type") == "agent.model-selection"
+                and isinstance((attributes := event.get("attributes")), dict)
+            )
+            if not expected_selections:
+                continue
+            remaining_observations = list(observed_selections)
+            matched_count = 0
+            for expected_selection in expected_selections:
+                if expected_selection not in remaining_observations:
+                    continue
+                remaining_observations.remove(expected_selection)
+                matched_count += 1
+            passed = matched_count / len(expected_selections) * 100
+            missing = tuple(
+                selection
+                for selection in expected_selections
+                if observed_selections.count(selection)
+                < expected_selections.count(selection)
+            )
+            rationale = (
+                f"resolved {matched_count} of {len(expected_selections)} expected "
+                "subagent compute selections"
+            )
+            if missing:
+                rationale += f"; missing: {', '.join(dict.fromkeys(missing))}"
         else:
             continue
         results.append(MetricResult(metric["name"], passed, rationale))

@@ -25,6 +25,7 @@ SUPPORTED_EVIDENCE_BY_PROFILE: dict[str, frozenset[EvidenceRequirement]] = {
         {
             "agent.message",
             "agent.definition-canary",
+            "agent.model-selection",
             "agent.spawn",
             "agent.plan",
             "agent.skill",
@@ -39,7 +40,6 @@ SUPPORTED_EVIDENCE_BY_PROFILE: dict[str, frozenset[EvidenceRequirement]] = {
         {
             "agent.definition-canary",
             "agent.message",
-            "agent.model-selection",
             "agent.spawn",
             "agent.plan",
             "agent.skill",

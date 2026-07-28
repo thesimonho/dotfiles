@@ -144,7 +144,7 @@ Implementation rules:
 
 Each applicable case declares its expected subagent invocations and the accepted resolved model and reasoning-effort combinations for each subtask class. A lighter model or lower reasoning effort can satisfy a lighter-compute requirement; a stronger model or higher reasoning effort can satisfy a stronger-compute requirement. Case-specific accepted combinations avoid pretending that every model and reasoning tier has a universal numerical equivalence.
 
-Score appropriate resolved selections over expected invocations. Use authoritative child-session evidence for the model and reasoning effort that actually ran, after custom-agent files, global defaults, spawn overrides, and inheritance have been resolved. A requested model, agent nickname, or definition alone is insufficient. List each mismatched or unobservable invocation and its resolved settings in the rationale.
+Score appropriate resolved selections over expected invocations. For Codex, read each isolated direct-child rollout record, match its `parent_thread_id` to the evaluated parent, and use the child turn context's resolved model and reasoning effort after custom-agent files, global defaults, spawn overrides, and inheritance have been applied. A requested model, agent nickname, definition, or parent collaboration event alone is insufficient. List each mismatched or unobservable invocation and its resolved settings in the rationale.
 
 ### 8. Measure coding-style function limits
 
@@ -170,4 +170,4 @@ Implementation rules:
 
 ## Implementation status
 
-The images fragment is intentionally excluded. The agreed assessments are executable across the tiered HomeOps catalog except `subagents.compute_selection_percent`: Claude can expose requested child model selection, but Codex does not expose the resolved child model and reasoning effort. Keep that assessment gated until authoritative resolved child-session evidence is available rather than inferring it from an agent definition or nickname.
+The images fragment is intentionally excluded. The tiered HomeOps catalog contains nine executable cases: the normal core suite selects seven, and extended selects all nine by adding the worktree-lifecycle and Codex-only subagent-compute cases. `subagents.compute_selection_percent` is executable for Codex because the harness obtains resolved child model and reasoning-effort evidence from isolated direct-child sessions rather than inferring it from an agent definition, nickname, requested setting, or parent collaboration event.

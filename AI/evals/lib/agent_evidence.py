@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Any, Literal
 
 from agent_event_contract import AgentEventCoverage
 from agent_canary_evidence import has_exact_canary_footer
 from agent_plan_evidence import codex_has_plan
 from shell_commands import normalize_shell_command
+from codex_session_evidence import ResolvedCodexSubagent
+from token_usage import TokenUsage
 
 type EvidenceValue = str | int | float | bool
 type AgentEventCategory = Literal["agent", "runtime", "tool"]
@@ -65,36 +67,10 @@ class AgentEvent:
         }
 
 
-@dataclass(frozen=True)
-class TokenUsage:
-    """Provider-aware token counts normalized to comparable dimensions."""
-
-    source: str
-    input_tokens: int | None = None
-    uncached_input_tokens: int | None = None
-    cached_input_tokens: int | None = None
-    cache_creation_input_tokens: int | None = None
-    output_tokens: int | None = None
-    reasoning_output_tokens: int | None = None
-    total_tokens: int | None = None
-
-    def to_dict(self) -> dict[str, object]:
-        """Render every dimension so unavailable values remain explicit."""
-        return asdict(self)
-
-    def available_counts(self) -> dict[str, int]:
-        """Return only numeric dimensions suitable for MLflow feedback."""
-        usage = asdict(self)
-        return {
-            name: value
-            for name, value in usage.items()
-            if name != "source" and isinstance(value, int)
-        }
-
-
 def codex_evidence(
     events: tuple[dict[str, Any], ...],
     agent_definition_canary: str | None = None,
+    resolved_subagents: tuple[ResolvedCodexSubagent, ...] = (),
 ) -> tuple[
     tuple[AgentEvent, ...],
     TokenUsage,
@@ -131,6 +107,26 @@ def codex_evidence(
             agent_definition_canary,
         ),
         *_codex_runtime_events(events),
+        *(
+            AgentEvent(
+                category="agent",
+                name="resolved-model-selection",
+                evidence_type="agent.model-selection",
+                status="completed",
+                attributes=tuple(
+                    (name, value)
+                    for name, value in (
+                        ("thread_id", child.thread_id),
+                        ("agent", child.role or ""),
+                        ("agent_name", child.nickname or ""),
+                        ("model", child.model),
+                        ("reasoning_effort", child.effort),
+                    )
+                    if value
+                ),
+            )
+            for child in resolved_subagents
+        ),
     )
     usage_event = next(
         (

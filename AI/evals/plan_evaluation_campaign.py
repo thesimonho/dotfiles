@@ -34,6 +34,7 @@ def main() -> None:
         repetitions=arguments.repetitions,
         coverage=INSTRUCTION_COVERAGE,
         cases=CASES,
+        agent_profile=arguments.agent,
     )
     planned_case_ids = set(plan.case_ids)
     planned_cases = tuple(case for case in CASES if case["case_id"] in planned_case_ids)
