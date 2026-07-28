@@ -119,5 +119,20 @@ in
       contributions.packages = [ pkgsUnstable.python3Packages.huggingface-hub ];
       bundles = [ "cli" ];
     };
+    tabby = {
+      # Native binary for nvim's Tabby process service; Metal acceleration is
+      # the build default on aarch64-darwin (the only darwin platform tabby
+      # supports). Linux hosts run Tabby through AI/tabby.yaml instead.
+      # Sourced from the dedicated nixpkgs-tabby input; see the flake input
+      # comment for why newer channels cannot build it.
+      # lowPrio: tabby bundles bin/llama-server, which collides with llama.nix's
+      # llama-cpp in the profile. tabby spawns the llama-server adjacent to its
+      # invoked path (no PATH lookup), so llama.nix's copy serves both.
+      contributions.packages = [
+        (inputs.nixpkgs.lib.lowPrio inputs.nixpkgs-tabby.legacyPackages.${system}.tabby)
+      ];
+      requirements.systems = [ "aarch64-darwin" ];
+      bundles = [ "cli" ];
+    };
   };
 }

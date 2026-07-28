@@ -32,6 +32,14 @@
     # darwin builds, which forces local recompiles and runs flaky test phases.
     # Excluded from `just update`; bump explicitly with `just update-pinned`.
     nixpkgs-pinned.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # Workaround pin for tabby only: 26.05 and unstable rustc reject its
+    # vendored metrics-0.22.3 crate (rust-lang/rust#141402), and 25.11 is the
+    # newest channel with a Hydra-cached aarch64-darwin binary.
+    # TODO: (late 2026) once nixpkgs PR #485360 (tabby 0.28.0 -> 0.32.0) lands
+    # in unstable, point the AI catalog's tabby entry back at pkgsUnstable,
+    # delete this input, and remove it from PINNED in the justfile.
+    nixpkgs-tabby.url = "github:NixOS/nixpkgs/nixos-25.11";
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
