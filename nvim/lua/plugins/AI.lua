@@ -312,6 +312,8 @@ if require("utils.os").is_darwin() then
     },
     poll_timeout_ms = 120000,
     session_scoped = true,
+    install_hint = "run `brew install tabbyml/tabby/tabby`",
+    slow_start_hint = "Likely downloading models on first run.",
     on_state_change = set_tabby_lifecycle_state,
   })
 else
@@ -323,6 +325,7 @@ else
     wait_for_health = true,
     poll_timeout_ms = 120000,
     session_scoped = true,
+    install_hint = "install Docker Engine with the NVIDIA Container Toolkit",
     on_state_change = set_tabby_lifecycle_state,
   })
 end

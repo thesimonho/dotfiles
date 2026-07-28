@@ -23,6 +23,8 @@ function ServiceLifecycle.new(options)
   vim.validate({
     name = { options.name, "string" },
     backend = { options.backend, "table" },
+    install_hint = { options.install_hint, "string", true },
+    slow_start_hint = { options.slow_start_hint, "string", true },
     poll_interval_ms = { options.poll_interval_ms, "number", true },
     poll_timeout_ms = { options.poll_timeout_ms, "number", true },
     spinner_frames = { options.spinner_frames, "table", true },
@@ -38,6 +40,8 @@ function ServiceLifecycle.new(options)
   local controller = setmetatable({
     name = options.name,
     backend = options.backend,
+    install_hint = options.install_hint,
+    slow_start_hint = options.slow_start_hint,
     session_scoped = options.session_scoped or false,
     session_registered = false,
     poll_interval_ms = options.poll_interval_ms or 1000,
@@ -177,6 +181,30 @@ function ServiceLifecycle:fail_start(generation, message)
   end)
 end
 
+--- Extend the health deadline while the backend reports fresh output, so a
+--- slow first-run initialization (e.g. a model download) is not killed as
+--- wedged. Returns nil once activity stops.
+function ServiceLifecycle:extended_deadline()
+  local activity = self.backend.read_activity and self.backend:read_activity()
+  if not activity or activity == self.transition_activity then
+    return nil
+  end
+  self.transition_activity = activity
+  if not self.slow_start_notified then
+    self.slow_start_notified = true
+    vim.notify(
+      string.format(
+        "%s is slow to become healthy but is still producing output; waiting. %s",
+        self.name,
+        self.slow_start_hint or ""
+      ),
+      vim.log.levels.INFO,
+      { title = self.name .. " service" }
+    )
+  end
+  return vim.uv.now() + self.poll_timeout_ms
+end
+
 function ServiceLifecycle:poll_until_ready(generation, deadline)
   if generation ~= self.transition_generation or not self.desired_running then
     return
@@ -191,15 +219,21 @@ function ServiceLifecycle:poll_until_ready(generation, deadline)
       return
     end
 
-    local has_timed_out = vim.uv.now() >= deadline
-    if error_message or lifecycle_state == "failed" or has_timed_out then
-      local message = error_message or detail or string.format("%s did not become healthy in time", self.name)
-      self:fail_start(generation, message)
+    if error_message or lifecycle_state == "failed" then
+      self:fail_start(generation, error_message or detail or string.format("%s failed to start", self.name))
       return
     end
 
+    if vim.uv.now() >= deadline then
+      deadline = self:extended_deadline()
+      if not deadline then
+        self:fail_start(generation, string.format("%s did not become healthy in time", self.name))
+        return
+      end
+    end
+
     self:set_lifecycle_state("starting")
-    self:notify_progress("Waiting for health")
+    self:notify_progress(self.slow_start_notified and "Still starting; output is active" or "Waiting for health")
     vim.defer_fn(function()
       self:poll_until_ready(generation, deadline)
     end, self.poll_interval_ms)
@@ -251,7 +285,27 @@ function ServiceLifecycle:run_operation(should_run)
   end)
 end
 
+function ServiceLifecycle:notify_missing_requirement(missing)
+  if self.install_hint then
+    missing = missing .. "; " .. self.install_hint
+  end
+  -- scheduled so startup-time calls land after snacks has replaced vim.notify
+  vim.schedule(function()
+    vim.notify(missing, vim.log.levels.WARN, { id = self.notification_id, title = self.name .. " service" })
+  end)
+end
+
 function ServiceLifecycle:set_running(should_run)
+  if should_run then
+    local missing = self.backend.missing_requirement and self.backend:missing_requirement()
+    if missing then
+      self.desired_running = false
+      self:notify_missing_requirement(missing)
+      return
+    end
+  end
+  self.transition_activity = self.backend.read_activity and self.backend:read_activity() or nil
+  self.slow_start_notified = false
   self.transition_generation = self.transition_generation + 1
   local generation = self.transition_generation
   self.desired_running = should_run

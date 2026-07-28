@@ -47,6 +47,17 @@ local function create_backend(options)
     expects_process = false,
   }
 
+  function backend:read_activity()
+    local stat = vim.uv.fs_stat(self.log_file)
+    return stat and stat.size or nil
+  end
+
+  function backend:missing_requirement()
+    if vim.fn.executable(self.command[1]) ~= 1 then
+      return string.format("`%s` is not installed", self.command[1])
+    end
+  end
+
   function backend:start(callback)
     local command = {
       "sh",

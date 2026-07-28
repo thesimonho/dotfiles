@@ -36,6 +36,12 @@ local function create_backend(options)
     end)
   end
 
+  function backend:missing_requirement()
+    if vim.fn.executable("docker") ~= 1 then
+      return "`docker` is not installed"
+    end
+  end
+
   function backend:start(callback)
     self:run({ "up", "--detach", self.service }, callback)
   end
