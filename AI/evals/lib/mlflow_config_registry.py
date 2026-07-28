@@ -423,7 +423,7 @@ def _run_name(
     manifest_version = publication.manifest_prompt.version
     model_label = model.rsplit("-", maxsplit=1)[-1] or model
     return (
-        f"{profile}-{model_label}-{effort}-manifest-v{manifest_version} - "
+        f"{profile}-{model_label}-{effort}-v{manifest_version} - "
         f"{_change_label(publication)}"
     )
 
