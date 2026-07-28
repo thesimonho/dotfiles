@@ -49,7 +49,6 @@ CODEX_LIGHTWEIGHT_SELECTIONS = (
     "gpt-5.6-luna:low",
     "gpt-5.6-luna:medium",
     "gpt-5.6-luna:high",
-    "gpt-5.6-sol:low",
 )
 CODEX_ESCALATED_SELECTIONS = (
     "gpt-5.6-sol:medium",
