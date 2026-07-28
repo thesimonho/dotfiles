@@ -50,7 +50,7 @@ def score_output_quality(
     rubric: str,
     context: AgentExecutionContext,
     profile: str = "claude",
-) -> tuple[bool, str]:
+) -> tuple[float, str]:
     """Judge response quality through the selected authenticated agent CLI."""
     judge_prompt = (
         f"Judge whether this output satisfies the rubric below. "
@@ -68,7 +68,7 @@ def score_output_quality(
     verdict = verdict_raw.strip().splitlines()[0].upper()
     if verdict not in {"PASS", "FAIL"}:
         raise RuntimeError("evaluation judge did not return PASS or FAIL")
-    return verdict == "PASS", verdict_raw[:1000]
+    return (100.0 if verdict == "PASS" else 0.0), verdict_raw[:1000]
 
 
 def score_expected_mention(output: str, expected_mention: str) -> tuple[bool, str]:

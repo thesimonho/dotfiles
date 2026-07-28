@@ -69,8 +69,11 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
             "homeops-authorized-gitops-dns-remediation",
             "homeops-maintenance-visibility",
             "homeops-readonly-gitops-dns-diagnosis",
+            "homeops-template-structure-exploration",
             "homeops-worktree-handoff",
             "homeops-secret-backed-integration",
+            "homeops-critical-security-discovery",
+            "homeops-subagent-compute-selection",
         ),
     ),
 )

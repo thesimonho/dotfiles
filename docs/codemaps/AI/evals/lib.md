@@ -31,7 +31,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `final_state_evidence.py` | Scans final agent-attributable additions, created commits, plan artifacts, plan references, debug logs, secrets, and changed function limits |
 | `disposable_workspace.py` | Builds scenario repositories, exposes simulator tools and worktree-scoped writable paths, and captures agent-attributable file and command evidence from compound shell invocations |
 | `capabilities.py` | Preflights and hashes shared CLI tools, skills, and agents and renders path-redacted MLflow evidence |
-| `scoring.py` | Evaluates categorical completion and blast radius plus independently applicable tools, workflow, planning, Git, style, documentation, and security assessments |
+| `scoring.py` | Evaluates categorical completion and blast radius plus independently applicable tools, workflow, planning, Git, style, documentation, security, and CLI-judged response assessments |
 | `compute_selection_scoring.py` | Maintains least-to-most-capable model/effort ladders per CLI and scores task-bound child selections as delegation or escalation relative to the evaluated parent compute |
 | `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
 | `dataset_sync.py` | Replaces hosted dataset contents and produces filtered hosted-dataset views so tiered runs retain the `agent-harness-cases` identity |

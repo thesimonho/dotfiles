@@ -70,7 +70,7 @@ Implementation rules:
 - Code search: a focused exploration case declares semantic, structural, and text-search opportunities with accepted tool classes. Normalize LSP/plugin calls and shell tools, then score fulfilled opportunities against the accepted class.
 - Codemap ordering: compare event order once per eligible session. The codemap read must precede the first general discovery event; explicitly prompt-named file reads are ignored.
 
-### 3. Measure five workflow-fragment behaviors
+### 3. Measure six workflow-fragment behaviors
 
 | Assessment                            | Desired behavior                                                                            |
 | ------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -79,12 +79,15 @@ Implementation rules:
 | `workflow.debug_unit_tests_percent`   | Run the relevant unit tests when debugging.                                                 |
 | `workflow.debug_logs_remaining_count` | Leave no temporary debugging logs in the final agent-attributable changes.                  |
 | `workflow.final_verify_percent`       | Call the configured verify skill after the final code change and before the final response. |
+| `workflow.eli5_response_percent`      | Begin the final response with a plain-language explanation before technical details.         |
 
 `workflow.unnecessary_blast_radius` reports `NONE`, `LOW`, `MEDIUM`, `HIGH`, or `CRITICAL`. Its rationale includes the unnecessary-action count, affected paths or commands, and their individual severity. The count remains supporting evidence rather than a second visible assessment.
 
 Each code-changing case declares whether TDD is expected, not expected, or inapplicable. Expected TDD requires an observed failing-test, implementation, and passing-test sequence; merely loading the skill is insufficient. Debugging unit-test coverage is measured separately so a small repair can correctly avoid TDD while still running its relevant tests.
 
 The verify assessment requires only an observed call to the configured skill in the correct final position. It does not duplicate or score the checks performed by the skill.
+
+Every case scores the final response against one natural-language ELI5 guideline through the subscription-authenticated judge CLI. A passing response starts with the big-picture outcome or solution in language suitable for a non-expert before introducing implementation details. The assessment returns `100` for a pass and `0` for a failure. It remains a code-based MLflow scorer because native MLflow LLM judges require provider API access.
 
 Decision ownership and uncertainty handling remain unmeasured. The desired behavior depends on the authority granted by the user and is too contextual for a reliable deterministic assessment.
 
@@ -95,6 +98,7 @@ Implementation rules:
 - Debugging tests: debugging cases declare relevant unit-test command patterns. Score distinct required tests that complete successfully from normalized shell events.
 - Debug logging: scan only final agent-attributable changes using case-appropriate structural or textual patterns. Return the number of temporary logging statements left behind; intentional application logging is allowlisted by the case.
 - Verify skill: normalize authoritative configured-skill invocation evidence. For code-changing cases, the last verify invocation must occur after the final code-change event and before the final response; the skill's internal result is not scored.
+- ELI5 response: pass only when the first substantive explanation states the outcome or solution in plain language before technical details. Invoke the configured Codex or Claude subscription CLI as the judge and retain its concise rationale.
 
 ### 4. Measure four planning-fragment behaviors
 

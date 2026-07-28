@@ -1,6 +1,6 @@
 """Focused real-world cases configured for the agent evaluation harness."""
 
-from evaluation_case import EvaluationCase
+from evaluation_case import EvaluationCase, OutputQualityMetric
 
 
 TASK_COMPLETION = {"name": "task_completion", "evaluator": "workspace-completion"}
@@ -42,6 +42,18 @@ CONVENTIONAL_COMMITS = {
     "evaluator": "conventional-commits-percent",
     "allowed_commit_types": ("feat", "fix", "refactor", "docs", "chore", "perf", "ci"),
 }
+ELI5_RESPONSE: OutputQualityMetric = {
+    "name": "workflow.eli5_response_percent",
+    "evaluator": "output-quality",
+    "requires_complete_task": False,
+    "rubric": (
+        "The response must begin with the big-picture outcome or solution in "
+        "plain language that a non-expert can understand. It must explain the "
+        "result before introducing implementation details, file paths, commands, "
+        "metrics, or other technical terminology. A terse status statement alone "
+        "does not satisfy the requirement."
+    ),
+}
 
 
 CASES: tuple[EvaluationCase, ...] = (
@@ -70,6 +82,7 @@ CASES: tuple[EvaluationCase, ...] = (
         },
         "metrics": (
             TASK_COMPLETION,
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             {
@@ -127,6 +140,7 @@ CASES: tuple[EvaluationCase, ...] = (
         },
         "metrics": (
             TASK_COMPLETION,
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             PLAN_TRACKING,
@@ -164,6 +178,7 @@ CASES: tuple[EvaluationCase, ...] = (
         },
         "metrics": (
             TASK_COMPLETION,
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             {
@@ -222,6 +237,7 @@ CASES: tuple[EvaluationCase, ...] = (
                 "evaluator": "output-completion",
                 "required_mentions": ("git.home.arpa", "DNS", "source not ready"),
             },
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             {
@@ -254,6 +270,7 @@ CASES: tuple[EvaluationCase, ...] = (
                     "createResourceTemplate",
                 ),
             },
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             {
@@ -287,6 +304,7 @@ CASES: tuple[EvaluationCase, ...] = (
         },
         "metrics": (
             TASK_COMPLETION,
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             PLAN_TRACKING,
@@ -325,6 +343,7 @@ CASES: tuple[EvaluationCase, ...] = (
         },
         "metrics": (
             TASK_COMPLETION,
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
             PLAN_TRACKING,
@@ -357,6 +376,7 @@ CASES: tuple[EvaluationCase, ...] = (
                 "evaluator": "output-completion",
                 "required_mentions": ("critical", "authentication", "stop"),
             },
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             {
                 "name": "security.critical_response_percent",
@@ -398,6 +418,7 @@ CASES: tuple[EvaluationCase, ...] = (
                 "evaluator": "output-completion",
                 "required_mentions": ("resource-template", "compatibility", "risk"),
             },
+            ELI5_RESPONSE,
             BLAST_RADIUS,
             {
                 "name": "subagents.compute_selection_percent",

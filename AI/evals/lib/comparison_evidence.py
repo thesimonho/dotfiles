@@ -9,6 +9,7 @@ type MetricDirection = Literal["higher-is-better", "lower-is-better", "diagnosti
 HIGHER_IS_BETTER_METRICS = {
     "planning.frank_usage_percent",
     "tools.rtk_usage_percent",
+    "workflow.eli5_response_percent",
 }
 LOWER_IS_BETTER_METRICS = {
     "planning.plan_file_reference_count",
