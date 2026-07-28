@@ -4,7 +4,6 @@ agent:
   on-change:
     - "AI/evals/cases.py"
     - "AI/evals/lib/scoring.py"
-    - "AI/evals/lib/evaluation_operational_feedback.py"
 ---
 
 # Eval assessment design
@@ -23,6 +22,7 @@ Explicit A/B instruction ablation is paused. The current focus is whether behavi
 - Rationales state the numerator and denominator or categorical evidence and identify misses by command, path, or event.
 - Machine-readable CLI events and captured workspace state are authoritative. Unsupported required evidence fails preflight; missing must-observe evidence invalidates the case instead of scoring the agent.
 - Timing, tokens, raw commands, changed files, parser coverage, and harness health remain trace diagnostics rather than feedback.
+- Each case has an immutable machine-readable `case_id` and immutable human-readable `case.name` metadata. `case.name` supports MLflow filtering and is used as the request preview so the primary Request column identifies the scenario; the full prompt remains the root-span input.
 
 ## Agreed decisions
 

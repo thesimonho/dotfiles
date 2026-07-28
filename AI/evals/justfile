@@ -80,9 +80,21 @@ eval-compare agent model effort component case_id:
 eval-plan agent component repetitions="1":
     {{ eval_python }} AI/evals/plan_evaluation_campaign.py --agent "{{ agent }}" --component "{{ component }}" --repetitions "{{ repetitions }}"
 
-# Run the suite with the selected agent CLI.
+# Run the normal comparison suite with the selected agent CLI.
 eval-run agent model effort:
-    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}"
+    just --justfile AI/evals/justfile eval-core "{{ agent }}" "{{ model }}" "{{ effort }}"
+
+# Run the fast smoke suite while developing the evaluation harness.
+eval-smoke agent model effort:
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite smoke
+
+# Run the normal current-versus-previous instruction comparison suite.
+eval-core agent model effort:
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite core
+
+# Run every executable case, including expensive periodic coverage.
+eval-extended agent model effort:
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite extended
 
 # Show local service state.
 eval-status:

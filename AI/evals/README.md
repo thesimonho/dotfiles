@@ -32,6 +32,8 @@ MLflow creates or reuses one Agent Version for each `(agent CLI, manifest hash)`
 
 The focused suite uses four HomeOps scenarios: a small debugging repair, an authorized GitOps remediation, a large planning and documentation change, and a read-only diagnosis. Cases emit only the agreed instruction assessments that their evidence can support: categorical `task_completion` and `workflow.unnecessary_blast_radius`, percentage-based `tools.rtk_usage_percent`, planning-agent usage where applicable, and required documentation updates for the maintenance case. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same assessment name across applicable dataset rows without inventing failures for inapplicable behavior.
 
+The public suite recipes express cost intent rather than a separate case catalog: `eval-smoke` is the two-case harness-development check, `eval-core` is the normal evaluation suite, and `eval-extended` runs every executable case for expensive periodic coverage. Until additional cases are added, `core` and `extended` intentionally select the same four cases. `eval-run` remains the normal-suite alias for `eval-core`.
+
 Every executable case declares `required_evidence`, using semantic names such as `agent.message`, `tool.shell`, `agent.spawn`, `agent.model-selection`, and `token.usage`. It separately declares the subset in `required_observed_evidence` that must appear for the run to be trustworthy. Campaign previews and live runs validate these declarations against the selected CLI parser before contacting an agent. Missing, duplicate, inconsistent, or unsupported declarations fail before execution. This prevents a new case from silently assuming evidence that the harness does not capture; for example, a Codex case requiring `agent.model-selection` is rejected because Codex collaboration JSONL does not expose that field.
 
 Parser support and observed behavior are distinct. Actions that a negative case expects the agent to avoid belong only in `required_evidence`; their absence remains meaningful behavioral evidence for the case scorer. Evidence needed to make any judgment, such as the final message or token report, also belongs in `required_observed_evidence`. Missing must-observe evidence is listed in the `evaluation.unobserved_required_evidence` trace attribute.
@@ -66,7 +68,7 @@ The authenticated CLIs' machine-readable output is the authoritative source for 
 
 The harness creates one native MLflow trace per case. Its `agent.invoke` subtree contains normalized CLI events for commands, file changes, collaboration, configured-agent canaries, timing, token usage, models, parser coverage, and unknown event shapes. Raw Codex OTEL export is removed only from the disposable evaluation profile because its low-level runtime and transport instrumentation overwhelms the four useful case traces. The user's normal Codex profile is unchanged.
 
-Each harness invocation generates one UUID as `evaluation.execution_id`. Every case trace also records `agent.cli`, `agent.model`, `agent.effort`, `case_id`, `category`, and `config.manifest_id`, making repeated model and effort runs directly filterable without putting prompt or response text in resource attributes. `evaluation.role` is limited to the child CLI process resource identity.
+Each harness invocation generates one UUID as `evaluation.execution_id`. Every case trace also records `agent.cli`, `agent.model`, `agent.effort`, immutable `case_id`, immutable `case.name`, `category`, and `config.manifest_id`, making repeated model and effort runs directly filterable without putting prompt or response text in resource attributes. `evaluation.role` is limited to the child CLI process resource identity. The human-facing `case_name` is also the MLflow request preview, so the primary Request column identifies the scenario while the full prompt remains the root-span input.
 
 ## Running the harness
 
@@ -84,8 +86,12 @@ just eval-up
 # Start only MLflow and wait until it answers.
 just eval-up-mlflow
 
-# Run with this month's authenticated CLI.
+# Run the normal core suite with this month's authenticated CLI.
 just eval-run codex gpt-5.6-sol low
+
+# Run the fast harness-development smoke suite or all periodic coverage.
+just eval-smoke codex gpt-5.6-sol low
+just eval-extended codex gpt-5.6-sol low
 
 # Equivalent direct runner, with an optional explicit baseline.
 just eval-mlflow --agent codex --model gpt-5.6-sol --effort low
@@ -177,13 +183,13 @@ Use these filters:
 - Evaluation Runs: ``params.`agent.cli` = 'codex'``
 - Trace UI: **Filters → Field → `agent.cli`**
 - Trace API: ``metadata.`agent.cli` = 'codex'``
-- Case trace: **Filters → Field → `case_id`** or **Field → `category`**
+- Case trace: **Filters → Field → `case_id`**, **Field → `case.name`**, or **Field → `category`**
 - Evaluation invocation: **Filters → Field → `evaluation.execution_id`**
 - Paired comparison: **Filters → Field → `evaluation.comparison_group_id`**
 - Comparison arm: **Filters → Field → `evaluation.variant`**
 - Configuration identity: **Filters → Field → `config.manifest_id`**
 
-`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id`, `category`, `agent.model`, `agent.effort`, `evaluation.execution_id`, and `config.manifest_id` metadata while retaining plain-text request and response previews. The harness deliberately emits no duplicate CLI tags.
+`agent.cli` is the only CLI query key. Agent Versions and Evaluation Runs store it as a parameter; traces store it as immutable metadata. Case traces also store immutable `case_id`, `case.name`, `category`, `agent.model`, `agent.effort`, `evaluation.execution_id`, and `config.manifest_id` metadata. The `case.name` value is a human-readable filtering field; the same value supplies the request preview while the complete prompt remains the root-span input. The harness deliberately emits no duplicate CLI tags.
 
 Independent single-turn cases do not belong under **Sessions**. If conversational cases are added later, assign one session ID per simulated conversation rather than one for the complete evaluation run.
 

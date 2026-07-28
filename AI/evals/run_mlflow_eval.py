@@ -51,7 +51,7 @@ import mlflow.genai  # noqa: E402
 import mlflow_tracing  # noqa: E402
 from mlflow_execution_trace import invoke_traced_agent  # noqa: E402
 import scoring  # noqa: E402
-from cases import CASES  # noqa: E402
+from cases import CASES, EVALUATION_SUITES, select_cases  # noqa: E402
 from mlflow.entities import Feedback  # noqa: E402
 from mlflow.genai import scorer  # noqa: E402
 from mlflow.tracking import MlflowClient  # noqa: E402
@@ -64,6 +64,7 @@ from mlflow_parameter_names import (  # noqa: E402
     AGENT_MODEL_FIELD,
     CASE_CATEGORY_FIELD,
     CASE_ID_FIELD,
+    CASE_NAME_FIELD,
 )
 from evaluation_case import EvaluationCase, WorkspaceSpec  # noqa: E402
 
@@ -143,6 +144,7 @@ def build_predict_fn(
     def predict_fn(
         prompt: str,
         case_id: str,
+        case_name: str,
         category: str,
         required_evidence: list[str] | tuple[str, ...],
         required_observed_evidence: list[str] | tuple[str, ...],
@@ -154,10 +156,11 @@ def build_predict_fn(
             metadata={
                 AGENT_CLI_FIELD: identity.profile,
                 CASE_ID_FIELD: case_id,
+                CASE_NAME_FIELD: case_name,
                 CASE_CATEGORY_FIELD: category,
                 **identity.trace_metadata(),
             },
-            request_preview=prompt,
+            request_preview=case_name,
         )
         execution_context = _execution_context(
             identity=identity,
@@ -400,11 +403,17 @@ def parse_arguments() -> argparse.Namespace:
         type=int,
         help="Compare against this MLflow manifest prompt version instead of the latest.",
     )
-    parser.add_argument(
+    selection_group = parser.add_mutually_exclusive_group()
+    selection_group.add_argument(
         "--case-id",
         action="append",
         dest="case_ids",
         help="Evaluate only this case ID without replacing the complete hosted dataset.",
+    )
+    selection_group.add_argument(
+        "--suite",
+        choices=tuple(EVALUATION_SUITES),
+        help="Evaluate a named cost tier from the case catalog.",
     )
     parser.add_argument(
         "--compare-component",
@@ -423,7 +432,7 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             "no evaluation cases configured; add real cases to AI/evals/cases.py"
         )
 
-    selected_cases = _selected_cases(arguments.case_ids)
+    selected_cases = select_cases(arguments.case_ids, arguments.suite)
     agent_profile = agent.resolve_agent_profile(arguments.agent)
     validate_case_evidence_requirements(agent_profile, selected_cases)
     mlflow_tracing.init()
@@ -442,7 +451,9 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
     experiment_id = experiment.experiment_id
     dataset = dataset_sync.sync_mlflow_dataset(CASES, experiment_id)
     evaluation_data = (
-        dataset_sync.mlflow_records(selected_cases) if arguments.case_ids else dataset
+        dataset
+        if selected_cases == CASES
+        else dataset_sync.mlflow_records(selected_cases)
     )
 
     if arguments.compare_component:
@@ -701,20 +712,6 @@ def _print_completed_evaluation(
     print(f"{prefix}agent version: {completed.model_id}")
     print(f"{prefix}evaluation execution: {completed.execution_id}")
     print(completed.change_summary)
-
-
-def _selected_cases(case_ids: list[str] | None) -> tuple[EvaluationCase, ...]:
-    """Resolve focused case IDs while retaining the complete hosted dataset."""
-    if not case_ids:
-        return CASES
-    requested_case_ids = set(case_ids)
-    selected_cases = tuple(
-        case for case in CASES if case["case_id"] in requested_case_ids
-    )
-    missing_case_ids = requested_case_ids - {case["case_id"] for case in selected_cases}
-    if missing_case_ids:
-        raise ValueError(f"unknown evaluation case IDs: {', '.join(missing_case_ids)}")
-    return selected_cases
 
 
 def _preflight_case_capabilities(

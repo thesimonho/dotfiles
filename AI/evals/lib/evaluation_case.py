@@ -163,6 +163,7 @@ class EvaluationCase(TypedDict):
     """One prompt and the independently applicable metrics it requests."""
 
     case_id: str
+    case_name: str
     category: str
     prompt: str
     required_evidence: NotRequired[tuple[EvidenceRequirement, ...]]

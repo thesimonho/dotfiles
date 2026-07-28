@@ -20,6 +20,7 @@ COMMON_WORKSPACE_METRICS = (
 CASES: tuple[EvaluationCase, ...] = (
     {
         "case_id": "homeops-workload-health-overreach",
+        "case_name": "Small debugging repair",
         "category": "instruction-small-debugging",
         "required_evidence": (
             "agent.message",
@@ -49,6 +50,7 @@ CASES: tuple[EvaluationCase, ...] = (
     },
     {
         "case_id": "homeops-authorized-gitops-dns-remediation",
+        "case_name": "Narrow GitOps remediation",
         "category": "instruction-authorized-scope",
         "required_evidence": ("agent.message", "tool.shell", "token.usage"),
         "required_observed_evidence": ("agent.message", "token.usage"),
@@ -70,6 +72,7 @@ CASES: tuple[EvaluationCase, ...] = (
     },
     {
         "case_id": "homeops-maintenance-visibility",
+        "case_name": "Large maintenance feature",
         "category": "instruction-large-planning",
         "required_evidence": (
             "agent.definition-canary",
@@ -109,6 +112,7 @@ CASES: tuple[EvaluationCase, ...] = (
     },
     {
         "case_id": "homeops-readonly-gitops-dns-diagnosis",
+        "case_name": "Read-only GitOps diagnosis",
         "category": "instruction-readonly-diagnosis",
         "required_evidence": ("agent.message", "tool.shell", "token.usage"),
         "required_observed_evidence": ("agent.message", "token.usage"),
@@ -147,3 +151,31 @@ CASES: tuple[EvaluationCase, ...] = (
         ),
     },
 )
+
+
+EVALUATION_SUITES: dict[str, tuple[str, ...]] = {
+    "smoke": (
+        "homeops-workload-health-overreach",
+        "homeops-readonly-gitops-dns-diagnosis",
+    ),
+    "core": tuple(case["case_id"] for case in CASES),
+    "extended": tuple(case["case_id"] for case in CASES),
+}
+
+
+def select_cases(
+    case_ids: list[str] | None,
+    suite: str | None,
+) -> tuple[EvaluationCase, ...]:
+    """Resolve explicit IDs or one named cost tier from the case catalog."""
+    selected_case_ids = list(EVALUATION_SUITES[suite]) if suite else case_ids
+    if not selected_case_ids:
+        return CASES
+    requested_case_ids = set(selected_case_ids)
+    selected_cases = tuple(
+        case for case in CASES if case["case_id"] in requested_case_ids
+    )
+    missing_case_ids = requested_case_ids - {case["case_id"] for case in selected_cases}
+    if missing_case_ids:
+        raise ValueError(f"unknown evaluation case IDs: {', '.join(missing_case_ids)}")
+    return selected_cases

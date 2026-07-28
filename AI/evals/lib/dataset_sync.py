@@ -14,6 +14,7 @@ def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
     """Translate typed local cases into MLflow inputs and expectations."""
     input_field_names = {
         "prompt",
+        "case_name",
         "required_evidence",
         "required_observed_evidence",
         "workspace",
@@ -24,6 +25,7 @@ def mlflow_records(cases: tuple[EvaluationCase, ...]) -> list[dict[str, Any]]:
         {
             "inputs": {
                 "prompt": case["prompt"],
+                "case_name": case["case_name"],
                 "required_evidence": _required_evidence(case),
                 "required_observed_evidence": _required_observed_evidence(case),
                 CASE_ID_FIELD: case[CASE_ID_FIELD],
