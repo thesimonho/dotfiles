@@ -32,7 +32,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `scoring.py` | Evaluates categorical completion and blast radius plus independently applicable tools, workflow, planning, Git, style, documentation, and security assessments |
 | `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
 | `dataset_sync.py` | Replaces hosted dataset contents and produces filtered hosted-dataset views so tiered runs retain the `agent-harness-cases` identity |
-| `harness_environment.py` | Repository paths and supported agent profile constants |
+| `harness_environment.py` | Repository paths, supported agent profiles, and the `gpt-5.6-sol`/`low` defaults for top-level Codex agents and judges; child-agent compute remains independently selected |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
 | `configuration_variant.py` | Builds treatment and single-component-ablated control profiles, materializes custom-agent files, and removes copied Codex OTEL configuration so native eval traces remain authoritative |
@@ -53,6 +53,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | Symbol | File | Description |
 | --- | --- | --- |
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model and effort for a case or judge prompt |
+| `DEFAULT_CODEX_MODEL` / `DEFAULT_CODEX_EFFORT` | `harness_environment.py` | Default the evaluated Codex base agent and judge to `gpt-5.6-sol` with low reasoning effort without constraining delegated subagents |
 | `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, model, effort, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
 | `shell_segments()` / `unwrapped_shell_invocations()` | `shell_commands.py` | Provide one command-parsing source of truth for tool-prefix and prohibited-action evidence |

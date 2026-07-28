@@ -63,7 +63,11 @@ from mlflow.genai import scorer  # noqa: E402
 from mlflow.tracking import MlflowClient  # noqa: E402
 from mlflow_agent_versions import MlflowAgentVersionRegistry  # noqa: E402
 from mlflow_config_registry import MlflowConfigurationRegistry  # noqa: E402
-from harness_environment import AGENT_ARGUMENT_CHOICES  # noqa: E402
+from harness_environment import (  # noqa: E402
+    AGENT_ARGUMENT_CHOICES,
+    DEFAULT_CODEX_EFFORT,
+    DEFAULT_CODEX_MODEL,
+)
 from mlflow_parameter_names import (  # noqa: E402
     AGENT_CLI_FIELD,
     AGENT_EFFORT_FIELD,
@@ -391,12 +395,10 @@ def parse_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "--model",
-        required=True,
         help="Exact model or CLI-supported model alias to evaluate.",
     )
     parser.add_argument(
         "--effort",
-        required=True,
         help="CLI-supported reasoning or effort level to evaluate.",
     )
     parser.add_argument(
@@ -434,6 +436,11 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         )
 
     agent_profile = agent.resolve_agent_profile(arguments.agent)
+    model, effort = _resolve_evaluation_compute(
+        agent_profile,
+        arguments.model,
+        arguments.effort,
+    )
     requested_cases = select_cases(arguments.case_ids, arguments.suite)
     selected_cases = select_cases_for_profile(
         requested_cases,
@@ -469,8 +476,8 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             evaluation_data=evaluation_data,
             experiment_id=experiment_id,
             baseline_manifest_version=arguments.baseline_manifest_version,
-            model=arguments.model,
-            effort=arguments.effort,
+            model=model,
+            effort=effort,
         )
         return
 
@@ -488,12 +495,25 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             evaluation_data=evaluation_data,
             experiment_id=experiment_id,
             baseline_manifest_version=arguments.baseline_manifest_version,
-            model=arguments.model,
-            effort=arguments.effort,
+            model=model,
+            effort=effort,
             profile_environment=prepared_profile.environment,
             agent_definition_canary=prepared_profile.agent_definition_canary,
         )
     _print_completed_evaluation(completed)
+
+
+def _resolve_evaluation_compute(
+    profile: str,
+    model: str | None,
+    effort: str | None,
+) -> tuple[str, str]:
+    """Apply top-level Codex defaults while keeping Claude choices explicit."""
+    if profile == "codex":
+        return model or DEFAULT_CODEX_MODEL, effort or DEFAULT_CODEX_EFFORT
+    if model and effort:
+        return model, effort
+    raise RuntimeError("Claude evaluation runs require --model and --effort")
 
 
 def _run_component_comparison(

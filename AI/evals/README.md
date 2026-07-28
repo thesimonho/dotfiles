@@ -70,6 +70,8 @@ The harness creates one native MLflow trace per case. Its `agent.invoke` subtree
 
 Each harness invocation generates one UUID as `evaluation.execution_id`. Every case trace also records `agent.cli`, `agent.model`, `agent.effort`, immutable `case_id`, immutable `case.name`, `category`, and `config.manifest_id`, making repeated model and effort runs directly filterable without putting prompt or response text in resource attributes. `evaluation.role` is limited to the child CLI process resource identity. The human-facing `case_name` is also the MLflow request preview, so the primary Request column identifies the scenario while the full prompt remains the root-span input.
 
+When a Codex run omits top-level compute settings, the harness defaults both the evaluated base agent and any judges to `gpt-5.6-sol` with `low` effort. Explicit `--model` and `--effort` values override those defaults. They do not constrain child agents: the **Subagent compute selection** case independently observes and scores the model and effort resolved for each child. Claude runs require explicit top-level model and effort because the harness has neither a Claude default mapping nor authoritative resolved-child compute evidence.
+
 ## Running the harness
 
 The local [`justfile`](justfile) contains the supported workflow:
@@ -86,27 +88,27 @@ just eval-up
 # Start only MLflow and wait until it answers.
 just eval-up-mlflow
 
-# Run the normal core suite with this month's authenticated CLI.
-just eval-run codex gpt-5.6-sol low
+# Run the normal core suite with Codex's default top-level compute.
+just eval-run codex
 
 # Run the fast harness-development smoke suite or all periodic coverage.
-just eval-smoke codex gpt-5.6-sol low
-just eval-extended codex gpt-5.6-sol low
+just eval-smoke codex
+just eval-extended codex
 
-# Equivalent direct runner, with an optional explicit baseline.
-just eval-mlflow --agent codex --model gpt-5.6-sol --effort low
+# Equivalent direct runner, with optional compute overrides or an explicit baseline.
+just eval-mlflow --agent codex
 just eval-mlflow --agent codex --model gpt-5.6-sol --effort high --baseline-manifest-version 3
 just eval-mlflow --agent codex --model gpt-5.6-sol --effort low --case-id homeops-workload-health-overreach
 
 # Run a causal treatment/control comparison for one instruction fragment.
-just eval-compare codex gpt-5.6-sol low instruction/tools homeops-workload-health-overreach
+just eval-compare codex instruction/tools homeops-workload-health-overreach
 
 # Preview applicable workflow comparisons without running an agent.
 just eval-plan codex instruction/workflow
 just eval-plan codex instruction/workflow 3
 
 # Send the evaluation to a remote MLflow server.
-MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex gpt-5.6-sol low
+MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex
 
 # Inspect services or follow logs.
 just eval-status

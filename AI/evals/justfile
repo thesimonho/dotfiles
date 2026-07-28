@@ -73,7 +73,7 @@ eval-mlflow *args:
     {{ eval_python }} AI/evals/run_mlflow_eval.py "$@"
 
 # Compare full instructions with one component removed from the control arm.
-eval-compare agent model effort component case_id:
+eval-compare agent component case_id model="" effort="":
     {{ eval_python }} AI/evals/run_mlflow_eval.py --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --case-id "{{ case_id }}" --compare-component "{{ component }}"
 
 # Preview component coverage and CLI usage without invoking an agent or MLflow.
@@ -81,19 +81,19 @@ eval-plan agent component repetitions="1":
     {{ eval_python }} AI/evals/plan_evaluation_campaign.py --agent "{{ agent }}" --component "{{ component }}" --repetitions "{{ repetitions }}"
 
 # Run the normal comparison suite with the selected agent CLI.
-eval-run agent model effort:
+eval-run agent model="" effort="":
     just --justfile AI/evals/justfile eval-core "{{ agent }}" "{{ model }}" "{{ effort }}"
 
 # Run the fast smoke suite while developing the evaluation harness.
-eval-smoke agent model effort:
+eval-smoke agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite smoke
 
 # Run the normal current-versus-previous instruction comparison suite.
-eval-core agent model effort:
+eval-core agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite core
 
 # Run every executable case, including expensive periodic coverage.
-eval-extended agent model effort:
+eval-extended agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite extended
 
 # Show local service state.

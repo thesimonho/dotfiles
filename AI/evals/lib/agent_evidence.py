@@ -687,11 +687,6 @@ def _claude_event_coverage(
         normalized_evidence_types.add("agent.message")
     if token_usage.available_counts():
         normalized_evidence_types.add("token.usage")
-    if any(
-        event.evidence_type == "agent.spawn" and "model" in dict(event.attributes)
-        for event in agent_events
-    ):
-        normalized_evidence_types.add("agent.model-selection")
     return AgentEventCoverage(
         observed_event_types=tuple(sorted(set(event_keys))),
         normalized_evidence_types=tuple(sorted(normalized_evidence_types)),
