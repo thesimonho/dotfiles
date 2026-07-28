@@ -17,6 +17,7 @@ class CommonMetric(TypedDict):
     """Fields shared by every independently reported evaluation metric."""
 
     name: str
+    requires_complete_task: NotRequired[bool]
 
 
 class OutputContainsMetric(CommonMetric):
@@ -133,6 +134,37 @@ class RequiredDocumentationUpdatesMetric(CommonMetric):
     evaluator: Literal["required-documentation-updates-percent"]
 
 
+class PolicyMetric(CommonMetric, total=False):
+    """Declarative policy metric evaluated from ordered events or final state."""
+
+    evaluator: Literal[
+        "just-usage-percent",
+        "preferred-search-percent",
+        "codemap-first-percent",
+        "tdd-appropriate-percent",
+        "debug-unit-tests-percent",
+        "debug-logs-count",
+        "final-verify-percent",
+        "plan-tracking-percent",
+        "large-plan-file-percent",
+        "plan-file-reference-count",
+        "conventional-commits-percent",
+        "branch-before-changes-percent",
+        "worktree-lifecycle-percent",
+        "function-limits-percent",
+        "hardcoded-secrets-count",
+        "critical-response-percent",
+    ]
+    direct_commands: tuple[str, ...]
+    just_recipes: tuple[str, ...]
+    accepted_search_tools: tuple[str, ...]
+    relevant_test_commands: tuple[str, ...]
+    tdd: Literal["expected", "not-expected", "inapplicable"]
+    allowed_commit_types: tuple[str, ...]
+    critical_mentions: tuple[str, ...]
+    critical_path: str
+
+
 type ResponseMetric = (
     OutputContainsMetric
     | OutputContainsAllMetric
@@ -156,7 +188,9 @@ type WorkspaceMetric = (
     | WorkspaceCompletionMetric
     | RequiredDocumentationUpdatesMetric
 )
-type EvaluationMetric = ResponseMetric | ExecutionMetric | WorkspaceMetric
+type EvaluationMetric = (
+    ResponseMetric | ExecutionMetric | WorkspaceMetric | PolicyMetric
+)
 
 
 class EvaluationCase(TypedDict):

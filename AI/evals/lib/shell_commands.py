@@ -26,6 +26,18 @@ def shell_segments(command: str) -> tuple[tuple[str, ...], ...]:
     return tuple(segments)
 
 
+def normalize_shell_command(command: str) -> str:
+    """Remove a CLI shell launcher while preserving agent-authored syntax."""
+    try:
+        tokens = shlex.split(command)
+    except ValueError:
+        return command
+    if len(tokens) >= 3 and os.path.basename(tokens[0]) in {"bash", "sh", "zsh"}:
+        if tokens[1] in {"-c", "-lc"}:
+            return tokens[2]
+    return command
+
+
 def executable_index(segment: tuple[str, ...]) -> int | None:
     """Return the executable position after leading environment assignments."""
     return next(

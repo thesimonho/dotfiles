@@ -2,22 +2,18 @@
 
 from __future__ import annotations
 
-import os
-import shlex
 from dataclasses import asdict, dataclass
 from typing import Any, Literal
 
 from agent_event_contract import AgentEventCoverage
+from agent_canary_evidence import has_exact_canary_footer
+from agent_plan_evidence import codex_has_plan
+from shell_commands import normalize_shell_command
 
 type EvidenceValue = str | int | float | bool
 type AgentEventCategory = Literal["agent", "runtime", "tool"]
 
-_KNOWN_CODEX_COLLABORATION_TOOLS = {
-    "close_agent",
-    "send_input",
-    "spawn_agent",
-    "wait",
-}
+_KNOWN_CODEX_COLLABORATION_TOOLS = {"close_agent", "send_input", "spawn_agent", "wait"}
 _KNOWN_CLAUDE_TOOLS = {
     "Agent",
     "AskUserQuestion",
@@ -118,6 +114,18 @@ def codex_evidence(
     )
     agent_events = (
         *agent_events,
+        *(
+            (
+                AgentEvent(
+                    category="agent",
+                    name="plan",
+                    evidence_type="agent.plan",
+                    status="observed",
+                ),
+            )
+            if codex_has_plan(events)
+            else ()
+        ),
         *_codex_definition_canary_events(
             completed_items,
             agent_definition_canary,
@@ -167,24 +175,20 @@ def claude_evidence(
     return agent_events, token_usage, model_ids, coverage
 
 
-def normalize_shell_command(command: str) -> str:
-    """Remove the CLI's shell launcher while preserving agent-authored syntax."""
-    try:
-        tokens = shlex.split(command)
-    except ValueError:
-        return command
-    if len(tokens) >= 3 and os.path.basename(tokens[0]) in {"bash", "sh", "zsh"}:
-        if tokens[1] in {"-c", "-lc"}:
-            return tokens[2]
-    return command
-
-
 def _codex_item_event(item: dict[str, Any]) -> AgentEvent | None:
     item_type = item.get("type")
     if not isinstance(item_type, str):
         return None
-    if item_type in {"agent_message", "reasoning", "todo_list"}:
+    if item_type in {"agent_message", "reasoning"}:
         return None
+
+    if item_type == "todo_list":
+        return AgentEvent(
+            category="agent",
+            name="plan",
+            evidence_type="agent.plan",
+            status=_item_status(item),
+        )
 
     name = _codex_item_name(item_type, item)
     category: AgentEventCategory = (
@@ -330,7 +334,7 @@ def _codex_definition_canary_events(
             ):
                 continue
             message = state.get("message")
-            if not isinstance(message, str) or not _has_exact_canary_footer(
+            if not isinstance(message, str) or not has_exact_canary_footer(
                 message,
                 expected_canary,
             ):
@@ -378,7 +382,7 @@ def _claude_definition_canary_events(
         if content.get("type") == "tool_result"
         and isinstance((tool_use_id := content.get("tool_use_id")), str)
         and tool_use_id in agent_tool_ids
-        and _has_exact_canary_footer(
+        and has_exact_canary_footer(
             _claude_tool_result_text(content),
             expected_canary,
         )
@@ -397,12 +401,6 @@ def _claude_tool_result_text(content: dict[str, Any]) -> str:
         for block in result_content
         if isinstance(block, dict) and isinstance(block.get("text"), str)
     )
-
-
-def _has_exact_canary_footer(message: str, expected_canary: str) -> bool:
-    """Require the opaque marker as the final unformatted response line."""
-    lines = tuple(line.strip() for line in message.splitlines() if line.strip())
-    return bool(lines) and lines[-1] == expected_canary
 
 
 def _codex_event_coverage(
@@ -453,7 +451,7 @@ def _codex_event_coverage(
         )
         or (
             event.get("type") == "item.completed"
-            and _codex_item_type(event) in {"reasoning", "todo_list"}
+            and _codex_item_type(event) == "reasoning"
         )
     }
     normalized_evidence_types = {event.evidence_type for event in agent_events}
@@ -594,7 +592,15 @@ def _claude_tool_event(
     attributes = (
         _safe_attributes(
             tool_input,
-            ("agent", "description", "model", "name", "subagent_type"),
+            (
+                "agent",
+                "description",
+                "file_path",
+                "model",
+                "name",
+                "skill",
+                "subagent_type",
+            ),
         )
         if isinstance(tool_input, dict)
         else {}
@@ -603,6 +609,10 @@ def _claude_tool_event(
         command = tool_input.get("command")
         if isinstance(command, str):
             attributes["command"] = _bounded(normalize_shell_command(command))
+    if source_name == "Skill" and isinstance(tool_input, dict):
+        skill = tool_input.get("skill")
+        if isinstance(skill, str):
+            attributes["skill"] = _bounded(skill)
     tool_use_id = content.get("id")
     status = (
         tool_results.get(tool_use_id, "observed")
@@ -623,6 +633,10 @@ def _claude_tool_evidence_type(name: str) -> str:
         return "tool.shell"
     if name in {"Agent", "Task"} or "agent" in name.lower():
         return "agent.spawn"
+    if name in {"TaskCreate", "TaskUpdate", "TodoWrite"}:
+        return "agent.plan"
+    if name == "Skill":
+        return "agent.skill"
     if name in {"Edit", "MultiEdit", "NotebookEdit", "Write"}:
         return "tool.file-change"
     if name in {"WebFetch", "WebSearch"}:

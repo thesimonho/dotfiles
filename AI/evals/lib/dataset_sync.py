@@ -1,5 +1,7 @@
 """Push the git-tracked cases into MLflow's hosted evaluation dataset."""
 
+from copy import copy
+
 from typing import Any
 
 from agent_event_contract import EvidenceRequirement
@@ -90,6 +92,25 @@ def sync_mlflow_dataset(cases: tuple[EvaluationCase, ...], experiment_id: str):
         dataset = created[0]
     replace_dataset_records(dataset, cases)
     return dataset
+
+
+def select_dataset_cases(dataset: Any, cases: tuple[EvaluationCase, ...]) -> Any:
+    """Return a hosted-dataset view containing only the requested case rows.
+
+    MLflow labels a plain list of records as ``dataset``. A shallow view keeps the
+    hosted dataset identity while preventing tiered runs from evaluating every row.
+    """
+    selected_case_ids = {case[CASE_ID_FIELD] for case in cases}
+    selected_dataset = copy(dataset)
+    selected_entity = copy(dataset._mlflow_dataset)
+    selected_entity._records = [
+        record
+        for record in dataset._mlflow_dataset.records
+        if record.inputs.get(CASE_ID_FIELD) in selected_case_ids
+    ]
+    selected_dataset._mlflow_dataset = selected_entity
+    selected_dataset._df = None
+    return selected_dataset
 
 
 def replace_dataset_records(dataset: Any, cases: tuple[EvaluationCase, ...]) -> None:

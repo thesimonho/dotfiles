@@ -50,6 +50,7 @@ import mlflow  # noqa: E402
 import mlflow.genai  # noqa: E402
 import mlflow_tracing  # noqa: E402
 from mlflow_execution_trace import invoke_traced_agent  # noqa: E402
+from mlflow_trace_preview import update_trace_preview  # noqa: E402
 import scoring  # noqa: E402
 from cases import CASES, EVALUATION_SUITES, select_cases  # noqa: E402
 from mlflow.entities import Feedback  # noqa: E402
@@ -152,7 +153,7 @@ def build_predict_fn(
     ) -> dict[str, object]:
         """Run one case while keeping its identity queryable on the trace."""
         case_started_at = time.perf_counter()
-        _update_trace_preview(
+        update_trace_preview(
             metadata={
                 AGENT_CLI_FIELD: identity.profile,
                 CASE_ID_FIELD: case_id,
@@ -251,7 +252,7 @@ def build_predict_fn(
                     span_type="CHAIN",
                 ):
                     workspace_stack.close()
-        _update_trace_preview(response_preview=result.response)
+        update_trace_preview(response_preview=result.response)
         case_completion_seconds = time.perf_counter() - case_started_at
         unobserved_required_evidence = unobserved_evidence_requirements(
             observed_evidence_requirements,
@@ -287,24 +288,6 @@ def build_predict_fn(
         return output
 
     return predict_fn
-
-
-def _update_trace_preview(
-    *,
-    metadata: dict[str, str] | None = None,
-    request_preview: str | None = None,
-    response_preview: str | None = None,
-) -> None:
-    """Update list-view text only when MLflow has opened a trace span."""
-    if mlflow.get_current_active_span() is None:
-        return
-    if request_preview is not None:
-        mlflow.update_current_trace(
-            metadata=metadata,
-            request_preview=request_preview,
-        )
-    if response_preview is not None:
-        mlflow.update_current_trace(response_preview=response_preview)
 
 
 def build_evaluation_scorer(identity: EvaluationIdentity):
@@ -343,13 +326,26 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             if "workspace_evidence" in outputs
             else []
         )
+        cross_results = scoring.score_cross_metrics(
+            outputs["response"],
+            tuple(outputs["execution_evidence"]["events"]),
+            metrics,
+        )
         behavioral_feedback = [
             Feedback(
                 name=result.name,
                 value=result.value,
                 rationale=result.rationale,
+                metadata=scoring.metric_metadata(
+                    next(metric for metric in metrics if metric["name"] == result.name)
+                ),
             )
-            for result in (*response_results, *execution_results, *workspace_results)
+            for result in (
+                *response_results,
+                *execution_results,
+                *workspace_results,
+                *cross_results,
+            )
         ]
         return behavioral_feedback
 
@@ -450,11 +446,7 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         )
     experiment_id = experiment.experiment_id
     dataset = dataset_sync.sync_mlflow_dataset(CASES, experiment_id)
-    evaluation_data = (
-        dataset
-        if selected_cases == CASES
-        else dataset_sync.mlflow_records(selected_cases)
-    )
+    evaluation_data = dataset_sync.select_dataset_cases(dataset, selected_cases)
 
     if arguments.compare_component:
         _run_component_comparison(

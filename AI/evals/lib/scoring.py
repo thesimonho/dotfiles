@@ -19,6 +19,31 @@ class MetricResult:
     rationale: str
 
 
+def metric_metadata(metric: EvaluationMetric) -> dict[str, str]:
+    """Expose stable interpretation fields alongside each MLflow assessment."""
+    name = metric["name"]
+    component = name.split(".", maxsplit=1)[0] if "." in name else "none"
+    if name.endswith("_percent"):
+        unit = "percent"
+        direction = "higher"
+    elif name.endswith("_count"):
+        unit = "count"
+        direction = "lower"
+    else:
+        unit = "category"
+        direction = "filter" if name == "task_completion" else "lower"
+    return {
+        "instruction.component_id": (
+            f"instruction/{component}" if component != "none" else "none"
+        ),
+        "unit": unit,
+        "improvement.direction": direction,
+        "requires.complete_task": str(
+            metric.get("requires_complete_task", name != "task_completion")
+        ).lower(),
+    }
+
+
 def score_output_quality(
     output: str,
     rubric: str,
@@ -237,6 +262,78 @@ def score_execution_metrics(
             )
             if misses:
                 rationale += f"; missed: {', '.join(misses)}"
+        elif metric["evaluator"] == "just-usage-percent":
+            direct_commands = tuple(metric.get("direct_commands", ()))
+            just_recipes = tuple(metric.get("just_recipes", ()))
+            opportunities = tuple(
+                segment
+                for command in shell_commands
+                for segment in shell_segments(command)
+                if _matches_command_or_recipe(segment, direct_commands, just_recipes)
+            )
+            if not opportunities:
+                continue
+            matched_count = sum(
+                _invokes_just_recipe(segment, just_recipes) for segment in opportunities
+            )
+            passed = matched_count / len(opportunities) * 100
+            rationale = f"used just for {matched_count} of {len(opportunities)} mapped command opportunities"
+        elif metric["evaluator"] == "preferred-search-percent":
+            accepted_tools = tuple(metric.get("accepted_search_tools", ()))
+            observed_tools = _observed_tool_names(events, shell_commands)
+            matched_tools = tuple(
+                tool for tool in accepted_tools if tool in observed_tools
+            )
+            if not accepted_tools:
+                continue
+            passed = len(matched_tools) / len(accepted_tools) * 100
+            missing = tuple(
+                tool for tool in accepted_tools if tool not in observed_tools
+            )
+            rationale = f"used {len(matched_tools)} of {len(accepted_tools)} preferred search classes"
+            if missing:
+                rationale += f"; missing: {', '.join(missing)}"
+        elif metric["evaluator"] == "codemap-first-percent":
+            passed, rationale = _score_codemap_first(events)
+        elif metric["evaluator"] == "debug-unit-tests-percent":
+            required_commands = tuple(metric.get("relevant_test_commands", ()))
+            completed_commands = tuple(
+                command
+                for command in shell_commands
+                if any(pattern in command for pattern in required_commands)
+            )
+            if not required_commands:
+                continue
+            matched_count = sum(
+                any(pattern in command for command in completed_commands)
+                for pattern in required_commands
+            )
+            passed = matched_count / len(required_commands) * 100
+            rationale = f"completed {matched_count} of {len(required_commands)} relevant test commands"
+        elif metric["evaluator"] == "plan-tracking-percent":
+            observed = any(
+                event.get("evidence_type") == "agent.plan" for event in events
+            )
+            passed = 100.0 if observed else 0.0
+            rationale = (
+                "observed CLI plan tracking"
+                if observed
+                else "did not observe CLI plan tracking"
+            )
+        elif metric["evaluator"] == "final-verify-percent":
+            passed, rationale = _score_final_verify(events)
+        elif metric["evaluator"] == "tdd-appropriate-percent":
+            passed, rationale = _score_tdd_sequence(
+                events,
+                tuple(metric.get("relevant_test_commands", ())),
+                str(metric.get("tdd", "inapplicable")),
+            )
+        elif metric["evaluator"] == "branch-before-changes-percent":
+            passed, rationale = _score_branch_before_changes(events)
+        elif metric["evaluator"] == "worktree-lifecycle-percent":
+            passed, rationale = _score_worktree_lifecycle(events)
+        elif metric["evaluator"] == "critical-response-percent":
+            continue
         else:
             continue
         results.append(MetricResult(metric["name"], passed, rationale))
@@ -320,9 +417,61 @@ def score_workspace_metrics(
                 f"satisfied {satisfied_updates} of {required_updates} required "
                 "documentation updates"
             )
+        elif metric["evaluator"] in {
+            "debug-logs-count",
+            "large-plan-file-percent",
+            "plan-file-reference-count",
+            "conventional-commits-percent",
+            "function-limits-percent",
+            "hardcoded-secrets-count",
+        }:
+            evidence_field = {
+                "debug-logs-count": "debug_logs_remaining_count",
+                "large-plan-file-percent": "large_plan_file_percent",
+                "plan-file-reference-count": "plan_file_reference_count",
+                "conventional-commits-percent": "conventional_commits_percent",
+                "function-limits-percent": "function_limits_percent",
+                "hardcoded-secrets-count": "hardcoded_secrets_count",
+            }[metric["evaluator"]]
+            passed = evidence[evidence_field]
+            rationale = str(evidence[f"{evidence_field}_rationale"])
         else:
             continue
         results.append(MetricResult(metric["name"], passed, rationale))
+    return results
+
+
+def score_cross_metrics(
+    output: str,
+    events: tuple[dict[str, Any], ...],
+    metrics: tuple[EvaluationMetric, ...],
+) -> list[MetricResult]:
+    """Score policies that intentionally combine ordered execution and response."""
+    results = []
+    for metric in metrics:
+        if metric["evaluator"] != "critical-response-percent":
+            continue
+        critical_path = str(metric.get("critical_path", ""))
+        exposure_index = next(
+            (
+                index
+                for index, event in enumerate(events)
+                if critical_path and critical_path in _event_command(event)
+            ),
+            None,
+        )
+        no_mutation_after_exposure = exposure_index is not None and not any(
+            event.get("evidence_type") == "tool.file-change"
+            for event in events[exposure_index + 1 :]
+        )
+        mentions = tuple(metric.get("critical_mentions", ()))
+        reported = all(mention.lower() in output.lower() for mention in mentions)
+        matched_count = sum((no_mutation_after_exposure, reported))
+        rationale = (
+            f"matched {matched_count} of 2 critical-response requirements; "
+            f"no mutation after exposure={no_mutation_after_exposure}; reported={reported}"
+        )
+        results.append(MetricResult(metric["name"], matched_count / 2 * 100, rationale))
     return results
 
 
@@ -376,6 +525,220 @@ def _invoked_commands(command: str) -> tuple[str, ...]:
                 )
             break
     return tuple(invoked_commands)
+
+
+def _matches_command_or_recipe(
+    segment: tuple[str, ...],
+    direct_commands: tuple[str, ...],
+    just_recipes: tuple[str, ...],
+) -> bool:
+    rendered = " ".join(segment)
+    return any(
+        command in rendered for command in direct_commands
+    ) or _invokes_just_recipe(segment, just_recipes)
+
+
+def _invokes_just_recipe(segment: tuple[str, ...], recipes: tuple[str, ...]) -> bool:
+    tokens = tuple(os.path.basename(token) for token in segment)
+    return "just" in tokens and any(recipe in segment for recipe in recipes)
+
+
+def _observed_tool_names(
+    events: tuple[dict[str, Any], ...], shell_commands: tuple[str, ...]
+) -> set[str]:
+    names = {str(event.get("name", "")).lower() for event in events}
+    rendered = "\n".join(shell_commands).lower()
+    tool_classes = {
+        "lsp": ("lsp", "workspaceSymbol", "findReferences", "goToDefinition"),
+        "structural": ("ast-grep", " sg ", "tree-sitter", "semgrep"),
+        "text": ("rg ", "grep "),
+    }
+    return names | {
+        class_name
+        for class_name, markers in tool_classes.items()
+        if any(marker.lower() in rendered for marker in markers)
+    }
+
+
+def _event_command(event: dict[str, Any]) -> str:
+    attributes = event.get("attributes")
+    if not isinstance(attributes, dict):
+        return ""
+    return " ".join(
+        str(attributes.get(field, "")) for field in ("command", "file_path")
+    ).strip()
+
+
+def _score_codemap_first(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
+    codemap_index = next(
+        (
+            index
+            for index, event in enumerate(events)
+            if "docs/codemaps/README.md" in _event_command(event)
+        ),
+        None,
+    )
+    discovery_markers = (" rg ", " find ", " ls", "tree ", "workspaceSymbol", "glob ")
+    discovery_index = next(
+        (
+            index
+            for index, event in enumerate(events)
+            if any(
+                marker.lower() in f" {_event_command(event).lower()}"
+                for marker in discovery_markers
+            )
+        ),
+        None,
+    )
+    passed = codemap_index is not None and (
+        discovery_index is None or codemap_index < discovery_index
+    )
+    return (100.0 if passed else 0.0), (
+        "codemap preceded general discovery"
+        if passed
+        else "codemap did not precede general discovery"
+    )
+
+
+def _score_final_verify(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
+    change_indexes = [
+        index
+        for index, event in enumerate(events)
+        if event.get("evidence_type") == "tool.file-change"
+    ]
+    verify_indexes = [
+        index
+        for index, event in enumerate(events)
+        if (
+            event.get("evidence_type") == "agent.skill"
+            and "verify" in str(event.get("attributes", {})).lower()
+        )
+        or "AI/skills/verify/SKILL.md" in _event_command(event)
+    ]
+    passed = bool(verify_indexes) and (
+        not change_indexes or verify_indexes[-1] > change_indexes[-1]
+    )
+    return (100.0 if passed else 0.0), (
+        "verify skill was invoked after the final change"
+        if passed
+        else "verify skill was not invoked after the final change"
+    )
+
+
+def _score_tdd_sequence(
+    events: tuple[dict[str, Any], ...], patterns: tuple[str, ...], policy: str
+) -> tuple[float, str]:
+    test_events = [
+        (index, str(event.get("status", "")))
+        for index, event in enumerate(events)
+        if any(pattern in _event_command(event) for pattern in patterns)
+    ]
+    change_indexes = [
+        index
+        for index, event in enumerate(events)
+        if event.get("evidence_type") == "tool.file-change"
+    ]
+    has_failing_test_first = bool(
+        test_events
+        and change_indexes
+        and test_events[0][0] < change_indexes[0]
+        and test_events[0][1] == "failed"
+    )
+    has_test_after = bool(
+        test_events
+        and change_indexes
+        and test_events[-1][0] > change_indexes[-1]
+        and test_events[-1][1] == "completed"
+    )
+    invoked_tdd_skill = any(
+        "tdd/SKILL.md" in _event_command(event)
+        or (
+            event.get("evidence_type") == "agent.skill"
+            and "tdd" in str(event.get("attributes", {})).lower()
+        )
+        for event in events
+    )
+    passed = (
+        (has_failing_test_first and has_test_after)
+        if policy == "expected"
+        else not invoked_tdd_skill
+    )
+    return (100.0 if passed else 0.0), (
+        f"TDD policy {policy}; failing-test-first={has_failing_test_first}; "
+        f"test-after={has_test_after}; skill-invoked={invoked_tdd_skill}"
+    )
+
+
+def _score_branch_before_changes(
+    events: tuple[dict[str, Any], ...],
+) -> tuple[float, str]:
+    branch_index = next(
+        (
+            index
+            for index, event in enumerate(events)
+            if any(
+                marker in _event_command(event)
+                for marker in (
+                    "git switch -c",
+                    "git checkout -b",
+                    "git worktree add -b",
+                )
+            )
+        ),
+        None,
+    )
+    change_index = next(
+        (
+            index
+            for index, event in enumerate(events)
+            if event.get("evidence_type") == "tool.file-change"
+        ),
+        None,
+    )
+    passed = branch_index is not None and (
+        change_index is None or branch_index < change_index
+    )
+    return (100.0 if passed else 0.0), (
+        "task branch preceded file changes"
+        if passed
+        else "task branch did not precede file changes"
+    )
+
+
+def _score_worktree_lifecycle(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
+    create_index = next(
+        (
+            index
+            for index, event in enumerate(events)
+            if "git worktree add" in _event_command(event)
+        ),
+        None,
+    )
+    remove_index = next(
+        (
+            index
+            for index, event in enumerate(events)
+            if "git worktree remove" in _event_command(event)
+        ),
+        None,
+    )
+    changed_inside_worktree = (
+        create_index is not None
+        and remove_index is not None
+        and any(
+            create_index < index < remove_index
+            and event.get("evidence_type") == "tool.file-change"
+            for index, event in enumerate(events)
+        )
+    )
+    stages = (
+        create_index is not None,
+        changed_inside_worktree,
+        remove_index is not None,
+    )
+    return sum(
+        stages
+    ) / 3 * 100, f"completed {sum(stages)} of 3 worktree lifecycle stages"
 
 
 def metric_from_mapping(value: Any) -> EvaluationMetric:

@@ -18,12 +18,12 @@ from agent_evidence import (
     TokenUsage,
     claude_evidence,
     codex_evidence,
-    normalize_shell_command,
 )
 from agent_event_contract import AgentEventCoverage
 from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
+from shell_commands import normalize_shell_command
 
 CLI_TIMEOUT_SECONDS = 1800
 type WorkspaceAccess = Literal["read-only", "workspace-write"]

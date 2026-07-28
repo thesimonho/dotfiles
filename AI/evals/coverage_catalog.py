@@ -6,8 +6,11 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
     InstructionCoverage(
         component_id="instruction/coding-style",
         hypothesis="Implementation instructions improve maintainability without hurting correctness.",
-        maturity="planned",
-        case_ids=(),
+        maturity="active",
+        case_ids=(
+            "homeops-maintenance-visibility",
+            "homeops-secret-backed-integration",
+        ),
     ),
     InstructionCoverage(
         component_id="instruction/documentation",
@@ -18,8 +21,8 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
     InstructionCoverage(
         component_id="instruction/git",
         hypothesis="Git instructions preserve user state and produce reviewable handoffs.",
-        maturity="planned",
-        case_ids=(),
+        maturity="active",
+        case_ids=("homeops-worktree-handoff",),
     ),
     InstructionCoverage(
         component_id="instruction/planning",
@@ -33,8 +36,11 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
     InstructionCoverage(
         component_id="instruction/security",
         hypothesis="Security instructions prevent unsafe shortcuts while allowing legitimate remediation.",
-        maturity="planned",
-        case_ids=(),
+        maturity="active",
+        case_ids=(
+            "homeops-secret-backed-integration",
+            "homeops-critical-security-discovery",
+        ),
     ),
     InstructionCoverage(
         component_id="instruction/subagents",
@@ -51,6 +57,7 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
             "homeops-authorized-gitops-dns-remediation",
             "homeops-maintenance-visibility",
             "homeops-readonly-gitops-dns-diagnosis",
+            "homeops-template-structure-exploration",
         ),
     ),
     InstructionCoverage(
@@ -62,6 +69,8 @@ INSTRUCTION_COVERAGE: tuple[InstructionCoverage, ...] = (
             "homeops-authorized-gitops-dns-remediation",
             "homeops-maintenance-visibility",
             "homeops-readonly-gitops-dns-diagnosis",
+            "homeops-worktree-handoff",
+            "homeops-secret-backed-integration",
         ),
     ),
 )

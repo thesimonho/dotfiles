@@ -50,6 +50,9 @@ docs
 !/docs/codemaps/**
 !AI/evals/docs/
 !AI/evals/docs/**
+!AI/evals/environments/homeops/project/docs/
+!AI/evals/environments/homeops/project/docs/codemaps/
+!AI/evals/environments/homeops/project/docs/codemaps/README.md
 .pi
 .pi-lens
 

@@ -16,10 +16,12 @@ from harness_environment import EVALUATION_ROOT
 from evaluation_scenario import (
     BlastRadiusSeverity,
     EvaluationScenario,
+    RequiredPathContent,
     resolve_scenario,
 )
 from shell_commands import unwrapped_shell_invocations
 from workspace_evidence import WorkspaceEvidence
+from final_state_evidence import capture_final_state_evidence
 
 ENVIRONMENTS_ROOT = EVALUATION_ROOT / "environments"
 TYPESCRIPT_MODULE_GRAPH_SCRIPT = Path(__file__).with_name("typescript_module_graph.mjs")
@@ -34,6 +36,8 @@ class PreparedWorkspace:
     path: Path
     scenario: EvaluationScenario
     initial_file_hashes: dict[str, str]
+    initial_file_contents: dict[str, str]
+    initial_commit: str
     environment: dict[str, str]
     simulator_journal_path: Path
     additional_writable_paths: tuple[Path, ...]
@@ -99,10 +103,21 @@ class PreparedWorkspace:
             task_outcome_rationale,
             required_task_outcomes,
             satisfied_task_outcomes,
-            documentation_failures,
+            _,
         ) = _validate_task_outcome(
             self.path,
             self.scenario,
+        )
+        documentation_failures = _content_failures(
+            self.path,
+            self.scenario.required_documentation_contents,
+        )
+        final_state = capture_final_state_evidence(
+            self.path,
+            changed_files,
+            self.initial_commit,
+            self.initial_file_contents,
+            self.scenario.secret_canaries,
         )
         return WorkspaceEvidence(
             workspace_snapshot_hash=self.workspace_snapshot_hash,
@@ -120,10 +135,14 @@ class PreparedWorkspace:
             task_outcome_rationale=task_outcome_rationale,
             required_task_outcomes=required_task_outcomes,
             satisfied_task_outcomes=satisfied_task_outcomes,
-            required_documentation_updates=len(self.scenario.required_path_contents),
-            satisfied_documentation_updates=(
-                len(self.scenario.required_path_contents) - len(documentation_failures)
+            required_documentation_updates=len(
+                self.scenario.required_documentation_contents
             ),
+            satisfied_documentation_updates=(
+                len(self.scenario.required_documentation_contents)
+                - len(documentation_failures)
+            ),
+            **final_state.__dict__,
         )
 
 
@@ -158,6 +177,7 @@ def prepare_workspace(
         if setup_root.is_dir():
             shutil.copytree(setup_root, workspace_path, dirs_exist_ok=True)
         _initialize_repository(workspace_path)
+        initial_commit = _current_commit(workspace_path)
         shutil.copytree(overlay_root, workspace_path, dirs_exist_ok=True)
         simulator_environment, simulator_journal_path = _prepare_simulator(
             environment_root,
@@ -173,9 +193,12 @@ def prepare_workspace(
             path=workspace_path,
             scenario=scenario,
             initial_file_hashes=_file_hashes(workspace_path),
+            initial_file_contents=_file_contents(workspace_path),
+            initial_commit=initial_commit,
             environment=simulator_environment,
             simulator_journal_path=simulator_journal_path,
             additional_writable_paths=(
+                temporary_root,
                 simulator_journal_path.parent,
                 temporary_path,
             ),
@@ -193,6 +216,18 @@ def _initialize_repository(workspace_path: Path) -> None:
     )
     for command in commands:
         subprocess.run(command, cwd=workspace_path, check=True)
+
+
+def _current_commit(workspace_path: Path) -> str:
+    """Return the immutable fixture commit used as the Git evidence baseline."""
+    result = subprocess.run(
+        ("git", "rev-parse", "HEAD"),
+        cwd=workspace_path,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return result.stdout.strip()
 
 
 def _copy_dependencies(project_root: Path, workspace_path: Path) -> None:
@@ -276,6 +311,15 @@ def _file_hashes(workspace_path: Path) -> dict[str, str]:
         if path.is_file():
             hashes[relative_path] = hashlib.sha256(path.read_bytes()).hexdigest()
     return hashes
+
+
+def _file_contents(workspace_path: Path) -> dict[str, str]:
+    """Capture initial text for addition-only final-state scanners."""
+    return {
+        relative_path: (workspace_path / relative_path).read_text(errors="replace")
+        for relative_path in _file_hashes(workspace_path)
+        if (workspace_path / relative_path).is_file()
+    }
 
 
 def _matches_any(path: str, patterns: tuple[str, ...]) -> bool:
@@ -394,8 +438,16 @@ def _path_content_failures(
     scenario: EvaluationScenario,
 ) -> tuple[str, ...]:
     """Return missing file-pattern and expected-content evidence."""
+    return _content_failures(workspace_path, scenario.required_path_contents)
+
+
+def _content_failures(
+    workspace_path: Path,
+    requirements: tuple[RequiredPathContent, ...],
+) -> tuple[str, ...]:
+    """Return missing file-pattern and expected-content evidence."""
     failures = []
-    for requirement in scenario.required_path_contents:
+    for requirement in requirements:
         matching_paths = tuple(
             path
             for path in workspace_path.glob(requirement.path_pattern)
