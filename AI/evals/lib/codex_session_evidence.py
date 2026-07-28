@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import Any
 
 
+INTERNAL_REVIEW_MODELS = frozenset({"codex-auto-review"})
+
+
 @dataclass(frozen=True)
 class ResolvedCodexSubagent:
     """Actual child configuration recorded by Codex after precedence resolution."""
@@ -75,6 +78,8 @@ def _resolved_child(
         return None
     role = session_meta.get("agent_role")
     nickname = session_meta.get("agent_nickname")
+    if model in INTERNAL_REVIEW_MODELS:
+        return None
     return ResolvedCodexSubagent(
         thread_id=thread_id,
         role=role if isinstance(role, str) else None,

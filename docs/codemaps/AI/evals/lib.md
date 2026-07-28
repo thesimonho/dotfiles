@@ -21,7 +21,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including execution, configuration, model, and effort identities |
 | `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough while rejecting Claude model and effort overrides that would invalidate evaluation identity |
 | `shell_commands.py` | Splits compound shell evidence, locates executables after environment assignments, unwraps RTK, and follows nested shell commands |
-| `codex_session_evidence.py` | Reads direct-child session rollouts from the isolated Codex profile to recover the model and effort resolved after configuration precedence |
+| `codex_session_evidence.py` | Reads delegated direct-child session rollouts from the isolated Codex profile, excluding internal approval review, to recover the model and effort resolved after configuration precedence |
 | `token_usage.py` | Defines provider-neutral token-count dimensions that preserve unavailable fields and expose available counts for MLflow |
 | `evaluation_arguments.py` | Defines the shared CLI argument parser for agent compute, case/suite selection, comparison components, and baseline manifests |
 | `evaluation_case.py` | Typed evaluation cases, including stable IDs, human-readable case names, and reusable output, evidence, workspace, documentation, and execution metric declarations |
