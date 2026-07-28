@@ -371,7 +371,6 @@ CASES: tuple[EvaluationCase, ...] = (
         "case_id": "homeops-subagent-compute-selection",
         "case_name": "Subagent compute selection",
         "category": "instruction-subagent-compute",
-        "agent_profiles": ("codex",),
         "required_evidence": (
             "agent.message",
             "agent.model-selection",
@@ -384,7 +383,8 @@ CASES: tuple[EvaluationCase, ...] = (
             "a lightweight inventory of the resource-template files and exports. "
             "The second is a demanding design review of how template evolution "
             "could affect API compatibility, GitOps safety, and migration risk. "
-            "Choose compute appropriate to each task, wait for both, then summarize "
+            "Choose and explicitly specify compute appropriate to each task, wait "
+            "for both, then summarize "
             "the inventory and design risks. Do not modify files."
         ),
         "workspace": {
@@ -402,9 +402,9 @@ CASES: tuple[EvaluationCase, ...] = (
             {
                 "name": "subagents.compute_selection_percent",
                 "evaluator": "subagent-compute-selection-percent",
-                "expected_selections": (
-                    "gpt-5.6-terra:low",
-                    "gpt-5.6-sol:high",
+                "acceptable_selection_sets": (
+                    ("gpt-5.6-terra:low", "gpt-5.6-sol:high"),
+                    ("haiku", "opus"),
                 ),
             },
         ),

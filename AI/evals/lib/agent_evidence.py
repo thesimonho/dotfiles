@@ -7,6 +7,7 @@ from typing import Any, Literal
 
 from agent_event_contract import AgentEventCoverage
 from agent_canary_evidence import has_exact_canary_footer
+from agent_model_evidence import claude_invocation_model_selections
 from agent_plan_evidence import codex_has_plan
 from shell_commands import normalize_shell_command
 from codex_session_evidence import ResolvedCodexSubagent
@@ -155,13 +156,24 @@ def claude_evidence(
 ]:
     """Normalize Claude tool-use blocks, result usage, and emitted model IDs."""
     tool_results = _claude_tool_results(events)
+    tool_events = tuple(
+        _claude_tool_event(content, tool_results)
+        for event in events
+        if event.get("type") == "assistant"
+        for content in event.get("message", {}).get("content", [])
+        if content.get("type") == "tool_use"
+    )
     agent_events = (
+        *tool_events,
         *tuple(
-            _claude_tool_event(content, tool_results)
-            for event in events
-            if event.get("type") == "assistant"
-            for content in event.get("message", {}).get("content", [])
-            if content.get("type") == "tool_use"
+            AgentEvent(
+                category="agent",
+                name="invocation-model-selection",
+                evidence_type="agent.model-selection",
+                status=selection.status,
+                attributes=selection.attributes,
+            )
+            for selection in claude_invocation_model_selections(tool_events)
         ),
         *_claude_definition_canary_events(events, agent_definition_canary),
     )

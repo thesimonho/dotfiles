@@ -5,6 +5,10 @@ from collections.abc import Mapping
 from agent_execution_context import AgentExecutionContext
 
 PASSTHROUGH_CONTROL_VARIABLE = "AGENT_EVAL_PASSTHROUGH_ENV"
+BLOCKED_COMPUTE_VARIABLES = {
+    "CLAUDE_CODE_EFFORT_LEVEL",
+    "CLAUDE_CODE_SUBAGENT_MODEL",
+}
 SAFE_ENVIRONMENT_VARIABLES = (
     "PATH",
     "HOME",
@@ -48,4 +52,11 @@ def _explicit_passthrough_names(
 ) -> tuple[str, ...]:
     """Parse opt-in variable names without copying the control variable itself."""
     configured_names = parent_environment.get(PASSTHROUGH_CONTROL_VARIABLE, "")
-    return tuple(name.strip() for name in configured_names.split(",") if name.strip())
+    names = tuple(name.strip() for name in configured_names.split(",") if name.strip())
+    blocked_names = BLOCKED_COMPUTE_VARIABLES.intersection(names)
+    if blocked_names:
+        formatted_names = ", ".join(sorted(blocked_names))
+        raise RuntimeError(
+            f"evaluation compute controls cannot be passed through: {formatted_names}"
+        )
+    return names

@@ -14,14 +14,16 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | --- | --- |
 | `agent.py` | Invokes Claude/Codex with explicit model, effort, fail-closed native sandbox settings, and measured authenticated CLI subprocess duration |
 | `agent_canary_evidence.py` | Recognizes only exact configured-agent canaries in final child-response footers |
-| `agent_evidence.py` | Normalizes tool and collaboration events, exact expected child-definition canaries, emitted model IDs, resolved Codex child model selections, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
+| `agent_evidence.py` | Normalizes tool and collaboration events, exact expected child-definition canaries, provider-specific model selections, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
+| `agent_model_evidence.py` | Converts explicit model choices in Claude parent Agent-tool invocations into normalized model-selection evidence after environment filtering |
 | `agent_event_contract.py` | Defines semantic case evidence requirements, per-profile parser support, missing-observation calculation, coverage evidence, and pre-execution validation |
 | `agent_plan_evidence.py` | Recognizes Codex plan updates even when the CLI emits no completed plan item |
 | `agent_execution_context.py` | Defines immutable OTEL resource identity for each evaluated agent or judge process, including execution, configuration, model, and effort identities |
-| `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough |
+| `agent_environment.py` | Builds allowlisted CLI environments with explicit integration passthrough while rejecting Claude model and effort overrides that would invalidate evaluation identity |
 | `shell_commands.py` | Splits compound shell evidence, locates executables after environment assignments, unwraps RTK, and follows nested shell commands |
 | `codex_session_evidence.py` | Reads direct-child session rollouts from the isolated Codex profile to recover the model and effort resolved after configuration precedence |
 | `token_usage.py` | Defines provider-neutral token-count dimensions that preserve unavailable fields and expose available counts for MLflow |
+| `evaluation_arguments.py` | Defines the shared CLI argument parser for agent compute, case/suite selection, comparison components, and baseline manifests |
 | `evaluation_case.py` | Typed evaluation cases, including stable IDs, human-readable case names, and reusable output, evidence, workspace, documentation, and execution metric declarations |
 | `evaluation_coverage.py` | Validates instruction-to-case coverage and projects treatment, control, and judge CLI usage before execution |
 | `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, source/import-graph outcome validators, and consequence rules |
@@ -30,9 +32,10 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `disposable_workspace.py` | Builds scenario repositories, exposes simulator tools and worktree-scoped writable paths, and captures agent-attributable file and command evidence from compound shell invocations |
 | `capabilities.py` | Preflights and hashes shared CLI tools, skills, and agents and renders path-redacted MLflow evidence |
 | `scoring.py` | Evaluates categorical completion and blast radius plus independently applicable tools, workflow, planning, Git, style, documentation, and security assessments |
+| `compute_selection_scoring.py` | Scores delegated model and effort evidence against alternative provider-specific acceptable selection sets |
 | `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
 | `dataset_sync.py` | Replaces hosted dataset contents and produces filtered hosted-dataset views so tiered runs retain the `agent-harness-cases` identity |
-| `harness_environment.py` | Repository paths, supported agent profiles, and the `gpt-5.6-sol`/`low` defaults for top-level Codex agents and judges; child-agent compute remains independently selected |
+| `harness_environment.py` | Repository paths, supported agent profiles, and top-level defaults: Codex `gpt-5.6-sol`/`low` and Claude `opus` alias/`medium`; child-agent compute remains independently selected |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
 | `configuration_variant.py` | Builds treatment and single-component-ablated control profiles, materializes custom-agent files, and removes copied Codex OTEL configuration so native eval traces remain authoritative |
@@ -54,6 +57,9 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | --- | --- | --- |
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model and effort for a case or judge prompt |
 | `DEFAULT_CODEX_MODEL` / `DEFAULT_CODEX_EFFORT` | `harness_environment.py` | Default the evaluated Codex base agent and judge to `gpt-5.6-sol` with low reasoning effort without constraining delegated subagents |
+| `DEFAULT_CLAUDE_MODEL` / `DEFAULT_CLAUDE_EFFORT` | `harness_environment.py` | Default the evaluated Claude base agent and judge to the current `opus` alias with medium effort without constraining delegated subagents |
+| `resolve_evaluation_compute()` | `harness_environment.py` | Applies provider defaults independently to omitted model or effort arguments while preserving explicit overrides |
+| `parse_evaluation_arguments()` | `evaluation_arguments.py` | Supplies one argument contract for normal and campaign evaluation entry points |
 | `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, model, effort, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
 | `build_child_environment()` | `agent_environment.py` | Selects safe runtime variables and explicit integration passthrough for a CLI process |
 | `shell_segments()` / `unwrapped_shell_invocations()` | `shell_commands.py` | Provide one command-parsing source of truth for tool-prefix and prohibited-action evidence |
@@ -64,6 +70,8 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `AgentResult` | `agent.py` | Pairs the final response with normalized events, parser coverage, shell commands, models, token usage, and invocation duration |
 | `AgentEvent` / `TokenUsage` | `agent_evidence.py` | Preserve comparable execution and usage dimensions without retaining arbitrary raw CLI payloads |
 | `ResolvedCodexSubagent` / `resolved_codex_subagents()` | `codex_session_evidence.py` | Link the evaluated parent thread to direct child rollout records and return their authoritative resolved model and effort |
+| `claude_invocation_model_selections()` | `agent_model_evidence.py` | Returns explicit Claude child-model choices recorded on the parent Agent invocation; Claude currently exposes no corresponding child effort evidence |
+| `score_compute_selection()` | `compute_selection_scoring.py` | Matches normalized model-selection evidence against the best provider-specific acceptable set and returns a percentage and rationale |
 | `AgentEventCoverage` / `validate_case_evidence_requirements()` | `agent_event_contract.py` | Distinguish parser support, observed evidence, intentionally ignored events, and unknown schema shapes before scoring |
 | `invoke_traced_agent()` | `mlflow_execution_trace.py` | Creates the readable `agent.invoke` subtree used as the primary instruction-adherence trace |
 | `build_manifest()` / `compare_manifests()` | `configuration_manifest.py` | Creates stable manifests and identifies configuration changes |
@@ -78,6 +86,8 @@ Python modules supporting the agent evaluation harness. The library separates ag
 - **Case selection**: `AI/evals/cases.py` owns `CASES`, named `smoke`, `core`, and `extended` suite memberships, and `select_cases()`; `AI/evals/run_mlflow_eval.py` accepts mutually exclusive `--case-id` and `--suite` selection, keeps the hosted dataset synchronized with the complete catalog, and supplies selected rows through a filtered hosted-dataset view.
 - **Makes cases queryable by**: storing the stable `case_id`, category, and display `case.name` trace metadata. The trace request preview uses the human-readable `case_name`, while the full prompt remains a dataset input.
 - **Resolves Codex child compute by**: reading direct child session JSONL rollouts from the isolated Codex profile. `agent.py` passes that evidence to `agent_evidence.py`, which emits the actual child model and reasoning effort after defaults, custom-agent definitions, spawn overrides, and inheritance have resolved.
+- **Observes Claude child compute by**: reading the explicit model on the parent Agent-tool invocation after higher-priority environment filtering. This records the model Claude requested for the child; unlike Codex, the current event surface does not independently expose resolved child-session effort.
+- **Scores compute selection by**: normalizing both provider evidence paths as `agent.model-selection`, then comparing them with provider-specific acceptable sets in `compute_selection_scoring.py`.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
 - **Validates cases by**: requiring semantic parser-support and must-observe declarations, then rejecting inconsistent or unsupported combinations before starting an agent.
 - **Correlates traces by**: one `evaluation.execution_id` shared by every case in a harness run, plus `config.manifest_id`, `agent.model`, and `agent.effort` for the exact evaluated configuration. The native trace owns the readable harness and normalized CLI-event tree.

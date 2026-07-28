@@ -1,10 +1,10 @@
 """Run the eval suite through MLflow with complete config provenance."""
 
-import argparse
 import os
 import sys
 import time
 import uuid
+from argparse import Namespace
 from collections.abc import Callable
 from contextlib import ExitStack
 from dataclasses import asdict, dataclass, field
@@ -52,22 +52,14 @@ import mlflow_tracing  # noqa: E402
 from mlflow_execution_trace import invoke_traced_agent  # noqa: E402
 from mlflow_trace_preview import update_trace_preview  # noqa: E402
 import scoring  # noqa: E402
-from cases import (  # noqa: E402
-    CASES,
-    EVALUATION_SUITES,
-    select_cases,
-    select_cases_for_profile,
-)
+from cases import CASES, select_cases, select_cases_for_profile  # noqa: E402
 from mlflow.entities import Feedback  # noqa: E402
 from mlflow.genai import scorer  # noqa: E402
 from mlflow.tracking import MlflowClient  # noqa: E402
 from mlflow_agent_versions import MlflowAgentVersionRegistry  # noqa: E402
 from mlflow_config_registry import MlflowConfigurationRegistry  # noqa: E402
-from harness_environment import (  # noqa: E402
-    AGENT_ARGUMENT_CHOICES,
-    DEFAULT_CODEX_EFFORT,
-    DEFAULT_CODEX_MODEL,
-)
+from evaluation_arguments import parse_evaluation_arguments  # noqa: E402
+from harness_environment import resolve_evaluation_compute  # noqa: E402
 from mlflow_parameter_names import (  # noqa: E402
     AGENT_CLI_FIELD,
     AGENT_EFFORT_FIELD,
@@ -384,51 +376,7 @@ def _execution_context(
     )
 
 
-def parse_arguments() -> argparse.Namespace:
-    """Parse an optional manifest version to use as the comparison baseline."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--agent",
-        choices=AGENT_ARGUMENT_CHOICES,
-        default="auto",
-        help="Agent CLI and configuration profile to evaluate.",
-    )
-    parser.add_argument(
-        "--model",
-        help="Exact model or CLI-supported model alias to evaluate.",
-    )
-    parser.add_argument(
-        "--effort",
-        help="CLI-supported reasoning or effort level to evaluate.",
-    )
-    parser.add_argument(
-        "--baseline-manifest-version",
-        type=int,
-        help="Compare against this MLflow manifest prompt version instead of the latest.",
-    )
-    selection_group = parser.add_mutually_exclusive_group()
-    selection_group.add_argument(
-        "--case-id",
-        action="append",
-        dest="case_ids",
-        help="Evaluate only this case ID without replacing the complete hosted dataset.",
-    )
-    selection_group.add_argument(
-        "--suite",
-        choices=tuple(EVALUATION_SUITES),
-        help="Evaluate a named cost tier from the case catalog.",
-    )
-    parser.add_argument(
-        "--compare-component",
-        help=(
-            "Run treatment and control arms, removing exactly this instruction "
-            "component from the control configuration."
-        ),
-    )
-    return parser.parse_args()
-
-
-def run_evaluation(arguments: argparse.Namespace) -> None:
+def run_evaluation(arguments: Namespace) -> None:
     """Run one evaluation after rejecting an unconfigured case suite."""
     if not CASES:
         raise RuntimeError(
@@ -436,7 +384,7 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
         )
 
     agent_profile = agent.resolve_agent_profile(arguments.agent)
-    model, effort = _resolve_evaluation_compute(
+    model, effort = resolve_evaluation_compute(
         agent_profile,
         arguments.model,
         arguments.effort,
@@ -501,19 +449,6 @@ def run_evaluation(arguments: argparse.Namespace) -> None:
             agent_definition_canary=prepared_profile.agent_definition_canary,
         )
     _print_completed_evaluation(completed)
-
-
-def _resolve_evaluation_compute(
-    profile: str,
-    model: str | None,
-    effort: str | None,
-) -> tuple[str, str]:
-    """Apply top-level Codex defaults while keeping Claude choices explicit."""
-    if profile == "codex":
-        return model or DEFAULT_CODEX_MODEL, effort or DEFAULT_CODEX_EFFORT
-    if model and effort:
-        return model, effort
-    raise RuntimeError("Claude evaluation runs require --model and --effort")
 
 
 def _run_component_comparison(
@@ -816,4 +751,4 @@ def _publish_capability_evidence(
 
 
 if __name__ == "__main__":
-    run_evaluation(parse_arguments())
+    run_evaluation(parse_evaluation_arguments())
