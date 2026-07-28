@@ -159,6 +159,9 @@ def score_execution_metrics(
     shell_commands: tuple[str, ...],
     metrics: tuple[EvaluationMetric, ...],
     events: tuple[dict[str, Any], ...] = (),
+    agent_profile: str | None = None,
+    parent_model: str | None = None,
+    parent_effort: str | None = None,
 ) -> list[MetricResult]:
     """Score metrics whose evidence comes from normalized execution events."""
     results = []
@@ -336,8 +339,14 @@ def score_execution_metrics(
         elif metric["evaluator"] == "critical-response-percent":
             continue
         elif metric["evaluator"] == "subagent-compute-selection-percent":
-            selection_sets = tuple(metric.get("acceptable_selection_sets", ()))
-            passed, rationale = score_compute_selection(events, selection_sets)
+            if agent_profile is None or parent_model is None or parent_effort is None:
+                continue
+            passed, rationale = score_compute_selection(
+                events,
+                agent_profile,
+                parent_model,
+                parent_effort,
+            )
         else:
             continue
         results.append(MetricResult(metric["name"], passed, rationale))

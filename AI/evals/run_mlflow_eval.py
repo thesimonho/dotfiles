@@ -28,6 +28,7 @@ from comparison_evidence import (  # noqa: E402
     ComparisonArmResult,
     build_comparison_evidence,
 )
+from compute_selection_scoring import validate_compute_selection_baseline  # noqa: E402
 from configuration_variant import (  # noqa: E402
     ConfigurationVariant,
     comparison_variants,
@@ -321,6 +322,9 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             tuple(outputs["execution_evidence"]["shell_commands"]),
             metrics,
             tuple(outputs["execution_evidence"]["events"]),
+            agent_profile=identity.profile,
+            parent_model=identity.model,
+            parent_effort=identity.effort,
         )
         workspace_results = (
             scoring.score_workspace_metrics(outputs["workspace_evidence"], metrics)
@@ -395,6 +399,11 @@ def run_evaluation(arguments: Namespace) -> None:
         agent_profile,
         explicit_selection=bool(arguments.case_ids),
     )
+    if any(
+        case["case_id"] == "homeops-subagent-compute-selection"
+        for case in selected_cases
+    ):
+        validate_compute_selection_baseline(agent_profile, model, effort)
     validate_case_evidence_requirements(agent_profile, selected_cases)
     mlflow_tracing.init()
     client = MlflowClient()

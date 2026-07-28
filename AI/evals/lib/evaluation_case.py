@@ -164,7 +164,6 @@ class PolicyMetric(CommonMetric, total=False):
     allowed_commit_types: tuple[str, ...]
     critical_mentions: tuple[str, ...]
     critical_path: str
-    acceptable_selection_sets: tuple[tuple[str, ...], ...]
 
 
 type ResponseMetric = (
