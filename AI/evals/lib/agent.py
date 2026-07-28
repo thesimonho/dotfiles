@@ -363,17 +363,25 @@ def run_judge(
     prompt: str,
     context: AgentExecutionContext,
     profile: str = "claude",
+    environment_overrides: dict[str, str] | None = None,
     model: str | None = None,
     effort: str | None = None,
 ) -> str:
     """Judge one response through the selected authenticated agent CLI."""
     if profile == "codex":
-        return _call_codex(prompt, context, model=model, effort=effort).response
+        return _call_codex(
+            prompt,
+            context,
+            environment_overrides=environment_overrides,
+            model=model,
+            effort=effort,
+        ).response
     if profile == "claude":
         return _call_claude(
             prompt,
             context,
             has_tools=False,
+            environment_overrides=environment_overrides,
             model=model,
             effort=effort,
         ).response

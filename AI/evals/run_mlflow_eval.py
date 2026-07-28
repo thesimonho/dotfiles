@@ -292,7 +292,10 @@ def build_predict_fn(
     return predict_fn
 
 
-def build_evaluation_scorer(identity: EvaluationIdentity):
+def build_evaluation_scorer(
+    identity: EvaluationIdentity,
+    profile_environment: dict[str, str] | None = None,
+):
     """Build a scorer whose judge traces share the evaluation execution ID."""
     metrics_by_case_id = {case["case_id"]: case["metrics"] for case in CASES}
 
@@ -317,6 +320,7 @@ def build_evaluation_scorer(identity: EvaluationIdentity):
             metrics,
             judge_context,
             profile=identity.profile,
+            environment_overrides=profile_environment,
         )
         execution_results = scoring.score_execution_metrics(
             tuple(outputs["execution_evidence"]["shell_commands"]),
@@ -589,7 +593,7 @@ def _run_evaluation_arm(
     results = mlflow.genai.evaluate(
         data=evaluation_data,
         predict_fn=predict_function,
-        scorers=[build_evaluation_scorer(identity)],
+        scorers=[build_evaluation_scorer(identity, profile_environment)],
         model_id=agent_version.model_id,
     )
     agent_version_registry.publish_configuration_evidence(

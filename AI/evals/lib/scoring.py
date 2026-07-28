@@ -50,6 +50,7 @@ def score_output_quality(
     rubric: str,
     context: AgentExecutionContext,
     profile: str = "claude",
+    environment_overrides: dict[str, str] | None = None,
 ) -> tuple[float, str]:
     """Judge response quality through the selected authenticated agent CLI."""
     judge_prompt = (
@@ -62,6 +63,7 @@ def score_output_quality(
         judge_prompt,
         context,
         profile=profile,
+        environment_overrides=environment_overrides,
         model=context.agent_model,
         effort=context.agent_effort,
     )
@@ -121,6 +123,7 @@ def score_response_metrics(
     metrics: tuple[EvaluationMetric, ...],
     context: AgentExecutionContext | None,
     profile: str = "claude",
+    environment_overrides: dict[str, str] | None = None,
 ) -> list[MetricResult]:
     """Score only metrics whose evidence is available in the final response."""
     results = []
@@ -143,6 +146,7 @@ def score_response_metrics(
                 metric["rubric"],
                 context,
                 profile=profile,
+                environment_overrides=environment_overrides,
             )
         elif metric["evaluator"] == "output-completion":
             passed, rationale = score_output_completion(

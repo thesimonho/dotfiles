@@ -12,7 +12,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 | File | Description |
 | --- | --- |
-| `agent.py` | Invokes Claude/Codex with explicit model, effort, fail-closed native sandbox settings, and measured authenticated CLI subprocess duration |
+| `agent.py` | Invokes Claude/Codex agents and judges with explicit model, effort, shared isolated-profile overrides, fail-closed native sandbox settings, and measured authenticated CLI subprocess duration |
 | `agent_canary_evidence.py` | Recognizes only exact configured-agent canaries in final child-response footers |
 | `agent_evidence.py` | Normalizes tool and collaboration events, exact expected child-definition canaries, provider-specific model selections, shell commands, provider-aware token usage, and parser coverage from CLI event streams |
 | `agent_model_evidence.py` | Converts explicit model choices in Claude parent Agent-tool invocations into normalized model-selection evidence after environment filtering |
@@ -55,7 +55,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 
 | Symbol | File | Description |
 | --- | --- | --- |
-| `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model and effort for a case or judge prompt |
+| `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model, effort, and isolated evaluation profile for a case or judge prompt |
 | `DEFAULT_CODEX_MODEL` / `DEFAULT_CODEX_EFFORT` | `harness_environment.py` | Default the evaluated Codex base agent and judge to `gpt-5.6-sol` with low reasoning effort without constraining delegated subagents |
 | `DEFAULT_CLAUDE_MODEL` / `DEFAULT_CLAUDE_EFFORT` | `harness_environment.py` | Default the evaluated Claude base agent and judge to `sonnet` with medium effort while preserving explicit run overrides and leaving delegated subagents unconstrained |
 | `resolve_evaluation_compute()` | `harness_environment.py` | Applies provider defaults independently to omitted model or effort arguments while preserving explicit overrides |
@@ -91,6 +91,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 - **Observes Claude child compute by**: reading the explicit model on the parent Agent-tool invocation after higher-priority environment filtering. This records the model Claude requested for the child; unlike Codex, the current event surface does not independently expose resolved child-session effort.
 - **Scores compute selection by**: normalizing both provider evidence paths as `agent.model-selection`, binding explorer/Explore to the known lightweight task and default/general-purpose to the known demanding task, then locating the evaluated parent model and effort in that CLI's ordered `COMPUTE_LADDERS`. The lightweight child must select an earlier ladder position and the demanding child a later one, so swapping their compute fails. Unknown baselines fail validation, as do the lowest and highest ladder edges because they cannot exercise both directions. Codex child model-and-effort evidence resolves to an exact position; Claude exposes only the requested child model, so its full low-to-high effort band must sit below or above the parent before the model counts.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
+- **Isolates judge telemetry by**: passing the same prepared Codex or Claude profile environment to agent-under-test and judge subprocesses, preventing the normal profile's OTEL configuration from exporting internal judge activity through Alloy.
 - **Validates cases by**: requiring semantic parser-support and must-observe declarations, then rejecting inconsistent or unsupported combinations before starting an agent.
 - **Correlates traces by**: one `evaluation.execution_id` shared by every case in a harness run, plus `config.manifest_id`, `agent.model`, and `agent.effort` for the exact evaluated configuration. The native trace owns the readable harness and normalized CLI-event tree.
 
