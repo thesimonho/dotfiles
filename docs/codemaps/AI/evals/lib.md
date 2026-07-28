@@ -35,7 +35,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `compute_selection_scoring.py` | Scores delegated model and effort evidence against alternative provider-specific acceptable selection sets |
 | `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
 | `dataset_sync.py` | Replaces hosted dataset contents and produces filtered hosted-dataset views so tiered runs retain the `agent-harness-cases` identity |
-| `harness_environment.py` | Repository paths, supported agent profiles, and top-level defaults: Codex `gpt-5.6-sol`/`low` and Claude `opus` alias/`medium`; child-agent compute remains independently selected |
+| `harness_environment.py` | Repository paths, supported agent profiles, and top-level defaults: Codex `gpt-5.6-sol`/`low` and Claude `sonnet`/`medium`; explicit CLI overrides remain supported and child-agent compute remains independently selected |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
 | `configuration_variant.py` | Builds treatment and single-component-ablated control profiles, materializes custom-agent files, and removes copied Codex OTEL configuration so native eval traces remain authoritative |
@@ -57,7 +57,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | --- | --- | --- |
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model and effort for a case or judge prompt |
 | `DEFAULT_CODEX_MODEL` / `DEFAULT_CODEX_EFFORT` | `harness_environment.py` | Default the evaluated Codex base agent and judge to `gpt-5.6-sol` with low reasoning effort without constraining delegated subagents |
-| `DEFAULT_CLAUDE_MODEL` / `DEFAULT_CLAUDE_EFFORT` | `harness_environment.py` | Default the evaluated Claude base agent and judge to the current `opus` alias with medium effort without constraining delegated subagents |
+| `DEFAULT_CLAUDE_MODEL` / `DEFAULT_CLAUDE_EFFORT` | `harness_environment.py` | Default the evaluated Claude base agent and judge to `sonnet` with medium effort while preserving explicit run overrides and leaving delegated subagents unconstrained |
 | `resolve_evaluation_compute()` | `harness_environment.py` | Applies provider defaults independently to omitted model or effort arguments while preserving explicit overrides |
 | `parse_evaluation_arguments()` | `evaluation_arguments.py` | Supplies one argument contract for normal and campaign evaluation entry points |
 | `AgentExecutionContext` | `agent_execution_context.py` | Serializes case, category, CLI, role, model, effort, `evaluation.execution_id`, and `config.manifest_id` as OTEL resource attributes |
@@ -87,7 +87,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 - **Makes cases queryable by**: storing the stable `case_id`, category, and display `case.name` trace metadata. The trace request preview uses the human-readable `case_name`, while the full prompt remains a dataset input.
 - **Resolves Codex child compute by**: reading direct child session JSONL rollouts from the isolated Codex profile. `agent.py` passes that evidence to `agent_evidence.py`, which emits the actual child model and reasoning effort after defaults, custom-agent definitions, spawn overrides, and inheritance have resolved.
 - **Observes Claude child compute by**: reading the explicit model on the parent Agent-tool invocation after higher-priority environment filtering. This records the model Claude requested for the child; unlike Codex, the current event surface does not independently expose resolved child-session effort.
-- **Scores compute selection by**: normalizing both provider evidence paths as `agent.model-selection`, then comparing them with provider-specific acceptable sets in `compute_selection_scoring.py`.
+- **Scores compute selection by**: normalizing both provider evidence paths as `agent.model-selection`, then comparing them with provider-specific acceptable sets in `compute_selection_scoring.py`; Codex accepts model-and-effort combinations while Claude scores the requested child model because child effort is not exposed.
 - **Integrates with**: MLflow for datasets, runs, scorers, prompts, and traces; Claude and Codex CLIs for execution.
 - **Validates cases by**: requiring semantic parser-support and must-observe declarations, then rejecting inconsistent or unsupported combinations before starting an agent.
 - **Correlates traces by**: one `evaluation.execution_id` shared by every case in a harness run, plus `config.manifest_id`, `agent.model`, and `agent.effort` for the exact evaluated configuration. The native trace owns the readable harness and normalized CLI-event tree.

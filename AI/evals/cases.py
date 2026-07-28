@@ -42,6 +42,27 @@ CONVENTIONAL_COMMITS = {
     "evaluator": "conventional-commits-percent",
     "allowed_commit_types": ("feat", "fix", "refactor", "docs", "chore", "perf", "ci"),
 }
+CODEX_LIGHTWEIGHT_SELECTIONS = (
+    "gpt-5.6-terra:low",
+    "gpt-5.6-terra:medium",
+    "gpt-5.6-terra:high",
+    "gpt-5.6-luna:low",
+    "gpt-5.6-luna:medium",
+    "gpt-5.6-luna:high",
+    "gpt-5.6-sol:low",
+)
+CODEX_ESCALATED_SELECTIONS = (
+    "gpt-5.6-sol:medium",
+    "gpt-5.6-sol:high",
+)
+ACCEPTABLE_SUBAGENT_COMPUTE_SELECTIONS = (
+    *tuple(
+        (lightweight, escalated)
+        for lightweight in CODEX_LIGHTWEIGHT_SELECTIONS
+        for escalated in CODEX_ESCALATED_SELECTIONS
+    ),
+    ("haiku", "opus"),
+)
 
 
 CASES: tuple[EvaluationCase, ...] = (
@@ -402,10 +423,7 @@ CASES: tuple[EvaluationCase, ...] = (
             {
                 "name": "subagents.compute_selection_percent",
                 "evaluator": "subagent-compute-selection-percent",
-                "acceptable_selection_sets": (
-                    ("gpt-5.6-terra:low", "gpt-5.6-sol:high"),
-                    ("haiku", "opus"),
-                ),
+                "acceptable_selection_sets": ACCEPTABLE_SUBAGENT_COMPUTE_SELECTIONS,
             },
         ),
     },

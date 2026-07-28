@@ -62,7 +62,7 @@ HomeOps adds reusable workspace evidence for categorical completion and blast ra
 
 Task correctness and blast radius remain separate. A narrow correct patch can be `COMPLETE` while an unnecessary operational action raises `workflow.unnecessary_blast_radius`; Git-ignored verification artifacts are excluded from workspace evidence.
 
-The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. Each result records distinct observed raw event shapes, normalized semantic evidence, intentionally ignored shapes, and unknown shapes without storing arbitrary raw payloads. The predictor returns final response, normalized execution events, parser coverage, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. For Codex compute selection, the harness reads each direct child session's isolated rollout record, links it to the evaluated parent by `parent_thread_id`, and records the resolved child `model` and `effort` from that session's turn context. For Claude, the explicit `model` on the parent Agent tool call is authoritative within the eval environment because higher-priority `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_EFFORT_LEVEL` overrides are rejected from passthrough. Claude does not expose per-invocation subagent effort, so its case scores accepted Haiku and Opus model choices without inventing effort evidence.
+The authenticated CLIs' machine-readable output is the authoritative source for behavioral evidence. Codex completed thread items and Claude tool-use blocks are normalized into shell, file-change, MCP, collaboration/subagent, and other tool observations. Each result records distinct observed raw event shapes, normalized semantic evidence, intentionally ignored shapes, and unknown shapes without storing arbitrary raw payloads. The predictor returns final response, normalized execution events, parser coverage, model IDs exposed by the CLI, token usage, and timing evidence together, making them inspectable on the compact MLflow-native case trace and available synchronously to deterministic scorers. For Codex compute selection, the harness reads each direct child session's isolated rollout record, links it to the evaluated parent by `parent_thread_id`, and records the resolved child `model` and `effort` from that session's turn context. Lightweight work accepts Terra or Luna at low, medium, or high effort, or Sol at low effort; demanding work accepts Sol at medium or high effort. For Claude, the explicit `model` on the parent Agent tool call is authoritative within the eval environment because higher-priority `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_EFFORT_LEVEL` overrides are rejected from passthrough. Claude does not expose per-invocation subagent effort, so lightweight work scores Haiku and demanding work scores Opus without inventing effort evidence.
 
 ## Agent telemetry flow
 
@@ -70,7 +70,7 @@ The harness creates one native MLflow trace per case. Its `agent.invoke` subtree
 
 Each harness invocation generates one UUID as `evaluation.execution_id`. Every case trace also records `agent.cli`, `agent.model`, `agent.effort`, immutable `case_id`, immutable `case.name`, `category`, and `config.manifest_id`, making repeated model and effort runs directly filterable without putting prompt or response text in resource attributes. `evaluation.role` is limited to the child CLI process resource identity. The human-facing `case_name` is also the MLflow request preview, so the primary Request column identifies the scenario while the full prompt remains the root-span input.
 
-When a Codex run omits top-level compute settings, the harness defaults both the evaluated base agent and any judges to `gpt-5.6-sol` with `low` effort. Claude defaults to the `opus` alias—currently the latest Opus 4.8 model—with `medium` effort. Explicit `--model` and `--effort` values override those defaults. Top-level settings do not constrain child agents: the **Subagent compute selection** case independently scores Codex's resolved child model and effort or Claude's authoritative Agent-call model.
+When a run omits top-level compute settings, the harness defaults both the evaluated base agent and any judges to `gpt-5.6-sol` with `low` effort for Codex or `sonnet` with `medium` effort for Claude. Explicit model and effort arguments in the `just` recipes, or direct `--model` and `--effort` flags, override either default independently so runs can compare settings such as low versus medium effort. Top-level settings do not constrain child agents: the **Subagent compute selection** case independently scores Codex's resolved child model and effort or Claude's authoritative Agent-call model.
 
 ## Running the harness
 
@@ -99,6 +99,10 @@ just eval-extended codex
 just eval-mlflow --agent codex
 just eval-mlflow --agent codex --model gpt-5.6-sol --effort high --baseline-manifest-version 3
 just eval-mlflow --agent codex --model gpt-5.6-sol --effort low --case-id homeops-workload-health-overreach
+
+# Run separate Claude evaluations to compare top-level effort settings.
+just eval-run claude sonnet low
+just eval-run claude sonnet medium
 
 # Run a causal treatment/control comparison for one instruction fragment.
 just eval-compare codex instruction/tools homeops-workload-health-overreach
