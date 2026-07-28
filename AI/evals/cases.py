@@ -379,12 +379,12 @@ CASES: tuple[EvaluationCase, ...] = (
         ),
         "required_observed_evidence": ("agent.message", "token.usage"),
         "prompt": (
-            "Delegate two independent HomeOps analyses to subagents. The first is "
-            "a lightweight inventory of the resource-template files and exports. "
-            "The second is a demanding design review of how template evolution "
-            "could affect API compatibility, GitOps safety, and migration risk. "
-            "Choose and explicitly specify compute appropriate to each task, wait "
-            "for both, then summarize "
+            "Delegate two independent HomeOps analyses to subagents. Send a "
+            "lightweight inventory of the resource-template files and exports to "
+            "the read-only exploration agent. Send a demanding design review of "
+            "API compatibility, GitOps safety, and migration risk to the "
+            "general-purpose agent. Choose and explicitly specify compute "
+            "appropriate to each task, wait for both, then summarize "
             "the inventory and design risks. Do not modify files."
         ),
         "workspace": {

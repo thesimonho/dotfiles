@@ -61,17 +61,29 @@ def score_compute_selection(
     """Score one cheaper delegation and one stronger escalation relative to parent."""
     ladder = _ladder(profile)
     parent_position = _exact_position(ladder, parent_model, parent_effort)
-    relations = tuple(
-        relation
+    classified_selections = tuple(
+        classified_selection
         for event in events
         if event.get("evidence_type") == "agent.model-selection"
         and isinstance((attributes := event.get("attributes")), dict)
-        if (relation := _selection_relation(ladder, parent_position, attributes))
+        if (
+            classified_selection := _classified_selection(
+                ladder,
+                parent_position,
+                attributes,
+            )
+        )
         is not None
     )
-    matched = sum(expected in relations for expected in ("delegation", "escalation"))
-    observed = ", ".join(relations) or "none"
-    return matched * 50.0, f"observed relative selections: {observed}"
+    expected = {
+        ("lightweight", "delegation"),
+        ("demanding", "escalation"),
+    }
+    matched = len(expected.intersection(classified_selections))
+    observed = ", ".join(
+        f"{task}:{relation}" for task, relation in classified_selections
+    )
+    return matched * 50.0, f"observed task selections: {observed or 'none'}"
 
 
 def _ladder(profile: str) -> tuple[ComputeLevel, ...]:
@@ -92,14 +104,15 @@ def _exact_position(
     return ladder.index(selection)
 
 
-def _selection_relation(
+def _classified_selection(
     ladder: tuple[ComputeLevel, ...],
     parent_position: int,
     attributes: dict[str, object],
-) -> str | None:
+) -> tuple[str, str] | None:
+    task_class = _task_class(attributes)
     model = attributes.get("model")
     effort = attributes.get("reasoning_effort")
-    if not isinstance(model, str):
+    if task_class is None or not isinstance(model, str):
         return None
     positions = tuple(
         index
@@ -107,7 +120,19 @@ def _selection_relation(
         if level.model == model and (effort is None or level.effort == effort)
     )
     if positions and max(positions) < parent_position:
-        return "delegation"
+        return task_class, "delegation"
     if positions and min(positions) > parent_position:
-        return "escalation"
-    return "equal-or-ambiguous"
+        return task_class, "escalation"
+    return task_class, "equal-or-ambiguous"
+
+
+def _task_class(attributes: dict[str, object]) -> str | None:
+    agent_role = attributes.get("agent") or attributes.get("subagent_type")
+    if not isinstance(agent_role, str):
+        return None
+    normalized_role = agent_role.lower()
+    if normalized_role in {"explore", "explorer"}:
+        return "lightweight"
+    if normalized_role in {"default", "general-purpose"}:
+        return "demanding"
+    return None
