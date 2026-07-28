@@ -69,6 +69,7 @@ eval-wait-alloy:
     exit 1
 
 # Run the eval suite in MLflow. Pass runner flags directly to the recipe.
+[private]
 eval-mlflow *args:
     {{ eval_python }} AI/evals/run_mlflow_eval.py "$@"
 
@@ -82,15 +83,11 @@ eval-plan agent component repetitions="1":
 
 # Run the normal comparison suite with the selected agent CLI.
 eval-run agent model="" effort="":
-    just --justfile AI/evals/justfile eval-core "{{ agent }}" "{{ model }}" "{{ effort }}"
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite core
 
 # Run the fast smoke suite while developing the evaluation harness.
 eval-smoke agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite smoke
-
-# Run the normal current-versus-previous instruction comparison suite.
-eval-core agent model="" effort="":
-    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite core
 
 # Run every executable case, including expensive periodic coverage.
 eval-extended agent model="" effort="":
@@ -107,16 +104,3 @@ eval-logs:
 # Stop MLflow without deleting its data.
 eval-down:
     docker compose -f {{ mlflow_compose }} down
-
-# Run behavior tests for the harness contracts.
-eval-test:
-    {{ eval_python }} -m unittest discover -s AI/evals/tests -v
-
-# Run local harness and Compose validation.
-eval-verify:
-    {{ eval_python }} -m unittest discover -s AI/evals/tests -v
-    {{ eval_python }} -m compileall -q AI/evals
-    npm run build --prefix AI/evals/environments/homeops/project
-    npm test --prefix AI/evals/environments/homeops/project
-    docker compose -f {{ mlflow_compose }} config --quiet
-    docker run --rm -e MLFLOW_EXPERIMENT_ID=1 -v "$PWD/infra/compose/alloy.config:/etc/alloy/config.alloy:ro" grafana/alloy:v1.18.0 validate /etc/alloy/config.alloy

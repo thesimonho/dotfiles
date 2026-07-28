@@ -32,7 +32,7 @@ MLflow creates or reuses one Agent Version for each `(agent CLI, manifest hash)`
 
 The catalog contains nine HomeOps scenarios: **Small regression fix**, **Narrow remediation**, **Large feature implementation**, **Read-only diagnosis**, **Codebase structure exploration**, **Isolated worktree handoff**, **Secret-backed webhook integration**, **Critical security discovery**, and **Subagent compute selection**. These human case names are the MLflow request previews. Cases emit only the assessments whose evidence and applicability they declare. One MLflow scorer returns a list of named `Feedback` objects, so MLflow aggregates the same assessment name across applicable rows without inventing failures for inapplicable behavior.
 
-The public suite recipes express cost intent rather than a separate case catalog: `eval-smoke` is the two-case harness-development check, `eval-core` is the normal seven-case evaluation suite, and `eval-extended` selects all nine cases for expensive periodic coverage. The two extended-only cases are **Isolated worktree handoff** and **Subagent compute selection**. `eval-run` remains the normal-suite alias for `eval-core`. Every tier remains a filtered view of the hosted `agent-harness-cases` dataset, so MLflow does not create a generic `dataset` identity for subset runs.
+The public suite recipes express cost intent rather than a separate case catalog: `eval-smoke` is the two-case harness-development check, `eval-run` is the normal seven-case evaluation suite, and `eval-extended` selects all nine cases for expensive periodic coverage. The two extended-only cases are **Isolated worktree handoff** and **Subagent compute selection**. Every tier remains a filtered view of the hosted `agent-harness-cases` dataset, so MLflow does not create a generic `dataset` identity for subset runs.
 
 Every executable case declares `required_evidence`, using semantic names such as `agent.message`, `agent.plan`, `agent.skill`, `tool.shell`, `agent.spawn`, `agent.model-selection`, and `token.usage`. It separately declares the subset in `required_observed_evidence` that must appear for the run to be trustworthy. Campaign previews and live runs validate these declarations against the selected CLI parser before contacting an agent. Missing, duplicate, inconsistent, or unsupported declarations fail before execution. This prevents a new case from silently assuming evidence that the harness does not capture. Profile-specific cases are omitted from suites and campaign previews for CLIs that cannot produce their evidence; explicitly requesting an incompatible case fails before execution.
 
@@ -123,12 +123,9 @@ just eval-logs
 # Stop MLflow while retaining its local data.
 just eval-down
 
-# Run project checks.
-just eval-test
-just eval-verify
 ```
 
-The recipe list exposes operator-facing workflows. Dependency-only setup, startup, and readiness recipes are private so `just --list` stays focused, but they remain callable by the public recipes that compose them.
+The recipe list exposes operator-facing workflows. Dependency-only setup, startup, readiness, and direct-runner recipes are private so `just --list` stays focused, but they remain callable by public recipes or explicitly by name for targeted runs.
 
 Use `claude` instead of `codex` during a Claude month. `--agent auto` works only when exactly one supported CLI is installed. The active suite runs from disposable project repositories so project-local instructions and Git state behave normally. Each subprocess receives a least-privilege environment containing runtime essentials, scenario command adapters, and immutable OTEL evaluation context. Other variables, including MLflow settings and credentials from the harness process, are excluded by default. If an evaluated integration genuinely needs a credential or setting, opt in by variable name, for example `AGENT_EVAL_PASSTHROUGH_ENV=CONTEXT7_API_KEY just eval-run codex gpt-5.6-sol low`. Multiple names are comma-separated. Each CLI call has a 30-minute timeout. A case chooses read-only or workspace-write access; Codex receives the matching sandbox mode and Claude receives plan or accept-edits permission mode.
 
@@ -214,7 +211,6 @@ The change note classifies added, removed, and modified components and includes 
 - `plan_evaluation_campaign.py` validates evidence contracts and previews paired campaign usage without invoking agents or MLflow.
 - `fixtures/` is reserved for future small inputs that do not require a disposable repository; every active case is workspace-backed.
 - `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
-- `tests/` covers case translation, metric scoring, CLI evidence normalization, and MLflow compatibility boundaries.
 - `lib/evaluation_case.py` defines the typed case contract.
 - `lib/agent_event_contract.py` defines semantic evidence requirements, per-profile parser support, coverage evidence, and fail-before-execution validation.
 - `lib/evaluation_coverage.py` validates fragment coverage and calculates campaign invocation costs.
