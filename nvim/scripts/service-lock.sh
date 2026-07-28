@@ -1,7 +1,9 @@
 #!/bin/sh
 
 get_process_start_time() {
-  ps -o lstart= -p "$1" 2>/dev/null | sed 's/^[[:space:]]*//'
+  # macOS ps pads lstart with trailing spaces; trim both ends so this value
+  # compares equal to the Lua side's trimmed reading.
+  ps -o lstart= -p "$1" 2>/dev/null | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
 is_process_identity_current() {

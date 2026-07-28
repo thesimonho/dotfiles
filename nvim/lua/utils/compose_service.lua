@@ -13,8 +13,9 @@ local function compose_command(backend, arguments)
 end
 
 local function create_backend(options)
+  -- NUL bytes would make Neovim pass this to sha256() as a Blob (E976), so use RS instead
   local identity =
-    table.concat({ options.docker_context or "", vim.fn.expand(options.compose_file), options.service }, "\0")
+    table.concat({ options.docker_context or "", vim.fn.expand(options.compose_file), options.service }, "\30")
   local backend = {
     key = "compose_" .. options.service:gsub("[^%w_.-]", "_") .. "_" .. vim.fn.sha256(identity):sub(1, 12),
     compose_file = vim.fn.expand(options.compose_file),

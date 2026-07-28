@@ -30,7 +30,8 @@ local function create_backend(options)
   for _, key in ipairs(environment_keys) do
     table.insert(identity_parts, key .. "=" .. tostring(options.environment[key]))
   end
-  local identity = table.concat(identity_parts, "\0")
+  -- NUL bytes would make Neovim pass this to sha256() as a Blob (E976), so use RS instead
+  local identity = table.concat(identity_parts, "\30")
   local service_key = safe_name .. "_" .. vim.fn.sha256(identity):sub(1, 12)
   local state_directory = vim.fs.joinpath(vim.fn.stdpath("state"), "services", service_key)
   local backend = {
