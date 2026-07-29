@@ -14,7 +14,7 @@ nix_eval_skill_targets() {
   if ! nix --extra-experimental-features 'nix-command flakes' \
     eval --json "$flake_dir#homeConfigurations.$host.config.home.file" \
     --apply 'files: builtins.filter (name: builtins.match ".*skills/.*" name != null) (builtins.attrNames files)' \
-    2> "$nix_eval_errors"; then
+    2>"$nix_eval_errors"; then
     cat "$nix_eval_errors" >&2
     return 1
   fi
@@ -42,7 +42,7 @@ print_skill_rows() {
         if [ -L "$HOME/$target" ]; then
           current_link_count=$((current_link_count + 1))
         fi
-      done <<< "$configured_skill_targets"
+      done <<<"$configured_skill_targets"
 
       if [ "$mode" = "tsv" ]; then
         printf '%s\t%s\t%s\t%s\t%s\n' \
