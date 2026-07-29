@@ -31,7 +31,11 @@
     # cache coverage for the transitive deps — a raw master commit has no
     # darwin builds, which forces local recompiles and runs flaky test phases.
     # Excluded from `just update`; bump explicitly with `just update-pinned`.
-    nixpkgs-pinned.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # Tracks unstable HEAD (per `just update-pinned`) rather than a release
+    # channel: nixos-26.05 froze llama-cpp at b9190 (2026-05-16), which
+    # predates the Mellum architecture landing in llama.cpp at ~b9485
+    # (2026-06-02), so Tabby's darwin completion server cannot load Mellum2.
+    nixpkgs-pinned.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Workaround pin for tabby only: 26.05 and unstable rustc reject its
     # vendored metrics-0.22.3 crate (rust-lang/rust#141402), and 25.11 is the
     # newest channel with a Hydra-cached aarch64-darwin binary.

@@ -41,7 +41,21 @@ let
       (oldAttrs: {
         doCheck = false;
         nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgsPinned.makeWrapper ];
-        cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [ "-DGGML_NATIVE=ON" ];
+        cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+          "-DGGML_NATIVE=ON"
+          # GGML_NATIVE builds for this exact CPU; GGML_CPU_ALL_VARIANTS builds
+          # every microarch variant as a dlopen-ed backend chosen by runtime
+          # feature scoring. They are mutually exclusive intents, and newer
+          # nixpkgs turns the latter on by default. With both, the variants get
+          # built but none is ever selected, leaving no CPU backend registered:
+          # Metal and BLAS still work, so only models needing a CPU-resident
+          # buffer fail, with "make_cpu_buft_list: no CPU backend found"
+          # (and -ngl 0 fails for every model). Turning the DL machinery off
+          # restores the single linked lib/libggml-cpu.dylib that llama-cpp
+          # 9190 shipped.
+          "-DGGML_BACKEND_DL=OFF"
+          "-DGGML_CPU_ALL_VARIANTS=OFF"
+        ];
         preConfigure = ''
           export NIX_ENFORCE_NO_NATIVE=0
           ${oldAttrs.preConfigure or ""}
