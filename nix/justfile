@@ -20,8 +20,32 @@ update *inputs:
       {{ _nix }} flake update $to_update
     fi
 
-# Bump pinned inputs to latest (e.g. nixpkgs-pinned tracks unstable HEAD)
+# Bump pinned inputs to latest (nixpkgs-pinned advances to the unstable tip)
 update-pinned:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # nixpkgs-pinned names a bare revision, which `nix flake update` cannot
+    # move: it re-resolves the same rev and exits 0, so the recipe would look
+    # like it worked while changing nothing. Rewrite the rev in flake.nix
+    # first, then let the flake update re-lock it along with the rest.
+    #
+    # The channel tip, never master HEAD: only commits nixpkgs-unstable
+    # actually advanced to are Hydra-built, and without that the transitive
+    # deps of llama-cpp/ffmpeg have no darwin binaries and get compiled here.
+    pinned_rev_pattern='.*nixpkgs-pinned\.url = "github:NixOS/nixpkgs/\([0-9a-f]\{40\}\)".*'
+    current=$(sed -n "s|$pinned_rev_pattern|\1|p" flake.nix)
+    if [ -z "$current" ]; then
+      echo "==> nixpkgs-pinned is not rev-pinned; fix flake.nix before bumping" >&2
+      exit 1
+    fi
+    tip=$({{ _nix }} flake metadata github:NixOS/nixpkgs/nixpkgs-unstable --json | jq -r .locked.rev)
+    if [ "$tip" = "$current" ]; then
+      echo "==> nixpkgs-pinned already at channel tip ${tip:0:12}"
+    else
+      echo "==> nixpkgs-pinned ${current:0:12} -> ${tip:0:12}"
+      sed -i.bak "/nixpkgs-pinned\.url/s|$current|$tip|" flake.nix
+      rm -f flake.nix.bak
+    fi
     {{ _nix }} flake update {{ PINNED }}
 
 # Show flake outputs (homeConfigurations, apps, etc.)
