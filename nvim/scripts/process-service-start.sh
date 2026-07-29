@@ -31,8 +31,21 @@ fi
 if [ -n "$working_directory" ]; then
   cd "$working_directory"
 fi
+# Job control puts the background child in a process group of its own instead
+# of inheriting this script's -- which, since Neovim spawns us through
+# vim.system (libuv, undetached), is *Neovim's own* group. That inheritance is
+# why the stop script could only ever signal the single tracked pid: a group
+# kill would have taken the editor with it. With the child as its own group
+# leader, pgid == pid, and stop can safely signal -pid to reach grandchildren
+# (Tabby's llama-server embedders) that outlive a SIGTERM to the parent.
+#
+# `set -m` rather than setsid: macOS ships no setsid binary. This leaves the
+# child in the same session, which is enough -- process groups, not sessions,
+# are what kill(2) addresses.
+set -m
 nohup "$@" >>"$log_file" 2>&1 &
 process_id=$!
+set +m
 
 process_start_time=""
 attempt=0
