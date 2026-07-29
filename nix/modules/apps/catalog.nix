@@ -189,7 +189,7 @@
       bundles = [ "cli" ];
     };
     master-pdf-editor = {
-      flatpak.id = "net.code_industry.MasterPDFEditor";
+      contributions.packages = [ pkgs.masterpdfeditor4 ];
       bundles = [ ];
     };
     nh = {
