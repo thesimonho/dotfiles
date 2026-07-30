@@ -174,3 +174,13 @@ services:
       timeout: 2s
       retries: 30
       start_period: 10s
+    # Completion inference lives in a separate fim-* service, but Tabby still
+    # runs its bundled llama-server for repository embeddings. Give that
+    # process access to libcuda and the GPU too.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
