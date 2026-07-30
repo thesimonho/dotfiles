@@ -23,6 +23,7 @@ function ServiceLifecycle.new(options)
   vim.validate({
     name = { options.name, "string" },
     backend = { options.backend, "table" },
+    progress_context = { options.progress_context, "string", true },
     install_hint = { options.install_hint, "string", true },
     slow_start_hint = { options.slow_start_hint, "string", true },
     poll_interval_ms = { options.poll_interval_ms, "number", true },
@@ -40,6 +41,7 @@ function ServiceLifecycle.new(options)
   local controller = setmetatable({
     name = options.name,
     backend = options.backend,
+    progress_context = options.progress_context,
     install_hint = options.install_hint,
     slow_start_hint = options.slow_start_hint,
     session_scoped = options.session_scoped or false,
@@ -145,7 +147,11 @@ function ServiceLifecycle:notify_progress(message)
   self.progress_step = self.progress_step + 1
   local elapsed_seconds = math.floor((vim.uv.now() - (self.transition_started_at or vim.uv.now())) / 1000)
   local spinner = self.spinner_frames[(self.progress_step - 1) % #self.spinner_frames + 1]
-  vim.notify(string.format("%s  %s · %ds", spinner, message, elapsed_seconds), vim.log.levels.INFO, {
+  local progress = string.format("%s  %s · %ds", spinner, message, elapsed_seconds)
+  if self.progress_context then
+    progress = self.progress_context .. "\n" .. progress
+  end
+  vim.notify(progress, vim.log.levels.INFO, {
     id = self.notification_id,
     title = self.name .. " service",
     timeout = false,

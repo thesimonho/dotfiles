@@ -362,7 +362,8 @@ end
 local function new_completion_service(model)
   if require("utils.os").is_darwin() then
     return require("utils.process_service").new({
-      name = "Tabby model (" .. model.label .. ")",
+      name = "Tabby model",
+      progress_context = model.label,
       command = {
         "llama-server",
         "-hf",
@@ -411,7 +412,8 @@ local function new_completion_service(model)
   end
 
   return require("utils.compose_service").new({
-    name = "Tabby model (" .. model.label .. ")",
+    name = "Tabby model",
+    progress_context = model.label,
     compose_file = "~/dotfiles/AI/tabby.yaml",
     service = "fim-" .. model.key,
     docker_context = "default",
