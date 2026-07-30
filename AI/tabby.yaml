@@ -24,12 +24,18 @@ x-fim: &fim
   restart: "no"
   image: ghcr.io/ggml-org/llama.cpp:server-cuda-b10156
   profiles: [fim]
+  # Docker's device-request path currently injects libcuda but CUDA
+  # initialization still fails. The explicit NVIDIA runtime exposes a working
+  # CUDA device to both this image and Tabby's bundled llama-server.
+  runtime: nvidia
   # HF_HOME, not LLAMA_CACHE: -hf downloads land in the huggingface hub cache
   # layout ($HF_HOME/hub/models--<org>--<repo>/blobs), verified against
   # llama-server b9190. LLAMA_CACHE is set too since older builds honour it.
   environment:
     HF_HOME: /models
     LLAMA_CACHE: /models
+    NVIDIA_VISIBLE_DEVICES: all
+    NVIDIA_DRIVER_CAPABILITIES: compute,utility
   # Shares the host's huggingface cache rather than a private volume. llama.cpp
   # names blobs by the manifest layer digest, which is byte-identical to the
   # file's LFS oid -- so `hf download <repo> <file>` writes exactly the path
@@ -62,13 +68,6 @@ x-fim: &fim
     start_period: 30s
   # Each service passes --n-gpu-layers auto so llama.cpp fits what it can while
   # preserving its default 1 GiB VRAM margin, then keeps remaining layers on CPU.
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: 1
-            capabilities: [gpu]
 
 services:
   # Current baseline. Pretrained FIM, never post-trained for completion
@@ -180,10 +179,7 @@ services:
     # Completion inference lives in a separate fim-* service, but Tabby still
     # runs its bundled llama-server for repository embeddings. Give that
     # process access to libcuda and the GPU too.
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    runtime: nvidia
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
