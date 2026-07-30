@@ -418,6 +418,7 @@ local function new_completion_service(model)
     service = "fim-" .. model.key,
     docker_context = "default",
     wait_for_health = true,
+    starting_message = "Preparing model",
     poll_timeout_ms = 600000,
     session_scoped = true,
     install_hint = "install Docker Engine with the NVIDIA Container Toolkit",

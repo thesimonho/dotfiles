@@ -36,6 +36,7 @@ local function create_backend(options)
     service = options.service,
     docker_context = options.docker_context,
     wait_for_health = options.wait_for_health or false,
+    starting_message = options.starting_message or "Starting container",
     progress_message = nil,
   }
 
@@ -62,7 +63,7 @@ local function create_backend(options)
   end
 
   function backend:start(callback)
-    self.progress_message = "Starting container"
+    self.progress_message = self.starting_message
     self:run({ "up", "--detach", self.service }, callback)
   end
 
@@ -109,7 +110,7 @@ local function create_backend(options)
         callback("ready")
       else
         self:read_health_detail(status.ID, function(health_detail)
-          self.progress_message = health_detail or "Waiting for health"
+          self.progress_message = health_detail or self.starting_message
           callback(status.Health == "unhealthy" and "failed" or "starting", nil, self.progress_message)
         end)
       end
@@ -129,6 +130,7 @@ function M.new(options)
     service = { options.service, "string" },
     docker_context = { options.docker_context, "string", true },
     wait_for_health = { options.wait_for_health, "boolean", true },
+    starting_message = { options.starting_message, "string", true },
   })
 
   return ServiceLifecycle.new(vim.tbl_extend("force", options, {
