@@ -41,6 +41,7 @@ x-fim: &fim
   # connection, and avoids a second 4.5GB copy inside a docker volume.
   volumes:
     - "$HOME/.cache/huggingface:/models"
+    - "./scripts/container-health-progress.sh:/usr/local/bin/container-health-progress:ro"
   # Runs as the invoking user so cached blobs stay writable by `hf download`
   # on the host; the image would otherwise write them as root.
   user: "${UID:-1000}:${GID:-1000}"
@@ -51,10 +52,10 @@ x-fim: &fim
   healthcheck:
     test:
       - CMD
-      - curl
-      - --fail
-      - --silent
+      - sh
+      - /usr/local/bin/container-health-progress
       - http://127.0.0.1:8082/health
+      - /models
     interval: 5s
     timeout: 5s
     retries: 120

@@ -156,7 +156,11 @@ function ServiceLifecycle:animate_transition(generation, lifecycle_state, messag
   if generation ~= self.transition_generation or self.lifecycle_state ~= lifecycle_state then
     return
   end
-  self:notify_progress(message)
+  if lifecycle_state == "starting" and self.slow_start_notified then
+    message = "Still starting; output is active"
+  end
+  local backend_progress = self.backend.read_progress and self.backend:read_progress()
+  self:notify_progress(backend_progress or message)
   vim.defer_fn(function()
     self:animate_transition(generation, lifecycle_state, message)
   end, self.poll_interval_ms)
@@ -233,7 +237,6 @@ function ServiceLifecycle:poll_until_ready(generation, deadline)
     end
 
     self:set_lifecycle_state("starting")
-    self:notify_progress(self.slow_start_notified and "Still starting; output is active" or "Waiting for health")
     vim.defer_fn(function()
       self:poll_until_ready(generation, deadline)
     end, self.poll_interval_ms)
@@ -310,9 +313,8 @@ function ServiceLifecycle:set_running(should_run)
   local generation = self.transition_generation
   self.desired_running = should_run
   self:set_lifecycle_state(should_run and "starting" or "stopping")
-  if not should_run then
-    self:animate_transition(generation, "stopping", "Stopping")
-  end
+  local progress_message = should_run and "Waiting for health" or "Stopping"
+  self:animate_transition(generation, self.lifecycle_state, progress_message)
   if not self.operation_in_progress then
     self:run_operation(should_run)
   end

@@ -2,14 +2,28 @@ local M = {}
 local general = require("utils.general")
 local ServiceLifecycle = require("utils.service_lifecycle")
 
-local function compose_command(backend, arguments)
+local function docker_command(backend, arguments)
   local command = { "docker" }
   if backend.docker_context then
     vim.list_extend(command, { "--context", backend.docker_context })
   end
-  vim.list_extend(command, { "compose", "--file", backend.compose_file })
   vim.list_extend(command, arguments)
   return command
+end
+
+local function compose_command(backend, arguments)
+  local command = docker_command(backend, { "compose", "--file", backend.compose_file })
+  vim.list_extend(command, arguments)
+  return command
+end
+
+local function latest_health_output(health_logs)
+  local latest_health_log = health_logs and health_logs[#health_logs]
+  local output = general.trim_string(latest_health_log and latest_health_log.Output)
+  if output == "" then
+    return nil
+  end
+  return output:gsub("\r", ""):match("([^\n]+)$")
 end
 
 local function create_backend(options)
@@ -22,7 +36,12 @@ local function create_backend(options)
     service = options.service,
     docker_context = options.docker_context,
     wait_for_health = options.wait_for_health or false,
+    progress_message = nil,
   }
+
+  function backend:read_progress()
+    return self.progress_message
+  end
 
   function backend:run(arguments, callback)
     local command = compose_command(self, arguments)
@@ -43,6 +62,7 @@ local function create_backend(options)
   end
 
   function backend:start(callback)
+    self.progress_message = "Creating or starting container"
     self:run({ "up", "--detach", self.service }, callback)
   end
 
@@ -52,6 +72,21 @@ local function create_backend(options)
 
   function backend:release_command()
     return compose_command(self, { "stop", self.service })
+  end
+
+  function backend:read_health_detail(container_id, callback)
+    local command = docker_command(self, { "inspect", "--format", "{{json .State.Health.Log}}", container_id })
+    vim.system(command, { text = true }, function(result)
+      vim.schedule(function()
+        if result.code ~= 0 then
+          callback(nil)
+          return
+        end
+
+        local has_health_logs, health_logs = pcall(vim.json.decode, general.trim_string(result.stdout))
+        callback(has_health_logs and latest_health_output(health_logs) or nil)
+      end)
+    end)
   end
 
   function backend:read_status(callback)
@@ -70,9 +105,13 @@ local function create_backend(options)
       elseif status.State ~= "running" then
         callback(status.State == "exited" and "failed" or "stopped", nil, status.Status)
       elseif not self.wait_for_health or status.Health == "healthy" then
+        self.progress_message = nil
         callback("ready")
       else
-        callback(status.Health == "unhealthy" and "failed" or "starting", nil, status.Status)
+        self:read_health_detail(status.ID, function(health_detail)
+          self.progress_message = health_detail or status.Status
+          callback(status.Health == "unhealthy" and "failed" or "starting", nil, health_detail or status.Status)
+        end)
       end
     end)
   end
