@@ -4,6 +4,26 @@ ServiceLifecycle.__index = ServiceLifecycle
 local default_spinner_frames = require("config.constants").spinner
 local fs = require("utils.fs")
 local os = require("utils.os")
+-- Snacks adds one padding cell per side to its 40-column minimum window.
+local progress_line_width = 38
+
+--- Fit notification text to a stable display width so an updating toast does
+--- not resize when its phase changes. Preserve multibyte spinner characters.
+--- @param value string
+--- @param width number
+--- @return string
+local function fit_display_width(value, width)
+  if vim.fn.strdisplaywidth(value) > width then
+    local character_count = vim.fn.strchars(value)
+    repeat
+      character_count = character_count - 1
+      value = vim.fn.strcharpart(value, 0, character_count)
+    until character_count == 0 or vim.fn.strdisplaywidth(value .. "…") <= width
+    value = value .. "…"
+  end
+
+  return value .. string.rep(" ", width - vim.fn.strdisplaywidth(value))
+end
 
 --- Wrap a command in the cross-process operation lock when one is configured.
 --- @param command string[]
@@ -147,9 +167,12 @@ function ServiceLifecycle:notify_progress(message)
   self.progress_step = self.progress_step + 1
   local elapsed_seconds = math.floor((vim.uv.now() - (self.transition_started_at or vim.uv.now())) / 1000)
   local spinner = self.spinner_frames[(self.progress_step - 1) % #self.spinner_frames + 1]
-  local progress = string.format("%s  %s · %ds", spinner, message, elapsed_seconds)
+  local prefix = spinner .. "  "
+  local suffix = string.format(" · %ds", elapsed_seconds)
+  local message_width = progress_line_width - vim.fn.strdisplaywidth(prefix .. suffix)
+  local progress = prefix .. fit_display_width(message, message_width) .. suffix
   if self.progress_context then
-    progress = self.progress_context .. "\n" .. progress
+    progress = fit_display_width(self.progress_context, progress_line_width) .. "\n" .. progress
   end
   vim.notify(progress, vim.log.levels.INFO, {
     id = self.notification_id,

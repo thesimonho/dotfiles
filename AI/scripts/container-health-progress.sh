@@ -22,7 +22,7 @@ done
 
 if [ "$largest_open_file_size" -gt 0 ]; then
   received_size=$(awk -v bytes="$largest_open_file_size" 'BEGIN { printf "%.2f GB", bytes / 1000000000 }')
-  printf 'Receiving service data · %s received\n' "$received_size"
+  printf 'Receiving · %s\n' "$received_size"
 else
   printf 'Initializing service\n'
 fi

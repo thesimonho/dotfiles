@@ -62,7 +62,7 @@ local function create_backend(options)
   end
 
   function backend:start(callback)
-    self.progress_message = "Creating or starting container"
+    self.progress_message = "Starting container"
     self:run({ "up", "--detach", self.service }, callback)
   end
 
@@ -109,8 +109,8 @@ local function create_backend(options)
         callback("ready")
       else
         self:read_health_detail(status.ID, function(health_detail)
-          self.progress_message = health_detail or status.Status
-          callback(status.Health == "unhealthy" and "failed" or "starting", nil, health_detail or status.Status)
+          self.progress_message = health_detail or "Waiting for health"
+          callback(status.Health == "unhealthy" and "failed" or "starting", nil, self.progress_message)
         end)
       end
     end)
