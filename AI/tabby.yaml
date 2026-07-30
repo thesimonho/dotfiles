@@ -60,6 +60,8 @@ x-fim: &fim
     timeout: 5s
     retries: 120
     start_period: 30s
+  # Each service passes --n-gpu-layers auto so llama.cpp fits what it can while
+  # preserving its default 1 GiB VRAM margin, then keeps remaining layers on CPU.
   deploy:
     resources:
       reservations:
@@ -83,7 +85,7 @@ services:
       - --ctx-size
       - "4096"
       - --n-gpu-layers
-      - "999"
+      - auto
       - --flash-attn
       - auto
       # One slot, not llama-server's default 4: this serves a single editor,
@@ -110,7 +112,7 @@ services:
       - --ctx-size
       - "4096"
       - --n-gpu-layers
-      - "999"
+      - auto
       - --flash-attn
       - auto
       # One slot, not llama-server's default 4: this serves a single editor,
@@ -138,7 +140,7 @@ services:
       - --ctx-size
       - "4096"
       - --n-gpu-layers
-      - "999"
+      - auto
       - --flash-attn
       - auto
       # One slot, not llama-server's default 4: this serves a single editor,
