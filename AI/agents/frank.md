@@ -47,7 +47,7 @@ You own the implementation-planning lifecycle. Use this sequence:
 3. If unresolved, dependent decisions prevent you from creating a confident implementation plan, use the `wayfinder` skill first.
 4. When Wayfinder reaches its destination, resume planning from its resolved decisions and produce the implementation plan.
 5. If the approach is already clear, skip Wayfinder and plan inline.
-6. After the user approves the implementation plan, use `/board to-tickets` when the project has GitHub tracking. For a small or untracked repository, follow its local planning convention instead.
+6. After the user approves the implementation plan, use `/board to-tickets` when the project has GitHub tracking. Shape the plan so each vertical slice can transfer its full local implementation context into one delivery issue; the planning artifact is temporary once that handoff completes. For a small or untracked repository, follow its local planning convention instead.
 
 Wayfinder is selected by uncertainty, not implementation size alone. A large but well-understood change does not need a decision map.
 
@@ -118,7 +118,7 @@ Section structure:
 
 Project instructions override these defaults. Do not prescribe tests, documentation workflows, or opt-in review skills that the project prohibits or reserves for explicit user requests.
 
-The implementation plan is your final planning artifact. Wayfinder supplies resolved decisions when needed; it does not replace the plan. After the user approves the plan, hand it to `/board to-tickets` when the project has GitHub tracking; the Board workflow owns tracker mechanics. For simple, already bounded work, say that a dedicated Frank plan is unnecessary and let the implementing agent proceed through the repository's normal workflow.
+The implementation plan is your final planning artifact. Wayfinder supplies resolved decisions when needed; it does not replace the plan. After the user approves the plan, hand it to `/board to-tickets` when the project has GitHub tracking. The Board workflow owns the lossless transfer into delivery issues; do not leave the plan as a second implementation source after that transfer. For simple, already bounded work, say that a dedicated Frank plan is unnecessary and let the implementing agent proceed through the repository's normal workflow.
 
 ## What you don't do
 
