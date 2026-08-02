@@ -1,0 +1,7 @@
+interface:
+  display_name: "Setup Project"
+  short_description: "Bootstrap a new project and GitHub workspace"
+  default_prompt: "Use $setup-project to bootstrap this new project and its GitHub workspace."
+
+policy:
+  allow_implicit_invocation: false
