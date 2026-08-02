@@ -1,28 +1,14 @@
 /**
- * Hook: Keep stray documentation files out of the repo.
+ * Hook: Keep documentation files out of the repository root.
  *
- * The intent is to stop random `.md`/`.txt` files landing in arbitrary places in
- * the repo, not to police files anywhere on disk — so enforcement is scoped to
- * paths inside the repo (relative to cwd). Scratch/temp files elsewhere (e.g.
- * /tmp) are ignored.
- *
- * Inside the repo, allowed .md files are:
- *   - README.md, CLAUDE.md, AGENTS.md (anywhere in the tree)
- *   - Any .md file under docs/
- *   - Direct shared agent and instruction-fragment sources under AI/
- *   - Files inside the disposable HomeOps evaluation environment
- * .txt files inside the repo are always blocked.
+ * The intent is to keep root-level Markdown from becoming an unstructured
+ * documentation surface. Documentation next to the code it explains is valid,
+ * and durable repository documentation belongs under docs/. Scratch/temp files
+ * outside the repo (for example, /tmp) are ignored.
  */
 
 const path = require("node:path");
 const { block, doNothing } = require("../lib/hooks/policy-result");
-
-const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
-const DOCS_DIR_MD = /(^|\/)docs\//;
-const INSTRUCTION_SOURCE_MD =
-  /^AI\/(agents\/[^/]+|instructions\/fragments\/[^/]+)\.md$/;
-const CUSTOM_SKILL_MD = /^AI\/skills\/(?!\.(?:agents|system)\/)[^/]+\/.*\.md$/;
-const HOMEOPS_EVALUATION_ENVIRONMENT = /^AI\/evals\/environments\/homeops\//;
 
 /**
  * Returns file paths from Claude and Codex tool inputs.
@@ -55,21 +41,13 @@ function evaluate(payload) {
     if (relative.startsWith("..") || path.isAbsolute(relative)) {
       continue;
     }
-    if (HOMEOPS_EVALUATION_ENVIRONMENT.test(relative)) {
-      continue;
-    }
+    const isRepositoryRootMarkdown =
+      path.dirname(relative) === "." && relative.endsWith(".md");
 
-    const isTxt = /\.txt$/.test(relative);
-    const isMd = /\.md$/.test(relative);
-    const isAllowed =
-      isMd &&
-      (ALWAYS_ALLOWED_MD.test(relative) ||
-        DOCS_DIR_MD.test(relative) ||
-        INSTRUCTION_SOURCE_MD.test(relative) ||
-        CUSTOM_SKILL_MD.test(relative));
-
-    if (isTxt || (isMd && !isAllowed)) {
-      return block(filePath, ["Allowed: README.md, CLAUDE.md, AGENTS.md, or docs/*.md"]);
+    if (isRepositoryRootMarkdown) {
+      return block(filePath, [
+        "Do not write Markdown files in the repository root. Put durable documentation under docs/ instead.",
+      ]);
     }
   }
 

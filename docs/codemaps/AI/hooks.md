@@ -12,7 +12,7 @@ Executable policy evaluators that block unsafe operations or add workflow guidan
 
 | File group | Description |
 | --- | --- |
-| `block-*.js` | Prevents build artifacts, debug logging, documentation misuse, force pushes, and plan references in durable files |
+| `block-*.js` | Prevents build artifacts, debug logging, root-level Markdown, force pushes, and plan references in durable files |
 | `branch-guard.js` | Blocks code edits on default branches by resolving Git worktree metadata |
 | `check-*.js` | Enforces conventional commits, file size limits, and dated plan filenames |
 | `*-nudge.js` | Adds contextual reminders for formatting, compaction, branch cleanup, justfiles, LSP, Markdown wrapping, RTK, delegation, and simplification |
