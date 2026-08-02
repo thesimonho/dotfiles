@@ -21,6 +21,7 @@ const ALWAYS_ALLOWED_MD = /(^|\/)(README|CLAUDE|AGENTS)\.md$/;
 const DOCS_DIR_MD = /(^|\/)docs\//;
 const INSTRUCTION_SOURCE_MD =
   /^AI\/(agents\/[^/]+|instructions\/fragments\/[^/]+)\.md$/;
+const CUSTOM_SKILL_MD = /^AI\/skills\/(?!\.(?:agents|system)\/)[^/]+\/.*\.md$/;
 const HOMEOPS_EVALUATION_ENVIRONMENT = /^AI\/evals\/environments\/homeops\//;
 
 /**
@@ -64,7 +65,8 @@ function evaluate(payload) {
       isMd &&
       (ALWAYS_ALLOWED_MD.test(relative) ||
         DOCS_DIR_MD.test(relative) ||
-        INSTRUCTION_SOURCE_MD.test(relative));
+        INSTRUCTION_SOURCE_MD.test(relative) ||
+        CUSTOM_SKILL_MD.test(relative));
 
     if (isTxt || (isMd && !isAllowed)) {
       return block(filePath, ["Allowed: README.md, CLAUDE.md, AGENTS.md, or docs/*.md"]);
