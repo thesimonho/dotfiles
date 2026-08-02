@@ -15,7 +15,7 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 ## Project Management
 
-When a repository has a GitHub Project or issue tracker, use `/board` to keep delivery state current. GitHub is the operational source of truth for tracked work; follow local conventions for small or untracked repositories.
+When a repository has a GitHub Project or issue tracker, use `$kanban` to keep delivery state current. GitHub is the operational source of truth for tracked work; follow local conventions for small or untracked repositories.
 
 ## When Programming
 

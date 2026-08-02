@@ -1,11 +1,11 @@
 ---
-name: board
+name: kanban
 description: Work with GitHub Projects, Milestones, and issue trackers. Use when you need to update delivery state, triage issues, create tickets, organize milestones, or trace planned work.
 model: sonnet
 user-invocable: true
 ---
 
-# Board
+# Kanban
 
 Check the GitHub remote for a Project board, Milestones, and issue tracker. If available, GitHub is the operational source of truth for delivery state: Projects hold actual delivery work, Milestones hold delivery landmarks, and Issues hold bounded work items. Architecture and product documents remain linked context, not a parallel roadmap.
 
@@ -53,7 +53,7 @@ Keep Project metadata meaningful: use Status, Milestone, Parent issue, Sub-issue
 
 ## Invocation
 
-The maintainer invokes `/board` and describes what they want in natural language. Interpret the request type and act. Examples:
+The maintainer invokes `$kanban` and describes what they want in natural language. Interpret the request type and act. Examples:
 
 - "Show me anything that needs my attention"
 - "Let's look at #42" (issue or PR)

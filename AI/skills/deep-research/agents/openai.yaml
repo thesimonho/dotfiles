@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Research"
+  short_description: "Research complex questions with citations"
+  default_prompt: "Use $deep-research to investigate this question with current, citation-backed evidence and recommend a course of action."

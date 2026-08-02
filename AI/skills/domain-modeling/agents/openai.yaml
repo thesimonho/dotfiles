@@ -1,0 +1,4 @@
+interface:
+  display_name: "Domain Modeling"
+  short_description: "Keep domain language consistent"
+  default_prompt: "Use $domain-modeling to keep terminology and domain operations consistent throughout this work."

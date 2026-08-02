@@ -2,7 +2,7 @@
 
 Break actionable work from a plan, spec, or conversation into a set of **tickets** — tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-Not all actionable work needs a dedicated implementation plan. Preserve a clear, sufficiently specified request and publish it directly. If producing independent tickets would require consequential unresolved architecture, product, or implementation decisions, stop and route that planning work to Frank. Board represents actionable work on the tracker; it does not silently make the decisions that would make the work actionable. Do not use Frank for simple, already bounded work.
+Not all actionable work needs a dedicated implementation plan. Preserve a clear, sufficiently specified request and publish it directly. If producing independent tickets would require consequential unresolved architecture, product, or implementation decisions, stop and route that planning work to Frank. Kanban represents actionable work on the tracker; it does not silently make the decisions that would make the work actionable. Do not use Frank for simple, already bounded work.
 
 Critical: each ticket must be independently actionable by a new agent after reading that ticket and its explicitly linked parent context. Sibling or child tickets may explain sequencing, but must not contain requirements needed to implement this ticket.
 

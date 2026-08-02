@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wayfinder"
+  short_description: "Resolve uncertainty before planning"
+  default_prompt: "Use $wayfinder to map and resolve the dependent decisions blocking a confident implementation approach."

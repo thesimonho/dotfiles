@@ -1,6 +1,6 @@
 # Trace Feature
 
-Find all project board and issue tracker tickets that are related to a particular feature to understand its context and current state. Use that information to construct a dependency map of issues and tasks.
+Find all GitHub Project and issue tracker tickets that are related to a particular feature to understand its context and current state. Use that information to construct a dependency map of issues and tasks.
 
 This could be for the specific feature being asked about, or multiple features that are affected by, or dependent on, the feature.
 

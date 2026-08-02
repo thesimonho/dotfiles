@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kanban"
+  short_description: "Manage GitHub delivery work and triage"
+  default_prompt: "Use $kanban to triage and organize this repository’s tracked delivery work."

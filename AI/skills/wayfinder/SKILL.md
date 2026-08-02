@@ -9,7 +9,7 @@ The **destination** is the decision state Frank needs before implementation plan
 
 ## Tracking boundary
 
-When GitHub tracking exists, use its issue tracker for a Wayfinder map and decision tickets. They are planning artifacts, not delivery work. When the map resolves, hand off to `/board` for any tracked delivery work.
+When GitHub tracking exists, use its issue tracker for a Wayfinder map and decision tickets. They are planning artifacts, not delivery work. When the map resolves, hand off to `$kanban` for any tracked delivery work.
 
 If a repository has no issue tracker or intentionally uses no Project, do not create one merely for Wayfinder. Keep the same destination, decision, and resolution structure in the active planning artifact and use the repository's local planning convention for the later handoff.
 
@@ -19,7 +19,7 @@ Wayfinder is **pre-planning** by default. It resolves the questions that prevent
 
 Prototype and task tickets may perform bounded work only when that work is necessary to resolve a decision. Do not carry feature implementation into the map.
 
-Do not use `/board to-tickets` for decision tickets. That workflow publishes an approved implementation plan as actionable work after Frank finishes planning. Wayfinder creates and maintains its own map and decision tickets on the issue tracker.
+Do not use `$kanban`'s `to-tickets` workflow for decision tickets. That workflow publishes an approved implementation plan as actionable work after Frank finishes planning. Wayfinder creates and maintains its own map and decision tickets on the issue tracker.
 
 Apply the `domain-modeling` skill as an overlay throughout Wayfinder whenever domain terms or operations are introduced, challenged, or resolved. Domain Modeling keeps the language consistent; Wayfinder owns the decisions.
 
@@ -35,7 +35,7 @@ The map is an **index**, not a store. It lists the decisions made and points at 
 
 ### The map body
 
-The whole map at low resolution, loaded once per session. Open tickets are **not** listed — they are open child issues, found by tracing the feature using the `/board` skill.
+The whole map at low resolution, loaded once per session. Open tickets are **not** listed — they are open child issues, found by tracing the feature using the `$kanban` skill.
 
 ```markdown
 ## Destination
@@ -73,7 +73,7 @@ Each ticket is a **child issue** of the map; the tracker's issue id is its ident
 
 Each ticket carries a `wayfinder:<type>` label — one of `research`, `prototype`, `grilling`, `task` (see [Ticket Types](#ticket-types)).
 
-Wayfinder decision tickets also use Board's normal labels. Apply the effort's `bug` or `enhancement` category to every child ticket, then apply exactly one state label:
+Wayfinder decision tickets also use Kanban's normal labels. Apply the effort's `bug` or `enhancement` category to every child ticket, then apply exactly one state label:
 
 - `needs-triage` when the ticket's driver or resolution mode still needs maintainer evaluation.
 - `needs-info` when progress is waiting on information from the user or another person.
@@ -81,7 +81,7 @@ Wayfinder decision tickets also use Board's normal labels. Apply the effort's `b
 - `ready-for-human` for a sufficiently specified HITL ticket. Blocking relationships, not the label, determine whether it is on the current frontier.
 - `wontfix` when the ticket is ruled out of scope.
 
-The `wayfinder:map` issue is an index rather than a unit of work. Give it the effort's category label, but exempt it from Board's state-label invariant.
+The `wayfinder:map` issue is an index rather than a unit of work. Give it the effort's category label, but exempt it from Kanban's state-label invariant.
 
 A session **claims** a ticket by assigning it to the dev driving the map, **first**, before any work, so concurrent sessions skip it. That assignee _is_ the claim: an open, unassigned ticket is unclaimed.
 
@@ -128,7 +128,7 @@ Two modes. Either way, **never resolve more than one ticket per session** — wi
 The user or an orchestrating agent invokes Wayfinder with a loose idea.
 
 1. **Name the destination.** Run a `/grilling` session to pin down what this map is finding its way to — the spec, feature, or change. Apply `domain-modeling` as an overlay whenever domain language is involved. The destination fixes the scope, so it's settled first.
-2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** — the way to the destination is already clear — do not create a map. Return the clarified context to the invoker, which may proceed inline, send actionable work to Board, or invoke Frank if dedicated implementation planning is still useful.
+2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** — the way to the destination is already clear — do not create a map. Return the clarified context to the invoker, which may proceed inline, send actionable work to Kanban, or invoke Frank if dedicated implementation planning is still useful.
 3. **Create the map** (label `wayfinder:map`) when a tracker exists: Destination and Notes filled in, Decisions-so-far empty, the fog sketched into **Not yet specified**. Without a tracker, create the equivalent active planning artifact instead.
 4. **Create the tickets you can specify now** as child issues of the map when a tracker exists — then wire blocking edges in a **second pass** (issues need ids before they can reference each other). Without a tracker, retain the same ordered decision list in the planning artifact. Everything you can't yet specify stays in the fog — the **Not yet specified** section.
 5. **Fire the research subagents.** For each unblocked `research` ticket on the frontier, launch one isolated subagent. Each subagent claims and resolves only its assigned ticket using the `deep-research` skill, posts its resolution, and closes the ticket. The charting session collects those resolutions and updates the map; it does not resolve any HITL ticket.
@@ -143,6 +143,6 @@ The user or an orchestrating agent invokes Wayfinder with a map (URL or number).
 3. Resolve it — **zoom as needed**: fetch the full body of any related or closed ticket on demand. If in doubt, use `/grilling`; apply `domain-modeling` as an overlay when domain language is involved.
 4. Record the resolution: post the answer as a **resolution comment**, **close** the issue, and **append a context pointer** to the map's Decisions-so-far.
 5. Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals a ticket — this one or another — sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
-6. Recompute the frontier and inspect **Not yet specified**. If no open child tickets and no in-scope fog remain, mark the map complete and return its resolved decisions to the invoking context. Invoke Frank when consequential implementation planning is still needed; otherwise proceed inline or hand tracked delivery work to `/board`. In an untracked repository, follow its local planning convention instead.
+6. Recompute the frontier and inspect **Not yet specified**. If no open child tickets and no in-scope fog remain, mark the map complete and return its resolved decisions to the invoking context. Invoke Frank when consequential implementation planning is still needed; otherwise proceed inline or hand tracked delivery work to `$kanban`. In an untracked repository, follow its local planning convention instead.
 
 The user may run unblocked tickets in parallel, so expect other sessions to be editing the tracker concurrently.
