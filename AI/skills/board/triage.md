@@ -32,6 +32,8 @@ Show counts and a one-line summary per item. Let the maintainer pick.
      - **Already implemented** — the change already exists in the codebase. Point to where it lives;
    - `needs-triage` — apply the role. Optional comment if there's partial progress.
 
+For accepted delivery work in a tracked repository, attach the issue to the appropriate existing Milestone and Project. Do not manufacture a new Milestone for an isolated maintenance fix; record why no delivery landmark applies when that would otherwise be ambiguous. Keep the Project status synchronized with the triage result.
+
 ### Needs-info template
 
 ```markdown

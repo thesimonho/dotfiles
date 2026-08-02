@@ -6,8 +6,8 @@ This could be for the specific feature being asked about, or multiple features t
 
 ## How to trace
 
-Identify the feature in question, then reference the project's `docs/glossary.md` for terminology. Apply `domain-modeling` as an overlay if the feature's tickets, documentation, and code use inconsistent domain terms or operations. List open tickets on the project board and/or search tickets by relevant terminology and keywords.
+Identify the feature in question, then reference the project's `docs/glossary.md` for terminology. Apply `domain-modeling` as an overlay if the feature's tickets, documentation, and code use inconsistent domain terms or operations. In a tracked repository, locate the feature's Milestone first, read its predecessor links and scope anchors, then list its open Project tickets and search related issues by relevant terminology and keywords.
 
-Identify the hierarchical dependency relationships between tickets.
+Identify both milestone-level sequencing and native issue-level blocking relationships. Treat parent/sub-issue relationships as grouping, not proof of execution order.
 
-Present the user with the dependency tree or map, with a summary of what has been done, what the current state is, and what is blocked/coming up.
+Present the user with the Milestone → feature slice → issue dependency map, with a summary of what has been done, current Project state, and what is blocked or coming up.

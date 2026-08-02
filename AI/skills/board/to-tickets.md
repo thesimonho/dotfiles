@@ -2,7 +2,7 @@
 
 Break actionable work from a plan, spec, or conversation into a set of **tickets** — tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-Not all actionable work needs a dedicated implementation plan. Preserve a clear, sufficiently specified request and publish it directly. If producing independent tickets would require unresolved architecture, product, or implementation decisions, stop and route that planning work to Frank. Board represents actionable work on the tracker; it does not silently make the decisions that would make the work actionable.
+Not all actionable work needs a dedicated implementation plan. Preserve a clear, sufficiently specified request and publish it directly. If producing independent tickets would require consequential unresolved architecture, product, or implementation decisions, stop and route that planning work to Frank. Board represents actionable work on the tracker; it does not silently make the decisions that would make the work actionable. Do not use Frank for simple, already bounded work.
 
 Critical: each ticket must be independently actionable by a new agent after reading that ticket and its explicitly linked parent context. Sibling or child tickets may explain sequencing, but must not contain requirements needed to implement this ticket.
 
@@ -10,7 +10,7 @@ Critical: each ticket must be independently actionable by a new agent after read
 
 ### 1. Gather context
 
-Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments.
+Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments. When the work advances a tracked delivery landmark, first identify its active Milestone and inspect existing Project work so the new tickets extend the delivery graph rather than duplicating it. For isolated maintenance work with no relevant landmark, inspect the related Project and issue context instead.
 
 Before drafting, confirm the source defines an observable outcome, sufficient acceptance criteria, and no unresolved decisions that would materially change the implementation. Route it to Frank only when dedicated implementation planning is needed; otherwise continue directly.
 
@@ -37,7 +37,11 @@ Give each ticket its **blocking edges** — the other tickets that must complete
 
 **Wide refactors are the exception to vertical slicing.** A **wide refactor** is one mechanical change — rename a column, retype a shared symbol — whose **blast radius** fans across the whole codebase, so a single edit breaks thousands of call sites at once and no vertical slice can land green. Don't force it into a tracer bullet; sequence it as **expand–contract**. First expand: add the new form beside the old so nothing breaks. Then migrate the call sites over in batches sized by blast radius (per package, per directory), each batch its own ticket blocked by the expand, keeping CI green batch to batch because the old form still exists. Finally contract: delete the old form once no caller remains, in a ticket blocked by every migrate batch. When even the batches can't stay green alone, keep the sequence but let them share an integration branch that all block a final integrate-and-verify ticket — green is promised only there.
 
-### 4. Quiz the user
+### 4. Confirm the delivery container
+
+When GitHub tracking exists, assign the ticket set to the active Milestone. If the work begins a new coherent landmark, create or have the maintainer create a Milestone first; do not create an epic issue as a substitute. A planning ticket is valid only when planning is actual next work, not as a placeholder for an unstarted landmark.
+
+### 5. Quiz the user
 
 Present the proposed breakdown as a numbered list. For each ticket, show:
 
@@ -53,13 +57,13 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Publish the tickets to the configured tracker
+### 6. Publish the tickets to the configured tracker
 
-Publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues.
+Publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Add every tracked ticket to the Project and active Milestone. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Parent/sub-issues may group actual feature-slice work but must not represent the Milestone itself.
 
 When publishing issue bodies, preserve actual newline characters. Prefer `--body-file` or structured API input; never interpolate a JSON-stringified body into `gh issue create --body`.
 
-Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
+Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction. Set Project status to `Todo`; the assignee and `In Progress` status are the claim when work begins.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
 

@@ -6,7 +6,7 @@ This directory contains custom skills and imported agent skills that are linked 
 
 | Skill | Description |
 | --- | --- |
-| `board` | Work with the projects board and issue tracker. Use when you need to update tasks, triage issues, create tickets, track/locate plans. |
+| `board` | Work with GitHub Projects, Milestones, and issue trackers. Use when you need to update delivery state, triage issues, create tickets, organize milestones, or trace planned work. |
 | `deep-research` | Conduct rigorous, citation-backed research on a question, then deliver a self-contained HTML report that ends in a clear recommendation. Use this whenever the user asks you to "research", "do a web search", "do a deep dive", "compare options", or asks any question that needs evidence from multiple current sources rather than a single lookup. Use it even when the user doesn't say "research" — if answering well means pulling together several online sources, cross-checking them, and citing them, use this. Do NOT use it for single-fact lookups answerable from one source. |
 | `domain-modeling` | Keep a project's domain terminology and domain operations consistent across conversation, documentation, and code. Use as an overlay whenever another workflow introduces, interprets, challenges, or records domain language. |
 | `scaffold` | Set up new projects with frameworks or languages in the current working directory. Use when the user explicitly requests to scaffold, set up, initialize, or create a new project. Supports any language setup or framework. Proactively searches for latest versions and best practices, surfaces choices to the user when multiple options exist. |

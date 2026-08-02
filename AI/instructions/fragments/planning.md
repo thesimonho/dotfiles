@@ -1,12 +1,8 @@
 # Planning
 
-For multi-file code changes, create a plan first. You should:
+For consequential multi-file changes, create and review a plan first. Use Frank when architecture, design, trade-offs, or implementation sequencing need dedicated exploration; plan simple, well-bounded work directly. Escalate to a stronger model when the decision complexity warrants it.
 
-1. Call the frank agent - he's good at planning.
-2. Escalate to a stronger model (e.g. Opus, latest Codex)
-3. Have the plan and spec reviewed before proceeding with implementation.
-
-Plans should be turned into project board tickets. If there is no board, save it locally: plan file names should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
+When a repository has GitHub tracking, use `/board` after the user approves a plan to publish and track real delivery work. For an untracked repository, follow its local planning convention; plan file names should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
 
 If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 

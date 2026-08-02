@@ -15,7 +15,7 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 ## Project Management
 
-If the repo has a GitHub project board or issue tracker, use it religiously! Make sure new items are added, current items are updated, and stale items are removed. It is the single source of truth for the projects current state - multiple agents use it for tracking work so it is vital that it stays in sync with what you're doing.
+When a repository has a GitHub Project or issue tracker, use `/board` to keep delivery state current. GitHub is the operational source of truth for tracked work; follow local conventions for small or untracked repositories.
 
 ## When Programming
 
