@@ -12,7 +12,9 @@ Keep `/docs`, READMEs, APIs, and other documentation up to date.
 Sort docs by how they age, not just by kind:
 
 - **Living** — evergreen truth, edited in place (specs, references, codemaps).
-- **Snapshot** — true as-of a date, then frozen (research, plans, mockups). Give each a status; when it ships or is superseded, move it into a sibling `archive/` subdir so the live folder shows only current docs. A superseded file gets a one-line banner at its top naming what replaced it.
+- **Snapshot** — true as-of a date, then frozen (research, durable local plans, mockups). Give each a status; when it ships or is superseded, move it into a sibling `archive/` subdir so the live folder shows only current docs. A superseded file gets a one-line banner at its top naming what replaced it.
+
+A temporary plan for tracker-backed delivery is not a documentation snapshot: after its requirements have been transferred to the relevant delivery tickets, remove the local artifact. Durable local plans still use the snapshot lifecycle above.
 
 An index (`docs/README.md`) maps only the **live** docs — don't enumerate archived files, the `archive/` folder is its own list. For work that's relevant later, put a "revisit-when" trigger in the roadmap/backlog, not buried in the doc.
 

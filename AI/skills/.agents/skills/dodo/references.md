@@ -23,14 +23,16 @@ References vary massively by project and personal preference. Common types inclu
 References age in two different ways — treat them differently:
 
 - **Living** — evergreen truth, edited in place: architecture overviews, development guides, data models, roadmaps, troubleshooting guides. Keep these fresh (that's the update flow's job).
-- **Snapshot** — true as-of a date, then frozen: plans, ADRs, research reports, design docs, mockups. A snapshot is _not_ kept fresh — its job is to record a decision or a moment. Give each a status (`active`, `shipped`, `superseded`, `deferred`).
+- **Snapshot** — true as-of a date, then frozen: durable local plans, ADRs, research reports, design docs, mockups. A snapshot is _not_ kept fresh — its job is to record a decision or a moment. Give each a status (`active`, `shipped`, `superseded`, `deferred`).
 
-When a snapshot's moment passes — a plan ships, an ADR is superseded, a decision is overtaken — **archive it rather than update or delete it**:
+When a snapshot's moment passes — a durable local plan ships, an ADR is superseded, a decision is overtaken — **archive it rather than update or delete it**:
 
 - Move the file into a sibling `archive/` subdir (e.g. `docs/plans/archive/`, `docs/adrs/archive/`) so the live folder shows only current docs.
 - Leave a one-line banner at the top of a _superseded_ file naming what replaced it (a shipped plan needs no banner — it's self-evidently historical).
 - Drop it from the index — the index lists only **live** docs; the `archive/` folder is its own list, so don't enumerate archived files there (that list only grows and rots).
 - If the archived doc still holds work that matters later, put a short **"revisit-when X"** trigger in the roadmap/backlog with a link, rather than keeping the whole doc "live" just to remember it.
+
+Tracker-backed delivery plans are not reference documents. Their lifecycle belongs to the repository's delivery workflow, and a successful handoff normally leaves no temporary `docs/plans/` artifact for this skill to update or archive. Do not create, reconstruct, or manipulate tracker state while updating references. If a local plan file is present, apply this lifecycle only when it is intentionally retained as a durable repository reference.
 
 ## Structure conventions
 
@@ -76,7 +78,7 @@ Important: if you're searching or reading documents, it's much faster to do it i
 3. Categorize findings:
    - **Factual inaccuracies** (wrong paths, outdated APIs, incorrect examples): fix these directly. These are objective errors.
    - **Stale opinions** in a living doc (a roadmap item no longer planned, a stated intent the project moved away from): flag these to the user with specific line references. Don't rewrite someone else's plans.
-   - **Snapshots whose moment has passed** (a plan whose feature shipped, a superseded ADR or decision): don't try to freshen them — archive them per Lifecycle & archiving (move to `archive/`, add a banner if superseded, drop from the index, surface any still-live work as a roadmap trigger). If it's ambiguous whether the snapshot is truly done, confirm with the user before archiving.
+   - **Snapshots whose moment has passed** (a durable local plan whose feature shipped, a superseded ADR or decision): don't try to freshen them — archive them per Lifecycle & archiving (move to `archive/`, add a banner if superseded, drop from the index, surface any still-live work as a roadmap trigger). If it's ambiguous whether the snapshot is truly done, confirm with the user before archiving. Do not treat the absence of a local plan file as missing documentation when delivery work is tracked elsewhere.
    - **Missing documentation** (new features with no docs): suggest new reference docs to the user. Follow the create flow if they approve.
 4. Update the `docs/README.md` index if docs have been added, removed, renamed, or archived — it lists only the live set.
 
