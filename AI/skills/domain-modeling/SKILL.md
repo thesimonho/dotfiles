@@ -50,10 +50,10 @@ When domain relationships are being discussed, stress-test them with specific sc
 
 When the user states how something works, check whether the code agrees. If you find a contradiction, surface it: "Your code cancels entire Orders, but you just said partial cancellation is possible — which is right?"
 
-### Update glossary.md inline
+### Update an existing glossary inline
 
-When a term is resolved, update `glossary.md` right there. Don't batch these up — capture them as they happen.
+When a term is resolved and the repository already has a glossary, update `glossary.md` right there. Don't batch these up — capture them as they happen.
 
 `glossary.md` should be totally devoid of implementation details. Do not treat `glossary.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
 
-If no glossary exists, follow the documentation structure described by `docs/README.md`. Ask before creating a new documentation convention.
+If no glossary exists, do not create one during the active workflow. Preserve the resolved terminology in the artifact the active workflow owns, and explicitly propose a standalone glossary documentation change. Create a glossary only after the user asks for it.
