@@ -13,6 +13,10 @@ Verification claims must name the environment actually tested. Testing a canonic
 
 Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex, Claude Code).
 
+## Project Management
+
+If the repo has a GitHub project board or issue tracker, use it religiously! Make sure new items are added, current items are updated, and stale items are removed. It is the single source of truth for the projects current state - multiple agents use it for tracking work so it is vital that it stays in sync with what you're doing.
+
 ## When Programming
 
 - Use TDD for big changes (unless repo-specific rules specify otherwise). Aim for 80% coverage.
@@ -33,7 +37,7 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 Once your task is complete and you are responding to the user, follow this order:
 
-1. ELI5 your explanation/solution. Start with the big picture.
+1. ELI5 your explanation/solution. Always start with the big picture.
 2. Tables/diagrams if relevant.
 3. Details with reference to the code if necessary.
-4. Suggest next steps.
+4. Always suggest next steps.

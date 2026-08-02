@@ -6,7 +6,7 @@ For multi-file code changes, create a plan first. You should:
 2. Escalate to a stronger model (e.g. Opus, latest Codex)
 3. Have the plan and spec reviewed before proceeding with implementation.
 
-Plan file names should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
+Plans should be turned into project board tickets. If there is no board, save it locally: plan file names should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
 
 If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 
@@ -18,7 +18,7 @@ You must think through your decisions and recommendations. It's very easy to rec
 
 If bringing in external libraries, you must first do a web search for the latest version, and check whether the dependency you want is the latest best practice for the ecosystem.
 
-## HTML plans
+## Local HTML plans
 
 When creating a plan under `docs/plans/`, write a single self-contained `.html` file (inline CSS, no external assets).
 
