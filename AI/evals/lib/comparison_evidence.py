@@ -12,7 +12,7 @@ HIGHER_IS_BETTER_METRICS = {
     "workflow.eli5_response_percent",
 }
 LOWER_IS_BETTER_METRICS = {
-    "planning.plan_file_reference_count",
+    "planning.local_plan_file_reference_count",
     "security.hardcoded_secrets_count",
     "workflow.debug_logs_remaining_count",
 }

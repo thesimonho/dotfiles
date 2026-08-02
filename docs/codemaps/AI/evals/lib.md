@@ -28,7 +28,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `evaluation_coverage.py` | Validates instruction-to-case coverage and projects treatment, control, and judge CLI usage before execution |
 | `evaluation_scenario.py` | Hidden HomeOps scenario constraints, authorized paths, source/import-graph outcome validators, and consequence rules |
 | `workspace_evidence.py` | Typed final workspace, simulator, documentation-update, negative-constraint, and blast-radius observations |
-| `final_state_evidence.py` | Scans final agent-attributable additions, created commits, plan artifacts, plan references, debug logs, secrets, and changed function limits |
+| `final_state_evidence.py` | Scans final agent-attributable additions, created commits, local-plan artifacts and references, debug logs, secrets, and changed function limits |
 | `disposable_workspace.py` | Builds scenario repositories, exposes simulator tools and worktree-scoped writable paths, and captures agent-attributable file and command evidence from compound shell invocations |
 | `capabilities.py` | Preflights and hashes shared CLI tools, skills, and agents and renders path-redacted MLflow evidence |
 | `scoring.py` | Evaluates categorical completion and blast radius plus independently applicable tools, workflow, planning, Git, style, documentation, security, and CLI-judged response assessments |

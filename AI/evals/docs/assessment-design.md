@@ -106,17 +106,17 @@ Implementation rules:
 | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
 | `planning.plan_tracking_percent`     | Use the CLI plan or task-list facility for every planning-eligible large or small change.       |
 | `planning.frank_usage_percent`       | Call the configured Frank agent for large changes and avoid calling Frank for small changes.    |
-| `planning.large_plan_file_percent`   | For large changes, create one HTML plan in the required location with a date-prefixed filename. |
-| `planning.plan_file_reference_count` | Leave no references to plan files in final agent-attributable code, rules, or reference docs.   |
+| `planning.local_plan_file_percent`   | In the local-planning fixture, create one HTML plan in the required location with a date-prefixed filename. |
+| `planning.local_plan_file_reference_count` | In the local-planning fixture, leave no references to the plan in final agent-attributable code, rules, or reference docs. |
 
-Each case declares its planning size as `large`, `small`, or `inapplicable`. Both large and small cases require plan tracking. Large cases additionally require a configured Frank call and a compliant HTML plan artifact; small cases are self-planned and must not call Frank. Plan-file requirements apply only to large cases.
+Each case declares its planning size as `large`, `small`, or `inapplicable`. Both large and small cases require plan tracking. Large cases additionally require a configured Frank call. The HomeOps large case is deliberately a local-planning fixture: its disposable repository has no GitHub remote or Project context, so it also requires a compliant HTML plan artifact. Small cases are self-planned and must not call Frank. The eval suite does not test the GitHub remote, Project-board, issue, or ticketization path.
 
 Implementation rules:
 
 - Plan tracking: normalize each CLI's authoritative plan or task-list events. Score the declared required plan-tracking opportunity; prose that merely describes a plan does not count.
 - Frank usage: large cases require an agent-spawn event plus the configured Frank definition canary in the loaded agent context. Small cases require zero Frank spawn events. A matching nickname without the canary does not count as the configured agent.
-- Large plan file: score the declared artifact requirements: exactly one plan, the designated plan directory, a valid `YYYYMMDD-<name>.html` filename, and HTML content. Report the failed components in the rationale.
-- Plan references: scan final agent-attributable non-plan files for the created plan path or basename. Return the reference count and list each source location in the rationale; lower is better and the target is zero.
+- Local plan file: for the declared local-planning fixture only, score exactly one plan in `docs/plans/`, a valid `YYYYMMDD-<name>.html` filename, and HTML content. Report the failed components in the rationale.
+- Local plan references: for the declared local-planning fixture only, scan final agent-attributable non-plan files for the created plan path or basename. Return the reference count and list each source location in the rationale; lower is better and the target is zero.
 
 ### 5. Measure documentation maintenance
 

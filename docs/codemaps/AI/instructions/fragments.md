@@ -16,7 +16,7 @@ Source-of-truth Markdown sections assembled into generated agent instruction fil
 | `documentation.md` | Documentation lifecycle, codemap use, file-scoped agent frontmatter, and worktree runbook expectations |
 | `git.md` | Worktree bootstrap and handoff, branching, conventional commits, focused commits, and merge requirements |
 | `images.md` | Repository and temporary storage rules for generated images |
-| `planning.md` | Plan review, filename, HTML structure, and dependency research rules |
+| `planning.md` | Plan review, GitHub-Project routing, local-plan filename and HTML structure, and dependency research rules |
 | `security.md` | Mandatory checks and the stop-and-escalate response protocol |
 | `subagents.md` | Delegation criteria and model tiers |
 | `tools.md` | Just, RTK, LSP, structural search, data parsing, isolated local browser verification, and codemap guidance |

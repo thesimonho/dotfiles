@@ -24,10 +24,10 @@ class WorkspaceEvidence:
     satisfied_documentation_updates: int
     debug_logs_remaining_count: int
     debug_logs_remaining_count_rationale: str
-    large_plan_file_percent: float
-    large_plan_file_percent_rationale: str
-    plan_file_reference_count: int
-    plan_file_reference_count_rationale: str
+    local_plan_file_percent: float
+    local_plan_file_percent_rationale: str
+    local_plan_file_reference_count: int
+    local_plan_file_reference_count_rationale: str
     conventional_commits_percent: float
     conventional_commits_percent_rationale: str
     function_limits_percent: float

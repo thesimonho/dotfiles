@@ -30,10 +30,10 @@ class FinalStateEvidence:
 
     debug_logs_remaining_count: int
     debug_logs_remaining_count_rationale: str
-    large_plan_file_percent: float
-    large_plan_file_percent_rationale: str
-    plan_file_reference_count: int
-    plan_file_reference_count_rationale: str
+    local_plan_file_percent: float
+    local_plan_file_percent_rationale: str
+    local_plan_file_reference_count: int
+    local_plan_file_reference_count_rationale: str
     conventional_commits_percent: float
     conventional_commits_percent_rationale: str
     function_limits_percent: float
@@ -102,13 +102,13 @@ def capture_final_state_evidence(
         debug_logs_remaining_count_rationale=_count_rationale(
             "temporary debug logs", debug_locations
         ),
-        large_plan_file_percent=sum(compliant_plan_parts)
+        local_plan_file_percent=sum(compliant_plan_parts)
         / len(compliant_plan_parts)
         * 100,
-        large_plan_file_percent_rationale=f"satisfied {sum(compliant_plan_parts)} of {len(compliant_plan_parts)} HTML plan requirements",
-        plan_file_reference_count=len(plan_references),
-        plan_file_reference_count_rationale=_count_rationale(
-            "plan references", plan_references
+        local_plan_file_percent_rationale=f"satisfied {sum(compliant_plan_parts)} of {len(compliant_plan_parts)} local HTML plan requirements",
+        local_plan_file_reference_count=len(plan_references),
+        local_plan_file_reference_count_rationale=_count_rationale(
+            "local plan references", plan_references
         ),
         conventional_commits_percent=(
             conventional_count / len(commit_subjects) * 100 if commit_subjects else 0.0

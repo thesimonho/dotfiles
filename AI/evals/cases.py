@@ -194,12 +194,12 @@ CASES: tuple[EvaluationCase, ...] = (
                 "required_evidence_types": ("agent.spawn", "agent.definition-canary"),
             },
             {
-                "name": "planning.large_plan_file_percent",
-                "evaluator": "large-plan-file-percent",
+                "name": "planning.local_plan_file_percent",
+                "evaluator": "local-plan-file-percent",
             },
             {
-                "name": "planning.plan_file_reference_count",
-                "evaluator": "plan-file-reference-count",
+                "name": "planning.local_plan_file_reference_count",
+                "evaluator": "local-plan-file-reference-count",
             },
             {
                 "name": "workflow.tdd_appropriate_percent",

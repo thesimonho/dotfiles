@@ -2,7 +2,7 @@
 
 For consequential multi-file changes, create and review a plan first. Use Frank when architecture, design, trade-offs, or implementation sequencing need dedicated exploration; plan simple, well-bounded work directly. Escalate to a stronger model when the decision complexity warrants it.
 
-When a repository has GitHub tracking, use `$kanban` after the user approves a plan to publish and track real delivery work. A planning issue is valid when planning is genuinely the next unit of work. Its plan is temporary: after ticketization, the real delivery issues own the relevant implementation detail and the planning issue records that its work completed. The Kanban workflow owns the exact tracker handoff. For an untracked repository, follow its local planning convention; plan file names should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
+When a repository has both a GitHub remote and an existing GitHub Project board, use `$kanban` after the user approves a plan to publish and track real delivery work. A planning issue is valid when planning is genuinely the next unit of work. Its plan is temporary: after ticketization, the real delivery issues own the relevant implementation detail and the planning issue records that its work completed. The Kanban workflow owns the exact tracker handoff. For every other repository, follow its local planning convention; plan file names should start with a date and time stamp YYYYMMDD, eg `20231201-<name>.md`.
 
 If a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
 

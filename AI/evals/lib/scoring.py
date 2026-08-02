@@ -436,16 +436,16 @@ def score_workspace_metrics(
             )
         elif metric["evaluator"] in {
             "debug-logs-count",
-            "large-plan-file-percent",
-            "plan-file-reference-count",
+            "local-plan-file-percent",
+            "local-plan-file-reference-count",
             "conventional-commits-percent",
             "function-limits-percent",
             "hardcoded-secrets-count",
         }:
             evidence_field = {
                 "debug-logs-count": "debug_logs_remaining_count",
-                "large-plan-file-percent": "large_plan_file_percent",
-                "plan-file-reference-count": "plan_file_reference_count",
+                "local-plan-file-percent": "local_plan_file_percent",
+                "local-plan-file-reference-count": "local_plan_file_reference_count",
                 "conventional-commits-percent": "conventional_commits_percent",
                 "function-limits-percent": "function_limits_percent",
                 "hardcoded-secrets-count": "hardcoded_secrets_count",
