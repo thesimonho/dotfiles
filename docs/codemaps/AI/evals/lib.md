@@ -35,7 +35,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `compute_selection_scoring.py` | Maintains least-to-most-capable model/effort ladders per CLI and scores task-bound child selections as delegation or escalation relative to the evaluated parent compute |
 | `typescript_module_graph.mjs` | Lexes TypeScript source to identify real relative imports whose runtime bindings are used |
 | `dataset_sync.py` | Replaces hosted dataset contents and produces filtered hosted-dataset views so tiered runs retain the `agent-harness-cases` identity |
-| `harness_environment.py` | Repository paths, supported agent profiles, and top-level defaults: Codex `gpt-5.6-sol`/`low` and Claude `sonnet`/`medium`; explicit CLI overrides remain supported and child-agent compute remains independently selected |
+| `harness_environment.py` | Repository paths, supported agent profiles, and top-level defaults: Codex `gpt-5.6-terra`/`medium` and Claude `sonnet`/`medium`; explicit CLI overrides remain supported and child-agent compute remains independently selected |
 | `harness_identity.py` | Environment-backed MLflow URI, experiment, dataset, and namespace identities |
 | `configuration_components.py` | Discovers normalized instruction/config components and computes stable identities |
 | `configuration_variant.py` | Builds treatment and single-component-ablated control profiles, materializes custom-agent files, and removes copied Codex OTEL configuration so native eval traces remain authoritative |
@@ -56,7 +56,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | Symbol | File | Description |
 | --- | --- | --- |
 | `run_agent()` / `run_judge()` | `agent.py` | Executes the selected CLI with the requested model, effort, and isolated evaluation profile for a case or judge prompt |
-| `DEFAULT_CODEX_MODEL` / `DEFAULT_CODEX_EFFORT` | `harness_environment.py` | Default the evaluated Codex base agent and judge to `gpt-5.6-sol` with low reasoning effort without constraining delegated subagents |
+| `DEFAULT_CODEX_MODEL` / `DEFAULT_CODEX_EFFORT` | `harness_environment.py` | Default the evaluated Codex base agent and judge to `gpt-5.6-terra` with medium reasoning effort without constraining delegated subagents |
 | `DEFAULT_CLAUDE_MODEL` / `DEFAULT_CLAUDE_EFFORT` | `harness_environment.py` | Default the evaluated Claude base agent and judge to `sonnet` with medium effort while preserving explicit run overrides and leaving delegated subagents unconstrained |
 | `resolve_evaluation_compute()` | `harness_environment.py` | Applies provider defaults independently to omitted model or effort arguments while preserving explicit overrides |
 | `parse_evaluation_arguments()` | `evaluation_arguments.py` | Supplies one argument contract for normal and campaign evaluation entry points |
