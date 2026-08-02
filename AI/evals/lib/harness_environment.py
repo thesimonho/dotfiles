@@ -6,8 +6,8 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 EVALUATION_ROOT = Path(__file__).resolve().parents[1]
 SUPPORTED_AGENT_PROFILES = ("codex", "claude")
 AGENT_ARGUMENT_CHOICES = ("auto", *SUPPORTED_AGENT_PROFILES)
-DEFAULT_CODEX_MODEL = "gpt-5.6-terra"
-DEFAULT_CODEX_EFFORT = "medium"
+DEFAULT_CODEX_MODEL = "gpt-5.6-sol"
+DEFAULT_CODEX_EFFORT = "low"
 DEFAULT_CLAUDE_MODEL = "sonnet"
 DEFAULT_CLAUDE_EFFORT = "medium"
 
