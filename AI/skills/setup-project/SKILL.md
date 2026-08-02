@@ -1,6 +1,9 @@
 ---
 name: setup-project
-description: Bootstrap a new local project and its GitHub delivery workspace. Use only when the user manually invokes this skill at the start of a project to initialize Git, establish shared agent instructions, create and link a GitHub repository, set up a GitHub Project board, scaffold the chosen project, and create an empty domain glossary.
+description: Bootstrap a new local project and its GitHub delivery workspace. Use only when the user manually invokes this skill at the start of a project to set up initial project structure.
+model: sonnet
+disable-model-invocation: true
+user-invocable: true
 ---
 
 # Setup Project
@@ -41,11 +44,12 @@ Track these steps explicitly and complete them in order.
 - If `origin` does not exist, confirm `gh` is authenticated, infer a sensible repository name from the directory, and ask the user for any unresolved owner, name, description, or visibility choice.
 - Use `gh repo create` with the current directory as its source and configure the new repository as `origin`.
 - Create and link the repository without pushing unless the user explicitly asks to publish commits.
-- Never make repository visibility assumptions.
+- New repositories should always be created as Private.
 
 ### 5. Set up delivery tracking
 
-- Invoke `$kanban` with an explicit request to set up the GitHub Project board for the linked repository.
+- Make sure Projects are enabled in the GitHub repository.
+- Invoke the `$kanban` skill with an explicit request to set up the GitHub Project board for the linked repository.
 - Let the Kanban workflow inspect existing Projects, labels, Milestones, and Issues so it can reuse rather than duplicate them.
 - Surface any GitHub authorization or ownership limitation to the user instead of silently skipping setup.
 
@@ -57,14 +61,24 @@ Track these steps explicitly and complete them in order.
 - Ensure scaffolding preserves `AGENTS.md`, `CLAUDE.md`, the `origin` remote, and the GitHub Project created earlier.
 - After scaffolding, replace the generic note in a newly created `AGENTS.md` with concise project-specific commands and conventions learned during scaffolding. Do not alter an `AGENTS.md` that predated this workflow unless the user approves.
 
-### 7. Create the glossary
+### 7. Create the project baseline
+
+Create the project baseline after scaffolding so every file reflects the selected language, framework, and runtime:
+
+- Create `mise.toml` if it does not exist. Declare only the runtimes and tools the scaffolded project actually requires, using the versions selected or installed by the Scaffold workflow. Do not guess versions or replace an existing Mise configuration.
+- Ensure a root `.gitignore` exists and covers the standard generated files, dependencies, build output, local environment files, editor files, and operating-system files for the scaffolded project type. Extend an incomplete generated `.gitignore` without removing existing entries; preserve intentional tracked files.
+- Create a truly empty root `justfile` if it does not exist. Preserve an existing `justfile` exactly and do not add speculative recipes.
+- Ensure a root `README.md` exists with the project name, a brief purpose, setup instructions, the primary development or usage command, verification commands, and a concise technology summary. Improve a scaffold-generated README only when those basics are missing; preserve useful generated guidance.
+- Keep all baseline files consistent with the actual scaffold. Do not document commands, tools, or runtimes that were not installed and verified.
+
+### 8. Create the glossary
 
 - Create the `docs/` directory when needed.
 - Create an empty `docs/glossary.md` if it does not exist.
 - Preserve an existing glossary exactly; do not empty or replace it.
 - Keep the new glossary truly blank until project domain terms are resolved.
 
-### 8. Report the result
+### 9. Report the result
 
 Summarize:
 
@@ -73,5 +87,6 @@ Summarize:
 - the `origin` URL and repository visibility;
 - the GitHub Project created or reused;
 - what was scaffolded and how it was verified;
+- the runtime pins and repository baseline files created or preserved;
 - whether `docs/glossary.md` was created or preserved;
 - any incomplete step and the exact action needed to unblock it.

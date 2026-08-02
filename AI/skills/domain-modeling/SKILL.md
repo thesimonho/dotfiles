@@ -17,7 +17,6 @@ Most repos have a `docs/` directory:
 /
 ├── docs/
 │   ├── codemaps/
-│   ├── plans/
 │   ├── glossary.md
 │   ├── README.md
 │   └── ...
