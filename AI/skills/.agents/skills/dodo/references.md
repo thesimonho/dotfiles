@@ -18,11 +18,25 @@ References vary massively by project and personal preference. Common types inclu
 - **Troubleshooting guides** — known issues and their solutions
 - **Runbooks** — operational procedures for services
 
+## Lifecycle & archiving
+
+References age in two different ways — treat them differently:
+
+- **Living** — evergreen truth, edited in place: architecture overviews, development guides, data models, roadmaps, troubleshooting guides. Keep these fresh (that's the update flow's job).
+- **Snapshot** — true as-of a date, then frozen: plans, ADRs, research reports, design docs, mockups. A snapshot is _not_ kept fresh — its job is to record a decision or a moment. Give each a status (`active`, `shipped`, `superseded`, `deferred`).
+
+When a snapshot's moment passes — a plan ships, an ADR is superseded, a decision is overtaken — **archive it rather than update or delete it**:
+
+- Move the file into a sibling `archive/` subdir (e.g. `docs/plans/archive/`, `docs/adrs/archive/`) so the live folder shows only current docs.
+- Leave a one-line banner at the top of a _superseded_ file naming what replaced it (a shipped plan needs no banner — it's self-evidently historical).
+- Drop it from the index — the index lists only **live** docs; the `archive/` folder is its own list, so don't enumerate archived files there (that list only grows and rots).
+- If the archived doc still holds work that matters later, put a short **"revisit-when X"** trigger in the roadmap/backlog with a link, rather than keeping the whole doc "live" just to remember it.
+
 ## Structure conventions
 
 References are inherently freeform — don't enforce rigid structure. But follow these conventions:
 
-- **Index file**: maintain a `docs/README.md` that links to all reference docs with a one-line description of each
+- **Index file**: maintain a `docs/README.md` that links to all **live** reference docs with a one-line description and status of each — not archived ones (see Lifecycle & archiving)
 - **Grouping**: when there are 5+ docs of the same type, group them in a subdirectory (e.g., `docs/adrs/`, `docs/guides/`)
 - **Location**: keep references in `docs/` unless the project has an established convention elsewhere. Root-level files like `CONTRIBUTING.md` stay at the root — that's standard.
 
@@ -61,14 +75,15 @@ Important: if you're searching or reading documents, it's much faster to do it i
    - **Missing coverage**: have new major features been added that have no documentation at all?
 3. Categorize findings:
    - **Factual inaccuracies** (wrong paths, outdated APIs, incorrect examples): fix these directly. These are objective errors.
-   - **Stale opinions or plans** (outdated roadmaps, superseded decisions): flag these to the user with specific line references. Don't rewrite someone else's plans.
+   - **Stale opinions** in a living doc (a roadmap item no longer planned, a stated intent the project moved away from): flag these to the user with specific line references. Don't rewrite someone else's plans.
+   - **Snapshots whose moment has passed** (a plan whose feature shipped, a superseded ADR or decision): don't try to freshen them — archive them per Lifecycle & archiving (move to `archive/`, add a banner if superseded, drop from the index, surface any still-live work as a roadmap trigger). If it's ambiguous whether the snapshot is truly done, confirm with the user before archiving.
    - **Missing documentation** (new features with no docs): suggest new reference docs to the user. Follow the create flow if they approve.
-4. Update the `docs/README.md` index if docs have been added, removed, or renamed.
+4. Update the `docs/README.md` index if docs have been added, removed, renamed, or archived — it lists only the live set.
 
 ## Principles
 
 - **References are the user's documentation, not yours.** Respect their voice, structure, and decisions. When updating, match the existing writing style.
-- **Freshness is the #1 priority.** A doc that was accurate 6 months ago but wrong today is worse than no doc at all.
+- **Freshness applies to living docs, not snapshots.** A _living_ doc that was accurate 6 months ago but wrong today is worse than no doc at all — keep it current. A _snapshot's_ job is the opposite: stay frozen. "Fresh" means the live set is accurate and finished snapshots are archived, not that every file changes.
 - **Prefer surgical fixes over rewrites.** Change the wrong path, update the outdated example, remove the completed TODO. Don't restructure the whole document.
 - **Always explain what you changed and why.** The user should be able to review your updates and understand each one.
 - **Ask before changing intent.** Factual corrections are fine to make directly. But if a doc says "we plan to migrate to PostgreSQL" and the project now uses MongoDB, ask the user — maybe they abandoned the plan, or maybe it's still in progress.

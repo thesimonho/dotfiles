@@ -57,6 +57,8 @@ Iterate until the user approves the breakdown.
 
 Publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues.
 
+When publishing issue bodies, preserve actual newline characters. Prefer `--body-file` or structured API input; never interpolate a JSON-stringified body into `gh issue create --body`.
+
 Apply the `ready-for-agent` triage label unless instructed otherwise — the tickets are agent-grabbable by construction.
 
 Work the **frontier**: any ticket whose blockers are all done. For a purely linear chain that means top to bottom.
