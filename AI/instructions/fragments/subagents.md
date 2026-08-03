@@ -16,14 +16,14 @@ Models: Claude Haiku, GPT5.3 Codex Spark
 
 ### Regular tasks
 
-Scoped research, code exploration, in-scope synthesis
+Scoped research, working with project boards, in-scope synthesis, regular implementation
 
-Models: Claude Sonnet, GPT medium reasoning
+Models: Claude Sonnet, GPT Terra
 
 ### Complex tasks
 
-Subtasks needing real planning, decision making, or tradeoffs
+Use these for decision making tasks and planning tasks
 
-Models: Claude Opus, GPT high reasoning
+Models: Claude Opus, GPT Sol
 
 Escalate to the highest reasoning level if the task is not resolved after a few attempts.
