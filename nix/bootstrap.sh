@@ -328,26 +328,6 @@ apply_host() {
     switch --flake "$FLAKE_DIR#$host"
 }
 
-# -----------------------------
-# Optional: set default shell to Nix-provided zsh (if present)
-# -----------------------------
-ensure_nix_zsh_shell() {
-  local zsh_path="$HOME/.nix-profile/bin/zsh"
-
-  if [[ ! -x "$zsh_path" ]]; then
-    echo "==> Nix zsh not found at $zsh_path (maybe HM doesn't install zsh yet). Skipping chsh."
-    return 0
-  fi
-
-  if ! grep -qx "$zsh_path" /etc/shells 2>/dev/null; then
-    echo "==> Adding nix zsh to /etc/shells..."
-    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
-  fi
-
-  echo "==> Changing default shell to nix zsh..."
-  chsh -s "$zsh_path" || true
-}
-
 maybe_mise_install() {
   if command -v mise >/dev/null 2>&1; then
     echo "==> Running mise install..."
@@ -375,7 +355,6 @@ main() {
   apply_host "$HOST"
   run_post_setup
 
-  ensure_nix_zsh_shell
   maybe_mise_install
 
   echo "✅ Done. Open a new shell (or log out/in) to ensure environment is fresh."
