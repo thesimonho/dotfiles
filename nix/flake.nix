@@ -30,9 +30,9 @@
     # `just update`; bump explicitly with `just update-pinned`.
     #
     # A release channel is no longer usable here: nixos-26.05 froze llama-cpp
-    # at b9190 (2026-05-16), which predates the Mellum architecture landing in
-    # llama.cpp at ~b9485 (2026-06-02), so Tabby's darwin completion server
-    # cannot load Mellum2. Naming the `nixpkgs-unstable` branch instead is the
+    # at b9190 (2026-05-16), old enough that architectures added upstream since
+    # (Mellum landed at ~b9485, 2026-06-02) fail to load at all. Local models
+    # move faster than the channel. Naming the `nixpkgs-unstable` branch is the
     # obvious move and the wrong one — it is the same ref as the input above,
     # but resolves to a *separate* lock node, so the two drift into different
     # checkouts of one branch as `just update` and `just update-pinned` bump
@@ -47,13 +47,6 @@
     # `just update-pinned` advances this to the current channel tip; do not
     # hand-edit it to an arbitrary master SHA.
     nixpkgs-pinned.url = "github:NixOS/nixpkgs/38a4887411571457d700c51c64a6e49ead2ed5ab";
-    # Workaround pin for tabby only: 26.05 and unstable rustc reject its
-    # vendored metrics-0.22.3 crate (rust-lang/rust#141402), and 25.11 is the
-    # newest channel with a Hydra-cached aarch64-darwin binary.
-    # TODO: (late 2026) once nixpkgs PR #485360 (tabby 0.28.0 -> 0.32.0) lands
-    # in unstable, point the AI catalog's tabby entry back at pkgsUnstable,
-    # delete this input, and remove it from PINNED in the justfile.
-    nixpkgs-tabby.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";

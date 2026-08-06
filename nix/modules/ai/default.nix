@@ -44,7 +44,6 @@ in
     ./skills.nix
     ./clients.nix
     ./llama.nix
-    ./tabby.nix
   ];
 
   options.my.ai = {

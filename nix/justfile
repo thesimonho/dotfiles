@@ -2,7 +2,7 @@ FLAKE_DIR := "."
 
 # Inputs excluded from `just update` (heavy rebuilds). Bump explicitly.
 
-PINNED := "nixpkgs-pinned nixpkgs-tabby"
+PINNED := "nixpkgs-pinned"
 [private]
 _nix := "nix --extra-experimental-features 'nix-command flakes'"
 

@@ -26,9 +26,10 @@ if ! is_owned_process; then
   exit 0
 fi
 
-# Signalling the tracked pid alone leaves its children running: Tabby forks
-# llama-server processes that do not die with their parent, and they pile up
-# one per start/stop cycle until something notices the port is busy.
+# Signalling the tracked pid alone leaves its children running: a service that
+# forks worker processes (inference servers, in practice) leaves them behind
+# when it dies, and they pile up one per start/stop cycle until something
+# notices the port is busy.
 #
 # The start script gives the service a process group of its own, so the whole
 # tree can be signalled at once. Only do that when the group *is* the service:

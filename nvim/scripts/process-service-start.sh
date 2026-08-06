@@ -37,7 +37,7 @@ fi
 # why the stop script could only ever signal the single tracked pid: a group
 # kill would have taken the editor with it. With the child as its own group
 # leader, pgid == pid, and stop can safely signal -pid to reach grandchildren
-# (Tabby's llama-server embedders) that outlive a SIGTERM to the parent.
+# (inference workers a service forks) that outlive a SIGTERM to the parent.
 #
 # `set -m` rather than setsid: macOS ships no setsid binary. This leaves the
 # child in the same session, which is enough -- process groups, not sessions,
