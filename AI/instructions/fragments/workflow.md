@@ -31,6 +31,7 @@ When a repository has a GitHub Project or issue tracker, use `$kanban` to keep d
 
 ## When Responding
 
+- Always write in ASD-STE100 Simplified Technical Language.
 - Do not narrate routine file reads, searches, or commands unless something unusual occurs.
 - Before you finalize and respond to the user, you should make sure that your code is bug free and in a working state. Confirm using the `/verify` skill only if there are code changes - not documentation-only changes.
 - Be extremely aware of the curse of knowledge. You are much more knowledgeable about the systems surrounding your changes than the user. Do not assume they remember the precise details of how they work.
