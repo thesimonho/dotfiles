@@ -4,6 +4,10 @@
  * git.md requires all work to start on a feature branch. Docs/config edits
  * are still allowed on main/master since they are often small housekeeping
  * changes; only edits to recognized code file extensions are blocked.
+ *
+ * The branch is resolved from the edited file's own repository, not the
+ * session cwd: a session parked in the canonical checkout must still be able
+ * to edit files inside a linked worktree that sits on a feature branch.
  */
 
 const fs = require("node:fs");
@@ -38,37 +42,65 @@ const CODE_EXTENSIONS = new Set([
 ]);
 
 /**
- * Reads the branch ref that .git/HEAD points at, or null when it cannot be
- * determined (missing repo, detached HEAD, unreadable file).
+ * Walks up from a file to the nearest directory containing a `.git` entry
+ * (a directory for a normal checkout, a file for a linked worktree), or null
+ * when the file is not inside any repository.
  *
- * @param {string} cwd
+ * @param {string} absoluteFilePath
  * @returns {string|null}
  */
-function currentBranchRef(cwd) {
-  try {
-    const head = fs.readFileSync(path.join(gitMetadataPath(cwd), "HEAD"), "utf8").trim();
-    const match = head.match(/^ref:\s+(refs\/heads\/.+)$/);
-    return match ? match[1] : null;
-  } catch {
-    return null;
+function repositoryRootFor(absoluteFilePath) {
+  let directory = path.dirname(absoluteFilePath);
+  while (true) {
+    if (fs.existsSync(path.join(directory, ".git"))) {
+      return directory;
+    }
+    const parent = path.dirname(directory);
+    if (parent === directory) {
+      return null;
+    }
+    directory = parent;
   }
 }
 
 /**
  * Resolve the Git metadata directory for a checkout or linked worktree.
  *
- * @param {string} cwd
+ * @param {string} repositoryRoot
  * @returns {string}
  */
-function gitMetadataPath(cwd) {
-  const dotGitPath = path.join(cwd, ".git");
+function gitMetadataPath(repositoryRoot) {
+  const dotGitPath = path.join(repositoryRoot, ".git");
   if (fs.statSync(dotGitPath).isDirectory()) {
     return dotGitPath;
   }
 
   const gitDirectoryFile = fs.readFileSync(dotGitPath, "utf8").trim();
   const gitDirectory = gitDirectoryFile.match(/^gitdir:\s+(.+)$/)?.[1];
-  return path.resolve(cwd, gitDirectory ?? ".git");
+  return path.resolve(repositoryRoot, gitDirectory ?? ".git");
+}
+
+/**
+ * Reads the branch ref that a file's own repository HEAD points at, or null
+ * when it cannot be determined (no repo, detached HEAD, unreadable file).
+ *
+ * @param {string} absoluteFilePath
+ * @returns {string|null}
+ */
+function branchRefForFile(absoluteFilePath) {
+  try {
+    const repositoryRoot = repositoryRootFor(absoluteFilePath);
+    if (!repositoryRoot) {
+      return null;
+    }
+    const head = fs
+      .readFileSync(path.join(gitMetadataPath(repositoryRoot), "HEAD"), "utf8")
+      .trim();
+    const match = head.match(/^ref:\s+(refs\/heads\/.+)$/);
+    return match ? match[1] : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -84,23 +116,26 @@ function isCodeFile(filePath) {
 
 function evaluate(payload) {
   const filePaths = payload.tool_input?.file_paths ?? [payload.tool_input?.file_path].filter(Boolean);
-  const codeFilePaths = filePaths.filter(isCodeFile);
+  const cwd = payload.cwd ?? ".";
+  const blockedEntries = filePaths
+    .filter(isCodeFile)
+    .map((filePath) => ({
+      filePath,
+      branchRef: branchRefForFile(path.resolve(cwd, filePath)),
+    }))
+    .filter(
+      (entry) => entry.branchRef && DEFAULT_BRANCH_REFS.includes(entry.branchRef),
+    );
 
-  if (codeFilePaths.length === 0) {
+  if (blockedEntries.length === 0) {
     return doNothing();
   }
 
-  const branchRef = currentBranchRef(payload.cwd ?? ".");
-
-  if (branchRef && DEFAULT_BRANCH_REFS.includes(branchRef)) {
-    return block("Start work in a feature branch, not on the default branch", [
-      `Currently on: ${branchRef.replace("refs/heads/", "")}`,
-      `Code files: ${codeFilePaths.join(", ")}`,
-      "Run: git checkout -b <type>/<short-desc>",
-    ]);
-  }
-
-  return doNothing();
+  return block("Start work in a feature branch, not on the default branch", [
+    `Currently on: ${blockedEntries[0].branchRef.replace("refs/heads/", "")}`,
+    `Code files: ${blockedEntries.map((entry) => entry.filePath).join(", ")}`,
+    "Run: git checkout -b <type>/<short-desc>",
+  ]);
 }
 
 module.exports = { evaluate };
