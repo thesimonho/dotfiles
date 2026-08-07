@@ -98,6 +98,10 @@ eval-smoke agent model="" effort="":
 eval-extended agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite extended
 
+# Run the extended suite against the bare harness: no instructions, no hooks.
+eval-naked agent model="" effort="":
+    just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite extended --naked
+
 # Show local service state.
 eval-status:
     docker compose -f {{ mlflow_compose }} ps

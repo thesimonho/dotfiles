@@ -14,7 +14,7 @@ from typing import Literal
 
 from configuration_components import ConfigComponent
 
-type VariantName = Literal["treatment", "control"]
+type VariantName = Literal["treatment", "control", "naked"]
 
 
 @dataclass(frozen=True)
@@ -125,11 +125,9 @@ def _prepare_codex_profile(
     agent_definition_canary: str,
 ) -> None:
     """Copy Codex runtime identity and render only active prose instructions."""
-    _copy_required_files(
-        source_root,
-        profile_root,
-        ("auth.json", "config.toml", "hooks.json"),
-    )
+    _copy_required_files(source_root, profile_root, ("auth.json", "config.toml"))
+    if _has_hook_components(variant):
+        _copy_required_files(source_root, profile_root, ("hooks.json",))
     _remove_codex_otel_configuration(profile_root / "config.toml")
     _remove_codex_hook_trust_state(profile_root / "config.toml")
     _copy_optional_files(source_root, profile_root, ("installation_id",))
@@ -174,10 +172,11 @@ def _prepare_claude_profile(
 ) -> None:
     """Copy Claude authentication and expose active instructions as rules."""
     _copy_required_files(source_root, profile_root, (".credentials.json",))
-    _write_claude_hook_settings(
-        source_root / "settings.json",
-        profile_root / "settings.json",
-    )
+    if _has_hook_components(variant):
+        _write_claude_hook_settings(
+            source_root / "settings.json",
+            profile_root / "settings.json",
+        )
     _copy_required_directories(source_root, profile_root, ("agents",))
     _link_required_directories(source_root, profile_root, ("skills",))
     _instrument_claude_agent(
@@ -189,6 +188,19 @@ def _prepare_claude_profile(
     for component in _instruction_components(variant):
         rule_name = component.component_id.removeprefix("instruction/")
         (rules_root / f"{rule_name}.md").write_text(component.content)
+
+
+def _has_hook_components(variant: ConfigurationVariant) -> bool:
+    """The variant's component set decides whether hooks are deployed.
+
+    A full configuration carries hook/* components, so the profile mirrors
+    the live hook wiring. A naked variant carries none, so the profile is
+    deliberately hook-free and the manifest records exactly that.
+    """
+    return any(
+        component.component_id.startswith("hook/")
+        for component in variant.components
+    )
 
 
 def _write_claude_hook_settings(source_path: Path, destination_path: Path) -> None:

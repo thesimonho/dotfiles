@@ -99,6 +99,7 @@ class MlflowConfigurationRegistry:
         external_trace_execution_id: str | None = None,
         expected_external_invocation_count: int | None = None,
         advance_baseline_alias: bool = True,
+        variant_label: str | None = None,
     ) -> None:
         """Make configuration provenance visible from the completed evaluation run."""
         self._client.log_param(
@@ -133,6 +134,7 @@ class MlflowConfigurationRegistry:
                 agent_model,
                 agent_effort,
                 publication,
+                variant_label=variant_label,
             ),
         )
         self._client.log_dict(
@@ -419,11 +421,13 @@ def _run_name(
     model: str,
     effort: str,
     publication: ConfigurationPublication,
+    variant_label: str | None = None,
 ) -> str:
     manifest_version = publication.manifest_prompt.version
     model_label = model.rsplit("-", maxsplit=1)[-1] or model
+    variant_segment = f"-{variant_label}" if variant_label else ""
     return (
-        f"{profile}-{model_label}-{effort}-v{manifest_version} - "
+        f"{profile}-{model_label}-{effort}{variant_segment}-v{manifest_version} - "
         f"{_change_label(publication)}"
     )
 

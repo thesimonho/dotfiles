@@ -56,4 +56,18 @@ def parse_evaluation_arguments() -> argparse.Namespace:
             "component from the control configuration."
         ),
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--naked",
+        action="store_true",
+        help=(
+            "Evaluate the bare harness: no instruction fragments and no hooks, "
+            "keeping agents and skills. Implies --no-advance-baseline and marks "
+            "the run so it can never be mistaken for a full-configuration run."
+        ),
+    )
+    arguments = parser.parse_args()
+    if arguments.naked and arguments.compare_component:
+        parser.error("--naked cannot be combined with --compare-component")
+    if arguments.naked:
+        arguments.advance_baseline = False
+    return arguments

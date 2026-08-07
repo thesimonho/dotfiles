@@ -7,7 +7,7 @@ import uuid
 from argparse import Namespace
 from collections.abc import Callable
 from contextlib import ExitStack
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Literal, cast
 
@@ -70,70 +70,11 @@ from mlflow_parameter_names import (  # noqa: E402
     CASE_NAME_FIELD,
 )
 from evaluation_case import EvaluationCase, WorkspaceSpec  # noqa: E402
-
-
-@dataclass(frozen=True)
-class EvaluationIdentity:
-    """Immutable run and comparison identity shared by traces and CLIs."""
-
-    profile: str
-    model: str
-    effort: str
-    execution_id: str
-    manifest_id: str
-    comparison_group_id: str | None = None
-    comparison_variant: str | None = None
-    ablated_component_id: str | None = None
-
-    def trace_metadata(self) -> dict[str, str]:
-        """Return optional comparison fields for native MLflow traces."""
-        metadata = {
-            "evaluation.execution_id": self.execution_id,
-            "config.manifest_id": self.manifest_id,
-            AGENT_MODEL_FIELD: self.model,
-            AGENT_EFFORT_FIELD: self.effort,
-        }
-        optional_metadata = {
-            "evaluation.comparison_group_id": self.comparison_group_id,
-            "evaluation.variant": self.comparison_variant,
-            "evaluation.ablated_component_id": self.ablated_component_id,
-        }
-        metadata.update(
-            {
-                name: value
-                for name, value in optional_metadata.items()
-                if value is not None
-            }
-        )
-        return metadata
-
-
-@dataclass
-class WorkspaceSnapshotRecorder:
-    """Collect initial workspace identities observed during one arm."""
-
-    hashes: dict[str, str] = field(default_factory=dict)
-
-    def record(self, case_id: str, snapshot_hash: str) -> None:
-        """Reject inconsistent retries of the same case inside one arm."""
-        previous_hash = self.hashes.get(case_id)
-        if previous_hash is not None and previous_hash != snapshot_hash:
-            raise RuntimeError(f"case {case_id} used multiple workspace snapshots")
-        self.hashes[case_id] = snapshot_hash
-
-
-@dataclass(frozen=True)
-class CompletedEvaluation:
-    """Inspectable result from one complete MLflow evaluation arm."""
-
-    run_id: str
-    execution_id: str
-    manifest_id: str
-    manifest_prompt: str
-    model_id: str
-    metrics: dict[str, float]
-    workspace_snapshot_hashes: dict[str, str]
-    change_summary: str
+from evaluation_run_identity import (  # noqa: E402
+    CompletedEvaluation,
+    EvaluationIdentity,
+    WorkspaceSnapshotRecorder,
+)
 
 
 def build_predict_fn(
@@ -443,16 +384,28 @@ def run_evaluation(arguments: Namespace) -> None:
         )
         return
 
-    treatment_variant = ConfigurationVariant(
-        name="treatment",
-        components=components,
-    )
-    with prepare_variant_profile(agent_profile, treatment_variant) as prepared_profile:
+    if arguments.naked:
+        active_components = tuple(
+            component
+            for component in components
+            if not component.component_id.startswith(("instruction/", "hook/"))
+        )
+        active_variant = ConfigurationVariant(
+            name="naked",
+            components=active_components,
+        )
+    else:
+        active_components = components
+        active_variant = ConfigurationVariant(
+            name="treatment",
+            components=components,
+        )
+    with prepare_variant_profile(agent_profile, active_variant) as prepared_profile:
         completed = _run_evaluation_arm(
             client=client,
             registry=registry,
             profile=agent_profile,
-            components=components,
+            components=active_components,
             selected_cases=selected_cases,
             evaluation_data=evaluation_data,
             experiment_id=experiment_id,
@@ -461,6 +414,7 @@ def run_evaluation(arguments: Namespace) -> None:
             effort=effort,
             profile_environment=prepared_profile.environment,
             agent_definition_canary=prepared_profile.agent_definition_canary,
+            comparison_variant="naked" if arguments.naked else None,
             advance_baseline_alias=arguments.advance_baseline,
         )
     _print_completed_evaluation(completed)
@@ -617,6 +571,7 @@ def _run_evaluation_arm(
         agent_effort=identity.effort,
         expected_trace_count=len(selected_cases),
         advance_baseline_alias=advance_baseline_alias,
+        variant_label=comparison_variant if comparison_group_id is None else None,
     )
     client.log_param(results.run_id, AGENT_MODEL_FIELD, identity.model)
     client.log_param(results.run_id, AGENT_EFFORT_FIELD, identity.effort)
@@ -628,6 +583,8 @@ def _run_evaluation_arm(
             comparison_variant=comparison_variant,
             ablated_component_id=ablated_component_id,
         )
+    elif comparison_variant is not None:
+        client.set_tag(results.run_id, "evaluation.variant", comparison_variant)
     return CompletedEvaluation(
         run_id=results.run_id,
         execution_id=identity.execution_id,
