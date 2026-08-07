@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 import os
+import re
 from typing import Any, cast
 
 import agent
@@ -67,9 +68,16 @@ def score_output_quality(
         model=context.agent_model,
         effort=context.agent_effort,
     )
-    verdict = verdict_raw.strip().splitlines()[0].upper()
-    if verdict not in {"PASS", "FAIL"}:
+    stripped_verdict = verdict_raw.strip()
+    if not stripped_verdict:
         raise RuntimeError("evaluation judge did not return PASS or FAIL")
+    # Claude answers "PASS: reason" on one line while Codex follows the
+    # two-line format literally, so accept a leading verdict token only.
+    first_line = stripped_verdict.splitlines()[0].upper()
+    verdict_match = re.match(r"^[^A-Z]*(PASS|FAIL)\b", first_line)
+    if verdict_match is None:
+        raise RuntimeError("evaluation judge did not return PASS or FAIL")
+    verdict = verdict_match.group(1)
     return (100.0 if verdict == "PASS" else 0.0), verdict_raw[:1000]
 
 
