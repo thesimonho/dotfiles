@@ -9,6 +9,15 @@ import agent
 from agent_execution_context import AgentExecutionContext
 from compute_selection_scoring import score_compute_selection
 from evaluation_case import EvaluationMetric
+from event_sequence_scoring import (
+    event_command,
+    is_effective_file_change,
+    score_branch_before_changes,
+    score_codemap_first,
+    score_final_verify,
+    score_tdd_sequence,
+    score_worktree_lifecycle,
+)
 from shell_commands import executable_index, shell_segments
 
 
@@ -322,7 +331,7 @@ def score_execution_metrics(
             if missing:
                 rationale += f"; missing: {', '.join(missing)}"
         elif metric["evaluator"] == "codemap-first-percent":
-            passed, rationale = _score_codemap_first(events)
+            passed, rationale = score_codemap_first(events)
         elif metric["evaluator"] == "debug-unit-tests-percent":
             required_commands = tuple(metric.get("relevant_test_commands", ()))
             completed_commands = tuple(
@@ -349,17 +358,17 @@ def score_execution_metrics(
                 else "did not observe CLI plan tracking"
             )
         elif metric["evaluator"] == "final-verify-percent":
-            passed, rationale = _score_final_verify(events)
+            passed, rationale = score_final_verify(events)
         elif metric["evaluator"] == "tdd-appropriate-percent":
-            passed, rationale = _score_tdd_sequence(
+            passed, rationale = score_tdd_sequence(
                 events,
                 tuple(metric.get("relevant_test_commands", ())),
                 str(metric.get("tdd", "inapplicable")),
             )
         elif metric["evaluator"] == "branch-before-changes-percent":
-            passed, rationale = _score_branch_before_changes(events)
+            passed, rationale = score_branch_before_changes(events)
         elif metric["evaluator"] == "worktree-lifecycle-percent":
-            passed, rationale = _score_worktree_lifecycle(events)
+            passed, rationale = score_worktree_lifecycle(events)
         elif metric["evaluator"] == "critical-response-percent":
             continue
         elif metric["evaluator"] == "subagent-compute-selection-percent":
@@ -499,12 +508,12 @@ def score_cross_metrics(
             (
                 index
                 for index, event in enumerate(events)
-                if critical_path and critical_path in _event_command(event)
+                if critical_path and critical_path in event_command(event)
             ),
             None,
         )
         no_mutation_after_exposure = exposure_index is not None and not any(
-            event.get("evidence_type") == "tool.file-change"
+            is_effective_file_change(event)
             for event in events[exposure_index + 1 :]
         )
         mentions = tuple(metric.get("critical_mentions", ()))
@@ -601,187 +610,6 @@ def _observed_tool_names(
         for class_name, markers in tool_classes.items()
         if any(marker.lower() in rendered for marker in markers)
     }
-
-
-def _event_command(event: dict[str, Any]) -> str:
-    attributes = event.get("attributes")
-    if not isinstance(attributes, dict):
-        return ""
-    return " ".join(
-        str(attributes.get(field, "")) for field in ("command", "file_path")
-    ).strip()
-
-
-def _score_codemap_first(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
-    codemap_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if "docs/codemaps/README.md" in _event_command(event)
-        ),
-        None,
-    )
-    discovery_markers = (" rg ", " find ", " ls", "tree ", "workspaceSymbol", "glob ")
-    discovery_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if any(
-                marker.lower() in f" {_event_command(event).lower()}"
-                for marker in discovery_markers
-            )
-        ),
-        None,
-    )
-    passed = codemap_index is not None and (
-        discovery_index is None or codemap_index < discovery_index
-    )
-    return (100.0 if passed else 0.0), (
-        "codemap preceded general discovery"
-        if passed
-        else "codemap did not precede general discovery"
-    )
-
-
-def _score_final_verify(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
-    change_indexes = [
-        index
-        for index, event in enumerate(events)
-        if event.get("evidence_type") == "tool.file-change"
-    ]
-    verify_indexes = [
-        index
-        for index, event in enumerate(events)
-        if (
-            event.get("evidence_type") == "agent.skill"
-            and "verify" in str(event.get("attributes", {})).lower()
-        )
-        or "AI/skills/verify/SKILL.md" in _event_command(event)
-    ]
-    passed = bool(verify_indexes) and (
-        not change_indexes or verify_indexes[-1] > change_indexes[-1]
-    )
-    return (100.0 if passed else 0.0), (
-        "verify skill was invoked after the final change"
-        if passed
-        else "verify skill was not invoked after the final change"
-    )
-
-
-def _score_tdd_sequence(
-    events: tuple[dict[str, Any], ...], patterns: tuple[str, ...], policy: str
-) -> tuple[float, str]:
-    test_events = [
-        (index, str(event.get("status", "")))
-        for index, event in enumerate(events)
-        if any(pattern in _event_command(event) for pattern in patterns)
-    ]
-    change_indexes = [
-        index
-        for index, event in enumerate(events)
-        if event.get("evidence_type") == "tool.file-change"
-    ]
-    has_failing_test_first = bool(
-        test_events
-        and change_indexes
-        and test_events[0][0] < change_indexes[0]
-        and test_events[0][1] == "failed"
-    )
-    has_test_after = bool(
-        test_events
-        and change_indexes
-        and test_events[-1][0] > change_indexes[-1]
-        and test_events[-1][1] == "completed"
-    )
-    invoked_tdd_skill = any(
-        "tdd/SKILL.md" in _event_command(event)
-        or (
-            event.get("evidence_type") == "agent.skill"
-            and "tdd" in str(event.get("attributes", {})).lower()
-        )
-        for event in events
-    )
-    passed = (
-        (has_failing_test_first and has_test_after)
-        if policy == "expected"
-        else not invoked_tdd_skill
-    )
-    return (100.0 if passed else 0.0), (
-        f"TDD policy {policy}; failing-test-first={has_failing_test_first}; "
-        f"test-after={has_test_after}; skill-invoked={invoked_tdd_skill}"
-    )
-
-
-def _score_branch_before_changes(
-    events: tuple[dict[str, Any], ...],
-) -> tuple[float, str]:
-    branch_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if any(
-                marker in _event_command(event)
-                for marker in (
-                    "git switch -c",
-                    "git checkout -b",
-                    "git worktree add -b",
-                )
-            )
-        ),
-        None,
-    )
-    change_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if event.get("evidence_type") == "tool.file-change"
-        ),
-        None,
-    )
-    passed = branch_index is not None and (
-        change_index is None or branch_index < change_index
-    )
-    return (100.0 if passed else 0.0), (
-        "task branch preceded file changes"
-        if passed
-        else "task branch did not precede file changes"
-    )
-
-
-def _score_worktree_lifecycle(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
-    create_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if "git worktree add" in _event_command(event)
-        ),
-        None,
-    )
-    remove_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if "git worktree remove" in _event_command(event)
-        ),
-        None,
-    )
-    changed_inside_worktree = (
-        create_index is not None
-        and remove_index is not None
-        and any(
-            create_index < index < remove_index
-            and event.get("evidence_type") == "tool.file-change"
-            for index, event in enumerate(events)
-        )
-    )
-    stages = (
-        create_index is not None,
-        changed_inside_worktree,
-        remove_index is not None,
-    )
-    return sum(
-        stages
-    ) / 3 * 100, f"completed {sum(stages)} of 3 worktree lifecycle stages"
 
 
 def metric_from_mapping(value: Any) -> EvaluationMetric:
