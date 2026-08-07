@@ -6,8 +6,11 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from agent_event_contract import AgentEventCoverage
-from agent_canary_evidence import has_exact_canary_footer
-from agent_model_evidence import claude_invocation_model_selections
+from agent_canary_evidence import claude_canary_tool_use_ids, has_exact_canary_footer
+from agent_model_evidence import (
+    claude_invocation_model_selections,
+    claude_resolved_child_models,
+)
 from agent_plan_evidence import codex_has_plan
 from shell_commands import normalize_shell_command
 from codex_session_evidence import ResolvedCodexSubagent
@@ -173,7 +176,10 @@ def claude_evidence(
                 status=selection.status,
                 attributes=selection.attributes,
             )
-            for selection in claude_invocation_model_selections(tool_events)
+            for selection in claude_invocation_model_selections(
+                tool_events,
+                resolved_models_by_tool_use_id=claude_resolved_child_models(events),
+            )
         ),
         *_claude_definition_canary_events(events, agent_definition_canary),
     )
@@ -365,17 +371,6 @@ def _claude_definition_canary_events(
     expected_canary: str | None,
 ) -> tuple[AgentEvent, ...]:
     """Recognize an exact canary footer only in Agent or Task results."""
-    if expected_canary is None:
-        return ()
-    agent_tool_ids = {
-        content["id"]
-        for event in events
-        if event.get("type") == "assistant"
-        for content in event.get("message", {}).get("content", [])
-        if content.get("type") == "tool_use"
-        and content.get("name") in {"Agent", "Task"}
-        and isinstance(content.get("id"), str)
-    }
     return tuple(
         AgentEvent(
             category="agent",
@@ -384,30 +379,7 @@ def _claude_definition_canary_events(
             status="completed",
             attributes=(("tool_use_id", _bounded(tool_use_id, 100)),),
         )
-        for event in events
-        if event.get("type") == "user"
-        for content in event.get("message", {}).get("content", [])
-        if content.get("type") == "tool_result"
-        and isinstance((tool_use_id := content.get("tool_use_id")), str)
-        and tool_use_id in agent_tool_ids
-        and has_exact_canary_footer(
-            _claude_tool_result_text(content),
-            expected_canary,
-        )
-    )
-
-
-def _claude_tool_result_text(content: dict[str, Any]) -> str:
-    """Flatten only textual Claude tool-result content for exact matching."""
-    result_content = content.get("content")
-    if isinstance(result_content, str):
-        return result_content
-    if not isinstance(result_content, list):
-        return ""
-    return "\n".join(
-        block["text"]
-        for block in result_content
-        if isinstance(block, dict) and isinstance(block.get("text"), str)
+        for tool_use_id in claude_canary_tool_use_ids(events, expected_canary)
     )
 
 
@@ -622,6 +594,8 @@ def _claude_tool_event(
         if isinstance(skill, str):
             attributes["skill"] = _bounded(skill)
     tool_use_id = content.get("id")
+    if name == "spawn" and isinstance(tool_use_id, str):
+        attributes["tool_use_id"] = _bounded(tool_use_id, 100)
     status = (
         tool_results.get(tool_use_id, "observed")
         if isinstance(tool_use_id, str)
