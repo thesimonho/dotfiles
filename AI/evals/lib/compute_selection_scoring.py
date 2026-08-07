@@ -34,6 +34,9 @@ COMPUTE_LADDERS = {
         ComputeLevel("opus", "low"),
         ComputeLevel("opus", "medium"),
         ComputeLevel("opus", "high"),
+        ComputeLevel("fable", "low"),
+        ComputeLevel("fable", "medium"),
+        ComputeLevel("fable", "high"),
     ),
 }
 
