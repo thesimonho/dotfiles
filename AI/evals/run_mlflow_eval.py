@@ -60,7 +60,7 @@ from mlflow.tracking import MlflowClient  # noqa: E402
 from mlflow_agent_versions import MlflowAgentVersionRegistry  # noqa: E402
 from mlflow_config_registry import MlflowConfigurationRegistry  # noqa: E402
 from evaluation_arguments import parse_evaluation_arguments  # noqa: E402
-from harness_environment import resolve_evaluation_compute  # noqa: E402
+from catalog import resolve_evaluation_compute  # noqa: E402
 from mlflow_parameter_names import (  # noqa: E402
     AGENT_CLI_FIELD,
     AGENT_EFFORT_FIELD,

@@ -136,7 +136,7 @@ def validate_coverage_catalog(
             formatted_component_ids = ", ".join(stale_component_ids)
             raise ValueError(
                 "coverage entries reference components that are no longer "
-                f"monitored; remove them from coverage_catalog.py: "
+                f"monitored; remove them from catalog.toml: "
                 f"{formatted_component_ids}"
             )
     known_maturities = {"planned", "active", "proven"}

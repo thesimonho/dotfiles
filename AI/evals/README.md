@@ -56,7 +56,7 @@ Unavailable token dimensions are retained as `null` in the case output and omitt
 
 For planning cases, `agent_invocation_seconds` is useful corroborating evidence: the heavy case should normally take longer than the light case, and a child-agent call can add visible latency. Duration does not prove delegation, however. A long parent-only run can still avoid the planning agent, so `agent.spawn` and `agent.definition-canary` remain the authoritative usage and identity signals.
 
-[`catalog.toml`](catalog.toml) is the operator-facing master configuration: per-profile default model and effort, plus one entry per instruction fragment with its hypothesis, maturity, applicable cases, and an `enabled` toggle. Set `enabled = false` to exclude a fragment from comparison campaigns without deleting its entry. [`coverage_catalog.py`](coverage_catalog.py) only loads this file.
+[`catalog.toml`](catalog.toml) is the operator-facing master configuration: per-profile default model and effort, plus one entry per instruction fragment with its hypothesis, maturity, applicable cases, and an `enabled` toggle. Set `enabled = false` to exclude a fragment from comparison campaigns without deleting its entry. [`lib/catalog.py`](lib/catalog.py) is the file's single parser, serving both compute defaults and coverage entries.
 
 The catalog maps monitored instruction fragments to explicit behavioral hypotheses, maturity, and only the cases that genuinely exercise them. A case may support multiple fragments, so coverage grows by reusing high-signal scenarios rather than adding a separate repository or case for every instruction. `planned` entries have no cases and therefore add no evaluation cost; `active` and `proven` entries must reference executable cases.
 
@@ -227,7 +227,7 @@ The change note classifies added, removed, and modified components and includes 
 
 - `cases.py` defines real evaluation inputs and reusable metric declarations.
 - `catalog.toml` holds compute defaults and toggleable instruction coverage entries.
-- `coverage_catalog.py` loads the catalog into typed coverage entries.
+- `lib/catalog.py` loads the catalog into compute defaults and typed coverage entries.
 - `plan_evaluation_campaign.py` validates evidence contracts and previews paired campaign usage without invoking agents or MLflow.
 - `fixtures/` is reserved for future small inputs that do not require a disposable repository; every active case is workspace-backed.
 - `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
