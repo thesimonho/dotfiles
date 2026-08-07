@@ -81,6 +81,10 @@ eval-compare agent component case_id model="" effort="":
 eval-plan agent component repetitions="1":
     {{ eval_python }} AI/evals/plan_evaluation_campaign.py --agent "{{ agent }}" --component "{{ component }}" --repetitions "{{ repetitions }}"
 
+# Report tracking and coverage state for every monitored component.
+eval-coverage agent="claude":
+    {{ eval_python }} AI/evals/plan_evaluation_campaign.py --agent "{{ agent }}"
+
 # Run the normal comparison suite with the selected agent CLI.
 eval-run agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite core

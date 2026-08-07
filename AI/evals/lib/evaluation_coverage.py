@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from typing import Literal
 
+from configuration_components import ConfigComponent
 from evaluation_case import EvaluationCase
 
 type CoverageMaturity = Literal["planned", "active", "proven"]
@@ -68,13 +69,18 @@ def plan_instruction_campaign(
     coverage: tuple[InstructionCoverage, ...],
     cases: tuple[EvaluationCase, ...],
     agent_profile: str | None = None,
+    known_component_ids: tuple[str, ...] | None = None,
 ) -> EvaluationCampaignPlan:
     """Resolve applicable cases and project paired comparison usage."""
     if repetitions < 1:
         raise ValueError("campaign repetitions must be at least one")
 
     known_case_ids = tuple(case["case_id"] for case in cases)
-    validate_coverage_catalog(coverage, known_case_ids=known_case_ids)
+    validate_coverage_catalog(
+        coverage,
+        known_case_ids=known_case_ids,
+        known_component_ids=known_component_ids,
+    )
     matching_entries = tuple(
         entry for entry in coverage if entry.component_id == component_id
     )
@@ -112,8 +118,22 @@ def validate_coverage_catalog(
     coverage: tuple[InstructionCoverage, ...],
     *,
     known_case_ids: tuple[str, ...],
+    known_component_ids: tuple[str, ...] | None = None,
 ) -> None:
     """Reject coverage entries that cannot resolve to executable cases."""
+    if known_component_ids is not None:
+        stale_component_ids = tuple(
+            entry.component_id
+            for entry in coverage
+            if entry.component_id not in known_component_ids
+        )
+        if stale_component_ids:
+            formatted_component_ids = ", ".join(stale_component_ids)
+            raise ValueError(
+                "coverage entries reference components that are no longer "
+                f"monitored; remove them from coverage_catalog.py: "
+                f"{formatted_component_ids}"
+            )
     component_ids = tuple(entry.component_id for entry in coverage)
     duplicate_component_ids = {
         component_id
@@ -156,3 +176,56 @@ def validate_coverage_catalog(
     if unknown_case_ids:
         formatted_case_ids = ", ".join(sorted(unknown_case_ids))
         raise ValueError(f"unknown evaluation case IDs: {formatted_case_ids}")
+
+
+def format_coverage_report(
+    coverage: tuple[InstructionCoverage, ...],
+    components: tuple[ConfigComponent, ...],
+    *,
+    known_case_ids: tuple[str, ...],
+) -> str:
+    """Render every monitored component's tracking and coverage state.
+
+    Discovery is the source of truth: components appear here the moment their
+    file exists, so adding or removing fragments, agents, or skills never
+    requires manual list maintenance. Instruction components without a
+    coverage entry are tracked but unmeasured until they earn cases.
+    """
+    validate_coverage_catalog(
+        coverage,
+        known_case_ids=known_case_ids,
+        known_component_ids=tuple(
+            component.component_id for component in components
+        ),
+    )
+    coverage_by_component_id = {entry.component_id: entry for entry in coverage}
+    lines = []
+    for kind, heading in (
+        ("instruction", "instruction components"),
+        ("agent", "agent components"),
+        ("skill", "skill components"),
+    ):
+        kind_components = tuple(
+            component
+            for component in components
+            if component.component_id.startswith(f"{kind}/")
+        )
+        lines.append(f"{heading} ({len(kind_components)}):")
+        if not kind_components:
+            lines.append("  (none)")
+            continue
+        for component in kind_components:
+            entry = coverage_by_component_id.get(component.component_id)
+            if kind != "instruction":
+                lines.append(f"  {component.component_id}: tracked")
+            elif entry is None:
+                lines.append(
+                    f"  {component.component_id}: tracked, unmeasured "
+                    "(no coverage entry)"
+                )
+            else:
+                lines.append(
+                    f"  {component.component_id}: {entry.maturity}, "
+                    f"{len(entry.case_ids)} case(s)"
+                )
+    return "\n".join(lines)

@@ -41,7 +41,8 @@ def discover_agent_components(
         "*.md",
         "agent",
     )
-    components = [*instruction_components, *agent_components]
+    skill_components = _discover_skill_components(repository_root)
+    components = [*instruction_components, *agent_components, *skill_components]
     components_by_id = {component.component_id: component for component in components}
     if len(components_by_id) != len(components):
         raise ValueError("configuration component IDs must be unique")
@@ -71,6 +72,33 @@ def _discover_single_file_components(
                 f"{component_kind}/{path.stem}",
                 _normalized_text(path),
                 (path,),
+            )
+        )
+    return components
+
+
+def _discover_skill_components(repository_root: Path) -> list[ConfigComponent]:
+    """Track each custom skill through its SKILL.md interface document."""
+    directory = repository_root / "AI/skills"
+    if not directory.exists():
+        return []
+    components = []
+    for skill_directory in sorted(directory.iterdir()):
+        if skill_directory.name.startswith(".") or not skill_directory.is_dir():
+            continue
+        skill_file = skill_directory / "SKILL.md"
+        if skill_directory.is_symlink() or skill_file.is_symlink():
+            raise ValueError(
+                f"configuration files must not be symlinks: {skill_file}"
+            )
+        if not skill_file.is_file():
+            continue
+        components.append(
+            _component_from_content(
+                repository_root,
+                f"skill/{skill_directory.name}",
+                _normalized_text(skill_file),
+                (skill_file,),
             )
         )
     return components
