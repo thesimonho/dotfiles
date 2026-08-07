@@ -123,7 +123,41 @@ def _classified_selection(
         return task_class, "delegation"
     if positions and min(positions) > parent_position:
         return task_class, "escalation"
+    edge_relation = _model_band_edge_relation(
+        ladder,
+        parent_model=ladder[parent_position].model,
+        selected_model=model,
+        selected_effort=effort,
+        task_class=task_class,
+    )
+    if edge_relation is not None:
+        return task_class, edge_relation
     return task_class, "equal-or-ambiguous"
+
+
+def _model_band_edge_relation(
+    ladder: tuple[ComputeLevel, ...],
+    *,
+    parent_model: str,
+    selected_model: str,
+    selected_effort: object,
+    task_class: str,
+) -> str | None:
+    """Credit a same-model choice when no further model band exists.
+
+    Claude does not expose child effort, so when the parent already runs the
+    strongest model, requesting that model for demanding work is the maximal
+    expressible escalation; the same fairness applies to the weakest model
+    for lightweight work. Effort-aware providers keep the strict rule.
+    """
+    if selected_effort is not None or selected_model != parent_model:
+        return None
+    model_order = tuple(dict.fromkeys(level.model for level in ladder))
+    if task_class == "demanding" and parent_model == model_order[-1]:
+        return "escalation"
+    if task_class == "lightweight" and parent_model == model_order[0]:
+        return "delegation"
+    return None
 
 
 def _task_class(attributes: dict[str, object]) -> str | None:
