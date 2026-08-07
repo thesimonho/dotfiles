@@ -182,6 +182,9 @@ def _call_codex(
         *codex_sandbox_arguments(),
         "--sandbox",
         workspace_access,
+        # Trust state is keyed by the live hooks.json path, which cannot match
+        # the temporary CODEX_HOME; the harness itself vets the copied hooks.
+        "--dangerously-bypass-hook-trust",
     ]
     if model is not None:
         command.extend(["--model", model])

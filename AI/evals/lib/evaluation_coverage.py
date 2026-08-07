@@ -219,6 +219,7 @@ def format_coverage_report(
         ("instruction", "instruction components"),
         ("agent", "agent components"),
         ("skill", "skill components"),
+        ("hook", "hook components"),
     ):
         kind_components = tuple(
             component

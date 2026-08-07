@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,7 +43,13 @@ def discover_agent_components(
         "agent",
     )
     skill_components = _discover_skill_components(repository_root)
-    components = [*instruction_components, *agent_components, *skill_components]
+    hook_components = _discover_hook_components(repository_root, profile)
+    components = [
+        *instruction_components,
+        *agent_components,
+        *skill_components,
+        *hook_components,
+    ]
     components_by_id = {component.component_id: component for component in components}
     if len(components_by_id) != len(components):
         raise ValueError("configuration component IDs must be unique")
@@ -102,6 +109,63 @@ def _discover_skill_components(repository_root: Path) -> list[ConfigComponent]:
             )
         )
     return components
+
+
+def _discover_hook_components(
+    repository_root: Path,
+    profile: str,
+) -> list[ConfigComponent]:
+    """Fingerprint the hook layer so run manifests identify it without measuring it.
+
+    Hooks run during evaluation (profiles are prepared hook-inclusive), so a
+    hook edit must surface as a configuration change, not invisible drift.
+    """
+    components = _discover_single_file_components(
+        repository_root,
+        "AI/hooks",
+        "*.js",
+        "hook",
+    )
+    components = [
+        component
+        for component in components
+        if not component.source_paths[0].endswith(".test.js")
+    ]
+    runtime_directory = repository_root / "AI/lib/hooks"
+    runtime_paths = tuple(sorted(runtime_directory.rglob("*.js")))
+    if runtime_paths:
+        runtime_content = "\n".join(
+            f"### {path.relative_to(repository_root).as_posix()}\n"
+            f"{_normalized_text(path)}"
+            for path in runtime_paths
+        )
+        components.append(
+            _component_from_content(
+                repository_root,
+                "hook/_runtime",
+                runtime_content,
+                runtime_paths,
+            )
+        )
+    components.append(_hook_wiring_component(repository_root, profile))
+    return components
+
+
+def _hook_wiring_component(repository_root: Path, profile: str) -> ConfigComponent:
+    """Track which hooks are wired to which tool events for one agent profile."""
+    if profile == "codex":
+        wiring_path = repository_root / "AI/settings/codex/hooks.json"
+        wiring_content = _normalized_text(wiring_path)
+    else:
+        wiring_path = repository_root / "AI/settings/claude/settings.json"
+        settings = json.loads(_normalized_text(wiring_path))
+        wiring_content = json.dumps({"hooks": settings.get("hooks", {})}, indent=2)
+    return _component_from_content(
+        repository_root,
+        "hook/_wiring",
+        wiring_content,
+        (wiring_path,),
+    )
 
 
 def _component_from_content(

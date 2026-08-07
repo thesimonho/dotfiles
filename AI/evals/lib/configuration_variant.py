@@ -3,6 +3,7 @@
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+import json
 import os
 from pathlib import Path
 import secrets
@@ -67,7 +68,12 @@ def prepare_variant_profile(
     source_config_root: Path | None = None,
     agent_definition_canary: str | None = None,
 ) -> Iterator[PreparedProfileConfiguration]:
-    """Assemble an authenticated, hook-free profile for one comparison arm."""
+    """Assemble an authenticated, hook-inclusive profile for one comparison arm.
+
+    Hooks mirror the deployed configuration so evaluated behaviour matches
+    day-to-day sessions; raw OTEL export stays stripped so native eval traces
+    remain authoritative.
+    """
     source_root = source_config_root or _active_config_root(profile)
     with tempfile.TemporaryDirectory(
         prefix=f"agent-eval-{profile}-config-"
@@ -119,8 +125,13 @@ def _prepare_codex_profile(
     agent_definition_canary: str,
 ) -> None:
     """Copy Codex runtime identity and render only active prose instructions."""
-    _copy_required_files(source_root, profile_root, ("auth.json", "config.toml"))
+    _copy_required_files(
+        source_root,
+        profile_root,
+        ("auth.json", "config.toml", "hooks.json"),
+    )
     _remove_codex_otel_configuration(profile_root / "config.toml")
+    _remove_codex_hook_trust_state(profile_root / "config.toml")
     _copy_optional_files(source_root, profile_root, ("installation_id",))
     _copy_required_directories(source_root, profile_root, ("agents",))
     _link_required_directories(source_root, profile_root, ("skills",))
@@ -134,13 +145,23 @@ def _prepare_codex_profile(
 
 def _remove_codex_otel_configuration(config_path: Path) -> None:
     """Keep native eval traces authoritative by disabling copied raw OTEL export."""
+    _remove_codex_config_sections(config_path, "[otel")
+
+
+def _remove_codex_hook_trust_state(config_path: Path) -> None:
+    """Drop trust entries keyed by the live hooks.json path; they cannot match
+    the temporary profile, and codex exec runs with hook trust bypassed."""
+    _remove_codex_config_sections(config_path, "[hooks.state")
+
+
+def _remove_codex_config_sections(config_path: Path, section_prefix: str) -> None:
     retained_lines = []
-    is_otel_section = False
+    is_removed_section = False
     for line in config_path.read_text().splitlines():
         stripped_line = line.strip()
         if stripped_line.startswith("[") and stripped_line.endswith("]"):
-            is_otel_section = stripped_line.startswith("[otel")
-        if not is_otel_section:
+            is_removed_section = stripped_line.startswith(section_prefix)
+        if not is_removed_section:
             retained_lines.append(line)
     config_path.write_text("\n".join(retained_lines).rstrip() + "\n")
 
@@ -153,6 +174,10 @@ def _prepare_claude_profile(
 ) -> None:
     """Copy Claude authentication and expose active instructions as rules."""
     _copy_required_files(source_root, profile_root, (".credentials.json",))
+    _write_claude_hook_settings(
+        source_root / "settings.json",
+        profile_root / "settings.json",
+    )
     _copy_required_directories(source_root, profile_root, ("agents",))
     _link_required_directories(source_root, profile_root, ("skills",))
     _instrument_claude_agent(
@@ -164,6 +189,27 @@ def _prepare_claude_profile(
     for component in _instruction_components(variant):
         rule_name = component.component_id.removeprefix("instruction/")
         (rules_root / f"{rule_name}.md").write_text(component.content)
+
+
+def _write_claude_hook_settings(source_path: Path, destination_path: Path) -> None:
+    """Expose only the live hook wiring; other settings stay out of the arm.
+
+    Hooks are part of the deployed configuration under test, so evaluated
+    sessions must run them exactly as day-to-day sessions do. Everything else
+    in settings.json (permissions, model, status line) is harness-owned.
+    """
+    if not source_path.is_file():
+        raise RuntimeError(
+            f"required claude settings file is missing: {source_path}"
+        )
+    settings = json.loads(source_path.read_text())
+    hooks = settings.get("hooks")
+    if not isinstance(hooks, dict) or not any(hooks.values()):
+        raise RuntimeError(
+            "claude settings.json declares no hooks; refusing to prepare a "
+            "silently hook-free profile"
+        )
+    destination_path.write_text(json.dumps({"hooks": hooks}, indent=2) + "\n")
 
 
 def _instruction_document(variant: ConfigurationVariant) -> str:
