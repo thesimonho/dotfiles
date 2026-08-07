@@ -34,6 +34,7 @@ class FinalStateEvidence:
     local_plan_file_percent_rationale: str
     local_plan_file_reference_count: int
     local_plan_file_reference_count_rationale: str
+    created_commit_count: int
     conventional_commits_percent: float
     conventional_commits_percent_rationale: str
     function_limits_percent: float
@@ -110,6 +111,7 @@ def capture_final_state_evidence(
         local_plan_file_reference_count_rationale=_count_rationale(
             "local plan references", plan_references
         ),
+        created_commit_count=len(commit_subjects),
         conventional_commits_percent=(
             conventional_count / len(commit_subjects) * 100 if commit_subjects else 0.0
         ),

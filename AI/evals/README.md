@@ -65,7 +65,7 @@ The normal active suite is deliberately bounded to seven unique cases. The nine-
 
 Environment-backed cases use the single-package [HomeOps environment](environments/homeops/README.md). Each case selects a deterministic scenario and either read-only or workspace-write access. The predictor prepares a disposable Git repository, runs the selected CLI from that repository, captures agent-attributable changes before cleanup, and returns workspace plus operational evidence on the native trace.
 
-HomeOps adds reusable workspace evidence for categorical completion and blast radius, documentation obligations, created commit subjects, plan artifacts and references, final debug logging, function limits, and hardcoded-secret additions. Changed paths, prohibited commands, and validation details remain trace evidence supporting those assessments.
+HomeOps adds reusable workspace evidence for categorical completion and blast radius, documentation obligations, created commit subjects, plan artifacts and references, final debug logging, function limits, and hardcoded-secret additions. Commit-subject quality is scored only when the run created at least one commit; a zero-commit case omits the metric instead of reporting a failure. Changed paths, prohibited commands, and validation details remain trace evidence supporting those assessments.
 
 Task correctness and blast radius remain separate. A narrow correct patch can be `COMPLETE` while an unnecessary operational action raises `workflow.unnecessary_blast_radius`; Git-ignored verification artifacts are excluded from workspace evidence.
 

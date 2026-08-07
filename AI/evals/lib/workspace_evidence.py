@@ -28,6 +28,7 @@ class WorkspaceEvidence:
     local_plan_file_percent_rationale: str
     local_plan_file_reference_count: int
     local_plan_file_reference_count_rationale: str
+    created_commit_count: int
     conventional_commits_percent: float
     conventional_commits_percent_rationale: str
     function_limits_percent: float

@@ -450,6 +450,12 @@ def score_workspace_metrics(
             "function-limits-percent",
             "hardcoded-secrets-count",
         }:
+            is_vacuous_commit_metric = (
+                metric["evaluator"] == "conventional-commits-percent"
+                and int(evidence.get("created_commit_count", 0)) == 0
+            )
+            if is_vacuous_commit_metric:
+                continue
             evidence_field = {
                 "debug-logs-count": "debug_logs_remaining_count",
                 "local-plan-file-percent": "local_plan_file_percent",
