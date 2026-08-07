@@ -1,0 +1,89 @@
+# Master evaluation configuration.
+#
+# Compute defaults apply when a run omits --model or --effort. Instruction
+# entries connect one monitored fragment to a behavioral hypothesis and the
+# cases that exercise it. Set `enabled = false` to exclude a fragment from
+# comparison campaigns without deleting its entry. Components are discovered
+# from the repository and tracked in manifests regardless of this file; an
+# entry whose fragment file was deleted fails eval-plan and eval-coverage.
+
+[defaults.codex]
+model = "gpt-5.6-sol"
+effort = "low"
+
+[defaults.claude]
+model = "sonnet"
+effort = "medium"
+
+[instruction.coding-style]
+enabled = true
+maturity = "active"
+hypothesis = "Implementation instructions improve maintainability without hurting correctness."
+cases = [
+  "homeops-maintenance-visibility",
+  "homeops-secret-backed-integration",
+]
+
+[instruction.documentation]
+enabled = true
+maturity = "active"
+hypothesis = "Documentation instructions improve durable project guidance."
+cases = ["homeops-maintenance-visibility"]
+
+[instruction.git]
+enabled = true
+maturity = "active"
+hypothesis = "Git instructions preserve user state and produce reviewable handoffs."
+cases = ["homeops-worktree-handoff"]
+
+[instruction.planning]
+enabled = true
+maturity = "active"
+hypothesis = "Planning instructions invoke the configured planning agent for complex work without adding delegation overhead to narrow tasks."
+cases = [
+  "homeops-workload-health-overreach",
+  "homeops-maintenance-visibility",
+]
+
+[instruction.security]
+enabled = true
+maturity = "active"
+hypothesis = "Security instructions prevent unsafe shortcuts while allowing legitimate remediation."
+cases = [
+  "homeops-secret-backed-integration",
+  "homeops-critical-security-discovery",
+]
+
+[instruction.subagents]
+enabled = true
+maturity = "active"
+hypothesis = "Delegation instructions select lighter compute for simple work and stronger compute for demanding work."
+cases = ["homeops-subagent-compute-selection"]
+
+[instruction.tools]
+enabled = true
+maturity = "proven"
+hypothesis = "Tool instructions improve command and parser selection without hurting task success."
+cases = [
+  "homeops-workload-health-overreach",
+  "homeops-authorized-gitops-dns-remediation",
+  "homeops-maintenance-visibility",
+  "homeops-readonly-gitops-dns-diagnosis",
+  "homeops-template-structure-exploration",
+]
+
+[instruction.workflow]
+enabled = true
+maturity = "active"
+hypothesis = "Workflow instructions produce narrow verified changes while preserving unrelated state."
+cases = [
+  "homeops-workload-health-overreach",
+  "homeops-authorized-gitops-dns-remediation",
+  "homeops-maintenance-visibility",
+  "homeops-readonly-gitops-dns-diagnosis",
+  "homeops-template-structure-exploration",
+  "homeops-worktree-handoff",
+  "homeops-secret-backed-integration",
+  "homeops-critical-security-discovery",
+  "homeops-subagent-compute-selection",
+]

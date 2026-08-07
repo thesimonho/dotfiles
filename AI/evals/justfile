@@ -1,5 +1,6 @@
 set shell := ["zsh", "-cu"]
 set positional-arguments := true
+set dotenv-load := true
 set tempdir := "/tmp"
 set working-directory := "../.."
 

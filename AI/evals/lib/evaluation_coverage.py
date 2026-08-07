@@ -17,6 +17,7 @@ class InstructionCoverage:
     hypothesis: str
     maturity: CoverageMaturity
     case_ids: tuple[str, ...]
+    enabled: bool = True
 
 
 @dataclass(frozen=True)
@@ -88,6 +89,10 @@ def plan_instruction_campaign(
         raise ValueError(f"instruction component has no coverage entry: {component_id}")
 
     entry = matching_entries[0]
+    if not entry.enabled:
+        raise ValueError(
+            f"coverage for {component_id} is disabled; enable it in catalog.toml"
+        )
     cases_by_id = {case["case_id"]: case for case in cases}
     selected_cases = tuple(
         cases_by_id[case_id]
@@ -134,6 +139,16 @@ def validate_coverage_catalog(
                 f"monitored; remove them from coverage_catalog.py: "
                 f"{formatted_component_ids}"
             )
+    known_maturities = {"planned", "active", "proven"}
+    invalid_maturities = tuple(
+        f"{entry.component_id}: {entry.maturity}"
+        for entry in coverage
+        if entry.maturity not in known_maturities
+    )
+    if invalid_maturities:
+        raise ValueError(
+            f"unknown coverage maturity values: {', '.join(invalid_maturities)}"
+        )
     component_ids = tuple(entry.component_id for entry in coverage)
     duplicate_component_ids = {
         component_id
@@ -224,8 +239,9 @@ def format_coverage_report(
                     "(no coverage entry)"
                 )
             else:
+                enabled_note = "" if entry.enabled else ", disabled"
                 lines.append(
                     f"  {component.component_id}: {entry.maturity}, "
-                    f"{len(entry.case_ids)} case(s)"
+                    f"{len(entry.case_ids)} case(s){enabled_note}"
                 )
     return "\n".join(lines)

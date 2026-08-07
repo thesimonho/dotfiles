@@ -1,16 +1,13 @@
 """Stable repository and agent-profile constants shared by the eval harness."""
 
+import tomllib
 from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 EVALUATION_ROOT = Path(__file__).resolve().parents[1]
+CATALOG_PATH = EVALUATION_ROOT / "catalog.toml"
 SUPPORTED_AGENT_PROFILES = ("codex", "claude")
 AGENT_ARGUMENT_CHOICES = ("auto", *SUPPORTED_AGENT_PROFILES)
-
-DEFAULT_CODEX_MODEL = "gpt-5.6-sol"
-DEFAULT_CODEX_EFFORT = "low"
-DEFAULT_CLAUDE_MODEL = "sonnet"
-DEFAULT_CLAUDE_EFFORT = "medium"
 
 
 def resolve_evaluation_compute(
@@ -18,12 +15,17 @@ def resolve_evaluation_compute(
     model: str | None,
     effort: str | None,
 ) -> tuple[str, str]:
-    """Apply profile defaults while preserving independent explicit overrides."""
-    default_compute = {
-        "codex": (DEFAULT_CODEX_MODEL, DEFAULT_CODEX_EFFORT),
-        "claude": (DEFAULT_CLAUDE_MODEL, DEFAULT_CLAUDE_EFFORT),
-    }
-    if profile not in default_compute:
+    """Apply catalog defaults while preserving independent explicit overrides."""
+    if profile not in SUPPORTED_AGENT_PROFILES:
         raise ValueError(f"unsupported evaluation profile: {profile}")
-    default_model, default_effort = default_compute[profile]
-    return model or default_model, effort or default_effort
+    catalog = tomllib.loads(CATALOG_PATH.read_text())
+    defaults = catalog.get("defaults", {}).get(profile)
+    if (
+        not isinstance(defaults, dict)
+        or not isinstance(defaults.get("model"), str)
+        or not isinstance(defaults.get("effort"), str)
+    ):
+        raise ValueError(
+            f"catalog.toml must define [defaults.{profile}] model and effort"
+        )
+    return model or defaults["model"], effort or defaults["effort"]
