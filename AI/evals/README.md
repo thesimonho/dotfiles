@@ -8,12 +8,15 @@ Git commits and working-tree state are not configuration identity. Before an eva
 
 ## Monitored configuration
 
-Only direct Markdown children of these directories are monitored:
+Monitored components are discovered dynamically from the repository working tree on every run, so adding or removing a file never requires harness changes:
 
 - `AI/instructions/fragments/*.md` becomes `instruction/<filename-stem>`.
 - `AI/agents/*.md` becomes `agent/<filename-stem>`.
+- `AI/skills/<name>/SKILL.md` becomes `skill/<name>`.
 
-Nested and generated files, including `AI/agents/.generated/**`, are excluded. Symlinks are rejected so a run cannot publish content from outside the allowlisted directories.
+Nested and generated files, including `AI/agents/.generated/**` and `AI/skills/.agents/**`, are excluded. Symlinks are rejected so a run cannot publish content from outside the allowlisted directories. Skill components track only the SKILL.md interface document; supporting skill files are not versioned.
+
+Because the CLI loads generated agent outputs while the manifest tracks `AI/agents/*.md` sources, preflight rejects a run whose deployed agent directory does not match the monitored source set. Re-run home-manager activation after adding or removing an agent source.
 
 Each component is a prompt family in the `agent-harness--*` namespace. Content is reused by hash, including historical versions, so reverting a file reuses its original prompt version. Adding or removing a file changes the complete manifest set without deleting historical prompt versions.
 
@@ -52,7 +55,9 @@ Unavailable token dimensions are retained as `null` in the case output and omitt
 
 For planning cases, `agent_invocation_seconds` is useful corroborating evidence: the heavy case should normally take longer than the light case, and a child-agent call can add visible latency. Duration does not prove delegation, however. A long parent-only run can still avoid the planning agent, so `agent.spawn` and `agent.definition-canary` remain the authoritative usage and identity signals.
 
-[`coverage_catalog.py`](coverage_catalog.py) maps all monitored instruction fragments to explicit behavioral hypotheses, maturity, and only the cases that genuinely exercise them. A case may support multiple fragments, so coverage grows by reusing high-signal scenarios rather than adding a separate repository or case for every instruction. `planned` entries have no cases and therefore add no evaluation cost; `active` and `proven` entries must reference executable cases.
+[`coverage_catalog.py`](coverage_catalog.py) maps monitored instruction fragments to explicit behavioral hypotheses, maturity, and only the cases that genuinely exercise them. A case may support multiple fragments, so coverage grows by reusing high-signal scenarios rather than adding a separate repository or case for every instruction. `planned` entries have no cases and therefore add no evaluation cost; `active` and `proven` entries must reference executable cases.
+
+The catalog is intentionally a subset of discovery. A new fragment, agent, or skill is tracked in manifests immediately without a catalog entry; it stays unmeasured until it earns cases. A catalog entry whose component file was deleted fails `eval-plan` and `eval-coverage` with the stale IDs, so the catalog can never drift silently. `just eval-coverage` prints the tracking and coverage state of every monitored component without contacting an agent or MLflow.
 
 The normal active suite is deliberately bounded to seven unique cases. The nine-case extended suite adds the costly worktree-lifecycle and subagent-compute exercises. Before spending agent usage on a fragment campaign, `eval-plan` reports the applicable cases, treatment/control pairs, agent-under-test calls, judge calls, and total CLI invocations without contacting MLflow or starting an agent. Repetitions default to one and should increase only when initial paired evidence is ambiguous or when a mature fragment is being regression-tested.
 
@@ -112,6 +117,13 @@ just eval-compare codex instruction/tools homeops-workload-health-overreach
 # Preview applicable workflow comparisons without running an agent.
 just eval-plan codex instruction/workflow
 just eval-plan codex instruction/workflow 3
+
+# Report tracking and coverage state for every monitored component.
+just eval-coverage
+
+# Capture a one-off baseline without moving the last-evaluated manifest alias,
+# for example from a temporary branch with instruction fragments removed.
+just eval-mlflow --agent claude --suite core --no-advance-baseline
 
 # Send the evaluation to a remote MLflow server.
 MLFLOW_TRACKING_URI=https://mlflow.example.com just eval-run codex

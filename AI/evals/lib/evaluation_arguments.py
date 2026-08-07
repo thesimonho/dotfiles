@@ -24,6 +24,15 @@ def parse_evaluation_arguments() -> argparse.Namespace:
         help="CLI-supported reasoning or effort level to evaluate.",
     )
     parser.add_argument(
+        "--no-advance-baseline",
+        action="store_false",
+        dest="advance_baseline",
+        help=(
+            "Do not move the last-evaluated manifest alias; use for one-off "
+            "baseline captures such as an ablated-configuration branch."
+        ),
+    )
+    parser.add_argument(
         "--baseline-manifest-version",
         type=int,
         help="Compare against this MLflow manifest prompt version instead of the latest.",

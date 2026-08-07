@@ -36,13 +36,13 @@ from configuration_variant import (  # noqa: E402
     prepare_variant_profile,
 )
 from capabilities import (  # noqa: E402
-    REQUIRED_EVALUATION_AGENTS,
-    REQUIRED_EVALUATION_SKILLS,
+    EXTERNAL_EVALUATION_SKILLS,
     REQUIRED_EVALUATION_TOOLS,
     REQUIRED_HOMEOPS_TOOLS,
     CapabilitySnapshot,
     capability_manifest,
     probe_capabilities,
+    validate_agent_directory_consistency,
 )
 from agent_environment import build_child_environment  # noqa: E402
 import dataset_sync  # noqa: E402
@@ -439,6 +439,7 @@ def run_evaluation(arguments: Namespace) -> None:
             baseline_manifest_version=arguments.baseline_manifest_version,
             model=model,
             effort=effort,
+            advance_baseline=arguments.advance_baseline,
         )
         return
 
@@ -460,6 +461,7 @@ def run_evaluation(arguments: Namespace) -> None:
             effort=effort,
             profile_environment=prepared_profile.environment,
             agent_definition_canary=prepared_profile.agent_definition_canary,
+            advance_baseline_alias=arguments.advance_baseline,
         )
     _print_completed_evaluation(completed)
 
@@ -477,6 +479,7 @@ def _run_component_comparison(
     baseline_manifest_version: int | None,
     model: str,
     effort: str,
+    advance_baseline: bool = True,
 ) -> None:
     """Run full and single-component-ablated arms and publish paired deltas."""
     comparison_group_id = str(uuid.uuid4())
@@ -508,7 +511,8 @@ def _run_component_comparison(
                 comparison_group_id=comparison_group_id,
                 comparison_variant=variant.name,
                 ablated_component_id=component_id,
-                advance_baseline_alias=variant.name == "treatment",
+                advance_baseline_alias=advance_baseline
+                and variant.name == "treatment",
             )
     treatment = _comparison_arm_result(
         "treatment",
@@ -562,6 +566,11 @@ def _run_evaluation_arm(
         model=model,
         effort=effort,
         profile_environment=profile_environment,
+        required_agents=_component_names(components, "agent"),
+        required_skills=(
+            *EXTERNAL_EVALUATION_SKILLS,
+            *_component_names(components, "skill"),
+        ),
     )
     publication = registry.prepare(
         components,
@@ -686,12 +695,28 @@ def _print_completed_evaluation(
     print(completed.change_summary)
 
 
+def _component_names(
+    components: tuple[configuration_components.ConfigComponent, ...],
+    component_kind: str,
+) -> tuple[str, ...]:
+    """Return the discovered component names for one monitored kind."""
+    prefix = f"{component_kind}/"
+    return tuple(
+        component.component_id.removeprefix(prefix)
+        for component in components
+        if component.component_id.startswith(prefix)
+    )
+
+
 def _preflight_case_capabilities(
     profile: str,
     cases: tuple[EvaluationCase, ...],
     model: str,
     effort: str,
     profile_environment: dict[str, str] | None = None,
+    *,
+    required_agents: tuple[str, ...],
+    required_skills: tuple[str, ...],
 ) -> tuple[CapabilitySnapshot, ...]:
     """Fail before MLflow evaluation when shared capabilities are unavailable."""
     probe_identity = EvaluationIdentity(
@@ -712,13 +737,14 @@ def _preflight_case_capabilities(
         probe_context,
         overrides=profile_environment,
     )
+    validate_agent_directory_consistency(profile, base_environment, required_agents)
     snapshots = [
         probe_capabilities(
             profile,
             base_environment,
             required_tools=REQUIRED_EVALUATION_TOOLS,
-            required_skills=REQUIRED_EVALUATION_SKILLS,
-            required_agents=REQUIRED_EVALUATION_AGENTS,
+            required_skills=required_skills,
+            required_agents=required_agents,
         )
     ]
     checked_environments = set()
@@ -747,8 +773,8 @@ def _preflight_case_capabilities(
                         *REQUIRED_EVALUATION_TOOLS,
                         *REQUIRED_HOMEOPS_TOOLS,
                     ),
-                    required_skills=REQUIRED_EVALUATION_SKILLS,
-                    required_agents=REQUIRED_EVALUATION_AGENTS,
+                    required_skills=required_skills,
+                    required_agents=required_agents,
                 )
             )
     return tuple(snapshots)

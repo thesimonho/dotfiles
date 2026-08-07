@@ -268,6 +268,8 @@ def new_agent_definition_canary() -> str:
 
 def _instrument_codex_agent(path: Path, canary: str) -> None:
     """Append a harmless identity footer inside Frank's developer instructions."""
+    if not path.is_file():
+        return
     content = path.read_text()
     closing_delimiter = content.rfind('"""')
     if closing_delimiter < 0:
@@ -283,7 +285,7 @@ def _instrument_codex_agent(path: Path, canary: str) -> None:
 def _instrument_claude_agent(path: Path, canary: str) -> None:
     """Append the same provider-neutral identity footer to Claude's Frank agent."""
     if not path.is_file():
-        raise RuntimeError(f"required Claude agent is missing: {path}")
+        return
     path.write_text(
         path.read_text().rstrip() + "\n" + _agent_definition_probe_instruction(canary)
     )

@@ -9,8 +9,7 @@ import shutil
 from typing import Any
 
 REQUIRED_EVALUATION_TOOLS = ("rtk", "jq", "git", "just", "node", "npm")
-REQUIRED_EVALUATION_SKILLS = ("tdd", "verify", "agent-browser")
-REQUIRED_EVALUATION_AGENTS = ("frank", "security-reviewer")
+EXTERNAL_EVALUATION_SKILLS = ("tdd", "agent-browser")
 REQUIRED_HOMEOPS_TOOLS = ("kubectl", "flux", "dig")
 
 
@@ -105,6 +104,36 @@ def probe_capabilities(
         skills=skills,
         agents=agents,
     )
+
+
+def validate_agent_directory_consistency(
+    profile: str,
+    environment: Mapping[str, str],
+    expected_agent_names: tuple[str, ...],
+) -> None:
+    """Reject deployed agent directories that drifted from monitored sources.
+
+    The manifest tracks `AI/agents/*.md` sources while the CLI loads generated
+    outputs, so a deleted or added source without regeneration would let the
+    manifest and the runtime disagree silently.
+    """
+    home_path = Path(environment["HOME"])
+    config_path = _config_path(profile, environment, home_path)
+    agent_extension = "toml" if profile == "codex" else "md"
+    agents_directory = config_path / "agents"
+    deployed_names = (
+        tuple(sorted(path.stem for path in agents_directory.glob(f"*.{agent_extension}")))
+        if agents_directory.is_dir()
+        else ()
+    )
+    expected_names = tuple(sorted(expected_agent_names))
+    if deployed_names != expected_names:
+        raise RuntimeError(
+            "deployed agent configs do not match monitored AI/agents sources "
+            f"(deployed: {', '.join(deployed_names) or 'none'}; monitored: "
+            f"{', '.join(expected_names) or 'none'}); re-run home-manager "
+            "activation to regenerate agent configs"
+        )
 
 
 def _config_path(
