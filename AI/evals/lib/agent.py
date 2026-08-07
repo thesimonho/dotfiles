@@ -94,8 +94,11 @@ def _call_claude(
         "--verbose",
         "--permission-mode",
         "plan" if workspace_access == "read-only" else "acceptEdits",
+        # The user source is what loads CLAUDE_CONFIG_DIR/rules/*.md; the
+        # judge must stay blind to those instructions so a response-format
+        # rule cannot corrupt its verdicts.
         "--setting-sources",
-        "",
+        "user" if has_tools else "",
         "--settings",
         json.dumps(sandbox_settings),
     ]
