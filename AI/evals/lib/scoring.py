@@ -60,25 +60,37 @@ def score_output_quality(
         f"sentence explaining the verdict.\n\n"
         f"Rubric: {rubric}\nOutput: {output}"
     )
-    verdict_raw = agent.run_judge(
-        judge_prompt,
-        context,
-        profile=profile,
-        environment_overrides=environment_overrides,
-        model=context.agent_model,
-        effort=context.agent_effort,
-    )
+    verdict = None
+    verdict_raw = ""
+    for _ in range(2):
+        verdict_raw = agent.run_judge(
+            judge_prompt,
+            context,
+            profile=profile,
+            environment_overrides=environment_overrides,
+            model=context.agent_model,
+            effort=context.agent_effort,
+        )
+        verdict = _parse_judge_verdict(verdict_raw)
+        if verdict is not None:
+            break
+    if verdict is None:
+        raise RuntimeError("evaluation judge did not return PASS or FAIL")
+    return (100.0 if verdict == "PASS" else 0.0), verdict_raw[:1000]
+
+
+def _parse_judge_verdict(verdict_raw: str) -> str | None:
+    """Accept a leading verdict token; judges occasionally add framing once.
+
+    Claude answers "PASS: reason" on one line while Codex follows the
+    two-line format literally, so only the first line's leading token counts.
+    """
     stripped_verdict = verdict_raw.strip()
     if not stripped_verdict:
-        raise RuntimeError("evaluation judge did not return PASS or FAIL")
-    # Claude answers "PASS: reason" on one line while Codex follows the
-    # two-line format literally, so accept a leading verdict token only.
+        return None
     first_line = stripped_verdict.splitlines()[0].upper()
     verdict_match = re.match(r"^[^A-Z]*(PASS|FAIL)\b", first_line)
-    if verdict_match is None:
-        raise RuntimeError("evaluation judge did not return PASS or FAIL")
-    verdict = verdict_match.group(1)
-    return (100.0 if verdict == "PASS" else 0.0), verdict_raw[:1000]
+    return verdict_match.group(1) if verdict_match else None
 
 
 def score_expected_mention(output: str, expected_mention: str) -> tuple[bool, str]:
