@@ -1,6 +1,6 @@
 """Typed contracts for reusable agent evaluation metrics and cases."""
 
-from typing import Literal, NotRequired, TypedDict
+from typing import Literal, NotRequired, Required, TypedDict
 
 from agent_event_contract import EvidenceRequirement
 
@@ -137,7 +137,7 @@ class RequiredDocumentationUpdatesMetric(CommonMetric):
 class PolicyMetric(CommonMetric, total=False):
     """Declarative policy metric evaluated from ordered events or final state."""
 
-    evaluator: Literal[
+    evaluator: Required[Literal[
         "just-usage-percent",
         "preferred-search-percent",
         "codemap-first-percent",
@@ -155,7 +155,7 @@ class PolicyMetric(CommonMetric, total=False):
         "hardcoded-secrets-count",
         "critical-response-percent",
         "subagent-compute-selection-percent",
-    ]
+    ]]
     direct_commands: tuple[str, ...]
     just_recipes: tuple[str, ...]
     accepted_search_tools: tuple[str, ...]
