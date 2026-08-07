@@ -7,17 +7,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import agent  # noqa: E402
-import configuration_components  # noqa: E402
-import dataset_sync  # noqa: E402
+import configuration.components as configuration_components  # noqa: E402
+import tracking.dataset_sync as dataset_sync  # noqa: E402
 import mlflow  # noqa: E402
 import mlflow.genai  # noqa: E402
-import mlflow_tracing  # noqa: E402
+import tracking.tracing as mlflow_tracing  # noqa: E402
 from agent_event_contract import validate_case_evidence_requirements  # noqa: E402
 from cases import CASES, select_cases, select_cases_for_profile  # noqa: E402
-from catalog import resolve_evaluation_compute  # noqa: E402
+from configuration.catalog import resolve_evaluation_compute  # noqa: E402
 from comparison_execution import run_component_comparison  # noqa: E402
-from compute_selection_scoring import validate_compute_selection_baseline  # noqa: E402
-from configuration_variant import (  # noqa: E402
+from scoring.compute_selection import validate_compute_selection_baseline  # noqa: E402
+from configuration.variant import (  # noqa: E402
     ConfigurationVariant,
     prepare_variant_profile,
 )
@@ -27,7 +27,7 @@ from evaluation_arm import (  # noqa: E402
     run_evaluation_arm,
 )
 from mlflow.tracking import MlflowClient  # noqa: E402
-from mlflow_config_registry import MlflowConfigurationRegistry  # noqa: E402
+from tracking.config_registry import MlflowConfigurationRegistry  # noqa: E402
 
 
 def run_evaluation(arguments: Namespace) -> None:

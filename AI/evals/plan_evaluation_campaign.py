@@ -10,9 +10,9 @@ sys.path.insert(0, str(EVALUATION_ROOT))
 
 from cases import CASES  # noqa: E402
 from agent_event_contract import validate_case_evidence_requirements  # noqa: E402
-from configuration_components import discover_agent_components  # noqa: E402
-from catalog import INSTRUCTION_COVERAGE  # noqa: E402
-from evaluation_coverage import (  # noqa: E402
+from configuration.components import discover_agent_components  # noqa: E402
+from configuration.catalog import INSTRUCTION_COVERAGE  # noqa: E402
+from configuration.coverage import (  # noqa: E402
     format_campaign_plan,
     format_coverage_report,
     plan_instruction_campaign,

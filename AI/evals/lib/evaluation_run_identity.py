@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 
-from mlflow_parameter_names import AGENT_EFFORT_FIELD, AGENT_MODEL_FIELD
+from tracking.parameter_names import AGENT_EFFORT_FIELD, AGENT_MODEL_FIELD
 
 
 @dataclass(frozen=True)

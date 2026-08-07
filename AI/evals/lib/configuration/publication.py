@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from configuration_manifest import ConfigurationChanges, ConfigurationManifest
+from configuration.manifest import ConfigurationChanges, ConfigurationManifest
 
 
 @dataclass(frozen=True)

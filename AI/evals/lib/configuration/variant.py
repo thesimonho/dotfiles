@@ -12,7 +12,7 @@ import tempfile
 import tomllib
 from typing import Literal
 
-from configuration_components import ConfigComponent
+from configuration.components import ConfigComponent
 
 type VariantName = Literal["treatment", "control", "naked"]
 

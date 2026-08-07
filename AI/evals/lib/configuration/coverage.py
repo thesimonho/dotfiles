@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import Literal
 
-from configuration_components import ConfigComponent
+from configuration.components import ConfigComponent
 from evaluation_case import EvaluationCase
 
 type CoverageMaturity = Literal["planned", "active", "proven"]

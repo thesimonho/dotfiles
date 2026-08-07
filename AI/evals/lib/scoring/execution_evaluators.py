@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from compute_selection_scoring import score_compute_selection
+from scoring.compute_selection import score_compute_selection
 from evaluation_case import (
     AllShellCommandsPrefixedMetric,
     CommonMetric,
@@ -14,7 +14,7 @@ from evaluation_case import (
     ShellCommandPrefixRateMetric,
     UsedCommandMetric,
 )
-from event_sequence_scoring import (
+from scoring.event_sequences import (
     score_branch_before_changes,
     score_codemap_first,
     score_final_verify,

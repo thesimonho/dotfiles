@@ -6,7 +6,7 @@ from collections.abc import Callable
 
 import mlflow
 from agent import AgentResult
-from agent_evidence import AgentEvent
+from evidence.agent_events import AgentEvent
 from agent_event_contract import EvidenceRequirement
 from mlflow.entities import LiveSpan, SpanType
 

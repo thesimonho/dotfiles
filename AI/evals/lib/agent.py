@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from agent_evidence import (
+from evidence.agent_events import (
     AgentEvent,
     TokenUsage,
     claude_evidence,
@@ -24,7 +24,7 @@ from agent_environment import build_child_environment
 from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
 from shell_commands import normalize_shell_command
-from codex_session_evidence import parent_thread_id, resolved_codex_subagents
+from evidence.codex_sessions import parent_thread_id, resolved_codex_subagents
 
 CLI_TIMEOUT_SECONDS = 1800
 type WorkspaceAccess = Literal["read-only", "workspace-write"]

@@ -3,7 +3,7 @@ agent:
   instruction: Keep this design aligned with the assessments shown in MLflow.
   on-change:
     - "AI/evals/cases.py"
-    - "AI/evals/lib/scoring.py"
+    - "AI/evals/lib/scoring/**"
 ---
 
 # Eval assessment design

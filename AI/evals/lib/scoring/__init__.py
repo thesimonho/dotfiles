@@ -12,10 +12,10 @@ from typing import Any, cast
 
 from agent_execution_context import AgentExecutionContext
 from evaluation_case import EvaluationMetric
-from event_sequence_scoring import event_command, is_effective_file_change
-from execution_evaluators import EXECUTION_EVALUATORS, ExecutionEvidence
-from response_evaluators import RESPONSE_EVALUATORS, ResponseEvidence
-from workspace_evaluators import WORKSPACE_EVALUATORS
+from scoring.event_sequences import event_command, is_effective_file_change
+from scoring.execution_evaluators import EXECUTION_EVALUATORS, ExecutionEvidence
+from scoring.response_evaluators import RESPONSE_EVALUATORS, ResponseEvidence
+from scoring.workspace_evaluators import WORKSPACE_EVALUATORS
 
 
 @dataclass(frozen=True)

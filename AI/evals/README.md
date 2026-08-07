@@ -227,27 +227,13 @@ The change note classifies added, removed, and modified components and includes 
 
 - `cases.py` defines real evaluation inputs and reusable metric declarations.
 - `catalog.toml` holds compute defaults and toggleable instruction coverage entries.
-- `lib/catalog.py` loads the catalog into compute defaults and typed coverage entries.
+- `run_mlflow_eval.py` is the thin entry point: argument parsing plus suite selection.
 - `plan_evaluation_campaign.py` validates evidence contracts and previews paired campaign usage without invoking agents or MLflow.
-- `fixtures/` is reserved for future small inputs that do not require a disposable repository; every active case is workspace-backed.
 - `environments/homeops/` contains the stable web project, scenario-visible setup and overlays, simulator command surface, and environment documentation.
-- `lib/evaluation_case.py` defines the typed case contract.
-- `lib/agent_event_contract.py` defines semantic evidence requirements, per-profile parser support, coverage evidence, and fail-before-execution validation.
-- `lib/evaluation_coverage.py` validates fragment coverage and calculates campaign invocation costs.
-- `lib/disposable_workspace.py` assembles isolated scenario repositories with private dependencies and captures final evidence.
-- `lib/evaluation_scenario.py` contains harness-only constraints, impact rules, and deterministic validators.
-- `lib/capabilities.py` proves shared tools, skills, and agents are available before scoring begins and creates the path-redacted capability artifact.
-- `run_mlflow_eval.py` publishes provenance, resolves an Agent Version, synchronizes the dataset, and runs evaluation.
-- `lib/agent.py` invokes the authenticated Codex or Claude CLI from the case's selected working directory and access mode while requiring native OS sandboxing and blocked tool-process network access.
-- `lib/agent_evidence.py` normalizes CLI tool, collaboration, model, and provider-aware token evidence without retaining arbitrary raw event payloads.
-- `lib/agent_execution_context.py` defines immutable OTEL identity for agent-under-test and judge processes.
-- `lib/agent_environment.py` builds the least-privilege CLI subprocess environment.
-- `lib/mlflow_experiment_bootstrap.py` binds Alloy to the shared MLflow experiment.
-- `lib/mlflow_execution_trace.py` renders normalized CLI evidence as child spans beneath the MLflow-native case trace.
-- `lib/configuration_components.py` discovers allowlisted configuration atoms.
-- `lib/configuration_manifest.py` builds complete manifests and baseline comparisons.
-- `lib/mlflow_config_registry.py` publishes and links prompts, run evidence, and trace provenance.
-- `lib/mlflow_agent_versions.py` resolves manifest-derived Agent Versions.
-- `lib/mlflow_configuration_evidence.py` renders shared run and Agent Version descriptions and artifacts.
+- Flat `lib/` modules are the harness runtime: `evaluation_arm.py` executes one configuration arm end to end, `case_execution.py` builds the per-case predictor and scorer, `comparison_execution.py` orchestrates paired comparisons, `agent.py` invokes the authenticated CLI under native OS sandboxing, `disposable_workspace.py` and `evaluation_scenario.py` own scenario workspaces and validators, `capabilities.py` proves shared tools/skills/agents before scoring, and `evaluation_case.py` plus `agent_event_contract.py` define the typed contracts.
+- `lib/configuration/` discovers monitored components, builds manifests and variants, and owns `catalog.toml` parsing (`components`, `manifest`, `variant`, `coverage`, `catalog`, `publication`).
+- `lib/evidence/` normalizes CLI output streams into tool, model, canary, plan, token, workspace, and comparison evidence without retaining arbitrary raw payloads.
+- `lib/scoring/` dispatches metrics to per-family evaluator registries (`response_evaluators`, `execution_evaluators`, `workspace_evaluators`) with shared event-ordering helpers in `event_sequences` and the compute ladder in `compute_selection`.
+- `lib/tracking/` integrates MLflow: `config_registry` publishes and links prompts and provenance, `agent_versions` resolves manifest-derived Agent Versions, `tracing`/`execution_trace`/`trace_preview` own native traces, and `experiment_bootstrap` binds Alloy to the shared experiment.
 - `infra/compose/mlflow.yml` runs the pinned local MLflow and Alloy services.
 - `infra/compose/alloy.config` filters, redacts, batches, and exports evaluation traces.

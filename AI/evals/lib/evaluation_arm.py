@@ -7,7 +7,7 @@ from typing import Any
 import mlflow
 from mlflow.tracking import MlflowClient
 
-import configuration_components
+import configuration.components as configuration_components
 from agent_environment import build_child_environment
 from capabilities import (
     EXTERNAL_EVALUATION_SKILLS,
@@ -30,9 +30,9 @@ from evaluation_run_identity import (
     EvaluationIdentity,
     WorkspaceSnapshotRecorder,
 )
-from mlflow_agent_versions import MlflowAgentVersionRegistry
-from mlflow_config_registry import MlflowConfigurationRegistry
-from mlflow_parameter_names import AGENT_EFFORT_FIELD, AGENT_MODEL_FIELD
+from tracking.agent_versions import MlflowAgentVersionRegistry
+from tracking.config_registry import MlflowConfigurationRegistry
+from tracking.parameter_names import AGENT_EFFORT_FIELD, AGENT_MODEL_FIELD
 
 
 def run_evaluation_arm(

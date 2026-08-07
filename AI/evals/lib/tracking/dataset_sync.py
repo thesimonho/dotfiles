@@ -7,7 +7,7 @@ from typing import Any
 from agent_event_contract import EvidenceRequirement
 from evaluation_case import EvaluationCase
 from harness_identity import EVALUATION_DATASET_NAME
-from mlflow_parameter_names import CASE_CATEGORY_FIELD, CASE_ID_FIELD
+from tracking.parameter_names import CASE_CATEGORY_FIELD, CASE_ID_FIELD
 
 DATASET_NAME = EVALUATION_DATASET_NAME
 

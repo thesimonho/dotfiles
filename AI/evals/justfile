@@ -49,7 +49,7 @@ eval-bootstrap-alloy:
       print -u2 "Missing {{ eval_python }}; run 'just eval-setup' first"
       exit 1
     fi
-    {{ eval_python }} AI/evals/lib/mlflow_experiment_bootstrap.py
+    {{ eval_python }} AI/evals/lib/tracking/experiment_bootstrap.py
 
 # Start Alloy after its MLflow experiment ID is available.
 [private]

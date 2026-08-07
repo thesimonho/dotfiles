@@ -20,14 +20,14 @@ from agent_execution_context import AgentExecutionContext, EvaluationRole
 from disposable_workspace import prepare_workspace
 from evaluation_case import WorkspaceSpec
 from evaluation_run_identity import EvaluationIdentity, WorkspaceSnapshotRecorder
-from mlflow_execution_trace import invoke_traced_agent
-from mlflow_parameter_names import (
+from tracking.execution_trace import invoke_traced_agent
+from tracking.parameter_names import (
     AGENT_CLI_FIELD,
     CASE_CATEGORY_FIELD,
     CASE_ID_FIELD,
     CASE_NAME_FIELD,
 )
-from mlflow_trace_preview import update_trace_preview
+from tracking.trace_preview import update_trace_preview
 
 
 def execution_context(

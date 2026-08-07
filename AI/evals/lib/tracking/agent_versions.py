@@ -5,13 +5,13 @@ from __future__ import annotations
 from datetime import UTC, date, datetime
 from typing import Any, Callable
 
-from configuration_publication import ConfigurationPublication
-from mlflow_configuration_evidence import (
+from configuration.publication import ConfigurationPublication
+from tracking.configuration_evidence import (
     DESCRIPTION_TAG,
     agent_version_description,
     upload_model_manifest_artifact,
 )
-from mlflow_parameter_names import AGENT_CLI_FIELD, component_parameter_name
+from tracking.parameter_names import AGENT_CLI_FIELD, component_parameter_name
 
 
 class MlflowAgentVersionRegistry:

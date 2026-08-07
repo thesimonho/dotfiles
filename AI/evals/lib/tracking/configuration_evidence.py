@@ -5,7 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
-from configuration_publication import ConfigurationPublication
+from configuration.publication import ConfigurationPublication
 
 CHANGES_ARTIFACT_PATH = "configuration/changes.txt"
 DESCRIPTION_TAG = "mlflow.note.content"

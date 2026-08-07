@@ -5,9 +5,9 @@ from typing import Any, Literal
 
 from mlflow.tracking import MlflowClient
 
-import configuration_components
-from comparison_evidence import ComparisonArmResult, build_comparison_evidence
-from configuration_variant import (
+import configuration.components as configuration_components
+from evidence.comparison import ComparisonArmResult, build_comparison_evidence
+from configuration.variant import (
     comparison_variants,
     new_agent_definition_canary,
     prepare_variant_profile,
@@ -15,7 +15,7 @@ from configuration_variant import (
 from evaluation_arm import print_completed_evaluation, run_evaluation_arm
 from evaluation_case import EvaluationCase
 from evaluation_run_identity import CompletedEvaluation
-from mlflow_config_registry import MlflowConfigurationRegistry
+from tracking.config_registry import MlflowConfigurationRegistry
 
 
 def run_component_comparison(

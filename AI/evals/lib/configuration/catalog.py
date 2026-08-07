@@ -4,7 +4,7 @@ import tomllib
 from functools import cache
 from typing import Any
 
-from evaluation_coverage import InstructionCoverage
+from configuration.coverage import InstructionCoverage
 from harness_environment import EVALUATION_ROOT, SUPPORTED_AGENT_PROFILES
 
 CATALOG_PATH = EVALUATION_ROOT / "catalog.toml"

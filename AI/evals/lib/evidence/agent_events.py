@@ -6,15 +6,15 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 from agent_event_contract import AgentEventCoverage
-from agent_canary_evidence import claude_canary_tool_use_ids, has_exact_canary_footer
-from agent_model_evidence import (
+from evidence.agent_canaries import claude_canary_tool_use_ids, has_exact_canary_footer
+from evidence.agent_models import (
     claude_invocation_model_selections,
     claude_resolved_child_models,
 )
-from agent_plan_evidence import codex_has_plan
+from evidence.agent_plans import codex_has_plan
 from shell_commands import normalize_shell_command
-from codex_session_evidence import ResolvedCodexSubagent
-from token_usage import TokenUsage
+from evidence.codex_sessions import ResolvedCodexSubagent
+from evidence.token_usage import TokenUsage
 
 type EvidenceValue = str | int | float | bool
 type AgentEventCategory = Literal["agent", "runtime", "tool"]

@@ -20,8 +20,8 @@ from evaluation_scenario import (
     resolve_scenario,
 )
 from shell_commands import unwrapped_shell_invocations
-from workspace_evidence import WorkspaceEvidence
-from final_state_evidence import capture_final_state_evidence
+from evidence.workspace import WorkspaceEvidence
+from evidence.final_state import capture_final_state_evidence
 
 ENVIRONMENTS_ROOT = EVALUATION_ROOT / "environments"
 TYPESCRIPT_MODULE_GRAPH_SCRIPT = Path(__file__).with_name("typescript_module_graph.mjs")

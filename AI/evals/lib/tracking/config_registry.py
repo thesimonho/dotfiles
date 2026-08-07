@@ -7,22 +7,22 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-from configuration_components import ConfigComponent
-from configuration_manifest import (
+from configuration.components import ConfigComponent
+from configuration.manifest import (
     RegisteredComponent,
     build_manifest,
     compare_manifests,
     manifest_from_content,
 )
-from configuration_publication import ConfigurationPublication
+from configuration.publication import ConfigurationPublication
 from harness_identity import manifest_prompt_name
-from mlflow_configuration_evidence import (
+from tracking.configuration_evidence import (
     CHANGES_ARTIFACT_PATH,
     DESCRIPTION_TAG,
     MANIFEST_ARTIFACT_PATH,
     configuration_description,
 )
-from mlflow_parameter_names import AGENT_CLI_FIELD, component_parameter_name
+from tracking.parameter_names import AGENT_CLI_FIELD, component_parameter_name
 
 CONTENT_HASH_TAG = "eval.content_hash"
 LAST_EVALUATED_ALIAS = "last-evaluated"
