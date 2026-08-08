@@ -7,6 +7,11 @@
 # from the repository and tracked in manifests regardless of this file; an
 # entry whose fragment file was deleted fails eval-plan and eval-coverage.
 
+# Measured on 2026-08-08 across three extended runs on the current
+# configuration. Pooled adherence tracked model strength exactly: sol at low
+# effort scored 66.3, terra at medium 57.1, and luna at high 53.4. Raising
+# effort did not recover a weaker band, so the default keeps the strongest
+# model at the cheapest effort.
 [defaults.codex]
 model = "gpt-5.6-sol"
 effort = "low"

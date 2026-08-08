@@ -434,6 +434,9 @@ def _tag_name(metadata_key: str) -> str:
 # one cool hue and walks saturation instead: near-grey cannot show a hue shift,
 # so tinting a fixed hue is the only way to separate its bands while the family
 # still reads as grey.
+#
+# Both ladders run weakest to strongest, so a stronger model always carries the
+# more intense tone and the swatch order matches the capability order.
 _MODEL_TONES: dict[str, dict[str, tuple[float, float]]] = {
     "claude": {
         "haiku": (44.0, 0.55),
@@ -443,8 +446,8 @@ _MODEL_TONES: dict[str, dict[str, tuple[float, float]]] = {
     },
     "codex": {
         "gpt-5.6-luna": (205.0, 0.04),
-        "gpt-5.6-sol": (205.0, 0.13),
-        "gpt-5.6-terra": (205.0, 0.24),
+        "gpt-5.6-terra": (205.0, 0.13),
+        "gpt-5.6-sol": (205.0, 0.24),
     },
 }
 
