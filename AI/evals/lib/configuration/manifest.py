@@ -50,25 +50,29 @@ def build_manifest(
     profile: str,
     components: list[RegisteredComponent] | tuple[RegisteredComponent, ...],
 ) -> ConfigurationManifest:
-    """Build a canonical manifest whose identity is provider-independent."""
+    """Build a canonical manifest whose identity is provider-independent.
+
+    The identity answers "which configuration ran", so it hashes component
+    content alone. Naming the profile or the file each component came from
+    would make two agents running byte-identical instructions hash
+    differently, which defeats grouping runs by configuration; both remain in
+    the manifest document as provenance.
+    """
     ordered_components = tuple(
         sorted(components, key=lambda component: component.component_id)
     )
     identity_payload = {
-        "profile": profile,
         "schema_version": 1,
         "components": {
-            component.component_id: {
-                "content_hash": component.content_hash,
-                "source_paths": list(component.source_paths),
-            }
+            component.component_id: {"content_hash": component.content_hash}
             for component in ordered_components
         },
     }
     identity_json = _canonical_json(identity_payload)
     manifest_id = hashlib.sha256(identity_json.encode()).hexdigest()
     manifest_payload = {
-        **identity_payload,
+        "profile": profile,
+        "schema_version": 1,
         "manifest_id": manifest_id,
         "components": {
             component.component_id: {

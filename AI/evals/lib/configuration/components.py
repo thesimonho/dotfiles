@@ -147,26 +147,64 @@ def _discover_hook_components(
                 runtime_paths,
             )
         )
-    components.append(_hook_wiring_component(repository_root, profile))
+    tracked_hook_names = frozenset(
+        component.component_id.removeprefix("hook/")
+        for component in components
+        if not component.component_id.startswith("hook/_")
+    )
+    components.append(
+        _hook_wiring_component(repository_root, profile, tracked_hook_names)
+    )
     return components
 
 
-def _hook_wiring_component(repository_root: Path, profile: str) -> ConfigComponent:
+def _hook_wiring_component(
+    repository_root: Path,
+    profile: str,
+    tracked_hook_names: frozenset[str],
+) -> ConfigComponent:
     """Track which hooks are wired to which tool events for one agent profile."""
     if profile == "codex":
         wiring_path = repository_root / "AI/settings/codex/hooks.json"
-        wiring_content = _normalized_text(wiring_path)
     else:
         wiring_path = repository_root / "AI/settings/claude/settings.json"
-        settings = json.loads(_normalized_text(wiring_path))
-        wiring_content = json.dumps({"hooks": settings.get("hooks", {})}, indent=2)
+    hooks = json.loads(_normalized_text(wiring_path)).get("hooks", {})
     return _component_from_content(
         repository_root,
         "hook/_wiring",
-        wiring_content,
+        _canonical_wiring(hooks, tracked_hook_names),
         (wiring_path,),
         registry_key=f"hook/_wiring/{profile}",
     )
+
+
+def _canonical_wiring(hooks: dict, tracked_hook_names: frozenset[str]) -> str:
+    """Render wiring as sorted event-to-hook pairs, free of CLI-specific form.
+
+    The two CLIs express the same intent differently: matchers name per-CLI
+    tools (only Claude has MultiEdit), each groups hooks into blocks its own
+    way, and the command embeds a provider-specific runner path. Hashing the
+    raw file made identical wiring look like a configuration difference, so
+    only the surviving question is recorded: which hook runs on which event.
+
+    Entries are limited to tracked hooks. A CLI's installation may wire its
+    own maintenance scripts, and those belong to how the tool was installed
+    rather than to the configuration under evaluation.
+    """
+    pairs = {
+        (event, name)
+        for event, blocks in hooks.items()
+        for block in blocks or []
+        for entry in block.get("hooks", []) or []
+        if (name := _hook_name(entry.get("command", ""))) in tracked_hook_names
+    }
+    return "\n".join(f"{event}\t{name}" for event, name in sorted(pairs))
+
+
+def _hook_name(command: str) -> str:
+    """Return the hook a wiring command runs, ignoring the runner that runs it."""
+    arguments = command.strip().split()
+    return Path(arguments[-1]).name if arguments else ""
 
 
 def _component_from_content(
