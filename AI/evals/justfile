@@ -102,6 +102,10 @@ eval-extended agent model="" effort="":
 eval-naked agent model="" effort="":
     just --justfile AI/evals/justfile eval-mlflow --agent "{{ agent }}" --model "{{ model }}" --effort "{{ effort }}" --suite extended --naked
 
+# Rank recorded runs by spend at current token prices.
+eval-cost:
+    {{ eval_python }} AI/evals/report_run_costs.py
+
 # Show local service state.
 eval-status:
     docker compose -f {{ mlflow_compose }} ps

@@ -50,6 +50,7 @@ Python modules supporting the agent evaluation harness. The library separates ag
 | `mlflow_trace_preview.py`          | Sets stable human-readable request and response previews on native case traces                                                                                                                                 |
 | `mlflow_execution_trace.py`        | Renders the measured agent invocation and normalized CLI event observations as child spans beneath each native case trace                                                                                      |
 | `mlflow_experiment_bootstrap.py`   | Creates the shared experiment and atomically renders Alloy's runtime experiment ID                                                                                                                             |
+| `tracking/cost_report.py`          | Price-weights recorded token usage at report time, selecting the rate in force and warning when the price table needs confirming                                                                               |
 
 ## Key exports
 
