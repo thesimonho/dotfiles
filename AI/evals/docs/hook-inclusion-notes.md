@@ -24,4 +24,8 @@ Runs recorded before 2026-08-07 predate hook inclusion and measured instruction-
 - codex sol/low `f820152d` (2026-07-27)
 - claude opus/low `65dec8ae`, sonnet/medium `51e75190`, fable/low `e6998973` (2026-08-07, pre-hooks)
 
-These remain the instructions-without-hooks reference set for the incremental-add experiment. The opus compute-selection value (100) was recorded under the pre-Fable compute ladder; the current ladder scores the same evidence 50 because opus is no longer the ceiling band.
+These remain the instructions-without-hooks reference set for the incremental-add experiment.
+
+The opus compute-selection value was recorded as 100 under the pre-Fable compute ladder, where opus held the ceiling band. Adding the Fable band made the same evidence an equal-tier selection, which the ladder scores 50. That manual override has been reverted so recorded values stay consistent with the ladder they are read against: assessment `a-ce7e14f07ece4050b3b09c6525b3478b` now carries 50, and the run and agent-version metrics were corrected to match. The two superseded assessments remain in the override chain as the audit trail.
+
+Manual overrides age against scorer changes. Prefer fixing the scorer, and when an override is unavoidable, expect to revisit it whenever the rule behind it moves.
