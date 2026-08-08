@@ -7,11 +7,16 @@
  * This fires only when a build/test/lint-shaped command is about to bypass a
  * justfile that's actually present at the tool's cwd — otherwise it would nag
  * on every Bash call in a project that happens to have a justfile.
+ *
+ * Even so narrowed it repeated often, so it is capped at once per session: the
+ * point is to make the agent look at `just --list` once, and after it has, the
+ * reminder has nothing left to teach.
  */
 
 const fs = require("node:fs");
 const path = require("node:path");
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
+const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 
 // package-manager `run <script>` invocations for the common build/test/lint
 // tasks, plus bare invocations of the underlying tools those scripts wrap.
@@ -48,6 +53,12 @@ function evaluate(payload) {
   }
 
   if (!hasJustfileIn(cwd)) {
+    return doNothing();
+  }
+
+  // Checked last, so a command that was never going to nudge can't spend the
+  // session's one allowance.
+  if (!shouldNudge(payload.session_id, "justfile")) {
     return doNothing();
   }
 

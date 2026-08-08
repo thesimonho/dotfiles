@@ -14,19 +14,15 @@
  */
 
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
-const state = require("../lib/hooks/session-state");
+const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 
 /** Re-nudge at most once per this window, to survive burst and session reuse. */
 const DEBOUNCE_MS = 15 * 60 * 1000;
 
 function evaluate(payload) {
-  const sessionId = payload.session_id;
-
-  const lastNudgedAt = state.read(sessionId).taskDelegationNudgedAt ?? 0;
-  if (Date.now() - lastNudgedAt < DEBOUNCE_MS) {
+  if (!shouldNudge(payload.session_id, "taskDelegation", { everyMs: DEBOUNCE_MS })) {
     return doNothing(); // still inside the debounce window (same planning burst)
   }
-  state.update(sessionId, { taskDelegationNudgedAt: Date.now() });
 
   return addContext(
     "Planning: the model can't change cheaply mid-session, so pick it at spawn time. " +

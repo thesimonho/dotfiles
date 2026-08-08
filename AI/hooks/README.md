@@ -12,7 +12,7 @@ A hook policy exports `evaluate(payload)` and returns one of three agent-neutral
 - **Nudge** — `addContext(text)` writes model-visible additional context without blocking.
 - **Silent** — `doNothing()` produces no output and lets the CLI continue normally.
 
-Shared helpers live in `../lib/hooks/`: `policy-result.js` defines policy results, `host-response.js` encodes them for each CLI, `run-policy.js` loads policies, and `session-state.js` stores per-session scratch state keyed by `session_id` (overridable via `AGENT_HOOK_STATE_DIR`). Host configuration invokes a runner with the policy name, for example `node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push`.
+Shared helpers live in `../lib/hooks/`: `policy-result.js` defines policy results, `host-response.js` encodes them for each CLI, `run-policy.js` loads policies, `session-state.js` stores per-session scratch state keyed by `session_id` (overridable via `AGENT_HOOK_STATE_DIR`), and `nudge-throttle.js` builds on that state to stop a nudge repeating within a session. Host configuration invokes a runner with the policy name, for example `node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push`.
 
 The native config owns discovery, event registration, matchers, trust, timeouts, and command invocation. The shared layer owns only policy evaluation, shared state, and response encoding. Add host-specific behavior to the runner/response boundary instead of teaching policy modules about a CLI.
 
@@ -35,7 +35,7 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder before opening a PR (agent judges)                  |
 | `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md)                            |
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)                       |
-| `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md)                 |
+| `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md, once/session)   |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`                            |
 | `coupling-surface`          | PostToolUse | nudge  | first-touch reminder for a doc's `agent.on-change` area (once/session) |
 | `verify-track`              | PostToolUse | state  | record code edits + verify runs for verify-gate                        |
