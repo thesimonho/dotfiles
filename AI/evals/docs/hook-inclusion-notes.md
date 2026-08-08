@@ -1,10 +1,10 @@
 ---
-status: snapshot, true as of 2026-08-07
+status: snapshot, true as of 2026-08-08
 ---
 
-# Hook inclusion verification notes (2026-08-07)
+# Hook inclusion verification notes (2026-08-07, reset 2026-08-08)
 
-Snapshot of the evidence gathered when evaluated profiles became hook-inclusive. The living behaviour description is in the README and `assessment-design.md`; this records what was verified and which stored runs predate the change.
+Snapshot of the evidence gathered when evaluated profiles became hook-inclusive, and of the tracking-store reset that followed. The living behaviour description is in the README and `assessment-design.md`; this records what was verified and why no run predating the reset survives.
 
 ## Why profiles became hook-inclusive
 
@@ -17,15 +17,22 @@ Instruction-only profiles measured prose that never runs alone: live sessions pa
 - Codex: `codex exec --dangerously-bypass-hook-trust` acknowledged enabled hooks from the copied `hooks.json` ("Enabled hooks may run without review for this invocation"). The end-to-end firing check was cut short by a usage-limit reset window; the first hook-inclusive codex run doubles as that check.
 - A measurement artifact surfaced immediately: branch-guard blocks the first code edit on main, the agent branches and proceeds correctly, and event-ordering scorers counted the blocked attempt as a pre-branch change. Scorers now ignore failed file-change events.
 
-## Run vintage
+## Tracking store reset (2026-08-08)
 
-Runs recorded before 2026-08-07 predate hook inclusion and measured instruction-only adherence:
+Every run described above has been deleted. The MLflow container data was wiped and rebuilt once the configuration reached its intended state, because the stored history measured instruction-only profiles that no longer resemble the live setup, and reading a baseline against them invited changes to behaviours that hooks already handle. The pre-reset database is not retained in the repository.
 
-- codex sol/low `f820152d` (2026-07-27)
-- claude opus/low `65dec8ae`, sonnet/medium `51e75190`, fable/low `e6998973` (2026-08-07, pre-hooks)
+The rebuilt store therefore starts at `agent-harness--claude--manifest` version 1, and every component registers at v1. That is deliberate: the registry's origin point is the current configuration rather than a version history describing configurations that are no longer run. Manifest diffs in run summaries now describe real drift from the intended setup instead of catch-up noise.
 
-These remain the instructions-without-hooks reference set for the incremental-add experiment.
+The first run in the rebuilt store is claude fable/low, extended suite, run `4474cd62`.
 
-The opus compute-selection value was recorded as 100 under the pre-Fable compute ladder, where opus held the ceiling band. Adding the Fable band made the same evidence an equal-tier selection, which the ladder scores 50. That manual override has been reverted so recorded values stay consistent with the ladder they are read against: assessment `a-ce7e14f07ece4050b3b09c6525b3478b` now carries 50, and the run and agent-version metrics were corrected to match. The two superseded assessments remain in the override chain as the audit trail.
+## Measurement variance
+
+Two runs of the same configuration scored the ELI5 judge metric at 25% and 67%, and the subagent compute-selection metric at 50 and 0. Both metrics rest on nine or fewer observations per run, so a single run cannot separate a configuration effect from ordinary variation.
+
+Judge-scored and low-count metrics need repeated runs per arm before a difference means anything. Deterministic scoring does not make a metric stable: the measurement is exact, but the behaviour it measures still varies between runs.
+
+## Retired practice: manual assessment overrides
+
+The opus compute-selection value was once overridden by hand from 50 to 100, then reverted when the Fable band entered the compute ladder and demoted the same evidence back to an equal-tier selection. Both the run and the override chain are gone with the reset.
 
 Manual overrides age against scorer changes. Prefer fixing the scorer, and when an override is unavoidable, expect to revisit it whenever the rule behind it moves.
