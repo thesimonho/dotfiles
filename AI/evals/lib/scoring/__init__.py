@@ -6,6 +6,7 @@ entry there. A handler returns (value, rationale), or None when the metric
 is inapplicable to the observed evidence — never a failure.
 """
 
+import sys
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any, cast
@@ -147,12 +148,34 @@ def _score_with_registry(
         handler = registry.get(metric["evaluator"])
         if handler is None:
             continue
-        scored = handler(metric, evidence)
+        try:
+            scored = handler(metric, evidence)
+        except Exception as handler_error:  # noqa: BLE001
+            # One unusable metric must not discard the rest of the case. A
+            # handler that raises used to escape the scorer, so MLflow dropped
+            # every Feedback for that case and a single flaky judge verdict
+            # erased nine unrelated measurements.
+            _warn_unscored_metric(metric["name"], evidence, handler_error)
+            continue
         if scored is None:
             continue
         value, rationale = scored
         results.append(MetricResult(metric["name"], value, rationale))
     return results
+
+
+def _warn_unscored_metric(
+    metric_name: str,
+    evidence: Any,
+    handler_error: Exception,
+) -> None:
+    """Announce a dropped metric so a shrinking denominator stays visible."""
+    context = getattr(evidence, "context", None)
+    case_id = getattr(context, "case_id", "unknown-case")
+    print(
+        f"scoring: dropped {metric_name} for {case_id}: {handler_error}",
+        file=sys.stderr,
+    )
 
 
 def metric_from_mapping(value: Any) -> EvaluationMetric:

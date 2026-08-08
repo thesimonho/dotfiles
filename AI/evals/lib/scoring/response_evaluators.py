@@ -60,17 +60,25 @@ def score_output_quality(
 
 
 def _parse_judge_verdict(verdict_raw: str) -> str | None:
-    """Accept a leading verdict token; judges occasionally add framing once.
+    """Return the first line that leads with exactly one verdict token.
 
-    Claude answers "PASS: reason" on one line while Codex follows the
-    two-line format literally, so only the first line's leading token counts.
+    Claude answers "PASS: reason" on one line while Codex follows the two-line
+    format literally, so a leading token is the signal. Judges also open with
+    framing that names both outcomes ("PASS or FAIL judgment doesn't require
+    exploration"), which read as a verdict when only the first line counted and
+    silently inverted a FAIL. A line naming both tokens states the task rather
+    than the answer, so skip it and keep looking for the real verdict below.
     """
-    stripped_verdict = verdict_raw.strip()
-    if not stripped_verdict:
-        return None
-    first_line = stripped_verdict.splitlines()[0].upper()
-    verdict_match = re.match(r"^[^A-Z]*(PASS|FAIL)\b", first_line)
-    return verdict_match.group(1) if verdict_match else None
+    for line in verdict_raw.strip().splitlines():
+        normalized_line = line.upper()
+        names_pass = "PASS" in normalized_line
+        names_fail = "FAIL" in normalized_line
+        if names_pass and names_fail:
+            continue
+        verdict_match = re.match(r"^[^A-Z]*(PASS|FAIL)\b", normalized_line)
+        if verdict_match is not None:
+            return verdict_match.group(1)
+    return None
 
 
 def score_expected_mention(output: str, expected_mention: str) -> tuple[bool, str]:

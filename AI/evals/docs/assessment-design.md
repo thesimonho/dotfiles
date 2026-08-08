@@ -102,7 +102,9 @@ Implementation rules:
 - Debugging tests: debugging cases declare relevant unit-test command patterns. Score distinct required tests that complete successfully from normalized shell events.
 - Debug logging: scan only final agent-attributable changes using case-appropriate structural or textual patterns. Return the number of temporary logging statements left behind; intentional application logging is allowlisted by the case.
 - Verify skill: normalize authoritative configured-skill invocation evidence. For code-changing cases, the last verify invocation must occur after the final code-change event and before the final response; the skill's internal result is not scored.
-- ELI5 response: pass only when the first substantive explanation states the outcome or solution in plain language before technical details. Invoke the configured Codex or Claude subscription CLI as the judge and retain its concise rationale.
+- ELI5 response: pass only when the first substantive explanation states the outcome or solution in plain language before technical details. Invoke the configured Codex or Claude subscription CLI as the judge and retain its concise rationale. Read the verdict from the first line that leads with exactly one of `PASS` or `FAIL`; a line naming both states the task rather than the answer and is skipped, because judge framing such as "PASS or FAIL judgment doesn't require exploration" otherwise reads as a verdict and inverts a failure.
+
+A metric whose handler raises is dropped for that case alone, with a warning naming the case and metric, and never fails the surrounding case. An escaping error discards every assessment MLflow would have recorded for that case, so one flaky judge verdict silently erases unrelated deterministic measurements and shrinks their denominators.
 
 ### 4. Measure four planning-fragment behaviors
 
