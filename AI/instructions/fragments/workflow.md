@@ -15,6 +15,12 @@ Your work will be reviewed by both a senior engineer and a second AI coding agen
 
 When a repository has a GitHub Project or issue tracker, use `$kanban` to keep delivery state current. GitHub is the operational source of truth for tracked work; follow local conventions for small or untracked repositories.
 
+For tracker-backed work:
+
+- Read the ticket and relevant milestone state once at ticket start.
+- Update the tracker and relevant tickets when their status materially changes.
+- Perform one final synchronization after the PR is merged.
+
 ## When Programming
 
 - Use TDD for big changes (unless repo-specific rules specify otherwise). Aim for 80% coverage.
