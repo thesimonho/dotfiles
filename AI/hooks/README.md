@@ -43,7 +43,6 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines (coding-style.md)                    |
 | `no-hard-linebreaks`        | PostToolUse | nudge  | flag hard-wrapped markdown (documentation.md)                          |
 | `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge (git.md)                         |
-| `compaction-nudge`          | PostToolUse | nudge  | `/compact` at a PR/merge/push boundary                                 |
 | `task-delegation-nudge`     | PostToolUse | nudge  | pick model/agent at TaskCreate (debounced 15m)                         |
 
 Native wiring includes only hooks for which a CLI exposes the corresponding event and matcher. Codex runs the shared edit and Bash policies through its `apply_patch` aliases and `Bash` matcher. Claude additionally wires `lsp-nudge` to its `Grep|Glob` tools and `task-delegation-nudge` to `TaskCreate`; Codex currently has no equivalent native matcher for those two policies.

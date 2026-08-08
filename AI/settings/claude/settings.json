@@ -226,15 +226,6 @@
         ]
       },
       {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js compaction-nudge"
-          }
-        ]
-      },
-      {
         "matcher": "TaskCreate",
         "hooks": [
           {

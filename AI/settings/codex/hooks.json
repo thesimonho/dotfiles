@@ -118,10 +118,6 @@
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js delete-branch-nudge"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js compaction-nudge"
           }
         ]
       }
