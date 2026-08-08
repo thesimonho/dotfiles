@@ -25,7 +25,14 @@ const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
 
 // A project has verification tooling when one of these is present at cwd.
-const TOOLING_MARKERS = ["justfile", "Justfile", "package.json", "Cargo.toml", "pyproject.toml", "go.mod"];
+const TOOLING_MARKERS = [
+  "justfile",
+  "Justfile",
+  "package.json",
+  "Cargo.toml",
+  "pyproject.toml",
+  "go.mod",
+];
 
 /**
  * Whether the working directory has a verification toolchain worth reminding on.
@@ -34,7 +41,9 @@ const TOOLING_MARKERS = ["justfile", "Justfile", "package.json", "Cargo.toml", "
  * @returns {boolean}
  */
 function hasTooling(cwd) {
-  return TOOLING_MARKERS.some((marker) => fs.existsSync(path.join(cwd, marker)));
+  return TOOLING_MARKERS.some((marker) =>
+    fs.existsSync(path.join(cwd, marker)),
+  );
 }
 
 function evaluate(payload) {
@@ -50,7 +59,7 @@ function evaluate(payload) {
   if (session.dirty && hasTooling(cwd)) {
     return addContext(
       "Code changed this session and no verify command ran afterward. Run the " +
-        "project's verify recipe (e.g. `just verify`, `npm test`) before committing " +
+        "/verify skill before committing " +
         "— unless the remaining changes don't warrant it or this environment can't run it.",
     );
   }

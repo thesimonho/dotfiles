@@ -59,8 +59,7 @@ When pushing, merging or creating PRs:
 
 1. All changes are committed
 2. The branch is up to date with main (rebase if needed)
-3. Verification has passed (lint, type-check, tests, build)
-4. Use a fast-forward merge strategy if possible
+3. Use a fast-forward merge strategy if possible
 
 Once merged, make sure you delete the local branch
 
@@ -68,7 +67,7 @@ When handing completed work from a worktree back to the canonical checkout:
 
 1. Commit the complete scoped work in the worktree.
 2. Fast-forward the target branch in the canonical checkout when possible.
-3. Verify both refs point at the intended commit.
+3. Check both refs point at the intended commit.
 4. Remove the clean worktree, then delete its redundant local branch.
 
 Moving an agent task between checkouts does not move uncommitted files or Git refs by itself. Use commits as the handoff boundary.

@@ -9,8 +9,6 @@ These are the core principles you must follow for your work:
 3. Touch only what you must. Clean up only your own mess.
 4. Define success criteria. Loop until verified.
 
-Verification claims must name the environment actually tested. Testing a canonical checkout does not verify worktree discovery, ignored configuration resolution, per-worktree ports, or cache isolation. When the feature is intended for agents in worktrees, run the final smoke test from a real worktree with the final code state.
-
 Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex, Claude Code).
 
 ## Project Management
@@ -21,6 +19,32 @@ When a repository has a GitHub Project or issue tracker, use `$kanban` to keep d
 
 - Use TDD for big changes (unless repo-specific rules specify otherwise). Aim for 80% coverage.
   - Use the TDD skill to help you.
+
+### Verification
+
+Verify in proportion to the risk and scope of the change.
+
+During implementation:
+
+- Run the smallest targeted test or check that gives useful feedback.
+- Do not repeatedly run the full verification suite after every edit.
+- Do not rerun a passing check unless relevant code or configuration changed.
+
+Before completing a ticket:
+
+- Run the /verify skill once.
+- Add one real-runtime smoke test only when runtime behaviour is part of the
+  ticket's acceptance criteria or cannot be proven adequately by automated
+  checks.
+- Verify only the affected platforms unless shared cross-platform behaviour
+  changed.
+- Treat failed verification methods as evidence about the method, not automatic
+  justification for unlimited retries.
+
+Stop when the ticket's explicit acceptance criteria are proven. Do not expand
+verification into unrelated quality, platform, or documentation work.
+
+Verification claims must name the environment actually tested. Testing a canonical checkout does not verify worktree discovery, ignored configuration resolution, per-worktree ports, or cache isolation. When the feature is intended for agents in worktrees, run the final smoke test from a real worktree with the final code state.
 
 ## When Debugging
 
