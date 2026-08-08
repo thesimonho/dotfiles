@@ -11,10 +11,12 @@
  *     on-change: "src/features/**"      # a scalar or a list of globs
  *   ---
  *
- * The first time (per session) you Read/Edit/Write/MultiEdit a file matching a
- * coupling's `on-change` glob, this surfaces that coupling once, then stays
- * silent for the rest of the session for that coupling — repeating on every
- * touch would just be noise once you've seen it.
+ * When you Read/Edit/Write/MultiEdit a file matching a coupling's `on-change`
+ * glob, this surfaces that coupling, then stays silent about it for an hour —
+ * repeating on every touch would just be noise once you've seen it. It's a
+ * window rather than once per session because a session survives `/compact` and
+ * `/clear`: a later work cycle has lost the doc from context and should hear
+ * about it again.
  *
  * This used to be paired with a commit-time "you forgot to update the doc" gate
  * (coupling-gate.js), but that gate couldn't tell a doc-worthy change from an
@@ -34,6 +36,7 @@
 const path = require("node:path");
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
+const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 const { globToRegExp, discoverCouplings, isValidCoupling } = require("../lib/hooks/coupling");
 
 /**
@@ -69,23 +72,24 @@ function evaluate(payload) {
     state.update(sessionId, { couplings });
   }
 
-  const surfaced = new Set(session.surfacedCouplings ?? []);
   const toSurface = [];
   for (const coupling of couplings) {
-    if (coupling.file === relative || surfaced.has(coupling.file)) {
-      continue; // it's the doc's own file (surface-file-header handles that), or already surfaced
+    if (coupling.file === relative) {
+      continue; // it's the doc's own file — surface-file-header handles that
     }
-    if (coupling.globs.some((glob) => globToRegExp(glob).test(relative))) {
+    if (!coupling.globs.some((glob) => globToRegExp(glob).test(relative))) {
+      continue;
+    }
+    // Throttled per coupling, and only for ones that actually matched, so an
+    // unrelated file can't start the window on a doc you were never shown.
+    if (shouldNudge(sessionId, `coupling:${coupling.file}`)) {
       toSurface.push(coupling);
-      surfaced.add(coupling.file);
     }
   }
 
   if (toSurface.length === 0) {
     return doNothing();
   }
-
-  state.update(sessionId, { surfacedCouplings: [...surfaced] });
 
   const lines = toSurface.map((coupling) =>
     coupling.instruction

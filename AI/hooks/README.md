@@ -12,7 +12,7 @@ A hook policy exports `evaluate(payload)` and returns one of three agent-neutral
 - **Nudge** — `addContext(text)` writes model-visible additional context without blocking.
 - **Silent** — `doNothing()` produces no output and lets the CLI continue normally.
 
-Shared helpers live in `../lib/hooks/`: `policy-result.js` defines policy results, `host-response.js` encodes them for each CLI, `run-policy.js` loads policies, `session-state.js` stores per-session scratch state keyed by `session_id` (overridable via `AGENT_HOOK_STATE_DIR`), and `nudge-throttle.js` builds on that state to stop a nudge repeating within a session. Host configuration invokes a runner with the policy name, for example `node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push`.
+Shared helpers live in `../lib/hooks/`: `policy-result.js` defines policy results, `host-response.js` encodes them for each CLI, `run-policy.js` loads policies, `session-state.js` stores per-session scratch state keyed by `session_id` (overridable via `AGENT_HOOK_STATE_DIR`), and `nudge-throttle.js` builds on that state to stop a nudge repeating within a time window (an hour by default). Host configuration invokes a runner with the policy name, for example `node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push`.
 
 The native config owns discovery, event registration, matchers, trust, timeouts, and command invocation. The shared layer owns only policy evaluation, shared state, and response encoding. Add host-specific behavior to the runner/response boundary instead of teaching policy modules about a CLI.
 
@@ -35,9 +35,9 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder before opening a PR (agent judges)                  |
 | `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md)                            |
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)                       |
-| `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md, once/session)   |
+| `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md, hourly)         |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`                            |
-| `coupling-surface`          | PostToolUse | nudge  | first-touch reminder for a doc's `agent.on-change` area (once/session) |
+| `coupling-surface`          | PostToolUse | nudge  | reminder for a doc's `agent.on-change` area, per coupling (hourly)     |
 | `verify-track`              | PostToolUse | state  | record code edits + verify runs for verify-gate                        |
 | `lint-config-files`         | PostToolUse | nudge  | run the matching linter after a config edit (tools.md)                 |
 | `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines (coding-style.md)                    |
@@ -62,7 +62,7 @@ agent:
 ```
 
 - `instruction` — `surface-file-header` re-emits it whenever the agent reads or edits the file, so the file's contract lands at the decision point instead of decaying up-context.
-- `on-change` (a glob or list of globs) — `coupling-surface` fires the first time (per session) a file matching the glob is read/edited/written, surfacing the coupling's instruction before the area gets worked blind. Fires once per coupling per session, not on every touch. Dormant until a doc opts in.
+- `on-change` (a glob or list of globs) — `coupling-surface` fires when a file matching the glob is read/edited/written, surfacing the coupling's instruction before the area gets worked blind. Throttled to once per coupling per hour, not on every touch. Dormant until a doc opts in.
 
 There used to be a companion commit-time "you forgot to update this doc" gate. It was removed: it couldn't tell a doc-worthy change from an irrelevant one, so every fix for its false positives added state without fixing the underlying unreliability. Surfacing the doc early is the reliable half — it's always a true statement, and an agent that's seen the doc is already positioned to update it as part of the work.
 

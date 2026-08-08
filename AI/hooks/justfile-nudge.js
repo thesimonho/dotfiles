@@ -8,9 +8,11 @@
  * justfile that's actually present at the tool's cwd — otherwise it would nag
  * on every Bash call in a project that happens to have a justfile.
  *
- * Even so narrowed it repeated often, so it is capped at once per session: the
- * point is to make the agent look at `just --list` once, and after it has, the
- * reminder has nothing left to teach.
+ * Even so narrowed it repeated often, so it is capped at once an hour: the point
+ * is to make the agent look at `just --list`, and for the rest of that work
+ * cycle the reminder has nothing left to teach. It's a window rather than once
+ * per session so a later cycle — a compaction, a new task in a reused session —
+ * hears it again.
  */
 
 const fs = require("node:fs");
@@ -57,7 +59,7 @@ function evaluate(payload) {
   }
 
   // Checked last, so a command that was never going to nudge can't spend the
-  // session's one allowance.
+  // window.
   if (!shouldNudge(payload.session_id, "justfile")) {
     return doNothing();
   }

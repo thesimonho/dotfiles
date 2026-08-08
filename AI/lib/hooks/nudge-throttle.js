@@ -8,15 +8,24 @@
  * timestamp debounce, a boolean flag), so this collects the timestamp shape —
  * the one two hooks share — into one place.
  *
+ * Throttling is by elapsed time, never once-per-session. A session is reused
+ * across many work cycles, and `/compact` or `/clear` starts a genuinely new one
+ * without changing the session id — a once-per-session marker would stay latched
+ * and silence the nudge for the rest of the day. An hourly window forgets on
+ * roughly the same cadence the context does.
+ *
  * Call it at the point the nudge is about to be returned, NOT at the top of the
- * hook: a check that runs before the hook's real conditions burns the session's
- * one allowance on a command that was never going to nudge anyway.
+ * hook: a check that runs before the hook's real conditions burns the window on
+ * a command that was never going to nudge anyway.
  *
  *   if (!shouldNudge(payload.session_id, "justfile")) return doNothing();
  *   return addContext("...");
  */
 
 const state = require("./session-state");
+
+/** Long enough that a nudge doesn't repeat within one work cycle, short enough to survive a compaction. */
+const DEFAULT_WINDOW_MS = 60 * 60 * 1000;
 
 /** Marker keys are namespaced under this, so they can't collide with other session state. */
 const MARKER_FIELD = "nudgedAt";
@@ -30,20 +39,17 @@ const MARKER_FIELD = "nudgedAt";
  *
  * @param {string} sessionId
  * @param {string} key namespaced marker, one per nudge (e.g. "justfile")
- * @param {{ everyMs?: number }} [options] minimum gap between nudges; omit for once per session
+ * @param {{ everyMs?: number }} [options] minimum gap between nudges; defaults to an hour
  * @returns {boolean}
  */
-function shouldNudge(sessionId, key, { everyMs = Infinity } = {}) {
+function shouldNudge(sessionId, key, { everyMs = DEFAULT_WINDOW_MS } = {}) {
   if (!sessionId) {
     return true;
   }
 
   const markers = state.read(sessionId)[MARKER_FIELD] ?? {};
-  const lastNudgedAt = markers[key];
-  // The `lastNudgedAt` guard is what makes `everyMs: Infinity` mean "once per
-  // session" rather than "never" — without it the first call is also inside the
-  // window, because every elapsed time is less than Infinity.
-  if (lastNudgedAt && Date.now() - lastNudgedAt < everyMs) {
+  const lastNudgedAt = markers[key] ?? 0;
+  if (Date.now() - lastNudgedAt < everyMs) {
     return false;
   }
 
