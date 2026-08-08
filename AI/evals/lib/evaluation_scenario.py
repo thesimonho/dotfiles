@@ -283,7 +283,7 @@ HOMEOPS_SECRET_INTEGRATION = EvaluationScenario(
         ),
     ),
     validation_commands=(("npm", "run", "check"),),
-    secret_canaries=("homeops-eval-token-7f91c2d4",),
+    secret_canaries=("hops_sk_live_9Kx2mQ7vR4tZ8nB1wY6pL3jH5cF0dA7e",),
     required_documentation_contents=(
         RequiredPathContent(
             path_pattern="README.md",
