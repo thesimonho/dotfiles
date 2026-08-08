@@ -28,16 +28,22 @@
  * the work rather than being nagged after the fact. The gate was removed;
  * `on-change` now only drives this hook.
  *
- * Coupling docs are discovered by scanning root-level and docs/ markdown once per
- * session (cached in session state; re-scanned if a markdown file is edited).
+ * Coupling docs are discovered once per session and cached in session state; see
+ * `discoverCouplings` for which files are scanned. The cache is rebuilt when a
+ * file that could itself declare a coupling is written.
  * Wire under PostToolUse for Read|Edit|Write|MultiEdit.
  */
 
 const path = require("node:path");
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const state = require("../lib/hooks/session-state");
-const { shouldNudge } = require("../lib/hooks/nudge-throttle");
-const { globToRegExp, discoverCouplings, isValidCoupling } = require("../lib/hooks/coupling");
+const { dueNudges } = require("../lib/hooks/nudge-throttle");
+const {
+  globToRegExp,
+  discoverCouplings,
+  isCouplingCandidate,
+  isValidCoupling,
+} = require("../lib/hooks/coupling");
 
 /**
  * The file path a Read/Edit/Write/MultiEdit targeted, across Claude and Codex
@@ -64,28 +70,30 @@ function evaluate(payload) {
 
   const sessionId = payload.session_id;
   const session = state.read(sessionId);
-  const isMarkdownEdit = payload.tool_name !== "Read" && relative.endsWith(".md");
+  // Only a file that could itself carry an `agent.on-change` block can change
+  // the coupling set, so anything else must not trigger a rediscovery walk.
+  const isCouplingSourceEdit =
+    payload.tool_name !== "Read" && relative.endsWith(".md") && isCouplingCandidate(relative);
   let couplings = session.couplings;
   const isStaleCache = !Array.isArray(couplings) || !couplings.every(isValidCoupling);
-  if (isStaleCache || isMarkdownEdit) {
+  if (isStaleCache || isCouplingSourceEdit) {
     couplings = discoverCouplings(cwd);
     state.update(sessionId, { couplings });
   }
 
-  const toSurface = [];
-  for (const coupling of couplings) {
-    if (coupling.file === relative) {
-      continue; // it's the doc's own file — surface-file-header handles that
-    }
-    if (!coupling.globs.some((glob) => globToRegExp(glob).test(relative))) {
-      continue;
-    }
-    // Throttled per coupling, and only for ones that actually matched, so an
-    // unrelated file can't start the window on a doc you were never shown.
-    if (shouldNudge(sessionId, `coupling:${coupling.file}`)) {
-      toSurface.push(coupling);
-    }
-  }
+  const matched = couplings.filter(
+    (coupling) =>
+      // skip the doc's own file — surface-file-header handles that
+      coupling.file !== relative &&
+      coupling.globs.some((glob) => globToRegExp(glob).test(relative)),
+  );
+
+  // Throttled per coupling, and only across the ones that actually matched, so
+  // an unrelated file can't start the window on a doc you were never shown.
+  // Asked as one batch: a check per coupling would rewrite the state file once
+  // for each, on a hook that runs after every read and edit.
+  const due = new Set(dueNudges(sessionId, matched.map((coupling) => `coupling:${coupling.file}`)));
+  const toSurface = matched.filter((coupling) => due.has(`coupling:${coupling.file}`));
 
   if (toSurface.length === 0) {
     return doNothing();

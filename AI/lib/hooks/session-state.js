@@ -26,14 +26,21 @@ const PRUNE_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const PRUNE_MARKER = path.join(STATE_DIR, ".last-prune");
 
 /**
- * Absolute path of the state file for a session.
+ * Absolute path of a session's state file.
+ *
+ * Hooks bound to the same event run concurrently, and `update` is a
+ * read-modify-write, so writers of one concern can drop another's changes. A
+ * namespace gives an independent concern its own file, which is the cheapest
+ * way to keep unrelated hooks from interfering.
  *
  * @param {string} sessionId
+ * @param {string} [namespace] omit for the default state file
  * @returns {string}
  */
-function statePath(sessionId) {
+function statePath(sessionId, namespace) {
   const safe = String(sessionId || "unknown").replace(/[^\w.-]/g, "_");
-  return path.join(STATE_DIR, `${safe}.json`);
+  const suffix = namespace ? `.${namespace}` : "";
+  return path.join(STATE_DIR, `${safe}${suffix}.json`);
 }
 
 /**
@@ -76,11 +83,12 @@ function pruneStaleSessions() {
  * Read a session's state, or {} when none exists yet.
  *
  * @param {string} sessionId
+ * @param {string} [namespace]
  * @returns {object}
  */
-function read(sessionId) {
+function read(sessionId, namespace) {
   try {
-    return JSON.parse(fs.readFileSync(statePath(sessionId), "utf8"));
+    return JSON.parse(fs.readFileSync(statePath(sessionId, namespace), "utf8"));
   } catch {
     return {};
   }
@@ -91,12 +99,13 @@ function read(sessionId) {
  *
  * @param {string} sessionId
  * @param {object} patch
+ * @param {string} [namespace]
  * @returns {object} the new state
  */
-function update(sessionId, patch) {
-  const next = { ...read(sessionId), ...patch };
+function update(sessionId, patch, namespace) {
+  const next = { ...read(sessionId, namespace), ...patch };
   fs.mkdirSync(STATE_DIR, { recursive: true });
-  fs.writeFileSync(statePath(sessionId), JSON.stringify(next));
+  fs.writeFileSync(statePath(sessionId, namespace), JSON.stringify(next));
   pruneStaleSessions();
   return next;
 }

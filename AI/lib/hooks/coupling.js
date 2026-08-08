@@ -29,7 +29,7 @@ const SKIPPED_DIRECTORIES = new Set([
 ]);
 
 // Filenames that can declare a coupling anywhere in the tree. Everything else
-// must live under docs/ or at the repository root. Without this the scan is
+// must live under docs/ or at the top of the scanned tree. Without this the scan is
 // bounded only by MAX_SCAN_FILES, and a repository large enough to exceed it
 // loses couplings silently, picked off by directory walk order.
 const INDEX_FILENAMES = new Set(["README.md", "INDEX.md", "AGENTS.md", "SKILL.md"]);
@@ -66,25 +66,30 @@ function readSmallFile(absolutePath) {
 
 /**
  * Whether a markdown file is somewhere a coupling may be declared: under a
- * `docs/` directory at any depth, directly at the repository root, or under one
- * of the index filenames that can appear anywhere.
+ * `docs/` directory at any depth, directly at the top of the scanned tree, or
+ * under one of the index filenames that can appear anywhere.
  *
- * @param {string} relativePath repository-relative, POSIX separators
+ * "Top of the scanned tree" means the `cwd` the host reported, which is the only
+ * root discovery has ever had. In a session whose cwd is a subdirectory, docs
+ * above it are out of scope — the same limit the glob patterns already carry,
+ * since they are written relative to cwd too.
+ *
+ * @param {string} relativePath relative to the scan root, native separators
  * @returns {boolean}
  */
 function isCouplingCandidate(relativePath) {
   const segments = relativePath.split(path.sep);
-  const isRepositoryRoot = segments.length === 1;
+  const isAtScanRoot = segments.length === 1;
   const isUnderDocs = segments.slice(0, -1).includes("docs");
-  return isRepositoryRoot || isUnderDocs || INDEX_FILENAMES.has(segments[segments.length - 1]);
+  return isAtScanRoot || isUnderDocs || INDEX_FILENAMES.has(segments[segments.length - 1]);
 }
 
 /**
  * Collect the markdown paths that may declare a coupling, bounded by a file
- * budget. The budget is now a backstop rather than the primary limit — the
- * directory skip and candidate filter are what keep the set small.
+ * budget. The budget is a backstop — the directory skip and the candidate filter
+ * are what keep the set small enough that it is never reached in normal use.
  *
- * @param {string} root the repository root, for relative-path decisions
+ * @param {string} root the scan root, for relative-path decisions
  * @param {string} dir directory currently being walked
  * @param {string[]} accumulator absolute paths are pushed here
  */
@@ -118,8 +123,8 @@ function collectMarkdown(root, dir, accumulator) {
 /**
  * Discover coupling declarations: markdown carrying an `agent.on-change` list,
  * among the files where one may be declared — anything under a `docs/`
- * directory, anything directly at the repository root, and any README.md,
- * INDEX.md, AGENTS.md, or SKILL.md anywhere.
+ * directory, anything directly at `cwd`, and any README.md, INDEX.md,
+ * AGENTS.md, or SKILL.md anywhere beneath it.
  *
  * @param {string} cwd
  * @returns {{file: string, globs: string[], instruction: string}[]}
@@ -168,4 +173,4 @@ function isValidCoupling(coupling) {
   );
 }
 
-module.exports = { globToRegExp, discoverCouplings, isValidCoupling };
+module.exports = { globToRegExp, discoverCouplings, isCouplingCandidate, isValidCoupling };
