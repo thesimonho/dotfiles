@@ -15,7 +15,7 @@ Executable policy evaluators that block unsafe operations or add workflow guidan
 | `block-*.js` | Prevents build artifacts, debug logging, root-level Markdown and `.txt` files, force pushes, and plan references in durable files |
 | `branch-guard.js` | Blocks code edits on default branches by resolving Git worktree metadata |
 | `check-*.js` | Enforces conventional commits, file size limits, and dated plan filenames |
-| `*-nudge.js` | Adds contextual reminders for formatting, compaction, branch cleanup, justfiles, LSP, Markdown wrapping, RTK, delegation, and simplification |
+| `*-nudge.js` | Adds contextual reminders for formatting, branch cleanup, justfiles, LSP, Markdown wrapping, RTK, delegation, and simplification; the repeat-prone ones throttle through `AI/lib/hooks/nudge-throttle.js` |
 | `coupling-surface.js` | Surfaces instructions from Markdown `agent.on-change` frontmatter for touched paths |
 | `lint-config-files.js` | Suggests format-specific linters when configuration files are edited |
 | `memory-redirect.js` | Redirects direct memory edits to the supported extension mechanism |

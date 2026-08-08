@@ -7,7 +7,7 @@ These are the core principles you must follow for your work:
 1. Don't assume. Don't hide confusion. Surface tradeoffs.
 2. Minimum code that solves the problem. Nothing speculative.
 3. Touch only what you must. Clean up only your own mess.
-4. Define success criteria. Loop until verified.
+4. Define success criteria.
 
 Your work will be reviewed by both a senior engineer and a second AI coding agent (e.g. OpenAI Codex, Claude Code).
 
