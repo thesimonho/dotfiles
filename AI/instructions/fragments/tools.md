@@ -6,6 +6,19 @@ Use the right tool for the job - do not just resort to manual search and edits. 
 
 More often than not, the project will have a `justfile` containing a set of recipes for common tasks. Check that first before running your own custom commands.
 
+## Tool orchestration
+
+Minimize model round trips. Before using tools, identify everything needed for the next meaningful decision.
+
+- Use an individual call when its result determines the next action.
+- Batch independent calls whose results inform the same decision.
+- Use workflows or programmatic tool calling for predictable multi-step collection, filtering, validation, polling, or mechanical work.
+- Process and summarize intermediate results inside the workflow rather than returning raw output to the model.
+- Do not batch dependent or risky mutations that require checking each result.
+- Avoid retrieving unchanged state or rerunning passing checks without relevant changes.
+
+Prefer one model decision around a batch or workflow over using the model as glue between mechanical steps.
+
 ## CLI commands
 
 [rtk](https://github.com/rtk-ai/rtk) is available for many Bash commands to help save tokens. It works by intercepting commands and compressing their output. In order to take advantage of this, you _must_ use the Bash tool instead of builtin tools like Read, Grep, and Glob.
@@ -91,6 +104,22 @@ For local application verification:
 - Exercise at least one meaningful read and write when the change depends on a backend, then restore test data unless the fixture is disposable.
 - Stop only the frontend and browser sessions owned by the current worktree. Leave documented shared services running.
 - Report the checkout, URL, route, user state, interaction, console/network result, and any screenshot or recording path. Do not report a canonical-checkout test as worktree evidence.
+
+### Runtime verification budget
+
+Verification should prove the changed behaviour with the fewest meaningful
+interactions. This is true for web apps, but also desktop and mobile apps via their own tooling.
+
+- Use one planned semantic user flow.
+- Take screenshots only before and after a meaningful state change, not after
+  every click or input attempt.
+- Retry the same GUI automation mechanism at most twice.
+- After two failed attempts, switch to a materially different verification
+  method or report that the runtime interaction could not be verified.
+- Prefer deterministic state, storage, API, accessibility-tree, or test evidence
+  over coordinate-based GUI automation when either can prove the same claim.
+- Do not verify unrelated platforms unless the change affects shared
+  cross-platform behaviour or the ticket explicitly requires them.
 
 ## Codemaps
 
