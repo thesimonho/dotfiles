@@ -11,6 +11,12 @@
 model = "gpt-5.6-sol"
 effort = "low"
 
+# Measured on 2026-08-08 across four extended runs on the current
+# configuration. Opus at low effort matched opus at medium on pooled
+# adherence (54.7 against 57.1, inside the error band) while running 30%
+# faster on 37% fewer output tokens, and beat sonnet at medium effort on
+# every axis. Raising effort bought little: model band, not reasoning
+# effort, moved rule-following behaviour.
 [defaults.claude]
 model = "opus"
 effort = "low"

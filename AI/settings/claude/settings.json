@@ -37,7 +37,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
-  "model": "sonnet",
+  "model": "opus",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -329,7 +329,7 @@
       "git:*"
     ]
   },
-  "effortLevel": "high",
+  "effortLevel": "low",
   "advisorModel": "opus",
   "voice": {
     "enabled": true,
