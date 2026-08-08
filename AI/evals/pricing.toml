@@ -66,14 +66,19 @@ cache_write = 12.50
 cache_read = 1.00
 output = 50.0
 
-# Codex rates have no first-party machine-readable source; they are read from
-# published summaries and should be confirmed against OpenAI's pricing page
-# when refreshed. Luna fell about 80% on 2026-07-30, so treat large moves in
-# this family as plausible rather than as a transcription error.
+# Codex rates are the short-context tier. OpenAI charges roughly double for
+# requests above the long-context threshold (sol goes to $10 input / $45
+# output), and a run's metrics do not record which tier each request billed
+# at, so a long-context-heavy run is under-costed here. That understates the
+# expensive models more than the cheap ones, which makes this table a
+# conservative floor for the ranking rather than a neutral one.
+#
+# Luna fell about 80% on 2026-07-30, so treat large moves in this family as
+# plausible rather than as a transcription error.
 [[model]]
 profile = "codex"
 name = "gpt-5.6-luna"
-source = "https://www.eesel.ai/blog/gpt-5-6-pricing"
+source = "https://developers.openai.com/api/docs/pricing"
 input = 0.20
 cache_write = 0.25
 cache_read = 0.02
@@ -82,7 +87,7 @@ output = 1.20
 [[model]]
 profile = "codex"
 name = "gpt-5.6-terra"
-source = "https://www.eesel.ai/blog/gpt-5-6-pricing"
+source = "https://developers.openai.com/api/docs/pricing"
 input = 2.0
 cache_write = 2.50
 cache_read = 0.20
@@ -91,7 +96,7 @@ output = 12.0
 [[model]]
 profile = "codex"
 name = "gpt-5.6-sol"
-source = "https://www.eesel.ai/blog/gpt-5-6-pricing"
+source = "https://developers.openai.com/api/docs/pricing"
 input = 5.0
 cache_write = 6.25
 cache_read = 0.50
