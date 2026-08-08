@@ -58,10 +58,28 @@ def score_codemap_first(events: tuple[dict[str, Any], ...]) -> tuple[float, str]
     )
 
 
+def is_documentation_change(event: dict[str, Any]) -> bool:
+    """Whether a file change only touched documentation."""
+    attributes = event.get("attributes")
+    path = str(attributes.get("file_path", "")) if isinstance(attributes, dict) else ""
+    if not path:
+        return False
+    return path.endswith((".md", ".mdx", ".txt")) or path.startswith("docs/")
+
+
 def score_final_verify(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
-    """Require the verify skill to run after the final effective change."""
-    change_indexes = [
-        index for index, event in enumerate(events) if is_effective_file_change(event)
+    """Require the verify skill to run after the last substantive change.
+
+    Verification gates a merge or pull request, not every individual commit,
+    and re-running it after an inconsequential edit proves nothing. A
+    documentation-only change following a completed verification therefore
+    leaves the run compliant, and a run that changed no code never needed
+    verification at all.
+    """
+    substantive_indexes = [
+        index
+        for index, event in enumerate(events)
+        if is_effective_file_change(event) and not is_documentation_change(event)
     ]
     verify_indexes = [
         index
@@ -72,13 +90,15 @@ def score_final_verify(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
         )
         or "AI/skills/verify/SKILL.md" in event_command(event)
     ]
-    passed = bool(verify_indexes) and (
-        not change_indexes or verify_indexes[-1] > change_indexes[-1]
-    )
+    if not substantive_indexes:
+        return 100.0, "no code changes required verification"
+    if not verify_indexes:
+        return 0.0, "code changed but the verify skill was never invoked"
+    passed = verify_indexes[-1] > substantive_indexes[-1]
     return (100.0 if passed else 0.0), (
-        "verify skill was invoked after the final change"
+        "verify skill ran after the last substantive change"
         if passed
-        else "verify skill was not invoked after the final change"
+        else "verify skill ran before a later substantive change"
     )
 
 
