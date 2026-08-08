@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import colorsys
 import hashlib
 import time
 from collections.abc import Callable
@@ -137,6 +138,9 @@ class MlflowConfigurationRegistry:
                 variant_label=variant_label,
             ),
         )
+        run_color = _run_color(self._profile, agent_model, agent_effort)
+        if run_color is not None:
+            self._client.set_tag(run_id, "mlflow.runColor", run_color)
         self._client.log_dict(
             run_id,
             publication.manifest.to_dict(),
@@ -414,6 +418,55 @@ def _registered_from_baseline(
 def _tag_name(metadata_key: str) -> str:
     suffix = metadata_key.removeprefix("config_")
     return f"eval.config.{suffix}"
+
+
+# The MLflow runs table reads `mlflow.runColor` and otherwise assigns a colour
+# per run from its own palette, which puts unrelated hues side by side and makes
+# a profile impossible to pick out at a glance.
+#
+# Model tier and effort are separate questions, so they get separate visual
+# dimensions: hue carries the ladder band and lightness carries the effort. A
+# single shared dimension would leave a dark swatch ambiguous between a stronger
+# model and a harder-thinking one. Saturation separates the CLIs, keeping Claude
+# warm and Codex near-grey whatever the band.
+# Each entry is the (hue, saturation) tone for one model. Claude walks the hue
+# across its warm range because a saturated family carries hue well. Codex holds
+# one cool hue and walks saturation instead: near-grey cannot show a hue shift,
+# so tinting a fixed hue is the only way to separate its bands while the family
+# still reads as grey.
+_MODEL_TONES: dict[str, dict[str, tuple[float, float]]] = {
+    "claude": {
+        "haiku": (44.0, 0.55),
+        "sonnet": (32.0, 0.58),
+        "opus": (20.0, 0.62),
+        "fable": (8.0, 0.66),
+    },
+    "codex": {
+        "gpt-5.6-luna": (205.0, 0.04),
+        "gpt-5.6-sol": (205.0, 0.13),
+        "gpt-5.6-terra": (205.0, 0.24),
+    },
+}
+
+_PROFILE_FALLBACK_TONES: dict[str, tuple[float, float]] = {
+    "claude": (20.0, 0.62),
+    "codex": (205.0, 0.13),
+}
+
+_EFFORT_LIGHTNESS: dict[str, float] = {"low": 0.66, "medium": 0.52, "high": 0.38}
+
+_DEFAULT_EFFORT_LIGHTNESS = 0.52
+
+
+def _run_color(profile: str, model: str, effort: str) -> str | None:
+    """Return the palette colour for one profile, model, and effort."""
+    fallback_tone = _PROFILE_FALLBACK_TONES.get(profile)
+    if fallback_tone is None:
+        return None
+    hue_degrees, saturation = _MODEL_TONES.get(profile, {}).get(model, fallback_tone)
+    lightness = _EFFORT_LIGHTNESS.get(effort, _DEFAULT_EFFORT_LIGHTNESS)
+    red, green, blue = colorsys.hls_to_rgb(hue_degrees / 360.0, lightness, saturation)
+    return "#" + "".join(f"{round(channel * 255):02X}" for channel in (red, green, blue))
 
 
 def _run_name(
