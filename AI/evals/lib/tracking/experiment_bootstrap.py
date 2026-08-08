@@ -1,11 +1,22 @@
 """Create the shared MLflow experiment and render Alloy's runtime identity."""
 
 import os
+import sys
 import tempfile
+from pathlib import Path
 
-from harness_environment import REPOSITORY_ROOT
-from harness_identity import MLFLOW_EXPERIMENT_NAME, MLFLOW_TRACKING_URI
-from mlflow.tracking import MlflowClient
+# Runs as a script from the justfile, where sys.path starts at this package
+# rather than the library root its sibling modules are imported from.
+LIBRARY_ROOT = Path(__file__).resolve().parent.parent
+if str(LIBRARY_ROOT) not in sys.path:
+    sys.path.insert(0, str(LIBRARY_ROOT))
+
+from harness_environment import REPOSITORY_ROOT  # noqa: E402
+from harness_identity import (  # noqa: E402
+    MLFLOW_EXPERIMENT_NAME,
+    MLFLOW_TRACKING_URI,
+)
+from mlflow.tracking import MlflowClient  # noqa: E402
 
 RUNTIME_ENVIRONMENT_PATH = REPOSITORY_ROOT / "infra/compose/.env.mlflow-runtime"
 
