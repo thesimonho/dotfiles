@@ -17,30 +17,13 @@ You _cannot_ push directly to main, don't even try.
 
 Always start your work in a new branch created from the currently checked out branch
 
-Naming convention: `<type>/<shrot description>`, where type is one of the conventional commit types:
-
-- feat: new feature
-- fix: bug fix
-- refactor: refactoring
-- docs: documentation
-- test: adding missing tests
-- chore: maintenance
-- perf: performance improvement
-- ci: CI related changes
-
 ## Committing
+
+Use conventional commit format.
 
 The first line of a commit message should be a description of your your changed (max 70 chars). Then the extended commit message needs to explain _why_ you changed it along with any necessary context.
 
 GPG sign your commits if possible. You might need to leave sandbox to do so.
-
-### Conventional commits
-
-Every commit message follows the conventional commit format:
-
-```
-<type>: <short description>
-```
 
 ### Small, logical commits
 
