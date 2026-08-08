@@ -165,6 +165,7 @@ def _hook_wiring_component(repository_root: Path, profile: str) -> ConfigCompone
         "hook/_wiring",
         wiring_content,
         (wiring_path,),
+        registry_key=f"hook/_wiring/{profile}",
     )
 
 
@@ -173,7 +174,15 @@ def _component_from_content(
     component_id: str,
     content: str,
     source_paths: tuple[Path, ...],
+    registry_key: str | None = None,
 ) -> ConfigComponent:
+    """Build a component, optionally versioning it under a distinct registry key.
+
+    A component whose content depends on the agent profile needs its own
+    version line per profile. Sharing one registry entry made each profile
+    overwrite the other's content, so alternating profiles bumped the version
+    and reported a configuration change that never happened.
+    """
     normalized_sources = tuple(
         source_path.relative_to(repository_root).as_posix()
         for source_path in source_paths
@@ -181,7 +190,7 @@ def _component_from_content(
     content_hash = hashlib.sha256(content.encode()).hexdigest()
     return ConfigComponent(
         component_id=component_id,
-        registry_name=_registry_name(component_id),
+        registry_name=_registry_name(registry_key or component_id),
         content=content,
         content_hash=content_hash,
         source_paths=normalized_sources,

@@ -14,7 +14,7 @@ Instruction-only profiles measured prose that never runs alone: live sessions pa
 
 - Claude: hooks are not rendered as events in headless stream-json output, so context-injection hooks look invisible from outside. A blocking hook is observable: `block-force-push` denied its command from inside a prepared temporary profile (`--setting-sources user`, copied hooks-only `settings.json`), proving hooks load and fire without any trust gating.
 - Claude judge path: judges run with empty setting sources and use no tools; every hook is wired to tool events, so hooks structurally cannot fire on verdicts.
-- Codex: `codex exec --dangerously-bypass-hook-trust` acknowledged enabled hooks from the copied `hooks.json` ("Enabled hooks may run without review for this invocation"). The end-to-end firing check was cut short by a usage-limit reset window; the first hook-inclusive codex run doubles as that check.
+- Codex: `codex exec --dangerously-bypass-hook-trust` acknowledged enabled hooks from the copied `hooks.json` ("Enabled hooks may run without review for this invocation"). End-to-end firing was confirmed on 2026-08-08 from inside a harness-prepared profile: `SessionStart` ran, and a `PreToolUse` hook denied a file write with "Command blocked by PreToolUse hook". Both agent profiles therefore load and execute hooks under their temporary configuration root.
 - A measurement artifact surfaced immediately: branch-guard blocks the first code edit on main, the agent branches and proceeds correctly, and event-ordering scorers counted the blocked attempt as a pre-branch change. Scorers now ignore failed file-change events.
 
 ## Tracking store reset (2026-08-08)
@@ -24,6 +24,14 @@ Every run described above has been deleted. The MLflow container data was wiped 
 The rebuilt store therefore starts at `agent-harness--claude--manifest` version 1, and every component registers at v1. That is deliberate: the registry's origin point is the current configuration rather than a version history describing configurations that are no longer run. Manifest diffs in run summaries now describe real drift from the intended setup instead of catch-up noise.
 
 The first run in the rebuilt store is claude fable/low, extended suite, run `4474cd62`.
+
+## Profile-scoped hook wiring
+
+The first codex run registered `hook/_wiring` at version 2 on a store where every other component sat at version 1. That component's content is the only one that differs by agent profile — claude reads the `hooks` block of `settings.json`, codex reads `hooks.json` — but its registry name was derived from the component ID alone, so both profiles wrote into one shared version line and each overwrote the other.
+
+The consequence was false drift rather than lost data: alternating profiles bumped the version every run, and the next claude run would have reported `hook/_wiring` as modified without any configuration change. The registry name is now scoped by profile, so each profile owns its own version line while the component keeps one ID across manifests.
+
+Runs before this fix reference the shared registry entry. It is left in place so their manifests stay resolvable; the entry is not written again.
 
 ## Measurement variance
 
