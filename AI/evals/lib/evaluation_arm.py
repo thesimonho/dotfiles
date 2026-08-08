@@ -30,6 +30,10 @@ from evaluation_run_identity import (
     EvaluationIdentity,
     WorkspaceSnapshotRecorder,
 )
+from evidence.operational_telemetry import (
+    TELEMETRY_ARTIFACT,
+    OperationalTelemetryRecorder,
+)
 from tracking.agent_versions import MlflowAgentVersionRegistry
 from tracking.config_registry import MlflowConfigurationRegistry
 from tracking.parameter_names import AGENT_EFFORT_FIELD, AGENT_MODEL_FIELD
@@ -84,6 +88,7 @@ def run_evaluation_arm(
     agent_version_registry = MlflowAgentVersionRegistry(client, mlflow)
     agent_version = agent_version_registry.resolve(publication, experiment_id)
     workspace_snapshots = WorkspaceSnapshotRecorder()
+    telemetry = OperationalTelemetryRecorder()
 
     os.environ.setdefault("MLFLOW_GENAI_EVAL_SKIP_TRACE_VALIDATION", "true")
     predict_function = mlflow.trace(
@@ -92,6 +97,7 @@ def run_evaluation_arm(
             profile_environment=profile_environment,
             agent_definition_canary=agent_definition_canary,
             workspace_snapshots=workspace_snapshots,
+            telemetry=telemetry,
         )
     )
     metrics_by_case_id = {case["case_id"]: case["metrics"] for case in selected_cases}
@@ -108,6 +114,7 @@ def run_evaluation_arm(
         agent_version,
     )
     _publish_capability_evidence(client, results.run_id, capability_snapshots)
+    _publish_operational_telemetry(client, results.run_id, telemetry, profile)
     registry.attach_to_run(
         results.run_id,
         publication,
@@ -253,6 +260,27 @@ def _preflight_case_capabilities(
                 )
             )
     return tuple(snapshots)
+
+
+def _publish_operational_telemetry(
+    client: MlflowClient,
+    run_id: str,
+    telemetry: OperationalTelemetryRecorder,
+    profile: str,
+) -> None:
+    """Publish ungraded cost as run metrics plottable across runs.
+
+    These are run metrics rather than assessments on purpose: cost is a data
+    point, not an outcome, so it must stay off the graded surface and out of
+    the paired-comparison metric set. The per-tool and per-case breakdown goes
+    to an artifact instead of more metrics, because the tool name set is
+    unstable between agents and between runs.
+    """
+    if not telemetry.cases:
+        return
+    for name, value in telemetry.run_metrics().items():
+        client.log_metric(run_id, name, value)
+    client.log_dict(run_id, telemetry.summary(profile), TELEMETRY_ARTIFACT)
 
 
 def _publish_capability_evidence(

@@ -25,6 +25,11 @@ from agent_execution_context import AgentExecutionContext
 from harness_environment import REPOSITORY_ROOT, SUPPORTED_AGENT_PROFILES
 from shell_commands import normalize_shell_command
 from evidence.codex_sessions import parent_thread_id, resolved_codex_subagents
+from evidence.operational_telemetry import (
+    CaseTelemetry,
+    claude_tool_round_trips,
+    tool_calls_by_name,
+)
 
 CLI_TIMEOUT_SECONDS = 1800
 type WorkspaceAccess = Literal["read-only", "workspace-write"]
@@ -41,6 +46,27 @@ class AgentResult:
     model_ids: tuple[str, ...]
     event_coverage: AgentEventCoverage
     invocation_seconds: float
+    tool_round_trips: int | None = None
+    """Model responses that requested tools, or None when the CLI cannot show it."""
+
+    @property
+    def tool_calls_by_name(self) -> dict[str, int]:
+        """Observed tool volume, derived once so every consumer agrees."""
+        return tool_calls_by_name(self.events)
+
+    @property
+    def tool_call_count(self) -> int:
+        """Total real tool invocations observed during this invocation."""
+        return sum(self.tool_calls_by_name.values())
+
+    @property
+    def telemetry(self) -> CaseTelemetry:
+        """Bundle the ungraded cost observations for run-level publication."""
+        return CaseTelemetry(
+            tool_calls_by_name=self.tool_calls_by_name,
+            tool_round_trips=self.tool_round_trips,
+            token_counts=self.token_usage.available_counts(),
+        )
 
 
 @dataclass(frozen=True)
@@ -161,6 +187,7 @@ def claude_result_from_output(
         model_ids=model_ids,
         event_coverage=event_coverage,
         invocation_seconds=invocation_seconds,
+        tool_round_trips=claude_tool_round_trips(events),
     )
 
 

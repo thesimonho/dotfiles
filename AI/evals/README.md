@@ -51,8 +51,24 @@ Every predictor case retains operational diagnostics on its trace rather than re
 - `evaluation.unobserved_required_evidence` lists must-observe evidence requirements that did not appear.
 - `evaluation.tokens.*` records each numeric token dimension supplied by the selected CLI.
 - `evaluation.unknown_event_type_count` reports distinct CLI event shapes that have no explicit parser classification.
+- `evaluation.tool_call_count` and `evaluation.tool_calls_by_name` count real tool invocations, excluding the agent-level records the harness synthesizes itself.
+- `evaluation.tool_round_trips` counts the model responses that requested tools, which is what each returned tool result charges a completion for.
 
 Unavailable token dimensions are retained as `null` in the case output and omitted from aggregate feedback rather than estimated. Each result identifies its CLI event source. Normalized input counts include cache-read and cache-creation input so the top-level input and total dimensions remain useful across providers, while the underlying cache dimensions remain separately inspectable. These diagnostics describe the agent-under-test predictor invocation. A separate LLM judge, when applicable, remains a separately correlated invocation and is not folded into these counts. The diagnostics have no pass threshold or improvement direction.
+
+Cost telemetry is the one operational diagnostic that also becomes a run metric, because a per-trace attribute cannot be plotted across runs. Each arm publishes `operations.*` MLflow run metrics plus an `operations/telemetry.json` artifact holding the per-case and per-tool breakdown. These are deliberately not assessments: no case declares them, no scorer produces them, and the paired-comparison layer never sees them, so cost stays a data point instead of an outcome. The per-tool breakdown stays in the artifact because the tool name set is unstable between agents and between runs.
+
+| Run metric | Meaning |
+| --- | --- |
+| `operations.tool_calls_total`, `_per_case` | Tool invocations. A chained shell command is one call, because the agent issued one invocation. |
+| `operations.tool_round_trips_total`, `_per_case` | Model responses that requested tools. Each one charges a completion when its results return, and tools requested together in one response share a single round trip. |
+| `operations.tokens.*_total`, `_per_case` | Each token dimension the CLI reported, kept separate so cache behavior stays visible. |
+
+Round trips, not tool calls, are what batching reduces. A measured probe makes the difference concrete: reading three files in one batched response and reading them one at a time both record three tool calls, but one round trip against three. A tool-call count alone is blind to this. Dividing the two gives the batching factor; it is not published, because it carries nothing the two terms do not.
+
+Claude streams a single API response as several `assistant` events — a thinking block and each parallel tool call arrive separately — so the events overcount. The shared `message.id` identifies the one underlying response and is what the harness counts. Codex exposes no equivalent per-response boundary, so its round-trip metrics are omitted rather than assumed; Codex issues tool calls serially, so there is no batching factor to observe.
+
+Tool counts compare across runs of the same agent only. Claude and Codex expose different tool surfaces — Codex reads files through `shell` while Claude has a dedicated `Read` tool — so a similar total can describe very different work. The artifact records `comparable_across_agents: false` to keep that limit attached to the data.
 
 For planning cases, `agent_invocation_seconds` is useful corroborating evidence: the heavy case should normally take longer than the light case, and a child-agent call can add visible latency. Duration does not prove delegation, however. A long parent-only run can still avoid the planning agent, so `agent.spawn` and `agent.definition-canary` remain the authoritative usage and identity signals.
 

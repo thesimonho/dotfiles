@@ -44,6 +44,9 @@ def _describe_agent_invocation(
     attributes: dict[str, object] = {
         "evaluation.invocation_seconds": result.invocation_seconds,
         "evaluation.event_count": len(result.events),
+        "evaluation.tool_call_count": result.tool_call_count,
+        "evaluation.tool_calls_by_name": result.tool_calls_by_name,
+        "evaluation.tool_round_trips": result.tool_round_trips,
         "evaluation.token_usage_source": token_usage.source,
         "evaluation.model_ids": list(result.model_ids),
         "evaluation.required_evidence": list(required_evidence),
@@ -72,6 +75,9 @@ def _describe_agent_invocation(
     span.set_outputs(
         {
             "event_count": len(result.events),
+            "tool_call_count": result.tool_call_count,
+            "tool_calls_by_name": result.tool_calls_by_name,
+            "tool_round_trips": result.tool_round_trips,
             "model_ids": result.model_ids,
             "required_evidence": required_evidence,
             "required_observed_evidence": required_observed_evidence,

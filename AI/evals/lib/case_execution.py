@@ -20,6 +20,7 @@ from agent_execution_context import AgentExecutionContext, EvaluationRole
 from disposable_workspace import prepare_workspace
 from evaluation_case import WorkspaceSpec
 from evaluation_run_identity import EvaluationIdentity, WorkspaceSnapshotRecorder
+from evidence.operational_telemetry import OperationalTelemetryRecorder
 from tracking.execution_trace import invoke_traced_agent
 from tracking.parameter_names import (
     AGENT_CLI_FIELD,
@@ -58,6 +59,7 @@ def build_predict_fn(
     profile_environment: dict[str, str] | None = None,
     agent_definition_canary: str | None = None,
     workspace_snapshots: WorkspaceSnapshotRecorder | None = None,
+    telemetry: OperationalTelemetryRecorder | None = None,
 ) -> Callable[..., dict[str, object]]:
     """Build a predictor whose native case traces share immutable run identity."""
 
@@ -177,6 +179,9 @@ def build_predict_fn(
             observed_evidence_requirements,
             result.event_coverage.normalized_evidence_types,
         )
+        observed_tool_calls = result.tool_calls_by_name
+        if telemetry is not None:
+            telemetry.record(case_id, result.telemetry)
         output = {
             "response": result.response,
             "execution_evidence": {
@@ -192,6 +197,9 @@ def build_predict_fn(
                 "case_completion_seconds": case_completion_seconds,
                 "agent_invocation_seconds": result.invocation_seconds,
                 "token_usage": result.token_usage.to_dict(),
+                "tool_call_count": result.tool_call_count,
+                "tool_calls_by_name": observed_tool_calls,
+                "tool_round_trips": result.tool_round_trips,
             },
         }
         active_span = mlflow.get_current_active_span()
@@ -200,6 +208,7 @@ def build_predict_fn(
                 {
                     "evaluation.case_completion_seconds": case_completion_seconds,
                     "evaluation.agent_invocation_seconds": result.invocation_seconds,
+                    "evaluation.tool_call_count": result.tool_call_count,
                 }
             )
         if workspace_evidence is not None:
