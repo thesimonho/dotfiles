@@ -2,8 +2,8 @@
 /**
  * Hook: Nudge toward `just` recipes when a justfile exists.
  *
- * tools.md: "the project will have a justfile containing a set of recipes for
- * common tasks. Check that first before running your own custom commands."
+ * The rule lives here rather than in prose: when a project has a justfile of
+ * recipes for common tasks, check it before running a custom command.
  * This fires only when a build/test/lint-shaped command is about to bypass a
  * justfile that's actually present at the tool's cwd — otherwise it would nag
  * on every Bash call in a project that happens to have a justfile.

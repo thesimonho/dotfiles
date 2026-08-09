@@ -16,7 +16,7 @@ Show counts and a one-line summary per item. Let the maintainer pick.
 
 ## Triage a specific issue
 
-1. **Gather context.** Read the full issue or PR (body, comments, labels, author, dates; for a PR, the diff too). Parse any prior triage notes so you don't re-ask resolved questions. Use the `trace-feature` workflow to gather related tickets. Explore the codebase using the project's codemaps and docs. Run checks against the codebase: **redundancy** — search for an existing implementation of the requested behavior by domain concept (not just the request's wording), and report where you looked. If found, it's an already-implemented `wontfix` (step 5).
+1. **Gather context.** Read the full issue or PR (body, comments, labels, author, dates; for a PR, the diff too). Parse any prior triage notes so you don't re-ask resolved questions. Use the `trace-feature` workflow to gather related tickets. Explore the codebase using the project's directory READMEs and docs. Run checks against the codebase: **redundancy** — search for an existing implementation of the requested behavior by domain concept (not just the request's wording), and report where you looked. If found, it's an already-implemented `wontfix` (step 5).
 
 2. **Recommend.** Tell the maintainer your category and state recommendation with reasoning, plus a brief codebase summary relevant to the request — including whether it's already implemented. Wait for direction.
 

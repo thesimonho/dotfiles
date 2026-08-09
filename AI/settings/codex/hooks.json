@@ -84,16 +84,6 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "update_plan",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js task-delegation-nudge",
-            "statusMessage": "Checking subagent delegation at planning time"
-          }
-        ]
-      },
-      {
         "matcher": "Edit|Write",
         "hooks": [
           {

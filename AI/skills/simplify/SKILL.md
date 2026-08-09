@@ -32,7 +32,7 @@ Use the narrowest accurate diff command for git changes:
 
 If there is no clear review scope, stop and say that briefly.
 
-Before judging code, read the nearest applicable instructions and docs for the touched area: `AGENTS.md`, `CLAUDE.md`, subdirectory `README.md`, codemaps, architecture notes, or workflow docs. Treat those as source-of-truth constraints.
+Before judging code, read the nearest applicable instructions and docs for the touched area: `AGENTS.md`, `CLAUDE.md`, the directory's own `README.md`, architecture notes, or workflow docs. Treat those as source-of-truth constraints.
 
 ### 2. Spawn Three Review Agents
 

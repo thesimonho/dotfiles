@@ -35,8 +35,6 @@ When pushing, merging or creating PRs:
 2. The branch is up to date with main (rebase if needed)
 3. Use a fast-forward merge strategy if possible
 
-Once merged, make sure you delete the local branch
-
 When handing completed work from a worktree back to the canonical checkout:
 
 1. Commit the complete scoped work in the worktree.

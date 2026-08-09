@@ -1,8 +1,8 @@
 # Agent reliability hooks
 
-This directory is a deterministic enforcement layer for agent instructions. It exists because standing instructions (the fragments in `AI/instructions/fragments/`) decay across a long context: they are injected once, weighted low, and lose out to the immediate task tens of thousands of tokens later. Prose alone cannot fix that — so the rules that are _event-shaped_ are mirrored here as hooks that fire at the exact moment they are relevant, for free and deterministically.
+This directory is a deterministic enforcement layer for agent instructions. It exists because standing instructions (the fragments in `AI/instructions/fragments/`) decay across a long context: they are injected once, weighted low, and lose out to the immediate task tens of thousands of tokens later. Prose alone cannot fix that — so the rules that are _event-shaped_ live here as hooks that fire at the exact moment they are relevant, for free and deterministically.
 
-The prose fragments remain the shared source of truth (they also feed Codex's `AGENTS.md`). These hooks are additive enforcement, not a replacement. Claude and Codex keep native wiring in `AI/settings/claude/settings.json` and `AI/settings/codex/hooks.json`, then enter the shared system through their respective runners under `AI/lib/hooks/runners/`. The runners load the same policy modules from this directory in-process, so each rule has one implementation and each CLI retains its documented configuration surface.
+A rule states itself in exactly one place. When a hook enforces the whole rule, the prose fragment drops the line and the hook's docstring carries it — duplicating it in both only gives the two copies a chance to drift apart. Prose keeps the rules a hook cannot express, and the detail a one-line nudge has no room for (what `rtk` is and why, the LSP call surface, the plan-document structure). Claude and Codex keep native wiring in `AI/settings/claude/settings.json` and `AI/settings/codex/hooks.json`, then enter the shared system through their respective runners under `AI/lib/hooks/runners/`. The runners load the same policy modules from this directory in-process, so each rule has one implementation and each CLI retains its documented configuration surface.
 
 ## How a hook works
 
@@ -22,39 +22,38 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | --------------------------- | ----------- | ------ | ---------------------------------------------------------------------- |
 | `block-doc-files`           | PreToolUse  | block  | keep root-level Markdown and all `.txt` files out of the repository |
 | `block-build-dirs`          | PreToolUse  | block  | don't edit build output                                                |
-| `block-plan-references`     | PreToolUse  | block  | no plan-file references in code/docs (planning.md)                     |
-| `block-force-push`          | PreToolUse  | block  | never force-push (git.md)                                              |
-| `check-conventional-commit` | PreToolUse  | block  | conventional subject, max 70 chars (git.md)                            |
-| `verify-gate`               | PreToolUse  | nudge  | verify reminder on `git commit` when code changed                      |
-| `branch-guard`              | PreToolUse  | block  | no code edits on the default branch (git.md)                           |
-| `block-debug-logging`       | PreToolUse  | block  | no leftover debug logging in a commit (workflow.md)                    |
+| `block-plan-references`     | PreToolUse  | block  | no plan-file references in code/docs                                   |
+| `block-force-push`          | PreToolUse  | block  | never force-push                                                       |
+| `check-conventional-commit` | PreToolUse  | block  | conventional subject, max 70 chars                                     |
+| `verify-gate`               | PreToolUse  | nudge  | verify reminder on merge/PR when code changed                          |
+| `branch-guard`              | PreToolUse  | block  | no code edits on the default branch                                    |
+| `block-debug-logging`       | PreToolUse  | block  | no leftover debug logging in a commit                                  |
 | `scan-secrets`              | PreToolUse  | block  | gitleaks scan of the commit diff (regex fallback)                      |
-| `check-plan-filename`       | PreToolUse  | block  | plan files start with a `YYYYMMDD` stamp (planning.md)                 |
+| `check-plan-filename`       | PreToolUse  | block  | plan files start with a `YYYYMMDD` stamp                               |
 | `memory-redirect`           | PreToolUse  | nudge  | prefer a hook over a memory for enforceable rules                      |
 | `commit-format-nudge`       | PreToolUse  | nudge  | format changed files before committing (avoid churn)                   |
 | `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder before opening a PR (agent judges)                  |
-| `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md)                            |
-| `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over Grep/Glob for symbols (tools.md)                       |
-| `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (tools.md, hourly)         |
+| `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md, hourly)                    |
+| `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over text search for symbols (tools.md, hourly)             |
+| `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (hourly)                   |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`                            |
 | `coupling-surface`          | PostToolUse | nudge  | reminder for a doc's `agent.on-change` area, per coupling (hourly)     |
 | `verify-track`              | PostToolUse | state  | record code edits + verify runs for verify-gate                        |
-| `lint-config-files`         | PostToolUse | nudge  | run the matching linter after a config edit (tools.md)                 |
-| `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines (coding-style.md)                    |
-| `no-hard-linebreaks`        | PostToolUse | nudge  | flag hard-wrapped markdown (documentation.md)                          |
-| `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge (git.md)                         |
-| `task-delegation-nudge`     | PostToolUse | nudge  | pick model/agent at TaskCreate (debounced 15m)                         |
+| `lint-config-files`         | PostToolUse | nudge  | run the matching linter after a config edit                            |
+| `check-file-size`           | PostToolUse | nudge  | flag a source file over 800 lines                                      |
+| `no-hard-linebreaks`        | PostToolUse | nudge  | flag hard-wrapped markdown                                             |
+| `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge                                  |
 
-Native wiring includes only hooks for which a CLI exposes the corresponding event and matcher. Codex runs the shared edit and Bash policies through its `apply_patch` aliases and `Bash` matcher. Claude additionally wires `lsp-nudge` to its `Grep|Glob` tools and `task-delegation-nudge` to `TaskCreate`; Codex currently has no equivalent native matcher for those two policies.
+Native wiring includes only hooks for which a CLI exposes the corresponding event and matcher. Codex runs the shared edit and Bash policies through its `apply_patch` aliases and `Bash` matcher. Both hosts now wire the same policy set: `lsp-nudge` reads the shell command rather than a Grep tool call, which is the only search path Codex has and the one Claude uses in practice.
 
 ## The `agent:` frontmatter convention
 
-A doc can carry directives for the agent in optional `agent:` frontmatter (parsed by `../lib/hooks/frontmatter.js`). Both fields are optional; a doc without it behaves normally. This is general-purpose, not codemap-specific — a roadmap tracking `src/**`, or a vision doc tracking `docs/plans/**` purely to get re-read, are equally valid pairings. The example below is just the codemap case:
+A doc can carry directives for the agent in optional `agent:` frontmatter (parsed by `../lib/hooks/frontmatter.js`). Both fields are optional; a doc without it behaves normally. This is general-purpose — a roadmap tracking `src/**`, or a vision doc tracking `docs/plans/**` purely to get re-read, are equally valid pairings. The example below is the common case, a directory's own README:
 
 ```yaml
 ---
 agent:
-  instruction: Update this codemap when the mapped directory changes.
+  instruction: Update this README when the module's structure or conventions change.
   on-change:
     - "src/features/**"
 ---

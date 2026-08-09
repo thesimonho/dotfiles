@@ -8,7 +8,7 @@
  * Expected format: type(scope)?: description
  * Breaking change suffix (!) is supported: feat!: description
  *
- * Also enforces git.md's "first line max 70 chars" rule: the description
+ * Also enforces a 70-character limit on the first line: the description
  * portion (after the `type(scope)?: ` prefix) must not exceed 70 characters,
  * so commit subjects stay skimmable in `git log --oneline` and PR lists.
  */

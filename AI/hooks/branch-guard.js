@@ -1,7 +1,8 @@
 /**
- * Hook: Block code edits made directly on the default branch (git.md).
+ * Hook: Block code edits made directly on the default branch.
  *
- * git.md requires all work to start on a feature branch. Docs/config edits
+ * The rule lives here rather than in prose: all work starts on a feature
+ * branch, which is also why git.md no longer needs to say so. Docs/config edits
  * are still allowed on main/master since they are often small housekeeping
  * changes; only edits to recognized code file extensions are blocked.
  *

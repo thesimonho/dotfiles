@@ -7,7 +7,7 @@
  *
  *   ---
  *   agent:
- *     instruction: Update this codemap when the mapped directory changes.
+ *     instruction: Update this README when the module's structure changes.
  *     on-change: "src/features/**"      # a scalar or a list of globs
  *   ---
  *

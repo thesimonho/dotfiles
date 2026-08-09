@@ -2,8 +2,9 @@
  * Hook: Block references to plan files from code, rules, and docs.
  *
  * Plans under docs/plans/ are snapshots — they get archived and superseded, so a
- * reference to one rots the moment the plan moves. The rule (planning.md): do NOT
- * reference plan files in code comments, rules files, or docs/ reference files.
+ * reference to one rots the moment the plan moves. The rule lives here rather
+ * than in prose: do NOT reference plan files in code comments, rules files, or
+ * docs/ reference files.
  *
  * A write is blocked when its *content* mentions a plan file AND its *target* is
  * not itself a plan (or an archived plan). Writing/editing a plan that cites other

@@ -1,8 +1,9 @@
 /**
- * Hook: Block committing leftover debug logging (workflow.md).
+ * Hook: Block committing leftover debug logging.
  *
- * workflow.md says logging is fine while debugging, but must be removed
- * before committing. This inspects the staged diff for `git commit` calls
+ * The rule lives here rather than in prose: logging is fine while debugging,
+ * but must be removed before committing. This inspects the staged diff for
+ * `git commit` calls
  * and blocks when an added line in a non-test file contains an obvious
  * debug statement. Patterns are deliberately narrow (console.log/debug,
  * `debugger;`, dbg!(), binding.pry, byebug) to avoid false positives on

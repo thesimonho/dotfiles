@@ -23,7 +23,7 @@ const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const { parseAgentFrontmatter } = require("../lib/hooks/frontmatter");
 
 // Files larger than this are skipped unread — instruction frontmatter lives in
-// small hand-maintained files (roadmaps, READMEs, codemaps), not large ones.
+// small hand-maintained files (directory READMEs, roadmaps), not large ones.
 const MAX_BYTES = 256 * 1024;
 
 // Cap the surfaced text so a huge instruction can't flood context on every touch.

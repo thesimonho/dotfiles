@@ -2,8 +2,8 @@
 /**
  * Hook: Nudge away from hard-wrapped prose in markdown files.
  *
- * documentation.md: "do not use hard line breaks; let text wrap naturally."
- * Hard-wrapped paragraphs (each line manually broken around ~70-80 chars) are
+ * The rule lives here rather than in prose: do not use hard line breaks in
+ * markdown; let text wrap naturally. Hard-wrapped paragraphs (each line manually broken around ~70-80 chars) are
  * hard to detect by eye once they're already in a file, and they cause noisy
  * diffs later when a single word changes and reflows the whole paragraph. This
  * checks the file after a Write/Edit/MultiEdit lands and nudges — it never

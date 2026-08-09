@@ -2,8 +2,9 @@
 /**
  * Hook: Nudge toward splitting up code files that have grown too large.
  *
- * coding-style.md caps files at 800 lines ("MANY SMALL FILES > FEW LARGE
- * FILES"). A single Edit/Write rarely pushes a file over that line on its own,
+ * The cap lives here rather than in prose: 800 lines, on the principle that
+ * many small files beat few large ones. A single Edit/Write rarely pushes a
+ * file over that line on its own,
  * so this checks the file's size *after* the write lands and nudges rather than
  * blocks — the agent may be mid-refactor and about to split the file anyway.
  *
@@ -61,7 +62,7 @@ function targetPathFrom(toolInput) {
 }
 
 /**
- * Whether a path's extension is one coding-style.md's file-size cap applies to.
+ * Whether a path's extension is one the file-size cap applies to.
  *
  * @param {string} filePath
  * @returns {boolean}

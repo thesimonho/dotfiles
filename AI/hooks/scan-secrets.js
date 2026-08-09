@@ -1,8 +1,9 @@
 /**
  * Hook: Block secrets from entering a commit.
  *
- * security.md is explicit — "No hardcoded secrets. Use environment variables
- * instead." A leaked credential in history is expensive to undo (rotation,
+ * The rule lives here rather than in prose: no hardcoded secrets, use
+ * environment variables instead. A leaked credential in history is expensive
+ * to undo (rotation,
  * scrubbing), so this blocks at commit time, the point where content would enter
  * history.
  *

@@ -224,15 +224,6 @@
             "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js no-hard-linebreaks"
           }
         ]
-      },
-      {
-        "matcher": "TaskCreate",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js task-delegation-nudge"
-          }
-        ]
       }
     ],
     "SessionStart": [

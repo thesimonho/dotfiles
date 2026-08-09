@@ -2,8 +2,9 @@
 /**
  * Hook: Nudge toward the matching configured linter after editing a config file.
  *
- * tools.md says to "assume linters are installed and configured" and to use
- * them first when double-checking code. This maps a handful of well-known
+ * The rule lives here rather than in prose: assume linters are installed and
+ * configured, and reach for them first when double-checking a config edit
+ * rather than reading the diff by eye. This maps a handful of well-known
  * config/script file shapes to their dedicated linter, so the agent is
  * reminded to run the specific tool rather than eyeballing the diff.
  * Agent-neutral: reads the Claude tool_input.file_path as well as the path

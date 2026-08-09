@@ -1,8 +1,8 @@
 /**
  * Hook: Enforce the date-stamp naming convention for plan files.
  *
- * planning.md: plan file names should start with a date and time stamp
- * YYYYMMDD, e.g. `20231201-<name>.md`. Plans are snapshots — the date stamp is
+ * The convention lives here rather than in prose: plan file names start with a
+ * YYYYMMDD stamp, e.g. `20231201-<name>.md`. Plans are snapshots — the stamp is
  * what lets readers tell a current plan from a stale one at a glance, and lets
  * doc-lifecycle tooling sort/archive them. A plan written without the stamp
  * loses that signal permanently (renaming later is friction nobody does), so
