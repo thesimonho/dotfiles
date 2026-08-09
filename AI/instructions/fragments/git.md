@@ -5,9 +5,6 @@
 Treat every new worktree, and every worktree moved to a different commit, as a fresh runtime boundary:
 
 - Confirm the worktree root and shared Git directory with `git rev-parse --show-toplevel` and `git rev-parse --git-common-dir` before deriving paths.
-- When a lockfile exists, install its exact dependencies before building, testing, or starting the app, even when a dependency directory already exists. Use the ecosystem's frozen or clean lockfile command, such as `npm ci`, `pnpm install --frozen-lockfile`, or `uv sync --frozen`; otherwise follow the documented bootstrap command.
-- Discover required runtimes, generated files, ignored configuration, local services, ports, and build caches. Do not assume they followed the branch into the worktree.
-- Do not copy, symlink, generate, or commit ignored secrets automatically. First identify the project's documented configuration owner and trust boundary.
 - A service started from the canonical checkout may be reusable from every worktree. Reuse it only when the project defines it as shared; do not reset, migrate, stop, or otherwise mutate a shared service unless the current task owns that lifecycle.
 - Give each worktree its own application port, cache/build output, browser session, and temporary artifacts when concurrent agents could collide. Prefer a repository command that prints the selected values over guessing defaults.
 
@@ -15,13 +12,7 @@ Treat every new worktree, and every worktree moved to a different commit, as a f
 
 You _cannot_ push directly to main, don't even try.
 
-Always start your work in a new branch created from the currently checked out branch
-
 ## Committing
-
-Use conventional commit format.
-
-The first line of a commit message should be a description of your your changed (max 70 chars). Then the extended commit message needs to explain _why_ you changed it along with any necessary context.
 
 GPG sign your commits if possible. You might need to leave sandbox to do so.
 

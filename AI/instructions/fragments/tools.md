@@ -2,15 +2,10 @@
 
 Use the right tool for the job - do not just resort to manual search and edits. Below are some examples of efficient tools for different tasks.
 
-## Scripts and Build Recipes
-
-More often than not, the project will have a `justfile` containing a set of recipes for common tasks. Check that first before running your own custom commands.
-
 ## Tool orchestration
 
 Minimize model round trips. Before using tools, identify everything needed for the next meaningful decision.
 
-- Use an individual call when its result determines the next action.
 - Batch independent calls whose results inform the same decision.
 - Use workflows or programmatic tool calling for predictable multi-step collection, filtering, validation, polling, or mechanical work.
 - Process and summarize intermediate results inside the workflow rather than returning raw output to the model.
@@ -30,18 +25,12 @@ Prefer one model decision around a batch or workflow over using the model as glu
 **Important**: Even in command chains with `&&`, use `rtk`:
 
 ```bash
-# ❌ Wrong
-git add . && git commit -m "msg" && git push
-
-# ✅ Correct
 rtk git add . && rtk git commit -m "msg" && rtk git push
 ```
 
 ## Code Intelligence
 
-You should declare/initialize before you use/reference a variable, otherwise you'll be flooded with stale LSP errors.
-
-Prefer LSP over Grep/Glob/Read for code navigation:
+Use LSP over Grep/Glob/Read for code navigation:
 
 - `goToDefinition` / `goToImplementation` to jump to source
 - `findReferences` to see all usages across the codebase
@@ -49,16 +38,6 @@ Prefer LSP over Grep/Glob/Read for code navigation:
 - `documentSymbol` to list all symbols in a file
 - `hover` for type info without reading the file
 - `incomingCalls` / `outgoingCalls` for call hierarchy
-
-Before renaming or changing a function signature, use `findReferences` to find all call sites first.
-
-Use Grep/Glob only for text/pattern searches (comments, strings, config values) where LSP doesn't help.
-
-After writing or editing code, check LSP diagnostics before moving on. Fix any type errors or missing imports immediately.
-
-## Linting
-
-You can assume linters are installed and configured. Use them first when double checking your code rather than parsing manually. Examples: actionlint (GitHub workflows), hadolint (docker), shellcheck (shell), tflint (terraform), etc.
 
 ## Structural Search
 
@@ -77,50 +56,3 @@ For structured output (JSON/YAML/CSV/logs), pipe through a parser instead of gre
 - `jq` — JSON filter/transform. Default for any JSON.
 - `yq` — same DSL as jq, for YAML/TOML/XML.
 - `gron` — flatten JSON to grep-able paths (`gron file.json | grep foo`). Great when you don't yet know the shape.
-
-## Browser Use
-
-You have access to the agent-browser skill and CLI (it should already be installed; flag if it isn't). Use this when you need access to dev tools for a web app, or when you need to interact with a page (get content, fill fields, click elements, screenshot, etc).
-
-Quick start:
-
-```bash
-agent-browser open example.com
-agent-browser snapshot                    # Get accessibility tree with refs
-agent-browser click @e2                   # Click by ref from snapshot
-agent-browser fill @e3 "test@example.com" # Fill by ref
-agent-browser get text @e1                # Get text by ref
-agent-browser screenshot page.png
-agent-browser close
-```
-
-Run `agent-browser skills get core --full` for a full run guide and examples, if needed.
-
-For local application verification:
-
-- Start the app with the repository's agent/development command and use the URL it prints. Do not assume port 3000 or reuse a server whose owning checkout is unknown.
-- Confirm the page is served by the intended worktree before drawing conclusions; concurrent checkouts may expose visually identical apps on different ports.
-- Use a worktree-scoped browser session. Test a semantic user flow, including authentication when relevant, and inspect console errors and failed network requests.
-- Exercise at least one meaningful read and write when the change depends on a backend, then restore test data unless the fixture is disposable.
-- Stop only the frontend and browser sessions owned by the current worktree. Leave documented shared services running.
-- Report the checkout, URL, route, user state, interaction, console/network result, and any screenshot or recording path. Do not report a canonical-checkout test as worktree evidence.
-
-### Runtime verification budget
-
-Verification should prove the changed behaviour with the fewest meaningful
-interactions. This is true for web apps, but also desktop and mobile apps via their own tooling.
-
-- Use one planned semantic user flow.
-- Take screenshots only before and after a meaningful state change, not after
-  every click or input attempt.
-- Retry the same GUI automation mechanism at most twice.
-- After two failed attempts, switch to a materially different verification
-  method or report that the runtime interaction could not be verified.
-- Prefer deterministic state, storage, API, accessibility-tree, or test evidence
-  over coordinate-based GUI automation when either can prove the same claim.
-- Do not verify unrelated platforms unless the change affects shared
-  cross-platform behaviour or the ticket explicitly requires them.
-
-## Codemaps
-
-Projects will usually have a `docs/codemaps/` directory. It acts as an index of the codebase to help you find the specific files that you're looking for based on their domain
