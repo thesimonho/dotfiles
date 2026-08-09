@@ -4,7 +4,6 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from scoring.compute_selection import score_compute_selection
 from evaluation_case import (
     AllShellCommandsPrefixedMetric,
     CommonMetric,
@@ -16,7 +15,6 @@ from evaluation_case import (
 )
 from scoring.event_sequences import (
     score_branch_before_changes,
-    score_codemap_first,
     score_final_verify,
     score_tdd_sequence,
     score_worktree_lifecycle,
@@ -240,13 +238,6 @@ def _evaluate_plan_tracking(
     return (100.0 if observed else 0.0), rationale
 
 
-def _evaluate_codemap_first(
-    _metric: CommonMetric,
-    evidence: ExecutionEvidence,
-) -> ScoredMetric:
-    return score_codemap_first(evidence.events)
-
-
 def _evaluate_final_verify(
     _metric: CommonMetric,
     evidence: ExecutionEvidence,
@@ -279,24 +270,6 @@ def _evaluate_worktree_lifecycle(
     return score_worktree_lifecycle(evidence.events)
 
 
-def _evaluate_compute_selection(
-    _metric: CommonMetric,
-    evidence: ExecutionEvidence,
-) -> ScoredMetric:
-    if (
-        evidence.agent_profile is None
-        or evidence.parent_model is None
-        or evidence.parent_effort is None
-    ):
-        return None
-    return score_compute_selection(
-        evidence.events,
-        evidence.agent_profile,
-        evidence.parent_model,
-        evidence.parent_effort,
-    )
-
-
 EXECUTION_EVALUATORS = {
     "used-command": _evaluate_used_command,
     "all-shell-commands-prefixed": _evaluate_all_commands_prefixed,
@@ -308,12 +281,10 @@ EXECUTION_EVALUATORS = {
     "preferred-search-percent": _evaluate_preferred_search,
     "debug-unit-tests-percent": _evaluate_debug_unit_tests,
     "plan-tracking-percent": _evaluate_plan_tracking,
-    "codemap-first-percent": _evaluate_codemap_first,
     "final-verify-percent": _evaluate_final_verify,
     "tdd-appropriate-percent": _evaluate_tdd_appropriate,
     "branch-before-changes-percent": _evaluate_branch_before_changes,
     "worktree-lifecycle-percent": _evaluate_worktree_lifecycle,
-    "subagent-compute-selection-percent": _evaluate_compute_selection,
 }
 
 

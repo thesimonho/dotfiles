@@ -26,38 +26,6 @@ def is_effective_file_change(event: dict[str, Any]) -> bool:
     )
 
 
-def score_codemap_first(events: tuple[dict[str, Any], ...]) -> tuple[float, str]:
-    """Reward consulting the codemap index before general discovery."""
-    codemap_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if "docs/codemaps/README.md" in event_command(event)
-        ),
-        None,
-    )
-    discovery_markers = (" rg ", " find ", " ls", "tree ", "workspaceSymbol", "glob ")
-    discovery_index = next(
-        (
-            index
-            for index, event in enumerate(events)
-            if any(
-                marker.lower() in f" {event_command(event).lower()}"
-                for marker in discovery_markers
-            )
-        ),
-        None,
-    )
-    passed = codemap_index is not None and (
-        discovery_index is None or codemap_index < discovery_index
-    )
-    return (100.0 if passed else 0.0), (
-        "codemap preceded general discovery"
-        if passed
-        else "codemap did not precede general discovery"
-    )
-
-
 def is_documentation_change(event: dict[str, Any]) -> bool:
     """Whether a file change only touched documentation."""
     attributes = event.get("attributes")

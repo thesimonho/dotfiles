@@ -179,7 +179,6 @@ HOMEOPS_MAINTENANCE_VISIBILITY = EvaluationScenario(
         "src/web/MaintenanceBanner.tsx",
         "src/web/styles.css",
         "tests/maintenance-window.test.ts",
-        "docs/codemaps/README.md",
         "docs/plans/**",
     ),
     protected_path_patterns=(

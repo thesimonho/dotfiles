@@ -140,7 +140,6 @@ class PolicyMetric(CommonMetric, total=False):
     evaluator: Required[Literal[
         "just-usage-percent",
         "preferred-search-percent",
-        "codemap-first-percent",
         "tdd-appropriate-percent",
         "debug-unit-tests-percent",
         "debug-logs-count",
@@ -151,10 +150,8 @@ class PolicyMetric(CommonMetric, total=False):
         "conventional-commits-percent",
         "branch-before-changes-percent",
         "worktree-lifecycle-percent",
-        "function-limits-percent",
         "hardcoded-secrets-count",
         "critical-response-percent",
-        "subagent-compute-selection-percent",
     ]]
     direct_commands: tuple[str, ...]
     just_recipes: tuple[str, ...]

@@ -28,10 +28,23 @@ class MetricResult:
     rationale: str
 
 
+# Assessments whose owning component is not an instruction fragment. A rule
+# that a hook, skill, or agent enforces completely is deleted from the prose so
+# it is stated once, which leaves the assessment measuring a component that is
+# not named `instruction/<prefix>`. Deriving the owner from the metric name
+# alone would point these at fragments that no longer exist.
+COMPONENT_OWNERS = {
+    "security.hardcoded_secrets_count": "hook/scan-secrets",
+    "security.critical_response_percent": "agent/security-reviewer",
+    "workflow.final_verify_percent": "skill/verify",
+}
+
+
 def metric_metadata(metric: EvaluationMetric) -> dict[str, str]:
     """Expose stable interpretation fields alongside each MLflow assessment."""
     name = metric["name"]
     component = name.split(".", maxsplit=1)[0] if "." in name else "none"
+    owner = COMPONENT_OWNERS.get(name)
     if name.endswith("_percent"):
         unit = "percent"
         direction = "higher"
@@ -43,7 +56,11 @@ def metric_metadata(metric: EvaluationMetric) -> dict[str, str]:
         direction = "filter" if name == "task_completion" else "lower"
     return {
         "instruction.component_id": (
-            f"instruction/{component}" if component != "none" else "none"
+            owner
+            if owner
+            else f"instruction/{component}"
+            if component != "none"
+            else "none"
         ),
         "unit": unit,
         "improvement.direction": direction,

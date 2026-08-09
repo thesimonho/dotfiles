@@ -48,16 +48,15 @@ Instruction assessments declare whether they require `task_completion = COMPLETE
 
 Each case declares deterministic required outcomes and, where meaningful, partial outcomes. Meeting every required outcome is `COMPLETE`; meeting at least one declared partial or required outcome without completing all required outcomes is `PARTIAL`; otherwise the result is `FAILED`. The rationale lists the met and unmet outcomes.
 
-### 2. Measure four tools-fragment behaviors
+### 2. Measure three tools-fragment behaviors
 
-The tools fragment has four important behaviors. Their order does not imply priority, and less important instructions are intentionally omitted from visible feedback.
+The tools fragment has three important behaviors. Their order does not imply priority, and less important instructions are intentionally omitted from visible feedback.
 
 | Assessment                       | Desired behavior                                                                                                     |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `tools.just_usage_percent`       | Use an available equivalent `just` recipe instead of `npm run`.                                                      |
 | `tools.rtk_usage_percent`        | Prefix executable shell-command segments with `rtk`.                                                                 |
 | `tools.preferred_search_percent` | Use LSP for semantic navigation, structural tools for syntax-shaped searches, and text search only when appropriate. |
-| `tools.codemap_first_percent`    | Read `docs/codemaps/README.md` before general repository discovery.                                                  |
 
 Each assessment reports successful preferred actions divided by eligible opportunities as a percentage. A case with no eligible opportunity omits the assessment. The rationale states the numerator, denominator, and any missed opportunities.
 
@@ -65,14 +64,11 @@ Tool availability is an environment prerequisite. The evaluated CLIs are expecte
 
 The code-search behavior should use a focused, read-only case involving initial codebase exploration or template structure. The case should create several known semantic and structural navigation opportunities so the percentage has an interpretable denominator.
 
-The codemap behavior is evaluated once per eligible CLI session. Reading the codemap before the first general discovery action satisfies the behavior for the rest of that session; subsequent file searches are not additional failures. Prompt-named file reads do not count as general discovery.
-
 Implementation rules:
 
 - Just usage: hidden case policy maps direct project commands to equivalent recipes. Split shell chains into executable segments and score each mapped direct invocation against its `just` replacement.
 - RTK prefixing: score every executable shell segment. Ignore leading environment assignments and shell syntax; the first executable token must be `rtk`.
 - Code search: a focused exploration case declares semantic, structural, and text-search opportunities with accepted tool classes. Normalize LSP/plugin calls and shell tools, then score fulfilled opportunities against the accepted class.
-- Codemap ordering: compare event order once per eligible session. The codemap read must precede the first general discovery event; explicitly prompt-named file reads are ignored.
 
 ### 3. Measure six workflow-fragment behaviors
 
@@ -82,7 +78,7 @@ Implementation rules:
 | `workflow.tdd_appropriate_percent`    | Use a test-first sequence for large changes and avoid TDD overhead for small changes.       |
 | `workflow.debug_unit_tests_percent`   | Run the relevant unit tests when debugging.                                                 |
 | `workflow.debug_logs_remaining_count` | Leave no temporary debugging logs in the final agent-attributable changes.                  |
-| `workflow.final_verify_percent`       | Call the configured verify skill after the last substantive code change. Documentation-only edits after a completed verification do not require re-running it, and a run that changed no code is exempt. |
+| `workflow.final_verify_percent`       | Call the configured verify skill after the last substantive code change. Owned by `skill/verify`, not the workflow fragment. Documentation-only edits after a completed verification do not require re-running it, and a run that changed no code is exempt. |
 | `workflow.eli5_response_percent`      | Begin the final response with a plain-language explanation before technical details.         |
 
 `workflow.unnecessary_blast_radius` reports `NONE`, `LOW`, `MEDIUM`, `HIGH`, or `CRITICAL`. Its rationale includes the unnecessary-action count, affected paths or commands, and their individual severity. The count remains supporting evidence rather than a second visible assessment.
@@ -146,27 +142,7 @@ Implementation rules:
 - Branch start: use Git events and the initial repository snapshot to require task-branch creation and checkout before the first effective task-attributable file change. This is one declared opportunity and therefore honestly scores `0` or `100`.
 - Worktree lifecycle: applicable cases declare three required stages: a task worktree is created, task-attributable changes occur inside it, and the clean worktree is removed after commit and handoff. Score completed stages over the three requirements and identify the missing stage.
 
-### 7. Measure subagent compute selection
-
-| Assessment                            | Desired behavior                                                                     |
-| ------------------------------------- | ------------------------------------------------------------------------------------ |
-| `subagents.compute_selection_percent` | Use lighter compute for simple delegated work and stronger compute for complex work. |
-
-Each CLI defines one ordered `COMPUTE_LADDERS` entry from least to most capable. The actual top-level model and effort selected for the run is the baseline. The scenario identifies the read-only explorer/Explore assignment as lightweight and the default/general-purpose assignment as demanding; the scorer requires the former to be earlier than the baseline and the latter to be later, so swapped assignments fail. An equal selection also fails. This makes explicit user overrides part of scoring instead of applying pairings designed for the default run. Unknown baselines fail preflight before the compute case runs. Maintaining the policy requires updating only the ordered model and effort names in `COMPUTE_LADDERS` as providers change their offerings.
-
-Score appropriate selections over expected invocations. For Codex, read each isolated direct-child rollout record, match its `parent_thread_id` to the evaluated parent, and use the child turn context's resolved model and reasoning effort after custom-agent files, global defaults, spawn overrides, and inheritance have been applied. For Claude, use the explicit model on the parent Agent tool call: the eval environment rejects higher-priority `CLAUDE_CODE_SUBAGENT_MODEL` and `CLAUDE_CODE_EFFORT_LEVEL` passthrough. Because Claude does not expose per-invocation effort, its child model must occupy a model band wholly earlier or wholly later than the baseline model's band. A same-model selection is ambiguous and fails, with one fairness exception at the ladder edges: when the baseline model has no higher band, a same-model demanding assignment counts as escalation, and when it has no lower band, a same-model lightweight assignment counts as delegation, because the agent could not have moved further in the required direction. List each mismatched or unobservable invocation and its available settings in the rationale.
-
-### 8. Measure coding-style function limits
-
-| Assessment                             | Desired behavior                                                                |
-| -------------------------------------- | ------------------------------------------------------------------------------- |
-| `coding_style.function_limits_percent` | Keep created or modified functions within the declared length and depth limits. |
-
-Implementation rules:
-
-- Function limits: use structural parsing to score eligible created or modified functions within the case-declared line and nesting limits. Report each violating symbol and failed limit in the rationale.
-
-### 9. Measure two universal security behaviors
+### 7. Measure two universal security behaviors
 
 | Assessment                           | Desired behavior                                                   |
 | ------------------------------------ | ------------------------------------------------------------------ |
@@ -180,4 +156,6 @@ Implementation rules:
 
 ## Implementation status
 
-The images fragment is intentionally excluded. The tiered HomeOps catalog contains nine executable cases: the normal core suite selects seven, and extended selects all nine by adding the worktree-lifecycle and subagent-compute cases. `subagents.compute_selection_percent` runs on both CLIs: Codex supplies resolved child model and reasoning effort from isolated direct-child sessions, while Claude supplies the authoritative requested model from the parent Agent call but no per-invocation effort. Base-agent and judge compute defaults live in `catalog.toml` (`[defaults.codex]` and `[defaults.claude]`); explicit model and effort overrides remain available for comparison runs. Workspace assessments whose evidence field is absent — vintage evidence recorded before the field existed — are omitted rather than invented as failures.
+The tiered HomeOps catalog contains eight executable cases: the normal core suite selects seven, and extended selects all eight by adding the worktree-lifecycle case. Base-agent and judge compute defaults live in `catalog.toml` (`[defaults.codex]` and `[defaults.claude]`); explicit model and effort overrides remain available for comparison runs. Workspace assessments whose evidence field is absent — vintage evidence recorded before the field existed — are omitted rather than invented as failures.
+
+An assessment usually belongs to the instruction fragment its name starts with, and `instruction.component_id` is derived from that prefix. Three do not, because the rule they measure is stated by a component other than a fragment: `security.hardcoded_secrets_count` belongs to `hook/scan-secrets`, `security.critical_response_percent` to `agent/security-reviewer`, and `workflow.final_verify_percent` to `skill/verify`. A rule that one component enforces completely is deleted from the prose so it is stated once, so these assessments name their real owner rather than a fragment that no longer exists.

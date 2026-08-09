@@ -20,7 +20,6 @@ _POLICY_EVIDENCE_FIELDS = {
     "local-plan-file-percent": "local_plan_file_percent",
     "local-plan-file-reference-count": "local_plan_file_reference_count",
     "conventional-commits-percent": "conventional_commits_percent",
-    "function-limits-percent": "function_limits_percent",
     "hardcoded-secrets-count": "hardcoded_secrets_count",
 }
 

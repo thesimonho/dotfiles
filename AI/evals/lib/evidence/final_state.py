@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass
 import difflib
-import json
 import re
 from pathlib import Path
 import subprocess
@@ -15,12 +14,6 @@ PLAN_NAME = re.compile(r"^\d{8}-[a-z0-9][a-z0-9-]*\.html$")
 DEBUG_LOG = re.compile(r"\b(console\.log|debugger|print\s*\()")
 SECRET = re.compile(
     r"(?i)(api[_-]?key|password|token|secret)\s*[:=]\s*['\"][^'\"]{8,}['\"]"
-)
-FUNCTION_PATTERNS = (
-    "function $F($$$A): $T { $$$B }",
-    "function $F($$$A) { $$$B }",
-    "const $F = ($$$A): $T => { $$$B }",
-    "const $F = ($$$A) => { $$$B }",
 )
 
 
@@ -37,8 +30,6 @@ class FinalStateEvidence:
     created_commit_count: int
     conventional_commits_percent: float
     conventional_commits_percent_rationale: str
-    function_limits_percent: float
-    function_limits_percent_rationale: str
     hardcoded_secrets_count: int
     hardcoded_secrets_count_rationale: str
 
@@ -91,10 +82,6 @@ def capture_final_state_evidence(
     conventional_count = sum(
         bool(CONVENTIONAL_COMMIT.match(subject)) for subject in commit_subjects
     )
-    function_results = _function_results(workspace, tuple(changed_contents))
-    compliant_functions = sum(
-        result["lines"] <= 30 and result["depth"] <= 4 for result in function_results
-    )
     return FinalStateEvidence(
         debug_logs_remaining_count=len(debug_locations),
         debug_logs_remaining_count_rationale=_count_rationale(
@@ -113,12 +100,6 @@ def capture_final_state_evidence(
             conventional_count / len(commit_subjects) * 100 if commit_subjects else 0.0
         ),
         conventional_commits_percent_rationale=f"{conventional_count} of {len(commit_subjects)} created commits used conventional subjects",
-        function_limits_percent=(
-            compliant_functions / len(function_results) * 100
-            if function_results
-            else 100.0
-        ),
-        function_limits_percent_rationale=f"{compliant_functions} of {len(function_results)} changed functions stayed within 30 lines and depth 4",
         hardcoded_secrets_count=len(secret_locations),
         hardcoded_secrets_count_rationale=_secret_rationale(
             canary_locations, introduced_locations
@@ -198,63 +179,6 @@ def _commit_subjects(workspace: Path, initial_commit: str) -> tuple[str, ...]:
         text=True,
     )
     return tuple(line for line in result.stdout.splitlines() if line)
-
-
-def _function_results(
-    workspace: Path,
-    changed_files: tuple[str, ...],
-) -> tuple[dict[str, int | str], ...]:
-    results_by_location: dict[tuple[str, int, int], dict[str, int | str]] = {}
-    for relative_path in changed_files:
-        if Path(relative_path).suffix not in {".ts", ".tsx", ".js", ".jsx"}:
-            continue
-        for pattern in FUNCTION_PATTERNS:
-            completed = subprocess.run(
-                (
-                    "ast-grep",
-                    "run",
-                    "--pattern",
-                    pattern,
-                    "--json",
-                    "--lang",
-                    "tsx" if relative_path.endswith(".tsx") else "ts",
-                    relative_path,
-                ),
-                cwd=workspace,
-                check=False,
-                capture_output=True,
-                text=True,
-            )
-            if completed.returncode not in {0, 1}:
-                raise subprocess.CalledProcessError(
-                    completed.returncode,
-                    completed.args,
-                    output=completed.stdout,
-                    stderr=completed.stderr,
-                )
-            for match in json.loads(completed.stdout):
-                start_line = int(match["range"]["start"]["line"])
-                end_line = int(match["range"]["end"]["line"])
-                location = (relative_path, start_line, end_line)
-                results_by_location[location] = {
-                    "path": relative_path,
-                    "lines": end_line - start_line + 1,
-                    "depth": _brace_depth(str(match["text"])),
-                }
-    return tuple(results_by_location.values())
-
-
-def _brace_depth(source: str) -> int:
-    """Measure nesting inside a structurally identified function body."""
-    depth = 0
-    maximum_depth = 0
-    for character in source:
-        if character == "{":
-            depth += 1
-            maximum_depth = max(maximum_depth, depth)
-        elif character == "}":
-            depth -= 1
-    return max(0, maximum_depth - 1)
 
 
 def _count_rationale(label: str, locations: tuple[str, ...]) -> str:

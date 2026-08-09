@@ -26,15 +26,6 @@ effort = "low"
 model = "opus"
 effort = "low"
 
-[instruction.coding-style]
-enabled = true
-maturity = "active"
-hypothesis = "Implementation instructions improve maintainability without hurting correctness."
-cases = [
-  "homeops-maintenance-visibility",
-  "homeops-secret-backed-integration",
-]
-
 [instruction.documentation]
 enabled = true
 maturity = "active"
@@ -55,21 +46,6 @@ cases = [
   "homeops-workload-health-overreach",
   "homeops-maintenance-visibility",
 ]
-
-[instruction.security]
-enabled = true
-maturity = "active"
-hypothesis = "Security instructions prevent unsafe shortcuts while allowing legitimate remediation."
-cases = [
-  "homeops-secret-backed-integration",
-  "homeops-critical-security-discovery",
-]
-
-[instruction.subagents]
-enabled = true
-maturity = "active"
-hypothesis = "Delegation instructions select lighter compute for simple work and stronger compute for demanding work."
-cases = ["homeops-subagent-compute-selection"]
 
 [instruction.tools]
 enabled = true
@@ -96,5 +72,4 @@ cases = [
   "homeops-worktree-handoff",
   "homeops-secret-backed-integration",
   "homeops-critical-security-discovery",
-  "homeops-subagent-compute-selection",
 ]

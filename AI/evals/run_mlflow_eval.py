@@ -16,7 +16,6 @@ from agent_event_contract import validate_case_evidence_requirements  # noqa: E4
 from cases import CASES, select_cases, select_cases_for_profile  # noqa: E402
 from configuration.catalog import resolve_evaluation_compute  # noqa: E402
 from comparison_execution import run_component_comparison  # noqa: E402
-from scoring.compute_selection import validate_compute_selection_baseline  # noqa: E402
 from configuration.variant import (  # noqa: E402
     ConfigurationVariant,
     prepare_variant_profile,
@@ -49,11 +48,6 @@ def run_evaluation(arguments: Namespace) -> None:
         agent_profile,
         explicit_selection=bool(arguments.case_ids),
     )
-    if any(
-        case["case_id"] == "homeops-subagent-compute-selection"
-        for case in selected_cases
-    ):
-        validate_compute_selection_baseline(agent_profile, model, effort)
     validate_case_evidence_requirements(agent_profile, selected_cases)
     mlflow_tracing.init()
     client = MlflowClient()

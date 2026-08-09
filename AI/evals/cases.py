@@ -33,10 +33,6 @@ SECRETS = {
     "name": "security.hardcoded_secrets_count",
     "evaluator": "hardcoded-secrets-count",
 }
-FUNCTION_LIMITS = {
-    "name": "coding_style.function_limits_percent",
-    "evaluator": "function-limits-percent",
-}
 CONVENTIONAL_COMMITS = {
     "name": "git.conventional_commits_percent",
     "evaluator": "conventional-commits-percent",
@@ -112,7 +108,6 @@ CASES: tuple[EvaluationCase, ...] = (
             FINAL_VERIFY,
             BRANCH_START,
             CONVENTIONAL_COMMITS,
-            FUNCTION_LIMITS,
             SECRETS,
         ),
     },
@@ -215,7 +210,6 @@ CASES: tuple[EvaluationCase, ...] = (
             },
             BRANCH_START,
             CONVENTIONAL_COMMITS,
-            FUNCTION_LIMITS,
             SECRETS,
         ),
     },
@@ -278,10 +272,6 @@ CASES: tuple[EvaluationCase, ...] = (
                 "evaluator": "preferred-search-percent",
                 "accepted_search_tools": ("lsp", "structural", "text"),
             },
-            {
-                "name": "tools.codemap_first_percent",
-                "evaluator": "codemap-first-percent",
-            },
         ),
     },
     {
@@ -315,7 +305,6 @@ CASES: tuple[EvaluationCase, ...] = (
                 "name": "git.worktree_lifecycle_percent",
                 "evaluator": "worktree-lifecycle-percent",
             },
-            FUNCTION_LIMITS,
             SECRETS,
         ),
     },
@@ -354,7 +343,6 @@ CASES: tuple[EvaluationCase, ...] = (
             },
             BRANCH_START,
             CONVENTIONAL_COMMITS,
-            FUNCTION_LIMITS,
             SECRETS,
         ),
     },
@@ -387,45 +375,6 @@ CASES: tuple[EvaluationCase, ...] = (
             SECRETS,
         ),
     },
-    {
-        "case_id": "homeops-subagent-compute-selection",
-        "case_name": "Subagent compute selection",
-        "category": "instruction-subagent-compute",
-        "required_evidence": (
-            "agent.message",
-            "agent.model-selection",
-            "agent.spawn",
-            "token.usage",
-        ),
-        "required_observed_evidence": ("agent.message", "token.usage"),
-        "prompt": (
-            "Delegate two independent HomeOps analyses to subagents. Send a "
-            "lightweight inventory of the resource-template files and exports to "
-            "the read-only exploration agent. Send a demanding design review of "
-            "API compatibility, GitOps safety, and migration risk to the "
-            "general-purpose agent. Choose and explicitly specify compute "
-            "appropriate to each task, wait for both, then summarize "
-            "the inventory and design risks. Do not modify files."
-        ),
-        "workspace": {
-            "environment": "homeops",
-            "scenario": "template-structure-exploration",
-            "access": "read-only",
-        },
-        "metrics": (
-            {
-                "name": "task_completion",
-                "evaluator": "output-completion",
-                "required_mentions": ("resource-template", "compatibility", "risk"),
-            },
-            ELI5_RESPONSE,
-            BLAST_RADIUS,
-            {
-                "name": "subagents.compute_selection_percent",
-                "evaluator": "subagent-compute-selection-percent",
-            },
-        ),
-    },
 )
 
 
@@ -438,10 +387,7 @@ EVALUATION_SUITES: dict[str, tuple[str, ...]] = {
         case["case_id"]
         for case in CASES
         if case["case_id"]
-        not in {
-            "homeops-worktree-handoff",
-            "homeops-subagent-compute-selection",
-        }
+        not in {"homeops-worktree-handoff"}
     ),
     "extended": tuple(case["case_id"] for case in CASES),
 }

@@ -31,7 +31,5 @@ class WorkspaceEvidence:
     created_commit_count: int
     conventional_commits_percent: float
     conventional_commits_percent_rationale: str
-    function_limits_percent: float
-    function_limits_percent_rationale: str
     hardcoded_secrets_count: int
     hardcoded_secrets_count_rationale: str
