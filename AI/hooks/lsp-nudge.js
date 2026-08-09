@@ -15,6 +15,7 @@
  */
 
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
+const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 
 // A bare code identifier: letters/digits/underscore, optionally dotted
 // (e.g. `foo.bar`), with no spaces or regex metacharacters.
@@ -122,6 +123,10 @@ function evaluate(payload) {
   const pattern = toolInput.pattern ?? searchPattern(toolInput.command ?? "");
 
   if (!pattern || !BARE_IDENTIFIER.test(pattern)) {
+    return doNothing();
+  }
+
+  if (!shouldNudge(payload.session_id, "lsp")) {
     return doNothing();
   }
 

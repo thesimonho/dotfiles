@@ -10,6 +10,7 @@
  */
 
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
+const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 
 // The first-token CLIs rtk knows how to compress, per tools.md.
 const RTK_COMPRESSIBLE_COMMANDS = new Set([
@@ -70,6 +71,10 @@ function evaluate(payload) {
 
   const firstToken = firstCommandTokenFrom(command);
   if (!RTK_COMPRESSIBLE_COMMANDS.has(firstToken)) {
+    return doNothing();
+  }
+
+  if (!shouldNudge(payload.session_id, "rtk")) {
     return doNothing();
   }
 

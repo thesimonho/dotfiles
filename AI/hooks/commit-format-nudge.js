@@ -4,8 +4,10 @@
  *
  * Agent-written code that doesn't match the project's formatting gets reformatted
  * the next time the file is opened in an editor with format-on-save, producing
- * noisy "chore: formatting" churn. This reminds — once per session — to format
- * changed files before committing. It only nudges: formatting is the editor's job
+ * noisy "chore: formatting" churn. This reminds to format changed files before
+ * committing, throttled so that committing often — which git.md asks for — does
+ * not repeat the same reminder on every commit.
+ * It only nudges: formatting is the editor's job
  * and varies by filetype, so a portable hook must not run a formatter itself or
  * depend on a specific editor. It names a formatter config when the project has
  * one, otherwise points at matching the surrounding code. Wire under PreToolUse
@@ -15,6 +17,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
+const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 
 // Formatter config markers → the tool to name in the nudge.
 const FORMATTER_CONFIGS = [
@@ -72,6 +75,10 @@ function evaluate(payload) {
   const command = payload.tool_input?.command ?? "";
   if (!/git\s+commit/.test(command)) {
     return doNothing(); // the matcher is broad Bash; only nudge on commits
+  }
+
+  if (!shouldNudge(payload.session_id, "commitFormat")) {
+    return doNothing();
   }
 
   const cwd = payload.cwd ?? process.cwd();
