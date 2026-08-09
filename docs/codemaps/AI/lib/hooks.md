@@ -15,7 +15,7 @@ Host-neutral infrastructure shared by policy evaluators and runtime adapters. It
 | `policy-result.js` | Constructors for no-op, block, and add-context decisions |
 | `frontmatter.js` | Minimal parser for `agent.instruction` and `agent.on-change` Markdown frontmatter |
 | `coupling.js` | Scans Markdown files, compiles glob patterns, and finds valid path couplings |
-| `session-state.js` | Persists nudge markers and verification state across hook invocations |
+| `session-state.js` | Persists nudge markers and verification state across hook invocations; both reads and writes fail soft, so an unwritable cache costs a marker rather than blocking a tool call |
 | `nudge-throttle.js` | Stops a nudge repeating within a time window, an hour by default |
 | `normalize-payload.js` | Converts host-specific request shapes into the common policy payload |
 | `host-response.js` | Renders neutral policy decisions into host-specific hook responses |

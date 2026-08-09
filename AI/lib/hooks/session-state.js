@@ -97,16 +97,30 @@ function read(sessionId, namespace) {
 /**
  * Merge a patch into a session's state and persist it.
  *
+ * An unwritable state directory is survivable, so a failed write is swallowed
+ * rather than thrown. Hooks run inside sandboxes that may mount the cache
+ * read-only, and a policy that throws exits non-zero, which a host can read as
+ * a blocked tool call: an unwritable cache would then stop the agent working
+ * rather than cost it a marker. Losing the write degrades honestly instead —
+ * a nudge repeats, and the verify gate re-surfaces a reminder it already gave.
+ *
+ * `read` already returns {} for an unreadable file, so both directions of the
+ * state round trip now fail soft.
+ *
  * @param {string} sessionId
  * @param {object} patch
  * @param {string} [namespace]
- * @returns {object} the new state
+ * @returns {object} the new state, persisted only if the cache was writable
  */
 function update(sessionId, patch, namespace) {
   const next = { ...read(sessionId, namespace), ...patch };
-  fs.mkdirSync(STATE_DIR, { recursive: true });
-  fs.writeFileSync(statePath(sessionId, namespace), JSON.stringify(next));
-  pruneStaleSessions();
+  try {
+    fs.mkdirSync(STATE_DIR, { recursive: true });
+    fs.writeFileSync(statePath(sessionId, namespace), JSON.stringify(next));
+    pruneStaleSessions();
+  } catch {
+    // Intentionally silent: see above.
+  }
   return next;
 }
 
