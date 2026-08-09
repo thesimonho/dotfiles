@@ -243,6 +243,10 @@ return {
           end,
         },
       },
+      log_level = {
+        file = vim.log.levels.INFO,
+        console = vim.log.levels.WARN,
+      },
     },
   },
   {
