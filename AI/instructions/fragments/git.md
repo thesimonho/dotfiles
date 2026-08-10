@@ -17,3 +17,7 @@ You _cannot_ push directly to main, don't even try.
 Commit often. Frequent commits = easy bisects.
 
 GPG sign your commits if possible. You might need to leave sandbox to do so.
+
+## PR/Merge
+
+Use the `verify` skill just before submitting a PR or merging into another branch.
