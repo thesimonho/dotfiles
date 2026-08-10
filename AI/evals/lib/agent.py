@@ -79,6 +79,32 @@ class CompletedAgentProcess:
     invocation_seconds: float
 
 
+def _failure_message(completed_process: CompletedAgentProcess, profile: str) -> str:
+    """Recover the CLI's own diagnostic, wherever it chose to write it.
+
+    Both CLIs report some failures only on stdout, inside their JSON result
+    envelope, and leave stderr empty. Reading stderr alone discarded the one
+    useful line: an expired OAuth session was recorded in every trace as the
+    generic fallback, so an auth problem was indistinguishable from a rate
+    limit or a bad flag until the CLI was rerun by hand.
+    """
+    stderr_message = completed_process.stderr.strip()
+    if stderr_message:
+        return stderr_message
+    for line in reversed(completed_process.stdout.splitlines()):
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(payload, dict):
+            continue
+        for field in ("result", "error", "message"):
+            value = payload.get(field)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+    return f"{profile} CLI request failed"
+
+
 def resolve_agent_profile(requested_profile: str) -> str:
     """Resolve an explicit profile or the only CLI available on PATH."""
     if requested_profile != "auto":
@@ -142,8 +168,7 @@ def _call_claude(
         environment_overrides=environment_overrides,
     )
     if completed_process.returncode != 0:
-        message = completed_process.stderr.strip() or "Claude CLI request failed"
-        raise RuntimeError(message)
+        raise RuntimeError(_failure_message(completed_process, "Claude"))
     return claude_result_from_output(
         completed_process.stdout,
         invocation_seconds=completed_process.invocation_seconds,
@@ -228,8 +253,7 @@ def _call_codex(
         environment_overrides=environment_overrides,
     )
     if completed_process.returncode != 0:
-        message = completed_process.stderr.strip() or "Codex CLI request failed"
-        raise RuntimeError(message)
+        raise RuntimeError(_failure_message(completed_process, "Codex"))
     return codex_result_from_output(
         completed_process.stdout,
         invocation_seconds=completed_process.invocation_seconds,
