@@ -19,6 +19,7 @@ Small reusable Lua modules that keep filesystem, Git, OS, UI, and color operatio
 | `os.lua` | Platform detection, process identity, and executable/environment selection |
 | `service_lifecycle.lua` | Backend-independent lifecycle state, readiness polling, progress notifications, optimistic reconciliation, and cross-platform Neovim session leases |
 | `compose_service.lua` | Docker Compose backend implementing start, stop, health status, and detached shutdown commands |
+| `cursortab.lua` | Pinned compatibility loader that keeps CursorTab preview floats inside their source split |
 | `process_service.lua` | Owned foreground-process backend with detached launch, PID identity checks, health commands, logs, and graceful shutdown |
 | `ui.lua` | UI composition and display helpers used by dashboard and pickers |
 
@@ -27,6 +28,7 @@ Small reusable Lua modules that keep filesystem, Git, OS, UI, and color operatio
 | Symbol group | File | Description |
 | --- | --- | --- |
 | `create_gradient()`, `color_num_to_hex()`, `nvim_get_hl_hex()` | `color.lua` | Color calculation and highlight conversion |
+| `install_ui_patch()` | `cursortab.lua` | Loads CursorTab's UI with the pinned overlay-width compatibility fix before plugin setup |
 | `absolute_path()`, `config_path()` | `fs.lua` | Normalizes user paths and resolves files shipped with the Neovim configuration |
 | `trim_string()` | `general.lua` | Normalizes leading and trailing command-output whitespace |
 | `get_process_start_time()` | `os.lua` | Reads stable process identity data used to guard against PID reuse |

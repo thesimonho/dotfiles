@@ -34,7 +34,6 @@ This repository manages a cross-platform development environment with Nix, Neovi
 | `nix/scripts/` | Installation diagnostics and secret/key setup utilities | [scripts](./nix/scripts.md) |
 | `nvim/lua/config/` | Neovim bootstrap, options, events, and keymaps | [Neovim config](./nvim/lua/config.md) |
 | `nvim/lua/plugins/` | Lazy.nvim plugin specifications and integrations | [Neovim plugins](./nvim/lua/plugins.md) |
-| `nvim/patches/` | Temporary downstream fixes applied to pinned Neovim plugins | [Neovim plugins](./nvim/lua/plugins.md) |
 | `nvim/lua/plugins/languages/` | Language-specific LSP, formatter, linter, and debugger setup | [language plugins](./nvim/lua/plugins/languages.md) |
 | `nvim/lua/utils/` | Shared Neovim filesystem, UI, Git, OS, and color helpers | [Neovim utilities](./nvim/lua/utils.md) |
 | `wezterm/` | WezTerm configuration, key tables, plugins, and container integration | [WezTerm](./wezterm.md) |

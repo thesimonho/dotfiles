@@ -220,9 +220,7 @@ local M = {
     "cursortab/cursortab.nvim",
     event = "LazyFile",
     -- Go >= 1.25.0; mise provides the toolchain (see nix/modules/mise.nix).
-    -- Keep the preview inside its source split until upstream supports wrapped
-    -- overlay windows. The reverse check makes reinstalls idempotent.
-    build = "if git apply --reverse --check /home/simon/dotfiles/nvim/patches/cursortab-wrap-previews.patch >/dev/null 2>&1; then :; else git apply /home/simon/dotfiles/nvim/patches/cursortab-wrap-previews.patch; fi; cd server && go build",
+    build = "cd server && go build",
     init = function()
       -- Unconditional by design: the start script is idempotent under its lock,
       -- so a second nvim attaches to the running server instead of racing it
@@ -258,6 +256,9 @@ local M = {
         -- paused long enough for the request to be useful.
         idle_completion_delay = -1,
         text_change_debounce = 400,
+        -- One acceptance may insert at most a small inline-sized stage, even
+        -- when the model continues a repeated document pattern.
+        max_visible_lines = 2,
       },
       provider = {
         -- Fill-in-the-middle, not next-edit: infills at the cursor and emits a
@@ -268,7 +269,9 @@ local M = {
         -- Ignored by llama-server, which holds one model; named for the logs.
         model = "qwen2.5-coder-1.5b",
         -- Raising context_size means raising the server's --ctx-size to match.
-        max_tokens = 128,
+        -- This small local model otherwise continues repeated document
+        -- patterns until the token limit and CursorTab inserts all of them.
+        max_tokens = 32,
         context_size = 1024,
         completion_timeout = 5000,
         -- fim_tokens is set in `config` below -- see the note there.
@@ -280,6 +283,7 @@ local M = {
       },
     },
     config = function(_, opts)
+      require("utils.cursortab").install_ui_patch()
       require("cursortab").setup(opts)
 
       configure_completion_highlights()
