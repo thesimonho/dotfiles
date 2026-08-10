@@ -30,7 +30,7 @@ rtk git add . && rtk git commit -m "msg" && rtk git push
 
 ## Code Intelligence
 
-Use LSP over Grep/Glob/Read for code navigation:
+Prefer LSP over Grep/Glob/Read for code navigation:
 
 - `goToDefinition` / `goToImplementation` to jump to source
 - `findReferences` to see all usages across the codebase
@@ -41,18 +41,8 @@ Use LSP over Grep/Glob/Read for code navigation:
 
 ## Structural Search
 
-Prefer structural matchers over regex when the pattern has syntactic shape (a call, a signature, an import, a JSX prop). They eliminate false positives from comments/strings and survive formatting changes.
-
-- `ast-grep` (`sg`) — pattern-based search/rewrite by AST. Use for: finding all call sites of a function with a specific argument shape, codemods, refactors that regex would mangle. Example: `sg -p 'console.log($$$)' -l ts`
-- `semgrep` — rules-based static analysis with taint tracking. Use for: security audits (injection, SSRF, secrets), enforcing project-specific anti-patterns, bulk lint rules across languages. Heavier than ast-grep but supports dataflow.
-- `tree-sitter` — the underlying parser. Use directly via `tree-sitter parse` when you need a raw syntax tree to script against, or when ast-grep's pattern DSL can't express what you need.
-
-Rule of thumb: regex for text, ast-grep for syntax, semgrep for semantics.
+Prefer structural matchers over regex when the pattern has syntactic shape (a call, a signature, an import, a JSX prop). They eliminate false positives from comments/strings and survive formatting changes. Examples: `ast-grep`, `tree-sitter`, and `semgrep`.
 
 ## Data Wrangling
 
-For structured output (JSON/YAML/CSV/logs), pipe through a parser instead of grepping raw text.
-
-- `jq` — JSON filter/transform. Default for any JSON.
-- `yq` — same DSL as jq, for YAML/TOML/XML.
-- `gron` — flatten JSON to grep-able paths (`gron file.json | grep foo`). Great when you don't yet know the shape.
+For structured output (JSON/YAML/CSV/logs), pipe through a parser instead of grepping raw text. Examples: `jq`, `yq`, `gron`.
