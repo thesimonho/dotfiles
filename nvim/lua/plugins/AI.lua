@@ -153,6 +153,12 @@ local function new_completion_service()
         "auto",
         "--flash-attn",
         "auto",
+        -- Match Qwen's generation config. llama.cpp's 1.0 default disables
+        -- repetition control, which lets a small model loop over FIM context.
+        "--repeat-penalty",
+        "1.1",
+        "--repeat-last-n",
+        "64",
         -- One slot, not the default 4: one editor, and 4 slots quadruple KV.
         "--parallel",
         "1",
@@ -256,22 +262,17 @@ local M = {
         -- paused long enough for the request to be useful.
         idle_completion_delay = -1,
         text_change_debounce = 400,
-        -- One acceptance may insert at most a small inline-sized stage, even
-        -- when the model continues a repeated document pattern.
-        max_visible_lines = 2,
       },
       provider = {
-        -- Fill-in-the-middle, not next-edit: infills at the cursor and emits a
-        -- line or two, where the edit-mode providers rewrite a whole span.
+        -- Fill-in-the-middle, not next-edit: infills at the cursor without
+        -- requiring the provider to rewrite a whole surrounding span.
         type = "fim",
         url = "http://127.0.0.1:8000",
         completion_path = "/v1/completions",
         -- Ignored by llama-server, which holds one model; named for the logs.
         model = "qwen2.5-coder-1.5b",
         -- Raising context_size means raising the server's --ctx-size to match.
-        -- This small local model otherwise continues repeated document
-        -- patterns until the token limit and CursorTab inserts all of them.
-        max_tokens = 32,
+        max_tokens = 256,
         context_size = 1024,
         completion_timeout = 5000,
         -- fim_tokens is set in `config` below -- see the note there.

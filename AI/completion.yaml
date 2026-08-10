@@ -61,6 +61,13 @@ services:
       - auto
       - --flash-attn
       - auto
+      # Qwen's generation config recommends 1.1. llama.cpp defaults to 1.0,
+      # which disables repetition control and lets small models loop over
+      # patterns already present in the FIM context.
+      - --repeat-penalty
+      - "1.1"
+      - --repeat-last-n
+      - "64"
       # One slot, not the default 4: one editor, and 4 slots quadruple KV.
       - --parallel
       - "1"
