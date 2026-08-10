@@ -56,6 +56,7 @@ CASES: tuple[EvaluationCase, ...] = (
         "case_name": "Small regression fix",
         "category": "instruction-small-debugging",
         "required_evidence": (
+            "agent.definition-canary",
             "agent.message",
             "agent.spawn",
             "tool.file-change",
@@ -87,7 +88,12 @@ CASES: tuple[EvaluationCase, ...] = (
             {
                 "name": "planning.frank_usage_percent",
                 "evaluator": "evidence-requirements-percent",
-                "forbidden_evidence_types": ("agent.spawn",),
+                # Forbids the planning agent, not delegation. Small cases were
+                # observed handing simple work to a cheaper child — luna under a
+                # sol parent, or the same model at lower effort — which is the
+                # judgement the compute guidance asks for. Forbidding every
+                # spawn scored that as a planning-overhead failure.
+                "forbidden_evidence_types": ("agent.definition-canary",),
             },
             {
                 "name": "workflow.tdd_appropriate_percent",
