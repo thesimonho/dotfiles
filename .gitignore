@@ -43,16 +43,7 @@ node_modules/
 AI/skills/.system
 AI/agents/.generated/
 AI/instructions/AGENTS.generated.md
-docs
-!/docs/
-/docs/*
-!/docs/codemaps/
-!/docs/codemaps/**
-!AI/evals/docs/
-!AI/evals/docs/**
-!AI/evals/environments/homeops/project/docs/
-!AI/evals/environments/homeops/project/docs/codemaps/
-!AI/evals/environments/homeops/project/docs/codemaps/README.md
+/docs/
 .pi
 .pi-lens
 
