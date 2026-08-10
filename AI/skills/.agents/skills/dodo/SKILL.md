@@ -1,7 +1,7 @@
 ---
 name: dodo
-description: Use proactively to create and update project documentation. Manages codemaps (for agents), references (for contributors), documentation sites (for users), and plugin/skills scaffolding (for agent users and developers). Run with no arguments to update everything, or specify a documentation type to update. Users may invoke this as "/dodo", "dodo", "dodocs", "update the docs", "generate a codemap", "update the reference docs", or similar phrasing — trigger this skill whenever the user's intent is to create or update project documentation.
-argument-hint: "[codemaps, references, site, plugin]"
+description: Use proactively to create and update project documentation. Manages per-directory READMEs (for agents), references (for contributors), documentation sites (for users), and plugin/skills scaffolding (for agent users and developers). Run with no arguments to update everything, or specify a documentation type to update. Users may invoke this as "/dodo", "dodo", "dodocs", "update the docs", "write a readme", "update the reference docs", or similar phrasing — trigger this skill whenever the user's intent is to create or update project documentation.
+argument-hint: "[readmes, references, site, plugin]"
 ---
 
 The fundamental principle of dodo and this skill: different audiences need different types of documentation. The documentation types below are designed to target drastically different demographics. Above all, you must first consider what type of audience you are writing for and what their specific needs are. If any 2 documentation types start overlapping in content, focus, or level of detail, then you are doing it wrong.
@@ -11,12 +11,12 @@ The fundamental principle of dodo and this skill: different audiences need diffe
 Parse `$ARGUMENTS` to determine which documentation type(s) to work on:
 
 - **No argument** (empty): update all types in priority order
-- **Type keyword**: `codemaps`, `references`, `site`, `plugin` — work on that type only
-- **Multiple types**: "codemaps and references", "site and plugin" — work on the listed types
+- **Type keyword**: `readmes`, `references`, `site`, `plugin` — work on that type only
+- **Multiple types**: "readmes and references", "site and plugin" — work on the listed types
 - **"all" or "everything"**: update all types in priority order
 - **Freeform text**: interpret the user's intent and route to the correct type. Examples:
   - "the site FAQ" → site type, specifically the FAQ page
-  - "add a codemap for the auth module" → codemaps type, specifically create/update for auth
+  - "add a readme for the auth module" → readmes type, specifically create/update for auth
   - "update the deployment guide" → references type, specifically the deployment guide
   - "fix the broken link on the getting started page" → site type, specific page
 
@@ -26,12 +26,14 @@ If the intent is ambiguous, ask the user to clarify before proceeding.
 
 Each documentation type has a default location. Check the default first.
 
-| Type       | Default location |
-| ---------- | ---------------- |
-| Codemaps   | `docs/codemaps/` |
-| References | `docs/`          |
-| Site       | `docs/site/`     |
-| Plugin     | `docs/plugin/`   |
+| Type       | Default location                   |
+| ---------- | ---------------------------------- |
+| READMEs    | one per source directory, in place |
+| References | `docs/`                            |
+| Site       | `docs/site/`                       |
+| Plugin     | `docs/plugin/`                     |
+
+READMEs are the exception to the search below: they have no single location to discover. Glob for `README.md` across the project instead, excluding generated, vendored, and build output directories.
 
 If documentation isn't at the default location:
 
@@ -66,7 +68,7 @@ Never create documentation without asking first. The user may not want or need e
 
 When working on multiple types, process them in this order:
 
-1. **Codemaps** — foundational. Other documentation types benefit from codemaps existing.
+1. **READMEs** — foundational for agents and contributors.
 2. **References** — high-value for contributors. Catches stale content before it misleads anyone.
 3. **Site** — user-facing. Important but less likely to cause harm if slightly outdated.
 4. **Plugin** — meta-documentation. Only relevant if the project distributes skills/agents.
@@ -74,7 +76,7 @@ When working on multiple types, process them in this order:
 This ordering matters for two reasons:
 
 - If the session is interrupted or context runs low, the most foundational work is already done.
-- Codemaps created in step 1 inform the work in later steps (e.g., the site can reference the codemap structure).
+- READMEs written in step 1 inform the work in later steps (e.g., the site can describe the same module boundaries).
 
 ## Parallel execution
 
@@ -82,9 +84,8 @@ When updating 2 or more types, use subagents to divide the work:
 
 - Dispatch one subagent per documentation type.
 - Each subagent should read the relevant reference file for its instructions.
-- Priority order determines dispatch sequence — codemaps first, then references, then site, then plugin.
+- Priority order determines dispatch sequence — readmes first, then references, then site, then plugin.
 - After all subagents complete, summarize what was created or updated across all types.
-- **Model defaults**: Use `model: "haiku"` for codemaps subagents. Use `model: "sonnet"` for all other subagents (references, site, plugin). The user may override these per invocation.
 
 For single-type requests, work directly without subagents.
 
@@ -102,7 +103,9 @@ If you had to update a large amount of documentation, across multiple files, ask
 
 These files contain detailed instructions for each documentation type — structure specifications, content templates, create flows, update flows, and quality rules.
 
-- [Codemaps](./codemaps.md) — structured codebase maps for AI agent navigation
+- [READMEs](./readmes.md) — per-directory context files for local knowledge
 - [References](./references.md) — contributor-facing documentation, guides, and plans
 - [Site](./site.md) — public documentation website deployed to GitHub Pages
 - [Plugin](./plugin.md) — Claude Code plugin and Vercel npx skills scaffolding
+
+The user may have local CLI tools that can help extract structured information, if you need. These are often faster and more efficient than reading each file. See [Tools](./tools.md) for common usage patterns before defaulting to full file reads of source code.
