@@ -3,33 +3,62 @@
  * Hook: Nudge toward the `rtk` wrapper for token-heavy CLI commands.
  *
  * tools.md's golden rule is "always prefix commands with rtk" so their output
- * gets compressed — but that rule only pays off for the wrapper's curated set
- * of CLIs, and only when it's actually missing from the command. This stays
- * silent for anything outside that set so it doesn't nag on arbitrary Bash
- * calls (curl, mkdir, echo, ...) where rtk has nothing to compress.
+ * gets compressed. The rule is unconditional and the wrapper falls back safely,
+ * so the agent should prefix everything; this hook only decides where a missing
+ * prefix is worth interrupting for. It fires on the commands rtk actually
+ * compresses and stays silent on the rest (mkdir, echo, sleep, ...), where a
+ * missing prefix costs nothing and a nudge would just be noise.
  */
 
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
 const { shouldNudge } = require("../lib/hooks/nudge-throttle");
 
-// The first-token CLIs rtk knows how to compress, per tools.md.
+// The first-token CLIs rtk knows how to compress, drawn from its published
+// coverage list. This is the nudge's trigger set, not a claim about the
+// wrapper's full surface: rtk covers more, and prefixing anything outside this
+// set is still correct per tools.md. Test runners come first because they are
+// where the wrapper pays most, reducing output by 94-99%.
+// https://www.rtk-ai.app/docs/resources/what-rtk-covers/
 const RTK_COMPRESSIBLE_COMMANDS = new Set([
-  "git",
+  // Tests and type/lint checks — the largest reductions.
+  "pytest",
+  "jest",
+  "vitest",
+  "playwright",
+  "tsc",
+  "eslint",
+  "mypy",
+  "ruff",
+  // Files and search.
   "ls",
   "cat",
+  "head",
+  "tail",
   "grep",
   "rg",
   "find",
+  "diff",
+  "wc",
   "eza",
   "tree",
+  // Version control and forges.
+  "git",
+  "gh",
+  // Package managers and language toolchains.
   "npm",
   "pnpm",
   "yarn",
   "bun",
+  "npx",
+  "pip",
   "cargo",
   "go",
+  // Containers and clusters.
   "docker",
   "kubectl",
+  // Network and data.
+  "curl",
+  "psql",
 ]);
 
 // Leading `sudo`/env-var assignments (FOO=bar cmd) sit before the real command
