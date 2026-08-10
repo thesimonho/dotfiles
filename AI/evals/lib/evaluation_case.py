@@ -137,22 +137,23 @@ class RequiredDocumentationUpdatesMetric(CommonMetric):
 class PolicyMetric(CommonMetric, total=False):
     """Declarative policy metric evaluated from ordered events or final state."""
 
-    evaluator: Required[Literal[
-        "just-usage-percent",
-        "preferred-search-percent",
-        "tdd-appropriate-percent",
-        "debug-unit-tests-percent",
-        "debug-logs-count",
-        "final-verify-percent",
-        "plan-tracking-percent",
-        "local-plan-file-percent",
-        "local-plan-file-reference-count",
-        "conventional-commits-percent",
-        "branch-before-changes-percent",
-        "worktree-lifecycle-percent",
-        "hardcoded-secrets-count",
-        "critical-response-percent",
-    ]]
+    evaluator: Required[
+        Literal[
+            "just-usage-percent",
+            "preferred-search-percent",
+            "tdd-appropriate-percent",
+            "debug-unit-tests-percent",
+            "debug-logs-count",
+            "final-verify-percent",
+            "local-plan-file-percent",
+            "local-plan-file-reference-count",
+            "conventional-commits-percent",
+            "branch-before-changes-percent",
+            "worktree-lifecycle-percent",
+            "hardcoded-secrets-count",
+            "critical-response-percent",
+        ]
+    ]
     direct_commands: tuple[str, ...]
     just_recipes: tuple[str, ...]
     accepted_search_tools: tuple[str, ...]

@@ -221,21 +221,6 @@ def _evaluate_debug_unit_tests(
     return matched_count / len(required_commands) * 100, rationale
 
 
-def _evaluate_plan_tracking(
-    _metric: CommonMetric,
-    evidence: ExecutionEvidence,
-) -> ScoredMetric:
-    observed = any(
-        event.get("evidence_type") == "agent.plan" for event in evidence.events
-    )
-    rationale = (
-        "observed CLI plan tracking"
-        if observed
-        else "did not observe CLI plan tracking"
-    )
-    return (100.0 if observed else 0.0), rationale
-
-
 def _evaluate_final_verify(
     _metric: CommonMetric,
     evidence: ExecutionEvidence,
@@ -278,7 +263,6 @@ EXECUTION_EVALUATORS = {
     "just-usage-percent": _evaluate_just_usage,
     "preferred-search-percent": _evaluate_preferred_search,
     "debug-unit-tests-percent": _evaluate_debug_unit_tests,
-    "plan-tracking-percent": _evaluate_plan_tracking,
     "final-verify-percent": _evaluate_final_verify,
     "tdd-appropriate-percent": _evaluate_tdd_appropriate,
     "branch-before-changes-percent": _evaluate_branch_before_changes,

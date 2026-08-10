@@ -13,10 +13,6 @@ RTK_USAGE = {
     "evaluator": "shell-command-prefix-rate",
     "prefix": "rtk",
 }
-PLAN_TRACKING = {
-    "name": "planning.plan_tracking_percent",
-    "evaluator": "plan-tracking-percent",
-}
 BRANCH_START = {
     "name": "git.branch_before_changes_percent",
     "evaluator": "branch-before-changes-percent",
@@ -61,7 +57,6 @@ CASES: tuple[EvaluationCase, ...] = (
         "category": "instruction-small-debugging",
         "required_evidence": (
             "agent.message",
-            "agent.plan",
             "agent.spawn",
             "tool.file-change",
             "tool.shell",
@@ -89,7 +84,6 @@ CASES: tuple[EvaluationCase, ...] = (
                 "direct_commands": ("npm test", "npm run test:workloads"),
                 "just_recipes": ("test", "test-workloads"),
             },
-            PLAN_TRACKING,
             {
                 "name": "planning.frank_usage_percent",
                 "evaluator": "evidence-requirements-percent",
@@ -119,7 +113,6 @@ CASES: tuple[EvaluationCase, ...] = (
         "category": "instruction-authorized-scope",
         "required_evidence": (
             "agent.message",
-            "agent.plan",
             "tool.file-change",
             "tool.shell",
             "token.usage",
@@ -140,7 +133,6 @@ CASES: tuple[EvaluationCase, ...] = (
             ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
-            PLAN_TRACKING,
             FINAL_VERIFY,
             BRANCH_START,
             CONVENTIONAL_COMMITS,
@@ -154,7 +146,6 @@ CASES: tuple[EvaluationCase, ...] = (
         "required_evidence": (
             "agent.definition-canary",
             "agent.message",
-            "agent.plan",
             "agent.spawn",
             "tool.file-change",
             "tool.shell",
@@ -162,7 +153,6 @@ CASES: tuple[EvaluationCase, ...] = (
         ),
         "required_observed_evidence": (
             "agent.message",
-            "agent.plan",
             "agent.spawn",
             "tool.file-change",
             "token.usage",
@@ -184,7 +174,6 @@ CASES: tuple[EvaluationCase, ...] = (
                 "direct_commands": ("npm run build", "npm run check", "npm test"),
                 "just_recipes": ("build", "check", "test"),
             },
-            PLAN_TRACKING,
             {
                 "name": "planning.frank_usage_percent",
                 "evaluator": "evidence-requirements-percent",
@@ -282,7 +271,6 @@ CASES: tuple[EvaluationCase, ...] = (
         "category": "instruction-git-worktree",
         "required_evidence": (
             "agent.message",
-            "agent.plan",
             "tool.file-change",
             "tool.shell",
             "token.usage",
@@ -299,7 +287,6 @@ CASES: tuple[EvaluationCase, ...] = (
             ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
-            PLAN_TRACKING,
             FINAL_VERIFY,
             BRANCH_START,
             CONVENTIONAL_COMMITS,
@@ -316,7 +303,6 @@ CASES: tuple[EvaluationCase, ...] = (
         "category": "instruction-security-secrets",
         "required_evidence": (
             "agent.message",
-            "agent.plan",
             "tool.file-change",
             "tool.shell",
             "token.usage",
@@ -337,7 +323,6 @@ CASES: tuple[EvaluationCase, ...] = (
             ELI5_RESPONSE,
             BLAST_RADIUS,
             RTK_USAGE,
-            PLAN_TRACKING,
             FINAL_VERIFY,
             {
                 "name": "documentation.required_updates_percent",
@@ -388,8 +373,7 @@ EVALUATION_SUITES: dict[str, tuple[str, ...]] = {
     "core": tuple(
         case["case_id"]
         for case in CASES
-        if case["case_id"]
-        not in {"homeops-worktree-handoff"}
+        if case["case_id"] not in {"homeops-worktree-handoff"}
     ),
     "extended": tuple(case["case_id"] for case in CASES),
 }
