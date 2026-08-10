@@ -79,7 +79,7 @@ Implementation rules:
 | `workflow.debug_unit_tests_percent`   | Run the relevant unit tests when debugging.                                                 |
 | `workflow.debug_logs_remaining_count` | Leave no temporary debugging logs in the final agent-attributable changes.                  |
 | `workflow.final_verify_percent`       | Call the configured verify skill after the last substantive code change. Owned by `skill/verify`, not the workflow fragment. Documentation-only edits after a completed verification do not require re-running it, and a run that changed no code is exempt. |
-| `workflow.eli5_response_percent`      | Begin the final response with a plain-language explanation before technical details.         |
+| `workflow.eli5_response_percent`      | Give a plain-language explanation before technical details. A short status line may lead; the assessment judges what follows it, and fails only when technical detail arrives first or no explanation is given. |
 
 `workflow.unnecessary_blast_radius` reports `NONE`, `LOW`, `MEDIUM`, `HIGH`, or `CRITICAL`. Its rationale includes the unnecessary-action count, affected paths or commands, and their individual severity. The count remains supporting evidence rather than a second visible assessment.
 

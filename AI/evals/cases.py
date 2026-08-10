@@ -43,11 +43,13 @@ ELI5_RESPONSE: OutputQualityMetric = {
     "evaluator": "output-quality",
     "requires_complete_task": False,
     "rubric": (
-        "The response must begin with the big-picture outcome or solution in "
-        "plain language that a non-expert can understand. It must explain the "
-        "result before introducing implementation details, file paths, commands, "
-        "metrics, or other technical terminology. A terse status statement alone "
-        "does not satisfy the requirement."
+        "The response must explain the big-picture outcome or solution in plain "
+        "language that a non-expert can understand, before it introduces "
+        "implementation details, file paths, commands, metrics, or other "
+        "technical terminology. A short status line such as 'Done.' or 'Fixed "
+        "and verified.' may precede that explanation; judge what comes after it. "
+        "Fail only when technical detail arrives before any plain-language "
+        "explanation, or when the response offers no such explanation at all."
     ),
 }
 
