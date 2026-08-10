@@ -1,0 +1,50 @@
+From: local
+Subject: [PATCH] ui: wrap previews inside their source window
+
+Cap overlay floats at the right edge of their parent window and give wrapped
+lines enough height. This prevents a stacked modification preview from covering
+an adjacent split.
+
+diff --git a/lua/cursortab/ui.lua b/lua/cursortab/ui.lua
+--- a/lua/cursortab/ui.lua
++++ b/lua/cursortab/ui.lua
+@@ -382,6 +382,18 @@ local function create_overlay_window(parent_win, buffer_line, col, content, synt
+ 		max_width = math.max(max_width, adjusted_min_width)
+ 	end
+ 
++	-- A float is not clipped to its parent, so an unconstrained completion can
++	-- cover an adjacent split. Cap it at the source window's right edge and let
++	-- Neovim wrap long lines inside that width.
++	local relative_col = overlay_window_col(wininfo, col, screen_anchor)
++	local available_width = math.max(1, vim.api.nvim_win_get_width(parent_win) - relative_col)
++	max_width = math.max(1, math.min(max_width, available_width))
++	local overlay_height = 0
++	for _, line_content in ipairs(content_lines) do
++		local line_width = vim.fn.strdisplaywidth(line_content)
++		overlay_height = overlay_height + math.max(1, math.ceil(line_width / max_width))
++	end
++
+ 	-- Use screenpos so wrap, folds, and virtual lines from other plugins
+ 	-- (e.g. render-markdown.nvim) don't shift the overlay off the target line.
+ 	-- buffer_line is the actual buffer line; row_offset adjusts for virtual lines
+@@ -405,8 +418,8 @@ local function create_overlay_window(parent_win, buffer_line, col, content, synt
+ 		-- Position horizontally at the actual screen column when available,
+ 		-- falling back to the buffer-text display column.
+-		col = overlay_window_col(wininfo, col, screen_anchor),
++		col = relative_col,
+ 		width = max_width,
+-		height = #content_lines,
++		height = overlay_height,
+ 		style = "minimal",
+ 		border = "none",
+ 		zindex = 1,
+@@ -420,6 +433,7 @@ local function create_overlay_window(parent_win, buffer_line, col, content, synt
+ 		-- Prevent Neovim from auto-adjusting window position when it doesn't fit
+ 		fixed = true,
+ 	})
++	vim.api.nvim_set_option_value("wrap", true, { win = overlay_win })
+ 
+ 	local overlay_start_line = buffer_line + row_offset
+ 	local overlay_has_cursor_line = cursor_line >= overlay_start_line and cursor_line < overlay_start_line + #content_lines
+-- 
+2.50.1

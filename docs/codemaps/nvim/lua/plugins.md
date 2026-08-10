@@ -4,6 +4,7 @@ agent:
   on-change:
     - "nvim/lua/plugins/*.lua"
     - "nvim/lua/plugins/colourschemes/**"
+    - "nvim/patches/**"
 ---
 
 # Neovim Plugins
@@ -24,6 +25,7 @@ Lazy.nvim plugin specifications organized primarily by user-facing feature. File
 | `flash.lua`, `nvim-spider.lua`, `which-key.lua`, `hardtime.lua` | Navigation and key-discovery behavior |
 | `languages/` | Per-language tooling; see [language plugins](./plugins/languages.md) |
 | `init.lua` | Miscellaneous shared plugin specifications |
+| `nvim/patches/` | Temporary downstream plugin fixes applied by a plugin spec's build hook |
 
 ## Relationships
 

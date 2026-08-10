@@ -196,6 +196,11 @@ end
 
 local completion_service = new_completion_service()
 
+local function configure_completion_highlights()
+  vim.api.nvim_set_hl(0, "CursorTabDeletion", { link = "DiffDelete" })
+  vim.api.nvim_set_hl(0, "CursorTabModification", { link = "DiffAdd" })
+end
+
 local function configure_completion_toggle()
   require("snacks")
     .toggle({
@@ -215,7 +220,9 @@ local M = {
     "cursortab/cursortab.nvim",
     event = "LazyFile",
     -- Go >= 1.25.0; mise provides the toolchain (see nix/modules/mise.nix).
-    build = "cd server && go build",
+    -- Keep the preview inside its source split until upstream supports wrapped
+    -- overlay windows. The reverse check makes reinstalls idempotent.
+    build = "if git apply --reverse --check /home/simon/dotfiles/nvim/patches/cursortab-wrap-previews.patch >/dev/null 2>&1; then :; else git apply /home/simon/dotfiles/nvim/patches/cursortab-wrap-previews.patch; fi; cd server && go build",
     init = function()
       -- Unconditional by design: the start script is idempotent under its lock,
       -- so a second nvim attaches to the running server instead of racing it
@@ -245,6 +252,13 @@ local M = {
       -- Only debug logs the assembled prompt and the raw completion, which is
       -- what makes a model swap diagnosable. Drop to "info" once settled.
       log_level = "debug",
+      behavior = {
+        -- Normal-mode cursor movement used to start a request after only 50ms,
+        -- so previews flashed while navigating. Complete only after editing has
+        -- paused long enough for the request to be useful.
+        idle_completion_delay = -1,
+        text_change_debounce = 400,
+      },
       provider = {
         -- Fill-in-the-middle, not next-edit: infills at the cursor and emits a
         -- line or two, where the edit-mode providers rewrite a whole span.
@@ -267,6 +281,13 @@ local M = {
     },
     config = function(_, opts)
       require("cursortab").setup(opts)
+
+      configure_completion_highlights()
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        group = vim.api.nvim_create_augroup("cursortab_highlights", { clear = true }),
+        callback = configure_completion_highlights,
+        desc = "Keep CursorTab replacement previews visually distinct",
+      })
 
       -- Written here, not passed to setup(): fim_tokens is missing from
       -- cursortab's default_config, and its validator rejects any key the
