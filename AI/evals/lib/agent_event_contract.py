@@ -6,6 +6,11 @@ from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass
 from typing import Literal, cast
 
+# The one agent definition the harness instruments, and therefore the only one
+# a case can require by identity. Both profiles copy it into the arm and add
+# the canary footer, so the configuration layer and the parsers share the name.
+INSTRUMENTED_PLANNING_AGENT = "frank"
+
 type EvidenceRequirement = Literal[
     "agent.message",
     "agent.definition-canary",

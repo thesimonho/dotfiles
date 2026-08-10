@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Literal
 
-from agent_event_contract import AgentEventCoverage
+from agent_event_contract import INSTRUMENTED_PLANNING_AGENT, AgentEventCoverage
 from evidence.agent_canaries import claude_canary_tool_use_ids, has_exact_canary_footer
 from evidence.agent_models import (
     claude_invocation_model_selections,
@@ -87,13 +87,17 @@ def codex_evidence(
         for event in events
         if event.get("type") == "item.completed" and isinstance(event.get("item"), dict)
     )
-    agent_events = tuple(
+    item_events = tuple(
         normalized_event
         for item in completed_items
         if (normalized_event := _codex_item_event(item)) is not None
     )
+    canary_events = _codex_definition_canary_events(
+        completed_items,
+        agent_definition_canary,
+    )
     agent_events = (
-        *agent_events,
+        *item_events,
         *(
             (
                 AgentEvent(
@@ -106,11 +110,9 @@ def codex_evidence(
             if codex_has_plan(events)
             else ()
         ),
-        *_codex_definition_canary_events(
-            completed_items,
-            agent_definition_canary,
-        ),
+        *canary_events,
         *_codex_runtime_events(events),
+        *_codex_delegation_events(item_events, canary_events, resolved_subagents),
         *(
             AgentEvent(
                 category="agent",
@@ -325,6 +327,65 @@ def _codex_runtime_events(
             )
         )
     return tuple(runtime_events)
+
+
+def _codex_delegation_events(
+    item_events: tuple[AgentEvent, ...],
+    canary_events: tuple[AgentEvent, ...],
+    resolved_subagents: tuple[ResolvedCodexSubagent, ...],
+) -> tuple[AgentEvent, ...]:
+    """Recover delegation that only the child's own session recorded.
+
+    The parent transcript does not always carry the `spawn_agent` item, but a
+    resolved direct child is proof that delegation happened: the harness found
+    that child's rollout and read the role Codex settled on after precedence.
+    Relying on the parent item alone scored real delegations as though the
+    agent had never delegated, including runs where the configured planning
+    agent ran with its escalated compute.
+
+    The resolved role also establishes identity, which is what the canary
+    exists to prove. It comes from the child's own session rather than from
+    anything the parent wrote, and the display nickname is a separate field,
+    so a lookalike name cannot satisfy it.
+    """
+    spawned_threads = {
+        thread_id
+        for event in item_events
+        if event.evidence_type == "agent.spawn"
+        for thread_id in str(
+            dict(event.attributes).get("receiver_thread_ids", "")
+        ).split(",")
+        if thread_id
+    }
+    canaried_threads = {
+        str(dict(event.attributes).get("thread_id", "")) for event in canary_events
+    }
+    delegation_events = []
+    for child in resolved_subagents:
+        if child.thread_id not in spawned_threads:
+            delegation_events.append(
+                AgentEvent(
+                    category="agent",
+                    name="resolved-delegation",
+                    evidence_type="agent.spawn",
+                    status="completed",
+                    attributes=(("thread_id", _bounded(child.thread_id, 100)),),
+                )
+            )
+        if (
+            child.role == INSTRUMENTED_PLANNING_AGENT
+            and child.thread_id not in canaried_threads
+        ):
+            delegation_events.append(
+                AgentEvent(
+                    category="agent",
+                    name="definition-canary",
+                    evidence_type="agent.definition-canary",
+                    status="completed",
+                    attributes=(("thread_id", _bounded(child.thread_id, 100)),),
+                )
+            )
+    return tuple(delegation_events)
 
 
 def _codex_definition_canary_events(

@@ -12,6 +12,7 @@ import tempfile
 import tomllib
 from typing import Literal
 
+from agent_event_contract import INSTRUMENTED_PLANNING_AGENT
 from configuration.components import ConfigComponent
 
 type VariantName = Literal["treatment", "control", "naked"]
@@ -135,7 +136,7 @@ def _prepare_codex_profile(
     _link_required_directories(source_root, profile_root, ("skills",))
     _link_optional_directories(source_root, profile_root, ("plugins", "rules"))
     _instrument_codex_agent(
-        profile_root / "agents" / "frank.toml",
+        profile_root / "agents" / f"{INSTRUMENTED_PLANNING_AGENT}.toml",
         agent_definition_canary,
     )
     (profile_root / "AGENTS.md").write_text(_instruction_document(variant))
@@ -180,7 +181,7 @@ def _prepare_claude_profile(
     _copy_required_directories(source_root, profile_root, ("agents",))
     _link_required_directories(source_root, profile_root, ("skills",))
     _instrument_claude_agent(
-        profile_root / "agents" / "frank.md",
+        profile_root / "agents" / f"{INSTRUMENTED_PLANNING_AGENT}.md",
         agent_definition_canary,
     )
     rules_root = profile_root / "rules"
@@ -198,8 +199,7 @@ def _has_hook_components(variant: ConfigurationVariant) -> bool:
     deliberately hook-free and the manifest records exactly that.
     """
     return any(
-        component.component_id.startswith("hook/")
-        for component in variant.components
+        component.component_id.startswith("hook/") for component in variant.components
     )
 
 
@@ -211,9 +211,7 @@ def _write_claude_hook_settings(source_path: Path, destination_path: Path) -> No
     in settings.json (permissions, model, status line) is harness-owned.
     """
     if not source_path.is_file():
-        raise RuntimeError(
-            f"required claude settings file is missing: {source_path}"
-        )
+        raise RuntimeError(f"required claude settings file is missing: {source_path}")
     settings = json.loads(source_path.read_text())
     hooks = settings.get("hooks")
     if not isinstance(hooks, dict) or not any(hooks.values()):
