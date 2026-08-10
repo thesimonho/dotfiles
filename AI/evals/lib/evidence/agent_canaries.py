@@ -44,11 +44,38 @@ def _claude_tool_result_text(content: dict[str, Any]) -> str:
     """Flatten only textual Claude tool-result content for exact matching."""
     result_content = content.get("content")
     if isinstance(result_content, str):
-        return result_content
+        return _without_cli_trailer(result_content)
     if not isinstance(result_content, list):
         return ""
-    return "\n".join(
-        block["text"]
-        for block in result_content
-        if isinstance(block, dict) and isinstance(block.get("text"), str)
+    return _without_cli_trailer(
+        "\n".join(
+            block["text"]
+            for block in result_content
+            if isinstance(block, dict) and isinstance(block.get("text"), str)
+        )
     )
+
+
+def _without_cli_trailer(message: str) -> str:
+    """Drop the bookkeeping Claude appends below a subagent's own reply.
+
+    The canary has to be the child's final line, because a display nickname
+    must not pass for the configured definition. Claude appends its own
+    continuation hint and usage block underneath that line, so the exact
+    check never matched and the canary could not be observed even when the
+    configured agent ran and emitted it correctly.
+    """
+    lines = [line.strip() for line in message.splitlines() if line.strip()]
+    usage_index = next(
+        (
+            index
+            for index, line in reversed(tuple(enumerate(lines)))
+            if line.startswith("<usage>")
+        ),
+        None,
+    )
+    if usage_index is not None and lines[-1].endswith("</usage>"):
+        lines = lines[:usage_index]
+    while lines and lines[-1].startswith("agentId: "):
+        lines.pop()
+    return "\n".join(lines)
