@@ -108,9 +108,9 @@ vim.keymap.set("v", "<leader>as", function()
 end, { noremap = true, silent = true, desc = "Send selection to agent terminal" })
 
 local completion_model = {
-  label = "Qwen2.5-Coder-1.5B",
-  model = "QuantFactory/Qwen2.5-Coder-1.5B-GGUF:Q6_K",
-  download_size = "1.3GB",
+  label = "Qwen2.5-Coder-7B",
+  model = "QuantFactory/Qwen2.5-Coder-7B-GGUF:Q6_K",
+  download_size = "6.3GB",
   context_size = "8192",
 }
 
@@ -253,13 +253,8 @@ local M = {
     opts = {
       -- Flipped on by set_completion_requests_enabled once the server is up.
       enabled = false,
-      -- Only debug logs the assembled prompt and the raw completion, which is
-      -- what makes a model swap diagnosable. Drop to "info" once settled.
-      log_level = "debug",
+      log_level = "info",
       behavior = {
-        -- Normal-mode cursor movement used to start a request after only 50ms,
-        -- so previews flashed while navigating. Complete only after editing has
-        -- paused long enough for the request to be useful.
         idle_completion_delay = -1,
         text_change_debounce = 400,
       },
@@ -270,15 +265,13 @@ local M = {
         url = "http://127.0.0.1:8000",
         completion_path = "/v1/completions",
         -- Ignored by llama-server, which holds one model; named for the logs.
-        model = "qwen2.5-coder-1.5b",
+        model = "qwen2.5-coder-7b",
         -- Raising context_size means raising the server's --ctx-size to match.
         max_tokens = 256,
         context_size = 1024,
         completion_timeout = 5000,
-        -- fim_tokens is set in `config` below -- see the note there.
       },
       keymaps = {
-        -- <Tab>/<S-Tab> are the plugin defaults and collide with blink.cmp.
         accept = "<M-l>",
         partial_accept = "<M-h>",
       },
