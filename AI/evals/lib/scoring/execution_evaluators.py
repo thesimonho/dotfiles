@@ -58,7 +58,7 @@ def _evaluate_all_commands_prefixed(
     evidence: ExecutionEvidence,
 ) -> ScoredMetric:
     prefix = metric["prefix"]
-    segments = _all_segments(evidence.shell_commands)
+    segments = _prefixable_segments(evidence.shell_commands)
     passed = bool(segments) and all(
         _first_executable(segment) == prefix for segment in segments
     )
@@ -75,7 +75,7 @@ def _evaluate_command_prefix_rate(
     evidence: ExecutionEvidence,
 ) -> ScoredMetric:
     prefix = metric["prefix"]
-    segments = _all_segments(evidence.shell_commands)
+    segments = _prefixable_segments(evidence.shell_commands)
     prefixed_segment_count = sum(
         _first_executable(segment) == prefix for segment in segments
     )
@@ -112,8 +112,7 @@ def _evaluate_evidence_count(
         f"{minimum} or more" if maximum is None else f"{minimum} through {maximum}"
     )
     rationale = (
-        f"observed {observed_count} '{evidence_type}' events; "
-        f"expected {expected_range}"
+        f"observed {observed_count} '{evidence_type}' events; expected {expected_range}"
     )
     return passed, rationale
 
@@ -217,8 +216,7 @@ def _evaluate_debug_unit_tests(
         for pattern in required_commands
     )
     rationale = (
-        f"completed {matched_count} of {len(required_commands)} "
-        "relevant test commands"
+        f"completed {matched_count} of {len(required_commands)} relevant test commands"
     )
     return matched_count / len(required_commands) * 100, rationale
 
@@ -295,6 +293,85 @@ def _all_segments(
         segment
         for shell_command in shell_commands
         for segment in shell_segments(shell_command)
+    )
+
+
+# Shell keywords and builtins, which no wrapper can prefix: `rtk cd /x` runs the
+# change in a subprocess that immediately exits, and `rtk done` is not a command
+# at all. Segments are split on `|`, `&`, and `;` only, so a loop body arrives as
+# its own segment and the surrounding `for` and `done` arrive as theirs.
+UNPREFIXABLE_EXECUTABLES = frozenset(
+    {
+        "for",
+        "while",
+        "until",
+        "do",
+        "done",
+        "if",
+        "then",
+        "elif",
+        "else",
+        "fi",
+        "case",
+        "esac",
+        "select",
+        "function",
+        "cd",
+        "export",
+        "source",
+        ".",
+        "eval",
+        "exec",
+        "set",
+        "unset",
+        "shift",
+        "return",
+        "exit",
+        "alias",
+        "unalias",
+        "local",
+        "declare",
+        "typeset",
+        "readonly",
+        "read",
+        "trap",
+        "wait",
+        "umask",
+        "ulimit",
+        "times",
+        "jobs",
+        "bg",
+        "fg",
+        "hash",
+        "type",
+        "command",
+        "builtin",
+        "pushd",
+        "popd",
+        "dirs",
+        "let",
+        "true",
+        "false",
+        ":",
+    }
+)
+
+
+def _prefixable_segments(
+    shell_commands: tuple[str, ...],
+) -> tuple[tuple[str, ...], ...]:
+    """Keep only segments a wrapper prefix could actually apply to.
+
+    Counting shell keywords put the ceiling out of reach: a correct
+    `for f in *; do rtk cat $f; done` scored one of three, so any agent that
+    wrote a loop was marked non-compliant for the loop itself. Segments with no
+    executable at all — a bare `FOO=1` — drop out for the same reason.
+    """
+    return tuple(
+        segment
+        for segment in _all_segments(shell_commands)
+        if (executable := _first_executable(segment)) is not None
+        and executable not in UNPREFIXABLE_EXECUTABLES
     )
 
 
