@@ -11,7 +11,7 @@ These are the core principles you must follow for your work:
 
 ## Project Management
 
-When a repository has a GitHub Project or issue tracker, use `$kanban` to keep delivery state current. GitHub is the operational source of truth for tracked work; follow local conventions for small or untracked repositories.
+When a repository has a GitHub Project or issue tracker, use the `kanban` skill to keep delivery state current. GitHub is the operational source of truth for tracked work; follow local conventions for small or untracked repositories.
 
 For tracker-backed work:
 
