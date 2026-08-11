@@ -3,7 +3,7 @@ name: frank
 description: Used for all planning tasks that require exploring complex problem spaces, designing features, evaluating trade-offs, and producing implementation-ready plans. The primary plan agent, replacing the default planner.
 claude:
   model: opus
-  effort: high
+  effort: medium
   tools:
     - Read
     - Write
@@ -19,7 +19,7 @@ claude:
   color: orange
 codex:
   model: gpt-5.6-sol
-  model_reasoning_effort: high
+  model_reasoning_effort: medium
   nickname_candidates:
     - Frank
 pi:
