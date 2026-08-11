@@ -6,14 +6,9 @@ A directory's own `README.md` is where its context lives. Write one for any subd
 
 ## Doc lifecycle & archiving
 
-Keep `/docs`, READMEs, APIs, and other documentation up to date.
+Keep local documentation up to date. For docs that are superseded or no longer relevant (e.g. plans after merging the feature), archive them in a sibling `archive/` folder.
 
-Organize docs by how they age, not just by kind:
-
-- **Living** — evergreen truth, edited in place (specs, references).
-- **Snapshot** — true as-of a date, then frozen (research, durable local plans, mockups). Give each a status; when it ships or is superseded, move it into a sibling `archive/` subdir so the live folder shows only current docs. A superseded file gets a one-line banner at its top naming what replaced it.
-
-A temporary plan for tracker-backed delivery is not a documentation snapshot: after its requirements have been transferred to the relevant delivery tickets, remove the local artifact. Durable local plans still use the snapshot lifecycle above.
+A temporary plan for tracker-backed delivery should not be stored permanently: after its requirements have been transferred to the relevant delivery tickets, remove the local artifact entirely.
 
 ## File-scoped agent directives (frontmatter)
 
