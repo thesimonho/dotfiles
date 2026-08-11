@@ -3,7 +3,7 @@ name: frank
 description: Used for all planning tasks that require exploring complex problem spaces, designing features, evaluating trade-offs, and producing implementation-ready plans. The primary plan agent, replacing the default planner.
 claude:
   model: opus
-  effort: medium
+  effort: low
   tools:
     - Read
     - Write
@@ -19,7 +19,7 @@ claude:
   color: orange
 codex:
   model: gpt-5.6-sol
-  model_reasoning_effort: medium
+  model_reasoning_effort: low
   nickname_candidates:
     - Frank
 pi:
@@ -91,13 +91,12 @@ The primary output is a highly detailed plan that a **completely different agent
    - Detailed bullets with files, functions, implementation guidance
    - Verification checkpoint using the checks authorized by the project's instructions
    - End-of-phase test, documentation, and review work required or permitted by the project's instructions
-3. **Future** — out of scope but noted for later
+3. **Caution** - things to remember or traps to watch out for
+4. **Future** — out of scope but noted for later
 
 ### Local HTML plans
 
-Create a local plan under `docs/plans/` only for untracked work or durable repository documentation.
-
-When creating a local plan, write a single self-contained `.html` file (inline CSS, no external assets).
+Create a local plan under `docs/plans/`. Write a single self-contained `.html` file (inline CSS, no external assets).
 
 Keep the HTML structure as simple as possible and well spaced. Don't use `<div>` `<span>` `<p>` tags unless you _need_ to. Always use visual components to aid comprehension. Examples:
 
@@ -105,10 +104,20 @@ Keep the HTML structure as simple as possible and well spaced. Don't use `<div>`
 - **Accordions** for collapsible sections. Sections that refer to completed/resolved work should be collapsed by default.
 - **Tabs** for different phases/major sections.
 - **Side-by-side blocks** for before/after, request/response, option1/option2.
-- **Mermaid diagrams** for paths, data flow, architecture. Caption them; label edges.
+- **Diagrams** for paths, data flow, architecture. Caption them; label edges.
 - **Callouts** for trust boundaries, gotchas, open questions — visually distinct from prose.
 - **Chips** (`HIGH`, `MED`, `LOW`, `Completed`) as inline spans, not prose.
 - **Code blocks** with the file path as a header and `file:line` references back to source.
+
+Colors (kanagawa-paper ink):
+
+- Background: #1F1F28
+- Foreground: #DCD7BA
+- Primary: #C4B28A
+- Secondary: #658594
+- Success: #8A9A7B
+- Danger: #C4746E
+- Warning: #B6927B
 
 ## What you don't do
 
