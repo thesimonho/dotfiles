@@ -160,7 +160,7 @@ class PolicyMetric(CommonMetric, total=False):
     relevant_test_commands: tuple[str, ...]
     tdd: Literal["expected", "not-expected", "inapplicable"]
     allowed_commit_types: tuple[str, ...]
-    critical_mentions: tuple[str, ...]
+    critical_rubric: str
     critical_path: str
 
 

@@ -274,6 +274,9 @@ def build_evaluation_scorer(
             outputs["response"],
             tuple(outputs["execution_evidence"]["events"]),
             metrics,
+            judge_context,
+            profile=identity.profile,
+            environment_overrides=profile_environment,
         )
         return [
             Feedback(

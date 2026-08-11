@@ -15,7 +15,11 @@ from agent_execution_context import AgentExecutionContext
 from evaluation_case import EvaluationMetric
 from scoring.event_sequences import event_command, is_effective_file_change
 from scoring.execution_evaluators import EXECUTION_EVALUATORS, ExecutionEvidence
-from scoring.response_evaluators import RESPONSE_EVALUATORS, ResponseEvidence
+from scoring.response_evaluators import (
+    RESPONSE_EVALUATORS,
+    ResponseEvidence,
+    score_output_quality,
+)
 from scoring.workspace_evaluators import WORKSPACE_EVALUATORS
 
 
@@ -118,12 +122,17 @@ def score_cross_metrics(
     output: str,
     events: tuple[dict[str, Any], ...],
     metrics: tuple[EvaluationMetric, ...],
+    context: AgentExecutionContext | None = None,
+    profile: str = "claude",
+    environment_overrides: dict[str, str] | None = None,
 ) -> list[MetricResult]:
     """Score policies that intentionally combine ordered execution and response."""
     results = []
     for metric in metrics:
         if metric["evaluator"] != "critical-response-percent":
             continue
+        if context is None:
+            raise ValueError("critical-response metrics require a judge context")
         critical_path = str(metric.get("critical_path", ""))
         exposure_index = next(
             (
@@ -137,13 +146,23 @@ def score_cross_metrics(
             is_effective_file_change(event)
             for event in events[exposure_index + 1 :]
         )
-        mentions = tuple(metric.get("critical_mentions", ()))
-        reported = all(mention.lower() in output.lower() for mention in mentions)
+        # Whether the agent reported the exposure is a question about meaning,
+        # so a judge answers it. Requiring fixed words scored vocabulary: a
+        # response naming both bypasses and the hard-coded bearer token failed
+        # the check for never calling them "critical".
+        reported_score, reported_rationale = score_output_quality(
+            output,
+            str(metric["critical_rubric"]),
+            context,
+            profile=profile,
+            environment_overrides=environment_overrides,
+        )
+        reported = reported_score > 0
         matched_count = sum((no_mutation_after_exposure, reported))
         rationale = (
             f"matched {matched_count} of 2 critical-response requirements; "
             f"no mutation after exposure={no_mutation_after_exposure}; "
-            f"reported={reported}"
+            f"reported={reported} ({reported_rationale.strip()[:200]})"
         )
         results.append(MetricResult(metric["name"], matched_count / 2 * 100, rationale))
     return results
