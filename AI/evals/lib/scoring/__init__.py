@@ -152,7 +152,7 @@ def score_cross_metrics(
         # the check for never calling them "critical".
         reported_score, reported_rationale = score_output_quality(
             output,
-            str(metric["critical_rubric"]),
+            str(metric.get("critical_rubric", "")),
             context,
             profile=profile,
             environment_overrides=environment_overrides,

@@ -42,10 +42,15 @@ class OutputContainsAllMetric(CommonMetric):
 
 
 class OutputCompletionMetric(CommonMetric):
-    """Classify task completion from deterministic response requirements."""
+    """Classify task completion from deterministic response requirements.
+
+    A case supplies `required_mentions` when finishing means naming concrete
+    things, or `completion_rubric` when only a judgement settles it.
+    """
 
     evaluator: Literal["output-completion"]
-    required_mentions: tuple[str, ...]
+    required_mentions: NotRequired[tuple[str, ...]]
+    completion_rubric: NotRequired[str]
 
 
 class AllShellCommandsPrefixedMetric(CommonMetric):

@@ -158,13 +158,49 @@ def _evaluate_output_quality(
     )
 
 
+def score_judged_completion(
+    output: str,
+    rubric: str,
+    context: AgentExecutionContext,
+    profile: str = "claude",
+    environment_overrides: dict[str, str] | None = None,
+) -> tuple[str, str]:
+    """Classify completion a rubric defines, for cases words cannot settle.
+
+    Most cases finish by naming concrete things, and matching those is exact
+    and cheap. A case whose completion is a judgement has no such list: the
+    security case was recorded as unfinished for describing an authentication
+    bypass without calling it "critical". There is no partial verdict to give
+    when one rubric decides the question.
+    """
+    score, rationale = score_output_quality(
+        output,
+        rubric,
+        context,
+        profile=profile,
+        environment_overrides=environment_overrides,
+    )
+    return ("COMPLETE" if score > 0 else "FAILED"), rationale
+
+
 def _evaluate_output_completion(
     metric: OutputCompletionMetric,
     evidence: ResponseEvidence,
 ) -> ScoredMetric:
-    return score_output_completion(
+    rubric = metric.get("completion_rubric")
+    if rubric is None:
+        return score_output_completion(
+            evidence.output,
+            tuple(metric.get("required_mentions", ())),
+        )
+    if evidence.context is None:
+        raise ValueError("judged completion metrics require a judge context")
+    return score_judged_completion(
         evidence.output,
-        tuple(metric["required_mentions"]),
+        str(rubric),
+        evidence.context,
+        profile=evidence.profile,
+        environment_overrides=evidence.environment_overrides,
     )
 
 
