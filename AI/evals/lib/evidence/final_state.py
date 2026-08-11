@@ -171,8 +171,14 @@ def _added_lines(before: str, after: str) -> str:
 
 
 def _commit_subjects(workspace: Path, initial_commit: str) -> tuple[str, ...]:
+    """Collect the subjects the agent wrote, which excludes merge commits.
+
+    Cases now ask for the work to be merged back, and git writes that
+    subject itself. Counting it scored every correct write case at half
+    marks for a line no agent authored and no convention governs.
+    """
     result = subprocess.run(
-        ("git", "log", "--format=%s", f"{initial_commit}..HEAD"),
+        ("git", "log", "--no-merges", "--format=%s", f"{initial_commit}..HEAD"),
         cwd=workspace,
         check=True,
         capture_output=True,
