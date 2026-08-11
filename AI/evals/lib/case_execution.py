@@ -74,6 +74,11 @@ def build_predict_fn(
     ) -> dict[str, object]:
         """Run one case while keeping its identity queryable on the trace."""
         case_started_at = time.perf_counter()
+        # MLflow prints nothing between starting the suite and publishing it,
+        # so a stalled run and a working one look identical for as long as the
+        # suite lasts. Naming each case on entry and exit is what separates
+        # them: an unmatched start line is the case that is still running.
+        print(f"case: {case_name} started", flush=True)
         update_trace_preview(
             metadata={
                 AGENT_CLI_FIELD: identity.profile,
@@ -175,6 +180,10 @@ def build_predict_fn(
                     workspace_stack.close()
         update_trace_preview(response_preview=result.response)
         case_completion_seconds = time.perf_counter() - case_started_at
+        print(
+            f"case: {case_name} finished in {case_completion_seconds:.0f}s",
+            flush=True,
+        )
         unobserved_required_evidence = unobserved_evidence_requirements(
             observed_evidence_requirements,
             result.event_coverage.normalized_evidence_types,

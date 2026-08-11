@@ -7,6 +7,7 @@ from typing import Any
 import mlflow
 from mlflow.tracking import MlflowClient
 
+import agent
 import configuration.components as configuration_components
 from agent_environment import build_child_environment
 from capabilities import (
@@ -59,6 +60,12 @@ def run_evaluation_arm(
     advance_baseline_alias: bool = True,
 ) -> CompletedEvaluation:
     """Execute one configuration against a fixed selected case set."""
+    _preflight_agent_authentication(
+        profile,
+        model=model,
+        effort=effort,
+        profile_environment=profile_environment,
+    )
     capability_snapshots = _preflight_case_capabilities(
         profile,
         selected_cases,
@@ -188,6 +195,53 @@ def _publish_comparison_arm_metadata(
     client.set_tag(run_id, "evaluation.comparison_group_id", comparison_group_id)
     client.set_tag(run_id, "evaluation.variant", comparison_variant)
     client.set_tag(run_id, "evaluation.ablated_component_id", ablated_component_id)
+
+
+def _preflight_agent_authentication(
+    profile: str,
+    *,
+    model: str,
+    effort: str,
+    profile_environment: dict[str, str] | None = None,
+) -> None:
+    """Fail in seconds when the CLI cannot reach the model.
+
+    The capability preflight resolves files on disk, so it cannot see an
+    expired session. Without this probe an expired login still starts every
+    case, each one dies at its first CLI call, and the suite leaves a full
+    set of ERROR traces behind a run that reports no metrics at all.
+
+    The probe takes the judge path deliberately: it is the same code that
+    raises on a failed invocation, so a session that satisfies the probe is
+    known to satisfy the real calls, and it carries no tools and no
+    instructions to pay for.
+    """
+    probe_identity = EvaluationIdentity(
+        profile=profile,
+        model=model,
+        effort=effort,
+        execution_id="authentication-preflight",
+        manifest_id="authentication-preflight",
+    )
+    print(f"preflight: checking {profile} authentication", flush=True)
+    try:
+        agent.run_judge(
+            "Reply with the single word: ok",
+            execution_context(
+                identity=probe_identity,
+                case_id="authentication-preflight",
+                category="authentication-preflight",
+                role="judge",
+            ),
+            profile=profile,
+            environment_overrides=profile_environment,
+            model=model,
+            effort=effort,
+        )
+    except RuntimeError as error:
+        raise RuntimeError(
+            f"{profile} CLI cannot run an evaluation: {error}"
+        ) from error
 
 
 def _preflight_case_capabilities(
