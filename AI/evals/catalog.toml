@@ -7,21 +7,10 @@
 # from the repository and tracked in manifests regardless of this file; an
 # entry whose fragment file was deleted fails eval-plan and eval-coverage.
 
-# Measured on 2026-08-08 across three extended runs on the current
-# configuration. Pooled adherence tracked model strength exactly: sol at low
-# effort scored 66.3, terra at medium 57.1, and luna at high 53.4. Raising
-# effort did not recover a weaker band, so the default keeps the strongest
-# model at the cheapest effort.
 [defaults.codex]
-model = "gpt-5.6-sol"
-effort = "low"
+model = "gpt-5.6-terra"
+effort = "medium"
 
-# Measured on 2026-08-08 across four extended runs on the current
-# configuration. Opus at low effort matched opus at medium on pooled
-# adherence (54.7 against 57.1, inside the error band) while running 30%
-# faster on 37% fewer output tokens, and beat sonnet at medium effort on
-# every axis. Raising effort bought little: model band, not reasoning
-# effort, moved rule-following behaviour.
 [defaults.claude]
 model = "opus"
 effort = "low"
@@ -42,10 +31,7 @@ cases = ["homeops-worktree-handoff"]
 enabled = true
 maturity = "active"
 hypothesis = "Planning instructions invoke the configured planning agent for complex work without adding delegation overhead to narrow tasks."
-cases = [
-  "homeops-workload-health-overreach",
-  "homeops-maintenance-visibility",
-]
+cases = ["homeops-workload-health-overreach", "homeops-maintenance-visibility"]
 
 [instruction.tools]
 enabled = true

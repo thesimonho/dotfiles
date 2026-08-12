@@ -49,8 +49,8 @@ Default to **light** unless the user asks for a document or the question is clea
 Match the **capability tier** — a bigger model, or higher reasoning effort on the same model, not a vendor's model name:
 
 - **Light** (Claude Haiku; Codex 5.3 Spark) — mechanical work only. **Never gather with it** — thin notes poison synthesis.
-- **Mid** (Claude Sonnet; Codex latest at medium effort) — the **gather subagents** (Phase 2). Fetch / comprehend / note is a mid-tier job; the frontier model on every gatherer is overkill.
-- **Frontier** (Claude Opus; Codex latest at high effort) — the **orchestrator** (Phases 3–4) and the **red-team** lenses (Phase 5). Don't downgrade the judgment.
+- **Mid** (Claude Sonnet; Codex latest at low effort) — the **gather subagents** (Phase 2). Fetch / comprehend / note is a mid-tier job; the frontier model on every gatherer is overkill.
+- **Frontier** (Claude Opus; Codex latest at medium effort) — the **orchestrator** (Phases 3–4) and the **red-team** lenses (Phase 5). Don't downgrade the judgment.
 
 The gates (`clock.sh`, `verify-links.sh`) use no model at all.
 

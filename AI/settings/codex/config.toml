@@ -1,6 +1,6 @@
 service_tier = "default"
-model = "gpt-5.6-sol"
-model_reasoning_effort = "low"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "medium"
 model_reasoning_summary = "concise"
 model_verbosity = "medium"
 plan_mode_reasoning_effort = "high"
