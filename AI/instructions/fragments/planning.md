@@ -1,23 +1,35 @@
 # Planning
 
-The order of operations should be:
+## Delivery record
 
-1. Discuss the unit of work with the user
-2. Planning decision:
-   2a. If the task is straightforward and well-bounded: no planning necessary. Most tasks fall under this category. Spikes never require a plan. Always ask the user if you're not sure.
-   2b. If the task is more complex: you must call a dedicated planning agent and have them create a HTML plan file. Use a planning agent when architecture, feature design, consequential trade-offs, or implementation sequencing need dedicated exploration.
-3. Once the user agrees with the approach:
-   3a. For projects with a board: turn any plan files into durable tickets on the project board. Remove the plan file once the transfer is complete
-   3b. For projects without a board: keep plan files in the repo until they are complete
-4. Implement the work
-5. Local plan files can now be archived. Board tickets can be closed.
+Before implementation, choose exactly one durable delivery record. It owns the approved scope, decisions, acceptance criteria, and completion state.
+
+Use this order:
+
+1. The relevant issue, when the repository tracks work in issues.
+2. The relevant project item, when the project board is the repository's declared delivery system.
+3. A local roadmap or specification, when repository documentation declares it as the delivery record.
+4. The pull request or commit, when the repository has no other delivery system.
+
+Do not create a tracker, board, issue, or plan merely to satisfy this rule.
+Follow the repository's existing delivery convention.
+
+## Planning decision
+
+Plan only when meaningful uncertainty remains: architecture choices, cross-cutting changes, migrations, consequential product trade-offs, or a multi-step delivery sequence. For straightforward, well-bounded work, implement directly. Spikes do not require a delivery plan.
+
+For complex work, use a dedicated planning agent. It must produce an implementation-ready decision record; it may use a temporary local HTML plan while exploring.
+
+## Workflow
+
+1. Discuss the unit of work with the user.
+2. Choose the delivery record and decide whether planning is needed.
+3. When needed, plan the work and get user approval.
+4. Transfer every approved implementation detail and acceptance check into the delivery record.
+5. Delete any temporary planning artifact and remove references to it.
+6. Implement the work.
+7. Close or complete the delivery record according to the repository's workflow.
 
 Planning can take a while. Check in with the planner subagent while it's working, but let it finish.
 
 Once a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
-
-## Plan storage
-
-When a repository has both a GitHub remote and an existing GitHub Project board, use `$kanban` after the user approves a plan to convert it to tickets and track real delivery work. A planning issue is valid when planning is genuinely the next unit of work. Its plan file is temporary: after ticketization, the real delivery issues own the relevant implementation detail and the planning issue records that its work completed. The `kanban` skill owns the exact tracker handoff.
-
-When a repository does not use a Project board, follow its local docs and archival conventions.

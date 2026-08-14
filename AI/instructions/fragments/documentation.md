@@ -6,9 +6,9 @@ A directory's own `README.md` is where its context lives. Write one for any subd
 
 ## Doc lifecycle & archiving
 
-Keep local documentation up to date. For docs that are superseded or no longer relevant (e.g. plans after merging the feature), archive them in a sibling `archive/` folder.
+Keep local documentation up to date. Archive a superseded document in a sibling `archive/` folder only when it remains useful as repository history.
 
-A temporary plan for tracker-backed delivery should not be stored permanently: after its requirements have been transferred to the relevant delivery tickets, remove the local artifact entirely.
+Treat temporary planning and exploratory verification files as disposable. After their essential contents are transferred to the delivery record, remove them entirely rather than archiving a duplicate. Retain a local plan or verification record only when repository documentation explicitly declares it as durable.
 
 ## File-scoped agent directives (frontmatter)
 

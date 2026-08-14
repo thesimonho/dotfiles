@@ -7,11 +7,17 @@ user-invocable: true
 
 # Kanban
 
-Check the GitHub remote for a Project board, Milestones, and issue tracker. If available, GitHub is the operational source of truth for delivery state: Projects hold actual delivery work, Milestones hold delivery landmarks, and Issues hold bounded work items. Architecture and product documents remain linked context, not a parallel roadmap.
+Check the GitHub remote for a Project board, Milestones, and issue tracker. If GitHub tracking is active, it is the operational source of truth for delivery state: Projects hold actual delivery work, Milestones hold delivery landmarks, and Issues hold bounded work items. Architecture and product documents remain linked context, not a parallel roadmap.
 
 If a GitHub Project board does not exist, ask the user if they would like to create one using `gh`. Some projects may not need a dedicated board; record this as a project memory so you don't continue to ask.
 
 Do not create a Project merely because GitHub Issues exists. For a small or intentionally untracked repository, follow its local planning convention and do not invent Milestones, Project items, or delivery tickets.
+
+## Delivery record
+
+For tracked work, choose one authoritative delivery record before implementation: the relevant issue by default, or a project item only when the repository uses project items as its declared work record. Keep the full slice-specific requirements, acceptance criteria, and completion evidence there.
+
+An approved local plan is temporary working material, never a second source of truth. Transfer its details into the delivery record, then delete the file and any documentation references to it before implementation begins. If the repository does not use GitHub tracking, leave delivery-record selection to its local workflow; do not create tracker state to make this skill fit.
 
 ## Delivery hierarchy
 

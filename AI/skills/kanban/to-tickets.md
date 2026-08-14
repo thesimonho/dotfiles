@@ -6,7 +6,7 @@ Not all actionable work needs a dedicated implementation plan. Preserve a clear,
 
 Critical: each ticket must be independently actionable by a new agent after reading that ticket and its explicitly linked parent context. Sibling or child tickets may explain sequencing, but must not contain requirements needed to implement this ticket.
 
-When the source is an approved dedicated plan, ticketization is a **lossless handoff**, not a summary. Move every slice-specific decision into the relevant ticket body: user outcome, architecture constraints, concrete locations, implementation steps, edge cases, acceptance evidence, and local risks. A ticket may link the closed planning issue as provenance, but it must not depend on an external plan file or issue for requirements needed to implement it. The temporary plan ceases to be an active specification after handoff.
+When the source is an approved dedicated plan, ticketization is a **lossless handoff**, not a summary. Move every slice-specific decision into the relevant ticket body: user outcome, architecture constraints, concrete locations, implementation steps, edge cases, acceptance evidence, and local risks. A ticket may link the closed planning issue as provenance, but it must not depend on an external plan file or issue for requirements needed to implement it. The temporary plan ceases to be an active specification after handoff and must be deleted before implementation begins.
 
 ## Process
 
@@ -64,7 +64,7 @@ Iterate until the user approves the breakdown.
 
 Publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Add every tracked ticket to the Project and active Milestone. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Parent/sub-issues may group actual feature-slice work but must not represent the Milestone itself.
 
-When a planning issue produced the approved plan, close it after publication with a concise handoff comment that lists the replacement tickets. Remove any temporary local plan only after confirming every slice-specific requirement now lives in its ticket body. Do not leave a plan file or planning issue as a second implementation source of truth.
+When a planning issue produced the approved plan, close it after publication with a concise handoff comment that lists the replacement tickets. Remove any temporary local plan only after confirming every slice-specific requirement now lives in its ticket body. Do not leave a plan file or planning issue as a second implementation source of truth. Attach essential verification evidence to the ticket or linked pull request; do not create a duplicate local verification report unless the repository explicitly requires a durable release or operational record.
 
 When publishing issue bodies, preserve actual newline characters. Prefer `--body-file` or structured API input; never interpolate a JSON-stringified body into `gh issue create --body`.
 
