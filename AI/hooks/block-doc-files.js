@@ -2,14 +2,25 @@
  * Hook: Keep documentation files out of the repository root.
  *
  * The intent is to keep root-level Markdown from becoming an unstructured
- * documentation surface and to keep untyped text files out of the repository.
- * Documentation next to the code it explains is valid, and durable repository
- * documentation belongs under docs/. Scratch/temp files outside the repo (for
- * example, /tmp) are ignored.
+ * documentation surface while preserving conventional repository entrypoints
+ * and agent instruction files. It also keeps untyped text files out of the
+ * repository. Documentation next to the code it explains is valid, and durable
+ * repository documentation belongs under docs/. Scratch/temp files outside the
+ * repo (for example, /tmp) are ignored.
  */
 
 const path = require("node:path");
 const { block, doNothing } = require("../lib/hooks/policy-result");
+
+const ROOT_MARKDOWN_ALLOWLIST = new Set([
+  "AGENTS.md",
+  "CLAUDE.md",
+  "README.md",
+  "CONTRIBUTING.md",
+  "CODE_OF_CONDUCT.md",
+  "SECURITY.md",
+  "CHANGELOG.md",
+]);
 
 /**
  * Returns file paths from Claude and Codex tool inputs.
@@ -42,13 +53,15 @@ function evaluate(payload) {
     if (relative.startsWith("..") || path.isAbsolute(relative)) {
       continue;
     }
-    const isRepositoryRootMarkdown =
-      path.dirname(relative) === "." && relative.endsWith(".md");
+    const isBlockedRepositoryRootMarkdown =
+      path.dirname(relative) === "." &&
+      relative.endsWith(".md") &&
+      !ROOT_MARKDOWN_ALLOWLIST.has(path.basename(relative));
     const isTextFile = relative.endsWith(".txt");
 
-    if (isRepositoryRootMarkdown) {
+    if (isBlockedRepositoryRootMarkdown) {
       return block(filePath, [
-        "Do not write Markdown files in the repository root. Put durable documentation under docs/ instead.",
+        "Do not write arbitrary Markdown files in the repository root. Put durable documentation under docs/ instead.",
       ]);
     }
 
