@@ -45,7 +45,7 @@ function targetPathFrom(toolInput) {
   }
 
   const command = toolInput.command ?? "";
-  const patched = command.match(/^\*\*\* (?:Add|Update) File: (.+)$/m);
+  const patched = command.match(/^\*\*\* (?:Add|Update|Delete) File: (.+)$/m);
   return patched ? patched[1] : "";
 }
 
