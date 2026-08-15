@@ -1,0 +1,20 @@
+{
+  "name": "work-surface-probes",
+  "interface": {
+    "displayName": "Work Surface Probes"
+  },
+  "plugins": [
+    {
+      "name": "work-surface-probe",
+      "source": {
+        "source": "local",
+        "path": "./AI/work-surface-marketplace/plugins/work-surface-probe"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
