@@ -23,6 +23,7 @@
         "slack-darwin"
         "ffmpeg"
         "glow"
+        "google-cloud-sdk"
       ];
     };
     ai = {

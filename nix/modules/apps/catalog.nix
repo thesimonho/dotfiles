@@ -127,6 +127,9 @@
       contributions.xdgConfigFiles."fzf" = symlinkConfig "fzf";
       bundles = [ "cli" ];
     };
+    google-cloud-sdk = {
+      contributions.packages = [ pkgs.google-cloud-sdk ];
+    };
     gearlever = {
       flatpak.id = "it.mijorus.gearlever";
       bundles = [ ];

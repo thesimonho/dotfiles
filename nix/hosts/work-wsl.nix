@@ -25,6 +25,7 @@
       enabled = [
         "ffmpeg"
         "glow"
+        "google-cloud-sdk"
       ];
     };
     ai = {
