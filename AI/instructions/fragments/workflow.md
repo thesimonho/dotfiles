@@ -19,6 +19,15 @@ For tracker-backed work:
 - Update the tracker and relevant tickets when their status materially changes.
 - Perform one final synchronization after the PR is merged.
 
+### Future Issues
+
+If an item arises that is not related to a current issue or milestone (e.g. an irreproducible bug, feature idea, out of scope changes), it should be logged so it is not forgotten:
+
+- Tracked: create a new GitHub issue with the label `needs-triage`
+- Untracked: add it to a `TODO.md` doc (untracked, local only)
+
+If there are a set of related issues, consider creating a new milestone for them.
+
 ## When Responding
 
 - Start with the big picture. ELI5 your explanation/solution. Assume the user doesn't know anything.
