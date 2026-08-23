@@ -24,7 +24,7 @@ For complex work, use a dedicated planning agent. It must produce an implementat
 
 1. Discuss the unit of work with the user.
 2. Choose the delivery record and decide whether planning is needed.
-3. When needed, plan the work and get user approval.
+3. When needed, plan the work and get user approval. This is the ideal time to use the `wayfinder` skill to nail down spec and requirements.
 4. Transfer every approved implementation detail and acceptance check into the delivery record.
 5. Delete any temporary planning artifact and remove references to it.
 6. Implement the work.
