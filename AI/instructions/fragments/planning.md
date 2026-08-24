@@ -16,9 +16,13 @@ Follow the repository's existing delivery convention.
 
 ## Planning decision
 
-Plan only when meaningful uncertainty remains: architecture choices, cross-cutting changes, migrations, consequential product trade-offs, or a multi-step delivery sequence. For straightforward, well-bounded work, implement directly. Spikes do not require a delivery plan.
+For short, straightforward, well-bounded work, you can implement directly. Spikes do not require a delivery plan.
 
-For complex work, use a dedicated planning agent. It must produce an implementation-ready decision record; it may use a temporary local HTML plan while exploring.
+For complex work, you must call a dedicated planning agent. Example situations: architecture choices, cross-cutting changes, migrations, consequential product trade-offs, milestone creation or a multi-step delivery sequence.
+
+Planning agents must produce an implementation-ready decision record; it may use a temporary local HTML plan while exploring.
+
+If unsure about work complexity and whether to call a planning agent, err on the side of caution and call the agent.
 
 ## Workflow
 

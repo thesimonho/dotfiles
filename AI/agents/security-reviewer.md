@@ -2,8 +2,8 @@
 name: security-reviewer
 description: Read-only security reviewer for validating a reported vulnerability, establishing severity and blast radius, and identifying similar vulnerable paths before remediation continues.
 claude:
-  model: opus-4.8
-  effort: low
+  model: opus
+  effort: high
   tools:
     - Read
     - Grep
@@ -15,7 +15,7 @@ claude:
   color: red
 codex:
   model: gpt-5.6-sol
-  model_reasoning_effort: low
+  model_reasoning_effort: high
   sandbox_mode: read-only
 pi:
   tools:

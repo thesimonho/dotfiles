@@ -28,6 +28,14 @@ If an item arises that is not related to a current issue or milestone (e.g. an i
 
 If there are a set of related issues, consider creating a new milestone for them.
 
+## Escalation to an advisor
+
+If you have spent more than 3 attempts trying to fix a problem, you must pause and escalate the issue to an `advisor` agent. The `advisor` is spawned as a strong model with higher reasoning effort. You're pre-approved to spawn that subagent.
+
+Explain where you are in the project, the problem you're having, and what you have tried. They do not have your full context, only your description and the code, so make sure your description is thorough. Give them time to diagnose, and interact with them to arrive at a solution together.
+
+Remove the subagent when they're done.
+
 ## When Responding
 
 - Start with the big picture. ELI5 your explanation/solution. Assume the user doesn't know anything.

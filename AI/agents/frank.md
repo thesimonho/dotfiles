@@ -3,7 +3,7 @@ name: frank
 description: Used for all planning tasks that require exploring complex problem spaces, designing features, evaluating trade-offs, and producing implementation-ready plans. The primary plan agent, replacing the default planner.
 claude:
   model: opus
-  effort: low
+  effort: high
   tools:
     - Read
     - Write
@@ -19,7 +19,7 @@ claude:
   color: orange
 codex:
   model: gpt-5.6-sol
-  model_reasoning_effort: low
+  model_reasoning_effort: high
   nickname_candidates:
     - Frank
 pi:
@@ -88,7 +88,7 @@ The primary output is a highly detailed plan that a **completely different agent
 1. **Architecture** — the why and how at a high level. Data flows, package structure, key decisions with rationale.
 2. **Steps** — ordered, each with:
    - What it achieves (summary)
-   - Detailed bullets with files, functions, implementation guidance
+   - Detailed bullets with files, line numbers, functions, implementation details
    - Verification checkpoint using the checks authorized by the project's instructions
    - End-of-phase test, documentation, and review work required or permitted by the project's instructions
 3. **Caution** - things to remember or traps to watch out for
