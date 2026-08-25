@@ -1,39 +1,30 @@
 # Planning
 
+Keep these records distinct: a **working outline** is disposable execution scaffolding; a **decision map** resolves dependent uncertainty; an **implementation plan** settles the material decisions another agent needs to build the work; and a **delivery record** is the project-native authority for implementation and completion.
+
+The running agent owns transitions between records. Skills and subagents produce only the artifact requested; they do not choose the next workflow.
+
 ## Delivery record
 
-Before implementation, choose exactly one durable delivery record. It owns the approved scope, decisions, acceptance criteria, and completion state.
-
-Use this order:
+Before implementation, choose exactly one durable delivery record in this order:
 
 1. The relevant issue, when the repository tracks work in issues.
 2. The relevant project item, when the project board is the repository's declared delivery system.
-3. A local roadmap or specification, when repository documentation declares it as the delivery record.
-4. The pull request or commit, when the repository has no other delivery system.
+3. A local plan, roadmap, or specification when that is the repository convention.
+4. The pull request or commit when no other delivery system exists.
 
-Do not create a tracker, board, issue, or plan merely to satisfy this rule.
-Follow the repository's existing delivery convention.
+Do not create tracking machinery merely to satisfy this rule. Delete a temporary artifact only after transferring its approved details; retain a local plan when it is the delivery record.
 
 ## Planning decision
 
-For short, straightforward, well-bounded work, you can implement directly. Spikes do not require a delivery plan.
+Inspect what is already known before planning. A `ready-for-agent` ticket is presumed implementation-ready unless a specific material gap or contradiction is found. Complexity alone does not justify replanning it.
 
-For complex work, you must call a dedicated planning agent. Example situations: architecture choices, cross-cutting changes, migrations, consequential product trade-offs, milestone creation or a multi-step delivery sequence.
+Handle bounded detail directly. Use the planning agent when unresolved product, architecture, or implementation decisions require substantial exploration or judgment. Use Wayfinder skill only when dependent uncertainty needs a shared, multi-session decision map.
 
-Planning agents must produce an implementation-ready decision record; it may use a temporary local HTML plan while exploring.
-
-If unsure about work complexity and whether to call a planning agent, err on the side of caution and call the agent.
+A working outline becomes authoritative only when deliberately promoted into the delivery record after it defines the outcome, material decisions, affected boundaries, failure behaviour, acceptance checks, dependencies, and non-goals. If an allegedly ready record fails that test, report the concrete gaps and return it to planning or triage; do not create a parallel plan.
 
 ## Workflow
 
-1. Discuss the unit of work with the user.
-2. Choose the delivery record and decide whether planning is needed.
-3. When needed, plan the work and get user approval. This is the ideal time to use the `wayfinder` skill to nail down spec and requirements.
-4. Transfer every approved implementation detail and acceptance check into the delivery record.
-5. Delete any temporary planning artifact and remove references to it.
-6. Implement the work.
-7. Close or complete the delivery record according to the repository's workflow.
+Agree on scope, resolve uncertainty, obtain approval when required, and select the project-native delivery record. In tracked projects, approved material may be decomposed into independently actionable tickets. In untracked projects, the approved local plan may remain authoritative. Implement and record completion against that one delivery record.
 
-Planning can take a while. Check in with the planner subagent while it's working, but let it finish.
-
-Once a plan has been established, do NOT deviate from it. If you need to adjust for some reason, then pause and discuss first.
+Once an approved plan is established, do not deviate without pausing to discuss the change.

@@ -47,8 +47,6 @@ Five state roles:
 
 Every triaged issue should carry exactly one category role and one state role. If state roles conflict, flag it and ask the maintainer before doing anything else.
 
-Wayfinder child tickets follow this invariant. A `wayfinder:map` issue is an index rather than a unit of work: give it one category role, but no state role. Wayfinder maps are pre-delivery decision artifacts: keep them on the issue tracker, but out of the delivery Project and Milestones. Once decisions are resolved, hand the result into the relevant Milestone and an approved plan.
-
 ## Synchronization
 
 Before Milestone delivery work, inspect the active Milestone, its Project items, native blockers, parent context, linked pull requests, and relevant scope documents. For an isolated issue with no relevant Milestone, inspect its issue and Project context and record why it remains outside a delivery landmark when that would otherwise be ambiguous. When a tracked issue starts, assign its owner and set Project status to `In Progress`. When it completes, record acceptance evidence, close it, and set Project status to `Done`. For a stale or wrongly shaped item, leave a supersession note, close it, and remove it from the active Project rather than preserving misleading active state.

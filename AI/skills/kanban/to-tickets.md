@@ -2,7 +2,7 @@
 
 Break actionable work from a plan, spec, or conversation into a set of **tickets** — tracer-bullet vertical slices, each declaring the tickets that **block** it.
 
-Not all actionable work needs a dedicated implementation plan. Preserve a clear, sufficiently specified request and publish it directly. If producing independent tickets would require consequential unresolved architecture, product, or implementation decisions, stop and route that planning work to Frank. Kanban represents actionable work on the tracker; it does not silently make the decisions that would make the work actionable. Do not use Frank for simple, already bounded work.
+Not all actionable work needs a dedicated implementation plan. Preserve a clear, sufficiently specified request and publish it directly. If producing independent tickets would require consequential unresolved architecture, product, or implementation decisions, stop and report the exact missing decisions to the caller. Kanban represents actionable work on the tracker; it does not silently make those decisions or choose how they should be resolved.
 
 Critical: each ticket must be independently actionable by a new agent after reading that ticket and its explicitly linked parent context. Sibling or child tickets may explain sequencing, but must not contain requirements needed to implement this ticket.
 
@@ -14,13 +14,13 @@ When the source is an approved dedicated plan, ticketization is a **lossless han
 
 Work from whatever is already in the conversation context. If the user passes a reference (a spec path, an issue number or URL) as an argument, fetch it and read its full body and comments. When the work advances a tracked delivery landmark, first identify its active Milestone and inspect existing Project work so the new tickets extend the delivery graph rather than duplicating it. For isolated maintenance work with no relevant landmark, inspect the related Project and issue context instead.
 
-Before drafting, confirm the source defines an observable outcome, sufficient acceptance criteria, and no unresolved decisions that would materially change the implementation. Route it to Frank only when dedicated implementation planning is needed; otherwise continue directly.
+Before drafting, confirm the source defines an observable outcome, sufficient acceptance criteria, and no unresolved decisions that would materially change the implementation. If it does not, return the concrete gaps to the caller; otherwise continue directly.
 
 ### 2. Explore the codebase (optional)
 
 If you have not already explored the codebase, do so to understand the current state of the code. Apply the `domain-modeling` skill as an overlay while drafting so ticket titles, domain operations, and descriptions remain consistent with the project's `docs/glossary.md`, approved plan, and codebase.
 
-Preserve prefactoring already established by the source. If new prefactoring would require an implementation decision, route that decision to Frank rather than inventing it during ticketization.
+Preserve prefactoring already established by the source. If new prefactoring would require an implementation decision, report that gap rather than inventing it during ticketization.
 
 ### 3. Draft vertical slices
 

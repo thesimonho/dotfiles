@@ -25,7 +25,7 @@ Show counts and a one-line summary per item. Let the maintainer pick.
 4. **Grill (if needed).** If the request needs fleshing out, run the `/grilling` skill — grill it into shape one question at a time. Apply `domain-modeling` as an overlay when domain terms or operations need clarification, and update the glossary as they are resolved.
 
 5. **Apply the outcome:**
-   - `ready-for-agent` — confirm the issue is independently actionable. If unresolved implementation decisions require a dedicated plan, route it to Frank first; otherwise a clear issue or spec may become ready without one.
+   - `ready-for-agent` — confirm the issue is independently actionable. If material implementation decisions remain unresolved, report the concrete gaps to the caller; otherwise a clear issue or spec may become ready without a dedicated plan.
    - `ready-for-human` — tasks that need human judgement/decisions and can't be delegated (judgment calls, external access, design decisions, manual testing).
    - `needs-info` — post triage notes (template below).
    - `wontfix` — close, with the comment depending on _why_:
