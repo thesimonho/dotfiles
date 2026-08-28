@@ -47,13 +47,20 @@ Five state roles:
 
 Every triaged issue should carry exactly one category role and one state role. If state roles conflict, flag it and ask the maintainer before doing anything else.
 
+Create these Project custom fields if not already present.
+
+- `Start Date` — the date the issue was moved to `In Progress` status
+- `End Date` — the date the issue was moved to `Done` status
+
 ## Synchronization
 
 Before Milestone delivery work, inspect the active Milestone, its Project items, native blockers, parent context, linked pull requests, and relevant scope documents. For an isolated issue with no relevant Milestone, inspect its issue and Project context and record why it remains outside a delivery landmark when that would otherwise be ambiguous. When a tracked issue starts, assign its owner and set Project status to `In Progress`. When it completes, record acceptance evidence, close it, and set Project status to `Done`. For a stale or wrongly shaped item, leave a supersession note, close it, and remove it from the active Project rather than preserving misleading active state.
 
+Update the issues `Start Date` and `End Date` fields when its status changes.
+
 A planning issue is legitimate only when planning is the actual frontier. Once its approved plan is decomposed, the delivery tickets become the implementation authority: each owns the full detail relevant to its slice. Close the planning issue as completed planning work and remove a temporary local plan rather than leaving a duplicate specification. The planning issue is neither a parent epic nor an enduring requirements document.
 
-Keep Project metadata meaningful: use Status, Milestone, Parent issue, Sub-issues progress, and Linked pull requests. Add dates, iterations, priority, size, and status updates only when they express a real commitment or decision. Ensure the Project has useful views for current work, triage, ready/unblocked work, and completed work.
+Keep Project metadata meaningful: use Status, Milestone, Parent issue, Sub-issues progress, and Linked pull requests. Add iterations, priority, size, and status updates only when they express a real commitment or decision. Ensure the Project has useful views for current work, triage, ready/unblocked work, and completed work.
 
 ## Invocation
 
