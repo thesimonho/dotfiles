@@ -1,6 +1,6 @@
 ---
 name: kanban
-description: Work with GitHub Projects, Milestones, and issue trackers. Use when you need to update delivery state, triage issues, create tickets, organize milestones, or trace planned work.
+description: Work with GitHub Projects, Milestones, and issue trackers. Use when you need to update delivery state, triage issues, create/update tickets/issues, organize milestones, or trace planned work.
 model: sonnet
 user-invocable: true
 ---

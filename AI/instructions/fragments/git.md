@@ -22,3 +22,7 @@ GPG sign your commits if possible. You might need to leave sandbox to do so.
 ## PR/Merge
 
 Use the `verify` skill just before submitting a PR or merging into another branch.
+
+## GitHub
+
+When working with GitHub, use `gh` cli directly instead of agent connectors.
