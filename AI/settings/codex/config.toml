@@ -68,13 +68,6 @@ enabled = true
 [plugins."github@openai-curated"]
 enabled = true
 
-[mcp_servers.context7]
-command = "npx"
-args = ["-y", "@upstash/context7-mcp"]
-env_vars = ["CONTEXT7_API_KEY"]
-default_tools_approval_mode = "approve"
-startup_timeout_sec = 20
-
 [desktop]
 hotkey-window-projectless-default-enabled = true
 worktree-keep-count = 20
