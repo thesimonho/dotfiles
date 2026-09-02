@@ -1,3 +1,4 @@
+onboarding = false
 # Herdr is managed by Nix, but its runtime config stays in the dotfiles
 # checkout so the same setup is available on every configured host.
 
@@ -11,21 +12,6 @@ auto_switch = true
 dark_name = "tokyo-night"
 light_name = "tokyo-night-day"
 
-[keys]
-prefix = "super+space"
-
-# Direct movement uses an extra modifier layer. Plain Ctrl+H/J/K/L are owned
-# by shells, editors, and KDE, while the prefix bindings remain available too.
-focus_pane_left = ["prefix+h", "ctrl+shift+alt+h"]
-focus_pane_down = ["prefix+j", "ctrl+shift+alt+j"]
-focus_pane_up = ["prefix+k", "ctrl+shift+alt+k"]
-focus_pane_right = ["prefix+l", "ctrl+shift+alt+l"]
-
-# Tabs are one-dimensional siblings; bracket keys avoid competing with pane
-# navigation and remain safe in both terminal and editor sessions.
-previous_tab = ["prefix+p", "ctrl+alt+["]
-next_tab = ["prefix+n", "ctrl+alt+]"]
-
 [ui]
 agent_panel_sort = "priority"
 prompt_new_tab_name = false
@@ -33,6 +19,7 @@ status_indicators = "symbols"
 pane_scrollbars = true
 pane_gaps = true
 hide_tab_bar_when_single_tab = false
+show_agent_labels_on_pane_borders = true
 
 [ui.toast]
 delivery = "terminal"
@@ -52,3 +39,35 @@ manage_ssh_config = true
 
 [experimental]
 kitty_graphics = true
+
+[keys]
+prefix = "super+space"
+
+focus_pane_left = ["prefix+h"]
+focus_pane_down = ["prefix+j"]
+focus_pane_up = ["prefix+k"]
+focus_pane_right = ["prefix+l"]
+previous_tab = ["prefix+["]
+next_tab = ["prefix+]"]
+new_tab = ["prefix+t"]
+split_vertical = ["prefix+v"]
+split_horizontal = ["prefix+s"]
+zoom = ["prefix+z"]
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "plugin_action"
+command = "herdr-lazy.manage"
+description = "manage plugins"
+
+[[keys.command]] # lazygit: open in a split
+key = "prefix+g"
+type = "plugin_action"
+command = "herdr-lazygit.open"
+description = "lazygit"
+
+[[keys.command]] # lazygit: open in its own tab
+key = "prefix+shift+g"
+type = "plugin_action"
+command = "herdr-lazygit.open-tab"
+description = "lazygit (tab)"

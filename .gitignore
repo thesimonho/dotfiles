@@ -56,5 +56,9 @@ infra/compose/data/
 __pycache__/
 *.pyc
 
-herdr
-!herdr/config.toml
+/herdr/**
+!/herdr/config.toml
+!/herdr/plugins/
+!/herdr/plugins/config/
+!/herdr/plugins/config/herdr-lazy/
+!/herdr/plugins/config/herdr-lazy/plugins.list
