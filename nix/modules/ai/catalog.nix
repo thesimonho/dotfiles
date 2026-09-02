@@ -2,6 +2,7 @@
   inputs,
   pkgsUnstable,
   system,
+  symlinkConfig,
 }:
 
 let
@@ -113,6 +114,7 @@ in
     };
     herdr = {
       contributions.packages = [ pkgsUnstable.herdr ];
+      contributions.xdgConfigFiles."herdr" = symlinkConfig "herdr";
       bundles = [
         "cli"
         "agents"

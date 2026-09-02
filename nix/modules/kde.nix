@@ -78,6 +78,7 @@
             "Walk Through Windows" = "Alt+Tab";
             "Walk Through Windows (Reverse)" = "Alt+Shift+Tab";
             "Walk Through Windows of Current Application" = "Alt+`";
+            "KZones: Snap all windows=Meta+Space" = "";
           };
           org_kde_powerdevil = {
             "powerProfile" = "Battery";

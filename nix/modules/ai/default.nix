@@ -10,12 +10,18 @@
 let
   inherit (lib) mkOption types;
   system = pkgs.stdenv.hostPlatform.system;
+  dotfiles = config.my.dotfilesPath;
+  symlinkConfig = name: {
+    source = config.lib.file.mkOutOfStoreSymlink "${dotfiles}/${name}";
+    force = true;
+  };
 
   catalogData = import ./catalog.nix {
     inherit
       inputs
       pkgsUnstable
       system
+      symlinkConfig
       ;
   };
   inherit (catalogData) bundleNames;

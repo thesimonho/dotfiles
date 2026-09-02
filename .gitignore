@@ -55,3 +55,6 @@ infra/compose/.env.*
 infra/compose/data/
 __pycache__/
 *.pyc
+
+herdr
+!herdr/config.toml

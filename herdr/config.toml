@@ -1,0 +1,54 @@
+# Herdr is managed by Nix, but its runtime config stays in the dotfiles
+# checkout so the same setup is available on every configured host.
+
+[terminal]
+default_shell = "zsh"
+shell_mode = "auto"
+new_cwd = "follow"
+
+[theme]
+auto_switch = true
+dark_name = "tokyo-night"
+light_name = "tokyo-night-day"
+
+[keys]
+prefix = "super+space"
+
+# Direct movement uses an extra modifier layer. Plain Ctrl+H/J/K/L are owned
+# by shells, editors, and KDE, while the prefix bindings remain available too.
+focus_pane_left = ["prefix+h", "ctrl+shift+alt+h"]
+focus_pane_down = ["prefix+j", "ctrl+shift+alt+j"]
+focus_pane_up = ["prefix+k", "ctrl+shift+alt+k"]
+focus_pane_right = ["prefix+l", "ctrl+shift+alt+l"]
+
+# Tabs are one-dimensional siblings; bracket keys avoid competing with pane
+# navigation and remain safe in both terminal and editor sessions.
+previous_tab = ["prefix+p", "ctrl+alt+["]
+next_tab = ["prefix+n", "ctrl+alt+]"]
+
+[ui]
+agent_panel_sort = "priority"
+prompt_new_tab_name = false
+status_indicators = "symbols"
+pane_scrollbars = true
+pane_gaps = true
+hide_tab_bar_when_single_tab = false
+
+[ui.toast]
+delivery = "terminal"
+
+[ui.toast.herdr]
+position = "bottom-right"
+
+[ui.toast.clipboard]
+enabled = true
+position = "bottom-center"
+
+[session]
+resume_agents_on_restore = true
+
+[remote]
+manage_ssh_config = true
+
+[experimental]
+kitty_graphics = true
