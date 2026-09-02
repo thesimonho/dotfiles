@@ -111,6 +111,13 @@ in
       contributions.packages = [ llmAgents.agent-browser ];
       bundles = [ "skills" ];
     };
+    herdr = {
+      contributions.packages = [ pkgsUnstable.herdr ];
+      bundles = [
+        "cli"
+        "agents"
+      ];
+    };
     rtk = {
       contributions.packages = [ llmAgents.rtk ];
       bundles = [ "skills" ];
