@@ -1,140 +1,149 @@
 {
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-doc-files",
-            "statusMessage": "Checking documentation file policy"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-build-dirs"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-plan-references"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js branch-guard"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-plan-filename"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js memory-redirect"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-conventional-commit"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-gate"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js scan-secrets"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js simplify-nudge"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js rtk-nudge"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js justfile-nudge"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-debug-logging"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js commit-format-nudge"
-          },
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js lsp-nudge"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
         "hooks": [
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js surface-file-header"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js surface-file-header",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js coupling-surface"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js coupling-surface",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-track"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-track",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js lint-config-files"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js lint-config-files",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-file-size"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-file-size",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js no-hard-linebreaks"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js no-hard-linebreaks",
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "Edit|Write"
       },
       {
-        "matcher": "Bash",
         "hooks": [
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-track"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-track",
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js delete-branch-nudge"
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js delete-branch-nudge",
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-doc-files",
+            "statusMessage": "Checking documentation file policy",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write"
+      },
+      {
+        "hooks": [
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-build-dirs",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-plan-references",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js branch-guard",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-plan-filename",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js memory-redirect",
+            "type": "command"
+          }
+        ],
+        "matcher": "Edit|Write"
+      },
+      {
+        "hooks": [
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-force-push",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js check-conventional-commit",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js verify-gate",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js scan-secrets",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js simplify-nudge",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js rtk-nudge",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js justfile-nudge",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js block-debug-logging",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js commit-format-nudge",
+            "type": "command"
+          },
+          {
+            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js lsp-nudge",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
       }
     ],
     "SessionStart": [
       {
-        "matcher": "startup|resume",
         "hooks": [
           {
-            "type": "command",
             "command": "node ~/dotfiles/AI/lib/hooks/run-codex-mcp-helper-reaper.js",
             "statusMessage": "Pruning stale Codex helper processes",
-            "timeout": 1
+            "timeout": 1,
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume"
+      },
+      {
+        "hooks": [
+          {
+            "command": "bash '/home/simon/.codex/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
           }
         ]
       }

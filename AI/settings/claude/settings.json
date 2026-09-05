@@ -226,42 +226,21 @@
         ]
       }
     ],
-    "SessionStart": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
+    "SessionStart": [{
+      "matcher":"*",
+      "hooks":[{
+        "type":"command",
+        "command":"bash '/home/simon/.claude/hooks/herdr-agent-state.sh' session",
+        "timeout":10
+      }]
+    }],
     "SubagentStart": [
       {
         "matcher": "",
         "hooks": []
       }
     ],
-    "UserPromptSubmit": [
-      {
-        "hooks": []
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
     "Notification": [
-      {
-        "matcher": "",
-        "hooks": []
-      }
-    ],
-    "PermissionRequest": [
       {
         "matcher": "",
         "hooks": []
