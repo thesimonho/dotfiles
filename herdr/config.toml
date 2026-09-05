@@ -71,3 +71,9 @@ key = "prefix+shift+g"
 type = "plugin_action"
 command = "herdr-lazygit.open-tab"
 description = "lazygit (tab)"
+
+[[keys.command]]
+key = "prefix+e"
+type = "plugin_action"
+command = "herdr-workspacer.open"
+description = "open workspace picker"
