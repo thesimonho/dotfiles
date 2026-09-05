@@ -181,7 +181,12 @@ in
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    settings = identitySettings;
+    settings = identitySettings // {
+      workstation = {
+        HostName = "workstation.home.arpa";
+        User = "simon";
+      };
+    };
   };
 
   # secret-askpass / ssh-add-keys / ssh-keys are installed via home.packages
