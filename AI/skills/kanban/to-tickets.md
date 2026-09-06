@@ -51,6 +51,7 @@ Present the proposed full ticket bodies as a numbered list. For each ticket, sho
 - **Blocked by**: which other tickets (if any) must complete first
 - **Implementation context**: the complete slice-specific plan an implementing agent needs
 - **What it delivers**: the end-to-end behaviour this ticket makes work
+- **Agent configuration**: the recommended model and reasoning effort level for the implementation agent based on how difficult the work is
 
 Ask the user:
 
@@ -62,7 +63,7 @@ Iterate until the user approves the breakdown.
 
 ### 6. Publish the tickets to the configured tracker
 
-Publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Add every tracked ticket to the Project and active Milestone. Use the platform's native blocking / sub-issue relationship where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Parent/sub-issues may group actual feature-slice work but must not represent the Milestone itself.
+Publish one issue per ticket in dependency order (blockers first) so each ticket's blocking edges can reference real identifiers. Add every tracked ticket to the Project and active Milestone. Use the platform's native issue dependency API where it has one; otherwise set each ticket's "Blocked by" to the blocking issues. Parent/sub-issues may group actual feature-slice work but must not represent the Milestone itself.
 
 When a planning issue produced the approved plan, close it after publication with a concise handoff comment that lists the replacement tickets. Remove any temporary local plan only after confirming every slice-specific requirement now lives in its ticket body. Do not leave a plan file or planning issue as a second implementation source of truth. Attach essential verification evidence to the ticket or linked pull request; do not create a duplicate local verification report unless the repository explicitly requires a durable release or operational record.
 
@@ -83,14 +84,14 @@ The end-to-end behaviour this ticket makes work, from the user's perspective —
 
 ## Implementation context
 
-The full portion of the approved plan relevant to this slice: constraints, code locations, implementation steps, edge cases, and any local verification details.
+The full portion of the approved plan relevant to this slice: constraints, code locations, implementation steps, edge cases, and any local verification details. Detailed enough that a new agent can implement it without reading the source and prior discussions.
 
 ## Acceptance criteria
 
 - [ ] Criterion 1
 - [ ] Criterion 2
 
-## Blocked by
+## Blocked by (optional, if no native dependency API)
 
 - A reference to each blocking ticket, or "None — can start immediately".
 </issue-template>
