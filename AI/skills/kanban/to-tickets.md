@@ -78,11 +78,19 @@ Work the **frontier**: any ticket whose blockers are all done. For a purely line
 
 A reference to the parent issue on the tracker (if the source was an existing issue, otherwise omit this section).
 
+## Motivation
+
+What problem motivates this work? Was there a prior discussion or design decision that led to this slice? Why?
+
 ## What to build
 
 The end-to-end behaviour this ticket makes work, from the user's perspective — not layer-by-layer implementation.
 
-## Implementation context
+## Scope
+
+What are the boundaries of this slice?
+
+## Implementation plan
 
 The full portion of the approved plan relevant to this slice: constraints, code locations, implementation steps, edge cases, and any local verification details. Detailed enough that a new agent can implement it without reading the source and prior discussions.
 
