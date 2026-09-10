@@ -7,7 +7,6 @@
     gpu.backend = "cuda";
     identities = [
       "personal"
-      "sprung"
     ];
     secrets = [ "api-keys" ];
     browser.executable = "google-chrome-stable";

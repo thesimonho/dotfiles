@@ -41,18 +41,6 @@
         '';
       };
     };
-    sprung = {
-      email = "simon@sprungstudios.com";
-      sshKeyFile = "id_sprung";
-      sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICO7UrEfOu/voCC/uZO3sWanVW8BxMQbZrDd9IWWU4XV simon@sprungstudios.com";
-      sshHost = "work-github.com";
-      sshProxyHost = "ssh.github.com";
-      sshPort = 443;
-      remotePatterns = [
-        "git@work-github.com:*/**"
-      ];
-      gpg = null;
-    };
   };
 
   # Non-identity secrets

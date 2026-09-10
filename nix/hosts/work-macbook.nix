@@ -5,7 +5,6 @@
     gpu.backend = "metal";
     identities = [
       "personal"
-      "sprung"
     ];
     secrets = [ "api-keys" ];
     mise.trustedPaths = [ "~/Projects" ];
