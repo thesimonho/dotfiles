@@ -28,7 +28,7 @@ secrets/
 └── api-keys.age                 # Encrypted environment variables
 ```
 
-**On machine after deployment:**
+**On a machine after deployment:**
 
 ```
 ~/.secrets/
@@ -47,6 +47,24 @@ secrets/
 2. **Clone dotfiles** and run `home-manager switch`
 
 That's it. All SSH keys, GPG keys, and API keys are decrypted automatically.
+
+## Rotating a compromised age identity
+
+Treat loss of `~/.secrets/age_identity` as exposure of every secret encrypted to it. Git retains earlier ciphertext, so changing only `agePublicKey` and re-encrypting the same plaintext does not contain the incident: the old private identity can still decrypt the old revisions.
+
+Use this order:
+
+1. Revoke the SSH, GPG, API, and other credentials contained in every `.age` file.
+2. Generate replacement credentials on a trusted machine.
+3. Generate a new age identity with `age-keygen` and store its complete private identity in the password manager before deployment.
+4. Replace `agePublicKey` in `meta.nix` with the new recipient.
+5. Replace each secret's plaintext with its new credential and encrypt every `.age` file to the new recipient.
+6. Confirm every tracked ciphertext decrypts with the new identity and fails with the old identity.
+7. Build all affected host configurations before replacing the installed age identity.
+8. Deploy the new private identity to trusted hosts, activate Home Manager, and verify authentication with the replacement credentials.
+9. Remove old private keys from agents, keyrings, local files, and temporary rotation directories. Retain revoked public keys only when they are needed to verify historical signatures.
+
+Never commit an age private identity, decrypted secret, API token, or key passphrase. Do not delete the last working copy of the old identity until the new ciphertext and its independently stored recovery copy are verified.
 
 ## Adding a new identity
 

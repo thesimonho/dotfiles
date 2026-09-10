@@ -5,13 +5,13 @@
 {
   # Age identity key — encrypts all secrets in this repo
   # Private key lives at ~/.secrets/age_identity (not managed by agenix — it IS the agenix decryption key)
-  agePublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMa8Ec2tSLTEmmMfJw/qF2rNRycb7wm1Pxls2qr3AbPF";
+  agePublicKey = "age1q78n6tyqujn6l4yvwvaa6m7p45z9lnl3cme79qf0curt6glfjdgq35nw9j";
 
   identities = {
     personal = {
       email = "simonho.ubc@gmail.com";
       sshKeyFile = "id_personal";
-      sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIRQyprwIcqn8MzjcOK3mRjQNGogsVYQGM4JhTDdetXz simonho.ubc@gmail.com";
+      sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIInxAupJx0YQwBRFLN/gPQCc2my21GwU6CQet62Dww8y simonho.ubc@gmail.com";
       sshHost = "github.com";
       sshProxyHost = "ssh.github.com";
       sshPort = 443;
@@ -20,23 +20,23 @@
         "https://github.com/**"
       ];
       gpg = {
-        keyId = "1A3DBCCFA37493B1";
+        keyId = "241A482648245430";
         sign = true;
         secretFile = "gpg-personal";
         revocationFile = "gpg-personal-revocation";
         publicKey = ''
           -----BEGIN PGP PUBLIC KEY BLOCK-----
 
-          mDMEaddVoBYJKwYBBAHaRw8BAQdAzzRMmBYWLrlIqboKz906cTe2T4VJn38KLxQq
-          kc+LXB20IFNpbW9uIEhvIDxzaW1vbmhvLnViY0BnbWFpbC5jb20+iJYEExYKAD4W
-          IQTfC1UXKqlBUTMAdaUaPbzPo3STsQUCaddVoAIbAwUJBaOagAULCQgHAgYVCgkI
-          CwIEFgIDAQIeAQIXgAAKCRAaPbzPo3STsQWqAP4tPuqb2KkPKgrHT44xl0eNURMh
-          HlFS5OcPhvombxEXqwEAx8RxI2nF8diU42T2oWgqhzf6cMad4iso/VREReCs9gC4
-          OARp11WgEgorBgEEAZdVAQUBAQdAbCczKPOFibLTshbkOPmsfcK0Z9jk70+AfFe7
-          7iSdqygDAQgHiH4EGBYKACYWIQTfC1UXKqlBUTMAdaUaPbzPo3STsQUCaddVoAIb
-          DAUJBaOagAAKCRAaPbzPo3STsVw3AP41HTRYfucbsduKz/SSuq7r9EOqLJUwHzSU
-          QXVHFL1/QAD+P4R8kiolEElfHW188QtRNAqLYiZHXHnHTtBqI82sxQI=
-          =MWi+
+          mDMEaqMi3xYJKwYBBAHaRw8BAQdAh0Xd7u/kuqGIB0W02ZuaxcY+CTkIssbpy60h
+          ivtfxXC0IFNpbW9uIEhvIDxzaW1vbmhvLnViY0BnbWFpbC5jb20+iJYEExYKAD4W
+          IQRrI6Sexu4Op+HLDXgkGkgmSCRUMAUCaqMi3wIbAwUJBaOagAULCQgHAgYVCgkI
+          CwIEFgIDAQIeAQIXgAAKCRAkGkgmSCRUMMWFAQCemEGIUUQMCIZSwX1fHVK4wR1S
+          ktcv1nTDgNXWVyUHJgD/UcTwe7X29zwiPk36PeZ7/ug3MLI0j2UL7NHc9VUE7AK4
+          OARqoyLgEgorBgEEAZdVAQUBAQdAp4f7bu8moNZpONOpMKEqOCoG7mEKmJxEWN66
+          amhOrmYDAQgHiH4EGBYKACYWIQRrI6Sexu4Op+HLDXgkGkgmSCRUMAUCaqMi4AIb
+          DAUJBaOagAAKCRAkGkgmSCRUMEq2AP981YKsOsdrwQQyXeheLzlOxIBR4iUPj87Y
+          ba/LNOoFewD9G2ncpyia/oRKSyzYBXYsg+m34J32stkDhVpTouByGA0=
+          =uVpq
           -----END PGP PUBLIC KEY BLOCK-----
         '';
       };
