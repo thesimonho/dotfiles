@@ -37,7 +37,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -226,14 +226,18 @@
         ]
       }
     ],
-    "SessionStart": [{
-      "matcher":"*",
-      "hooks":[{
-        "type":"command",
-        "command":"bash '/home/simon/.claude/hooks/herdr-agent-state.sh' session",
-        "timeout":10
-      }]
-    }],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/home/simon/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "SubagentStart": [
       {
         "matcher": "",
