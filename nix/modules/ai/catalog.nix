@@ -13,11 +13,9 @@ let
     "x86_64-linux"
   ];
   codexDesktopLinuxFeatures = [
-    "appshots"
     "codex-wrapper-updater"
     "directory-only-working-tree-watch"
     "global-dictation"
-    "mcp-helper-reaper"
     "node-repl-reaper"
     "open-target-discovery"
     "persistent-status-panel"
@@ -25,20 +23,12 @@ let
     "remote-control-ui"
     "remote-mobile-control"
   ];
-  # prevent the reaper scripts from adding their own entries into hooks.json
   codexDesktopPackage =
     if builtins.elem system linuxSystems then
       (inputs.codex-desktop-linux.packages.${system}.codex-desktop.override {
         enableComputerUseUi = true;
         linuxFeatureIds = codexDesktopLinuxFeatures;
-      }).overrideAttrs
-        (previousAttributes: {
-          postFixup = (previousAttributes.postFixup or "") + ''
-            reaperHookInstaller="$out/opt/codex-desktop/.codex-linux/mcp-helper-reaper/install-session-hook.sh"
-            substituteInPlace "$reaperHookInstaller" \
-              --replace-fail '[ "''${CODEX_MCP_HELPER_REAPER_DISABLE_HOOK:-}" = "1" ] && exit 0' 'exit 0'
-          '';
-        })
+      })
     else
       null;
 in
