@@ -33,6 +33,7 @@ Verification should prove the changed behaviour with the fewest meaningful
 interactions. This is true for web apps, but also desktop and mobile apps via their own tooling.
 
 - Use one planned semantic user flow.
+- Screenshots are more valuable than code for assessing UI and layout changes.
 - Take screenshots only before and after a meaningful state change, not after
   every click or input attempt.
 - Retry the same GUI automation mechanism at most twice.
@@ -40,5 +41,4 @@ interactions. This is true for web apps, but also desktop and mobile apps via th
   method or report that the runtime interaction could not be verified.
 - Prefer deterministic state, storage, API, accessibility-tree, or test evidence
   over coordinate-based GUI automation when either can prove the same claim.
-- Do not verify unrelated platforms unless the change affects shared
-  cross-platform behaviour or the ticket explicitly requires them.
+- Verify only the platforms and screen sizes that might be affected by the change.
