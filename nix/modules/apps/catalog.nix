@@ -261,7 +261,7 @@
           "xdg-videos:ro"
         ];
       };
-      bundles = [ "communication" ];
+      bundles = [ ];
     };
     # darwin-only; opt in via my.apps.enabled.
     slack-darwin = {
