@@ -13,7 +13,6 @@ let
     "x86_64-linux"
   ];
   codexDesktopLinuxFeatures = [
-    "authored-message-visibility"
     "automation-extensions"
     "codex-wrapper-updater"
     "computer-use-linux"
