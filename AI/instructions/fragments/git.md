@@ -25,4 +25,4 @@ Use the `verify` skill just before submitting a PR or merging into another branc
 
 ## GitHub
 
-When working with GitHub, use `gh` cli directly instead of agent connectors.
+When working with GitHub, use `gh` cli directly, and prefer SSH, instead of agent connectors or raw git commands.
