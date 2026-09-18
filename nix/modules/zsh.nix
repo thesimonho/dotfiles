@@ -261,7 +261,7 @@ in
         };
       }
       {
-        name = "dot-up";
+        name = "zsh-dot-up";
         src = pkgs.fetchFromGitHub {
           owner = "toku-sa-n";
           repo = "zsh-dot-up";
