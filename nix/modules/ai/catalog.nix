@@ -13,15 +13,20 @@ let
     "x86_64-linux"
   ];
   codexDesktopLinuxFeatures = [
+    "authored-message-visibility"
+    "automation-extensions"
     "codex-wrapper-updater"
+    "computer-use-linux"
     "directory-only-working-tree-watch"
     "global-dictation"
     "node-repl-reaper"
     "open-target-discovery"
     "persistent-status-panel"
     "pet-overlay"
+    "preferred-editor-file-links"
     "remote-control-ui"
     "remote-mobile-control"
+    "tray-usage"
   ];
   codexDesktopPackage =
     if builtins.elem system linuxSystems then
