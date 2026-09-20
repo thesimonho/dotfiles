@@ -136,7 +136,7 @@ let
     assert !invalidCatalogEvaluation.success;
     pkgs.writeText "catalog-type-check.json" (builtins.toJSON { rejectsUnknownHostValues = true; });
 
-  mkCodexDesktopCheck =
+  mkChatgptCheck =
     {
       system,
       hmConfig,
@@ -145,12 +145,12 @@ let
     let
       pkgs = pkgsFor {
         inherit system;
-        hostName = "_codex-desktop-check";
+        hostName = "_chatgpt-check";
       };
-      actual = hmConfig.config.programs.codexDesktopLinux.enable;
+      actual = lib.any (package: (package.pname or null) == "chatgpt") hmConfig.config.home.packages;
     in
     assert actual == expected;
-    pkgs.writeText "codex-desktop-check.json" (builtins.toJSON { inherit actual expected; });
+    pkgs.writeText "chatgpt-check.json" (builtins.toJSON { inherit actual expected; });
 
   /*
     Synthetic host that enables every bundle. Catches catalog entries whose
@@ -198,12 +198,12 @@ in
     x86_64-linux = {
       catalog-engine = mkCatalogEngineCheck "x86_64-linux";
       catalog-types = mkCatalogTypeCheck "x86_64-linux";
-      codex-desktop = mkCodexDesktopCheck {
+      chatgpt = mkChatgptCheck {
         system = "x86_64-linux";
         hmConfig = homeConfigurations.desktop;
         expected = true;
       };
-      codex-desktop-wsl = mkCodexDesktopCheck {
+      chatgpt-wsl = mkChatgptCheck {
         system = "x86_64-linux";
         hmConfig = homeConfigurations.work-wsl;
         expected = false;
@@ -213,7 +213,7 @@ in
       kitchen-sink = mkEvalCheck "x86_64-linux" kitchenSinkLinux;
     };
     aarch64-darwin = {
-      codex-desktop = mkCodexDesktopCheck {
+      chatgpt = mkChatgptCheck {
         system = "aarch64-darwin";
         hmConfig = homeConfigurations.work-macbook;
         expected = false;

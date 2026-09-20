@@ -12,29 +12,6 @@ let
     "aarch64-linux"
     "x86_64-linux"
   ];
-  codexDesktopLinuxFeatures = [
-    "automation-extensions"
-    "codex-wrapper-updater"
-    "computer-use-linux"
-    "directory-only-working-tree-watch"
-    "global-dictation"
-    "node-repl-reaper"
-    "open-target-discovery"
-    "persistent-status-panel"
-    "pet-overlay"
-    "preferred-editor-file-links"
-    "remote-control-ui"
-    "remote-mobile-control"
-    "tray-usage"
-  ];
-  codexDesktopPackage =
-    if builtins.elem system linuxSystems then
-      (inputs.codex-desktop-linux.packages.${system}.codex-desktop.override {
-        enableComputerUseUi = true;
-        linuxFeatureIds = codexDesktopLinuxFeatures;
-      })
-    else
-      null;
 in
 {
   bundleNames = [
@@ -63,26 +40,21 @@ in
           ]
         else
           [ ];
-      requirements.systems = linuxSystems;
+      requirements = {
+        systems = linuxSystems ++ [ "aarch64-darwin" ];
+        hasDesktop = true;
+      };
       bundles = [ "agents" ];
     };
     codex = {
       contributions.packages = [ llmAgents.codex ];
       bundles = [ "agents" ];
     };
-    codex-desktop = {
+    chatgpt = {
+      contributions.packages = [ llmAgents.chatgpt ];
       requirements = {
-        systems = linuxSystems;
+        systems = linuxSystems ++ [ "aarch64-darwin" ];
         hasDesktop = true;
-      };
-      contributions.programs.codexDesktopLinux = {
-        enable = true;
-        cliPackage = llmAgents.codex;
-        package = codexDesktopPackage;
-        remoteControl = {
-          enable = false; # turning this on breaks QR code pairing for remote control
-          package = llmAgents.codex;
-        };
       };
       bundles = [ "agents" ];
     };
