@@ -1,14 +1,13 @@
 service_tier = "default"
-model = "gpt-5.6-luna"
+model = "gpt-6-luna"
 model_reasoning_effort = "max"
 model_reasoning_summary = "concise"
 model_verbosity = "medium"
 plan_mode_reasoning_effort = "high"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
-hide_agent_reasoning = false
+hide_agent_reasoning = true
 show_raw_agent_reasoning = false
-commit_attribution = ""
 cli_auth_credentials_store = "file"
 project_doc_fallback_filenames = ["CLAUDE.md"]
 web_search = "live"
