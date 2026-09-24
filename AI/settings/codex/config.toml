@@ -17,9 +17,6 @@ sandbox_mode = "workspace-write"
 writable_roots = ["/run/user/1000/agent-browser"]
 network_access = true
 
-[skills]
-max_context_tokens = 3
-
 [tui]
 status_line = [
   "model-with-reasoning",
