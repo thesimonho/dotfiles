@@ -46,3 +46,15 @@ Prefer structural matchers over regex when the pattern has syntactic shape (a ca
 ## Data Wrangling
 
 For structured output (JSON/YAML/CSV/logs), pipe through a parser instead of grepping raw text. Examples: `jq`, `yq`, `gron`.
+
+## TypeSafe Jev
+
+Use Jev for fuzzy semantic judgments over evidence you already have, not for exact facts that can be retrieved with tools like `rg`, LSP, git, tests, or static analysis.
+
+When using Jev for your own decision-making:
+
+- Prefer the TypeSafe HTTP API directly via `curl` using `$TYPESAFE_API_KEY`.
+- Do not add SDK dependencies or create integration scripts unless the project itself is integrating TypeSafe.
+- Batch independent questions over the same state into one request where practical.
+- Keep state focused and avoid repeatedly sending large amounts of irrelevant code.
+- Use the official TypeSafe skill as the source of truth for current request schemas, question types, and examples.
