@@ -15,7 +15,7 @@ claude:
   agent: true
   color: purple
 codex:
-  model: gpt-5.6-sol
+  model: gpt-6-sol
   model_reasoning_effort: high
   sandbox_mode: read-only
   nickname_candidates:
