@@ -40,4 +40,5 @@ Remove the subagent when they're done.
 
 - Start with the big picture. ELI5 your explanation/solution. Assume the user doesn't know anything.
 - Write in ASD-STE100 Simplified Technical Language.
+- If code was edited, provide a bulleted list of key files that were changed and summary of what changes were made.
 - Suggest next steps.
