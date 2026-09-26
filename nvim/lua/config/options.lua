@@ -12,11 +12,7 @@ vim.g.ai_cmp = false -- show AI suggestions in cmp?
 -- through the terminal (WezTerm) via OSC52 instead of relying on win32yank.
 vim.schedule(function()
   vim.opt.clipboard:append("unnamedplus")
-  if
-    vim.uv.os_getenv("SSH_CLIENT") ~= nil
-    or vim.uv.os_getenv("SSH_TTY") ~= nil
-    or util_os.is_wsl()
-  then
+  if vim.uv.os_getenv("SSH_CLIENT") ~= nil or vim.uv.os_getenv("SSH_TTY") ~= nil or util_os.is_wsl() then
     utils.set_osc52_clipboard()
   else
     util_os.is_wezterm_mux_server(function(is_server)
@@ -47,6 +43,5 @@ vim.opt.foldcolumn = "1"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldnestmax = 5
-vim.opt.conceallevel = 0
 vim.opt.mousemoveevent = true
 vim.opt.wrap = true
