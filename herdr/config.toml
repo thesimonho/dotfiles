@@ -19,6 +19,9 @@ pane_gaps = true
 hide_tab_bar_when_single_tab = false
 show_agent_labels_on_pane_borders = true
 
+[ui.sidebar.agents]
+rows = [["state_icon", "workspace"], ["agent"]]
+
 [ui.toast]
 delivery = "terminal"
 
