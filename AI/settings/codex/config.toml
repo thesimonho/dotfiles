@@ -43,6 +43,7 @@ multi_agent = true
 remote_plugin = true
 undo = true
 prevent_idle_sleep = true
+daemon_auto_start = false
 
 [features.context_management]
 experimental_mode = true
