@@ -1,6 +1,7 @@
 local utils = require("utils.general")
 local fs = require("utils.fs")
 local constants = require("config.constants")
+local codecompanion = require("plugins.lualine_extensions.codecompanion")
 local theme = nil
 
 local function get_lsp_clients()
@@ -300,6 +301,16 @@ return {
         },
       },
     },
-    extensions = { "neo-tree", "lazy", "mason", "toggleterm", "trouble", "nvim-dap-ui", "quickfix", "oil" },
+    extensions = {
+      "neo-tree",
+      "lazy",
+      "mason",
+      "toggleterm",
+      "trouble",
+      "nvim-dap-ui",
+      "quickfix",
+      "oil",
+      codecompanion,
+    },
   },
 }

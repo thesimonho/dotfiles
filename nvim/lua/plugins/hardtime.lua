@@ -5,7 +5,7 @@ return {
   opts = {
     max_count = 2,
     disable_mouse = false,
-    disabled_filetypes = { "octo", "mcphub" },
+    disabled_filetypes = { "octo", "mcphub", "codecompanion" },
     disabled_keys = {
       ["<Up>"] = {},
       ["<Down>"] = {},

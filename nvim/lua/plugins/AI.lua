@@ -95,18 +95,6 @@ vim.keymap.set({ "n", "i", "v", "t" }, "<C-.>", function()
   end)
 end, { noremap = true, silent = true })
 
-local function show_agent_terminal()
-  local t = open_agents[next(open_agents or {})]
-  if t and not t:is_open() then
-    t:open()
-  end
-end
-
-vim.keymap.set("v", "<leader>as", function()
-  vim.cmd("'<,'>ToggleTermSendVisualSelection 5")
-  show_agent_terminal()
-end, { noremap = true, silent = true, desc = "Send selection to agent terminal" })
-
 local M = {
   {
     "supermaven-inc/supermaven-nvim",
@@ -138,11 +126,247 @@ local M = {
         clear_suggestion = "<C-e>",
         accept_word = "<M-h>",
       },
-      ignore_filetypes = { "bigfile", "neo-tree-popup", "snacks_picker_input", "snacks_input", "snacks_notif" },
+      ignore_filetypes = {
+        "bigfile",
+        "neo-tree-popup",
+        "snacks_picker_input",
+        "snacks_input",
+        "snacks_notif",
+        "codecompanion",
+      },
       color = {
         cterm = 244,
       },
       log_level = "off",
+    },
+  },
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      {
+        "MeanderingProgrammer/render-markdown.nvim",
+        opts = {
+          overrides = {
+            filetype = {
+              codecompanion = {
+                win_options = {
+                  conceallevel = {
+                    rendered = 2,
+                  },
+                  concealcursor = {
+                    rendered = "n",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    cmd = {
+      "CodeCompanionChat",
+      "CodeCompanionActions",
+    },
+    keys = {
+      {
+        "<leader>aa",
+        "<cmd>CodeCompanionChat Toggle<cr>",
+        desc = "Agent: Toggle",
+      },
+      {
+        "<leader>an",
+        "<cmd>CodeCompanionChat<cr>",
+        desc = "Agent: New chat",
+      },
+      {
+        "<leader>ar",
+        function()
+          local chat
+
+          vim.api.nvim_create_autocmd("User", {
+            pattern = "CodeCompanionACPSessionPost",
+            once = true,
+            callback = function()
+              vim.schedule(function()
+                require("codecompanion.interactions.chat.slash_commands.keymaps").resume.callback(chat)
+              end)
+            end,
+          })
+
+          chat = require("codecompanion").chat()
+        end,
+        desc = "Agent: Resume session",
+      },
+      {
+        "<leader>am",
+        function()
+          local chat = require("codecompanion.interactions.chat").last_chat()
+
+          if not chat or not chat.acp_connection then
+            return
+          end
+
+          require("codecompanion.interactions.chat.slash_commands.keymaps").acp_session_options.callback(chat)
+        end,
+        desc = "Agent: Model / reasoning",
+      },
+      {
+        "<leader>ao",
+        "<cmd>CodeCompanionActions<cr>",
+        desc = "Agent: Actions",
+      },
+    },
+    init = function()
+      local function sync_herdr_title(bufnr)
+        if not vim.env.HERDR_PANE_ID then
+          return
+        end
+
+        local chat = require("codecompanion.interactions.chat").buf_get_chat(bufnr)
+
+        if not chat or not chat.title or chat.title == "" then
+          return
+        end
+
+        local pane = vim.env.HERDR_PANE_ID
+
+        vim.system({
+          vim.env.HERDR_BIN_PATH or "herdr",
+          "pane",
+          "report-metadata",
+          pane,
+          "--source",
+          "custom:codecompanion-title",
+          "--applies-to-source",
+          "custom:codecompanion.nvim:" .. pane,
+          "--display-agent",
+          chat.title,
+        })
+      end
+
+      vim.api.nvim_create_autocmd("BufFilePost", {
+        callback = function(args)
+          if vim.bo[args.buf].filetype ~= "codecompanion" then
+            return
+          end
+
+          vim.schedule(function()
+            sync_herdr_title(args.buf)
+          end)
+        end,
+      })
+    end,
+    opts = {
+      adapters = {
+        http = {
+          opts = {
+            show_presets = false,
+          },
+        },
+        acp = {
+          opts = {
+            show_presets = false,
+          },
+          codex = function()
+            return require("codecompanion.adapters").extend("codex", {
+              defaults = {
+                auth_method = "chat-gpt",
+              },
+            })
+          end,
+        },
+      },
+      interactions = {
+        chat = {
+          adapter = "codex",
+          roles = {
+            user = "You",
+            llm = "Codex",
+          },
+          opts = {
+            context_management = {
+              enabled = false,
+            },
+          },
+        },
+        background = {
+          chat = {
+            opts = {
+              enabled = false,
+            },
+          },
+        },
+        code_review = {
+          enabled = false,
+        },
+      },
+      mcp = {
+        opts = {
+          acp_enabled = false,
+        },
+      },
+      integrations = {
+        herdr = {
+          enabled = true,
+        },
+      },
+      display = {
+        action_palette = {
+          provider = "snacks",
+          opts = {
+            show_preset_prompts = false,
+            show_preset_rules = false,
+          },
+        },
+        chat = {
+          intro_message = "",
+          separator = "",
+          show_context = true,
+          show_header_separator = false,
+          show_token_count = false,
+          show_reasoning = true,
+          fold_reasoning = true,
+          fold_context = true,
+          start_in_insert_mode = true,
+          window = {
+            layout = "vertical",
+            position = "right",
+            width = 0.4,
+            full_height = true,
+            opts = {
+              breakindent = true,
+              linebreak = true,
+              wrap = true,
+            },
+          },
+          icons = {
+            tool_pending = "○ ",
+            tool_in_progress = "◌ ",
+            tool_success = "✓ ",
+            tool_failure = "✗ ",
+          },
+        },
+        diff = {
+          enabled = true,
+          threshold_for_chat = 8,
+          word_highlights = {
+            additions = true,
+            deletions = true,
+          },
+          window = {
+            width = function()
+              return math.min(140, vim.o.columns - 10)
+            end,
+            height = function()
+              return vim.o.lines - 4
+            end,
+            opts = {
+              number = true,
+            },
+          },
+        },
+      },
     },
   },
 }
