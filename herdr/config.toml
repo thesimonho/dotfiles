@@ -1,6 +1,4 @@
 onboarding = false
-# Herdr is managed by Nix, but its runtime config stays in the dotfiles
-# checkout so the same setup is available on every configured host.
 
 [terminal]
 default_shell = "zsh"
@@ -32,7 +30,7 @@ enabled = true
 position = "bottom-center"
 
 [session]
-resume_agents_on_restore = true
+resume_agents_on_restore = false
 
 [remote]
 manage_ssh_config = true
@@ -43,37 +41,60 @@ kitty_graphics = true
 [keys]
 prefix = "super+space"
 
-focus_pane_left = ["prefix+h"]
-focus_pane_down = ["prefix+j"]
-focus_pane_up = ["prefix+k"]
-focus_pane_right = ["prefix+l"]
-previous_tab = ["prefix+["]
-next_tab = ["prefix+]"]
-new_tab = ["prefix+t"]
-split_vertical = ["prefix+v"]
-split_horizontal = ["prefix+s"]
-zoom = ["prefix+z"]
+# General
+help = "prefix+?"
+settings = "prefix+comma"
+
+# Panes -------------------------------------------------------
+# Direct movement: Super scopes Ctrl+hjkl to the terminal layer.
+focus_pane_left = "super+ctrl+h"
+focus_pane_down = "super+ctrl+j"
+focus_pane_up = "super+ctrl+k"
+focus_pane_right = "super+ctrl+l"
+
+# Lifecycle / manipulation.
+close_pane = "prefix+d"
+split_vertical = "prefix+v"
+split_horizontal = "prefix+s"
+zoom = "prefix+m"
+resize_mode = "prefix+r"
+
+# Tabs --------------------------------------------------------
+# Direct movement: tabs are 1D siblings.
+previous_tab = "super+shift+h"
+next_tab = "super+shift+l"
+
+# Lifecycle.
+new_tab = "prefix+shift+n"
+close_tab = "prefix+shift+d"
+
+# Indexed navigation.
+switch_tab = "prefix+shift+1..9"
+
+# Workspaces --------------------------------------------------
+workspace_picker = "prefix+w"
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+
+new_workspace = "prefix+ctrl+n"
+close_workspace = "prefix+ctrl+d"
+new_worktree = "prefix+ctrl+t"
+
+# Shift+number = same positional idea, one level above tabs.
+switch_workspace = "prefix+ctrl+1..9"
+
+# Agents / sidebar --------------------------------------------
+toggle_sidebar = "prefix+e"
+focus_agent = "prefix+alt+1..9"
 
 [[keys.command]]
-key = "prefix+shift+l"
+key = "prefix+alt+l"
 type = "plugin_action"
 command = "herdr-lazy.manage"
 description = "manage plugins"
 
-[[keys.command]] # lazygit: open in a split
-key = "prefix+g"
-type = "plugin_action"
-command = "herdr-lazygit.open"
-description = "lazygit"
-
-[[keys.command]] # lazygit: open in its own tab
-key = "prefix+shift+g"
-type = "plugin_action"
-command = "herdr-lazygit.open-tab"
-description = "lazygit (tab)"
-
 [[keys.command]]
-key = "prefix+e"
+key = "prefix+z"
 type = "plugin_action"
 command = "herdr-workspacer.open"
 description = "open workspace picker"
