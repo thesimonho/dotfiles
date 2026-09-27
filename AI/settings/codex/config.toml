@@ -89,3 +89,10 @@ appearanceLightCodeThemeId = "catppuccin"
 appearanceDarkCodeThemeId = "catppuccin"
 open-link-in-target-preference = "external-browser"
 open-local-url-in-target-preference = "external-browser"
+
+[desktop.custom_file_handlers.nvim]
+label = "neovim"
+icon = "/home/simon/.local/share/icons/Tela/scalable/apps/nvim.svg"
+command = "/usr/bin/ghostty"
+args = ["+new-window", "-e", "/home/simon/.nix-profile/bin/nvim"]
+input = "path"
