@@ -20,6 +20,9 @@ const ROOT_MARKDOWN_ALLOWLIST = new Set([
   "CODE_OF_CONDUCT.md",
   "SECURITY.md",
   "CHANGELOG.md",
+  "PRODUCT.md",
+  "DESIGN.md",
+  "VISION.md",
 ]);
 
 /**
@@ -37,7 +40,9 @@ function filePathsFrom(payload) {
     paths.push(filePath);
   }
 
-  for (const match of command.matchAll(/^\*\*\* (?:Add|Update) File: (.+)$/gm)) {
+  for (const match of command.matchAll(
+    /^\*\*\* (?:Add|Update) File: (.+)$/gm,
+  )) {
     paths.push(match[1]);
   }
 
