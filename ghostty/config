@@ -3,6 +3,7 @@ custom-shader = shaders/cursor_warp.glsl
 custom-shader = shaders/ripple_rectangle_cursor.glsl
 
 command = herdr
+confirm-close-surface = false
 font-family = CaskaydiaCove Nerd Font
 font-style = SemiLight
 font-size = 12
