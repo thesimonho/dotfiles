@@ -18,7 +18,7 @@ claude:
   agent: true
   color: orange
 codex:
-  model: gpt-6-sol
+  model: gpt-6.1-sol
   model_reasoning_effort: high
   nickname_candidates:
     - Frank

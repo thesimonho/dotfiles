@@ -14,7 +14,7 @@ claude:
   agent: true
   color: red
 codex:
-  model: gpt-6-sol
+  model: gpt-6.1-sol
   model_reasoning_effort: high
   sandbox_mode: read-only
 pi:

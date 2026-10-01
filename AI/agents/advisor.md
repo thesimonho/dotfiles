@@ -15,8 +15,8 @@ claude:
   agent: true
   color: purple
 codex:
-  model: gpt-6-sol
-  model_reasoning_effort: high
+  model: gpt-6-astra
+  model_reasoning_effort: low
   sandbox_mode: read-only
   nickname_candidates:
     - Oracle
