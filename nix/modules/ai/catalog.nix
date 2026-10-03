@@ -79,7 +79,7 @@ in
       bundles = [ "skills" ];
     };
     herdr = {
-      contributions.packages = [ pkgsUnstable.herdr ];
+      contributions.packages = [ llmAgents.herdr ];
       contributions.xdgConfigFiles."herdr" = symlinkConfig "herdr";
       bundles = [
         "cli"
