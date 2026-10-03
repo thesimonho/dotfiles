@@ -23,6 +23,8 @@ GPG sign your commits if possible. You might need to leave sandbox to do so.
 
 Use the `verify` skill just before submitting a PR or merging into another branch.
 
+Before creating a PR, assess whether the branch warrants `/simplify`, subject to repository instructions. Record a completed review or a reasoned skip with `rtk node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js reviewed` or `skip --reason "..."` after the final changes. Small, bounded, mechanical, and docs-only changes can skip review. See `~/dotfiles/AI/hooks/README.md` for checkpoint details.
+
 ## GitHub
 
 When working with GitHub, use `gh` cli directly, and prefer SSH, instead of agent connectors or raw git commands.

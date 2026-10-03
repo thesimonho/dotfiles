@@ -32,7 +32,7 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `check-plan-filename`       | PreToolUse  | block  | plan files start with a `YYYYMMDD` stamp                               |
 | `memory-redirect`           | PreToolUse  | nudge  | prefer a hook over a memory for enforceable rules                      |
 | `commit-format-nudge`       | PreToolUse  | nudge  | format changed files before committing (avoid churn)                   |
-| `simplify-nudge`            | PreToolUse  | nudge  | /simplify reminder before opening a PR (agent judges)                  |
+| `simplify-nudge`            | PreToolUse  | block  | current review decision before opening a PR; reasoned skips allowed    |
 | `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md, hourly)                    |
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over text search for symbols (tools.md, hourly)             |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (hourly)                   |
@@ -45,6 +45,26 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge                                  |
 
 Native wiring includes only hooks for which a CLI exposes the corresponding event and matcher. Codex runs the shared edit and Bash policies through its `apply_patch` aliases and `Bash` matcher. Both hosts now wire the same policy set: `lsp-nudge` reads the shell command rather than a Grep tool call, which is the only search path Codex has and the one Claude uses in practice.
+
+## Pre-PR review decision
+
+Before creating a pull request, assess whether the branch needs `/simplify`. Run it for substantial code changes; skip it for small, bounded, mechanical, or docs-only changes when a review would add little value. Repository instructions can also require a skip. The hook enforces a current decision, not mandatory review.
+
+After a review and any resulting fixes are committed, record the decision from the source checkout:
+
+```bash
+rtk node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js reviewed
+```
+
+For a skip, give a brief reason:
+
+```bash
+rtk node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js skip --reason "Small bounded fix with focused verification"
+```
+
+The helper stores the repository, branch, commit, working-state fingerprint, outcome, and reason in the existing local hook state directory. Tracked and untracked changes invalidate the decision; ignored files do not. Decisions are local and shared across sessions for that checkout and branch, with the existing stale-state pruning. They attest the agent's judgment; they do not prove that a review was executed.
+
+The existing `PreToolUse` wiring invokes `simplify-nudge`, which blocks PR creation when the decision is absent or stale. This is an internal workflow checkpoint, not a request for user approval. Record the decision after other work finishes, then retry PR creation separately. A push may precede creation in the same command; commands that can change the reviewed state must finish first. Use the checked-out source branch and repository. The matcher recognizes direct `gh`, `glab`, and `tea` creation commands, including common global options and `rtk` wrappers, without matching quoted argument examples. It is not a complete shell parser; aliases and indirect scripts remain outside its coverage.
 
 ## The `agent:` frontmatter convention
 
