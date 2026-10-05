@@ -70,11 +70,6 @@ enabled = true
 [plugins."github@openai-curated"]
 enabled = true
 
-[mcp_servers.jev]
-command = "npx"
-args = ["-y", "@jkudish/jev-mcp"]
-env_vars = ["TYPESAFE_API_KEY"]
-
 [desktop]
 hotkey-window-projectless-default-enabled = true
 worktree-keep-count = 20

@@ -31,12 +31,6 @@
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "2449db6ab1ded9581f69fcc56c1f64818112d05e271fd4c5da23c6523f9d3d9d"
     },
-    "jev": {
-      "source": "jkudish/jev-mcp",
-      "sourceType": "github",
-      "skillPath": "skills/jev/SKILL.md",
-      "computedHash": "35b07d039dd4c887094980cd66d5cb8c7123fd765a60d4fe71993adcd0a98a67"
-    },
     "tdd": {
       "source": "mattpocock/skills",
       "sourceType": "github",
