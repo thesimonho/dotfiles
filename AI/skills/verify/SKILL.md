@@ -29,7 +29,7 @@ Verification claims must name the environment actually tested. Testing a canonic
 
 ## Tasks
 
-Determine which of the following verification checks are relevant for the code changes you just made. Construct a batched compound command to run the simpler checks in a single call. Pass the task to a subagent to run - the subagent should use the smallest/lightest model possible (e.g. haiku, Codex-Spark).
+Read applicable repository instructions and acceptance criteria before selecting checks. They take precedence over this checklist, including restrictions on tests. Determine which checks below are relevant. Batch independent, non-mutating checks in a single call; run formatters separately and inspect their changes before final review. Pass routine checks to a subagent using the smallest/lightest available model.
 
 You have permission to spawn subagents for this.
 
@@ -53,9 +53,8 @@ You have permission to spawn subagents for this.
 
 ### 5. Test Suite
 
-- Check that tests are still passing
-- Report pass/fail count
-- Report coverage percentage
+- Run the relevant tests only when repository instructions permit them
+- Report pass/fail count and coverage when measured; do not invent missing coverage
 
 ### 6. Usage Test
 
@@ -66,3 +65,21 @@ Do not downgrade the subagent model for this check.
 - Report blockers, UX issues, unexpected side effects, and bugs
 
 Read the `gui.md` reference file first for supporting information about tools.
+
+### 7. Standards Review
+
+After the final edits and relevant checks, call the `standards-reviewer` agent for every verification run. This review is independent of build, lint, test, and usage results.
+
+Supply:
+
+- The repository/worktree root and exact diff or revision, including task-owned untracked files.
+- The user's constraints and the authoritative delivery record or acceptance criteria.
+- Relevant project guidance paths, including design/style rules and directory READMEs. The reviewer must also inspect applicable instructions itself.
+- Check results and runtime or visual evidence, with the code state and environment actually checked.
+- The delivery stage being assessed, so future hosted or deployment checks are not treated as already due.
+
+Use the agent's configured lightweight model. If the named role is unavailable in the current session, use a subagent with the full instructions from `AI/agents/standards-reviewer.md` in the dotfiles repository. Keep reviewed files unchanged and permit only task-owned evidence writes under `/tmp`; preserve the announced packet path for continuation after compaction. If the definition, required temporary-file access, or delegation is unavailable, report that the required review was not performed; do not substitute an unreported self-review.
+
+The review must cover applicable written rules, consistency with equivalent operations, and existing alternatives to new local implementations. Supply any known peers or reusable candidates, but the reviewer must inspect the evidence itself.
+
+Resolve confirmed violations and demonstrated consistency or reuse issues before reporting verification as complete. If a finding requires a decision that changes approved scope, return that decision to the user. Obtain required missing evidence, or state the specific blocker without claiming readiness. After corrections, rerun only affected checks and ask the reviewer to reassess the affected findings on the final diff. A standards PASS does not replace runtime checks or authorize external delivery actions.
