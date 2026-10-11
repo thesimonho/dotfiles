@@ -70,6 +70,8 @@ Read the `gui.md` reference file first for supporting information about tools.
 
 After the final edits and relevant checks, call the `standards-reviewer` agent for every verification run. This review is independent of build, lint, test, and usage results.
 
+Create a fresh reviewer for each distinct change or delivery stage. Give it a focused handoff without inheriting the main chat's full history; use `fork_turns: none` where supported. Reuse it only for corrections and missing evidence within that same bounded review. Do not carry it into another feature, integration review, release investigation, or later verification run merely because the main chat continues.
+
 Supply:
 
 - The repository/worktree root and exact diff or revision, including task-owned untracked files.
@@ -83,3 +85,5 @@ Use the agent's configured lightweight model. If the named role is unavailable i
 The review must cover applicable written rules, consistency with equivalent operations, and existing alternatives to new local implementations. Supply any known peers or reusable candidates, but the reviewer must inspect the evidence itself.
 
 Resolve confirmed violations and demonstrated consistency or reuse issues before reporting verification as complete. If a finding requires a decision that changes approved scope, return that decision to the user. Obtain required missing evidence, or state the specific blocker without claiming readiness. After corrections, rerun only affected checks and ask the reviewer to reassess the affected findings on the final diff. A standards PASS does not replace runtime checks or authorize external delivery actions.
+
+Once the final assessment is accepted, or the review is handed back with unresolved blockers, retain its essential findings and evidence references in the caller's delivery record or handoff. Confirm temporary evidence cleanup, then close or release the reviewer with the host's agent lifecycle tool when available. If the host cannot remove agents, mark this reviewer finished and do not message or resume it for later work; spawn a fresh reviewer instead. Do not treat interruption as erasing an agent's context. The caller owns retirement; the reviewer cannot close itself.
