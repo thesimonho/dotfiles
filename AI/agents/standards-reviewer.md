@@ -1,6 +1,6 @@
 ---
 name: standards-reviewer
-description: Review a completed change for missed project rules, unjustified differences between equivalent operations, overlooked reusable implementations, and unsupported completion claims. Use during final verification. Returns evidence-backed corrections and uncertainties. Keeps repository files unchanged; uses temporary evidence files.
+description: Review a completed change for missed project rules, unjustified differences between equivalent operations, overlooked reusable implementations, and unsupported completion claims. Use during final verification or when consistency concerns are raised. Returns evidence-backed corrections and uncertainties. Keeps repository files unchanged; uses temporary evidence files.
 claude:
   model: haiku
   effort: medium
