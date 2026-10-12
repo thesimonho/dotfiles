@@ -1,9 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "CLAUDE_CODE_NO_FLICKER": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "500000",
     "CLAUDE_CODE_DISABLE_FAST_MODE": "1",
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
     "CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION": "false",
@@ -37,7 +35,7 @@
     "deny": [],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "enableAllProjectMcpServers": true,
   "hooks": {
     "PreToolUse": [
@@ -226,7 +224,18 @@
         ]
       }
     ],
-    "SessionStart": [{"matcher":"^(startup|resume|clear|compact|fork)$","hooks":[{"type":"command","command":"bash '/home/simon/.claude/hooks/herdr-agent-state.sh' session","timeout":10}]}],
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume|clear|compact|fork)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/home/simon/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "SubagentStart": [
       {
         "matcher": "",
@@ -246,6 +255,7 @@
       }
     ]
   },
+  "enableWorkflows": true,
   "statusLine": {
     "type": "command",
     "command": "bash ~/dotfiles/AI/settings/claude/statusline.sh"
@@ -292,20 +302,38 @@
       "git:*"
     ]
   },
+  "feedbackDrafts": "notify",
   "effortLevel": "low",
   "advisorModel": "opus",
+  "promptSuggestionEnabled": false,
+  "askUserQuestionTimeout": "60s",
+  "pluginConfigs": {
+    "cc-plugin-agents-md@builtin": {
+      "options": {
+        "instructionFiles": "claude-md-or-agents-md"
+      }
+    }
+  },
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
+  "timeFormat": "auto",
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
   "preferredNotifChannel": "auto",
+  "switchModelsOnFlag": false,
+  "autoContinueAtUsageLimit": false,
   "teammateMode": "auto",
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
-  "disableBypassPermissionsMode": false
+  "disableBypassPermissionsMode": false,
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "low"
+    }
+  }
 }
