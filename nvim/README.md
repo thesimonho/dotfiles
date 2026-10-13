@@ -51,3 +51,40 @@ Gitsigns attachment is asynchronous. Wait for its first diff summary, then reatt
 Restart LazyGit after changing its config. Restart Neovim to load changed
 keymaps; the remote open command itself can load the helper in an existing
 editor session.
+
+## Plugin ownership and local overrides
+
+LazyVim owns Snacks setup and the notification handoff to Noice. Add Snacks
+options and filetype key specs instead of replacing its `config` function.
+Plugin rules and listeners belong in the owning plugin's load callback, after
+`setup(opts)`. Use which-key specs and nvim-lint options instead of requiring
+those plugins during spec import or `init`.
+
+The options picker captures its source window and buffer. Local changes apply
+to that source; the global toggle edits global values and defaults for future
+windows/buffers. Global-only options always use global scope. Numeric prompts
+accept whole numbers. Window line-number toggles survive buffer changes;
+utility buffers receive their defaults on FileType.
+
+Ruff LSP owns Python diagnostics. `lua/plugins/languages/python.lua` supplies
+one set of personal rule overrides to Ruff LSP and Conform's Ruff fix/format
+commands. Project configuration still supplies other settings. nvim-lint does
+not run a second Ruff diagnostic pass. Markdown's linter and formatter share
+`lua/plugins/languages/.markdownlint.yaml`.
+
+nvim-dap-go owns the Go adapter and built-in debug choices; Mason installs
+Delve but does not add duplicate Go configurations. Resolve launch paths and
+the adapter working directory at launch time so project switches and symlinked
+checkouts work. Package-info loads for package.json buffers in any directory.
+
+Neo-tree hides ignored files but always shows `.env*`; `.git` can be shown
+with the hidden toggle. `node_modules`, `.DS_Store`, and `thumbs.db` stay hidden.
+Host-side terminal selection recognises both `.devcontainer.json` and
+`.devcontainer/devcontainer.json`. Docker detection uses `/.dockerenv`.
+
+The status column caches marks once per statuscol redraw tick and Git signs
+once per line in that tick. Keep this cache on statuscol's window-owned args;
+it must refresh on redraw and must not retain deleted buffers globally.
+The unused process/Compose service helpers and their shell scripts were
+removed. They are not a supported editor integration; Git review remains
+independent of them.

@@ -1,21 +1,23 @@
 local git = require("utils.git")
 
-local function get_marks_on_current_line(lineNr, bufNr)
-  local marks = {}
+-- statuscol refreshes args.tick once per redraw. Keep buffer data on its
+-- window-owned args table so wrapped rows reuse it and closed windows release it.
+local function redraw_cache(args)
+  local cache = args.dotfiles_cache
+  if cache and cache.tick == args.tick and cache.buf == args.buf then
+    return cache
+  end
+  cache = { tick = args.tick, buf = args.buf, marks = {}, git = {} }
   local ignored = { '"', "^", "[", "]", "<", ">" }
-  for _, mark in ipairs(vim.fn.getmarklist(bufNr)) do
-    local pos = mark.pos
-    local name = mark.mark
-    if
-      pos[1] == bufNr
-      and pos[2] == lineNr
-      and not name:match("%d")
-      and not vim.tbl_contains(ignored, name:sub(2, 2))
-    then
-      table.insert(marks, string.sub(name, -1))
+  for _, mark in ipairs(vim.fn.getmarklist(args.buf)) do
+    local pos, name = mark.pos, mark.mark
+    if pos[1] == args.buf and not name:match("%d") and not vim.tbl_contains(ignored, name:sub(2, 2)) then
+      cache.marks[pos[2]] = cache.marks[pos[2]] or {}
+      table.insert(cache.marks[pos[2]], name:sub(-1))
     end
   end
-  return marks
+  args.dotfiles_cache = cache
+  return cache
 end
 
 return {
@@ -41,11 +43,11 @@ return {
           {
             text = {
               function(args)
-                if not args.nu or not args.rnu then
+                if not args.nu and not args.rnu then
                   return ""
                 end
 
-                local marks = get_marks_on_current_line(args.lnum, vim.api.nvim_get_current_buf())
+                local marks = redraw_cache(args).marks[args.lnum] or {}
 
                 -- highlights
                 local hl
@@ -95,11 +97,15 @@ return {
           {
             text = {
               function(args)
-                if not args.nu or not args.rnu then
+                if not args.nu and not args.rnu then
                   return ""
                 end
 
-                local hl = git.get_git_sign_hl(vim.api.nvim_get_current_buf(), args.lnum)
+                local cache = redraw_cache(args)
+                if cache.git[args.lnum] == nil then
+                  cache.git[args.lnum] = git.get_git_sign_hl(args.buf, args.lnum) or false
+                end
+                local hl = cache.git[args.lnum]
 
                 if hl then
                   return "%#" .. hl .. "#%=" .. " ┃"
