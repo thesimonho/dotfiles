@@ -1,4 +1,9 @@
 return {
+  {
+    "mfussenegger/nvim-dap",
+    -- Install the view's session/initialize listeners before a debug session.
+    dependencies = { "igorlfs/nvim-dap-view" },
+  },
   { "rcarriga/nvim-dap-ui", enabled = false },
   {
     "folke/snacks.nvim",
@@ -17,6 +22,7 @@ return {
   },
   {
     "igorlfs/nvim-dap-view",
+    lazy = true,
     keys = {
       { "<leader>dv", "<cmd>lua require('dap-view').toggle()<cr>", desc = "Toggle DAP View" },
       { "<leader>dW", "<cmd>lua require('dap-view').add_expr()<cr>", desc = "Add Watch" },
@@ -49,21 +55,9 @@ return {
         desc = "Step Out",
       },
     },
-    init = function()
-      local dap, dv = require("dap"), require("dap-view")
-      dap.listeners.before.attach["dap-view-config"] = function()
-        dv.open()
-      end
-      dap.listeners.before.launch["dap-view-config"] = function()
-        dv.open()
-      end
-      dap.listeners.before.event_terminated["dap-view-config"] = function()
-        dv.close()
-      end
-      dap.listeners.before.event_exited["dap-view-config"] = function()
-        dv.close()
-      end
-
+    config = function(_, opts)
+      local dv = require("dap-view")
+      dv.setup(opts)
       vim.api.nvim_create_autocmd({ "FileType" }, {
         pattern = { "dap-view", "dap-view-term", "dap-repl" },
         callback = function(evt)
@@ -72,6 +66,7 @@ return {
       })
     end,
     opts = {
+      auto_toggle = true,
       winbar = {
         default_section = "scopes",
         controls = {
@@ -107,6 +102,7 @@ return {
   },
   {
     "theHamsta/nvim-dap-virtual-text",
+    lazy = true,
     opts = {
       all_references = false,
       highlight_changed_variables = true,

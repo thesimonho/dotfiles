@@ -2,47 +2,6 @@ local os = require("utils.os")
 
 local M = {}
 
---- Resolve a path to its normalized absolute form.
---- @param path string|nil
---- @return string|nil
-M.absolute_path = function(path)
-  if not path then
-    return nil
-  end
-  return vim.fs.normalize(vim.fn.fnamemodify(vim.fn.expand(path), ":p"))
-end
-
---- Resolve a file shipped alongside the Neovim configuration.
---- @param ... string
---- @return string
-M.config_path = function(...)
-  return vim.fs.joinpath(vim.fn.stdpath("config"), ...)
-end
-
--- Recursive function to find a directory containing the target
-M.find_parent_with_directory = function(start_path, target_dir)
-  local target_path = vim.fn.fnamemodify(start_path, ":p") .. target_dir
-  if vim.uv.fs_stat(target_path) then
-    return start_path
-  end
-
-  local parent = vim.fn.fnamemodify(start_path, ":h")
-  if parent == start_path then
-    return nil -- Reached the root directory
-  end
-
-  return M.find_parent_with_directory(parent, target_dir)
-end
-
-M.get_file_extension = function(fn)
-  local match = fn:match("^.+(%..+)$")
-  local ext = ""
-  if match ~= nil then
-    ext = match:sub(2)
-  end
-  return ext
-end
-
 M.get_path_sep = function()
   if os.is_windows() then
     return "\\"
@@ -77,80 +36,11 @@ M.get_path_components = function(path)
   return components
 end
 
-M.create_tempfile = function(filename)
-  if os.is_windows() then
-    return os.getenv("TEMP") .. "/" .. filename
-  else
-    return "/tmp/" .. filename
-  end
-end
-
 --- check if path has a devcontainer
 M.has_container = function(path)
   path = vim.fn.expand(path or vim.fn.getcwd())
-  local devcontainer_path = path .. "/.devcontainer.json"
-  if vim.fn.filereadable(devcontainer_path) == 1 then
-    return true
-  end
-
-  return false
-end
-
---- Check if a file exists in a directory or subdirectories
---- @param filename string filename to search for
---- @param directory string | nil (default "~/Projects") directory to search in
---- @param depth number | nil (default 1) max levels to search down. 0 means only search in the provided directory and not subdirectories
-M.has_in_project = function(filename, directory, depth)
-  local ignore = {
-    ["node_modules"] = true,
-    ["__pycache__"] = true,
-    ["logs"] = true,
-    ["cache"] = true,
-    ["config"] = true,
-    ["assets"] = true,
-    ["images"] = true,
-    ["docs"] = true,
-    ["examples"] = true,
-    ["lost+found"] = true,
-  }
-
-  directory = vim.fn.expand(directory or "~/Projects")
-  depth = depth or 1 -- Default to searching one level deep
-
-  if vim.fn.isdirectory(directory) == 0 then
-    return false
-  end
-
-  local function is_ignored(name)
-    return name:sub(1, 1) == "." or ignore[name]
-  end
-
-  local function search_dir(dir, remaining_depth)
-    if remaining_depth < 0 then
-      return false
-    end
-
-    local entries = vim.fn.readdir(dir)
-    for _, name in ipairs(entries) do
-      if not is_ignored(name) then
-        local path = dir .. "/" .. name
-        if vim.fn.isdirectory(path) == 1 then
-          -- Check for target file
-          if vim.fn.filereadable(path .. "/" .. filename) == 1 then
-            return true
-          end
-          -- Recurse into subdirectory
-          if remaining_depth > 0 and search_dir(path, remaining_depth - 1) then
-            return true
-          end
-        end
-      end
-    end
-
-    return false
-  end
-
-  return search_dir(directory, depth)
+  return vim.fn.filereadable(path .. "/.devcontainer.json") == 1
+    or vim.fn.filereadable(path .. "/.devcontainer/devcontainer.json") == 1
 end
 
 return M

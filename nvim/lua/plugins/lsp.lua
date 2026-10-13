@@ -29,14 +29,13 @@ return {
       codelens = {
         enabled = false,
       },
-      document_highlight = {
-        enabled = true,
-      },
-      ["*"] = {
-        capabilities = {
-          textDocument = {
-            foldingRange = {
-              lineFoldingOnly = true,
+      servers = {
+        ["*"] = {
+          capabilities = {
+            textDocument = {
+              foldingRange = {
+                lineFoldingOnly = true,
+              },
             },
           },
         },

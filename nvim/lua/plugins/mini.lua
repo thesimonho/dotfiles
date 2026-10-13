@@ -1,12 +1,9 @@
 return {
+  { "folke/which-key.nvim", opts = { spec = { { "<leader>cj", desc = "Split/join", icon = "󱐪" } } } },
   { "nvim-mini/mini.pairs", enabled = false },
   {
     "nvim-mini/mini.splitjoin",
     event = "LazyFile",
-    init = function()
-      local wk = require("which-key")
-      wk.add({ "<leader>cj", desc = "Split/join", icon = "󱐪" })
-    end,
     keys = {
       { "<leader>cj", "<cmd>lua require('mini.splitjoin').toggle()<cr>", desc = "Split/join" },
     },

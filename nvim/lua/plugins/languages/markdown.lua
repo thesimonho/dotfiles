@@ -3,7 +3,15 @@
 -- point both the formatter and the linter at it explicitly.
 local markdownlintConfigPath = vim.fn.stdpath("config") .. "/lua/plugins/languages/.markdownlint.yaml"
 
-M = {
+local M = {
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters = {
+        ["markdownlint-cli2"] = { args = { "--config", markdownlintConfigPath, "-" } },
+      },
+    },
+  },
   {
     "mason-org/mason.nvim",
     opts = {
@@ -20,15 +28,6 @@ M = {
         ["markdownlint-cli2"] = {
           prepend_args = { "--config", markdownlintConfigPath },
         },
-      },
-    },
-  },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "markdown",
-        "markdown_inline",
       },
     },
   },
@@ -84,16 +83,19 @@ M = {
   },
   {
     "jakewvincent/mkdnflow.nvim",
-    depedencies = {
+    dependencies = {
       {
         "saghen/blink.cmp",
         opts = {
           sources = {
-            default = { "lsp", "mkdnflow" },
+            default = { "mkdnflow" },
             providers = {
               mkdnflow = {
                 name = "Mkdnflow",
                 module = "mkdnflow.completion.blink",
+                enabled = function()
+                  return vim.tbl_contains({ "markdown", "rmd" }, vim.bo.filetype)
+                end,
               },
             },
           },
@@ -224,15 +226,6 @@ M = {
       },
     },
   },
-}
-
--- The extra lints with markdownlint-cli2; point it
--- at the same shared config so the linter and formatter agree on rules.
-local markdownlintCli2 = require("lint").linters["markdownlint-cli2"]
-markdownlintCli2.args = {
-  "--config",
-  markdownlintConfigPath,
-  "-",
 }
 
 return M

@@ -1,6 +1,4 @@
 local os_utils = require("utils.os")
-local fs = require("utils.fs")
-local wk = require("which-key")
 
 local function launch_chrome_debug(port)
   port = port or "9222"
@@ -49,6 +47,7 @@ local function launch_chrome_debug(port)
 end
 
 return {
+  { "folke/which-key.nvim", opts = { spec = { { "<localleader>n", group = "  npm" } } } },
   {
     "mason-org/mason.nvim",
     opts = {
@@ -73,12 +72,8 @@ return {
   },
   {
     "vuki656/package-info.nvim",
-    enabled = fs.has_in_project("package.json"),
     dependencies = { "MunifTanjim/nui.nvim" },
-    ft = { "json" },
-    init = function()
-      wk.add({ "<localleader>n", group = "  npm" })
-    end,
+    event = { "BufReadPost package.json", "BufNewFile package.json" },
     keys = {
       {
         "<localleader>nh",

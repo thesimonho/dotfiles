@@ -1,5 +1,4 @@
 local utils = require("utils.general")
-local fs = require("utils.fs")
 local constants = require("config.constants")
 local codecompanion = require("plugins.lualine_extensions.codecompanion")
 local theme = nil
@@ -27,10 +26,10 @@ local function short_path(component_limit)
   local num_components = math.max(0, component_limit - utils.get_split_count() + 1)
   local custom_sep = " ›"
 
-  local path = vim.fn.expand("%:h"):gsub(fs.get_path_sep(), custom_sep)
+  local path = vim.fs.normalize(vim.fn.expand("%:h"))
   local all_components = {}
-  for part in path:gmatch("[^" .. custom_sep .. "]+") do
-    table.insert(all_components, 1, part:match("^%s*(.-)%s*$"))
+  for part in path:gmatch("[^/]+") do
+    table.insert(all_components, 1, part)
   end
 
   local components = {}
@@ -91,7 +90,8 @@ return {
         },
         {
           function()
-            return Snacks.git.get_root():match("([^/\\]+)$")
+            local root = Snacks.git.get_root()
+            return root and root:match("([^/\\]+)$") or ""
           end,
           separator = "",
           padding = { left = 1, right = 0 },
@@ -136,9 +136,6 @@ return {
           end,
           on_click = function()
             Snacks.lazygit()
-            vim.defer_fn(function()
-              vim.cmd("startinsert")
-            end, 100)
           end,
         },
       },

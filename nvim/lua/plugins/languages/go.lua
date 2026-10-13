@@ -5,10 +5,17 @@ end
 
 return {
   {
+    "jay-babu/mason-nvim-dap.nvim",
+    optional = true,
+    opts = {
+      -- dap-go owns the adapter and built-in launch/attach configurations.
+      handlers = { delve = function() end },
+    },
+  },
+  {
     "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
-        "golangci-lint",
         "golines",
       },
     },
@@ -21,88 +28,58 @@ return {
       },
     },
   },
-  { -- linters
-    "mfussenegger/nvim-lint",
-    opts = {
-      linters_by_ft = {
-        go = { "golangcilint" }, -- BUG: linter doesnt run, and takes LSP out when it tries
-      },
-    },
-  },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "go",
-      },
-    },
-  },
   {
     "folke/snacks.nvim",
-    ft = { "go", "gomod" },
-    config = function(_, opts)
-      require("snacks").setup(opts)
-
-      local function open_pkg_go_dev_under_cursor()
-        local line = vim.api.nvim_get_current_line()
-        local col = vim.api.nvim_win_get_cursor(0)[2] + 1
-
-        for s, e in line:gmatch('()"[^"]+"()') do
-          if col >= s and col <= e then
-            local path = line:sub(s + 1, e - 2)
-            vim.ui.open(("https://pkg.go.dev/%s"):format(path))
-            return
+    keys = {
+      {
+        "gh",
+        function()
+          local line = vim.api.nvim_get_current_line()
+          local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+          for first, last in line:gmatch('()"[^"]+"()') do
+            if col >= first and col < last then
+              vim.ui.open("https://pkg.go.dev/" .. line:sub(first + 1, last - 2))
+              return
+            end
           end
-        end
-
-        vim.notify("Put cursor inside an import path string", vim.log.levels.INFO)
-      end
-
-      local Snacks = require("snacks")
-      Snacks.keymap.set("n", "gh", open_pkg_go_dev_under_cursor, {
-        desc = "Open Go docs for import",
+          vim.notify("Put cursor inside an import path string", vim.log.levels.INFO)
+        end,
         ft = { "go", "gomod" },
-      })
-    end,
+        desc = "Open Go docs for import",
+      },
+    },
   },
   {
     "leoluz/nvim-dap-go",
     optional = true,
-    opts = function(_, opts)
-      local resolve_cwd = vim.fn.resolve(vim.fn.getcwd())
-
-      opts.delve = vim.tbl_deep_extend("force", opts.delve or {}, {
-        path = vim.fn.stdpath("data") .. "/mason/bin/dlv",
-        port = "${port}",
-        args = {},
-        build_flags = {},
-        cwd = resolve_cwd,
-      })
-
-      -- DAP configurations (custom test config + patching)
-      opts.dap_configurations = opts.dap_configurations or {}
-      table.insert(opts.dap_configurations, {})
-
-      -- Filter out any config that doesn't start with "Delve"
-      vim.schedule(function()
-        local dap = require("dap")
-        local configs = dap.configurations.go or {}
-        -- this removes the generic vscode configs
-        dap.configurations.go = vim.tbl_filter(function(cfg)
-          return cfg.name and cfg.name:match("^Delve")
-        end, configs)
-      end)
-
-      -- patch configs with the correct paths to account for symlinked directories
-      for _, cfg in ipairs(opts.dap_configurations) do
-        if cfg.type == "go" then
-          cfg.cwd = vim.fn.resolve(cfg.cwd or vim.fn.getcwd())
-
-          if cfg.program == "${file}" or not cfg.program then
-            -- Resolve to absolute real path
-            cfg.program = vim.fn.resolve(vim.fn.expand("%:p"))
+    lazy = true,
+    config = function(_, opts)
+      require("dap-go").setup(opts)
+      local dap = require("dap")
+      -- Resolve project and file paths when launching, after project switches.
+      for _, config in ipairs(dap.configurations.go or {}) do
+        if config.request == "launch" then
+          config.cwd = function()
+            return vim.fn.resolve(vim.fn.getcwd())
+          end
+          if config.program == "${file}" then
+            config.program = function()
+              return vim.fn.resolve(vim.fn.expand("%:p"))
+            end
+          elseif config.program == "${fileDirname}" then
+            config.program = function()
+              return vim.fn.resolve(vim.fn.expand("%:p:h"))
+            end
           end
         end
+      end
+      local adapter = dap.adapters.go
+      dap.adapters.go = function(callback, config)
+        adapter(function(resolved)
+          resolved = vim.deepcopy(resolved)
+          resolved.executable.cwd = vim.fn.resolve(config.cwd or vim.fn.getcwd())
+          callback(resolved)
+        end, config)
       end
     end,
   },

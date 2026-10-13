@@ -10,7 +10,7 @@ return {
       vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
         pattern = { "*.csv", "*.tsv" },
         callback = function()
-          vim.cmd("CsvViewToggle")
+          vim.cmd("CsvViewEnable")
         end,
       })
     end,

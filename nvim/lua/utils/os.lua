@@ -1,21 +1,5 @@
 local M = {}
 
---- Read the operating-system start time used to distinguish PID reuse.
---- @param process_id number
---- @return string|nil
-M.get_process_start_time = function(process_id)
-  local result = vim.system({ "ps", "-o", "lstart=", "-p", tostring(process_id) }, { text = true }):wait()
-  if result.code ~= 0 then
-    return nil
-  end
-  return require("utils.general").trim_string(result.stdout)
-end
-
---- Check if the current OS is macOS
-M.is_darwin = function()
-  return vim.uv.os_uname().sysname == "Darwin"
-end
-
 --- Check if the current OS is Windows
 M.is_windows = function()
   return vim.uv.os_uname().sysname == "Windows_NT"
@@ -29,10 +13,7 @@ end
 
 --- Check if inside docker container
 M.is_container = function()
-  if vim.fn.filereadable("/.dockerenv") then
-    return true
-  end
-  return false
+  return vim.fn.filereadable("/.dockerenv") == 1
 end
 
 --- Run callback if this is a remote ssh multiplexer server

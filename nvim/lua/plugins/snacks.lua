@@ -1,41 +1,35 @@
 local ui = require("utils.ui")
 local utils = require("utils.general")
 
-local function show_scope_error(opt_global, info)
-  local current_scope = opt_global and "global" or "local"
-  vim.notify(
-    "Cannot set " .. info.scope .. " option (" .. info.name .. ") in " .. current_scope .. " scope",
-    vim.log.levels.ERROR,
-    { title = "Option Scope Error" }
-  )
-end
-
-local function is_settable(opt_global, info)
-  if opt_global then
-    if (info.scope == "win" or info.scope == "buf") and info.global_local ~= true then
-      show_scope_error(opt_global, info)
-      return false
-    end
-  else
-    if info.scope == "global" then
-      show_scope_error(opt_global, info)
-      return false
-    end
+-- Resolve local options against the source window, never the picker/input.
+local function option_context(picker, info)
+  -- Capture before the picker takes focus. Snacks can choose a new main
+  -- window when the original closes; option edits must not follow that change.
+  picker.option_source = picker.option_source
+    or {
+      win = picker.main,
+      buf = vim.api.nvim_win_get_buf(picker.main),
+    }
+  if picker.opts.global or info.scope == "global" then
+    return { scope = "global" }
   end
-  return true
+  local source = picker.option_source
+  if not vim.api.nvim_win_is_valid(source.win) or not vim.api.nvim_buf_is_valid(source.buf) then
+    error("The source window has closed")
+  end
+  if info.scope == "win" then
+    return { scope = "local", win = source.win }
+  end
+  return { scope = "local", buf = source.buf }
 end
 
 local function nvim_set_option(picker, opt, val, item)
-  local set_opts = {}
-  if item.info.scope == "win" then
-    set_opts.win = picker:current_win().id
-  elseif item.info.scope == "buf" then
-    set_opts.buf = vim.api.nvim_get_current_buf()
-  end
-
-  local ok, err = pcall(vim.api.nvim_set_option_value, opt, val, set_opts)
-  if not ok and err then
+  local ok, err = pcall(function()
+    vim.api.nvim_set_option_value(opt, val, option_context(picker, item.info))
+  end)
+  if not ok then
     vim.notify(err, vim.log.levels.ERROR)
+    return
   end
 
   picker:find({
@@ -51,11 +45,13 @@ local function show_option_value_input(picker, item, old)
       return
     end
 
-    local updated
-    if item.info.type == "number" then
-      updated = tonumber(input)
-    else
-      updated = input
+    local updated = item.info.type == "number" and tonumber(input) or input
+    if item.info.type == "number" and (type(updated) ~= "number" or updated % 1 ~= 0) then
+      vim.notify("Enter a whole number", vim.log.levels.ERROR)
+      return
+    end
+    if updated == old then
+      return
     end
 
     nvim_set_option(picker, item.text, updated, item)
@@ -117,13 +113,6 @@ return {
         desc = "Projects",
       },
     },
-    config = function(_, opts)
-      require("snacks").setup(opts)
-
-      _G.dd = Snacks.debug.inspect
-      _G.bt = Snacks.debug.backtrace
-      vim.print = Snacks.debug.inspect
-    end,
     opts = {
       bigfile = { enabled = true },
       quickfile = { enabled = true },
@@ -220,22 +209,24 @@ return {
         sources = {
           options = {
             title = "Options",
+            main = { current = true },
             preview = "preview",
             global = false,
             toggles = {
               global = "g",
             },
-            finder = function()
+            finder = function(_, ctx)
               local items = {}
               for i, o in ipairs(vim.tbl_values(vim.api.nvim_get_all_options_info())) do
-                local ok, v = pcall(vim.api.nvim_get_option_value, o.name, {})
-                local info = vim.api.nvim_get_option_info2(o.name, {})
-                if ok and info then
+                local ok, v = pcall(function()
+                  return vim.api.nvim_get_option_value(o.name, option_context(ctx.picker, o))
+                end)
+                if ok then
                   items[#items + 1] = {
                     idx = i,
                     text = o.name,
                     value = tostring(v),
-                    info = info,
+                    info = o,
                     preview = {
                       ft = "help",
                       text = utils.get_help_text(o.name) or "No help available for this option.",
@@ -276,7 +267,7 @@ return {
                 picker:find()
               end,
               confirm = function(picker, item)
-                if not is_settable(picker.opts.global, item.info) then
+                if not item then
                   return
                 end
 

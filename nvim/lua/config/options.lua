@@ -1,7 +1,6 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 local utils = require("utils.general")
 local util_os = require("utils.os")
-local hour = os.date("*t").hour
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","

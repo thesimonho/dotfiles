@@ -159,21 +159,13 @@ return {
           enabled = true,
         },
         filtered_items = {
-          visible = false, -- when true, they will just be displayed differently than normal items
-          hide_hidden = false, -- only works on Windows for hidden files/directories
+          visible = false,
+          hide_hidden = false,
           hide_dotfiles = false,
-          hide_gitignored = false,
-        },
-        always_show_by_pattern = { -- uses glob style patterns
-          ".env*", -- BUG: this is not working so have to set hide_gitignored = false
-        },
-        hide_by_pattern = {
-          "^./.git/",
-        },
-        never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
-          ".DS_Store",
-          "thumbs.db",
-          "node_modules",
+          hide_gitignored = true,
+          always_show_by_pattern = { ".env*" },
+          hide_by_name = { ".git" },
+          never_show = { ".DS_Store", "thumbs.db", "node_modules" },
         },
         use_libuv_file_watcher = true,
         window = {

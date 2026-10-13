@@ -1,7 +1,6 @@
 local general = require("utils.general")
 local os_utils = require("utils.os")
 local fs = require("utils.fs")
-local wk = require("which-key")
 
 local function set_shell()
   local preferred_shells = { "zsh", "nu", "cmd" }
@@ -83,6 +82,20 @@ end
 
 return {
   {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+        {
+          "<leader>\\",
+          group = "terminals",
+          expand = function()
+            return create_terminal_keys(4)
+          end,
+        },
+      },
+    },
+  },
+  {
     "akinsho/toggleterm.nvim",
     version = "*",
     cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
@@ -90,15 +103,6 @@ return {
       { "<leader>\\\\", init_or_toggle, desc = "Toggle all" },
       { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
-    init = function()
-      wk.add({
-        "<leader>\\",
-        group = "terminals",
-        expand = function()
-          return create_terminal_keys(4)
-        end,
-      })
-    end,
     opts = {
       autochdir = true,
       auto_scroll = true,
