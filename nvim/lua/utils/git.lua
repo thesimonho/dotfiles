@@ -1,13 +1,35 @@
 local M = {}
 
+--- Run Git in an explicit directory; return raw stdout or raise on failure.
+--- @param cwd string
+--- @param args string[]
+--- @return string
+M.run = function(cwd, args)
+  local cmd = { "git", "-C", cwd }
+  vim.list_extend(cmd, args)
+
+  local result = vim.system(cmd, { stdin = "" }):wait()
+  if result.code ~= 0 then
+    error(("Git %s: %s"):format(table.concat(args, " "), vim.trim(result.stderr or "Git failed")))
+  end
+
+  return result.stdout or ""
+end
+
 M.is_git_repo = function()
   vim.fn.system("git rev-parse --is-inside-work-tree")
   return vim.v.shell_error == 0
 end
 
-M.get_git_root = function()
-  local dot_git_path = vim.fn.finddir(".git", ".;")
-  return vim.fn.fnamemodify(dot_git_path, ":h")
+--- Resolve a working-tree root, including worktrees with a .git file.
+--- @param cwd string|nil Defaults to the current editor directory.
+--- @return string|nil Root directory, or nil when Git cannot resolve it.
+M.get_git_root = function(cwd)
+  local ok, output = pcall(M.run, cwd or vim.fn.getcwd(), { "rev-parse", "--show-toplevel" })
+  if not ok then
+    return nil
+  end
+  return vim.trim(output)
 end
 
 -- get git worktrees for a project directory

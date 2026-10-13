@@ -11,6 +11,19 @@ This directory configures Neovim with LazyVim. Plugin overrides live in
 `lua/utils/`. Keep the plugin lockfile unchanged unless a plugin update is part
 of the task.
 
+## Shared Git helpers
+
+`lua/utils/git.lua` owns directory-based Git operations. `run(cwd, args)` runs
+Git in an explicit directory and returns raw stdout, including NUL separators.
+It raises an error when Git fails. `get_git_root(cwd)` returns the absolute
+working-tree root or `nil` when Git cannot resolve one. Its default is the
+editor's current directory; pass the terminal directory explicitly for terminal
+integrations. Git handles both ordinary checkouts and worktrees with `.git`
+files. Snacks root lookups used by buffer UI remain based on the buffer path.
+
+Keep review state, buffer ownership, highlights, and controls in
+`lua/utils/git_review.lua`. Shared Git helpers have no review side effects.
+
 ## LazyGit commit review
 
 Open LazyGit through Snacks in Neovim. In the commits panel, select a commit and

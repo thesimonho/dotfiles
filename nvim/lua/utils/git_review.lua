@@ -1,3 +1,5 @@
+local git = require("utils.git")
+
 local M = {}
 local namespace = vim.api.nvim_create_namespace("GitReview")
 local review = {
@@ -8,18 +10,6 @@ local review = {
   generation = 0,
   pending = {},
 }
-
-local function git(cwd, args)
-  local cmd = { "git", "-C", cwd }
-  vim.list_extend(cmd, args)
-
-  local result = vim.system(cmd, { stdin = "" }):wait()
-  if result.code ~= 0 then
-    error(("Git %s: %s"):format(table.concat(args, " "), vim.trim(result.stderr or "Git failed")))
-  end
-
-  return result.stdout or ""
-end
 
 local function refresh_highlights(buf)
   if not review.enabled or not vim.tbl_contains(review.buffers, buf) then
@@ -141,16 +131,19 @@ local function open_commit(commit)
 
   local terminal = vim.b[term.buf].snacks_terminal or {}
   local cwd = terminal.cwd or vim.api.nvim_win_call(term.win, vim.fn.getcwd)
-  local root = vim.trim(git(cwd, { "rev-parse", "--show-toplevel" }))
-  local sha = vim.trim(git(root, {
+  local root = git.get_git_root(cwd)
+  if not root then
+    error("Not a Git working tree: " .. cwd)
+  end
+  local sha = vim.trim(git.run(root, {
     "rev-parse",
     "--verify",
     commit .. "^{commit}",
   }))
-  local parents = vim.split(vim.trim(git(root, { "rev-list", "--parents", "-n", "1", sha })), " ")
-  local parent = parents[2] or vim.trim(git(root, { "hash-object", "-t", "tree", "--stdin" }))
+  local parents = vim.split(vim.trim(git.run(root, { "rev-list", "--parents", "-n", "1", sha })), " ")
+  local parent = parents[2] or vim.trim(git.run(root, { "hash-object", "-t", "tree", "--stdin" }))
 
-  local output = git(root, {
+  local output = git.run(root, {
     "diff",
     "--name-only",
     "-z",
