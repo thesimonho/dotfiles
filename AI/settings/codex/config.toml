@@ -45,6 +45,10 @@ daemon_auto_start = false
 [features.context_management]
 experimental_mode = true
 
+[memories]
+extract_model = "gpt-6-luna"
+consolidation_model = "gpt-6.1-sol"
+
 [otel]
 environment = "workstation"
 log_user_prompt = true
