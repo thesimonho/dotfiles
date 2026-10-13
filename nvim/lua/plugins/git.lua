@@ -1,6 +1,11 @@
 return {
   {
     "folke/snacks.nvim",
+    init = function()
+      vim.api.nvim_create_user_command("GitReviewOpen", function(opts)
+        require("utils.git_review").open(opts.args)
+      end, { nargs = 1 })
+    end,
     keys = {
       {
         "<leader>gi",
@@ -15,6 +20,20 @@ return {
           Snacks.picker.gh_pr()
         end,
         desc = "GitHub Pull Requests (open)",
+      },
+      {
+        "<leader>gH",
+        function()
+          require("utils.git_review").toggle()
+        end,
+        desc = "Toggle commit highlights",
+      },
+      {
+        "<leader>gC",
+        function()
+          require("utils.git_review").close()
+        end,
+        desc = "Close commit review buffers",
       },
     },
     opts = {

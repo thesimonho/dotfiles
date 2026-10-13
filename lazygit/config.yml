@@ -86,6 +86,16 @@ customCommands:
           - value: "push --force-with-lease"
           - value: "push --force"
     command: "git {{ .Form.PushType | quote }} {{ .Form.Remote }}"
+  - key: "<c-o>"
+    context: commits
+    description: "Open commit files in Neovim"
+    command: >-
+      if [ -z "$NVIM" ]; then
+        echo "Open LazyGit from Neovim to review commit files" >&2; exit 1;
+      fi;
+      nvim --server "$NVIM" --remote-expr
+      "luaeval('require(\"utils.git_review\").open(_A)', '{{.SelectedCommit.Hash}}')"
+    output: log
   - key: "C"
     context: 'files,localBranches'
     description: "Create new conventional commit"
@@ -186,7 +196,6 @@ keybinding:
     copyToClipboard: <c-y>
   commits:
     renameCommitWithEditor: ''
-    viewResetOptions: R
     moveDownCommit: J # move commit down one
     moveUpCommit: K # move commit up one
     copyCommitAttributeToClipboard: <c-y>
