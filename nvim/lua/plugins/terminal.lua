@@ -23,36 +23,30 @@ local function term_or_exec(term_num)
   return term_num .. "ToggleTerm direction='float'"
 end
 
-local function is_togglterm_buffer(bufnr)
-  local buftype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-  return buftype == "toggleterm"
-end
-
-local function parse_toggleterm_buffer_info(bufnr)
-  local buf_name = vim.api.nvim_buf_get_name(bufnr)
-  local cmd, id = buf_name:match("//%d+:(.-);#toggleterm#(.+)$")
-  return cmd, tonumber(id)
-end
-
--- check if toggleterm buffer exists. If not then create one
+-- Use live terminal objects: restored buffers and hidden agent terminals do
+-- not establish that a regular shell exists.
 local function init_or_toggle()
-  local used_ids = {}
-  local toggleterm_exists = false
-  local buffers = vim.api.nvim_list_bufs()
-  for _, bufnr in ipairs(buffers) do
-    if is_togglterm_buffer(bufnr) then
-      local cmd, id = parse_toggleterm_buffer_info(bufnr)
-      used_ids[#used_ids + 1] = id
-
-      if id and cmd and cmd ~= "claude" and cmd ~= "codex" then
-        toggleterm_exists = true
-        -- cant break this. we need to get all used ids
-      end
+  local terminals = require("toggleterm.terminal").get_all(true)
+  local used_ids, shells = {}, {}
+  local shell_open = false
+  for _, term in ipairs(terminals) do
+    used_ids[#used_ids + 1] = term.id
+    if not term.hidden then
+      shells[#shells + 1] = term
+      shell_open = shell_open or term:is_open()
     end
   end
 
-  if toggleterm_exists then
-    vim.cmd("ToggleTermToggleAll")
+  if #shells > 0 then
+    -- ToggleTermToggleAll also sees hidden agent windows when deciding whether
+    -- to close. Only regular shells should determine this action.
+    for _, term in ipairs(shells) do
+      if shell_open then
+        term:close()
+      else
+        term:open()
+      end
+    end
     return
   end
 

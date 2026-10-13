@@ -69,6 +69,12 @@ Restart LazyGit after changing its config. Restart Neovim to load changed
 keymaps; the remote open command itself can load the helper in an existing
 editor session.
 
+## Terminal controls
+
+In Normal mode, `Space` then `\` opens the terminal choices menu. Another `\` toggles regular terminals; `1` through `4` select a terminal and `s` opens the terminal selector. These are Normal-mode mappings: press `Esc` to leave a regular terminal's input mode first.
+
+The toggle action uses ToggleTerm's live terminal registry. Hidden agent terminals reserve their IDs but do not count as regular shells or decide whether shells should open or close. Restored terminal buffer names are not proof that a live ToggleTerm instance exists.
+
 ## Plugin ownership and local overrides
 
 LazyVim owns Snacks setup and the notification handoff to Noice. Add Snacks
