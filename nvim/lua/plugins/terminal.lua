@@ -1,6 +1,4 @@
 local general = require("utils.general")
-local os_utils = require("utils.os")
-local fs = require("utils.fs")
 
 local function set_shell()
   local preferred_shells = { "zsh", "nu", "cmd" }
@@ -13,14 +11,7 @@ end
 
 local function term_or_exec(term_num)
   term_num = term_num or 1
-  if fs.has_container() and not os_utils.is_container() then
-    local path = fs.get_path_components(vim.fn.getcwd())
-    local container_name = path[#path]:lower():gsub("[ _]", "-")
-    local cmd = "ssh " .. container_name .. ".devpod"
-    vim.notify_once("Launching devcontainer: " .. container_name, vim.log.levels.INFO)
-    return term_num .. "TermExec cmd='" .. cmd .. "' go_back=0 direction='float'"
-  end
-  return term_num .. "ToggleTerm direction='float'"
+  return require("utils.devpod").terminal_command(term_num) or term_num .. "ToggleTerm direction='float'"
 end
 
 -- Use live terminal objects: restored buffers and hidden agent terminals do

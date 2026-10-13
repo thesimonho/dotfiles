@@ -5,6 +5,7 @@ local util_os = require("utils.os")
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.ai_cmp = false -- show AI suggestions in cmp?
+vim.g.devpod_terminals = false -- opt in to DevPod SSH for project terminals
 
 -- set clipboard for local and terminal (via OSC52)
 -- WSL is included: there is no native X/Wayland clipboard, so route yanks

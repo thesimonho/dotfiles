@@ -102,8 +102,7 @@ checkouts work. Package-info loads for package.json buffers in any directory.
 
 Neo-tree hides ignored files but always shows `.env*`; `.git` can be shown
 with the hidden toggle. `node_modules`, `.DS_Store`, and `thumbs.db` stay hidden.
-Host-side terminal selection recognises both `.devcontainer.json` and
-`.devcontainer/devcontainer.json`. Docker detection uses `/.dockerenv`.
+DevPod routing lives in `lua/utils/devpod.lua` and is off by default through `vim.g.devpod_terminals = false` in `lua/config/options.lua`. Set it to `true` to restore automatic SSH routing for project terminals, or use `:lua vim.g.devpod_terminals = true` for the current editor session (`false` turns it off again). When enabled, it recognises both `.devcontainer.json` and `.devcontainer/devcontainer.json` outside Docker and connects to `<directory-name>.devpod`; the workspace and SSH alias must already exist. Docker detection uses `/.dockerenv`. Changing the setting does not replace or disconnect existing terminals.
 
 The status column caches marks once per statuscol redraw tick and Git signs
 once per line in that tick. Keep this cache on statuscol's window-owned args;
