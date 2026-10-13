@@ -26,12 +26,28 @@ return {
           if not vim.g.persisting and persisted.allowed_dir() then
             persisted.start()
           end
-          -- Explicit files/directories and piped input own their startup buffer.
-          if vim.fn.argc(-1) == 0 and not vim.g.started_with_stdin then
+          local argc = vim.fn.argc(-1)
+          local arg = argc == 1 and vim.fn.argv(0) or nil
+          local directory = arg and vim.fn.isdirectory(arg) == 1 and vim.fn.fnamemodify(arg, ":p") or nil
+          -- One directory opts into the project picker; plain startup uses the
+          -- dashboard fallback. Files, multiple arguments and stdin stay native.
+          if (argc == 0 or directory) and not vim.g.started_with_stdin then
             vim.schedule(function()
-              if vim.api.nvim_buf_get_name(0) == "" and not vim.bo.modified then
-                require("utils.ui").load_project_session(vim.fn.getcwd())
+              if vim.bo.modified then
+                return
               end
+              if directory then
+                local directory_buf = vim.api.nvim_get_current_buf()
+                local is_directory_buf = vim.fn.isdirectory(vim.api.nvim_buf_get_name(directory_buf)) == 1
+                vim.cmd("%argdelete")
+                vim.cmd.enew()
+                if is_directory_buf then
+                  vim.api.nvim_buf_delete(directory_buf, {})
+                end
+              elseif vim.api.nvim_buf_get_name(0) ~= "" then
+                return
+              end
+              require("utils.ui").load_project_session(directory or vim.fn.getcwd(), { dashboard = argc == 0 })
             end)
           end
         end,

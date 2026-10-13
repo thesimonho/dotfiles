@@ -69,7 +69,7 @@ local M = {
         },
       },
       dashboard = {
-        enabled = false, -- Startup uses the session or project file picker.
+        enabled = false, -- The shared startup loader opens exactly one dashboard.
         width = 60,
         pane_gap = 10,
         autokeys = "1234567890abcdefghijklmnopqrstuvwxyz",

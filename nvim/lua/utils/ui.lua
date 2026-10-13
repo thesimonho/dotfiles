@@ -1,6 +1,7 @@
 local M = {}
 
-M.load_project_session = function(dir)
+M.load_project_session = function(dir, opts)
+  opts = opts or {}
   vim.fn.chdir(dir)
 
   local persisted = require("persisted")
@@ -33,7 +34,11 @@ M.load_project_session = function(dir)
     vim.g.project_session_load_failed = nil
   else
     vim.g.project_session_load_failed = nil
-    Snacks.picker.files({ root = false, hidden = true, dirs = { dir } })
+    if opts.dashboard then
+      Snacks.dashboard({ buf = vim.api.nvim_get_current_buf(), win = vim.api.nvim_get_current_win() })
+    else
+      Snacks.picker.files({ root = false, hidden = true, dirs = { dir } })
+    end
   end
   if require("persisted.config").autostart and persisted.allowed_dir() then
     persisted.start()
