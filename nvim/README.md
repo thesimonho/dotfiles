@@ -46,10 +46,7 @@ also include later changes and local edits in those files. Files deleted from
 the working tree are skipped. This is a working-tree review, not a snapshot of
 historical file contents.
 
-Gitsigns attachment is asynchronous. Wait for attachment before changing a
-buffer's comparison base. Review line backgrounds use a separate namespace so
-other buffers retain their normal highlighting. Disabling review restores the
-normal index comparison.
+Gitsigns attachment is asynchronous. Wait for its first diff summary, then reattach the review buffer with the selected parent as its initial base. This keeps an in-flight index read from overwriting the review comparison, including when highlights are enabled again for a hidden buffer. Review line backgrounds use a separate namespace so other buffers retain their normal highlighting. Disabling review restores the normal index comparison.
 
 Restart LazyGit after changing its config. Restart Neovim to load changed
 keymaps; the remote open command itself can load the helper in an existing

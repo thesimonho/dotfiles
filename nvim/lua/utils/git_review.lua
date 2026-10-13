@@ -41,22 +41,34 @@ local function apply_pending_base(buf)
   end
 
   local gs = require("gitsigns")
-  -- A duplicate attach callback can run while BufRead auto-attachment is still pending.
-  if gs.get_hunks(buf) == nil then
+  -- The cache exists before the first diff completes. Changing its base then
+  -- lets the initial index read overwrite the new comparison text.
+  local status = vim.b[buf].gitsigns_status_dict
+  if gs.get_hunks(buf) == nil or not status or status.added == nil then
     return
   end
   review.pending[buf] = nil
-  vim.api.nvim_buf_call(buf, function()
-    gs.change_base(review.parent, false, function(err)
-      if generation ~= review.generation then
-        return
+  -- Start a fresh attachment with the review base already selected. This also
+  -- isolates it from deferred index updates after highlights were disabled.
+  gs.detach(buf)
+  gs.attach({ bufnr = buf, ctx = { file = vim.api.nvim_buf_get_name(buf), base = review.parent } }, function(err)
+    if generation ~= review.generation then
+      -- Disabling can happen before attach creates its cache, so its earlier
+      -- reset was a no-op. Reconcile after attachment without resetting a newer review.
+      if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+        if not review.enabled or not vim.tbl_contains(review.buffers, buf) then
+          vim.api.nvim_buf_call(buf, gs.reset_base)
+        else
+          apply_pending_base(buf)
+        end
       end
-      if err then
-        vim.notify(tostring(err), vim.log.levels.WARN)
-      else
-        refresh_highlights(buf)
-      end
-    end)
+      return
+    end
+    if err then
+      vim.notify(tostring(err), vim.log.levels.WARN)
+    else
+      refresh_highlights(buf)
+    end
   end)
 end
 
@@ -65,7 +77,10 @@ vim.api.nvim_create_autocmd("User", {
   group = group,
   pattern = "GitSignsUpdate",
   callback = function(event)
-    local buf = event.data.buffer
+    local buf = event.data and event.data.buffer
+    if not buf then
+      return
+    end
     -- Gitsigns may emit its first status update before its buffer cache is ready.
     vim.schedule(function()
       apply_pending_base(buf)
