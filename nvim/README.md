@@ -71,9 +71,9 @@ editor session.
 
 ## Terminal controls
 
-In Normal mode, `Space` then `\` opens the terminal choices menu. Another `\` toggles regular terminals; `1` through `4` select a terminal and `s` opens the terminal selector. These are Normal-mode mappings: press `Esc` to leave a regular terminal's input mode first.
+In Normal mode, `Space` then `\` opens the terminal choices menu. Another `\` focuses an open regular terminal, reopens an existing one as a popup, or creates one when none exists; `1` through `4` select a terminal and `s` opens the terminal selector. These are Normal-mode mappings: press `Esc` to leave a regular terminal's input mode first.
 
-The toggle action uses ToggleTerm's live terminal registry. Hidden agent terminals reserve their IDs but do not count as regular shells or decide whether shells should open or close. Restored terminal buffer names are not proof that a live ToggleTerm instance exists.
+The open action uses ToggleTerm's live terminal registry. It leaves an open shell open. Hidden agent terminals reserve their IDs but do not count as regular shells. Restored terminal buffer names are not proof that a live ToggleTerm instance exists.
 
 ## Plugin ownership and local overrides
 

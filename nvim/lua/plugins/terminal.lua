@@ -25,28 +25,25 @@ end
 
 -- Use live terminal objects: restored buffers and hidden agent terminals do
 -- not establish that a regular shell exists.
-local function init_or_toggle()
+local function open_terminal()
   local terminals = require("toggleterm.terminal").get_all(true)
-  local used_ids, shells = {}, {}
-  local shell_open = false
+  local used_ids = {}
+  local existing
   for _, term in ipairs(terminals) do
     used_ids[#used_ids + 1] = term.id
     if not term.hidden then
-      shells[#shells + 1] = term
-      shell_open = shell_open or term:is_open()
+      if term:is_open() then
+        term:focus()
+        vim.cmd.startinsert()
+        return
+      end
+      existing = existing or term
     end
   end
 
-  if #shells > 0 then
-    -- ToggleTermToggleAll also sees hidden agent windows when deciding whether
-    -- to close. Only regular shells should determine this action.
-    for _, term in ipairs(shells) do
-      if shell_open then
-        term:close()
-      else
-        term:open()
-      end
-    end
+  if existing then
+    existing:open(nil, "float")
+    vim.cmd.startinsert()
     return
   end
 
@@ -94,7 +91,7 @@ return {
     version = "*",
     cmd = { "ToggleTerm", "TermExec", "TermSelect", "ToggleTermToggleAll" },
     keys = {
-      { "<leader>\\\\", init_or_toggle, desc = "Toggle all" },
+      { "<leader>\\\\", open_terminal, desc = "Open terminal" },
       { "<leader>\\s", "<cmd>TermSelect<CR>", desc = "Select" },
     },
     opts = {
