@@ -37,6 +37,9 @@ return {
         "~/dotfiles",
         "~/Projects",
       },
+      before_save = function()
+        vim.cmd("%argdelete")
+      end,
       should_save = function()
         if vim.bo.filetype == "snacks_dashboard" then
           return false

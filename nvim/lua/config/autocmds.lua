@@ -104,16 +104,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
   desc = "Toggle line numbers",
 })
 
--- clear args before saving a session
-vim.api.nvim_create_autocmd({ "VimLeavePre", "TabLeave", "TabClosed" }, {
-  callback = function()
-    local arglist = vim.fn.argv()
-    if #arglist > 0 then
-      vim.cmd("argdelete *")
-    end
-  end,
-})
-
 -- In quickfix window, press `dd` to remove the current entry
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "qf",
