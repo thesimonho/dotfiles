@@ -26,11 +26,20 @@ return {
           if not vim.g.persisting and persisted.allowed_dir() then
             persisted.start()
           end
+          -- Explicit files/directories and piped input own their startup buffer.
+          if vim.fn.argc(-1) == 0 and not vim.g.started_with_stdin then
+            vim.schedule(function()
+              if vim.api.nvim_buf_get_name(0) == "" and not vim.bo.modified then
+                require("utils.ui").load_project_session(vim.fn.getcwd())
+              end
+            end)
+          end
         end,
       })
     end,
     opts = {
-      autoload = true,
+      -- The shared project loader owns startup and reports source errors.
+      autoload = false,
       follow_cwd = true,
       use_git_branch = false,
       allowed_dirs = {
@@ -41,13 +50,10 @@ return {
         vim.cmd("%argdelete")
       end,
       should_save = function()
-        if vim.bo.filetype == "snacks_dashboard" then
+        if vim.g.project_session_load_failed or vim.bo.filetype == "snacks_dashboard" then
           return false
         end
         return true
-      end,
-      on_autoload_no_session = function()
-        Snacks.dashboard()
       end,
     },
   },

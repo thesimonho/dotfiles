@@ -11,6 +11,23 @@ This directory configures Neovim with LazyVim. Plugin overrides live in
 `lua/utils/`. Keep the plugin lockfile unchanged unless a plugin update is part
 of the task.
 
+## Startup and project sessions
+
+Starting `nvim` without arguments restores the current directory's saved
+session, or opens the file picker in that directory when no session exists.
+Dashboard project actions and the Projects picker use the same loader in
+`lua/utils/ui.lua`. Explicit file/directory arguments and piped input keep their
+normal startup behaviour. The dashboard does not open automatically; it is
+still available through `Snacks.dashboard()`.
+
+Persisted owns session storage and automatic saving, limited to `~/dotfiles`
+and `~/Projects`. Its automatic loader is disabled because the shared loader
+owns startup. The shared loader preserves Persisted load events and sources
+sessions without suppressing errors. A failed restore reports the session path
+and error, then stops automatic saving to protect the saved session from a
+partial restore, including saves on tab changes. Resolve the error and reload
+the session, or select a project without a saved session, to permit saving again.
+
 ## Shared Git helpers
 
 `lua/utils/git.lua` owns directory-based Git operations. `run(cwd, args)` runs
