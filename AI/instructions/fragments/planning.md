@@ -4,14 +4,18 @@ Keep these records distinct: a **working outline** is disposable execution scaff
 
 The running agent owns transitions between records. Skills and subagents produce only the artifact requested; they do not choose the next workflow.
 
+## Public repositories
+
+Work should never be tracked in public. This includes plans, roadmaps, TODO lists, decisions. Do not dump provenance and upcoming tasks in issues, PRs, or commit messages unless explicitly asked. Public repos are for contributors and end users; do not pollute the repository with internal planning.
+
 ## Delivery record
 
 Before implementation, choose exactly one durable delivery record in this order:
 
-1. The relevant issue, when the repository tracks work in issues.
+1. The relevant issue, when the repository is private and tracks work in issues.
 2. The relevant project item, when the project board is the repository's declared delivery system.
 3. A local plan, roadmap, or specification when that is the repository convention.
-4. The pull request or commit when no other delivery system exists.
+4. The pull request or commit if the repository is private and when no other delivery system exists.
 
 Do not create tracking machinery merely to satisfy this rule. Delete a temporary artifact only after transferring its approved details; retain a local plan when it is the delivery record.
 
