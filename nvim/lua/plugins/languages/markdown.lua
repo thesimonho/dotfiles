@@ -45,6 +45,9 @@ local M = {
       render_modes = { "n", "c", "v", "t" },
       preset = "lazy",
       nested = false,
+      html = {
+        comment = { conceal = false },
+      },
       completions = {
         blink = { enabled = true },
       },

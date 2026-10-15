@@ -90,7 +90,7 @@ Ruff LSP owns Python diagnostics. `lua/plugins/languages/python.lua` supplies
 one set of personal rule overrides to Ruff LSP and Conform's Ruff fix/format
 commands. Project configuration still supplies other settings. nvim-lint does
 not run a second Ruff diagnostic pass. Markdown's linter and formatter share
-`lua/plugins/languages/.markdownlint.yaml`.
+`lua/plugins/languages/.markdownlint.yaml`. HTML comments stay visible in Markdown buffers through `render-markdown`'s `html.comment.conceal = false`, so issue and PR template guidance remains readable away from the cursor. Other Markdown rendering stays enabled.
 
 nvim-dap-go owns the Go adapter and built-in debug choices; Mason installs
 Delve but does not add duplicate Go configurations. Resolve launch paths and
