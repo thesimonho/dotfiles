@@ -11,6 +11,7 @@ return {
     "thesimonho/kanagawa-paper.nvim",
     lazy = false,
     dev = true,
+    dir = "~/Projects/kanagawa-paper.nvim/dist/neovim",
     priority = 1000,
     keys = {
       {

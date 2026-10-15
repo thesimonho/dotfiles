@@ -72,6 +72,8 @@ The open action uses ToggleTerm's live terminal registry. It leaves an open shel
 
 ## Plugin ownership and local overrides
 
+Kanagawa Paper loads its local runtime from `~/Projects/kanagawa-paper.nvim/dist/neovim`. Run `just build neovim` in the theme repository after a clean checkout, or `just watch neovim` while editing it. The ordinary plugin spec owns this path so initial startup works before the project `.lazy.lua` is trusted. The project file adds preview and reload helpers after trust.
+
 LazyVim owns Snacks setup and the notification handoff to Noice. Add Snacks
 options and filetype key specs instead of replacing its `config` function.
 Plugin rules and listeners belong in the owning plugin's load callback, after
