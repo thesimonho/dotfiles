@@ -38,7 +38,12 @@ return {
               end
               if directory then
                 local directory_buf = vim.api.nvim_get_current_buf()
-                local is_directory_buf = vim.fn.isdirectory(vim.api.nvim_buf_get_name(directory_buf)) == 1
+                local current = vim.api.nvim_buf_get_name(directory_buf)
+                local is_directory_buf = vim.fn.isdirectory(current) == 1
+                -- Keep a file opened by a startup trust prompt visible for review.
+                if vim.bo.buftype == "" and current ~= "" and not is_directory_buf then
+                  return
+                end
                 vim.cmd("%argdelete")
                 vim.cmd.enew()
                 if is_directory_buf then

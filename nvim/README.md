@@ -13,7 +13,7 @@ of the task.
 
 ## Startup and project sessions
 
-Starting `nvim` without arguments restores the current directory's saved session, or opens one dashboard when no session exists. Starting `nvim .` (or passing one other directory) restores that directory's session, or opens its file picker. Dashboard project actions and the Projects picker keep the session-or-picker behaviour through `lua/utils/ui.lua`. Explicit file arguments, multiple arguments and piped input keep their normal startup behaviour. Snacks automatic dashboard startup remains disabled; the shared loader owns the dashboard fallback to prevent duplicate instances.
+Starting `nvim` without arguments restores the current directory's saved session, or opens one dashboard when no session exists. Starting `nvim .` (or passing one other directory) restores that directory's session, or opens its file picker. Dashboard project actions and the Projects picker keep the session-or-picker behaviour through `lua/utils/ui.lua`. Explicit file arguments, multiple arguments and piped input keep their normal startup behaviour. A file opened by a startup trust prompt also stays visible, including with `nvim .`, so `:trust` applies to the file being reviewed rather than a restored session buffer. Snacks automatic dashboard startup remains disabled; the shared loader owns the dashboard fallback to prevent duplicate instances.
 
 Persisted owns session storage and automatic saving, limited to `~/dotfiles`
 and `~/Projects`. Its automatic loader is disabled because the shared loader
