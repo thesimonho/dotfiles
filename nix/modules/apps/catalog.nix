@@ -314,6 +314,10 @@
       flatpak.id = "com.visualstudio.code";
       bundles = [ "dev" ];
     };
+    vscode-node-sdk = {
+      flatpak.id = "org.freedesktop.Sdk.Extension.node24//25.08";
+      bundles = [ "dev" ];
+    };
     # Linux/Wayland-only; opt in via my.apps.enabled.
     wl-clipboard = {
       contributions.packages = [ pkgs.wl-clipboard ];
