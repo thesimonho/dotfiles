@@ -34,7 +34,7 @@ gui:
   animateExplosion: true # shows an explosion animation when nuking the working tree
   portraitMode: "auto" # one of 'auto' | 'never' | 'always'
 git:
-  pagers: []
+  diffRenderers: []
   commit:
     signOff: false
   log:
@@ -91,10 +91,9 @@ customCommands:
     description: "Open commit files in Neovim"
     command: >-
       if [ -z "$NVIM" ]; then
+
         echo "Open LazyGit from Neovim to review commit files" >&2; exit 1;
-      fi;
-      nvim --server "$NVIM" --remote-expr
-      "luaeval('require(\"utils.git_review\").open(_A)', '{{.SelectedCommit.Hash}}')"
+      fi; nvim --server "$NVIM" --remote-expr "luaeval('require(\"utils.git_review\").open(_A)', '{{.SelectedCommit.Hash}}')"
     output: log
   - key: "C"
     context: 'files,localBranches'
