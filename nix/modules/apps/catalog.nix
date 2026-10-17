@@ -8,6 +8,7 @@
 {
   bundleNames = [
     "cli"
+    "desktop"
     "security"
     "fonts"
     "communication"
@@ -15,9 +16,13 @@
     "cloud"
   ];
 
-  entries = {
+  applications = {
     android-tools = {
-      contributions.packages = [ pkgs.android-tools ];
+      contributions.nativePackages = {
+        arch.pacman = [ "android-tools" ];
+        darwin.homebrew.casks = [ "android-platform-tools" ];
+        fedora.dnf.packages = [ "android-tools" ];
+      };
       bundles = [ ];
     };
     ast-grep = {
@@ -122,10 +127,32 @@
       ];
       bundles = [ ];
     };
+    firefox = {
+      contributions.nativePackages = {
+        arch.pacman = [ "firefox" ];
+        darwin.homebrew.casks = [ "firefox" ];
+        fedora.dnf.packages = [ "firefox" ];
+      };
+      bundles = [ ];
+    };
     fzf = {
       contributions.programs.fzf.enable = true;
       contributions.xdgConfigFiles."fzf" = symlinkConfig "fzf";
       bundles = [ "cli" ];
+    };
+    google-chrome = {
+      contributions.nativePackages = {
+        arch.aur = [ "google-chrome" ];
+        darwin.homebrew.casks = [ "google-chrome" ];
+        fedora.dnf = {
+          packages = [ "google-chrome-stable" ];
+          repositories.google-chrome = {
+            baseurl = "https://dl.google.com/linux/chrome/rpm/stable/$basearch";
+            gpgkey = "https://dl.google.com/linux/linux_signing_key.pub";
+          };
+        };
+      };
+      bundles = [ ];
     };
     google-cloud-sdk = {
       contributions.packages = [ pkgs.google-cloud-sdk ];
@@ -203,22 +230,6 @@
       contributions.packages = [ pkgs.nix-output-monitor ];
       bundles = [ "cli" ];
     };
-    nerd-fonts-caskaydia-cove = {
-      contributions.packages = [ pkgs.nerd-fonts.caskaydia-cove ];
-      bundles = [ "fonts" ];
-    };
-    nerd-fonts-fira-code = {
-      contributions.packages = [ pkgs.nerd-fonts.fira-code ];
-      bundles = [ "fonts" ];
-    };
-    nerd-fonts-jetbrains-mono = {
-      contributions.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
-      bundles = [ "fonts" ];
-    };
-    nerd-fonts-symbols-only = {
-      contributions.packages = [ pkgs.nerd-fonts.symbols-only ];
-      bundles = [ "fonts" ];
-    };
     nixd = {
       contributions.packages = [ pkgs.nixd ];
       bundles = [ "cli" ];
@@ -234,6 +245,18 @@
     onlyoffice = {
       flatpak.id = "org.onlyoffice.desktopeditors";
     };
+    partitionmanager = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "partitionmanager" ];
+        fedora.dnf.packages = [ "kde-partitionmanager" ];
+      };
+    };
     pay-respects = {
       contributions.packages = [ pkgs.pay-respects ];
       bundles = [ "cli" ];
@@ -248,6 +271,14 @@
         "security"
         "dev"
       ];
+    };
+    shelly = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [ "arch" ];
+      requirements.hasDesktop = true;
+      contributions.nativePackages = {
+        arch.pacman = [ "shelly" ];
+      };
     };
     slack = {
       flatpak = {
@@ -307,20 +338,43 @@
       ];
     };
     vivaldi = {
-      flatpak.id = "com.vivaldi.Vivaldi";
+      contributions.nativePackages = {
+        arch.pacman = [ "vivaldi" ];
+        darwin.homebrew.casks = [ "vivaldi" ];
+        fedora.dnf = {
+          packages = [ "vivaldi-stable" ];
+          repositories.vivaldi = {
+            baseurl = "https://repo.vivaldi.com/archive/rpm/$basearch";
+            gpgkey = "https://repo.vivaldi.com/archive/linux_signing_key.pub";
+          };
+        };
+      };
       bundles = [ "communication" ];
     };
     vscode = {
-      flatpak.id = "com.visualstudio.code";
-      bundles = [ "dev" ];
-    };
-    vscode-node-sdk = {
-      flatpak.id = "org.freedesktop.Sdk.Extension.node24//25.08";
+      contributions.nativePackages = {
+        arch.aur = [ "visual-studio-code-bin" ];
+        darwin.homebrew.casks = [ "visual-studio-code" ];
+        fedora.dnf = {
+          packages = [ "code" ];
+          repositories.vscode = {
+            baseurl = "https://packages.microsoft.com/yumrepos/vscode";
+            gpgkey = "https://packages.microsoft.com/keys/microsoft.asc";
+          };
+        };
+      };
       bundles = [ "dev" ];
     };
     # Linux/Wayland-only; opt in via my.apps.enabled.
     wl-clipboard = {
-      contributions.packages = [ pkgs.wl-clipboard ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      contributions.nativePackages = {
+        arch.pacman = [ "wl-clipboard" ];
+        fedora.dnf.packages = [ "wl-clipboard" ];
+      };
       bundles = [ ];
     };
     yq = {
@@ -336,6 +390,118 @@
     zoxide = {
       contributions.programs.zoxide.enable = true;
       bundles = [ "cli" ];
+    };
+  };
+
+  support = {
+    android-udev = {
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      contributions.nativePackages.arch.pacman = [ "android-udev" ];
+      bundles = [ ];
+    };
+    dolphin-plugins = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "dolphin-plugins" ];
+        fedora.dnf.packages = [ "dolphin-plugins" ];
+      };
+    };
+    flatpak-kcm = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [ "arch" ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "flatpak-kcm" ];
+      };
+    };
+    gnome-keyring = {
+      bundles = [ "security" ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.desktops = [ "none" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "gnome-keyring" ];
+        fedora.dnf.packages = [
+          "gnome-keyring"
+          "gnome-keyring-pam"
+        ];
+      };
+    };
+    kde-graphics-meta = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [ "arch" ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "kde-graphics-meta" ];
+      };
+    };
+    kde-system-meta = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [ "arch" ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "kde-system-meta" ];
+      };
+    };
+    kio-gdrive = {
+      bundles = [ "desktop" ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [ "kio-gdrive" ];
+        fedora.dnf.packages = [ "kio-gdrive" ];
+      };
+    };
+    libsecret = {
+      bundles = [ "security" ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      contributions.nativePackages = {
+        arch.pacman = [ "libsecret" ];
+        fedora.dnf.packages = [ "libsecret" ];
+      };
+    };
+    nerd-fonts-caskaydia-cove = {
+      contributions.packages = [ pkgs.nerd-fonts.caskaydia-cove ];
+      bundles = [ "fonts" ];
+    };
+    nerd-fonts-fira-code = {
+      contributions.packages = [ pkgs.nerd-fonts.fira-code ];
+      bundles = [ "fonts" ];
+    };
+    nerd-fonts-jetbrains-mono = {
+      contributions.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
+      bundles = [ "fonts" ];
+    };
+    nerd-fonts-symbols-only = {
+      contributions.packages = [ pkgs.nerd-fonts.symbols-only ];
+      bundles = [ "fonts" ];
+    };
+    zenity = {
+      bundles = [ "security" ];
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      contributions.nativePackages = {
+        arch.pacman = [ "zenity" ];
+        fedora.dnf.packages = [ "zenity" ];
+      };
     };
   };
 }

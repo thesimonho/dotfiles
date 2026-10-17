@@ -147,7 +147,7 @@ let
         inherit system;
         hostName = "_chatgpt-check";
       };
-      actual = lib.any (package: (package.pname or null) == "chatgpt") hmConfig.config.home.packages;
+      actual = builtins.hasAttr "ai.chatgpt" hmConfig.config.my.nativePackages.catalog;
     in
     assert actual == expected;
     pkgs.writeText "chatgpt-check.json" (builtins.toJSON { inherit actual expected; });
@@ -216,7 +216,7 @@ in
       chatgpt = mkChatgptCheck {
         system = "aarch64-darwin";
         hmConfig = homeConfigurations.work-macbook;
-        expected = false;
+        expected = true;
       };
       work-macbook = mkEvalCheck "aarch64-darwin" homeConfigurations.work-macbook;
     };

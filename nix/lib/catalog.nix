@@ -2,6 +2,7 @@
 
 let
   inherit (lib) mkOption types;
+  nativeLib = import ./native-packages.nix { inherit lib; };
 
   requirementType =
     requirementValues:
@@ -41,6 +42,11 @@ let
         type = types.listOf types.package;
         default = [ ];
         description = "Nix packages installed when this entry is enabled.";
+      };
+      nativePackages = mkOption {
+        type = nativeLib.mappingType;
+        default = { };
+        description = "Platform-specific native package installation mappings.";
       };
       programs = mkOption {
         type = types.attrs;
@@ -102,9 +108,24 @@ let
     ) "requires hasDesktop=${lib.boolToString requirements.hasDesktop}";
 
   contributionHasValues =
-    contributions: lib.any (value: value != [ ] && value != { }) (lib.attrValues contributions);
+    contributions:
+    lib.any (value: value != [ ] && value != { }) (
+      lib.attrValues (builtins.removeAttrs contributions [ "nativePackages" ])
+    )
+    || nativeLib.hasValues contributions.nativePackages;
 in
 {
+  # Both sections share one selection namespace; reject accidental shadowing.
+  mergeSections =
+    { applications, support, ... }:
+    let
+      duplicates = lib.intersectLists (lib.attrNames applications) (lib.attrNames support);
+    in
+    if duplicates != [ ] then
+      throw "Catalog names must be unique across applications and support: ${lib.concatStringsSep ", " duplicates}"
+    else
+      applications // support;
+
   /**
     Build the typed shape shared by every catalog domain.
 
@@ -134,28 +155,12 @@ in
           contributions = mkOption {
             type = contributionType;
             default = { };
-            description = "Typed Home Manager configuration contributed by this entry.";
+            description = "Typed Home Manager and native package contributions from this entry.";
           };
         }
         // extraOptions;
       }
     );
-
-  /**
-    Resolve names selected through bundles or explicit enablement.
-  */
-  resolveEnabled =
-    {
-      catalog,
-      bundles,
-      enabled,
-    }:
-    let
-      taggedNames = lib.filter (name: lib.any (bundle: lib.elem bundle catalog.${name}.bundles) bundles) (
-        lib.attrNames catalog
-      );
-    in
-    lib.unique (taggedNames ++ enabled);
 
   /**
     Select entries and partition them by their compatibility with one host.
@@ -169,6 +174,7 @@ in
       bundles,
       enabled,
       hostContext,
+      disabled ? [ ],
     }:
     let
       enabledNames = lib.unique (
@@ -177,7 +183,9 @@ in
         ))
         ++ enabled
       );
-      selectedEntries = lib.filterAttrs (name: _: lib.elem name enabledNames) catalog;
+      selectedEntries = lib.filterAttrs (
+        name: _: lib.elem name enabledNames && !lib.elem name disabled
+      ) catalog;
       failuresByName = lib.mapAttrs (
         _: entry: requirementFailures hostContext entry.requirements
       ) selectedEntries;
@@ -197,16 +205,20 @@ in
     };
 
   /**
-    Turn applicable catalog entries into a mergeable Home Manager fragment.
+    Turn applicable catalog entries into mergeable Home Manager and native package configuration.
   */
   realizeContributions =
-    entries:
+    { entries, domain }:
     let
       contributions = map (entry: entry.contributions) (lib.attrValues entries);
       mergeContributionField =
         field: lib.mkMerge (map (contribution: contribution.${field}) contributions);
     in
     {
+      my.nativePackages.catalog = lib.mapAttrs' (name: entry: {
+        name = "${domain}.${name}";
+        value = entry.contributions.nativePackages;
+      }) (lib.filterAttrs (_: entry: nativeLib.hasValues entry.contributions.nativePackages) entries);
       home = {
         packages = lib.unique (lib.concatMap (contribution: contribution.packages) contributions);
         file = mergeContributionField "homeFiles";

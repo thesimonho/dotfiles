@@ -106,9 +106,18 @@ pkg_update() {
   [[ "$OS" == "Linux" ]] || return 0
   case "$(detect_pkgmgr)" in
   apt) sudo apt-get update -y ;;
-  dnf) sudo dnf check-update -y || true ;;
-  pacman) sudo pacman -Sy ;;
-  none) echo "No supported Linux package manager found." >&2 ;;
+  dnf)
+    local status=0
+    sudo dnf check-update -y || status=$?
+    if [[ "$status" != 0 && "$status" != 100 ]]; then
+      return "$status"
+    fi
+    ;;
+  pacman) sudo pacman -Syu ;;
+  none)
+    echo "No supported Linux package manager found." >&2
+    return 1
+    ;;
   esac
 }
 
@@ -145,26 +154,90 @@ restart_nix_daemon() {
 
 # Prereqs needed before Nix can be installed. Can't go through the
 # nix-managed catalog because nix isn't running yet.
-#   - Fedora: xz (installer extracts .xz tarball), awk, @development-tools
-#     (empirically needed on minimal Fedora/WSL images)
+#   - Linux: curl/CA certificates, tar and xz; Fedora also needs awk and
+#     @development-tools on minimal Fedora/WSL images
 #   - macOS: Xcode CLT (provides system git used by installer + ours)
+check_bootstrap_environment() {
+  if [[ "$(id -u)" == 0 ]]; then
+    echo "Run bootstrap as your normal user; privileged steps use sudo." >&2
+    return 1
+  fi
+  case "$OS" in
+  Linux | Darwin) ;;
+  *)
+    echo "Unsupported OS: $OS" >&2
+    return 1
+    ;;
+  esac
+  if ! command -v sudo >/dev/null 2>&1; then
+    echo "Missing bootstrap prerequisite: sudo. Install/configure it first." >&2
+    return 1
+  fi
+  if [[ "$OS" == Linux && "$(detect_pkgmgr)" == none ]]; then
+    echo "Bootstrap needs apt-get, dnf, or pacman on Linux." >&2
+    return 1
+  fi
+}
+
 ensure_nix_prereqs() {
   case "$OS" in
   Linux)
     case "$(detect_pkgmgr)" in
-    dnf)
-      sudo dnf install -y xz gawk @development-tools
-      ;;
+    apt) pkg_install curl ca-certificates tar xz-utils ;;
+    dnf) pkg_install curl ca-certificates tar xz gawk @development-tools ;;
+    pacman) pkg_install curl ca-certificates tar xz ;;
     esac
     ;;
   Darwin)
     if ! xcode-select -p >/dev/null 2>&1; then
-      echo "==> Installing Xcode Command Line Tools..."
+      echo "==> Requesting Xcode Command Line Tools..."
       xcode-select --install || true
+      echo "Finish installing Xcode Command Line Tools, then rerun bootstrap." >&2
+      return 1
     fi
+    for tool in curl tar; do
+      if ! command -v "$tool" >/dev/null 2>&1; then
+        echo "Missing bootstrap prerequisite: $tool." >&2
+        return 1
+      fi
+    done
     ;;
   esac
 }
+
+# Homebrew may already be installed but absent from a fresh shell's PATH.
+add_homebrew_to_path() {
+  [[ "$OS" == Darwin ]] || return 0
+  if ! command -v brew >/dev/null 2>&1; then
+    for prefix in /opt/homebrew /usr/local; do
+      if [[ -x "$prefix/bin/brew" ]]; then
+        export PATH="$prefix/bin:$PATH"
+        break
+      fi
+    done
+  fi
+}
+
+native_cmd() {
+  nix_cmd run --accept-flake-config \
+    "$FLAKE_DIR#homeConfigurations.$HOST.config.my.nativePackages.package" -- "$@" --host "$HOST"
+}
+
+check_host_prerequisites() (
+  local manifest needs_secrets
+  manifest=$(mktemp)
+  trap 'rm -f "$manifest"' EXIT
+  nix_cmd eval --accept-flake-config --json \
+    "$FLAKE_DIR#homeConfigurations.$HOST.config.my.nativePackages.manifest" >"$manifest"
+  native_cmd check --manifest "$manifest"
+  needs_secrets=$(nix_cmd eval --accept-flake-config --json \
+    "$FLAKE_DIR#homeConfigurations.$HOST.config" \
+    --apply 'config: config.my.secrets != [ ] || config.my.identities != [ ]')
+  if [[ "$needs_secrets" == true && ! -f "$HOME/.secrets/age_identity" ]]; then
+    echo "Missing ~/.secrets/age_identity — restore it from Bitwarden before activation." >&2
+    return 1
+  fi
+)
 
 ensure_line_in_nix_conf() {
   # Ensures a key=value line exists in /etc/nix/nix.conf, replacing any existing key line.
@@ -183,6 +256,8 @@ ensure_line_in_nix_conf() {
   # so avoid in-place sed entirely here.)
   local tmp
   tmp="$(mktemp)"
+  # The redirect writes our user-owned temporary file, not the privileged source.
+  # shellcheck disable=SC2024
   sudo grep -Ev "^[[:space:]]*${key}[[:space:]]*=" "$conf" >"$tmp" || true
   printf '%s = %s\n' "$key" "$value" >>"$tmp"
   sudo install -m 0644 "$tmp" "$conf"
@@ -344,15 +419,19 @@ run_post_setup() {
 }
 
 main() {
-  pkg_update || true
+  check_bootstrap_environment
+  pkg_update
   ensure_nix_prereqs
 
   ensure_git
   ensure_flatpak
   ensure_nix
   sync_repo
+  add_homebrew_to_path
+  check_host_prerequisites
 
   apply_host "$HOST"
+  native_cmd apply
   run_post_setup
 
   maybe_mise_install

@@ -15,6 +15,8 @@
     mise.trustedPaths = [ "~/Projects" ];
 
     apps = {
+      # VS Code runs on Windows and connects through its WSL extension.
+      disabled = [ "vscode" ];
       bundles = [
         "cli"
         "security"

@@ -2,6 +2,7 @@
   my = {
     os = "darwin";
     desktop = "none";
+    hasDesktop = true;
     gpu.backend = "metal";
     identities = [
       "personal"

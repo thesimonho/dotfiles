@@ -78,7 +78,7 @@ describe target="hosts" detail="":
         ;;
       *)
         {{ _nix }} eval --json {{ FLAKE_DIR }}#homeConfigurations."$target".config --apply 'config: {
-          inherit (config.my) hostName os desktop identities secrets;
+          inherit (config.my) hostName os desktop hasDesktop identities secrets;
           gpuBackend = config.my.gpu.backend;
           appBundles = config.my.apps.bundles;
           appEnabled = config.my.apps.enabled;
@@ -129,15 +129,41 @@ check: docs
 codex-config-apply:
     command codex-config-apply
 
-# Apply a host configuration: `just switch desktop`
-switch host: docs
-    @if [ ! -f "$HOME/.secrets/age_identity" ]; then \
-      echo "Error: Missing ~/.secrets/age_identity — restore from Bitwarden"; \
-      exit 1; \
+# Apply a host configuration, or dry-run Home Manager and native packages.
+[positional-arguments]
+switch host *args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    host="$1"
+    shift
+    dry_run=false
+    for arg in "$@"; do
+      case "$arg" in
+        --dry-run) dry_run=true ;;
+        *) echo "Unknown switch option: $arg" >&2; exit 1 ;;
+      esac
+    done
+
+    if "$dry_run"; then
+      echo "==> Home Manager dry run for $host"
+      nh home switch --dry -b backup -c "$host" {{ FLAKE_DIR }}
+      echo "==> Native package dry run for $host"
+      manifest=$(mktemp)
+      trap 'rm -f "$manifest"' EXIT
+      {{ _nix }} eval --json "{{ FLAKE_DIR }}#homeConfigurations.$host.config.my.nativePackages.manifest" > "$manifest"
+      {{ _nix }} run "{{ FLAKE_DIR }}#homeConfigurations.$host.config.my.nativePackages.package" -- plan --host "$host" --manifest "$manifest"
+      exit 0
     fi
-    @echo "==> Applying host {{ host }} using flake at {{ FLAKE_DIR }}"
-    nh home switch -b backup -c {{ host }} {{ FLAKE_DIR }}
-    @just clean
+
+    if [ ! -f "$HOME/.secrets/age_identity" ]; then
+      echo "Error: Missing ~/.secrets/age_identity — restore from Bitwarden" >&2
+      exit 1
+    fi
+    just docs
+    echo "==> Applying host $host using flake at {{ FLAKE_DIR }}"
+    nh home switch -b backup -c "$host" {{ FLAKE_DIR }}
+    native-packages apply --host "$host"
+    just clean
 
 # Build a host activation package without activating; shows nvd diff vs current
 build host:

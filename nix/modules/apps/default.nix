@@ -28,7 +28,7 @@ let
       ;
   };
   inherit (catalogData) bundleNames;
-  catalog = catalogData.entries;
+  catalog = catalogLib.mergeSections catalogData;
 
   flatpakOverrideType = types.submodule {
     options = {
@@ -59,6 +59,7 @@ let
     catalog = resolvedCatalog;
     bundles = config.my.apps.bundles;
     enabled = config.my.apps.enabled;
+    disabled = config.my.apps.disabled;
     inherit hostContext;
   };
   enabledEntries = selection.applicableEntries;
@@ -91,6 +92,11 @@ in
       default = [ ];
       description = "Individually enabled catalog entries (in addition to bundles).";
     };
+    disabled = mkOption {
+      type = types.listOf (types.enum (lib.attrNames catalog));
+      default = [ ];
+      description = "Catalog entries excluded from this host, including bundle members.";
+    };
     catalog = mkOption {
       type = appType;
       default = catalog;
@@ -100,7 +106,10 @@ in
   };
 
   config = lib.mkMerge [
-    (catalogLib.realizeContributions enabledEntries)
+    (catalogLib.realizeContributions {
+      entries = enabledEntries;
+      domain = "apps";
+    })
     {
       assertions = lib.mapAttrsToList (name: entry: {
         assertion = catalogLib.hasContributions entry || entry.flatpak != null;

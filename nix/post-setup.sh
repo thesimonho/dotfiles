@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
-# Post-HM-activation: install OS-native packages that nix can't manage.
+# Post-HM-activation: privileged host configuration and remaining bootstrap.
 #
-# KDE userland (Dolphin plugins, partitionmanager, flatpak-kcm) stays
-# system-installed because KDE plugin discovery doesn't participate in
-# nix profile paths.
-#
-# All Linux hosts get `libsecret` (for `secret-tool`) and `zenity` for
-# the secret-askpass wrapper (see modules/ssh.nix). On non-KDE hosts
-# we also install `gnome-keyring` to provide the Secret Service API
-# that secret-tool talks to, and wire it into PAM so the keyring
-# auto-unlocks at login with the user's password. KDE hosts get the
-# Secret Service from KWallet, which SDDM already unlocks.
+# Arch/Fedora hosts select native app/authentication packages through the
+# catalog, including KDE metapackages.
+# WSL distro fallbacks remain here until the host selects a supported native
+# platform; Debian/Ubuntu still needs an APT backend.
+# PAM wiring and /etc/wsl.conf remain root-owned setup operations.
 set -euo pipefail
 
 is_kde() {
@@ -23,7 +18,7 @@ is_wsl() {
   [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version 2>/dev/null
 }
 
-install_arch() {
+install_arch_wsl() {
   local pkgs=(
     libsecret
     zenity
@@ -44,18 +39,22 @@ install_arch() {
   sudo pacman -S --needed --noconfirm "${pkgs[@]}"
 }
 
+install_arch() {
+  if is_wsl; then
+    install_arch_wsl
+  fi
+}
+
 install_fedora() {
-  local pkgs=(libsecret zenity)
-  if ! is_wsl; then
-    pkgs+=(dolphin-plugins kio-gdrive)
-    if is_kde; then
-      pkgs+=(kde-partitionmanager)
+  # Normal Fedora hosts use native catalog declarations. WSL has no selected
+  # native platform yet, so retain its authentication-package bootstrap.
+  if is_wsl; then
+    local pkgs=(libsecret zenity)
+    if ! is_kde; then
+      pkgs+=(gnome-keyring gnome-keyring-pam)
     fi
+    sudo dnf install -y "${pkgs[@]}"
   fi
-  if ! is_kde; then
-    pkgs+=(gnome-keyring gnome-keyring-pam)
-  fi
-  sudo dnf install -y "${pkgs[@]}"
 }
 
 # Debian/Ubuntu — the common WSL base. Package names differ from Fedora:

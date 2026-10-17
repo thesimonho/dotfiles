@@ -20,26 +20,17 @@ in
     "skills"
   ];
 
-  entries = {
+  applications = {
     claude-code = {
       contributions.packages = [ llmAgents.claude-code ];
       bundles = [ "agents" ];
     };
     claude-desktop = {
-      # From claude-desktop-bin (not llm-agents): its build patches the Cowork
-      # VM probe to honour CLAUDE_OVMF_CODE_PATH / CLAUDE_VIRTIOFSD_PATH and
-      # wires OVMF + virtiofsd from nixpkgs. qemu = null drops the bundled qemu
-      # from the closure; the Cowork helper finds qemu-system-x86_64 on the
-      # session PATH instead (needs the host qemu package + kvm group).
-      contributions.packages =
-        if builtins.elem system linuxSystems then
-          [
-            (inputs.claude-desktop-bin.packages.${system}.claude-desktop.override {
-              qemu = null;
-            })
-          ]
-        else
-          [ ];
+      # CachyOS supplies the native Cowork VM dependencies and firmware paths.
+      contributions.nativePackages = {
+        arch.pacman = [ "claude-desktop" ];
+        darwin.homebrew.casks = [ "claude" ];
+      };
       requirements = {
         systems = linuxSystems ++ [ "aarch64-darwin" ];
         hasDesktop = true;
@@ -51,7 +42,10 @@ in
       bundles = [ "agents" ];
     };
     chatgpt = {
-      contributions.packages = [ llmAgents.chatgpt ];
+      contributions.nativePackages = {
+        arch.pacman = [ "chatgpt-desktop-bin" ];
+        darwin.homebrew.casks = [ "chatgpt" ];
+      };
       requirements = {
         systems = linuxSystems ++ [ "aarch64-darwin" ];
         hasDesktop = true;
@@ -64,14 +58,6 @@ in
     };
     opencode = {
       contributions.packages = [ llmAgents.opencode ];
-      bundles = [ "agents" ];
-    };
-    claude-code-acp = {
-      contributions.packages = [ llmAgents.claude-agent-acp ];
-      bundles = [ "agents" ];
-    };
-    codex-acp = {
-      contributions.packages = [ llmAgents.codex-acp ];
       bundles = [ "agents" ];
     };
     agent-browser = {
@@ -93,6 +79,17 @@ in
     huggingface-hub = {
       contributions.packages = [ pkgsUnstable.python3Packages.huggingface-hub ];
       bundles = [ "cli" ];
+    };
+  };
+
+  support = {
+    claude-code-acp = {
+      contributions.packages = [ llmAgents.claude-agent-acp ];
+      bundles = [ "agents" ];
+    };
+    codex-acp = {
+      contributions.packages = [ llmAgents.codex-acp ];
+      bundles = [ "agents" ];
     };
   };
 }

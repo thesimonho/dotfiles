@@ -37,6 +37,13 @@ in
       description = "Desktop environment. Darwin hosts always set this to \"none\".";
     };
 
+    hasDesktop = mkOption {
+      type = types.bool;
+      default = config.my.desktop != "none";
+      defaultText = lib.literalExpression ''config.my.desktop != "none"'';
+      description = "Whether this host has a graphical desktop, independently of its desktop environment.";
+    };
+
     gpu.backend = mkOption {
       type = types.enum requirementValues.gpuBackends;
       default = "none";

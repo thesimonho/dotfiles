@@ -38,6 +38,6 @@
       operatingSystem = config.my.os;
       desktop = config.my.desktop;
       gpuBackend = config.my.gpu.backend;
-      hasDesktop = config.my.desktop != "none";
+      hasDesktop = config.my.hasDesktop;
     };
 }

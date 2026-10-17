@@ -15,6 +15,7 @@
     apps = {
       bundles = [
         "cli"
+        "desktop"
         "security"
         "fonts"
         "communication"
@@ -23,9 +24,12 @@
       ];
       enabled = [
         "android-tools"
+        "android-udev"
         "bitwarden"
         "ffmpeg"
+        "firefox"
         "glow"
+        "google-chrome"
         "master-pdf-editor"
         "onlyoffice"
         "wl-clipboard"
