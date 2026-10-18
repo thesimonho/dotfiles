@@ -92,6 +92,21 @@ commands. Project configuration still supplies other settings. nvim-lint does
 not run a second Ruff diagnostic pass. Markdown's linter and formatter share
 `lua/plugins/languages/.markdownlint.yaml`. HTML comments stay visible in Markdown buffers through `render-markdown`'s `html.comment.conceal = false`, so issue and PR template guidance remains readable away from the cursor. Other Markdown rendering stays enabled.
 
+JavaScript tooling is selected independently from project configuration.
+ESLint uses nvim-lspconfig's config detection; Oxlint starts for
+`.oxlintrc.json`, `.oxlintrc.jsonc`, or `oxlint.config.ts`, including package-level
+configs. Without either linter config, neither linter starts. ESLint's existing
+fix pass remains enabled.
+
+Conform runs Oxfmt when `.oxfmtrc.json`, `.oxfmtrc.jsonc`, or `oxfmt.config.ts`
+exists above the file. Prettier runs when its config exists (including a
+`prettier` field in `package.json`), or when no Oxfmt config exists. Configuring
+both formatters runs both; there is no priority rule. These rules apply to the
+Oxc extra's filetypes and Prettier's configured web/document filetypes.
+`lua/plugins/languages/typescript.lua` owns these conditions. Use `:ConformInfo`
+and `:LspInfo` to inspect selection for the current buffer. Restart Neovim after
+changing the editor configuration; Mason installs the added Oxc tools.
+
 nvim-dap-go owns the Go adapter and built-in debug choices; Mason installs
 Delve but does not add duplicate Go configurations. Resolve launch paths and
 the adapter working directory at launch time so project switches and symlinked
