@@ -166,10 +166,16 @@
       bundles = [ "dev" ];
     };
     ghostty = {
-      requirements.operatingSystems = [ "arch" ];
+      requirements.operatingSystems = [
+        "arch"
+        "darwin"
+      ];
       requirements.hasDesktop = true;
-      contributions.nativePackages.arch.pacman = [ "ghostty" ];
-      bundles = [ ];
+      contributions.nativePackages = {
+        arch.pacman = [ "ghostty" ];
+        darwin.homebrew.casks = [ "ghostty" ];
+      };
+      bundles = [ "desktop" ];
     };
     gitleaks = {
       contributions.packages = [ pkgs.gitleaks ];

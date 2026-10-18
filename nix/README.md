@@ -113,7 +113,7 @@ hostname check or arbitrary predicate to a catalog entry.
 
 ## Native packages
 
-Ghostty is an opt-in Arch catalog application, enabled by the desktop host. The native adapter installs the `ghostty` Pacman package; `modules/common.nix` keeps its configuration linked to `ghostty/` in the dotfiles checkout. Other platforms have no Ghostty package mapping yet.
+Ghostty belongs to the `desktop` bundle, selected by the Arch desktop and Mac hosts. It requires a graphical desktop and uses the native `ghostty` Pacman package on Arch or Homebrew cask on macOS. WSL does not select the bundle. `modules/common.nix` keeps its configuration linked to `ghostty/` in the dotfiles checkout. Fedora has no Ghostty package mapping yet.
 
 Home Manager writes `~/.config/native-packages/manifest.json` and installs the `native-packages` command. The manifest includes the explicit host key, OS, architecture, native platform, selected backend package lists and repositories. The reconciler is outside activation: `just switch <host>` first activates Home Manager, then applies its manifest. These are separate transactions.
 

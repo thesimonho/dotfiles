@@ -13,6 +13,7 @@
     apps = {
       bundles = [
         "cli"
+        "desktop"
         "security"
         "fonts"
         "communication"
