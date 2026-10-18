@@ -31,13 +31,6 @@ Track these steps explicitly and complete them in order.
 
 - Create `AGENTS.md` if it does not exist. Start it with `# AGENTS` and a short note that project-specific agent instructions belong there.
 - Preserve an existing `AGENTS.md` exactly.
-- Create `CLAUDE.md` if it does not exist with exactly this content:
-
-```markdown
-@AGENTS.md
-```
-
-- If `CLAUDE.md` already exists, do not replace it. Explain any mismatch instead.
 
 ### 4. Create or link the GitHub repository
 
