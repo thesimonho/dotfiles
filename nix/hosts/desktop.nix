@@ -28,6 +28,7 @@
         "bitwarden"
         "ffmpeg"
         "firefox"
+        "ghostty"
         "glow"
         "google-chrome"
         "master-pdf-editor"

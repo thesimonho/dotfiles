@@ -165,6 +165,12 @@
       contributions.packages = [ pkgs.gh ];
       bundles = [ "dev" ];
     };
+    ghostty = {
+      requirements.operatingSystems = [ "arch" ];
+      requirements.hasDesktop = true;
+      contributions.nativePackages.arch.pacman = [ "ghostty" ];
+      bundles = [ ];
+    };
     gitleaks = {
       contributions.packages = [ pkgs.gitleaks ];
       bundles = [

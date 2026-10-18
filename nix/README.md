@@ -113,6 +113,8 @@ hostname check or arbitrary predicate to a catalog entry.
 
 ## Native packages
 
+Ghostty is an opt-in Arch catalog application, enabled by the desktop host. The native adapter installs the `ghostty` Pacman package; `modules/common.nix` keeps its configuration linked to `ghostty/` in the dotfiles checkout. Other platforms have no Ghostty package mapping yet.
+
 Home Manager writes `~/.config/native-packages/manifest.json` and installs the `native-packages` command. The manifest includes the explicit host key, OS, architecture, native platform, selected backend package lists and repositories. The reconciler is outside activation: `just switch <host>` first activates Home Manager, then applies its manifest. These are separate transactions.
 
 On Arch, apply marks every declared installed package explicitly installed before removing old packages. This protects declared packages even when they originally arrived as dependencies, without adopting pre-existing packages. Owned packages whose last declaration disappears are removed with `pacman -Rs`, including dependencies that pacman finds unneeded. The dry-run resolves this transaction using a temporary copy of pacman’s local database with declared packages protected; it does not change real install reasons. Apply installs wanted packages first and resolves removals again immediately before execution. Pacman displays its final transaction and keeps its normal confirmation.
