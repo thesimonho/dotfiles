@@ -38,6 +38,13 @@ let
       }
     else
       { };
+  aurBuilds = lib.zipAttrsWith (
+    name: values:
+    if lib.all (value: value == builtins.head values) values then
+      builtins.head values
+    else
+      throw "Conflicting native AUR build commands for '${name}'."
+  ) (map (mapping: mapping.aurBuilds) selected);
   manifest =
     if missing != [ ] then
       throw "Native package mappings missing for host '${config.my.hostName}' (platform ${
@@ -45,13 +52,14 @@ let
       }): ${lib.concatStringsSep ", " missing}. Add a platform mapping or explicitly disable the application on this host."
     else
       {
-        version = 4;
+        version = 5;
         host = config.my.hostName;
         os = config.my.os;
         platform = cfg.platform;
         system = pkgs.stdenv.hostPlatform.system;
         inherit packages;
         repositories = if cfg.platform == "fedora" then repositories else { };
+        aurBuilds = if cfg.platform == "arch" then aurBuilds else { };
       };
   reconciler = pkgs.writeScriptBin "native-packages" (
     "#!${pkgs.python3}/bin/python3\n" + builtins.readFile ../scripts/native-packages.py

@@ -1,6 +1,7 @@
 {
   inputs,
   pkgsUnstable,
+  pkgs ? pkgsUnstable,
   system,
   symlinkConfig,
 }:
@@ -12,6 +13,31 @@ let
     "aarch64-linux"
     "x86_64-linux"
   ];
+  codexFeatureConfig = pkgs.writeText "codex-features.json" (
+    builtins.toJSON {
+      enabled = [
+        "automation-extensions"
+        "computer-use-linux"
+        "directory-only-working-tree-watch"
+        "filesystem-root-follow-ups"
+        "global-dictation"
+        "node-repl-reaper"
+        "persistent-status-panel"
+        "pet-overlay"
+        "preferred-editor-file-links"
+        "project-group-last-updated-sort"
+        "project-task-sort"
+        "remote-control-ui"
+        "remote-mobile-control"
+        "tray-usage"
+        "wayland-global-shortcuts"
+      ];
+    }
+  );
+  codexNativeBuild = pkgs.writeShellScript "codex-desktop-native-build" ''
+    export CODEX_LINUX_FEATURES_CONFIG=${codexFeatureConfig}
+    exec ${pkgs.python3}/bin/python3 ${./scripts/build-codex-desktop.py} "$@"
+  '';
 in
 {
   bundleNames = [
@@ -43,6 +69,7 @@ in
     chatgpt = {
       contributions.nativePackages = {
         arch.aur = [ "codex-desktop-git" ];
+        arch.aurBuilds.codex-desktop-git = "${codexNativeBuild}";
         darwin.homebrew.casks = [ "chatgpt" ];
       };
       requirements = {

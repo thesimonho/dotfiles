@@ -345,7 +345,7 @@ def package_map(value, native_platform):
 
 def load_manifest(path, host):
     manifest = read_json(path)
-    if not isinstance(manifest, dict) or manifest.get("version") not in (1, 2, 4):
+    if not isinstance(manifest, dict) or manifest.get("version") not in (1, 2, 4, 5):
         fail(
             "Unsupported manifest version; switch Home Manager to generate the current manifest."
         )
@@ -392,6 +392,16 @@ def load_manifest(path, host):
         os.environ["HOMEBREW_NO_AUTOREMOVE"] = "1"
         os.environ["HOMEBREW_NO_AUTO_UPDATE"] = "1"
     desired = package_map(manifest.get("packages"), native_platform)
+    backend.aur_builds = manifest.get("aurBuilds", {})
+    if not isinstance(backend.aur_builds, dict) or any(
+        desired.get(name) != "aur"
+        or not isinstance(executable, str)
+        or not executable.startswith("/nix/store/")
+        for name, executable in backend.aur_builds.items()
+    ):
+        fail(
+            "AUR build commands must be Nix store executables for declared AUR packages."
+        )
     return identity, desired, backend
 
 
@@ -482,7 +492,14 @@ def apply(desired, receipt, plan, path, helper, yes, backend):
     if (
         any(
             plan[key]
-            for key in ("install", "remove", "adopt", "repositories", "mark-explicit")
+            for key in (
+                "install",
+                "rebuild",
+                "remove",
+                "adopt",
+                "repositories",
+                "mark-explicit",
+            )
         )
         and not yes
     ):
@@ -490,7 +507,7 @@ def apply(desired, receipt, plan, path, helper, yes, backend):
             fail("Apply requires an interactive confirmation or explicit --yes.")
         if input("Apply this native package plan? [y/N] ").strip().lower() != "y":
             fail("Cancelled; no package changes made.")
-    if any(desired[name] == "aur" for name in plan["install"]):
+    if any(desired[name] == "aur" for name in plan["install"] + plan["rebuild"]):
         helper = helper or shutil.which("paru") or shutil.which("yay")
         if not helper:
             fail("AUR installation requires an existing paru or yay.")
@@ -498,25 +515,42 @@ def apply(desired, receipt, plan, path, helper, yes, backend):
     for name in plan["adopt"]:
         receipt["owned"][name] = desired[name]
     save(path, receipt)
-    for name in plan["install"]:
-        if present(backend.installed(), name, desired[name]):
+    for name in plan["install"] + plan["rebuild"]:
+        if name not in plan["rebuild"] and present(
+            backend.installed(), name, desired[name]
+        ):
             print(f"Preserving newly pre-existing package: {name}")
             continue
         kind = desired[name]
-        args = backend.install_command(name, kind, helper)
-        receipt["pending"] = {"name": name, "backend": kind}
+        builder = backend.aur_builds.get(name)
+        args = (
+            [builder, helper]
+            if builder
+            else backend.install_command(name, kind, helper)
+        )
+        was_owned = name in receipt["owned"]
+        receipt["pending"] = (
+            {"name": name, "backend": kind}
+            if was_owned or name in plan["install"]
+            else None
+        )
         save(path, receipt)
         try:
             command(args)
         finally:
             # Failed helpers may still commit targets. Failed queries leave the
             # journal intact for recovery. Helpers/makepkg never run as root.
-            if present(backend.installed(), name, desired[name]):
+            if present(backend.installed(), name, desired[name]) and (
+                name in plan["install"] or was_owned
+            ):
                 receipt["owned"][name] = kind
             receipt["pending"] = None
             save(path, receipt)
-        if name not in receipt["owned"]:
+        if not present(backend.installed(), name, kind):
             fail(f"Install did not produce exact package {name}; stopping.")
+        if builder:
+            receipt.setdefault("builds", {})[name] = builder
+            save(path, receipt)
     if backend.platform == "arch":
         installed = backend.installed()
         if any(not present(installed, name, kind) for name, kind in desired.items()):
@@ -596,9 +630,29 @@ def main():
             fail("Another native package command is running.")
         path = args.state_dir / "receipt.json"
         receipt = load_receipt(path, identity, backend)
+        builds = receipt.setdefault("builds", {})
+        if not isinstance(builds, dict) or any(
+            not isinstance(name, str) or not isinstance(value, str)
+            for name, value in builds.items()
+        ):
+            fail("Invalid native build receipt.")
         installed = backend.installed()
         recover(receipt, installed)
         plan = make_plan(desired, receipt, installed, args.adopt)
+        plan["rebuild"] = sorted(
+            name
+            for name, builder in backend.aur_builds.items()
+            if name not in plan["install"] and builds.get(name) != builder
+        )
+        for name, builder in backend.aur_builds.items():
+            if name in plan["install"] or name in plan["rebuild"]:
+                continue
+            result = subprocess.run([builder, "--check"], check=False)
+            if result.returncode == 1:
+                plan["rebuild"].append(name)
+            elif result.returncode != 0:
+                fail(f"Cannot check native build configuration for {name}.")
+        plan["rebuild"].sort()
         plan["mark-explicit"] = backend.protection_plan(desired, installed)
         resolved = backend.removal_preview(plan["remove"], desired)
         plan["remove-dependencies"] = sorted(set(resolved) - set(plan["remove"]))

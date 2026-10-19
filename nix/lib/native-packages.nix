@@ -29,6 +29,11 @@ rec {
       arch = mapping {
         pacman = names "Exact Arch repository package names.";
         aur = names "Exact AUR package names.";
+        aurBuilds = mkOption {
+          type = types.attrsOf types.str;
+          default = { };
+          description = "Custom AUR build executables, keyed by declared AUR package name.";
+        };
       };
       darwin = mapping {
         homebrew = {

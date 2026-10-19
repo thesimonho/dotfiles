@@ -20,6 +20,7 @@ let
     inherit
       inputs
       pkgsUnstable
+      pkgs
       system
       symlinkConfig
       ;
