@@ -26,6 +26,7 @@ let
   };
   pinentryFor =
     { os, desktop }: pinentryByDesktop.${desktop} or pinentryByOs.${os} or pkgs.pinentry-curses;
+  terminalPinentry = config.services.gpg-agent.pinentry.package == pkgs.pinentry-curses;
 
   gpgPkg = pkgs.gnupg;
   gpgBin = "${gpgPkg}/bin/gpg";
@@ -48,6 +49,7 @@ in
 
   services.gpg-agent = {
     enable = true;
+    enableZshIntegration = terminalPinentry;
     enableExtraSocket = true;
     grabKeyboardAndMouse = true;
     noAllowExternalCache = false;
@@ -65,6 +67,15 @@ in
     maxCacheTtl = if nativeKde then null else 2592000;
     extraConfig = lib.optionalString nativeKde "pinentry-program /usr/bin/pinentry-qt";
   };
+
+  # Refresh the prompt destination after Home Manager exports GPG_TTY.
+  programs.zsh.initContent = lib.mkIf terminalPinentry (
+    lib.mkOrder 1100 ''
+      if [[ -o interactive ]]; then
+        ${gpgPkg}/bin/gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1 || true
+      fi
+    ''
+  );
 
   # Pinentry inherits this from the socket-activated agent even for GUI callers.
   systemd.user.services.gpg-agent.Service.Environment = lib.mkIf nativeKde [

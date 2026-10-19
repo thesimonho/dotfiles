@@ -85,23 +85,6 @@ in
         fi
       '')
 
-      # 110: GPG_TTY so pinentry-curses finds the controlling terminal.
-      # Without it the curses prompt grabs the wrong tty and mishandles
-      # input — flaky/"incorrect" passphrase entry, notably in nvim's
-      # embedded terminal. updatestartuptty refreshes the running agent so
-      # cache-hit prompts render on the current tty. Linux only: macOS uses
-      # the pinentry-mac GUI, which needs neither.
-      (lib.mkIf isLinux (
-        lib.mkOrder 110 ''
-          export GPG_TTY=$(tty)
-          # Only nudge the agent in interactive shells — skip the
-          # socket-activation cost in scripts / scp sessions.
-          if [[ -o interactive ]]; then
-            gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1 || true
-          fi
-        ''
-      ))
-
       # 200: load secrets
       (lib.mkOrder 200 ''
         # Load encrypted environment variables

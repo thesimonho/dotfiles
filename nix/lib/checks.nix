@@ -199,6 +199,13 @@ let
     assert (services ? ssh-agent) == linux;
     assert !(c.systemd.user.sockets ? ssh-agent);
     assert !c.services.gpg-agent.enableSshSupport;
+    assert c.services.gpg-agent.enableZshIntegration == (linux && !native);
+    assert
+      !(c.age.secrets ? api-keys)
+      || (lib.hasInfix "GPG_TTY" c.programs.zsh.initContent) == (linux && !native);
+    assert
+      !(c.age.secrets ? api-keys)
+      || (lib.hasInfix "updatestartuptty" c.programs.zsh.initContent) == (linux && !native);
     assert lib.all (name: checkIdentity name ids.${name}) (builtins.attrNames ids);
     assert !(ssh ? "*"); # SSH settings are scoped to identity hosts.
     assert

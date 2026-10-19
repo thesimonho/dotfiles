@@ -233,6 +233,8 @@ decrypts none.
 
 Arch and Fedora KDE declare `ksshaskpass` and Qt pinentry in the native package catalog. See the [GnuPG agent manual](https://gnupg.org/documentation/manuals/gnupg26/gpg-agent.1.html) for its built-in cache defaults.
 
+The GPG module enables Zsh terminal integration only for `pinentry-curses`. It sets `GPG_TTY` and updates the agent's terminal destination. Graphical pinentry on KDE and macOS does not start or update the agent from Zsh.
+
 See `secrets/README.md` for more details.
 
 ## Validation
