@@ -14,6 +14,7 @@
     "communication"
     "dev"
     "cloud"
+    "gamedev"
   ];
 
   applications = {
@@ -61,6 +62,15 @@
     bitwarden = {
       flatpak.id = "com.bitwarden.desktop";
       bundles = [ ];
+    };
+    blender = {
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.hasDesktop = true;
+      flatpak.id = "org.blender.Blender";
+      bundles = [ "gamedev" ];
     };
     carapace = {
       contributions.programs.carapace.enable = true;
@@ -156,6 +166,23 @@
     };
     google-cloud-sdk = {
       contributions.packages = [ pkgs.google-cloud-sdk ];
+    };
+    godot = {
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.hasDesktop = true;
+      flatpak.id = "org.godotengine.GodotSharp";
+      bundles = [ "gamedev" ];
+      # Run inside Godot's sandbox, launching Blender through the host.
+      contributions.homeFiles.".local/share/godot-flatpak/bin/blender" = {
+        executable = true;
+        text = ''
+          #!/bin/sh
+          exec flatpak-spawn --host flatpak run org.blender.Blender "$@"
+        '';
+      };
     };
     gearlever = {
       flatpak.id = "it.mijorus.gearlever";

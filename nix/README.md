@@ -41,7 +41,7 @@ nix/
 
 ## How to add a tool
 
-1. **Trivial** (just a Flatpak ID, package, or Home Manager program): add an entry to `modules/apps/catalog.nix`. Tag it with the right bundle (`cli`, `desktop`, `dev`, `security`, `fonts`, `communication`, `cloud`) and place its Home Manager values under `contributions`.
+1. **Trivial** (just a Flatpak ID, package, or Home Manager program): add an entry to `modules/apps/catalog.nix`. Tag it with the right bundle (`cli`, `desktop`, `dev`, `security`, `fonts`, `communication`, `cloud`, `gamedev`) and place its Home Manager values under `contributions`.
 2. **Substantial config** (extensions, services, identity wiring): write
    a dedicated module `modules/<tool>.nix`, add it to `sharedModules`, and let
    the catalog contribute the typed option that activates it.
@@ -112,6 +112,43 @@ Flatpak remains an apps-only adapter because no other catalog domain needs it.
 If the host model cannot express an applicability rule, extend
 `lib/host-context.nix` and the corresponding `my.*` option instead of adding a
 hostname check or arbitrary predicate to a catalog entry.
+
+## Game development Flatpaks
+
+The `gamedev` app bundle selects Blender (`org.blender.Blender`) and Godot's
+.NET edition (`org.godotengine.GodotSharp`) on graphical Arch/Fedora hosts.
+The desktop host selects this bundle. Godot supports both GDScript and C#;
+its Flatpak includes .NET tooling. This bundle adds no host CUDA toolkit or
+.NET SDK. The host still needs a working GPU driver.
+
+After `just switch desktop` from `nix/`, finish these one-time Godot settings:
+
+- For direct `.blend` imports, set **Editor Settings → Filesystem → Import →
+  Blender → Blender Path** (called **Blender 3 Path** in some versions) to
+  `/home/simon/.local/share/godot-flatpak/bin`. On another host, substitute its
+  home directory. Home Manager installs the executable `blender` launcher in
+  that directory. It uses `flatpak-spawn --host` to run the Blender Flatpak.
+  Exporting `.glb` from Blender instead does not need this setting.
+- For a host GDScript editor such as VS Code, enable the external editor,
+  set **Text Editor → External → Exec Path** to `flatpak-spawn`, and set
+  **Exec Flags** to `--host code --reuse-window {project} --goto {file}:{line}:{col}`.
+  C# uses separate **Dotnet → Editor** settings. The package documents that
+  external C# editor integration needs additional configuration. A host editor
+  may need its own SDK for C# language services because Godot's SDK is inside
+  its sandbox. Choose that setup when choosing a C# editor workflow.
+
+Godot preferences stay writable and are not replaced on activation. The
+package already grants host-command access; no extra sandbox overrides are
+added. See the [GodotSharp package instructions](https://github.com/flathub/org.godotengine.GodotSharp)
+for Blender and external-editor integration.
+
+After switching, run `flatpak update` so graphics extensions match the host
+driver. In Blender, select the NVIDIA GPU under **Preferences → System →
+Cycles Render Devices** (OptiX if supported, otherwise CUDA), then select
+**Cycles → Device → GPU Compute** and complete a small render. In Godot,
+run a small scene with Forward+ or Mobile, import a `.blend` asset, and create,
+build, and run a C# script. These runtime checks require the activated apps;
+configuration evaluation alone does not prove GPU or C# operation.
 
 ## Native packages
 

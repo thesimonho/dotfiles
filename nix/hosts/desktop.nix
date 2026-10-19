@@ -21,6 +21,7 @@
         "communication"
         "dev"
         "cloud"
+        "gamedev"
       ];
       enabled = [
         "android-tools"
