@@ -6,7 +6,6 @@
 }:
 let
   isLinux = config.my.os != "darwin";
-  isWSL = config.my.os == "wsl";
   hostsPath = ../hosts;
   hostEntries = builtins.readDir hostsPath;
   hostNames = map (name: lib.removeSuffix ".nix" name) (
@@ -129,35 +128,6 @@ in
           export FZF_DEFAULT_OPTS_FILE="$HOME/.config/fzf/kanagawa-paper-ink.rc"
         fi
       '')
-
-      # 600: WSL — preload the SSH agent and preset the GPG signing passphrase
-      # from the interactive shell. WSL has no graphical-session.target and its
-      # systemd user manager has no DISPLAY, so neither the ssh-add-keys nor the
-      # gpg-preset-passphrases oneshot can fire or prompt. The shell does get
-      # DISPLAY via WSLg, so it runs the first-run zenity prompt (seeding
-      # libsecret) and silently reloads from libsecret on later boots. A
-      # per-boot marker in the tmpfs runtime dir caps each to one attempt.
-      (lib.mkIf isWSL (
-        lib.mkOrder 600 ''
-          # Run an agent-preload command ($1) at most once per boot, keyed on a
-          # marker file ($2) in the tmpfs runtime dir. Only touch the marker on
-          # success, so a cancelled/failed seed retries on the next shell.
-          _preload_agent_once() {
-            [[ -n "$XDG_RUNTIME_DIR" ]] || return 0
-            local marker="$XDG_RUNTIME_DIR/$2"
-            command -v "$1" >/dev/null 2>&1 || return 0
-            [[ ! -e "$marker" ]] || return 0
-            # Suppress stdout only — let stderr through so a failed/cancelled
-            # seed surfaces in the terminal (the sole signal on WSL).
-            "$1" >/dev/null && touch "$marker"
-          }
-          if [[ -o interactive ]]; then
-            _preload_agent_once ssh-add-keys ssh-add-keys-done
-            _preload_agent_once gpg-preset-driver gpg-preset-done
-          fi
-          unset -f _preload_agent_once
-        ''
-      ))
 
       # 550: before compinit — completion styles & fzf-tab zstyles
       (lib.mkOrder 550 ''

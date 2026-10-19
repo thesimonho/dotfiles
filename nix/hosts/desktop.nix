@@ -4,7 +4,6 @@
   my = {
     os = "arch";
     desktop = "kde";
-    kdeNativeAuth = true;
     gpu.backend = "cuda";
     identities = [
       "personal"

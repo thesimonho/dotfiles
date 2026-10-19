@@ -37,12 +37,6 @@ in
       description = "Desktop environment. Darwin hosts always set this to \"none\".";
     };
 
-    kdeNativeAuth = mkOption {
-      type = types.bool;
-      default = false;
-      description = "Use native Arch KDE askpass/pinentry instead of custom passphrase presetting. Disable to roll back during migration.";
-    };
-
     hasDesktop = mkOption {
       type = types.bool;
       default = config.my.desktop != "none";

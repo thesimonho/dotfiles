@@ -408,12 +408,21 @@
   support = {
     kde-authentication = {
       bundles = [ "security" ];
-      requirements.operatingSystems = [ "arch" ];
-      requirements.desktops = [ "kde" ];
-      contributions.nativePackages.arch.pacman = [
-        "ksshaskpass"
-        "pinentry"
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
       ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages = {
+        arch.pacman = [
+          "ksshaskpass"
+          "pinentry"
+        ];
+        fedora.dnf.packages = [
+          "ksshaskpass"
+          "pinentry-qt"
+        ];
+      };
     };
     android-udev = {
       requirements.operatingSystems = [
@@ -512,17 +521,6 @@
     nerd-fonts-symbols-only = {
       contributions.packages = [ pkgs.nerd-fonts.symbols-only ];
       bundles = [ "fonts" ];
-    };
-    zenity = {
-      bundles = [ "security" ];
-      requirements.operatingSystems = [
-        "arch"
-        "fedora"
-      ];
-      contributions.nativePackages = {
-        arch.pacman = [ "zenity" ];
-        fedora.dnf.packages = [ "zenity" ];
-      };
     };
   };
 }

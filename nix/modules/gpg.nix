@@ -1,8 +1,8 @@
-# GPG key management, agent configuration, and signing-passphrase persistence.
+# GPG agent configuration and key import.
 # Keys are derived from identities in secrets/meta.nix that have gpg config.
 #
-# KDE uses native pinentry-qt external caching; WSL/other Linux retain
-# libsecret presetting. macOS retains pinentry-mac and Keychain.
+# Linux KDE uses pinentry-qt with KWallet; macOS keeps pinentry-mac. WSL uses
+# pinentry-curses and keeps passphrases only in the agent's memory cache.
 {
   config,
   pkgs,
@@ -12,9 +12,8 @@
 
 let
   isLinux = config.my.os != "darwin";
-  isWSL = config.my.os == "wsl";
   isKde = config.my.desktop == "kde";
-  nativeKde = config.my.os == "arch" && isKde && config.my.kdeNativeAuth;
+  nativeKde = isLinux && config.my.os != "wsl" && isKde;
   selectedIdentities = config.my._identities;
 
   # Pinentry by (DE, OS). KDE → Qt + KWallet; macOS → Keychain bridge;
@@ -37,43 +36,6 @@ let
     trust = "ultimate";
   }) gpgIdentities;
 
-  # Identities that sign commits: have a GPG block with sign enabled.
-  # Matches the gpgSign wiring in git.nix; `sprung` (gpg = null) is excluded.
-  signingIdentities = lib.filterAttrs (
-    _: id: id.gpg != null && (id.gpg.sign or false)
-  ) selectedIdentities;
-  signingKeyIds = lib.concatStringsSep " " (
-    lib.mapAttrsToList (_: id: id.gpg.keyId) signingIdentities
-  );
-
-  # Passphrase persistence only applies on Linux (macOS uses Keychain) and
-  # only when something actually signs.
-  enablePersistence = isLinux && !nativeKde && signingIdentities != { };
-
-  # gpg-preset <keyId> — the per-key primitive (resolve/validate/store/preset).
-  gpgPresetApp = pkgs.writeShellApplication {
-    name = "gpg-preset";
-    runtimeInputs = [ gpgPkg ];
-    text = builtins.readFile ../scripts/gpg-preset.sh;
-  };
-  # gpg-preset-driver — preset every signing identity (the login entrypoint).
-  gpgPresetDriverApp = pkgs.writeShellApplication {
-    name = "gpg-preset-driver";
-    runtimeInputs = [ gpgPresetApp ];
-    text = ''
-      GPG_SIGNING_KEY_IDS=${lib.escapeShellArg signingKeyIds}
-      ${builtins.readFile ../scripts/gpg-preset-driver.sh}
-    '';
-  };
-  # gpg-keys — inspect/clear stored passphrases (parallels ssh-keys).
-  gpgKeysApp = pkgs.writeShellApplication {
-    name = "gpg-keys";
-    runtimeInputs = [ gpgPresetDriverApp ];
-    text = ''
-      GPG_SIGNING_KEY_IDS=${lib.escapeShellArg signingKeyIds}
-      ${builtins.readFile ../scripts/gpg-keys.sh}
-    '';
-  };
 in
 {
   programs.gpg = {
@@ -97,67 +59,16 @@ in
           os = config.my.os;
           desktop = config.my.desktop;
         };
-    defaultCacheTtl = 2592000; # 30 days
-    maxCacheTtl = 2592000; # 30 days
-    extraConfig =
-      if nativeKde then "pinentry-program /usr/bin/pinentry-qt" else "allow-preset-passphrase";
+    # KWallet persists the KDE passphrase, so let gpg-agent use its shorter
+    # built-in cache limits. Keep existing settings on untested platforms.
+    defaultCacheTtl = if nativeKde then null else 2592000;
+    maxCacheTtl = if nativeKde then null else 2592000;
+    extraConfig = lib.optionalString nativeKde "pinentry-program /usr/bin/pinentry-qt";
   };
 
   # Pinentry inherits this from the socket-activated agent even for GUI callers.
   systemd.user.services.gpg-agent.Service.Environment = lib.mkIf nativeKde [
     "PINENTRY_KDE_USE_WALLET=1"
-  ];
-
-  # Preset signing passphrases at login. Ordered on gpg-agent.socket (NOT
-  # the service — it is `--supervised` with RefuseManualStart); the preset
-  # binary socket-activates the agent. GNUPGHOME is pinned to match the
-  # agent's own value so we preset into the same agent.
-  #
-  # On KDE, also order after plasma-kwallet-pam.service (the PAM wallet unlock):
-  # it is pulled in by plasma-workspace.target, which is reached *after*
-  # graphical-session.target, so without this our unit can fire before the
-  # wallet unlock even launches and read an empty Secret Service. This only
-  # shrinks the window — plasma-kwallet-pam is Type=simple, so After= sequences
-  # us after the unlock *launches*, not after the wallet finishes opening; the
-  # lookup retry in gpg-preset.sh covers that async tail.
-  #
-  # Excluded on WSL: graphical-session.target never fires there, so this unit
-  # would install but never run. WSL drives the preset from the zsh
-  # _preload_agent_once hook instead (the gpg-preset-driver binary is still
-  # installed via home.packages below).
-  systemd.user.services.gpg-preset-passphrases = lib.mkIf (enablePersistence && !isWSL) {
-    Unit = {
-      Description = "Preset GPG signing passphrases into gpg-agent";
-      After = [
-        "gpg-agent.socket"
-        "graphical-session.target"
-      ]
-      ++ lib.optional isKde "plasma-kwallet-pam.service";
-      Wants = [ "gpg-agent.socket" ] ++ lib.optional isKde "plasma-kwallet-pam.service";
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      Environment = [ "GNUPGHOME=%h/.gnupg" ];
-      PassEnvironment = [
-        "DISPLAY"
-        "WAYLAND_DISPLAY"
-        "XAUTHORITY"
-        "DBUS_SESSION_BUS_ADDRESS"
-        "KDE_FULL_SESSION"
-        "XDG_CURRENT_DESKTOP"
-      ];
-      ExecStart = "${gpgPresetDriverApp}/bin/gpg-preset-driver";
-      # Cap so a hidden/hung GUI dialog can't stall `home-manager switch`.
-      TimeoutStartSec = "60";
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
-
-  home.packages = lib.mkIf enablePersistence [
-    gpgPresetApp
-    gpgPresetDriverApp
-    gpgKeysApp
   ];
 
   # Import agenix-decrypted secret keys into the GPG keyring on activation

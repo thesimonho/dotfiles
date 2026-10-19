@@ -153,18 +153,17 @@ let
     pkgs.writeText "chatgpt-check.json" (builtins.toJSON { inherit actual expected; });
 
   # Authentication contracts are module evaluations, not unit tests. Check
-  # native/rollback branches plus hosts with no identities through HM itself.
+  # native KDE, deferred WSL login preload, and hosts with no identities.
   mkAuthCheck =
     system: hmConfig:
     let
       c = hmConfig.config;
       linux = c.my.os != "darwin";
       wsl = c.my.os == "wsl";
-      native = c.my.os == "arch" && c.my.desktop == "kde" && c.my.kdeNativeAuth;
+      native = linux && !wsl && c.my.desktop == "kde";
       ids = c.my._identities;
-      signing = lib.filterAttrs (_: id: id.gpg != null && (id.gpg.sign or false)) ids;
       services = c.systemd.user.services;
-      hasLoader = services ? ssh-add-keys;
+      hasLoader = services ? ssh-add-identities;
       hasPreset = services ? gpg-preset-passphrases;
       packages = map (p: p.pname or p.name or "") c.home.packages;
       legacy = [
@@ -194,8 +193,10 @@ let
         hostName = "_auth-check";
       };
     in
-    assert hasLoader == (linux && !wsl && ids != { });
-    assert hasPreset == (linux && !wsl && !native && signing != { });
+    assert hasLoader == (native && ids != { });
+    assert !(services ? ssh-add-keys);
+    assert !hasPreset;
+    assert lib.all (name: !(lib.elem name packages)) legacy;
     assert (services ? ssh-agent) == linux;
     assert !(c.systemd.user.sockets ? ssh-agent);
     assert !c.services.gpg-agent.enableSshSupport;
@@ -204,25 +205,35 @@ let
     assert
       !native
       || (
-        lib.all (name: !(lib.elem name packages)) legacy
-        && c.services.gpg-agent.pinentry.package == null
+        c.services.gpg-agent.pinentry.package == null
         && c.services.gpg-agent.extraConfig == "pinentry-program /usr/bin/pinentry-qt"
+        && c.services.gpg-agent.defaultCacheTtl == null
+        && c.services.gpg-agent.maxCacheTtl == null
         && lib.elem "PINENTRY_KDE_USE_WALLET=1" services.gpg-agent.Service.Environment
+        && !(c.home.sessionVariables ? PINENTRY_KDE_USE_WALLET)
         && lib.hasInfix "SSH_ASKPASS=/usr/bin/ksshaskpass" c.xdg.configFile."environment.d/ssh.conf".text
+        && (
+          ids == { }
+          || lib.any (
+            command: lib.hasInfix "ssh-add -q" command
+          ) services.ssh-add-identities.Service.ExecStart
+        )
         && builtins.hasAttr "apps.kde-authentication" c.my.nativePackages.catalog
       );
     assert
       !wsl
       || (
-        lib.elem "gpg-preset-driver" packages
-        && lib.elem "secret-askpass" packages
-        && c.home.sessionVariables.SSH_AUTH_SOCK == "$XDG_RUNTIME_DIR/ssh-agent.socket"
+        c.home.sessionVariables.SSH_AUTH_SOCK == "$XDG_RUNTIME_DIR/ssh-agent.socket"
+        && c.services.gpg-agent.defaultCacheTtl == 2592000
+        && c.services.gpg-agent.maxCacheTtl == 2592000
+        && !(lib.hasInfix "ssh-add-keys" c.programs.zsh.initContent)
       );
     assert
       linux
       || (
         c.services.gpg-agent.pinentry.package.pname == "pinentry-mac"
-        && lib.all (name: !(lib.elem name packages)) legacy
+        && c.services.gpg-agent.defaultCacheTtl == 2592000
+        && c.services.gpg-agent.maxCacheTtl == 2592000
       );
     pkgs.writeText "authentication-check.json" (
       builtins.toJSON {
@@ -232,7 +243,10 @@ let
     );
 
   kdeVariant =
-    native: identities:
+    {
+      os ? "arch",
+      identities ? [ "personal" ],
+    }:
     mkSyntheticHost {
       system = "x86_64-linux";
       name = "auth-kde";
@@ -240,9 +254,8 @@ let
         {
           my = {
             hostName = "auth-kde";
-            os = "arch";
+            inherit os;
             desktop = "kde";
-            kdeNativeAuth = native;
             inherit identities;
             apps.bundles = [ "security" ];
           };
@@ -300,8 +313,12 @@ in
     x86_64-linux = {
       auth-desktop = mkAuthCheck "x86_64-linux" homeConfigurations.desktop;
       auth-wsl = mkAuthCheck "x86_64-linux" homeConfigurations.work-wsl;
-      auth-rollback = mkAuthCheck "x86_64-linux" (kdeVariant false [ "personal" ]);
-      auth-empty = mkAuthCheck "x86_64-linux" (kdeVariant true [ ]);
+      auth-empty = mkAuthCheck "x86_64-linux" (kdeVariant {
+        identities = [ ];
+      });
+      auth-fedora-kde = mkAuthCheck "x86_64-linux" (kdeVariant {
+        os = "fedora";
+      });
       auth-other-linux = mkAuthCheck "x86_64-linux" kitchenSinkLinux;
       catalog-engine = mkCatalogEngineCheck "x86_64-linux";
       catalog-types = mkCatalogTypeCheck "x86_64-linux";

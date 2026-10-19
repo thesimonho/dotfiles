@@ -21,7 +21,6 @@ is_wsl() {
 install_arch_wsl() {
   local pkgs=(
     libsecret
-    zenity
     shelly
   )
   if is_kde; then
@@ -49,7 +48,7 @@ install_fedora() {
   # Normal Fedora hosts use native catalog declarations. WSL has no selected
   # native platform yet, so retain its authentication-package bootstrap.
   if is_wsl; then
-    local pkgs=(libsecret zenity)
+    local pkgs=(libsecret)
     if ! is_kde; then
       pkgs+=(gnome-keyring gnome-keyring-pam)
     fi
@@ -62,7 +61,7 @@ install_fedora() {
 # libpam-gnome-keyring (vs gnome-keyring-pam).
 install_debian() {
   sudo apt-get update -y
-  local pkgs=(libsecret-tools zenity)
+  local pkgs=(libsecret-tools)
   if ! is_wsl; then
     pkgs+=(dolphin-plugins kio-gdrive)
     if is_kde; then
@@ -92,10 +91,10 @@ pam_append() {
 
 # Wire pam_gnome_keyring into the auth/session/password stacks so the
 # keyring auto-unlocks at login with the user's password. `auto_start`
-# spawns gnome-keyring-daemon so its secrets component (which serves
-# the Secret Service API) is running before our ssh-add-keys oneshot
-# fires. v50 no longer spawns the deprecated ssh component, so no
-# conflict with our openssh ssh-agent.
+# spawns gnome-keyring-daemon so its secrets component serves Secret
+# Service to applications. SSH and GPG passphrase loading no longer use
+# this keyring. v50 no longer spawns the deprecated ssh component, so no
+# conflict with our OpenSSH agent.
 configure_pam_gnome_keyring() {
   local auth_line="auth     optional  pam_gnome_keyring.so"
   local session_line="session  optional  pam_gnome_keyring.so auto_start"

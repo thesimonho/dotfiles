@@ -10,12 +10,8 @@
   imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
 
   config = lib.mkIf (config.my.desktop == "kde") {
-    # Native pinentry external caching requires a non-GPG-backed wallet.
-    # Also set on the gpg-agent service so GUI callers do not need a shell.
-    home.sessionVariables.PINENTRY_KDE_USE_WALLET = "1";
-
-    # Retain the existing activation entry until cold-login validation. On
-    # current KDE, kwalletd6 is a compatibility entrypoint for ksecretd.
+    # Expose KWallet's Secret Service API to applications. On current KDE,
+    # kwalletd6 is a compatibility entrypoint for ksecretd.
     xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".text = ''
       [D-BUS Service]
       Name=org.freedesktop.secrets
