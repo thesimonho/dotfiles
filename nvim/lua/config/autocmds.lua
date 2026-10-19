@@ -123,7 +123,11 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Debug aliases are installed after Snacks loads; LazyVim owns its setup.
-_G.dd = Snacks.debug.inspect
-_G.bt = Snacks.debug.backtrace
-vim.print = Snacks.debug.inspect
+-- File arguments load this config before Snacks; resolve debug helpers on use.
+_G.dd = function(...)
+  return require("snacks").debug.inspect(...)
+end
+_G.bt = function(...)
+  return require("snacks").debug.backtrace(...)
+end
+vim.print = _G.dd
