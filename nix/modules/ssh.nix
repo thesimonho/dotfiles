@@ -2,23 +2,8 @@
 # Match blocks are derived from identities in secrets/meta.nix.
 # Secret key decryption is handled by secrets.nix.
 #
-# Architecture (Linux):
-#   - openssh ssh-agent runs as a user systemd service.
-#   - ssh-add-keys oneshot preloads all identities at login.
-#   - SSH_ASKPASS points at the secret-askpass wrapper, a thin shell wrapper
-#     around `secret-tool` (libsecret CLI). First call per key pops a GUI
-#     prompt (kdialog on KDE, zenity elsewhere) and stores the passphrase via
-#     the Secret Service API; subsequent calls retrieve silently. The backing
-#     daemon differs per host:
-#       - KDE     → KWallet (PAM-unlocked at SDDM login).
-#       - non-KDE → gnome-keyring's secrets component (installed +
-#                   PAM-unlocked by post-setup.sh).
-#
-# The helper scripts live in ../scripts and are wrapped with
-# writeShellApplication (shellcheck at build time). runtimeInputs pins only
-# nix-provided tools (ssh-add); secret-tool and the GUI prompters resolve from
-# the ambient PATH (writeShellApplication prepends runtimeInputs, it doesn't
-# reset PATH). gpg-agent is a separate path; see modules/gpg.nix.
+# KDE uses native ksshaskpass; other Linux hosts retain libsecret helpers.
+# Native mode keeps the legacy helpers available through the KDE rollback option.
 {
   config,
   pkgs,
@@ -30,6 +15,7 @@ let
   isLinux = config.my.os != "darwin";
   isWSL = config.my.os == "wsl";
   isKde = config.my.desktop == "kde";
+  nativeKde = config.my.os == "arch" && isKde && config.my.kdeNativeAuth;
   sshDir = "${config.home.homeDirectory}/.ssh";
   selectedIdentities = config.my._identities;
 
@@ -77,9 +63,19 @@ let
     '';
   };
 
-  askpassPath = "${secretAskpassApp}/bin/secret-askpass";
+  askpassPath =
+    if nativeKde then "/usr/bin/ksshaskpass" else "${secretAskpassApp}/bin/secret-askpass";
 in
 {
+  assertions = [
+    {
+      assertion =
+        !config.my.kdeNativeAuth
+        || (nativeKde && builtins.hasAttr "apps.kde-authentication" config.my.nativePackages.catalog);
+      message = "kdeNativeAuth requires Arch KDE and the security bundle's native authentication packages.";
+    }
+  ];
+
   xdg.configFile = {
     "environment.d/ssh.conf" = lib.mkIf isLinux {
       text = ''
@@ -120,32 +116,25 @@ in
     Install.WantedBy = [ "default.target" ];
   };
 
-  # Preload identity keys at login. The askpass wrapper handles
-  # lookup/store via libsecret; first invocation per key shows a GUI
-  # prompt, subsequent runs are silent.
+  # Preload selected identities at graphical login. KDE calls ssh-add directly;
+  # the legacy loader remains for other Linux hosts and migration rollback.
   #
   # Excluded on WSL: graphical-session.target never fires there, so this unit
   # would install but never run. WSL drives the preload from the zsh
   # _preload_agent_once hook instead (the ssh-add-keys binary is still
   # installed via home.packages below).
-  systemd.user.services.ssh-add-keys = lib.mkIf (isLinux && !isWSL) {
+  systemd.user.services.ssh-add-keys = lib.mkIf (isLinux && !isWSL && selectedIdentities != { }) {
     Unit = {
       Description = "Load SSH keys into agent";
-      # graphical-session.target ensures the DE has imported
-      # DBUS_SESSION_BUS_ADDRESS/DISPLAY/WAYLAND_DISPLAY into the user
-      # systemd env. Without it, our askpass can't reach the Secret
-      # Service daemon and silently returns empty.
-      #
-      # plasma-kwallet-pam.service is best-effort narrowing only: this
-      # host's org.freedesktop.secrets is owned by ksecretd (PAM-unlocked
-      # independently), not kwalletd6, so this ordering doesn't guarantee
-      # readiness. SSH_ASKPASS_DEFER below is what actually covers the race.
+      # Plasma's workspace starts the PAM unlock helper. Order after it,
+      # without pulling it in again during a later Home Manager activation.
       After = [
         "ssh-agent.service"
         "graphical-session.target"
       ]
-      ++ lib.optional isKde "plasma-kwallet-pam.service";
-      Wants = [ "ssh-agent.service" ] ++ lib.optional isKde "plasma-kwallet-pam.service";
+      ++ lib.optional isKde "plasma-kwallet-pam.service"
+      ++ lib.optional nativeKde "plasma-workspace.target";
+      Wants = [ "ssh-agent.service" ] ++ lib.optional (isKde && !nativeKde) "plasma-kwallet-pam.service";
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
@@ -154,11 +143,9 @@ in
         "SSH_AUTH_SOCK=%t/ssh-agent.socket"
         "SSH_ASKPASS=${askpassPath}"
         "SSH_ASKPASS_REQUIRE=prefer"
-        # Tells secret-askpass.sh this is the unattended login preload:
-        # retry the lookup instead of popping a blocking dialog on a
-        # transient secrets-daemon-not-ready race.
-        "SSH_ASKPASS_DEFER=1"
-      ];
+      ]
+      ++ lib.optional (!nativeKde) "SSH_ASKPASS_DEFER=1";
+      StandardInput = "null";
       PassEnvironment = [
         "DISPLAY"
         "WAYLAND_DISPLAY"
@@ -167,7 +154,15 @@ in
         "KDE_FULL_SESSION"
         "XDG_CURRENT_DESKTOP"
       ];
-      ExecStart = "${sshAddKeysApp}/bin/ssh-add-keys";
+      ExecStart =
+        if nativeKde then
+          "${pkgs.openssh}/bin/ssh-add -q ${
+            lib.concatMapStringsSep " " (id: lib.escapeShellArg "${sshDir}/${id.sshKeyFile}") (
+              lib.attrValues selectedIdentities
+            )
+          }"
+        else
+          "${sshAddKeysApp}/bin/ssh-add-keys";
       # Cap the unit so a hidden/hung askpass dialog doesn't stall
       # subsequent `home-manager switch` invocations.
       TimeoutStartSec = "60";
@@ -191,7 +186,7 @@ in
 
   # secret-askpass / ssh-add-keys / ssh-keys are installed via home.packages
   # (below) since they're writeShellApplication derivations.
-  home.packages = lib.mkIf isLinux [
+  home.packages = lib.mkIf (isLinux && !nativeKde) [
     secretAskpassApp
     sshAddKeysApp
     sshKeysApp
@@ -212,6 +207,19 @@ in
   ];
 
   home.activation = {
+    # Native reconciliation runs after activation. Fail before replacing any
+    # files if a fresh host has not installed the native tools yet.
+    checkNativeKdeAuth = lib.mkIf nativeKde (
+      lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+        for tool in /usr/bin/ksshaskpass /usr/bin/pinentry-qt; do
+          if [ ! -x "$tool" ]; then
+            echo "Native KDE authentication requires $tool before activation. Install ksshaskpass and pinentry, then retry." >&2
+            exit 1
+          fi
+        done
+      ''
+    );
+
     fixSshPermissions = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       run install -d -m 0700 "$HOME/.ssh"
       if [ -L "$HOME/.ssh/config" ]; then

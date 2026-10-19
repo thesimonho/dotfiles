@@ -10,15 +10,12 @@
   imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
 
   config = lib.mkIf (config.my.desktop == "kde") {
-    # Re-enable pinentry's KWallet integration
-    # (disabled by default to prevent deadlock when KWallet uses GPG encryption — safe with blowfish)
+    # Native pinentry external caching requires a non-GPG-backed wallet.
+    # Also set on the gpg-agent service so GUI callers do not need a shell.
     home.sessionVariables.PINENTRY_KDE_USE_WALLET = "1";
 
-    # Make KWallet the Secret Service provider on KDE. seahorse's
-    # ssh-askpass (see modules/ssh.nix) writes through libsecret to
-    # whichever daemon owns org.freedesktop.secrets — which we want
-    # to be KWallet, so SSH passphrases land in the existing wallet
-    # that PAM already unlocks at SDDM login.
+    # Retain the existing activation entry until cold-login validation. On
+    # current KDE, kwalletd6 is a compatibility entrypoint for ksecretd.
     xdg.dataFile."dbus-1/services/org.freedesktop.secrets.service".text = ''
       [D-BUS Service]
       Name=org.freedesktop.secrets
@@ -28,7 +25,10 @@
     programs = {
       plasma = {
         enable = true;
-        configFile.kwalletrc.Wallet.Enabled = true;
+        configFile.kwalletrc = {
+          Wallet.Enabled = true;
+          "org.freedesktop.secrets".apiEnabled = true;
+        };
         input.keyboard = {
           numlockOnStartup = "on";
           repeatDelay = 350;

@@ -1,26 +1,8 @@
 # GPG key management, agent configuration, and signing-passphrase persistence.
 # Keys are derived from identities in secrets/meta.nix that have gpg config.
 #
-# Passphrase persistence (parallels modules/ssh.nix):
-#   - macOS: pinentry-mac stores the passphrase in Keychain.
-#   - Linux: the passphrase lives in libsecret (KWallet on KDE, gnome-keyring
-#     elsewhere) and is re-injected into gpg-agent at login by the
-#     gpg-preset-passphrases oneshot, so signed commits stop re-prompting
-#     after every reboot / `wsl --shutdown`. The long cache TTLs below are
-#     the in-memory backstop between those re-injections.
-#
-# Key divergence from SSH: `gpg-preset-passphrase` does NOT validate the
-# value it's given (a bogus passphrase presets with exit 0, then fails only
-# at sign time). SSH's askpass retry/self-heal has no GPG equivalent, so the
-# helper test-signs throwaway data first and never stores or presets a value
-# that won't actually sign.
-#
-# The helper scripts live in ../scripts and are wrapped with
-# writeShellApplication (shellcheck at build time). runtimeInputs pins only
-# the nix-provided tools (gpg/gpgconf); secret-tool and the GUI prompters
-# (kdialog/zenity/notify-send) resolve from the ambient PATH, exactly as the
-# SSH path does — writeShellApplication prepends runtimeInputs, it doesn't
-# reset PATH.
+# KDE uses native pinentry-qt external caching; WSL/other Linux retain
+# libsecret presetting. macOS retains pinentry-mac and Keychain.
 {
   config,
   pkgs,
@@ -32,6 +14,7 @@ let
   isLinux = config.my.os != "darwin";
   isWSL = config.my.os == "wsl";
   isKde = config.my.desktop == "kde";
+  nativeKde = config.my.os == "arch" && isKde && config.my.kdeNativeAuth;
   selectedIdentities = config.my._identities;
 
   # Pinentry by (DE, OS). KDE → Qt + KWallet; macOS → Keychain bridge;
@@ -65,7 +48,7 @@ let
 
   # Passphrase persistence only applies on Linux (macOS uses Keychain) and
   # only when something actually signs.
-  enablePersistence = isLinux && signingIdentities != { };
+  enablePersistence = isLinux && !nativeKde && signingIdentities != { };
 
   # gpg-preset <keyId> — the per-key primitive (resolve/validate/store/preset).
   gpgPresetApp = pkgs.writeShellApplication {
@@ -106,14 +89,24 @@ in
     enableExtraSocket = true;
     grabKeyboardAndMouse = true;
     noAllowExternalCache = false;
-    pinentry.package = pinentryFor {
-      os = config.my.os;
-      desktop = config.my.desktop;
-    };
+    pinentry.package =
+      if nativeKde then
+        null
+      else
+        pinentryFor {
+          os = config.my.os;
+          desktop = config.my.desktop;
+        };
     defaultCacheTtl = 2592000; # 30 days
     maxCacheTtl = 2592000; # 30 days
-    extraConfig = "allow-preset-passphrase";
+    extraConfig =
+      if nativeKde then "pinentry-program /usr/bin/pinentry-qt" else "allow-preset-passphrase";
   };
+
+  # Pinentry inherits this from the socket-activated agent even for GUI callers.
+  systemd.user.services.gpg-agent.Service.Environment = lib.mkIf nativeKde [
+    "PINENTRY_KDE_USE_WALLET=1"
+  ];
 
   # Preset signing passphrases at login. Ordered on gpg-agent.socket (NOT
   # the service — it is `--supervised` with RefuseManualStart); the preset

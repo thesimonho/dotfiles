@@ -406,6 +406,15 @@
   };
 
   support = {
+    kde-authentication = {
+      bundles = [ "security" ];
+      requirements.operatingSystems = [ "arch" ];
+      requirements.desktops = [ "kde" ];
+      contributions.nativePackages.arch.pacman = [
+        "ksshaskpass"
+        "pinentry"
+      ];
+    };
     android-udev = {
       requirements.operatingSystems = [
         "arch"
