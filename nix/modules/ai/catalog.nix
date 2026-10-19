@@ -26,9 +26,8 @@ in
       bundles = [ "agents" ];
     };
     claude-desktop = {
-      # CachyOS supplies the native Cowork VM dependencies and firmware paths.
       contributions.nativePackages = {
-        arch.pacman = [ "claude-desktop" ];
+        arch.aur = [ "claude-desktop-extra" ];
         darwin.homebrew.casks = [ "claude" ];
       };
       requirements = {
