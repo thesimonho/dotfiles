@@ -42,7 +42,7 @@ in
     };
     chatgpt = {
       contributions.nativePackages = {
-        arch.pacman = [ "chatgpt-desktop-bin" ];
+        arch.aur = [ "codex-desktop-git" ];
         darwin.homebrew.casks = [ "chatgpt" ];
       };
       requirements = {
