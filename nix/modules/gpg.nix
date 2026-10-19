@@ -60,7 +60,7 @@ in
           desktop = config.my.desktop;
         };
     # KWallet persists the KDE passphrase, so let gpg-agent use its shorter
-    # built-in cache limits. Keep existing settings on untested platforms.
+    # built-in cache limits. Other platforms use a 30-day memory cache.
     defaultCacheTtl = if nativeKde then null else 2592000;
     maxCacheTtl = if nativeKde then null else 2592000;
     extraConfig = lib.optionalString nativeKde "pinentry-program /usr/bin/pinentry-qt";

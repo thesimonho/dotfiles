@@ -92,8 +92,8 @@ pam_append() {
 # Wire pam_gnome_keyring into the auth/session/password stacks so the
 # keyring auto-unlocks at login with the user's password. `auto_start`
 # spawns gnome-keyring-daemon so its secrets component serves Secret
-# Service to applications. SSH and GPG passphrase loading no longer use
-# this keyring. v50 no longer spawns the deprecated ssh component, so no
+# Service to applications. SSH and GPG passphrase loading use separate
+# agents. v50 omits the deprecated ssh component, so no
 # conflict with our OpenSSH agent.
 configure_pam_gnome_keyring() {
   local auth_line="auth     optional  pam_gnome_keyring.so"

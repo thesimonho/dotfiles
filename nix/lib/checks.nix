@@ -152,8 +152,7 @@ let
     assert actual == expected;
     pkgs.writeText "chatgpt-check.json" (builtins.toJSON { inherit actual expected; });
 
-  # Authentication contracts are module evaluations, not unit tests. Check
-  # native KDE, deferred WSL login preload, and hosts with no identities.
+  # Check platform authentication configuration and identity deployment.
   mkAuthCheck =
     system: hmConfig:
     let
@@ -201,7 +200,7 @@ let
     assert !(c.systemd.user.sockets ? ssh-agent);
     assert !c.services.gpg-agent.enableSshSupport;
     assert lib.all (name: checkIdentity name ids.${name}) (builtins.attrNames ids);
-    assert !(ssh ? "*"); # No untested Apple-specific settings on any host.
+    assert !(ssh ? "*"); # SSH settings are scoped to identity hosts.
     assert
       !native
       || (
