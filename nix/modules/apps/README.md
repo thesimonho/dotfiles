@@ -8,7 +8,7 @@ agent:
 
 `catalog.nix` declares selectable applications and supporting integrations. `default.nix` resolves host selection and adapts Flatpak declarations. Keep application-specific behavior out of that shared adapter.
 
-`gamedev.nix` contributes the Arch game editor integration through the `gamedev` bundle. It installs an executable Flatpak bridge named `code`, a host Ghostty/Neovim launcher, and `gamedev-configure`. Host Neovim comes from the common Neovim module; Ghostty comes from the desktop bundle. Other Linux platforms can install the game Flatpaks without this Arch editor integration.
+The inline `support.gamedev-editor` entry in `catalog.nix` contributes the Arch game editor integration through the `gamedev` bundle. It installs an executable Flatpak bridge named `code`, a host Ghostty/Neovim launcher, and `gamedev-configure`. Host Neovim comes from the common Neovim module; Ghostty comes from the desktop bundle. Other Linux platforms can install the game Flatpaks without this Arch editor integration.
 
 `nix/scripts/gamedev-editor.py` accepts explicit Godot arguments and Unity's VS Code-style project plus `-g file:line:column`. It passes argument arrays without a shell, converts zero-based Godot positions, and opens an independent terminal window. Position the cursor on `VimEnter`: Neovim 0.12's separate UI/server startup does not preserve the earlier `+call cursor` approach.
 

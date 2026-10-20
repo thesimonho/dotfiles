@@ -123,7 +123,7 @@ manages editor versions and build modules; existing editors under
 the Flatpak Hub. Native Hub remains separate until its removal is requested.
 Unity's Flatpak already includes a Blender bridge; do not duplicate it.
 
-On Arch, `modules/apps/gamedev.nix` also installs a shared Neovim bridge at
+On Arch, the inline `gamedev-editor` support entry in `modules/apps/catalog.nix` installs a shared Neovim bridge at
 `~/.local/share/gamedev/bin/code`. It launches host Ghostty and Neovim through
 `flatpak-spawn --host`, retaining file/line/column arguments and paths with
 spaces. The `code` filename lets Unity's Visual Studio Editor package generate
