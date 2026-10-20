@@ -51,6 +51,8 @@ in
     settings = {
       user = {
         name = "Simon Ho";
+        # Provide an identity before a repository has a matching remote.
+        email = (import ../secrets/meta.nix).identities.personal.email;
       };
       init = {
         defaultBranch = "main";
