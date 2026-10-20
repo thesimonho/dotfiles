@@ -181,11 +181,12 @@ clean:
     @echo "==> Cleaning up old generations"
     @-nh clean user --keep-since 14d --keep 3 2>&1 | awk '!skip && /Performing garbage collection on the nix store/{print "==> Skipping nix store gc on Darwin (Tahoe+MDM xattr issue — see justfile comment)"; skip=1; next} !skip'
 
-# Wipe nix profile and GC entries older than 14 days; keep min 3 generations
+# Prune profiles older than 14 days; keep min 3 generations.
+# Leave daemon-managed gcroots to Nix store GC to avoid permission errors.
 [linux]
 clean:
     @echo "==> Cleaning up old generations"
-    nh clean user --keep-since 14d --keep 3
+    nh clean user --keep-since 14d --keep 3 --no-gcroots
 
 # Deduplicate the nix store (slow, run occasionally)
 optimise:
