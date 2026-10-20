@@ -115,33 +115,44 @@ hostname check or arbitrary predicate to a catalog entry.
 
 ## Game development Flatpaks
 
-The `gamedev` app bundle selects Blender (`org.blender.Blender`) and Godot's
-.NET edition (`org.godotengine.GodotSharp`) on graphical Arch/Fedora hosts.
-The desktop host selects this bundle. Godot supports both GDScript and C#;
-its Flatpak includes .NET tooling. This bundle adds no host CUDA toolkit or
-.NET SDK. The host still needs a working GPU driver.
+The `gamedev` app bundle selects Blender (`org.blender.Blender`), Godot's
+.NET edition (`org.godotengine.GodotSharp`), and Unity Hub (`com.unity.UnityHub`)
+on graphical Arch/Fedora hosts. The desktop host selects this bundle. Hub
+manages editor versions and build modules; existing editors under
+`~/Unity/Hub/Editor` can be reused. Sign in and activate the Unity license in
+the Flatpak Hub. Native Hub remains separate until its removal is requested.
+Unity's Flatpak already includes a Blender bridge; do not duplicate it.
 
-After `just switch desktop` from `nix/`, finish these one-time Godot settings:
+On Arch, `modules/apps/gamedev.nix` also installs a shared Neovim bridge at
+`~/.local/share/gamedev/bin/code`. It launches host Ghostty and Neovim through
+`flatpak-spawn --host`, retaining file/line/column arguments and paths with
+spaces. The `code` filename lets Unity's Visual Studio Editor package generate
+C# projects while opening Neovim. Add `com.unity.ide.visualstudio` through
+Unity's Package Manager in each project that needs IDE project generation.
+No host .NET SDK is installed by this integration: the engines compile with
+their own tooling. Neovim C# completion/debugging requires a separate language
+server and SDK setup; the bridge itself provides opening/editing only.
 
-- For direct `.blend` imports, set **Editor Settings → Filesystem → Import →
-  Blender → Blender Path** (called **Blender 3 Path** in some versions) to
-  `/home/simon/.local/share/godot-flatpak/bin/blender` in Godot 4.3. Older
-  versions with **Blender 3 Path** expect the containing directory instead.
-  On another host, substitute its home directory. Home Manager installs this
-  executable launcher. It uses `flatpak-spawn --host` to run the Blender Flatpak.
-  Exporting `.glb` from Blender instead does not need this setting.
-- For a host GDScript editor such as VS Code, enable the external editor,
-  set **Text Editor → External → Exec Path** to `flatpak-spawn`, and set
-  **Exec Flags** to `--host code --reuse-window {project} --goto {file}:{line}:{col}`.
-  C# uses separate **Dotnet → Editor** settings. The package documents that
-  external C# editor integration needs additional configuration. A host editor
-  may need its own SDK for C# language services because Godot's SDK is inside
-  its sandbox. Choose that setup when choosing a C# editor workflow.
+Home Manager merges selected external-editor preferences into existing Godot
+settings and the Unity Flatpak's `data/unity3d/prefs`; other preferences remain
+writable. Close editors before switching so they cannot overwrite the merge.
+The activation selects Neovim for both Godot GDScript and C#, including the
+zero-based line/column convention. If Godot has not been opened yet, open
+it once, close it, then run `gamedev-configure` to update its newly created
+version-specific settings. Do not replace all editor preferences with a Nix
+store symlink.
 
-Godot preferences stay writable and are not replaced on activation. The
-package already grants host-command access; no extra sandbox overrides are
-added. See the [GodotSharp package instructions](https://github.com/flathub/org.godotengine.GodotSharp)
-for Blender and external-editor integration.
+The preference merge also sets the direct Godot `.blend` import launcher.
+For manual setup, set **Editor Settings → Filesystem → Import
+→ Blender → Blender Path** to
+`/home/simon/.local/share/godot-flatpak/bin/blender` in Godot 4.3. Older versions
+with **Blender 3 Path** expect the containing directory instead. On another
+host, substitute its home directory. Home Manager installs this launcher;
+exporting `.glb` instead does not need it. The package already grants
+host-command access; this integration adds no sandbox overrides. See the
+[GodotSharp instructions](https://github.com/flathub/org.godotengine.GodotSharp)
+and [Unity Hub Flatpak instructions](https://github.com/flathub/com.unity.UnityHub)
+for the upstream bridge contracts.
 
 After switching, run `flatpak update` so graphics extensions match the host
 driver. In Blender, select the NVIDIA GPU under **Preferences → System →

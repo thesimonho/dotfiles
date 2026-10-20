@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   pkgsUnstable,
   pkgsPinned,
@@ -376,6 +377,15 @@
         "dev"
       ];
     };
+    unity = {
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.hasDesktop = true;
+      flatpak.id = "com.unity.UnityHub";
+      bundles = [ "gamedev" ];
+    };
     vivaldi = {
       contributions.nativePackages = {
         arch.pacman = [ "vivaldi" ];
@@ -433,6 +443,7 @@
   };
 
   support = {
+    gamedev-editor = import ./gamedev.nix { inherit pkgs lib; };
     kde-authentication = {
       bundles = [ "security" ];
       requirements.operatingSystems = [

@@ -20,6 +20,7 @@ let
   };
 
   catalogData = import ./catalog.nix {
+    inherit lib;
     inherit
       pkgs
       pkgsUnstable

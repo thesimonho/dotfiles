@@ -26,7 +26,7 @@ bold-is-bright = true
 link-url = true
 link-previews = true
 
-initial-window = false
+initial-window = true
 tab-inherit-working-directory = true
 split-inherit-working-directory = true
 window-theme = system
@@ -50,7 +50,7 @@ cursor-click-to-move = true
 right-click-action = context-menu
 mouse-reporting = true
 
-quit-after-last-window-closed = false
+quit-after-last-window-closed = true
 
 quick-terminal-position = top
 
