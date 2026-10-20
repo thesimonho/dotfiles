@@ -125,9 +125,10 @@ After `just switch desktop` from `nix/`, finish these one-time Godot settings:
 
 - For direct `.blend` imports, set **Editor Settings → Filesystem → Import →
   Blender → Blender Path** (called **Blender 3 Path** in some versions) to
-  `/home/simon/.local/share/godot-flatpak/bin`. On another host, substitute its
-  home directory. Home Manager installs the executable `blender` launcher in
-  that directory. It uses `flatpak-spawn --host` to run the Blender Flatpak.
+  `/home/simon/.local/share/godot-flatpak/bin/blender` in Godot 4.3. Older
+  versions with **Blender 3 Path** expect the containing directory instead.
+  On another host, substitute its home directory. Home Manager installs this
+  executable launcher. It uses `flatpak-spawn --host` to run the Blender Flatpak.
   Exporting `.glb` from Blender instead does not need this setting.
 - For a host GDScript editor such as VS Code, enable the external editor,
   set **Text Editor → External → Exec Path** to `flatpak-spawn`, and set
