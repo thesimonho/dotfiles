@@ -29,4 +29,4 @@ Before creating a PR, assess whether the branch warrants `/simplify`, subject to
 
 When working with GitHub, use `gh` cli directly, and prefer SSH, instead of agent connectors or raw git commands.
 
-Do not post (issues, comments, discussions, etc) on external repositories.
+Do not post (issues, comments, discussions, etc) on external repositories (repositories other than the current remote origin).
