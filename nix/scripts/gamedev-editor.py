@@ -1,4 +1,4 @@
-"""Translate Godot/Unity editor requests into a host Ghostty/Neovim window."""
+"""Translate Godot/Unity/Unreal editor requests into a host Ghostty/Neovim window."""
 
 import argparse
 import os
@@ -31,6 +31,9 @@ for path in args.paths:
     path = Path(path)
     if path.is_dir():
         project = path
+    elif path.suffix == ".code-workspace":
+        # Unreal passes its workspace file first; open its directory instead.
+        project = path.parent
     else:
         file = path
 if args.zero_based:

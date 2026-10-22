@@ -451,13 +451,25 @@
         configure = pkgs.writeShellScriptBin "gamedev-configure" ''
           exec ${pkgs.python3}/bin/python3 ${../../scripts/gamedev-configure.py}
         '';
+        # Only the Unreal wrapper's PATH sees this `code`; /usr/bin/code stays VS Code.
+        unrealCode = pkgs.writeShellScriptBin "code" ''
+          exec ${editor} "$@"
+        '';
+        # Unreal is installed by hand from Epic's Linux zip, not by a package manager.
+        unrealEditor = pkgs.writeShellScriptBin "unreal-editor" ''
+          export PATH=${unrealCode}/bin:$PATH
+          exec "$HOME/.local/share/UnrealEngine/5.8.4/Engine/Binaries/Linux/UnrealEditor" "$@"
+        '';
       in
       {
         bundles = [ "gamedev" ];
         requirements.operatingSystems = [ "arch" ];
         requirements.hasDesktop = true;
         contributions = {
-          packages = [ configure ];
+          packages = [
+            configure
+            unrealEditor
+          ];
           homeFiles.".local/share/gamedev/bin/code" = {
             executable = true;
             text = ''
@@ -465,6 +477,15 @@
               exec flatpak-spawn --host ${editor} "$@"
             '';
           };
+          homeFiles.".local/share/applications/unreal-editor.desktop".text = ''
+            [Desktop Entry]
+            Type=Application
+            Name=Unreal Editor
+            Comment=Unreal Engine 5.8.4 editor
+            Exec=${unrealEditor}/bin/unreal-editor %f
+            Categories=Development;IDE;
+            StartupWMClass=UnrealEditor
+          '';
           activation.gamedevEditors = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             run ${configure}/bin/gamedev-configure
           '';

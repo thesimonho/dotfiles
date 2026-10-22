@@ -133,6 +133,14 @@ No host .NET SDK is installed by this integration: the engines compile with
 their own tooling. Neovim C# completion/debugging requires a separate language
 server and SDK setup; the bridge itself provides opening/editing only.
 
+Unreal Engine has no Flatpak or Nix package. Extract Epic's Linux zip by hand to
+`~/.local/share/UnrealEngine/5.8.4`. On Arch, the same support entry installs
+an `unreal-editor` wrapper and an "Unreal Editor" desktop launcher. The wrapper
+gives only Unreal a `code` command that opens the shared Neovim bridge, without
+`flatpak-spawn`. Keep Unreal's Source Code Editor preference on Visual Studio
+Code, its Linux default. Start Unreal through the wrapper or launcher; running
+`UnrealEditor` directly opens the real VS Code instead.
+
 Home Manager merges selected external-editor preferences into existing Godot
 settings and the Unity Flatpak's `data/unity3d/prefs`; other preferences remain
 writable. Close editors before switching so they cannot overwrite the merge.
