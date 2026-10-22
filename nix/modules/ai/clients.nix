@@ -120,22 +120,12 @@ in
     };
   };
 
-  config = lib.mkMerge [
-    (lib.mkIf (config.my.ai.bundles != [ ]) {
-      my.ai.clientInstallations = clientConfigs;
-      home.file = clientFiles;
-      home.packages = clientPackages;
-      home.activation.reconcileCodexConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] (
-        lib.concatStringsSep "\n" clientActivations
-      );
-    })
-
-    {
-      programs.zsh.shellAliases = {
-        codex = "jev-codex";
-        claude = "jev-claude";
-        opencode = "jev-opencode";
-      };
-    }
-  ];
+  config = lib.mkIf (config.my.ai.bundles != [ ]) {
+    my.ai.clientInstallations = clientConfigs;
+    home.file = clientFiles;
+    home.packages = clientPackages;
+    home.activation.reconcileCodexConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      lib.concatStringsSep "\n" clientActivations
+    );
+  };
 }
