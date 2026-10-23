@@ -82,6 +82,12 @@ in
 
     # Internal: identities/secrets resolved against meta.nix. Modules read
     # these instead of refiltering meta.identities themselves.
+    _sessionSecrets = mkOption {
+      type = types.nullOr types.package;
+      internal = true;
+      default = null;
+      description = "KDE secret helper available to bootstrap before activation.";
+    };
     _identities = mkOption {
       type = types.attrs;
       internal = true;

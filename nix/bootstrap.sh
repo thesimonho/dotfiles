@@ -239,6 +239,18 @@ check_host_prerequisites() (
   fi
 )
 
+enroll_host_identity() {
+  local needs_enrollment
+  needs_enrollment=$(nix_cmd eval --accept-flake-config --json \
+    "$FLAKE_DIR#homeConfigurations.$HOST.config" \
+    --apply 'config: config.my._sessionSecrets != null && (config.my.secrets != [ ] || config.my.identities != [ ])')
+  if [[ "$needs_enrollment" == true ]]; then
+    echo "==> Checking age identity enrollment in KWallet"
+    nix_cmd run --accept-flake-config \
+      "$FLAKE_DIR#homeConfigurations.$HOST.config.my._sessionSecrets" -- enroll
+  fi
+}
+
 ensure_line_in_nix_conf() {
   # Ensures a key=value line exists in /etc/nix/nix.conf, replacing any existing key line.
   # Args:
@@ -429,6 +441,7 @@ main() {
   sync_repo
   add_homebrew_to_path
   check_host_prerequisites
+  enroll_host_identity
 
   apply_host "$HOST"
   native_cmd apply

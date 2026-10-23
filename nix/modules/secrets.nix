@@ -34,6 +34,9 @@ let
     builtins.toJSON {
       fnox = "${pkgsUnstable.fnox}/bin/fnox";
       age = "${pkgs.age}/bin/age";
+      ageKeygen = "${pkgs.age}/bin/age-keygen";
+      ageRecipient = (import ../secrets/meta.nix).agePublicKey;
+      keychainService = "dotfiles-secrets";
       sshAdd = "${pkgs.openssh}/bin/ssh-add";
       dbusUpdate = "${pkgs.dbus}/bin/dbus-update-activation-environment";
       isolatedConfig = "${pkgs.emptyDirectory}";
@@ -74,6 +77,8 @@ let
   }) selectedSecrets;
 in
 {
+  my._sessionSecrets = lib.mkIf nativeKde sessionSecrets;
+
   home.packages =
     with pkgs;
     [ age ]

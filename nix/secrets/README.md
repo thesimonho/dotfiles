@@ -49,15 +49,11 @@ secrets/
 
 ## KDE enrollment and use
 
-Set up login unlocking for the `kdewallet` KWallet collection before activating a KDE host. The helper checks that this collection is already unlocked before requesting credentials; it does not ask to unlock it. From a private terminal, use a temporary fnox config containing:
+Set up login unlocking for the `kdewallet` KWallet collection before running bootstrap from a KDE terminal. Bootstrap checks the wallet before Home Manager activation. If the age identity is present, it verifies that the identity matches `meta.nix` and continues without prompting. If it is absent, bootstrap asks for the age private key from Bitwarden with terminal echo disabled, validates its public recipient, stores it in KWallet, and verifies readback.
 
-```toml
-[providers.keychain]
-type = "keychain"
-service = "dotfiles-secrets"
-```
+The key is never passed as an argument or written to a temporary file. Bootstrap refuses an incorrect key and does not replace an existing entry. A locked or unavailable wallet stops enrollment with instructions to unlock or configure it; bootstrap does not change PAM or wallet passwords. Retain the independent Bitwarden recovery copy.
 
-Run `fnox --no-daemon -c /path/to/temporary.toml set AGE_IDENTITY --provider keychain --key-name age-identity` and enter the age identity at the hidden prompt. Do not pass it as a command argument. Retain its independent Bitwarden recovery copy. The temporary config contains only the keychain reference; remove it after enrollment. Activate Home Manager, then log out and in to verify `systemctl --user status session-secrets ssh-add-identities`.
+You can rerun the same check after installation with `session-secrets enroll`. Hosts without selected credentials skip enrollment; macOS and WSL retain their file-based prerequisite. After activation, log out and in to verify `systemctl --user status session-secrets ssh-add-identities`.
 
 Use `fnox set NAME` to edit global API values in a writable copy of `fnox.toml`, then commit only ciphertext. The deployed config is managed by Home Manager. Activation refreshes GPG's native key storage; `session-secrets decrypt /path/to/backup.age` writes plaintext to stdout and is intended only for a pipe into its consuming tool. Never redirect private credentials into persistent files.
 
