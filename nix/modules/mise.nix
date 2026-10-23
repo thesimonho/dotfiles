@@ -15,35 +15,40 @@ in
     description = "Additional mise trusted_config_paths entries appended on this host.";
   };
 
-  config.programs.mise = {
-    enable = true;
-    package = pkgsUnstable.mise;
-    globalConfig = {
-      tools = {
-        python = "3.14.4";
-        go = "1.25";
-        rust = {
-          version = "stable";
-          targets = "i686-unknown-linux-gnu";
+  config = {
+    # GUI applications resolve project runtimes through shims without a shell hook.
+    home.sessionPath = [ "${config.home.homeDirectory}/.local/share/mise/shims" ];
+
+    programs.mise = {
+      enable = true;
+      package = pkgsUnstable.mise;
+      globalConfig = {
+        tools = {
+          python = "3.14.4";
+          go = "1.25";
+          rust = {
+            version = "stable";
+            targets = "i686-unknown-linux-gnu";
+          };
         };
-      };
-      settings = {
-        env_file = ".env";
-        trusted_config_paths = [ "~" ] ++ config.my.mise.trustedPaths;
-        idiomatic_version_file_enable_tools = [
-          "node"
-          "go"
-          "python"
-          "terraform"
-        ];
-        auto_install = true;
-        not_found_auto_install = true;
-        status = {
-          missing_tools = "if_other_versions_installed";
-          show_env = false;
-          show_tools = false;
+        settings = {
+          env_file = ".env";
+          trusted_config_paths = [ "~" ] ++ config.my.mise.trustedPaths;
+          idiomatic_version_file_enable_tools = [
+            "node"
+            "go"
+            "python"
+            "terraform"
+          ];
+          auto_install = true;
+          not_found_auto_install = true;
+          status = {
+            missing_tools = "if_other_versions_installed";
+            show_env = false;
+            show_tools = false;
+          };
+          python.uv_venv_auto = "create|source";
         };
-        python.uv_venv_auto = "create|source";
       };
     };
   };

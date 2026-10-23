@@ -122,3 +122,9 @@ it must refresh on redraw and must not retain deleted buffers globally.
 The unused process/Compose service helpers and their shell scripts were
 removed. They are not a supported editor integration; Git review remains
 independent of them.
+
+## Project executables
+
+Mason adds its executable directory inside Neovim only; it is not part of the desktop or shell PATH. Conform resolves project-local Prettier and Oxfmt installations before falling back to PATH. The ESLint language server resolves the project's ESLint library; Mason can still supply the language-server executable. Project configuration continues to select linters and formatters independently.
+
+Home Manager adds mise shims to the session PATH so GUI-launched editors can resolve project runtimes. Restart the desktop session after applying PATH changes. Project dependencies remain owned by the project's package manager rather than Mason or a global mise formatter installation.
