@@ -232,7 +232,7 @@ check_host_prerequisites() (
   native_cmd check --manifest "$manifest"
   needs_secrets=$(nix_cmd eval --accept-flake-config --json \
     "$FLAKE_DIR#homeConfigurations.$HOST.config" \
-    --apply 'config: config.my.secrets != [ ] || config.my.identities != [ ]')
+    --apply 'config: !(config.my.desktop == "kde" && config.my.os != "wsl" && config.my.os != "darwin") && (config.my.secrets != [ ] || config.my.identities != [ ])')
   if [[ "$needs_secrets" == true && ! -f "$HOME/.secrets/age_identity" ]]; then
     echo "Missing ~/.secrets/age_identity — restore it from Bitwarden before activation." >&2
     return 1

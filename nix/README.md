@@ -1,7 +1,14 @@
 ---
 agent:
   instruction: Update this README when Nix catalog or host workflows change.
-  on-change: ["nix/lib/**", "nix/modules/**", "nix/scripts/native-packages.py", "nix/mise.toml", "nix/mise-tasks/**"]
+  on-change:
+    [
+      "nix/lib/**",
+      "nix/modules/**",
+      "nix/scripts/native-packages.py",
+      "nix/mise.toml",
+      "nix/mise-tasks/**",
+    ]
 ---
 
 # nix config
@@ -35,7 +42,7 @@ nix/
       {claude,llama,shared}.nix
     <tool>.nix             # config for larger tools (git, mise, ssh, …)
     common.nix             # universal HM infrastructure
-    secrets.nix            # agenix wiring, filtered by my.identities / my.secrets
+    secrets.nix            # KDE fnox/session wiring; agenix on other platforms
   secrets/                 # age-encrypted, identity registry in meta.nix
 ```
 
@@ -250,7 +257,7 @@ Codex remain local unless they are deliberately added to the tracked baseline.
 
 Bootstrap runs as your normal user with sudo available. Linux needs apt-get, dnf, or pacman. It refreshes APT metadata, accepts DNF’s “updates available” result without hiding actual errors, and runs a full `pacman -Syu` on Arch before installing prerequisites. Update failures stop bootstrap. Linux installer prerequisites include curl, CA certificates, tar and xz, plus Fedora’s existing awk/development-tools setup. macOS requires Xcode Command Line Tools to finish installing before bootstrap continues.
 
-After Nix setup and repository sync, bootstrap evaluates the requested host and runs its packaged `native-packages check` before Home Manager activation. It also checks for the age identity when the host selects secrets or identities. Existing Homebrew installations are discovered in `/opt/homebrew/bin` or `/usr/local/bin` if needed. Missing Homebrew, an AUR helper, or other backend tools must be installed before retrying; bootstrap does not install new package managers automatically. Native reconciliation uses the packaged command directly, so a fresh shell does not need its newly activated profile on PATH yet.
+After Nix setup and repository sync, bootstrap evaluates the requested host and runs its packaged `native-packages check` before Home Manager activation. It also checks for the age identity file when a non-KDE host selects secrets or identities. KDE hosts require the age identity enrolled in an unlocked KWallet before activation. Existing Homebrew installations are discovered in `/opt/homebrew/bin` or `/usr/local/bin` if needed. Missing Homebrew, an AUR helper, or other backend tools must be installed before retrying; bootstrap does not install new package managers automatically. Native reconciliation uses the packaged command directly, so a fresh shell does not need its newly activated profile on PATH yet.
 
 ## How to add a host
 
@@ -282,17 +289,17 @@ decrypts none.
 
 ## Authentication
 
-| Platform | SSH | GPG | Credential storage |
-| --- | --- | --- | --- |
-| KDE Linux | One OpenSSH agent owns the stable user socket. Selected keys load at graphical login, and ksshaskpass retrieves encrypted-key passphrases. | GPG uses `/usr/bin/pinentry-qt`, with `PINENTRY_KDE_USE_WALLET=1` set on the agent service. GnuPG uses its built-in cache defaults. | KWallet through ksshaskpass and pinentry. Automatic unlocking requires a PAM-compatible wallet configured for login unlock. |
-| macOS | Selected identity paths use the system session's SSH agent. | GPG uses `pinentry-mac`. | pinentry-mac can remember GPG passphrases in the login Keychain. |
-| WSL | SSH prompts in the terminal and `AddKeysToAgent` caches selected keys while the Linux agent runs. | pinentry-curses prompts in the terminal; the passphrase stays in the GPG agent's memory cache. | No persistent passphrase storage or Windows agent forwarding. |
+| Platform  | SSH                                                                                                                                                                | GPG                                                                                                                                 | Credential storage                                                                                                          |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| KDE Linux | One OpenSSH agent owns the stable user socket. Selected encrypted backups stream into the agent at graphical login; ksshaskpass retrieves their saved passphrases. | GPG uses `/usr/bin/pinentry-qt`, with `PINENTRY_KDE_USE_WALLET=1` set on the agent service. GnuPG uses its built-in cache defaults. | KWallet through ksshaskpass and pinentry. Automatic unlocking requires a PAM-compatible wallet configured for login unlock. |
+| macOS     | Selected identity paths use the system session's SSH agent.                                                                                                        | GPG uses `pinentry-mac`.                                                                                                            | pinentry-mac can remember GPG passphrases in the login Keychain.                                                            |
+| WSL       | SSH prompts in the terminal and `AddKeysToAgent` caches selected keys while the Linux agent runs.                                                                  | pinentry-curses prompts in the terminal; the passphrase stays in the GPG agent's memory cache.                                      | No persistent passphrase storage or Windows agent forwarding.                                                               |
 
 Arch and Fedora KDE declare `ksshaskpass` and Qt pinentry in the native package catalog. See the [GnuPG agent manual](https://gnupg.org/documentation/manuals/gnupg26/gpg-agent.1.html) for its built-in cache defaults.
 
 The GPG module enables Zsh terminal integration only for `pinentry-curses`. It sets `GPG_TTY` and updates the agent's terminal destination. Graphical pinentry on KDE and macOS does not start or update the agent from Zsh.
 
-See `secrets/README.md` for more details.
+KDE global API values are age-encrypted in `secrets/fnox.toml`. The age identity lives in KWallet, and the ordered `session-secrets` service imports API values into desktop activation environments. KDE activation does not deploy decrypted API or SSH files. See `secrets/README.md` for enrollment and recovery details.
 
 ## Validation
 

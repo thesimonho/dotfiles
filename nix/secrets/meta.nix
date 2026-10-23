@@ -4,7 +4,7 @@
 
 {
   # Age identity key — encrypts all secrets in this repo
-  # Private key lives at ~/.secrets/age_identity (not managed by agenix — it IS the agenix decryption key)
+  # KDE stores the private identity in KWallet; other hosts use ~/.secrets/age_identity.
   agePublicKey = "age1q78n6tyqujn6l4yvwvaa6m7p45z9lnl3cme79qf0curt6glfjdgq35nw9j";
 
   identities = {
@@ -44,7 +44,7 @@
   };
 
   # Non-identity secrets
-  # Each entry maps to a <file>.age in this directory, decrypted to ~/.secrets/<file>
+  # Non-KDE hosts decrypt <file>.age to ~/.secrets/<file>; KDE API values use fnox.toml.
   secrets = {
     api-keys = {
       file = "api-keys";

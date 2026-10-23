@@ -1,6 +1,12 @@
-# Secret Management with agenix
+# Secret management
 
-This directory contains encrypted secrets managed by **agenix** and **Nix/Home Manager**, using a single age identity key for decryption.
+This directory contains age-encrypted credentials and their public identity registry.
+
+KDE Linux uses fnox with the age identity held in KWallet's Secret Service under service `dotfiles-secrets`, account `age-identity`. `fnox.toml` contains encrypted global API values. The ordered `session-secrets` login service imports those values into the systemd and D-Bus activation environments before Plasma starts. Applications receive them when launched; restart an existing app to pick up changes. Project secrets remain project-owned.
+
+SSH backups decrypt through a pipe into the existing OpenSSH agent. The askpass adapter preserves the original key-path prompt so ksshaskpass reuses its saved KWallet passphrase. SSH configuration selects the public key for agent matching. GPG backups stream into GnuPG during activation. The age identity and private SSH key are never exported into the session environment.
+
+macOS and WSL retain agenix file deployment. The file-based instructions below apply to those platforms. KDE uses no plaintext-file fallback.
 
 ## How it works
 
@@ -11,7 +17,7 @@ Secrets fall into two categories:
 - **Identity secrets** — SSH keys and GPG keys tied to a specific identity (defined in `meta.identities`)
 - **Standalone secrets** — API keys and other credentials (defined in `meta.secrets`)
 
-On `home-manager switch`, agenix decrypts `.age` files and places them:
+On non-KDE hosts, `home-manager switch` uses agenix to decrypt `.age` files and places them:
 
 - Identity SSH keys → `~/.ssh/`
 - Standalone secrets → `~/.secrets/`
@@ -30,7 +36,7 @@ secrets/
 └── api-keys.age                 # Encrypted environment variables
 ```
 
-**On a machine after deployment:**
+**On a non-KDE machine after deployment:**
 
 ```
 ~/.secrets/
@@ -41,7 +47,23 @@ secrets/
 ├── id_personal                  # Decrypted SSH key
 ```
 
-## Setting up a new machine
+## KDE enrollment and use
+
+Set up login unlocking for the `kdewallet` KWallet collection before activating a KDE host. The helper checks that this collection is already unlocked before requesting credentials; it does not ask to unlock it. From a private terminal, use a temporary fnox config containing:
+
+```toml
+[providers.keychain]
+type = "keychain"
+service = "dotfiles-secrets"
+```
+
+Run `fnox --no-daemon -c /path/to/temporary.toml set AGE_IDENTITY --provider keychain --key-name age-identity` and enter the age identity at the hidden prompt. Do not pass it as a command argument. Retain its independent Bitwarden recovery copy. The temporary config contains only the keychain reference; remove it after enrollment. Activate Home Manager, then log out and in to verify `systemctl --user status session-secrets ssh-add-identities`.
+
+Use `fnox set NAME` to edit global API values in a writable copy of `fnox.toml`, then commit only ciphertext. The deployed config is managed by Home Manager. Activation refreshes GPG's native key storage; `session-secrets decrypt /path/to/backup.age` writes plaintext to stdout and is intended only for a pipe into its consuming tool. Never redirect private credentials into persistent files.
+
+A missing or unavailable wallet causes secret resolution to fail; no file fallback is used on KDE. Unit ordering permits desktop startup after a failure, so check the service status before assuming credentials are available.
+
+## Setting up a non-KDE machine
 
 1. **Restore the age identity key** from Bitwarden to `~/.secrets/age_identity`
 2. **Clone dotfiles** and run `home-manager switch`
@@ -93,7 +115,7 @@ git add id_new.age meta.nix
 
 SSH config, git identity routing, and secret decryption all derive from this one entry.
 
-## Adding a standalone secret
+## Adding a standalone secret on non-KDE hosts
 
 Add to `meta.secrets` in `meta.nix`:
 

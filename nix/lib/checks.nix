@@ -177,12 +177,11 @@ let
       checkIdentity =
         name: id:
         let
-          secret = c.age.secrets."identity-ssh-${name}";
+          path = "${c.home.homeDirectory}/.ssh/${id.sshKeyFile}";
+          secret = c.age.secrets."identity-ssh-${name}" or null;
         in
-        secret.path == "${c.home.homeDirectory}/.ssh/${id.sshKeyFile}"
-        && secret.mode == "600"
-        && !secret.symlink
-        && ssh.${id.sshHost}.data.IdentityFile == secret.path
+        (if native then secret == null else secret.path == path && secret.mode == "600" && !secret.symlink)
+        && ssh.${id.sshHost}.data.IdentityFile == "${path}${lib.optionalString native ".pub"}"
         && ssh.${id.sshHost}.data.HostName == id.sshProxyHost
         && ssh.${id.sshHost}.data.Port == id.sshPort
         && ssh.${id.sshHost}.data.ForwardAgent
@@ -221,7 +220,7 @@ let
         && (
           ids == { }
           || lib.any (
-            command: lib.hasInfix "ssh-add -q" command
+            command: lib.hasInfix "session-secrets ssh" command
           ) services.ssh-add-identities.Service.ExecStart
         )
         && builtins.hasAttr "apps.kde-authentication" c.my.nativePackages.catalog

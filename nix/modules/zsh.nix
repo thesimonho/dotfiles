@@ -78,14 +78,16 @@ in
       '')
 
       # 200: load secrets
-      (lib.mkOrder 200 ''
-        # Load encrypted environment variables
-        if [ -f ${config.age.secrets.api-keys.path} ]; then
-          set -a
-          source ${config.age.secrets.api-keys.path}
-          set +a
-        fi
-      '')
+      (lib.mkIf (config.age.secrets ? api-keys) (
+        lib.mkOrder 200 ''
+          # Load encrypted environment variables
+          if [ -f ${config.age.secrets.api-keys.path} ]; then
+            set -a
+            source ${config.age.secrets.api-keys.path}
+            set +a
+          fi
+        ''
+      ))
 
       # 500: early init
       (lib.mkOrder 500 ''
