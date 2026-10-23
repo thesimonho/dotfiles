@@ -76,8 +76,8 @@ in
 {
   home.packages =
     with pkgs;
-    [
-      age
+    [ age ]
+    ++ lib.optionals (!nativeKde) [
       inputs.agenix.packages.${stdenv.hostPlatform.system}.default
     ]
     ++ lib.optionals nativeKde [
