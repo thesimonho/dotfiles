@@ -5,7 +5,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-# Runs as a script from the justfile, where sys.path starts at this package
+# Runs as a script from the mise task, where sys.path starts at this package
 # rather than the library root its sibling modules are imported from.
 LIBRARY_ROOT = Path(__file__).resolve().parent.parent
 if str(LIBRARY_ROOT) not in sys.path:

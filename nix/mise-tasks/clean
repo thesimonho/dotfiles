@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Prune old generations and clean the Nix store"
+set -euo pipefail
+echo "==> Cleaning up old generations"
+if [[ "$(uname -s)" == Darwin ]]; then
+  # Tahoe+MDM may deny GC on stamped app bundles. Preserve profile pruning
+  # and tolerate that existing macOS GC failure after filtering its output.
+  nh clean user --keep-since 14d --keep 3 2>&1 | awk '!skip && /Performing garbage collection on the nix store/{print "==> Skipping nix store gc on Darwin (Tahoe+MDM xattr issue)"; skip=1; next} !skip' || true
+else
+  nh clean user --keep-since 14d --keep 3 --no-gcroots
+fi

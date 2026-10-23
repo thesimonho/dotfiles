@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Rank recorded runs by spend at current token prices."
+set -eu
+AI/evals/.venv/bin/python AI/evals/report_run_costs.py

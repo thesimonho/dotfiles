@@ -1,0 +1,9 @@
+[tools]
+# The HomeOps evaluation fixture measures Just usage independently of host tasks.
+just = "1"
+
+[env]
+_.file = "../../.env"
+
+[task_config]
+dir = "../.."

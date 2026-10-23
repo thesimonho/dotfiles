@@ -27,7 +27,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Frozen nixpkgs for heavy rebuilds (llama-cpp, ffmpeg). Excluded from
-    # `just update`; bump explicitly with `just update-pinned`.
+    # `mise run update`; bump explicitly with `mise run update-pinned`.
     #
     # A release channel is no longer usable here: nixos-26.05 froze llama-cpp
     # at b9190 (2026-05-16), old enough that architectures added upstream since
@@ -35,7 +35,7 @@
     # move faster than the channel. Naming the `nixpkgs-unstable` branch is the
     # obvious move and the wrong one — it is the same ref as the input above,
     # but resolves to a *separate* lock node, so the two drift into different
-    # checkouts of one branch as `just update` and `just update-pinned` bump
+    # checkouts of one branch as `mise run update` and `mise run update-pinned` bump
     # them at different times, and nothing stays frozen.
     #
     # So pin the revision. The constraint the old comment was reaching for is
@@ -44,7 +44,7 @@
     # whereas a commit the `nixpkgs-unstable` branch actually pointed at is
     # Hydra-built by definition. Evaluation is identical either way for the
     # same rev, so naming it by SHA costs nothing and buys an immovable pin.
-    # `just update-pinned` advances this to the current channel tip; do not
+    # `mise run update-pinned` advances this to the current channel tip; do not
     # hand-edit it to an arbitrary master SHA.
     nixpkgs-pinned.url = "github:NixOS/nixpkgs/38a4887411571457d700c51c64a6e49ead2ed5ab";
 

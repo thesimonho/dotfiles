@@ -18,10 +18,10 @@ const state = require("../lib/hooks/session-state");
 const CODE_FILE =
   /\.(js|jsx|ts|tsx|mjs|cjs|py|go|rs|dart|java|kt|rb|c|cc|cpp|h|hpp|nix|sh|lua|vue|svelte)$/i;
 
-// A command that constitutes verification: the project's just recipes, a package
+// A command that constitutes verification: the project's Just or mise tasks, a package
 // script, or a gate tool invoked directly.
 const VERIFY_COMMAND =
-  /\b(just\s+(verify|test|check|analyze|lint|typecheck|build)|(npm|pnpm|yarn|bun)\s+(run\s+)?(test|lint|typecheck|build|check)|tsc\b|eslint\b|oxlint\b|jest\b|vitest\b|pytest\b|ruff\b|pyright\b|mypy\b|cargo\s+(test|check|clippy)|go\s+(test|vet))/;
+  /\b((just|mise(?:\s+-C\s+\S+)?\s+(run|r))\s+(verify|test|check|analyze|lint|typecheck|build)|(npm|pnpm|yarn|bun)\s+(run\s+)?(test|lint|typecheck|build|check)|tsc\b|eslint\b|oxlint\b|jest\b|vitest\b|pytest\b|ruff\b|pyright\b|mypy\b|cargo\s+(test|check|clippy)|go\s+(test|vet))/;
 
 /**
  * The edited file path across Claude and Codex tool shapes.

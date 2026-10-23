@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Stop MLflow without deleting its data."
+set -eu
+docker compose -f infra/compose/mlflow.yml down

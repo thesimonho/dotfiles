@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE hide=true
+#MISE description="Install the locked single-package HomeOps web application dependencies."
+set -eu
+npm ci --prefix AI/evals/environments/homeops/project

@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Follow MLflow and Alloy logs."
+set -eu
+docker compose -f infra/compose/mlflow.yml logs --follow --tail=100

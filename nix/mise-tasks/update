@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#MISE description="Update flake inputs, excluding pinned inputs"
+set -euo pipefail
+if [ -n "$*" ]; then
+  nix --extra-experimental-features 'nix-command flakes' flake update "$@"
+else
+  all=$(nix --extra-experimental-features 'nix-command flakes' eval --raw --impure --expr \
+    'builtins.concatStringsSep "\n" (builtins.attrNames (builtins.getFlake (toString ./.)).inputs)')
+  to_update=()
+  while IFS= read -r input; do
+    to_update+=("$input")
+  done < <(comm -23 <(echo "$all" | sort) <(echo "nixpkgs-pinned" | sort))
+  printf '==> Updating:'
+  printf ' %s' "${to_update[@]}"
+  printf '\n'
+  nix --extra-experimental-features 'nix-command flakes' flake update "${to_update[@]}"
+fi

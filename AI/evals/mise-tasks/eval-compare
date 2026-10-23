@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Compare full instructions with one component removed from the control arm."
+#USAGE arg "<agent>"
+#USAGE arg "<component>"
+#USAGE arg "<case_id>"
+#USAGE arg "[model]" default=""
+#USAGE arg "[effort]" default=""
+set -eu
+AI/evals/.venv/bin/python AI/evals/run_mlflow_eval.py --agent "${usage_agent}" --model "${usage_model}" --effort "${usage_effort}" --case-id "${usage_case_id}" --compare-component "${usage_component}"

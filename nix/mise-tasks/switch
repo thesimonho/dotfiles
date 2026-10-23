@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#MISE description="Apply a host or preview Home Manager and native changes"
+#USAGE arg "<host>"
+#USAGE flag "--dry-run"
+#USAGE complete "host" run="printf '%s\n' hosts/*.nix | sed 's|hosts/||; s|.nix$||'"
+set -euo pipefail
+host="${usage_host:?}"
+dry_run="${usage_dry_run:-false}"
+
+if "$dry_run"; then
+  echo "==> Home Manager dry run for $host"
+  nh home switch --dry -b backup -c "$host" .
+  echo "==> Native package dry run for $host"
+  manifest=$(mktemp)
+  trap 'rm -f "$manifest"' EXIT
+  nix --extra-experimental-features 'nix-command flakes' eval --json ".#homeConfigurations.$host.config.my.nativePackages.manifest" >"$manifest"
+  nix --extra-experimental-features 'nix-command flakes' run ".#homeConfigurations.$host.config.my.nativePackages.package" -- plan --host "$host" --manifest "$manifest"
+  exit 0
+fi
+
+if [ ! -f "$HOME/.secrets/age_identity" ]; then
+  echo "Error: Missing ~/.secrets/age_identity — restore from Bitwarden" >&2
+  exit 1
+fi
+mise run docs
+echo "==> Applying host $host using flake at ."
+nh home switch -b backup -c "$host" .
+native-packages apply --host "$host"
+mise run clean

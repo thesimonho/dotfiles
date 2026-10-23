@@ -1,7 +1,7 @@
 ---
 agent:
   instruction: Update this README when Nix catalog or host workflows change.
-  on-change: ["nix/lib/**", "nix/modules/**", "nix/scripts/native-packages.py", "nix/justfile"]
+  on-change: ["nix/lib/**", "nix/modules/**", "nix/scripts/native-packages.py", "nix/mise.toml", "nix/mise-tasks/**"]
 ---
 
 # nix config
@@ -15,7 +15,7 @@ nix/
   flake.nix                # sharedModules + per-host wiring + cudaCapabilities map
   bootstrap.sh             # 1-click install: prereqs → clone → HM switch → post-setup
   post-setup.sh            # root-owned config and WSL/APT fallback
-  justfile                 # switch/build/clean; switch --dry-run covers Home Manager and native packages
+  mise.toml                # switch/build/clean; switch --dry-run covers Home Manager and native packages
   scripts/native-packages.py # Native package reconciliation and ownership receipt
   lib/
     catalog.nix            # typed catalog selection, applicability, and realization
@@ -174,7 +174,7 @@ configuration evaluation alone does not prove GPU or C# operation.
 
 Ghostty belongs to the `desktop` bundle, selected by the Arch desktop and Mac hosts. It requires a graphical desktop and uses the native `ghostty` Pacman package on Arch or Homebrew cask on macOS. WSL does not select the bundle. `modules/common.nix` keeps its configuration linked to `ghostty/` in the dotfiles checkout. Fedora has no Ghostty package mapping yet.
 
-Home Manager writes `~/.config/native-packages/manifest.json` and installs the `native-packages` command. The manifest includes the explicit host key, OS, architecture, native platform, selected backend package lists, repositories, and custom AUR build commands. Custom commands must name declared AUR packages and point into the Nix store. The receipt records successfully applied command paths; an initial custom build also rebuilds an existing package without implicitly adopting it. The reconciler is outside activation: `just switch <host>` first activates Home Manager, then applies its manifest. These are separate transactions.
+Home Manager writes `~/.config/native-packages/manifest.json` and installs the `native-packages` command. The manifest includes the explicit host key, OS, architecture, native platform, selected backend package lists, repositories, and custom AUR build commands. Custom commands must name declared AUR packages and point into the Nix store. The receipt records successfully applied command paths; an initial custom build also rebuilds an existing package without implicitly adopting it. The reconciler is outside activation: `mise run switch <host>` first activates Home Manager, then applies its manifest. These are separate transactions.
 
 A custom AUR build executable receives the selected helper (`paru` or `yay`) as its only argument during apply. It must build/install the exact declared package as the normal user, using sudo only through the native package tools. It also accepts `--check`: exit 0 means the installed package has the requested configuration, 1 schedules a rebuild, and other exit codes stop reconciliation. The check must not change the host. A failed build is not recorded as successfully configured, so the next apply retries it.
 
@@ -184,8 +184,8 @@ A native failure leaves Home Manager activated and stops the recipe before gener
 
 From `nix/`:
 
-- `just switch desktop --dry-run` runs Home Manager's `nh home switch --dry`, then evaluates current declarations and previews native package additions/removals. It skips activation, package changes, receipt writes, documentation generation, and generation cleanup. Nix may populate its cache and build the Home Manager configuration and reconciler. The Home Manager portion uses `nh`'s own dry-run output; the native portion lists the package transactions.
-- `just switch desktop` activates and reconciles normally, with confirmation.
+- `mise run switch desktop --dry-run` runs Home Manager's `nh home switch --dry`, then evaluates current declarations and previews native package additions/removals. It skips activation, package changes, receipt writes, documentation generation, and generation cleanup. Nix may populate its cache and build the Home Manager configuration and reconciler. The Home Manager portion uses `nh`'s own dry-run output; the native portion lists the package transactions.
+- `mise run switch desktop` activates and reconciles normally, with confirmation.
 - `native-packages apply --host desktop` retries the **activated** manifest.
 - `native-packages apply --host desktop --adopt visual-studio-code-bin` explicitly takes ownership of those already installed, declared packages.
 - `native-packages plan --host desktop` previews the activated manifest directly.
@@ -242,7 +242,7 @@ cache paths remain untouched. The adapter records the previously managed key
 paths under the XDG state directory so removing a tracked setting also removes
 its old local value.
 
-Run `just codex-config-apply` from `nix/` to apply tracked changes immediately
+Run `mise run codex-config-apply` from `nix/` to apply tracked changes immediately
 without switching the full Home Manager profile. Settings changed through
 Codex remain local unless they are deliberately added to the tracked baseline.
 
@@ -261,8 +261,8 @@ After Nix setup and repository sync, bootstrap evaluates the requested host and 
    the right system + the new host file.
 3. If the host runs CUDA, add its compute capability under
    `hostCudaCapabilities`.
-4. Run `just build <name>` to verify, then
-   `just switch <name>` to activate and reconcile native packages.
+4. Run `mise run build <name>` to verify, then
+   `mise run switch <name>` to activate and reconcile native packages.
 
 For a **WSL host** (`my.os = "wsl"`), the only step nix can't do is the
 Windows-side prerequisite — on a fresh machine run `wsl --install` in
@@ -296,7 +296,5 @@ See `secrets/README.md` for more details.
 
 ## Validation
 
-- `just build <host>` — eval-and-build without activating.
-- `just diff <host>` — closure diff vs. current activation. Useful to
-  check that a refactor is behavior-preserving.
+- `mise run build <host>` — eval-and-build without activating.
 - `nix flake check` — schema sanity.

@@ -232,13 +232,6 @@
         "cli"
       ];
     };
-    just = {
-      contributions.packages = [ pkgs.just ];
-      bundles = [
-        "cli"
-        "dev"
-      ];
-    };
     lazydocker = {
       contributions.packages = [ pkgs.lazydocker ];
       bundles = [

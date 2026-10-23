@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Show local service state."
+set -eu
+docker compose -f infra/compose/mlflow.yml ps

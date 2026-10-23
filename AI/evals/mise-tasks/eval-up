@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Start MLflow, bind Alloy to the eval experiment, and wait for both services."
+set -eu
+mise -C AI/evals run eval-up-mlflow
+mise -C AI/evals run eval-bootstrap-alloy
+mise -C AI/evals run eval-up-alloy
+mise -C AI/evals run eval-wait-alloy

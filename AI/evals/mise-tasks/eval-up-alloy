@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE hide=true
+#MISE description="Start Alloy after its MLflow experiment ID is available."
+set -eu
+docker compose -f infra/compose/mlflow.yml up -d alloy

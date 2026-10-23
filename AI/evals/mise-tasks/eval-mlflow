@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE hide=true
+#MISE description="Run the eval suite in MLflow. Pass runner flags directly to the recipe."
+set -eu
+AI/evals/.venv/bin/python AI/evals/run_mlflow_eval.py "$@"

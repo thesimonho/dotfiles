@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Preview component coverage and CLI usage without invoking an agent or MLflow."
+#USAGE arg "<agent>"
+#USAGE arg "<component>"
+#USAGE arg "[repetitions]" default="1"
+set -eu
+AI/evals/.venv/bin/python AI/evals/plan_evaluation_campaign.py --agent "${usage_agent}" --component "${usage_component}" --repetitions "${usage_repetitions}"

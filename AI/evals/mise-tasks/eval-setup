@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Install the isolated eval harness and HomeOps fixture dependencies."
+set -eu
+mise -C AI/evals run eval-homeops-setup
+python3 -m venv AI/evals/.venv
+AI/evals/.venv/bin/pip install "mlflow[genai]==3.14.0"

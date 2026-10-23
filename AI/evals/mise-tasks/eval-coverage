@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Report tracking and coverage state for every monitored component."
+#USAGE arg "[agent]" default="claude"
+set -eu
+AI/evals/.venv/bin/python AI/evals/plan_evaluation_campaign.py --agent "${usage_agent}"

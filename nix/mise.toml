@@ -1,0 +1,29 @@
+[tasks.show]
+description = "Show flake outputs"
+run = "nix --extra-experimental-features 'nix-command flakes' flake show ."
+
+[tasks.docs]
+description = "Regenerate repository skill documentation"
+hide = true
+run = "./scripts/write-skills-readme.sh"
+
+[tasks.check]
+description = "Evaluate flake checks without building"
+depends = ["docs"]
+run = "nix --extra-experimental-features 'nix-command flakes' flake check --no-build ."
+
+[tasks.codex-config-apply]
+description = "Apply tracked Codex preferences"
+run = "command codex-config-apply"
+
+[tasks.build]
+description = "Build a host activation package without activating"
+usage = '''
+arg "<host>"
+complete "host" run="printf '%s\n' hosts/*.nix | sed 's|hosts/||; s|.nix$||'"
+'''
+run = 'nh home build -c "$usage_host" .'
+
+[tasks.optimise]
+description = "Deduplicate the Nix store"
+run = "nix --extra-experimental-features 'nix-command flakes' store optimise"

@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE hide=true
+#MISE description="Create the experiment and write Alloy's ignored runtime environment file."
+set -eu
+if [[ ! -x "AI/evals/.venv/bin/python" ]]; then
+  print -u2 "Missing AI/evals/.venv/bin/python; run 'mise -C AI/evals run eval-setup' first"
+  exit 1
+fi
+AI/evals/.venv/bin/python AI/evals/lib/tracking/experiment_bootstrap.py

@@ -50,10 +50,10 @@ The subagent compute case reuses `template-structure-exploration`. It delegates 
 
 ## Setup and focused runs
 
-Run `just --justfile AI/evals/justfile eval-setup` to install both Python harness and locked HomeOps dependencies. During environment development, select one or more cases without replacing the complete hosted dataset:
+Run `mise -C AI/evals run eval-setup` to install both Python harness and locked HomeOps dependencies. During environment development, select one or more cases without replacing the complete hosted dataset:
 
 ```bash
-just --justfile AI/evals/justfile eval-mlflow \
+mise -C AI/evals run eval-mlflow \
   --agent codex \
   --case-id homeops-readonly-gitops-dns-diagnosis
 ```

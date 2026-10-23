@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Start the MLflow service and wait until it answers."
+set -eu
+docker compose -f infra/compose/mlflow.yml up -d mlflow
+mise -C AI/evals run eval-wait-mlflow

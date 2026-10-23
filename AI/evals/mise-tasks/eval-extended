@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE description="Run every executable case, including expensive periodic coverage."
+#USAGE arg "<agent>"
+#USAGE arg "[model]" default=""
+#USAGE arg "[effort]" default=""
+set -eu
+mise -C AI/evals run eval-mlflow --agent "${usage_agent}" --model "${usage_model}" --effort "${usage_effort}" --suite extended

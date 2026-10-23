@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+#MISE dir="{{ config_root }}/../.."
+#MISE hide=true
+#MISE description="Wait up to 60 seconds for MLflow to answer."
+set -eu
+for attempt in {1..60}; do
+  if curl --fail --silent --output /dev/null http://127.0.0.1:5000; then
+    exit 0
+  fi
+  sleep 1
+done
+print -u2 "Timed out waiting for http://127.0.0.1:5000"
+exit 1
