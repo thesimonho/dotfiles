@@ -166,6 +166,7 @@ let
       hasPreset = services ? gpg-preset-passphrases;
       packages = map (p: p.pname or p.name or "") c.home.packages;
       legacy = [
+        "agenix"
         "secret-askpass"
         "ssh-add-keys"
         "ssh-keys"
@@ -178,10 +179,8 @@ let
         name: id:
         let
           path = "${c.home.homeDirectory}/.ssh/${id.sshKeyFile}";
-          secret = c.age.secrets."identity-ssh-${name}" or null;
         in
-        (if native then secret == null else secret.path == path && secret.mode == "600" && !secret.symlink)
-        && ssh.${id.sshHost}.data.IdentityFile == "${path}${lib.optionalString native ".pub"}"
+        ssh.${id.sshHost}.data.IdentityFile == "${path}.pub"
         && ssh.${id.sshHost}.data.HostName == id.sshProxyHost
         && ssh.${id.sshHost}.data.Port == id.sshPort
         && ssh.${id.sshHost}.data.ForwardAgent
@@ -194,17 +193,13 @@ let
     assert hasLoader == (native && ids != { });
     assert !(services ? ssh-add-keys);
     assert !hasPreset;
+    assert !(c ? age);
     assert lib.all (name: !(lib.elem name packages)) legacy;
     assert (services ? ssh-agent) == linux;
     assert !(c.systemd.user.sockets ? ssh-agent);
     assert !c.services.gpg-agent.enableSshSupport;
     assert c.services.gpg-agent.enableZshIntegration == (linux && !native);
-    assert
-      !(c.age.secrets ? api-keys)
-      || (lib.hasInfix "GPG_TTY" c.programs.zsh.initContent) == (linux && !native);
-    assert
-      !(c.age.secrets ? api-keys)
-      || (lib.hasInfix "updatestartuptty" c.programs.zsh.initContent) == (linux && !native);
+    assert !(lib.hasInfix ".secrets/" c.programs.zsh.initContent);
     assert lib.all (name: checkIdentity name ids.${name}) (builtins.attrNames ids);
     assert !(ssh ? "*"); # SSH settings are scoped to identity hosts.
     assert

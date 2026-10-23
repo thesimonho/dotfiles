@@ -1,7 +1,7 @@
 # SSH agent, key loading, and host configuration.
 # Match blocks are derived from identities in secrets/meta.nix.
 # KDE loads encrypted backups directly into the agent through session-secrets.
-# Other platforms retain file deployment from secrets.nix.
+# Identity matching uses public keys; private backups are never deployed as files.
 #
 # Linux KDE uses ksshaskpass and KWallet directly. WSL retains the agent and
 # encrypted identities, but prompts in the terminal and does not preload keys.
@@ -28,7 +28,7 @@ let
       AddKeysToAgent = "true";
       ForwardAgent = true;
       IdentitiesOnly = true;
-      IdentityFile = "${sshDir}/${id.sshKeyFile}${lib.optionalString nativeKde ".pub"}";
+      IdentityFile = "${sshDir}/${id.sshKeyFile}.pub";
     };
   }) selectedIdentities;
 in

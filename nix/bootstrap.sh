@@ -224,19 +224,13 @@ native_cmd() {
 }
 
 check_host_prerequisites() (
-  local manifest needs_secrets
+  local manifest
   manifest=$(mktemp)
   trap 'rm -f "$manifest"' EXIT
   nix_cmd eval --accept-flake-config --json \
     "$FLAKE_DIR#homeConfigurations.$HOST.config.my.nativePackages.manifest" >"$manifest"
   native_cmd check --manifest "$manifest"
-  needs_secrets=$(nix_cmd eval --accept-flake-config --json \
-    "$FLAKE_DIR#homeConfigurations.$HOST.config" \
-    --apply 'config: !(config.my.desktop == "kde" && config.my.os != "wsl" && config.my.os != "darwin") && (config.my.secrets != [ ] || config.my.identities != [ ])')
-  if [[ "$needs_secrets" == true && ! -f "$HOME/.secrets/age_identity" ]]; then
-    echo "Missing ~/.secrets/age_identity — restore it from Bitwarden before activation." >&2
-    return 1
-  fi
+
 )
 
 enroll_host_identity() {
@@ -245,7 +239,7 @@ enroll_host_identity() {
     "$FLAKE_DIR#homeConfigurations.$HOST.config" \
     --apply 'config: config.my._sessionSecrets != null && (config.my.secrets != [ ] || config.my.identities != [ ])')
   if [[ "$needs_enrollment" == true ]]; then
-    echo "==> Checking age identity enrollment in KWallet"
+    echo "==> Checking native keyring age identity enrollment"
     nix_cmd run --accept-flake-config \
       "$FLAKE_DIR#homeConfigurations.$HOST.config.my._sessionSecrets" -- enroll
   fi

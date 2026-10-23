@@ -1,18 +1,15 @@
-# KDE secrets resolve through fnox and KWallet without plaintext staging.
-# Other platforms retain agenix activation and file-based recovery.
+# Native keyring adapters share fnox enrollment and streamed secret consumers.
 {
   config,
   pkgs,
   pkgsUnstable,
   lib,
-  inputs,
   ...
 }:
 
 let
   nativeKde = config.my.os != "darwin" && config.my.os != "wsl" && config.my.desktop == "kde";
   sshDir = "${config.home.homeDirectory}/.ssh";
-  secretsDir = "${config.home.homeDirectory}/.secrets";
   selectedIdentities = config.my._identities;
   selectedSecrets = config.my._secrets;
 
@@ -32,67 +29,63 @@ let
   '';
   settings = pkgs.writeText "session-secrets.json" (
     builtins.toJSON {
+      platform =
+        if nativeKde then
+          "kde"
+        else if config.my.os == "darwin" then
+          "macos"
+        else
+          "unsupported";
       fnox = "${pkgsUnstable.fnox}/bin/fnox";
       age = "${pkgs.age}/bin/age";
       ageKeygen = "${pkgs.age}/bin/age-keygen";
       ageRecipient = (import ../secrets/meta.nix).agePublicKey;
       keychainService = "dotfiles-secrets";
-      sshAdd = "${pkgs.openssh}/bin/ssh-add";
-      dbusUpdate = "${pkgs.dbus}/bin/dbus-update-activation-environment";
+      sshAdd = if config.my.os == "darwin" then "/usr/bin/ssh-add" else "${pkgs.openssh}/bin/ssh-add";
+      dbusUpdate = if nativeKde then "${pkgs.dbus}/bin/dbus-update-activation-environment" else null;
       isolatedConfig = "${pkgs.emptyDirectory}";
       inherit identityConfig globalKeys;
       globalConfig =
         if selectedSecrets ? api-keys then globalConfig else pkgs.writeText "empty-fnox.toml" "";
-      sshKeys = lib.mapAttrsToList (name: id: {
-        encrypted = builtins.toPath "${../secrets}/${id.sshKeyFile}.age";
-        askpass = pkgs.writeShellScript "ssh-askpass-${name}" ''
-          exec /usr/bin/ksshaskpass ${lib.escapeShellArg "Enter passphrase for ${sshDir}/${id.sshKeyFile}: "}
-        '';
-      }) selectedIdentities;
+      sshKeys = lib.mapAttrsToList (
+        name: id:
+        {
+          encrypted = builtins.toPath "${../secrets}/${id.sshKeyFile}.age";
+        }
+        // lib.optionalAttrs nativeKde {
+          askpass = pkgs.writeShellScript "ssh-askpass-${name}" ''
+            exec /usr/bin/ksshaskpass ${lib.escapeShellArg "Enter passphrase for ${sshDir}/${id.sshKeyFile}: "}
+          '';
+        }
+      ) selectedIdentities;
     }
   );
   sessionSecrets = pkgs.writeShellScriptBin "session-secrets" ''
     exec ${pkgs.python3}/bin/python3 ${../scripts/session-secrets.py} ${settings} "$@"
   '';
 
-  # SSH keys from identities → ~/.ssh/
-  sshSecrets = lib.mapAttrs' (name: id: {
-    name = "identity-ssh-${name}";
-    value = {
-      file = builtins.toPath "${../secrets}/${id.sshKeyFile}.age";
-      path = "${sshDir}/${id.sshKeyFile}";
-      mode = "600";
-      symlink = false;
-    };
-  }) selectedIdentities;
-
-  # Non-identity secrets → ~/.secrets/
-  otherSecrets = lib.mapAttrs' (name: info: {
-    name = name;
-    value = {
-      file = builtins.toPath "${../secrets}/${info.file}.age";
-      path = "${secretsDir}/${info.file}";
-      symlink = false;
-    };
-  }) selectedSecrets;
 in
 {
-  my._sessionSecrets = lib.mkIf nativeKde sessionSecrets;
+  my._sessionSecrets = sessionSecrets;
 
-  home.packages =
-    with pkgs;
-    [ age ]
-    ++ lib.optionals (!nativeKde) [
-      inputs.agenix.packages.${stdenv.hostPlatform.system}.default
-    ]
-    ++ lib.optionals nativeKde [
-      sessionSecrets
-      pkgsUnstable.fnox
-    ];
+  home.packages = [
+    pkgs.age
+    sessionSecrets
+    pkgsUnstable.fnox
+  ];
 
-  xdg.configFile."fnox/config.toml" = lib.mkIf (nativeKde && selectedSecrets ? api-keys) {
+  xdg.configFile."fnox/config.toml" = lib.mkIf (selectedSecrets ? api-keys) {
     source = globalConfig;
   };
+
+  # Prevent unsupported credential hosts from partially activating via direct HM.
+  home.activation.checkSecretBackend =
+    lib.mkIf (selectedIdentities != { } || selectedSecrets != { })
+      (
+        lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+          ${sessionSecrets}/bin/session-secrets check-platform
+        ''
+      );
 
   systemd.user.services.ssh-add-identities = lib.mkIf (nativeKde && selectedIdentities != { }) {
     Service.ExecStart = "${sessionSecrets}/bin/session-secrets ssh";
@@ -118,8 +111,4 @@ in
     Install.WantedBy = [ "plasma-workspace.target" ];
   };
 
-  age = {
-    identityPaths = lib.optionals (!nativeKde) [ "${secretsDir}/age_identity" ];
-    secrets = lib.mkIf (!nativeKde) (sshSecrets // otherSecrets);
-  };
 }

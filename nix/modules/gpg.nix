@@ -91,22 +91,9 @@ in
           encryptedKey = builtins.toPath "${../secrets}/${id.gpg.secretFile}.age";
         in
         ''
-          ${
-            if nativeKde then
-              ''
-                run ${pkgs.bash}/bin/bash -euo pipefail -c \
-                  '"$1" decrypt "$2" | ${gpgBin} --batch --import' \
-                  -- "${config.home.profileDirectory}/bin/session-secrets" ${lib.escapeShellArg (toString encryptedKey)}
-              ''
-            else
-              ''
-                if [ -f "$HOME/.secrets/age_identity" ]; then
-                  run ${pkgs.bash}/bin/bash -euo pipefail -c \
-                    '${pkgs.age}/bin/age --decrypt --identity "$1" "$2" | ${gpgBin} --batch --import' \
-                    -- "$HOME/.secrets/age_identity" ${lib.escapeShellArg (toString encryptedKey)}
-                fi
-              ''
-          }
+          run ${pkgs.bash}/bin/bash -euo pipefail -c \
+            '"$1" decrypt "$2" | ${gpgBin} --batch --import' \
+            -- "${config.home.profileDirectory}/bin/session-secrets" ${lib.escapeShellArg (toString encryptedKey)}
         ''
       ) (lib.filterAttrs (_: id: id.gpg ? secretFile) gpgIdentities)
     )

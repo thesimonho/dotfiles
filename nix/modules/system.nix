@@ -86,7 +86,7 @@ in
       type = types.nullOr types.package;
       internal = true;
       default = null;
-      description = "KDE secret helper available to bootstrap before activation.";
+      description = "Shared native-store secret helper available before activation.";
     };
     _identities = mkOption {
       type = types.attrs;

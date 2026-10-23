@@ -67,11 +67,6 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
   };
 
   outputs =
@@ -80,7 +75,6 @@
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
-      agenix,
       ...
     }:
     let
@@ -148,7 +142,6 @@
       sharedModules = [
         inputs.nix-flatpak.homeManagerModules.nix-flatpak
         inputs.nix-index-database.homeModules.nix-index
-        agenix.homeManagerModules.default
         ./modules/native-packages.nix
         ./modules/system.nix
         ./modules/apps
