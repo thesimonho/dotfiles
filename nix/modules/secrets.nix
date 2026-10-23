@@ -1,6 +1,7 @@
 # Agenix secret decryption and age tooling.
 # Reads from secrets/meta.nix and decrypts secrets on activation.
-# Identity SSH keys → ~/.ssh/, GPG secret keys → ~/.secrets/, other secrets → ~/.secrets/
+# Identity SSH keys → ~/.ssh/, other secrets → ~/.secrets/
+# GPG backups are imported directly by gpg.nix; revocation backups stay encrypted.
 {
   config,
   pkgs,
@@ -26,27 +27,6 @@ let
     };
   }) selectedIdentities;
 
-  # GPG secrets from identities → ~/.secrets/
-  gpgKeySecrets = lib.mapAttrs' (name: id: {
-    name = "identity-gpg-key-${name}";
-    value = {
-      file = builtins.toPath "${../secrets}/${id.gpg.secretFile}.age";
-      path = "${secretsDir}/${id.gpg.secretFile}";
-      mode = "600";
-      symlink = false;
-    };
-  }) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? secretFile) selectedIdentities);
-
-  gpgRevocationSecrets = lib.mapAttrs' (name: id: {
-    name = "identity-gpg-rev-${name}";
-    value = {
-      file = builtins.toPath "${../secrets}/${id.gpg.revocationFile}.age";
-      path = "${secretsDir}/${id.gpg.revocationFile}";
-      mode = "600";
-      symlink = false;
-    };
-  }) (lib.filterAttrs (name: id: id.gpg != null && id.gpg ? revocationFile) selectedIdentities);
-
   # Non-identity secrets → ~/.secrets/
   otherSecrets = lib.mapAttrs' (name: info: {
     name = name;
@@ -65,6 +45,6 @@ in
 
   age = {
     identityPaths = [ "${secretsDir}/age_identity" ];
-    secrets = sshSecrets // gpgKeySecrets // gpgRevocationSecrets // otherSecrets;
+    secrets = sshSecrets // otherSecrets;
   };
 }

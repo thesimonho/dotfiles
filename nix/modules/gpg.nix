@@ -82,20 +82,22 @@ in
     "PINENTRY_KDE_USE_WALLET=1"
   ];
 
-  # Import agenix-decrypted secret keys into the GPG keyring on activation
-  home.activation = {
-    importGpgSecretKey = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-      let
-        importCommands = lib.concatStringsSep "\n" (
-          lib.mapAttrsToList (name: id: ''
-            secretKeyFile="$HOME/.secrets/${id.gpg.secretFile}"
-            if [ -f "$secretKeyFile" ]; then
-              run ${gpgBin} --batch --import "$secretKeyFile" 2>&1 || true
-            fi
-          '') gpgIdentities
-        );
-      in
-      importCommands
-    );
-  };
+  # Import encrypted backups directly; never retain decrypted export files.
+  home.activation.importGpgSecretKey = lib.hm.dag.entryAfter [ "linkGeneration" ] (
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (
+        name: id:
+        let
+          encryptedKey = builtins.toPath "${../secrets}/${id.gpg.secretFile}.age";
+        in
+        ''
+          if [ -f "$HOME/.secrets/age_identity" ]; then
+            run ${pkgs.bash}/bin/bash -euo pipefail -c \
+              '${pkgs.age}/bin/age --decrypt --identity "$1" "$2" | ${gpgBin} --batch --import' \
+              -- "$HOME/.secrets/age_identity" ${lib.escapeShellArg (toString encryptedKey)}
+          fi
+        ''
+      ) (lib.filterAttrs (_: id: id.gpg ? secretFile) gpgIdentities)
+    )
+  );
 }

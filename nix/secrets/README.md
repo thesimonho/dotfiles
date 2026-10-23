@@ -14,7 +14,9 @@ Secrets fall into two categories:
 On `home-manager switch`, agenix decrypts `.age` files and places them:
 
 - Identity SSH keys → `~/.ssh/`
-- Everything else → `~/.secrets/`
+- Standalone secrets → `~/.secrets/`
+- GPG private-key backups → streamed directly into GnuPG during activation
+- GPG revocation certificates → remain encrypted; decrypt only for recovery
 
 ## File structure
 
@@ -33,8 +35,6 @@ secrets/
 ```
 ~/.secrets/
 ├── age_identity                 # Age private key (NOT managed by agenix — placed manually)
-├── gpg-personal                 # Decrypted GPG private key
-├── gpg-personal-revocation      # Decrypted GPG revocation cert
 └── api-keys                     # Decrypted environment variables
 
 ~/.ssh/
@@ -46,7 +46,7 @@ secrets/
 1. **Restore the age identity key** from Bitwarden to `~/.secrets/age_identity`
 2. **Clone dotfiles** and run `home-manager switch`
 
-That's it. All SSH keys, GPG keys, and API keys are decrypted automatically.
+SSH keys and API keys are deployed automatically. GPG private keys are imported directly from their encrypted backups into GnuPG's native key storage; no decrypted export is retained in `~/.secrets/`. Public-key trust remains managed by Home Manager. A failed decrypt/import stops activation. The revocation certificate stays encrypted in this directory until recovery requires it.
 
 ## Rotating a compromised age identity
 
