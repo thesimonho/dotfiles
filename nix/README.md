@@ -301,6 +301,8 @@ The GPG module enables Zsh terminal integration only for `pinentry-curses`. It s
 
 KDE global API values are age-encrypted in `secrets/fnox.toml`. The age identity lives in KWallet, and the ordered `session-secrets` service imports API values into desktop activation environments. No host deploys decrypted API or SSH files. macOS has a runtime-unverified Keychain adapter and explicit `fnox exec` support; automatic GUI API delivery is unavailable. WSL has no implemented native adapter. See `secrets/README.md` for enrollment and recovery details.
 
+Run `mise run secrets-refresh` from `nix/` to reapply the installed API values to KDE's systemd/D-Bus activation environment. Switch first after editing `secrets/fnox.toml`. Existing processes keep their environment; newly launched processes use the updated values when launched through the refreshed activation environment. Log out and back in to refresh the whole desktop or clear removed variables. The task does not modify the calling shell or enable desktop delivery on unsupported platforms.
+
 ## Validation
 
 - `mise run build <host>` — eval-and-build without activating.

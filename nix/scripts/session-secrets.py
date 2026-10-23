@@ -1,14 +1,14 @@
 """Resolve secrets through native keyrings without plaintext staging."""
 
-import getpass
 import ctypes
+import getpass
 import json
 import os
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import warnings
+from pathlib import Path
 
 
 class EnrollmentError(Exception):
@@ -22,13 +22,19 @@ class UnsupportedPlatform(EnrollmentError):
 def macos_identity_present(service):
     """Query attributes only, preserving native errors instead of CLI exit codes."""
     security = ctypes.CDLL("/System/Library/Frameworks/Security.framework/Security")
-    core = ctypes.CDLL("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation")
+    core = ctypes.CDLL(
+        "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+    )
     pointer = ctypes.c_void_p
     core.CFDictionaryCreateMutable.argtypes = [pointer, ctypes.c_long, pointer, pointer]
     core.CFDictionaryCreateMutable.restype = pointer
     core.CFDictionarySetValue.argtypes = [pointer, pointer, pointer]
     core.CFDictionarySetValue.restype = None
-    core.CFStringCreateWithCString.argtypes = [pointer, ctypes.c_char_p, ctypes.c_uint32]
+    core.CFStringCreateWithCString.argtypes = [
+        pointer,
+        ctypes.c_char_p,
+        ctypes.c_uint32,
+    ]
     core.CFStringCreateWithCString.restype = pointer
     core.CFRelease.argtypes = [pointer]
     core.CFRelease.restype = None
@@ -39,6 +45,7 @@ def macos_identity_present(service):
     strings = []
     result = pointer()
     try:
+
         def symbol(library, name):
             return pointer.in_dll(library, name).value
 
@@ -46,7 +53,10 @@ def macos_identity_present(service):
             core.CFDictionarySetValue(query, symbol(security, name), value)
 
         put("kSecClass", symbol(security, "kSecClassGenericPassword"))
-        for name, value in [("kSecAttrService", service), ("kSecAttrAccount", "age-identity")]:
+        for name, value in [
+            ("kSecAttrService", service),
+            ("kSecAttrAccount", "age-identity"),
+        ]:
             text = core.CFStringCreateWithCString(None, value.encode(), 0x08000100)
             strings.append(text)
             put(name, text)
@@ -58,7 +68,9 @@ def macos_identity_present(service):
             return True
         if status == -25300:  # errSecItemNotFound
             return False
-        raise EnrollmentError("Cannot query macOS Keychain. Unlock the login keychain and allow access, then retry. Nothing was replaced.")
+        raise EnrollmentError(
+            "Cannot query macOS Keychain. Unlock the login keychain and allow access, then retry. Nothing was replaced."
+        )
     finally:
         for value in [result.value, query, *strings]:
             if value:
@@ -70,7 +82,9 @@ def main():
     action = sys.argv[2]
     platform = settings["platform"]
     if platform not in ("kde", "macos"):
-        raise UnsupportedPlatform("Native secret delivery is not implemented for WSL or this desktop. Activation stopped; no file fallback is available.")
+        raise UnsupportedPlatform(
+            "Native secret delivery is not implemented for WSL or this desktop. Activation stopped; no file fallback is available."
+        )
     if action == "check-platform":
         return
     store_name = "KWallet" if platform == "kde" else "macOS Keychain"
@@ -86,29 +100,45 @@ def main():
             return  # Keychain access and consent are handled by the native provider.
         try:
             locked = subprocess.run(
-                ["/usr/bin/busctl", "--user", "get-property", "org.freedesktop.secrets",
-                 "/org/freedesktop/secrets/collection/kdewallet",
-                 "org.freedesktop.Secret.Collection", "Locked"],
-                capture_output=True, check=True, timeout=3,
+                [
+                    "/usr/bin/busctl",
+                    "--user",
+                    "get-property",
+                    "org.freedesktop.secrets",
+                    "/org/freedesktop/secrets/collection/kdewallet",
+                    "org.freedesktop.Secret.Collection",
+                    "Locked",
+                ],
+                capture_output=True,
+                check=True,
+                timeout=3,
             )
         except (subprocess.SubprocessError, OSError):
-            raise EnrollmentError("Open and unlock kdewallet in KWallet Manager, enable its Secret Service API, then rerun bootstrap.") from None
+            raise EnrollmentError(
+                "Open and unlock kdewallet in KWallet Manager, enable its Secret Service API, then rerun bootstrap."
+            ) from None
         if locked.stdout.strip() != b"b false":
             raise EnrollmentError("Unlock kdewallet before rerunning bootstrap.")
 
     def resolve(config, *args):
         require_wallet()
         return subprocess.run(
-            [*fnox, "-c", config, *args], env=env, capture_output=True,
-            check=True, timeout=15,
+            [*fnox, "-c", config, *args],
+            env=env,
+            capture_output=True,
+            check=True,
+            timeout=15,
         ).stdout
 
     def decrypt(path, output):
         identity = resolve(settings["identityConfig"], "get", "AGE_IDENTITY")
         subprocess.run(
             [settings["age"], "--decrypt", "--identity", "/dev/stdin", path],
-            input=identity, stdout=output, stderr=subprocess.PIPE,
-            check=True, timeout=30,
+            input=identity,
+            stdout=output,
+            stderr=subprocess.PIPE,
+            check=True,
+            timeout=30,
         )
 
     def identity_present():
@@ -116,25 +146,49 @@ def main():
             return macos_identity_present(settings["keychainService"])
         require_wallet()
         found = subprocess.run(
-            ["/usr/bin/busctl", "--user", "--json=short", "call",
-             "org.freedesktop.secrets", "/org/freedesktop/secrets",
-             "org.freedesktop.Secret.Service", "SearchItems", "a{ss}", "2",
-             "service", settings["keychainService"], "username", "age-identity"],
-            capture_output=True, check=True, timeout=5,
+            [
+                "/usr/bin/busctl",
+                "--user",
+                "--json=short",
+                "call",
+                "org.freedesktop.secrets",
+                "/org/freedesktop/secrets",
+                "org.freedesktop.Secret.Service",
+                "SearchItems",
+                "a{ss}",
+                "2",
+                "service",
+                settings["keychainService"],
+                "username",
+                "age-identity",
+            ],
+            capture_output=True,
+            check=True,
+            timeout=5,
         )
         unlocked, locked = json.loads(found.stdout)["data"]
         if locked:
-            raise EnrollmentError("The age identity is in a locked collection. Unlock it and rerun bootstrap.")
+            raise EnrollmentError(
+                "The age identity is in a locked collection. Unlock it and rerun bootstrap."
+            )
         return bool(unlocked)
 
     if action == "enroll":
+
         def validate(identity):
             result = subprocess.run(
-                [settings["ageKeygen"], "-y"], input=identity,
-                capture_output=True, timeout=5,
+                [settings["ageKeygen"], "-y"],
+                input=identity,
+                capture_output=True,
+                timeout=5,
             )
-            if result.returncode or result.stdout.decode().strip() != settings["ageRecipient"]:
-                raise EnrollmentError("The age identity does not match this repository's public recipient. Nothing was replaced.")
+            if (
+                result.returncode
+                or result.stdout.decode().strip() != settings["ageRecipient"]
+            ):
+                raise EnrollmentError(
+                    "The age identity does not match this repository's public recipient. Nothing was replaced."
+                )
 
         if identity_present():
             validate(resolve(settings["identityConfig"], "get", "AGE_IDENTITY"))
@@ -146,27 +200,51 @@ def main():
                     raise OSError("not a terminal")
                 with warnings.catch_warnings():
                     warnings.simplefilter("error", getpass.GetPassWarning)
-                    identity = (getpass.getpass("Age private key from Bitwarden (hidden): ", stream=terminal).strip() + "\n").encode()
+                    identity = (
+                        getpass.getpass(
+                            "Age private key from Bitwarden (hidden): ", stream=terminal
+                        ).strip()
+                        + "\n"
+                    ).encode()
         except (OSError, EOFError, getpass.GetPassWarning):
-            raise EnrollmentError("Age identity is missing. Run bootstrap from an interactive terminal to enroll it.") from None
+            raise EnrollmentError(
+                "Age identity is missing. Run bootstrap from an interactive terminal to enroll it."
+            ) from None
         validate(identity)
         # fnox writes its reference configuration; the key itself goes only over stdin.
         with tempfile.TemporaryDirectory(prefix="dotfiles-enrollment-") as directory:
             config = Path(directory) / "identity.toml"
             config.write_bytes(Path(settings["identityConfig"]).read_bytes())
             subprocess.run(
-                [*fnox, "-c", str(config), "set", "AGE_IDENTITY",
-                 "--provider", "keychain", "--key-name", "age-identity"],
-                input=identity, env=env, capture_output=True, check=True, timeout=15,
+                [
+                    *fnox,
+                    "-c",
+                    str(config),
+                    "set",
+                    "AGE_IDENTITY",
+                    "--provider",
+                    "keychain",
+                    "--key-name",
+                    "age-identity",
+                ],
+                input=identity,
+                env=env,
+                capture_output=True,
+                check=True,
+                timeout=15,
             )
         stored = resolve(settings["identityConfig"], "get", "AGE_IDENTITY")
         validate(stored)
         if stored.strip() != identity.strip():
-            raise EnrollmentError("Stored identity verification failed. Check the native keyring before continuing.")
+            raise EnrollmentError(
+                "Stored identity verification failed. Check the native keyring before continuing."
+            )
         print(f"Age identity enrolled in {store_name} and verified.")
     elif action == "environment":
         if platform == "macos":
-            raise UnsupportedPlatform("macOS desktop API delivery is not implemented pending runtime verification. Use fnox exec for explicit terminal commands.")
+            raise UnsupportedPlatform(
+                "macOS desktop API delivery is not implemented pending runtime verification. Use fnox exec for explicit terminal commands."
+            )
         result = json.loads(resolve(settings["globalConfig"], "env", "--json"))
         values = result["set"]
         if result.get("files") or set(values) != set(settings["globalKeys"]):
@@ -177,7 +255,10 @@ def main():
         if values:
             subprocess.run(
                 [settings["dbusUpdate"], "--systemd", *sorted(values)],
-                env=env, capture_output=True, check=True, timeout=10,
+                env=env,
+                capture_output=True,
+                check=True,
+                timeout=10,
             )
     elif action == "decrypt":
         decrypt(sys.argv[3], sys.stdout.buffer)
@@ -195,8 +276,11 @@ def main():
             reader, writer = os.pipe()
             with os.fdopen(reader, "rb") as source:
                 child = subprocess.Popen(
-                    [settings["sshAdd"], "-q", "-"], stdin=source,
-                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, env=env,
+                    [settings["sshAdd"], "-q", "-"],
+                    stdin=source,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    env=env,
                 )
             try:
                 with os.fdopen(writer, "wb") as destination:
@@ -215,9 +299,17 @@ if __name__ == "__main__":
     try:
         main()
     except EnrollmentError as error:
-        print(str(error) if sys.argv[2] == "enroll" or isinstance(error, UnsupportedPlatform) else "Session secret operation failed; no secret details logged.", file=sys.stderr)
+        print(
+            str(error)
+            if sys.argv[2] == "enroll" or isinstance(error, UnsupportedPlatform)
+            else "Session secret operation failed; no secret details logged.",
+            file=sys.stderr,
+        )
         sys.exit(1)
     except Exception:
         # Provider/tool errors can include credential data. Never log them.
-        print("Session secret operation failed; no secret details logged.", file=sys.stderr)
+        print(
+            "Session secret operation failed; no secret details logged.",
+            file=sys.stderr,
+        )
         sys.exit(1)
