@@ -269,6 +269,8 @@ def main():
                 pass
         for key in settings["sshKeys"]:
             if platform == "kde":
+                # Streamed keys use stdin, so force the per-key wrapper to reuse
+                # the original key-path prompt and its saved KWallet passphrase.
                 env["SSH_ASKPASS"] = key["askpass"]
                 env["SSH_ASKPASS_REQUIRE"] = "force"
             else:

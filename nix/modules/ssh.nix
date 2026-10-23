@@ -82,8 +82,6 @@ in
       Type = "oneshot";
       Environment = [
         "SSH_AUTH_SOCK=%t/ssh-agent.socket"
-        "SSH_ASKPASS=/usr/bin/ksshaskpass"
-        "SSH_ASKPASS_REQUIRE=prefer"
       ];
       StandardInput = "null";
       PassEnvironment = [
