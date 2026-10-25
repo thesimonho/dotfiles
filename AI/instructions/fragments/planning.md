@@ -31,4 +31,4 @@ A working outline becomes authoritative only when deliberately promoted into the
 
 Agree on scope, resolve uncertainty, obtain approval when required, and select the project-native delivery record. In tracked projects, approved material may be decomposed into independently actionable tickets. In untracked projects, the approved local plan may remain authoritative. Implement and record completion against that one delivery record.
 
-Once an approved plan is established, do not deviate without pausing to discuss the change.
+Once an approved plan is established, do not deviate without pausing to discuss the change. The only exception to this rule is an explicit autonomous overnight run, where you should use your best judgment given the goal of the task, and raise the deviation upon task completion.
