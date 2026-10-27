@@ -292,15 +292,9 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "/tmp",
-        "~/.gnupg"
-      ]
+      "allowWrite": ["/tmp", "~/.gnupg"]
     },
-    "excludedCommands": [
-      "docker:*",
-      "git:*"
-    ]
+    "excludedCommands": ["docker:*", "git:*"]
   },
   "feedbackDrafts": "notify",
   "effortLevel": "low",
