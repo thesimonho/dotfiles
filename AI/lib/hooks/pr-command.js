@@ -105,7 +105,7 @@ function pullRequestCommands(source, initialCwd) {
     const words = [...original];
     while (
       /^[A-Za-z_]\w*=/.test(words[0] ?? "") ||
-      ["rtk", "env", "command"].includes(words[0])
+      ["env", "command"].includes(words[0])
     )
       words.shift();
     if (words[0] === "cd" && words.length === 2) {

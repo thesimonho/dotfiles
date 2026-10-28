@@ -2,7 +2,7 @@
 
 This directory is a deterministic enforcement layer for agent instructions. It exists because standing instructions (the fragments in `AI/instructions/fragments/`) decay across a long context: they are injected once, weighted low, and lose out to the immediate task tens of thousands of tokens later. Prose alone cannot fix that — so the rules that are _event-shaped_ live here as hooks that fire at the exact moment they are relevant, for free and deterministically.
 
-A rule states itself in exactly one place. When a hook enforces the whole rule, the prose fragment drops the line and the hook's docstring carries it — duplicating it in both only gives the two copies a chance to drift apart. Prose keeps the rules a hook cannot express, and the detail a one-line nudge has no room for (what `rtk` is and why, the LSP call surface, the plan-document structure). Claude and Codex keep native wiring in `AI/settings/claude/settings.json` and `AI/settings/codex/hooks.json`, then enter the shared system through their respective runners under `AI/lib/hooks/runners/`. The runners load the same policy modules from this directory in-process, so each rule has one implementation and each CLI retains its documented configuration surface.
+A rule states itself in exactly one place. When a hook enforces the whole rule, the prose fragment drops the line and the hook's docstring carries it — duplicating it in both only gives the two copies a chance to drift apart. Prose keeps the rules a hook cannot express, and the detail a one-line nudge has no room for (the LSP call surface and the plan-document structure). Claude and Codex keep native wiring in `AI/settings/claude/settings.json` and `AI/settings/codex/hooks.json`, then enter the shared system through their respective runners under `AI/lib/hooks/runners/`. The runners load the same policy modules from this directory in-process, so each rule has one implementation and each CLI retains its documented configuration surface.
 
 ## How a hook works
 
@@ -33,7 +33,6 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `memory-redirect`           | PreToolUse  | nudge  | prefer a hook over a memory for enforceable rules                      |
 | `commit-format-nudge`       | PreToolUse  | nudge  | format changed files before committing (avoid churn)                   |
 | `simplify-nudge`            | PreToolUse  | block  | current review decision before opening a PR; reasoned skips allowed    |
-| `rtk-nudge`                 | PreToolUse  | nudge  | prefix rtk-compressible commands (tools.md, hourly)                    |
 | `lsp-nudge`                 | PreToolUse  | nudge  | prefer LSP over text search for symbols (tools.md, hourly)             |
 | `justfile-nudge`            | PreToolUse  | nudge  | check the justfile before custom build/test (hourly)                   |
 | `surface-file-header`       | PostToolUse | nudge  | re-surface a file's own `agent.instruction`                            |
@@ -53,18 +52,18 @@ Before creating a pull request, assess whether the branch needs `/simplify`. Run
 After a review and any resulting fixes are committed, record the decision from the source checkout:
 
 ```bash
-rtk node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js reviewed
+node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js reviewed
 ```
 
 For a skip, give a brief reason:
 
 ```bash
-rtk node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js skip --reason "Small bounded fix with focused verification"
+node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js skip --reason "Small bounded fix with focused verification"
 ```
 
 The helper stores the repository, branch, commit, working-state fingerprint, outcome, and reason in the existing local hook state directory. Tracked and untracked changes invalidate the decision; ignored files do not. Decisions are local and shared across sessions for that checkout and branch, with the existing stale-state pruning. They attest the agent's judgment; they do not prove that a review was executed.
 
-The existing `PreToolUse` wiring invokes `simplify-nudge`, which blocks PR creation when the decision is absent or stale. This is an internal workflow checkpoint, not a request for user approval. Record the decision after other work finishes, then retry PR creation separately. A push may precede creation in the same command; commands that can change the reviewed state must finish first. Use the checked-out source branch and repository. The matcher recognizes direct `gh`, `glab`, and `tea` creation commands, including common global options and `rtk` wrappers, without matching quoted argument examples. It is not a complete shell parser; aliases and indirect scripts remain outside its coverage.
+The existing `PreToolUse` wiring invokes `simplify-nudge`, which blocks PR creation when the decision is absent or stale. This is an internal workflow checkpoint, not a request for user approval. Record the decision after other work finishes, then retry PR creation separately. A push may precede creation in the same command; commands that can change the reviewed state must finish first. Use the checked-out source branch and repository. The matcher recognizes direct `gh`, `glab`, and `tea` creation commands, including common global options, without matching quoted argument examples. It is not a complete shell parser; aliases and indirect scripts remain outside its coverage.
 
 ## The `agent:` frontmatter convention
 

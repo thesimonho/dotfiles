@@ -8,10 +8,8 @@
  * "I'm looking for a symbol" rather than a text phrase, so that's the only
  * shape this fires on.
  *
- * Searches arrive as shell commands, not as a Grep tool call: tools.md requires
- * Bash so rtk can compress output, and Codex has no Grep or Glob tool at all —
- * its only search path is the shell. Reading the command therefore covers both
- * hosts, where matching a Grep tool covered neither in practice.
+ * Searches can arrive as shell commands or as Grep tool calls. Codex uses
+ * shell commands for search, so reading both forms covers both hosts.
  */
 
 const { addContext, doNothing } = require("../lib/hooks/policy-result");
@@ -25,7 +23,7 @@ const BARE_IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_.]*$/;
 const SEARCH_PROGRAMS = new Set(["grep", "rg", "egrep", "fgrep", "ripgrep"]);
 
 /** Wrappers that precede the real program without changing its arguments. */
-const COMMAND_PREFIXES = new Set(["rtk", "command", "sudo", "time", "xargs"]);
+const COMMAND_PREFIXES = new Set(["command", "sudo", "time", "xargs"]);
 
 /** Shell operators that end the first pipeline stage. */
 const STAGE_SEPARATORS = new Set(["|", ";", "&&", "||"]);

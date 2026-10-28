@@ -50,14 +50,13 @@ Instruction assessments declare whether they require `task_completion = COMPLETE
 
 Each case declares deterministic required outcomes and, where meaningful, partial outcomes. Meeting every required outcome is `COMPLETE`; meeting at least one declared partial or required outcome without completing all required outcomes is `PARTIAL`; otherwise the result is `FAILED`. The rationale lists the met and unmet outcomes.
 
-### 2. Measure three tools-fragment behaviors
+### 2. Measure two tools-fragment behaviors
 
-The tools fragment has three important behaviors. Their order does not imply priority, and less important instructions are intentionally omitted from visible feedback.
+The tools fragment has two important behaviors. Their order does not imply priority, and less important instructions are intentionally omitted from visible feedback.
 
 | Assessment                       | Desired behavior                                                                                                     |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `tools.just_usage_percent`       | Use an available equivalent `just` recipe instead of `npm run`.                                                      |
-| `tools.rtk_usage_percent`        | Prefix executable shell-command segments with `rtk`.                                                                 |
 | `tools.preferred_search_percent` | Use LSP for semantic navigation, structural tools for syntax-shaped searches, and text search only when appropriate. |
 
 Each assessment reports successful preferred actions divided by eligible opportunities as a percentage. A case with no eligible opportunity omits the assessment. The rationale states the numerator, denominator, and any missed opportunities.
@@ -69,7 +68,6 @@ The code-search behavior should use a focused, read-only case involving initial 
 Implementation rules:
 
 - Just usage: hidden case policy maps direct project commands to equivalent recipes. Split shell chains into executable segments and score each mapped direct invocation against its `just` replacement.
-- RTK prefixing: score every executable shell segment. Ignore leading environment assignments and shell syntax; the first executable token must be `rtk`.
 - Code search: a focused exploration case declares semantic, structural, and text-search opportunities with accepted tool classes. Normalize LSP/plugin calls and shell tools, then score fulfilled opportunities against the accepted class.
 
 ### 3. Measure six workflow-fragment behaviors

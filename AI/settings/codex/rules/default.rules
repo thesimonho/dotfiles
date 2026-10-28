@@ -1,29 +1,6 @@
 # User-layer Codex execution policy.
-#
-# RTK is a command proxy. Use command_rule() for commands where direct and
-# `rtk`-prefixed forms should share the same approval policy.
 
-def _rtk_commands(commands):
-    return ["rtk " + command for command in commands]
-
-def command_rule(pattern, decision, justification = None, match = [], not_match = []):
-    prefix_rule(
-        pattern = pattern,
-        decision = decision,
-        justification = justification,
-        match = match,
-        not_match = not_match,
-    )
-
-    prefix_rule(
-        pattern = ["rtk"] + pattern,
-        decision = decision,
-        justification = justification,
-        match = _rtk_commands(match),
-        not_match = _rtk_commands(not_match),
-    )
-
-command_rule(
+prefix_rule(
     pattern = ["git"],
     decision = "allow",
     justification = "Git is part of the normal development workflow",
@@ -36,7 +13,7 @@ command_rule(
     ],
 )
 
-command_rule(
+prefix_rule(
     pattern = ["git", "push"],
     decision = "prompt",
     justification = "Publishing branches should stay explicit",
@@ -49,7 +26,7 @@ command_rule(
     ],
 )
 
-command_rule(
+prefix_rule(
     pattern = ["rm", "-rf"],
     decision = "prompt",
     justification = "Recursive deletion should stay explicit",
@@ -62,7 +39,7 @@ command_rule(
     ],
 )
 
-command_rule(
+prefix_rule(
     pattern = ["gh"],
     decision = "prompt",
     justification = "GitHub CLI is part of the normal development workflow",
@@ -75,7 +52,7 @@ command_rule(
     ],
 )
 
-command_rule(
+prefix_rule(
     pattern = ["npm", "run"],
     decision = "allow",
     justification = "Package scripts are part of the normal project verification workflow",
@@ -88,7 +65,7 @@ command_rule(
     ],
 )
 
-command_rule(
+prefix_rule(
     pattern = [["oxlint", "oxfmt", "curl", "just"]],
     decision = "allow",
     justification = "Common project tooling is allowed by the Claude settings",
@@ -103,7 +80,7 @@ command_rule(
     ],
 )
 
-command_rule(
+prefix_rule(
     pattern = [["ls", "grep", "find", "read"]],
     decision = "allow",
     justification = "Common inspection commands are safe to run without approval",

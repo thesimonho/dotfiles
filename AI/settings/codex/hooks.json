@@ -103,10 +103,6 @@
             "type": "command"
           },
           {
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js rtk-nudge",
-            "type": "command"
-          },
-          {
             "command": "node ~/dotfiles/AI/lib/hooks/runners/codex.js justfile-nudge",
             "type": "command"
           },

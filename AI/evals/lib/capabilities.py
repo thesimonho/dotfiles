@@ -8,7 +8,7 @@ from pathlib import Path
 import shutil
 from typing import Any
 
-REQUIRED_EVALUATION_TOOLS = ("rtk", "jq", "git", "just", "node", "npm")
+REQUIRED_EVALUATION_TOOLS = ("jq", "git", "just", "node", "npm")
 EXTERNAL_EVALUATION_SKILLS = ("tdd", "agent-browser")
 REQUIRED_HOMEOPS_TOOLS = ("kubectl", "flux", "dig")
 

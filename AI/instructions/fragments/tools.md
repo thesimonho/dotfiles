@@ -14,20 +14,6 @@ Minimize model round trips. Before using tools, identify everything needed for t
 
 Prefer one model decision around a batch or workflow over using the model as glue between mechanical steps.
 
-## CLI commands
-
-[rtk](https://github.com/rtk-ai/rtk) is available for many Bash commands to help save tokens. It works by intercepting commands and compressing their output. In order to take advantage of this, you _must_ use the Bash tool instead of builtin tools like Read, Grep, and Glob.
-
-### Golden Rule
-
-**Always prefix commands with `rtk`**. It is always safe to use - if there is no `rtk` variant, it will just fall back to the regular command.
-
-**Important**: Even in command chains with `&&`, use `rtk`:
-
-```bash
-rtk git add . && rtk git commit -m "msg" && rtk git push
-```
-
 ## Code Intelligence
 
 Prefer LSP over Grep/Glob/Read for code navigation:

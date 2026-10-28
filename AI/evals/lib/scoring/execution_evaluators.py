@@ -5,21 +5,20 @@ from dataclasses import dataclass
 from typing import Any
 
 from evaluation_case import (
-    AllShellCommandsPrefixedMetric,
     CommonMetric,
     EvidenceCountMetric,
     EvidenceRequirementsPercentMetric,
     PolicyMetric,
-    ShellCommandPrefixRateMetric,
     UsedCommandMetric,
 )
+from shell_commands import executable_index, shell_segments
+
 from scoring.event_sequences import (
     score_branch_before_changes,
     score_final_verify,
     score_tdd_sequence,
     score_worktree_lifecycle,
 )
-from shell_commands import executable_index, shell_segments
 
 type MetricValue = bool | int | float | str
 type ScoredMetric = tuple[MetricValue, str] | None
@@ -51,40 +50,6 @@ def _evaluate_used_command(
         else f"did not observe command '{command}'"
     )
     return passed, rationale
-
-
-def _evaluate_all_commands_prefixed(
-    metric: AllShellCommandsPrefixedMetric,
-    evidence: ExecutionEvidence,
-) -> ScoredMetric:
-    prefix = metric["prefix"]
-    segments = _prefixable_segments(evidence.shell_commands)
-    passed = bool(segments) and all(
-        _first_executable(segment) == prefix for segment in segments
-    )
-    rationale = (
-        f"all {len(evidence.shell_commands)} shell commands used prefix '{prefix}'"
-        if passed
-        else f"not every shell command used prefix '{prefix}'"
-    )
-    return passed, rationale
-
-
-def _evaluate_command_prefix_rate(
-    metric: ShellCommandPrefixRateMetric,
-    evidence: ExecutionEvidence,
-) -> ScoredMetric:
-    prefix = metric["prefix"]
-    segments = _prefixable_segments(evidence.shell_commands)
-    prefixed_segment_count = sum(
-        _first_executable(segment) == prefix for segment in segments
-    )
-    rate = prefixed_segment_count / len(segments) * 100 if segments else 0.0
-    rationale = (
-        f"{prefixed_segment_count} of {len(segments)} shell command "
-        f"segments used prefix '{prefix}'"
-    )
-    return rate, rationale
 
 
 def _evaluate_command_count(
@@ -255,8 +220,6 @@ def _evaluate_worktree_lifecycle(
 
 EXECUTION_EVALUATORS = {
     "used-command": _evaluate_used_command,
-    "all-shell-commands-prefixed": _evaluate_all_commands_prefixed,
-    "shell-command-prefix-rate": _evaluate_command_prefix_rate,
     "shell-command-count": _evaluate_command_count,
     "evidence-count": _evaluate_evidence_count,
     "evidence-requirements-percent": _evaluate_evidence_requirements,
@@ -270,101 +233,6 @@ EXECUTION_EVALUATORS = {
 }
 
 
-def _all_segments(
-    shell_commands: tuple[str, ...],
-) -> tuple[tuple[str, ...], ...]:
-    return tuple(
-        segment
-        for shell_command in shell_commands
-        for segment in shell_segments(shell_command)
-    )
-
-
-# Shell keywords and builtins, which no wrapper can prefix: `rtk cd /x` runs the
-# change in a subprocess that immediately exits, and `rtk done` is not a command
-# at all. Segments are split on `|`, `&`, and `;` only, so a loop body arrives as
-# its own segment and the surrounding `for` and `done` arrive as theirs.
-UNPREFIXABLE_EXECUTABLES = frozenset(
-    {
-        "for",
-        "while",
-        "until",
-        "do",
-        "done",
-        "if",
-        "then",
-        "elif",
-        "else",
-        "fi",
-        "case",
-        "esac",
-        "select",
-        "function",
-        "cd",
-        "export",
-        "source",
-        ".",
-        "eval",
-        "exec",
-        "set",
-        "unset",
-        "shift",
-        "return",
-        "exit",
-        "alias",
-        "unalias",
-        "local",
-        "declare",
-        "typeset",
-        "readonly",
-        "read",
-        "trap",
-        "wait",
-        "umask",
-        "ulimit",
-        "times",
-        "jobs",
-        "bg",
-        "fg",
-        "hash",
-        "type",
-        "command",
-        "builtin",
-        "pushd",
-        "popd",
-        "dirs",
-        "let",
-        "true",
-        "false",
-        ":",
-    }
-)
-
-
-def _prefixable_segments(
-    shell_commands: tuple[str, ...],
-) -> tuple[tuple[str, ...], ...]:
-    """Keep only segments a wrapper prefix could actually apply to.
-
-    Counting shell keywords put the ceiling out of reach: a correct
-    `for f in *; do rtk cat $f; done` scored one of three, so any agent that
-    wrote a loop was marked non-compliant for the loop itself. Segments with no
-    executable at all — a bare `FOO=1` — drop out for the same reason.
-    """
-    return tuple(
-        segment
-        for segment in _all_segments(shell_commands)
-        if (executable := _first_executable(segment)) is not None
-        and executable not in UNPREFIXABLE_EXECUTABLES
-    )
-
-
-def _first_executable(segment: tuple[str, ...]) -> str | None:
-    """Return the executable token after leading environment assignments."""
-    index = executable_index(segment)
-    return os.path.basename(segment[index]) if index is not None else None
-
-
 def _invoked_commands(command: str) -> tuple[str, ...]:
     """Return executable positions, including commands inside shell wrappers."""
     invoked_commands = []
@@ -374,15 +242,9 @@ def _invoked_commands(command: str) -> tuple[str, ...]:
             continue
         executable = os.path.basename(segment[command_index])
         invoked_commands.append(executable)
-        delegated_index = command_index + 1 if executable == "rtk" else command_index
-        if delegated_index >= len(segment):
+        if executable not in {"bash", "sh", "zsh"}:
             continue
-        delegated_command = os.path.basename(segment[delegated_index])
-        if executable == "rtk":
-            invoked_commands.append(delegated_command)
-        if delegated_command not in {"bash", "sh", "zsh"}:
-            continue
-        shell_arguments = segment[delegated_index + 1 :]
+        shell_arguments = segment[command_index + 1 :]
         for flag in ("-c", "-lc"):
             if flag not in shell_arguments:
                 continue

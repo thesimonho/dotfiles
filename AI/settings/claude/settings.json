@@ -28,7 +28,6 @@
       "Bash(git *)",
       "Bash(curl *)",
       "Bash(just *)",
-      "Bash(rtk *)",
       "mcp__context7__query-docs",
       "mcp__context7__resolve-library-id"
     ],
@@ -99,10 +98,6 @@
       {
         "matcher": "Bash",
         "hooks": [
-          {
-            "type": "command",
-            "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js rtk-nudge"
-          },
           {
             "type": "command",
             "command": "node ~/dotfiles/AI/lib/hooks/runners/claude.js justfile-nudge"

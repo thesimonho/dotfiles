@@ -58,10 +58,6 @@ def unwrapped_shell_invocations(command: str) -> tuple[tuple[str, ...], ...]:
         if index is None:
             continue
         invocation = segment[index:]
-        if os.path.basename(invocation[0]) == "rtk":
-            invocation = invocation[1:]
-        if not invocation:
-            continue
         invocations.append(invocation)
         invocations.extend(_wrapped_shell_invocations(invocation))
     return tuple(invocations)

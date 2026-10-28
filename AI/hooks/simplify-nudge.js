@@ -10,7 +10,7 @@ const {
 } = require("../lib/hooks/review-checkpoint");
 const { pullRequestCommands } = require("../lib/hooks/pr-command");
 
-const CHECKPOINT = "rtk node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js";
+const CHECKPOINT = "node ~/dotfiles/AI/lib/hooks/review-checkpoint-cli.js";
 
 function evaluate(payload) {
   const requests = pullRequestCommands(

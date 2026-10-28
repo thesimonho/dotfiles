@@ -53,20 +53,6 @@ class OutputCompletionMetric(CommonMetric):
     completion_rubric: NotRequired[str]
 
 
-class AllShellCommandsPrefixedMetric(CommonMetric):
-    """Require every observed shell command to start with one prefix."""
-
-    evaluator: Literal["all-shell-commands-prefixed"]
-    prefix: str
-
-
-class ShellCommandPrefixRateMetric(CommonMetric):
-    """Report the fraction of observed command segments using one prefix."""
-
-    evaluator: Literal["shell-command-prefix-rate"]
-    prefix: str
-
-
 class UsedCommandMetric(CommonMetric):
     """Require at least one observed shell command to invoke a command."""
 
@@ -176,9 +162,7 @@ type ResponseMetric = (
     | OutputCompletionMetric
 )
 type ExecutionMetric = (
-    AllShellCommandsPrefixedMetric
-    | ShellCommandPrefixRateMetric
-    | UsedCommandMetric
+    UsedCommandMetric
     | ShellCommandCountMetric
     | EvidenceCountMetric
     | EvidenceRequirementsPercentMetric

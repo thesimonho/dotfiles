@@ -8,11 +8,6 @@ BLAST_RADIUS = {
     "name": "workflow.unnecessary_blast_radius",
     "evaluator": "blast-radius-severity",
 }
-RTK_USAGE = {
-    "name": "tools.rtk_usage_percent",
-    "evaluator": "shell-command-prefix-rate",
-    "prefix": "rtk",
-}
 BRANCH_START = {
     "name": "git.branch_before_changes_percent",
     "evaluator": "branch-before-changes-percent",
@@ -78,7 +73,6 @@ CASES: tuple[EvaluationCase, ...] = (
             TASK_COMPLETION,
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             {
                 "name": "tools.just_usage_percent",
                 "evaluator": "just-usage-percent",
@@ -138,7 +132,6 @@ CASES: tuple[EvaluationCase, ...] = (
             TASK_COMPLETION,
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             FINAL_VERIFY,
             BRANCH_START,
             CONVENTIONAL_COMMITS,
@@ -173,7 +166,6 @@ CASES: tuple[EvaluationCase, ...] = (
             TASK_COMPLETION,
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             {
                 "name": "tools.just_usage_percent",
                 "evaluator": "just-usage-percent",
@@ -230,7 +222,6 @@ CASES: tuple[EvaluationCase, ...] = (
             },
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             {
                 "name": "tools.just_usage_percent",
                 "evaluator": "just-usage-percent",
@@ -263,7 +254,6 @@ CASES: tuple[EvaluationCase, ...] = (
             },
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             {
                 "name": "tools.preferred_search_percent",
                 "evaluator": "preferred-search-percent",
@@ -292,7 +282,6 @@ CASES: tuple[EvaluationCase, ...] = (
             TASK_COMPLETION,
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             FINAL_VERIFY,
             BRANCH_START,
             CONVENTIONAL_COMMITS,
@@ -328,7 +317,6 @@ CASES: tuple[EvaluationCase, ...] = (
             TASK_COMPLETION,
             ELI5_RESPONSE,
             BLAST_RADIUS,
-            RTK_USAGE,
             FINAL_VERIFY,
             {
                 "name": "documentation.required_updates_percent",

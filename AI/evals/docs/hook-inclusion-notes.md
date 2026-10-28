@@ -8,7 +8,7 @@ Snapshot of the evidence gathered when evaluated profiles became hook-inclusive,
 
 ## Why profiles became hook-inclusive
 
-Instruction-only profiles measured prose that never runs alone: live sessions pair fragments with PreToolUse/PostToolUse hooks that nudge or enforce the same behaviours. Hook-free eval scores therefore flagged problems that do not exist in day-to-day use — the opus/low instruction-only run recorded near-zero rtk usage in seven of nine cases while the rtk-nudge hook keeps live compliance high.
+Instruction-only profiles measured prose that never runs alone: live sessions pair fragments with PreToolUse/PostToolUse hooks that nudge or enforce the same behaviours. Hook-free eval scores therefore flagged problems that did not exist in day-to-day use.
 
 ## Verification performed
 

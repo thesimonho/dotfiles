@@ -52,8 +52,8 @@ in
       bundles = [ "agents" ];
     };
     claude-desktop = {
-      # CachyOS supplies the native Cowork VM dependencies and firmware paths.
       contributions.nativePackages = {
+        # CachyOS supplies the native Cowork VM dependencies and firmware paths.
         arch.pacman = [ "claude-desktop" ];
         darwin.homebrew.casks = [ "claude" ];
       };
@@ -98,10 +98,6 @@ in
         "cli"
         "agents"
       ];
-    };
-    rtk = {
-      contributions.packages = [ llmAgents.rtk ];
-      bundles = [ "skills" ];
     };
     huggingface-hub = {
       contributions.packages = [ pkgsUnstable.python3Packages.huggingface-hub ];
