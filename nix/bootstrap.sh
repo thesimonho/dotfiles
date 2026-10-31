@@ -155,7 +155,7 @@ restart_nix_daemon() {
 # Prereqs needed before Nix can be installed. Can't go through the
 # nix-managed catalog because nix isn't running yet.
 #   - Linux: curl/CA certificates, tar and xz; Fedora also needs awk and
-#     @development-tools on minimal Fedora/WSL images
+#     @development-tools on minimal Fedora images
 #   - macOS: Xcode CLT (provides system git used by installer + ours)
 check_bootstrap_environment() {
   if [[ "$(id -u)" == 0 ]]; then
@@ -232,18 +232,6 @@ check_host_prerequisites() (
   native_cmd check --manifest "$manifest"
 
 )
-
-enroll_host_identity() {
-  local needs_enrollment
-  needs_enrollment=$(nix_cmd eval --accept-flake-config --json \
-    "$FLAKE_DIR#homeConfigurations.$HOST.config" \
-    --apply 'config: config.my._sessionSecrets != null && (config.my.secrets != [ ] || config.my.identities != [ ])')
-  if [[ "$needs_enrollment" == true ]]; then
-    echo "==> Checking native keyring age identity enrollment"
-    nix_cmd run --accept-flake-config \
-      "$FLAKE_DIR#homeConfigurations.$HOST.config.my._sessionSecrets" -- enroll
-  fi
-}
 
 ensure_line_in_nix_conf() {
   # Ensures a key=value line exists in /etc/nix/nix.conf, replacing any existing key line.
@@ -435,7 +423,6 @@ main() {
   sync_repo
   add_homebrew_to_path
   check_host_prerequisites
-  enroll_host_identity
 
   apply_host "$HOST"
   native_cmd apply

@@ -22,11 +22,7 @@ config.default_cursor_style = "SteadyBar"
 config.default_domain = "local"
 config.default_workspace = "default"
 config.disable_default_key_bindings = true
--- Disabled: WezTerm on WSL mis-reports <Esc> under the kitty protocol, which
--- hangs nvim (lone <Esc> waits for a sequence that never arrives). Trade-off:
--- with kitty off, Ctrl+<punct> chords (e.g. <C-.>) have no terminal encoding
--- and need terminal-side translation. A correct kitty impl (e.g. Ghostty)
--- handles both; this only bites WezTerm on the WSL/Windows path.
+-- Keep legacy keyboard encoding for the control-key mappings below.
 config.enable_kitty_keyboard = false
 config.enable_scroll_bar = false
 config.enable_tab_bar = true
@@ -73,10 +69,6 @@ if utils.is_windows() then
 	config.font_size = 12
 	config.win32_system_backdrop = "Mica"
 	config.window_background_opacity = 0.9
-	local default_wsl = utils.default_wsl_distro()
-	if default_wsl then
-		config.default_domain = "WSL:" .. default_wsl
-	end
 	additional_shells = {
 		{
 			label = "PowerShell",

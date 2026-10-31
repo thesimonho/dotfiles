@@ -18,10 +18,6 @@ if "$dry_run"; then
   exit 0
 fi
 
-needs_secrets=$(nix --extra-experimental-features 'nix-command flakes' eval --json ".#homeConfigurations.$host.config" --apply 'config: config.my.secrets != [ ] || config.my.identities != [ ]')
-if [[ "$needs_secrets" == true ]]; then
-  nix --extra-experimental-features 'nix-command flakes' run ".#homeConfigurations.$host.config.my._sessionSecrets" -- enroll
-fi
 mise run docs
 echo "==> Applying host $host using flake at ."
 nh home switch -b backup -c "$host" .

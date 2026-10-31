@@ -132,7 +132,6 @@ in
     };
     catalog = mkOption {
       type = appType;
-      default = catalog;
       internal = true;
       description = "Internal resolved app catalog.";
     };
@@ -144,6 +143,9 @@ in
       domain = "apps";
     })
     {
+      # Module definitions let hosts override one entry without replacing
+      # the complete catalog (an option default would be discarded).
+      my.apps.catalog = catalog;
       assertions =
         lib.mapAttrsToList (name: entry: {
           assertion = catalogLib.hasContributions entry || entry.flatpak != null;

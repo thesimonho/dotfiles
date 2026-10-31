@@ -8,7 +8,7 @@
     identities = [
       "personal"
     ];
-    secrets = [ "api-keys" ];
+    git.defaultIdentity = "personal";
     browser.executable = "google-chrome-stable";
     mise.trustedPaths = [ "~/Projects" ];
 
@@ -26,7 +26,6 @@
       enabled = [
         "android-tools"
         "android-udev"
-        "bitwarden"
         "ffmpeg"
         "firefox"
         "glow"

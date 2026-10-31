@@ -26,10 +26,7 @@
       "Bash(gh *)",
       "Bash(npm run *)",
       "Bash(git *)",
-      "Bash(curl *)",
-      "Bash(just *)",
-      "mcp__context7__query-docs",
-      "mcp__context7__resolve-library-id"
+      "Bash(curl *)"
     ],
     "deny": [],
     "defaultMode": "auto"
@@ -260,7 +257,7 @@
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "context7@claude-plugins-official": true
+    "lua-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "artificial-jellybeans": {
@@ -280,16 +277,12 @@
         "*.githubusercontent.com",
         "*.anthropic.com"
       ],
-      "allowUnixSockets": [
-        "$SSH_AUTH_SOCK",
-        "/run/user/1000/agent-browser",
-        "~/.gnupg/S.gpg-agent"
-      ]
+      "allowUnixSockets": ["/run/user/1000/agent-browser"]
     },
     "filesystem": {
-      "allowWrite": ["/tmp", "~/.gnupg"]
+      "allowWrite": ["/tmp"]
     },
-    "excludedCommands": ["docker:*", "git:*"]
+    "excludedCommands": ["docker:*", "git:*", "with-secrets:*"]
   },
   "feedbackDrafts": "notify",
   "effortLevel": "low",

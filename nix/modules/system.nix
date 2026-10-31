@@ -2,7 +2,7 @@
 
 let
   inherit (lib) mkOption types;
-  meta = import ../secrets/meta.nix;
+  identityRegistry = import ../identities.nix;
   hostContextLib = import ../lib/host-context.nix;
   inherit (hostContextLib) requirementValues;
 in
@@ -22,12 +22,7 @@ in
     os = mkOption {
       type = types.enum requirementValues.operatingSystems;
       description = ''
-        Host platform. Drives package-manager and DE assumptions.
-        `wsl` is its own value (rather than a flag on top of `fedora`)
-        because WSL hosts share almost nothing with native Linux at the
-        session/PAM/DE layer — modules branch on it directly. Distro-
-        level concerns inside WSL stay in post-setup.sh, which detects
-        the underlying distro from `/etc/*-release`.
+        Host platform. Drives package-manager and desktop assumptions.
       '';
     };
 
@@ -64,13 +59,7 @@ in
         "personal"
         "sprung"
       ];
-      description = "Identity names from secrets/meta.nix to materialize on this host.";
-    };
-
-    secrets = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      description = "Non-identity secret names from secrets/meta.nix to decrypt on this host.";
+      description = "Identity names from identities.nix to materialize on this host.";
     };
 
     browser.executable = mkOption {
@@ -80,25 +69,12 @@ in
       description = "Default browser binary, set as CHROME_EXECUTABLE.";
     };
 
-    # Internal: identities/secrets resolved against meta.nix. Modules read
-    # these instead of refiltering meta.identities themselves.
-    _sessionSecrets = mkOption {
-      type = types.nullOr types.package;
-      internal = true;
-      default = null;
-      description = "Shared native-store secret helper available before activation.";
-    };
+    # Public identity metadata selected for this host.
     _identities = mkOption {
       type = types.attrs;
       internal = true;
       readOnly = true;
-      default = lib.filterAttrs (name: _: lib.elem name config.my.identities) meta.identities;
-    };
-    _secrets = mkOption {
-      type = types.attrs;
-      internal = true;
-      readOnly = true;
-      default = lib.filterAttrs (name: _: lib.elem name config.my.secrets) meta.secrets;
+      default = lib.filterAttrs (name: _: lib.elem name config.my.identities) identityRegistry.identities;
     };
   };
 }

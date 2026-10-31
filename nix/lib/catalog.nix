@@ -157,6 +157,7 @@ in
             default = { };
             description = "Typed Home Manager and native package contributions from this entry.";
           };
+
         }
         // extraOptions;
       }
@@ -208,7 +209,10 @@ in
     Turn applicable catalog entries into mergeable Home Manager and native package configuration.
   */
   realizeContributions =
-    { entries, domain }:
+    {
+      entries,
+      domain,
+    }:
     let
       contributions = map (entry: entry.contributions) (lib.attrValues entries);
       mergeContributionField =

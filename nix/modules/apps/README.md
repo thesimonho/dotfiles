@@ -8,6 +8,8 @@ agent:
 
 `catalog.nix` declares selectable applications and supporting integrations. `default.nix` resolves host selection and adapts Flatpak declarations. Keep application-specific behavior out of that shared adapter.
 
+The `security` bundle selects native 1Password on graphical Arch and macOS hosts. `nix/modules/onepassword.nix` owns platform paths and the `with-secrets` launcher; startup belongs to the app's own setting. See [authentication setup](../../README.md#authentication).
+
 The inline `support.gamedev-editor` entry in `catalog.nix` contributes the Arch game editor integration through the `gamedev` bundle. It installs an executable Flatpak bridge named `code`, a host Ghostty/Neovim launcher, and `gamedev-configure`. Host Neovim comes from the common Neovim module; Ghostty comes from the desktop bundle. Other Linux platforms can install the game Flatpaks without this Arch editor integration.
 
 Unreal Engine is installed by hand from Epic's Linux zip at `~/.local/share/UnrealEngine/5.8.4`; no package manager owns it. The same entry adds an `unreal-editor` wrapper and its desktop launcher. The wrapper prepends a store-only `code` shim to Unreal's PATH. Unreal's default Linux accessor (Visual Studio Code) runs `type -p code`, so it reaches Neovim, while the real `/usr/bin/code` stays VS Code everywhere else. Starting `UnrealEditor` directly bypasses the bridge. Update the version path in the wrapper and launcher after an engine upgrade.

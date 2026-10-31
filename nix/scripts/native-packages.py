@@ -62,7 +62,6 @@ BACKENDS = {
     "arch": ("pacman", "aur"),
     "darwin": ("homebrewFormula", "homebrewCask"),
     "fedora": ("dnf",),
-    None: (),
 }
 
 
@@ -90,9 +89,6 @@ class Backend:
                 fail(f"Repository {name} requires HTTPS baseurl and gpgkey values.")
 
     def check_prerequisites(self, desired, helper):
-        if self.platform is None:
-            print("Native prerequisites: no native platform selected.")
-            return
         required = {
             "arch": ["pacman", "sudo"],
             "darwin": ["brew"],
@@ -352,9 +348,7 @@ def load_manifest(path, host):
     if manifest.get("host") != host:
         fail("Manifest must match the explicit --host.")
     native_platform = manifest.get("platform", manifest.get("os"))
-    if (
-        native_platform is not None and not isinstance(native_platform, str)
-    ) or native_platform not in BACKENDS:
+    if not isinstance(native_platform, str) or native_platform not in BACKENDS:
         fail(f"Unsupported native package platform: {native_platform}")
     machine_arch = {"arm64": "aarch64"}.get(platform.machine(), platform.machine())
     kernel = "darwin" if sys.platform == "darwin" else "linux"
@@ -371,15 +365,11 @@ def load_manifest(path, host):
     else:
         release = platform.freedesktop_os_release()
         families = (release.get("ID", ""), *release.get("ID_LIKE", "").split())
-        if native_platform is not None and native_platform not in families:
+        if native_platform not in families:
             fail(
                 f"Manifest platform {native_platform} does not match this Linux distro."
             )
-        is_wsl = "microsoft" in Path("/proc/sys/kernel/osrelease").read_text().lower()
-        expected_os = "wsl" if is_wsl else native_platform
-        if manifest.get("os") != expected_os or (
-            native_platform is None and not is_wsl
-        ):
+        if manifest.get("os") != native_platform:
             fail("Manifest OS does not match this host.")
         machine = Path("/etc/machine-id").read_text().strip()
     if not machine:

@@ -152,10 +152,8 @@
         ./modules/yazi.nix
         ./modules/nvim.nix
         ./modules/kde.nix
-        ./modules/secrets.nix
-        ./modules/gpg.nix
+        ./modules/onepassword.nix
         ./modules/ssh.nix
-        ./modules/wsl.nix
         ./modules/ai
         { home.stateVersion = "25.05"; } # dont touch this
       ];
@@ -215,10 +213,6 @@
       homeConfigurations.work-macbook = mkHost {
         name = "work-macbook";
         system = "aarch64-darwin";
-      };
-      homeConfigurations.work-wsl = mkHost {
-        name = "work-wsl";
-        system = "x86_64-linux";
       };
 
       # `nix flake check` entries. Eval-only — forces module evaluation

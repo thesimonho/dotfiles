@@ -16,9 +16,9 @@ run = "nix --extra-experimental-features 'nix-command flakes' flake check --no-b
 description = "Apply tracked Codex preferences"
 run = "command codex-config-apply"
 
-[tasks.secrets-refresh]
-description = "Refresh installed KDE secrets for newly launched processes"
-run = "command session-secrets environment"
+[tasks.onepassword-check]
+description = "Check native 1Password CLI permissions and interactive desktop authentication"
+run = "bash ./scripts/onepassword-check.sh"
 
 [tasks.build]
 description = "Build a host activation package without activating"

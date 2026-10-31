@@ -152,92 +152,56 @@ let
     assert actual == expected;
     pkgs.writeText "chatgpt-check.json" (builtins.toJSON { inherit actual expected; });
 
-  # Check platform authentication configuration and identity deployment.
+  # Evaluate the common 1Password identity contract on each platform.
   mkAuthCheck =
     system: hmConfig:
     let
       c = hmConfig.config;
-      linux = c.my.os != "darwin";
-      wsl = c.my.os == "wsl";
-      native = linux && !wsl && c.my.desktop == "kde";
       ids = c.my._identities;
       services = c.systemd.user.services;
-      hasLoader = services ? ssh-add-identities;
-      hasPreset = services ? gpg-preset-passphrases;
-      packages = map (p: p.pname or p.name or "") c.home.packages;
-      legacy = [
-        "agenix"
-        "secret-askpass"
-        "ssh-add-keys"
-        "ssh-keys"
-        "gpg-preset"
-        "gpg-preset-driver"
-        "gpg-keys"
-      ];
+      socket = c.my.onepassword.agentSocket;
       ssh = c.programs.ssh.settings;
-      checkIdentity =
-        name: id:
-        let
-          path = "${c.home.homeDirectory}/.ssh/${id.sshKeyFile}";
-        in
-        ssh.${id.sshHost}.data.IdentityFile == "${path}.pub"
-        && ssh.${id.sshHost}.data.HostName == id.sshProxyHost
-        && ssh.${id.sshHost}.data.Port == id.sshPort
-        && ssh.${id.sshHost}.data.ForwardAgent
-        && c.xdg.configFile."git/identity-${name}".text != "";
+      packages = map (p: p.pname or p.name or "") c.home.packages;
       pkgs = pkgsFor {
         inherit system;
         hostName = "_auth-check";
       };
     in
-    assert hasLoader == (native && ids != { });
-    assert !(services ? ssh-add-keys);
-    assert !hasPreset;
-    assert !(c ? age);
-    assert lib.all (name: !(lib.elem name packages)) legacy;
-    assert (services ? ssh-agent) == linux;
-    assert !(c.systemd.user.sockets ? ssh-agent);
-    assert !c.services.gpg-agent.enableSshSupport;
-    assert c.services.gpg-agent.enableZshIntegration == (linux && !native);
-    assert !(lib.hasInfix ".secrets/" c.programs.zsh.initContent);
-    assert lib.all (name: checkIdentity name ids.${name}) (builtins.attrNames ids);
-    assert !(ssh ? "*"); # SSH settings are scoped to identity hosts.
+    assert !(services ? ssh-agent);
+    assert !(services ? ssh-add-identities);
+    assert !(services ? session-secrets);
+    assert !c.services.gpg-agent.enable;
+    assert !c.programs.gpg.enable;
+    assert lib.all (name: !(lib.elem name packages)) [
+      "fnox"
+      "session-secrets"
+      "agenix"
+    ];
+    assert !(c.xdg.configFile ? "fnox/config.toml");
+    assert c.programs.git.settings.gpg.format == "ssh";
+    assert c.programs.git.settings.gpg.ssh.program == c.my.onepassword.signerPath;
+    assert c.programs.git.settings.commit.gpgSign && c.programs.git.settings.tag.gpgSign;
+    assert c.xdg.configFile ? "git/allowed-signers";
     assert
-      !native
-      || (
-        c.services.gpg-agent.pinentry.package == null
-        && c.services.gpg-agent.extraConfig == "pinentry-program /usr/bin/pinentry-qt"
-        && c.services.gpg-agent.defaultCacheTtl == null
-        && c.services.gpg-agent.maxCacheTtl == null
-        && lib.elem "PINENTRY_KDE_USE_WALLET=1" services.gpg-agent.Service.Environment
-        && !(c.home.sessionVariables ? PINENTRY_KDE_USE_WALLET)
-        && lib.hasInfix "SSH_ASKPASS=/usr/bin/ksshaskpass" c.xdg.configFile."environment.d/ssh.conf".text
-        && (
-          ids == { }
-          || lib.any (
-            command: lib.hasInfix "session-secrets ssh" command
-          ) services.ssh-add-identities.Service.ExecStart
-        )
-        && builtins.hasAttr "apps.kde-authentication" c.my.nativePackages.catalog
-      );
-    assert
-      !wsl
-      || (
-        c.home.sessionVariables.SSH_AUTH_SOCK == "$XDG_RUNTIME_DIR/ssh-agent.socket"
-        && c.services.gpg-agent.defaultCacheTtl == 2592000
-        && c.services.gpg-agent.maxCacheTtl == 2592000
-        && !(lib.hasInfix "ssh-add-keys" c.programs.zsh.initContent)
-      );
-    assert
-      linux
-      || (
-        c.services.gpg-agent.pinentry.package.pname == "pinentry-mac"
-        && c.services.gpg-agent.defaultCacheTtl == 2592000
-        && c.services.gpg-agent.maxCacheTtl == 2592000
-      );
+      c.my.git.defaultIdentity == null
+      || c.programs.git.settings.user.signingKey == ids.${c.my.git.defaultIdentity}.sshPublicKey;
+    assert c.home.sessionVariables.SSH_AUTH_SOCK == socket;
+    assert lib.all (
+      name:
+      let
+        id = ids.${name};
+        entry = ssh.${id.sshHost}.data;
+      in
+      entry.IdentityFile == ''"${c.home.homeDirectory}/.ssh/${id.sshKeyFile}.pub"''
+      && entry.HostName == id.sshProxyHost
+      && entry.Port == id.sshPort
+      && !entry.ForwardAgent
+      && entry.IdentitiesOnly
+      && c.xdg.configFile."git/identity-${name}".text != ""
+    ) (builtins.attrNames ids);
+    assert !(ssh ? "*");
     pkgs.writeText "authentication-check.json" (
       builtins.toJSON {
-        inherit native hasLoader hasPreset;
         identities = builtins.attrNames ids;
       }
     );
@@ -312,7 +276,6 @@ in
   mkChecks = homeConfigurations: {
     x86_64-linux = {
       auth-desktop = mkAuthCheck "x86_64-linux" homeConfigurations.desktop;
-      auth-wsl = mkAuthCheck "x86_64-linux" homeConfigurations.work-wsl;
       auth-empty = mkAuthCheck "x86_64-linux" (kdeVariant {
         identities = [ ];
       });
@@ -327,13 +290,7 @@ in
         hmConfig = homeConfigurations.desktop;
         expected = true;
       };
-      chatgpt-wsl = mkChatgptCheck {
-        system = "x86_64-linux";
-        hmConfig = homeConfigurations.work-wsl;
-        expected = false;
-      };
       desktop = mkEvalCheck "x86_64-linux" homeConfigurations.desktop;
-      work-wsl = mkEvalCheck "x86_64-linux" homeConfigurations.work-wsl;
       kitchen-sink = mkEvalCheck "x86_64-linux" kitchenSinkLinux;
     };
     aarch64-darwin = {

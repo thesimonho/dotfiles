@@ -10,7 +10,6 @@
       "arch"
       "darwin"
       "fedora"
-      "wsl"
     ];
     desktops = [
       "kde"

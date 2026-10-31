@@ -7,7 +7,7 @@
     identities = [
       "personal"
     ];
-    secrets = [ "api-keys" ];
+    git.defaultIdentity = "personal";
     mise.trustedPaths = [ "~/Projects" ];
 
     apps = {

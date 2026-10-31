@@ -7,17 +7,30 @@
 
 let
   inherit (lib) mkOption types;
+  cfg = config.my.mise;
 in
 {
-  options.my.mise.trustedPaths = mkOption {
-    type = types.listOf types.str;
-    default = [ ];
-    description = "Additional mise trusted_config_paths entries appended on this host.";
+  options.my.mise = {
+    trustedPaths = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Additional mise trusted_config_paths entries appended on this host.";
+    };
   };
 
   config = {
     # GUI applications resolve project runtimes through shims without a shell hook.
-    home.sessionPath = [ "${config.home.homeDirectory}/.local/share/mise/shims" ];
+    home.sessionPath = lib.mkBefore [
+      "${config.home.homeDirectory}/.local/share/mise/shims"
+    ];
+
+    # Refresh tool shims and remove obsolete mise command wrappers.
+    home.activation.miseReshim = lib.hm.dag.entryAfter [ "linkGeneration" "installPackages" ] ''
+      (
+        cd ${lib.escapeShellArg config.home.homeDirectory}
+        run ${lib.getExe config.programs.mise.package} reshim
+      )
+    '';
 
     programs.mise = {
       enable = true;

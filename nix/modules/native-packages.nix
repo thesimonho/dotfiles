@@ -8,9 +8,7 @@ let
   cfg = config.my.nativePackages;
   nativeLib = import ../lib/native-packages.nix { inherit lib; };
   missing = lib.attrNames (
-    lib.filterAttrs (
-      _: mappings: cfg.platform == null || !nativeLib.hasValues mappings.${cfg.platform}
-    ) cfg.catalog
+    lib.filterAttrs (_: mappings: !nativeLib.hasValues mappings.${cfg.platform}) cfg.catalog
   );
   selected = map (mappings: mappings.${cfg.platform}) (lib.attrValues cfg.catalog);
   collect = field: lib.sort builtins.lessThan (lib.unique (lib.concatMap field selected));
@@ -47,9 +45,7 @@ let
   ) (map (mapping: mapping.aurBuilds) selected);
   manifest =
     if missing != [ ] then
-      throw "Native package mappings missing for host '${config.my.hostName}' (platform ${
-        if cfg.platform == null then "unset" else cfg.platform
-      }): ${lib.concatStringsSep ", " missing}. Add a platform mapping or explicitly disable the application on this host."
+      throw "Native package mappings missing for host '${config.my.hostName}' (platform ${cfg.platform}): ${lib.concatStringsSep ", " missing}. Add a platform mapping or explicitly disable the application on this host."
     else
       {
         version = 5;
@@ -74,15 +70,13 @@ in
       description = "Applicable native package declarations, keyed by domain and application.";
     };
     platform = lib.mkOption {
-      type = lib.types.nullOr (
-        lib.types.enum [
-          "arch"
-          "darwin"
-          "fedora"
-        ]
-      );
-      default = if config.my.os == "wsl" then null else config.my.os;
-      description = "Native package platform. WSL requires an explicit Linux distro when native packages are selected.";
+      type = lib.types.enum [
+        "arch"
+        "darwin"
+        "fedora"
+      ];
+      default = config.my.os;
+      description = "Native package platform.";
     };
     package = lib.mkOption {
       type = lib.types.package;

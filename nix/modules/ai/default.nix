@@ -72,7 +72,6 @@ in
     };
     catalog = mkOption {
       type = aiType;
-      default = catalog;
       internal = true;
       description = "Internal resolved AI catalog.";
     };
@@ -84,6 +83,7 @@ in
       domain = "ai";
     })
     {
+      my.ai.catalog = catalog;
       assertions = lib.mapAttrsToList (name: entry: {
         assertion = catalogLib.hasContributions entry;
         message = "Applicable AI catalog entry '${name}' must contribute a package or Home Manager configuration.";

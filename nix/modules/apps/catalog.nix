@@ -19,6 +19,26 @@
   ];
 
   applications = {
+    "1password" = {
+      bundles = [ "security" ];
+      requirements = {
+        operatingSystems = [
+          "arch"
+          "darwin"
+        ];
+        hasDesktop = true;
+      };
+      contributions = {
+        nativePackages.arch.aur = [
+          "1password"
+          "1password-cli"
+        ];
+        nativePackages.darwin.homebrew.casks = [
+          "1password"
+          "1password-cli"
+        ];
+      };
+    };
     android-tools = {
       contributions.nativePackages = {
         arch.pacman = [ "android-tools" ];
@@ -498,24 +518,6 @@
           '';
         };
       };
-    kde-authentication = {
-      bundles = [ "security" ];
-      requirements.operatingSystems = [
-        "arch"
-        "fedora"
-      ];
-      requirements.desktops = [ "kde" ];
-      contributions.nativePackages = {
-        arch.pacman = [
-          "ksshaskpass"
-          "pinentry"
-        ];
-        fedora.dnf.packages = [
-          "ksshaskpass"
-          "pinentry-qt"
-        ];
-      };
-    };
     android-udev = {
       requirements.operatingSystems = [
         "arch"

@@ -26,14 +26,26 @@ let
   };
 
   clientKinds = {
-    claude = client: {
-      files = {
-        "${client.configDir}/agents" = mkSymlink "${generatedAgentOutputsPath}/claude";
-        "${client.configDir}/rules" = mkSymlink "${dotfiles}/AI/instructions/fragments";
-        "${client.configDir}/settings.json" = mkSymlink "${dotfiles}/AI/settings/claude/settings.json";
+    claude =
+      client:
+      let
+        configApplyPackage = pkgs.writeShellScriptBin "${client.name}-mcp-apply" ''
+          exec ${pkgs.python3}/bin/python3 ${./scripts/merge-claude-mcp.py} \
+            ${lib.escapeShellArg "${dotfiles}/AI/settings/claude/mcp.json"} \
+            ${lib.escapeShellArg "${config.home.homeDirectory}/${client.configDir}/.claude.json"} \
+            ${lib.escapeShellArg "${config.xdg.stateHome}/dotfiles/claude/${client.name}-managed-mcp.json"}
+        '';
+      in
+      {
+        files = {
+          "${client.configDir}/agents" = mkSymlink "${generatedAgentOutputsPath}/claude";
+          "${client.configDir}/rules" = mkSymlink "${dotfiles}/AI/instructions/fragments";
+          "${client.configDir}/settings.json" = mkSymlink "${dotfiles}/AI/settings/claude/settings.json";
+        };
+        skillsDir = "${client.configDir}/skills";
+        packages = [ configApplyPackage ];
+        activation = "run ${configApplyPackage}/bin/${client.name}-mcp-apply";
       };
-      skillsDir = "${client.configDir}/skills";
-    };
 
     codex =
       client:
