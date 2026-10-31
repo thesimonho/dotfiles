@@ -259,6 +259,20 @@
       contributions.packages = [ pkgs.nh ];
       bundles = [ "cli" ];
     };
+    mouseless = {
+      requirements.operatingSystems = [
+        "arch"
+        "fedora"
+      ];
+      requirements.hasDesktop = true;
+      flatpak = {
+        id = "net.sonuscape.mouseless";
+        remote = {
+          name = "sonuscape";
+          location = "https://dl.sonuscape.net/flatpak/sonuscape.flatpakrepo";
+        };
+      };
+    };
     nix-output-monitor = {
       contributions.packages = [ pkgs.nix-output-monitor ];
       bundles = [ "cli" ];

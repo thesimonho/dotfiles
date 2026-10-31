@@ -37,6 +37,18 @@ let
         type = types.str;
         description = "Flatpak app id (e.g. com.discordapp.Discord).";
       };
+      remote = mkOption {
+        type = types.nullOr (
+          types.submodule {
+            options = {
+              name = mkOption { type = types.str; };
+              location = mkOption { type = types.str; };
+            };
+          }
+        );
+        default = null;
+        description = "Flatpak remote to add and install the app from, when specified.";
+      };
       overrides = mkOption {
         type = types.attrs;
         default = { };
@@ -70,7 +82,27 @@ let
   isLinux = config.my.os != "darwin";
   flatpakActive = isLinux && hostContext.hasDesktop && hasAnyFlatpak;
 
-  flatpakIds = lib.mapAttrsToList (_: entry: entry.flatpak.id) flatpakEntries;
+  flatpakRemotes = lib.unique (
+    [
+      {
+        name = "flathub";
+        location = "https://flathub.org/repo/flathub.flatpakrepo";
+      }
+    ]
+    ++ lib.concatMap (entry: lib.optional (entry.flatpak.remote != null) entry.flatpak.remote) (
+      lib.attrValues flatpakEntries
+    )
+  );
+  flatpakPackages = lib.mapAttrsToList (
+    _: entry:
+    if entry.flatpak.remote == null then
+      entry.flatpak.id
+    else
+      {
+        appId = entry.flatpak.id;
+        origin = entry.flatpak.remote.name;
+      }
+  ) flatpakEntries;
   flatpakOverrides = lib.listToAttrs (
     lib.concatMap (
       entry:
@@ -112,20 +144,23 @@ in
       domain = "apps";
     })
     {
-      assertions = lib.mapAttrsToList (name: entry: {
-        assertion = catalogLib.hasContributions entry || entry.flatpak != null;
-        message = "App catalog entry '${name}' must contribute a package, Home Manager configuration, or Flatpak.";
-      }) resolvedCatalog;
+      assertions =
+        lib.mapAttrsToList (name: entry: {
+          assertion = catalogLib.hasContributions entry || entry.flatpak != null;
+          message = "App catalog entry '${name}' must contribute a package, Home Manager configuration, or Flatpak.";
+        }) resolvedCatalog
+        ++ [
+          {
+            assertion =
+              lib.length flatpakRemotes == lib.length (lib.unique (map (remote: remote.name) flatpakRemotes));
+            message = "Flatpak remotes with the same name must have the same location.";
+          }
+        ];
 
       services.flatpak = mkIf flatpakActive {
         enable = true;
         uninstallUnmanaged = true;
-        remotes = [
-          {
-            name = "flathub";
-            location = "https://flathub.org/repo/flathub.flatpakrepo";
-          }
-        ];
+        remotes = flatpakRemotes;
         update = {
           onActivation = true;
           auto = {
@@ -133,7 +168,7 @@ in
             onCalendar = "weekly";
           };
         };
-        packages = flatpakIds;
+        packages = flatpakPackages;
         overrides = flatpakOverrides;
       };
 
