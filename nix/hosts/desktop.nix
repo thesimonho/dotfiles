@@ -31,7 +31,6 @@
         "glow"
         "google-chrome"
         "master-pdf-editor"
-        "mouseless"
         "onlyoffice"
         "wl-clipboard"
       ];
