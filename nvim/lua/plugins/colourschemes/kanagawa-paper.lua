@@ -8,10 +8,10 @@ local opts = {
 
 return {
   {
-    "thesimonho/kanagawa-paper.nvim",
+    "thesimonho/kanagawa-paper",
     lazy = false,
     dev = true,
-    dir = "~/Projects/kanagawa-paper.nvim/dist/neovim",
+    dir = "~/Projects/kanagawa-paper/dist/neovim",
     priority = 1000,
     keys = {
       {
