@@ -6,6 +6,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { parseAgentFrontmatter } = require("./frontmatter");
+const { COUPLING_DISCOVERY_FILENAMES } = require("./doc-filenames");
 
 const MAX_BYTES = 256 * 1024;
 const MAX_SCAN_FILES = 300;
@@ -27,12 +28,6 @@ const SKIPPED_DIRECTORIES = new Set([
   ".next",
   ".cache",
 ]);
-
-// Filenames that can declare a coupling anywhere in the tree. Everything else
-// must live under docs/ or at the top of the scanned tree. Without this the scan is
-// bounded only by MAX_SCAN_FILES, and a repository large enough to exceed it
-// loses couplings silently, picked off by directory walk order.
-const INDEX_FILENAMES = new Set(["README.md", "INDEX.md", "AGENTS.md", "SKILL.md"]);
 
 /**
  * Compile a path glob (supporting `**` and `*`) into an anchored RegExp.
@@ -81,7 +76,7 @@ function isCouplingCandidate(relativePath) {
   const segments = relativePath.split(path.sep);
   const isAtScanRoot = segments.length === 1;
   const isUnderDocs = segments.slice(0, -1).includes("docs");
-  return isAtScanRoot || isUnderDocs || INDEX_FILENAMES.has(segments[segments.length - 1]);
+  return isAtScanRoot || isUnderDocs || COUPLING_DISCOVERY_FILENAMES.has(segments[segments.length - 1]);
 }
 
 /**

@@ -6,8 +6,8 @@
  * and agent instruction files. It also keeps untyped text files out of the
  * repository. Documentation next to the code it explains is valid, and durable
  * repository documentation belongs under docs/. Scratch/temp files outside the
- * repo (for example, /tmp) are ignored. An existing Git-ignored root TODO.md
- * can be edited, but this hook still blocks creating one.
+ * repo (for example, /tmp) are ignored. Allowed root Markdown filenames are
+ * listed in the shared documentation filename policy.
  */
 
 const path = require("node:path");
@@ -15,18 +15,7 @@ const fs = require("node:fs");
 const { spawnSync } = require("node:child_process");
 const { block, doNothing } = require("../lib/hooks/policy-result");
 
-const ROOT_MARKDOWN_ALLOWLIST = new Set([
-  "AGENTS.md",
-  "CLAUDE.md",
-  "README.md",
-  "CONTRIBUTING.md",
-  "CODE_OF_CONDUCT.md",
-  "SECURITY.md",
-  "CHANGELOG.md",
-  "PRODUCT.md",
-  "DESIGN.md",
-  "VISION.md",
-]);
+const { ROOT_MARKDOWN_ALLOWLIST } = require("../lib/hooks/doc-filenames");
 
 /**
  * Returns file paths from Claude and Codex tool inputs.
