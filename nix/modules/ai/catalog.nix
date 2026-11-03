@@ -103,6 +103,19 @@ in
       contributions.packages = [ pkgsUnstable.python3Packages.huggingface-hub ];
       bundles = [ "cli" ];
     };
+    zoetrope = {
+      contributions.packages = [
+        (pkgs.rustPlatform.buildRustPackage {
+          pname = "zoetrope";
+          version = "0.2.0";
+          src = inputs.zoetrope-src;
+          cargoLock.lockFile = "${inputs.zoetrope-src}/Cargo.lock";
+          doCheck = false;
+          meta.mainProgram = "zoe";
+        })
+      ];
+      bundles = [ "cli" ];
+    };
   };
 
   support = {

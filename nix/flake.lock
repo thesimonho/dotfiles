@@ -85,11 +85,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1793650088,
-        "narHash": "sha256-mcSygcrAd1/diXDuoQsHCNvpc9cftZzHYjYy0XHKpYY=",
+        "lastModified": 1793746948,
+        "narHash": "sha256-H+88IVI9GK9J/NlueD3LJWXneYFfx4EmqZtTWZuJ7zw=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "d5d821acb803775dc1973de62d0b3a616ad77a44",
+        "rev": "27b1ed21bf91138a14b7e4a4128176329b9b8787",
         "type": "github"
       },
       "original": {
@@ -168,11 +168,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1793616200,
-        "narHash": "sha256-3t7xlnGR8DYoMIISMPqE4CwjRzw3J/3ympUKMu8pC4o=",
+        "lastModified": 1793706278,
+        "narHash": "sha256-CE1GD35mj//AKYuLNbQJZDelQYWzef5GBpQno9uyNP0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "df1e6651c16c38563a164037647a5f00704b3e41",
+        "rev": "ea9e3ef341e11c193537f674f821a99f9f436729",
         "type": "github"
       },
       "original": {
@@ -230,7 +230,8 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-pinned": "nixpkgs-pinned",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "plasma-manager": "plasma-manager"
+        "plasma-manager": "plasma-manager",
+        "zoetrope-src": "zoetrope-src"
       }
     },
     "systems": {
@@ -266,6 +267,23 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "zoetrope-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789055627,
+        "narHash": "sha256-jfzbgtZNIbDyHpXqP5QxF9o71zdYKEbY862NIaPHujo=",
+        "owner": "furkankly",
+        "repo": "zoetrope",
+        "rev": "c87c2352103c40820e279f4df672509cf04cdc20",
+        "type": "github"
+      },
+      "original": {
+        "owner": "furkankly",
+        "ref": "v0.2.0",
+        "repo": "zoetrope",
         "type": "github"
       }
     }

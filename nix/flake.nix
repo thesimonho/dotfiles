@@ -67,6 +67,11 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    zoetrope-src = {
+      url = "github:furkankly/zoetrope/v0.2.0";
+      flake = false;
+    };
+
   };
 
   outputs =

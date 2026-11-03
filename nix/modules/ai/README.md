@@ -1,4 +1,8 @@
-# AI
+---
+agent:
+  instruction: Keep AI package and client configuration guidance current.
+  on-change: ["nix/modules/ai/**", "nix/flake.nix"]
+---
 
 ## Agent client configuration
 
