@@ -6,10 +6,13 @@
  * and agent instruction files. It also keeps untyped text files out of the
  * repository. Documentation next to the code it explains is valid, and durable
  * repository documentation belongs under docs/. Scratch/temp files outside the
- * repo (for example, /tmp) are ignored.
+ * repo (for example, /tmp) are ignored. An existing Git-ignored root TODO.md
+ * can be edited, but this hook still blocks creating one.
  */
 
 const path = require("node:path");
+const fs = require("node:fs");
+const { spawnSync } = require("node:child_process");
 const { block, doNothing } = require("../lib/hooks/policy-result");
 
 const ROOT_MARKDOWN_ALLOWLIST = new Set([
@@ -49,6 +52,27 @@ function filePathsFrom(payload) {
   return paths;
 }
 
+// Permit edits to a local ignored handoff without allowing its creation.
+function isExistingIgnoredTodoEdit(filePath, cwd, payload) {
+  const absolute = path.resolve(cwd, filePath);
+  if (path.relative(cwd, absolute) !== "TODO.md") return false;
+  const patch = payload.tool_input?.command ?? "";
+  for (const match of patch.matchAll(/^\*\*\* Add File: (.+)$/gm)) {
+    if (path.resolve(cwd, match[1]) === absolute) return false;
+  }
+  try {
+    if (!fs.statSync(absolute).isFile()) return false;
+  } catch {
+    return false;
+  }
+  const check = spawnSync(
+    "git",
+    ["check-ignore", "--quiet", "--", "TODO.md"],
+    { cwd, stdio: "ignore" },
+  );
+  return check.status === 0;
+}
+
 function evaluate(payload) {
   const cwd = payload.cwd ?? process.cwd();
 
@@ -64,7 +88,10 @@ function evaluate(payload) {
       !ROOT_MARKDOWN_ALLOWLIST.has(path.basename(relative));
     const isTextFile = relative.endsWith(".txt");
 
-    if (isBlockedRepositoryRootMarkdown) {
+    if (
+      isBlockedRepositoryRootMarkdown &&
+      !isExistingIgnoredTodoEdit(filePath, cwd, payload)
+    ) {
       return block(filePath, [
         "Do not write arbitrary Markdown files in the repository root. Put durable documentation under docs/ instead.",
       ]);

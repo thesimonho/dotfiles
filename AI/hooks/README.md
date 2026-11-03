@@ -20,7 +20,7 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 
 | Hook                        | Event       | Effect | Enforces                                                               |
 | --------------------------- | ----------- | ------ | ---------------------------------------------------------------------- |
-| `block-doc-files`           | PreToolUse  | block  | keep arbitrary root Markdown and all `.txt` files out of the repository |
+| `block-doc-files`           | PreToolUse  | block  | block arbitrary root Markdown and `.txt` files; allow edits to existing ignored root `TODO.md` |
 | `block-build-dirs`          | PreToolUse  | block  | don't edit build output                                                |
 | `block-plan-references`     | PreToolUse  | block  | no plan-file references in code/docs                                   |
 | `block-force-push`          | PreToolUse  | block  | never force-push                                                       |
