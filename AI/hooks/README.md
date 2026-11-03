@@ -20,7 +20,7 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 
 | Hook                        | Event       | Effect | Enforces                                                               |
 | --------------------------- | ----------- | ------ | ---------------------------------------------------------------------- |
-| `block-doc-files`           | PreToolUse  | block  | keep arbitrary root Markdown and all `.txt` files out of the repository |
+| `block-doc-files`           | PreToolUse  | block  | block arbitrary root Markdown and `.txt` files; allow listed root Markdown filenames |
 | `block-build-dirs`          | PreToolUse  | block  | don't edit build output                                                |
 | `block-plan-references`     | PreToolUse  | block  | no plan-file references in code/docs                                   |
 | `block-force-push`          | PreToolUse  | block  | never force-push                                                       |
@@ -44,6 +44,10 @@ The native config owns discovery, event registration, matchers, trust, timeouts,
 | `delete-branch-nudge`       | PostToolUse | nudge  | delete the local branch after a merge                                  |
 
 Native wiring includes only hooks for which a CLI exposes the corresponding event and matcher. Codex runs the shared edit and Bash policies through its `apply_patch` aliases and `Bash` matcher. Both hosts now wire the same policy set: `lsp-nudge` reads the shell command rather than a Grep tool call, which is the only search path Codex has and the one Claude uses in practice.
+
+## Documentation filenames
+
+Shared filename lists live in `../lib/hooks/doc-filenames.js`. Append allowed root Markdown filenames to `ROOT_MARKDOWN_ALLOWLIST`, which permits creation and edits (including `TODO.md`). `COUPLING_DISCOVERY_FILENAMES` controls which documentation filenames coupling discovery considers anywhere in the tree. These lists serve separate policies; adding a discovery filename does not grant permission to create it at the root.
 
 ## Pre-PR review decision
 
