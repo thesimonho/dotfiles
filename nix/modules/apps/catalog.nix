@@ -19,6 +19,15 @@
   ];
 
   applications = {
+    neovim = {
+      contributions.packages = [ pkgs.neovim ];
+      command = "${pkgs.neovim}/bin/nvim";
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
+      bundles = [ "cli" ];
+    };
     "1password" = {
       bundles = [ "security" ];
       requirements = {
@@ -210,6 +219,8 @@
       bundles = [ ];
     };
     gh = {
+      command = "${pkgs.gh}/bin/gh";
+      secrets.provides.GH_TOKEN = "op://Personal/GitHub CLI/token";
       contributions.packages = [ pkgs.gh ];
       bundles = [ "dev" ];
     };
@@ -260,6 +271,8 @@
       ];
     };
     lazygit = {
+      command = "${pkgs.lazygit}/bin/lazygit";
+      secrets.requires = [ "apps.gh" ];
       contributions.packages = [ pkgs.lazygit ];
       contributions.xdgConfigFiles."lazygit" = symlinkConfig "lazygit";
       bundles = [
@@ -414,6 +427,14 @@
       bundles = [ "communication" ];
     };
     vscode = {
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
+      contributions.desktopEntries = {
+        "com.microsoft.VSCode" = ./launchers/com.microsoft.VSCode.desktop;
+        "com.microsoft.VSCode.UrlHandler" = ./launchers/com.microsoft.VSCode.UrlHandler.desktop;
+      };
       contributions.nativePackages = {
         arch.aur = [ "visual-studio-code-bin" ];
         darwin.homebrew.casks = [ "visual-studio-code" ];
@@ -446,6 +467,11 @@
       ];
     };
     zed = {
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
+      contributions.desktopEntries."dev.zed.Zed" = ./launchers/dev.zed.Zed.desktop;
       flatpak.id = "dev.zed.Zed";
       bundles = [ "dev" ];
     };

@@ -6,10 +6,65 @@
 }:
 let
   mac = config.my.os == "darwin";
+  cfg = config.my.onepassword;
+  providers = lib.mapAttrs (_: app: app.secrets.provides) cfg.applications;
+  merge =
+    maps:
+    lib.foldl' (
+      acc: values:
+      lib.foldl' (
+        result: key:
+        if result ? ${key} && result.${key} != values.${key} then
+          throw "Conflicting secret variable ${key}"
+        else
+          result // { ${key} = values.${key}; }
+      ) acc (lib.attrNames values)
+    ) { } maps;
+  provider =
+    name: if providers ? ${name} then providers.${name} else throw "Unknown secret provider ${name}";
+  vault =
+    name:
+    if cfg.vaults ? ${name} then
+      merge (map provider cfg.vaults.${name})
+    else
+      throw "Unknown secret vault ${name}";
+  resolve =
+    ref: if lib.hasPrefix "vault." ref then vault (lib.removePrefix "vault." ref) else provider ref;
+  refsFor = app: merge ([ app.secrets.provides ] ++ map resolve app.secrets.requires);
+  makeLauncher =
+    name: refs:
+    pkgs.writeShellScriptBin "with-secrets" ''
+      exec ${pkgs.python3}/bin/python3 ${../scripts/with-secrets.py} \
+        ${pkgs.writeText "${name}-references.json" (builtins.toJSON refs)} \
+        ${lib.escapeShellArg cfg.cliPath} "$@"
+    '';
+  launchers = lib.mapAttrs (name: app: makeLauncher name (refsFor app)) cfg.applications;
+  cliWrappers = lib.mapAttrsToList (
+    name: app:
+    lib.hiPrio (
+      pkgs.writeShellScriptBin (baseNameOf app.command) ''
+        exec ${launchers.${name}}/bin/with-secrets ${lib.escapeShellArg app.command} "$@"
+      ''
+    )
+  ) (lib.filterAttrs (_: app: app.command != null && refsFor app != { }) cfg.applications);
 
 in
 {
   options.my.onepassword = {
+    applications = lib.mkOption {
+      type = lib.types.attrsOf lib.types.raw;
+      default = { };
+      internal = true;
+    };
+    launchers = lib.mkOption {
+      type = lib.types.attrsOf lib.types.package;
+      default = launchers;
+      internal = true;
+    };
+    vaults = lib.mkOption {
+      type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+      default = { };
+    };
     cliPath = lib.mkOption {
       type = lib.types.str;
       default =
@@ -39,31 +94,19 @@ in
     };
   };
 
-  config.home.packages =
-    lib.mkIf (builtins.hasAttr "apps.1password" config.my.nativePackages.catalog)
-      [
-        (pkgs.writeShellScriptBin "with-secrets" ''
-          if [ "$#" -eq 1 ] && [ "$1" = "--help" ]; then
-            printf '%s\n' 'Usage: with-secrets ENVIRONMENT_ID COMMAND [ARG...]' \
-              'Run a command with variables from a 1Password Environment.'
-            exit 0
-          fi
-          if [ "$#" -lt 2 ] || [ -z "$1" ] || [ -z "$2" ]; then
-            printf '%s\n' 'Usage: with-secrets ENVIRONMENT_ID COMMAND [ARG...]' >&2
-            exit 2
-          fi
-          environment_id="$1"
-          shift
-          exec ${lib.escapeShellArg config.my.onepassword.cliPath} run --environment "$environment_id" -- "$@"
-        '')
-      ];
-
-  config.programs.zsh.initContent = lib.mkIf (builtins.hasAttr "apps.1password" config.my.nativePackages.catalog) (
-    lib.mkAfter ''
-      if [[ -r "''${OP_CONFIG_DIR:-${config.xdg.configHome}/op}/plugins.sh" ]]; then
-        source "''${OP_CONFIG_DIR:-${config.xdg.configHome}/op}/plugins.sh"
-      fi
-    ''
-  );
-
+  config.my.onepassword.vaults = {
+    models = [
+      "ai.codex"
+      "ai.typesafe"
+    ];
+    developer-tools = [
+      "apps.gh"
+      "ai.huggingface-hub"
+      "ai.wrangler"
+    ];
+  };
+  config.home.packages = [
+    (makeLauncher "all-vaults" (merge (map vault (lib.attrNames cfg.vaults))))
+  ]
+  ++ cliWrappers;
 }

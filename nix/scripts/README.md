@@ -15,3 +15,5 @@ When present, the native MCP helper also needs its `onepassword-mcp` group, setg
 `native-packages.py` reconciles native application packages; see [ownership and recovery](../README.md#native-packages). The game editor scripts connect project setup and file opening to the configured editor. `write-skills-readme.sh` generates the installed skill index.
 
 Credential delivery uses `with-secrets` from `nix/modules/onepassword.nix`. Keep private values out of arguments, logs, persistent staging files and exception messages.
+
+`with-secrets.py` executes generated catalog launchers: reuse inherited nonempty variables, supply only missing references to native `op run`, and preserve interactive terminal handling. Reference JSON files are Nix-generated metadata, never decrypted values.

@@ -69,19 +69,13 @@ Arch SSH authentication, signing and runtime injection have been checked live. m
 
 ## Runtime secrets
 
-Native `1password` selection installs `with-secrets` from `modules/onepassword.nix`:
+Catalog entries own `secrets.provides` maps of variable names to `op://` references. Their effective credentials are their own definitions plus providers or `vault.NAME` groups listed in `secrets.requires`. `my.onepassword.vaults` defines the `models` and `developer-tools` access groups; these are separate from actual 1Password vaults. See [AI configuration](../AI/README.md) for lifecycle and nesting behavior.
 
-```sh
-with-secrets ENVIRONMENT_ID hf download organisation/model
-```
+An absolute `command` on a catalog item generates a wrapper under the executable's normal name. Linux desktop entries and actions use the same application-specific launcher. No shell plugins are loaded. Already inherited values are reused; only missing variables cause a 1Password lookup. Manual commands can prompt separately, while agent children reuse their parent's credentials. Native macOS Dock/Finder launch injection is not implemented.
 
-The helper runs the native `op run --environment` command. It passes every variable in the selected Environment to the command and its descendants, preserving arguments and exit status. Discover Environment IDs and variable names through the 1Password MCP; keep values in 1Password and out of configuration, command arguments and logs. Use a separate Environment when a consumer needs a narrower set of credentials.
+`with-secrets COMMAND [ARG...]` explicitly supplies the combined configured vaults when needed. Agents should use normal commands. There is no handwritten env file and no Environment-ID argument. For unrelated project Environments, use native `op run --environment ID -- COMMAND` explicitly. Keep credentials out of configuration, logs, and command arguments.
 
-For a local MCP server, set its launch command to `with-secrets` and its arguments to `ENVIRONMENT_ID`, the server executable, and any server arguments. The server must read credentials from its environment. Both executables must be on the client's PATH; use absolute paths when needed. Allow startup time for interactive approval and keep stdout reserved for the MCP protocol. Remote HTTP servers use the client's authentication support, such as OAuth.
-
-Interactive Zsh loads 1Password's generated `plugins.sh` when present, respecting `OP_CONFIG_DIR`. Initialize supported commands with `op plugin init <command>` and select an existing vault item and credential scope. Defaults and item references stay in 1Password's local configuration. Non-interactive agent commands use `op plugin run -- <command> ...` explicitly. For Hugging Face, initialize `hf` once the installed CLI lists it in `op plugin list`; the legacy `huggingface-cli` plugin does not support the current executable.
-
-Editors receive no automatic secret injection. Mise manages runtimes, shims and project `.env` loading. Project mounts and CI credential delivery belong to their respective projects.
+Mise manages runtimes, shims and project `.env` loading. Project mounts and CI credential delivery belong to their respective projects.
 
 ## Identity model
 

@@ -10,6 +10,9 @@ auto_switch = true
 dark_name = "tokyo-night"
 light_name = "tokyo-night-day"
 
+[update]
+version_check = false
+
 [ui]
 agent_panel_sort = "priority"
 prompt_new_tab_name = false

@@ -139,6 +139,7 @@ in
 
   config = lib.mkMerge [
     (catalogLib.realizeContributions {
+      inherit config;
       entries = enabledEntries;
       domain = "apps";
     })

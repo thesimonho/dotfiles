@@ -2,13 +2,11 @@
 
 ## Accessing secrets
 
-Maintain one persistent interactive terminal session for all credential-dependent commands for the duration of the agent session. Reuse the same running shell across tool calls; do not start a new terminal or shell for each command. If repeated 1Password approvals occur, investigate whether commands are using the same terminal before issuing further credential requests.
+Run commands normally. Nix manages credential injection for declared CLI commands and Linux desktop launchers. Use the project's existing credential setup when it has one. Do not add secret-loading commands or call 1Password as a routine fallback.
 
-Resolution order:
+If authentication fails, report the missing variable or authentication error without printing credential values. Secret references and access requirements belong to the application's Nix catalog entry. Running apps retain inherited values until exit, including after 1Password locks; fully restart them to pick up rotations. Remote, VM, or isolated runtimes may not inherit host credentials.
 
-1. Use the project's existing secret-loading setup when available, such as an application loading a mounted `.env` file.
-2. Run commands normally. The interactive shell loads configured 1Password plugin wrappers; do not add another `op plugin run` around them. If authentication fails, inspect the command's resolution and authentication setup before retrying.
-3. For commands without an existing credential source, use the 1Password MCP to find the appropriate Environment ID and inspect its variable names, then run `with-secrets <environment-id> <command> <args>` in the same terminal. Use the shared AI Environment for general AI tools.
+If the user explicitly requests a direct 1Password lookup, warn that it may trigger approval and reuse one persistent interactive terminal for those requests.
 
 ## Creating secrets
 

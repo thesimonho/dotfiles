@@ -19,3 +19,9 @@ Unreal Engine is installed by hand from Epic's Linux zip at `~/.local/share/Unre
 `nix/scripts/gamedev-configure.py` merges only selected external-editor and Blender-path preferences. Godot uses versioned text resources; Unity uses base64 string values in the Flatpak's `data/unity3d/prefs`. Keep both files writable. Close editors before activation. Invalid existing preference files must fail rather than silently replace user settings. A new Godot profile needs one launch before `gamedev-configure` can find its settings file.
 
 See `nix/README.md` for setup and runtime acceptance. Validate actual editor Open Script actions and Neovim file/cursor results; a successful launcher exit alone does not prove the integration works. Do not add or run unit tests.
+
+## Secret-enabled desktop launchers
+
+Catalog entries can declare `secrets.provides` and `secrets.requires` and map installed desktop IDs to checked-in `launchers/*.desktop` paths through `contributions.desktopEntries`. The shared catalog adapter wraps main and action commands through the configured `with-secrets` helper on Linux. The adapter preserves file contents except for wrapping each `Exec=` line, including desktop actions. Home Manager installs overrides in the user XDG applications directory with the same IDs, preserving normal menu and pin names. Preserve file/URL field codes, MIME types, startup class, and relevant actions when editing an entry. CLI entries declare an absolute `command`; the shared adapter generates normal-name wrappers. See `AI/README.md` for the provider/group contract. macOS native launch wrapping is not implemented.
+
+Neovim is a CLI-bundle catalog editor that requires both secret vault groups. Its normal `nvim` command injects credentials once for its floating terminals and agent children. `modules/nvim.nix` retains editor configuration and supporting tools.

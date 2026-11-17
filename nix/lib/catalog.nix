@@ -38,6 +38,11 @@ let
 
   contributionType = types.submodule {
     options = {
+      desktopEntries = mkOption {
+        type = types.attrsOf types.path;
+        default = { };
+        description = "Desktop launcher files, keyed by the existing desktop ID to replace.";
+      };
       packages = mkOption {
         type = types.listOf types.package;
         default = [ ];
@@ -142,6 +147,24 @@ in
     types.attrsOf (
       types.submodule {
         options = {
+          command = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "Absolute real executable to expose through a managed CLI wrapper.";
+          };
+          secrets = mkOption {
+            type = types.submodule {
+              options.provides = mkOption {
+                type = types.attrsOf types.str;
+                default = { };
+              };
+              options.requires = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+              };
+            };
+            default = { };
+          };
           bundles = mkOption {
             type = types.listOf (types.enum bundleNames);
             default = [ ];
@@ -212,6 +235,7 @@ in
     {
       entries,
       domain,
+      config,
     }:
     let
       contributions = map (entry: entry.contributions) (lib.attrValues entries);
@@ -219,6 +243,10 @@ in
         field: lib.mkMerge (map (contribution: contribution.${field}) contributions);
     in
     {
+      my.onepassword.applications = lib.mapAttrs' (name: entry: {
+        name = "${domain}.${name}";
+        value = { inherit (entry) secrets command; };
+      }) entries;
       my.nativePackages.catalog = lib.mapAttrs' (name: entry: {
         name = "${domain}.${name}";
         value = entry.contributions.nativePackages;
@@ -235,10 +263,37 @@ in
       );
       systemd.user.services = mergeContributionField "services";
       xdg.configFile = mergeContributionField "xdgConfigFiles";
+      # Install at the highest-priority XDG location, ahead of native and Flatpak entries.
+      xdg.dataFile = lib.mkIf (config.my.os != "darwin" && config.my.hasDesktop) (
+        lib.mkMerge (
+          lib.mapAttrsToList (
+            name: entry:
+            lib.mapAttrs' (
+              desktopId: source:
+              lib.nameValuePair "applications/${desktopId}.desktop" {
+                text =
+                  let
+                    wrap = entry.secrets.provides != { } || entry.secrets.requires != [ ];
+                    launcher = config.my.onepassword.launchers."${domain}.${name}";
+                  in
+                  lib.concatMapStringsSep "\n" (
+                    line:
+                    if wrap && lib.hasPrefix "Exec=" line then
+                      "Exec=${launcher}/bin/with-secrets ${lib.removePrefix "Exec=" line}"
+                    else
+                      line
+                  ) (lib.splitString "\n" (builtins.readFile source));
+              }
+            ) entry.contributions.desktopEntries
+          ) entries
+        )
+      );
+
     };
 
   /**
     Whether an entry contributes through at least one generic channel.
   */
-  hasContributions = entry: contributionHasValues entry.contributions;
+  hasContributions =
+    entry: contributionHasValues entry.contributions || entry.secrets.provides != { };
 }

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=ChatGPT Community
+Comment=Community Linux distribution based on OpenAI ChatGPT
+Exec=/usr/bin/codex-desktop %u
+Icon=codex-desktop
+Categories=Development;
+MimeType=x-scheme-handler/codex;x-scheme-handler/codex-browser-sidebar;
+StartupNotify=true
+StartupWMClass=codex-desktop

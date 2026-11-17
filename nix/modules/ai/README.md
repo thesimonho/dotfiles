@@ -12,3 +12,7 @@ agent:
 - **Claude:** `AI/settings/claude/mcp.json` owns managed MCP entries in each client's `${CLAUDE_CONFIG_DIR}/.claude.json`. Run `<client>-mcp-apply` to reconcile them. `settings.json` is linked separately.
 
 Client UI changes remain local unless deliberately added to the tracked baseline.
+
+## Secret-enabled desktop launchers
+
+Catalog entries can declare `secrets.provides` and `secrets.requires` and map installed desktop IDs to checked-in `launchers/*.desktop` paths through `contributions.desktopEntries`. The shared catalog adapter wraps main and action commands through the configured `with-secrets` helper on Linux. The adapter preserves file contents except for wrapping each `Exec=` line, including desktop actions. Home Manager installs overrides in the user XDG applications directory with the same IDs, preserving normal menu and pin names. Preserve file/URL field codes, MIME types, startup class, and relevant actions when editing an entry. CLI entries declare an absolute `command`; the shared adapter generates normal-name wrappers. See `AI/README.md` for the provider/group contract. macOS native launch wrapping is not implemented.

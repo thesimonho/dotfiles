@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Zed
+GenericName=Text Editor
+Comment=A high-performance, multiplayer code editor.
+Exec=/usr/bin/flatpak run --command=zed-wrapper --file-forwarding dev.zed.Zed @@u %U @@
+Icon=dev.zed.Zed
+StartupNotify=true
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=text/plain;application/x-zerosize;x-scheme-handler/zed;
+X-Flatpak=dev.zed.Zed
+Actions=NewWorkspace;
+
+[Desktop Action NewWorkspace]
+Name=Open a new workspace
+Exec=/usr/bin/flatpak run --command=zed --file-forwarding dev.zed.Zed --new @@u %U @@

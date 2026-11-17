@@ -47,11 +47,31 @@ in
   ];
 
   applications = {
+    typesafe = {
+      secrets.provides.TYPESAFE_API_KEY = "op://Personal/TypeSafe/api_token";
+      bundles = [ "cli" ];
+    };
+    wrangler = {
+      command = "${pkgs.wrangler}/bin/wrangler";
+      contributions.packages = [ pkgs.wrangler ];
+      secrets.provides.CLOUDFLARE_API_TOKEN = "op://Personal/Cloudflare Wrangler CLI/token";
+      bundles = [ "cli" ];
+    };
     claude-code = {
+      command = "${llmAgents.claude-code}/bin/claude";
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
       contributions.packages = [ llmAgents.claude-code ];
       bundles = [ "agents" ];
     };
     claude-desktop = {
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
+      contributions.desktopEntries."com.anthropic.Claude" = ./launchers/com.anthropic.Claude.desktop;
       contributions.nativePackages = {
         # CachyOS supplies the native Cowork VM dependencies and firmware paths.
         arch.pacman = [ "claude-desktop" ];
@@ -64,10 +84,21 @@ in
       bundles = [ "agents" ];
     };
     codex = {
+      command = "${llmAgents.codex}/bin/codex";
+      secrets.provides.OPENAI_API_KEY = "op://Personal/OpenAI/API Key";
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
       contributions.packages = [ llmAgents.codex ];
       bundles = [ "agents" ];
     };
     chatgpt = {
+      secrets.requires = [
+        "vault.models"
+        "vault.developer-tools"
+      ];
+      contributions.desktopEntries."codex-desktop" = ./launchers/codex-desktop.desktop;
       contributions.nativePackages = {
         arch.aur = [ "codex-desktop-git" ];
         arch.aurBuilds.codex-desktop-git = "${codexNativeBuild}";
@@ -100,6 +131,8 @@ in
       ];
     };
     huggingface-hub = {
+      command = "${pkgsUnstable.python3Packages.huggingface-hub}/bin/hf";
+      secrets.provides.HF_TOKEN = "op://Personal/Hugging Face CLI/user access token";
       contributions.packages = [ pkgsUnstable.python3Packages.huggingface-hub ];
       bundles = [ "cli" ];
     };

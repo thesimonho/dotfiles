@@ -1,0 +1,28 @@
+[Desktop Entry]
+Type=Application
+Name=Claude
+GenericName=AI Assistant
+Exec=/usr/bin/claude-desktop %U
+Icon=claude-desktop
+Categories=Utility;Development;
+MimeType=x-scheme-handler/claude;application/vnd.anthropic.mcpb;application/vnd.anthropic.skill;
+StartupNotify=true
+StartupWMClass=com.anthropic.Claude
+SingleMainWindow=true
+Actions=ContinueLast;NeedsInput;NewChat;NewCode;
+
+[Desktop Action ContinueLast]
+Name=Continue Last Claude Code Session
+Exec=/usr/bin/claude-desktop "claude://code/continue?session=last&source=desktop_action"
+
+[Desktop Action NeedsInput]
+Name=Sessions Waiting for You
+Exec=/usr/bin/claude-desktop "claude://code/needs-input?source=desktop_action"
+
+[Desktop Action NewChat]
+Name=New Chat
+Exec=/usr/bin/claude-desktop "claude://claude.ai/new?surface=chat&source=desktop_action"
+
+[Desktop Action NewCode]
+Name=New Claude Code Session
+Exec=/usr/bin/claude-desktop "claude://code/new?source=desktop_action"

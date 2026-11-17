@@ -9,7 +9,6 @@ let
 in
 {
   home.packages = [
-    pkgs.neovim
     pkgs.ninja
     pkgs.lua54Packages.luarocks
   ];
