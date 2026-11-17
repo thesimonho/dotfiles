@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "MLKEM768-X25519 is an algorithm name, not an API key"
+regexes = ['''^MLKEM768-X25519$''']
