@@ -34,6 +34,8 @@ If there is no clear review scope, stop and say that briefly.
 
 Before judging code, read the nearest applicable instructions and docs for the touched area: `AGENTS.md`, `CLAUDE.md`, the directory's own `README.md`, architecture notes, or workflow docs. Treat those as source-of-truth constraints.
 
+When a change adds a file or grows a large one, inspect the surrounding directory and related files for context. Keep findings tied to the reviewed change; do not turn the review into a general audit.
+
 ### 2. Spawn Three Review Agents
 
 Launch three read-only reviewers in parallel when the active environment supports delegation. For a tiny diff or a runtime without subagents, run the same three reviewer roles locally as separate passes and keep the output separated.
@@ -68,6 +70,7 @@ Look for maintainability and local-standard issues:
 - Parameter sprawl that threads context through too many layers.
 - Copy-paste blocks with slight variation.
 - Leaky abstractions or module boundary violations.
+- Files placed away from related feature code, redundant filename prefixes, or a growing file that has a natural, cohesive split. Consider nearby existing files and feature boundaries before recommending a move or extraction.
 - Stringly typed logic where constants, enums, unions, schemas, or typed helpers already exist.
 - Unnecessary JSX wrappers or elements that add no layout value when child component props already express the layout.
 - Deep nesting, including chained ternaries, nested `if` or `else` blocks, and `switch` logic 3 or more levels deep.

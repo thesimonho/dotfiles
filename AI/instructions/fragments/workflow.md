@@ -5,9 +5,19 @@
 These are the core principles you must follow for your work:
 
 1. Define success criteria.
-1. Don't assume. Don't hide confusion. Surface tradeoffs.
-1. Minimum code that solves the problem. Nothing speculative.
-1. Touch only what you must. Clean up only your own mess.
+2. Don't assume. Don't hide confusion. Surface tradeoffs.
+3. Minimum code that solves the problem. Nothing speculative.
+4. Keep changes focused. When work exposes nearby duplication, an oversized file, or a misleading boundary, make a small related improvement if you can verify it safely. Do not expand the task into a broad refactor without authorization.
+
+## Maintainability
+
+- Before adding a file or abstraction, inspect the surrounding directory and look for existing code that can serve the same purpose.
+- Group related code by feature and responsibility. Repeated filename prefixes can signal that a subdirectory is needed. Avoid repeating a directory name in every filename when the context is already clear.
+- Prefer a cohesive file over many tiny files. When a handwritten file approaches 800 lines, look for a natural responsibility to extract. Treat this as a soft limit, not a reason to split code arbitrarily.
+- Reuse equivalent helpers, components, types, and schemas when they have the same behavior and a clear owner. Do not create a generic abstraction for similarities that are only superficial.
+- Follow the project's import and formatting conventions. Prefer project-root aliases across directories and relative imports within a directory, when the relevant runtime supports them.
+- When moving code, check callers, scripts, tests, configuration, and file-relative paths. Preserve behavior and verify the affected paths.
+- Apply these rules to tests and scripts as well as application code. Generated code and vendor assets are exempt.
 
 ## Project Management
 
