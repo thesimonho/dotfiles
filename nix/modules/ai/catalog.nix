@@ -23,7 +23,6 @@ let
         "global-dictation"
         "node-repl-reaper"
         "persistent-status-panel"
-        "pet-overlay"
         "preferred-editor-file-links"
         "project-group-last-updated-sort"
         "project-task-sort"
