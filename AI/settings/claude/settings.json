@@ -220,7 +220,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ ! -f '/home/simon/.claude/skills/impeccable/scripts/impeccable' ] || '/home/simon/.claude/skills/impeccable/scripts/impeccable' hook",
+            "command": "[ ! -f \"$HOME/.claude/skills/impeccable/scripts/impeccable\" ] || \"$HOME/.claude/skills/impeccable/scripts/impeccable\" hook",
             "timeout": 5,
             "statusMessage": "Checking UI changes"
           }
@@ -233,7 +233,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/home/simon/.claude/hooks/herdr-agent-state.sh' session",
+            "command": "[ ! -f \"$HOME/.claude/hooks/herdr-agent-state.sh\" ] || bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session",
             "timeout": 10
           }
         ]
@@ -262,7 +262,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ ! -f '/home/simon/.claude/skills/impeccable/scripts/impeccable' ] || '/home/simon/.claude/skills/impeccable/scripts/impeccable' hook",
+            "command": "[ ! -f \"$HOME/.claude/skills/impeccable/scripts/impeccable\" ] || \"$HOME/.claude/skills/impeccable/scripts/impeccable\" hook",
             "timeout": 30,
             "statusMessage": "Design deep pass"
           }
@@ -311,7 +311,7 @@
   "effortLevel": "low",
   "modelSettings": {
     "claude-opus-5-5": {
-      "effortLevel": "low",
+      "effortLevel": "medium",
       "autoCompactWindow": 400000
     }
   },
@@ -325,6 +325,7 @@
       }
     }
   },
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"

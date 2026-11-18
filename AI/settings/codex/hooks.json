@@ -126,7 +126,7 @@
       {
         "hooks": [
           {
-            "command": "bash '/home/simon/.codex/herdr-agent-state.sh' session",
+            "command": "[ ! -f \"$HOME/.codex/herdr-agent-state.sh\" ] || bash \"$HOME/.codex/herdr-agent-state.sh\" session",
             "timeout": 10,
             "type": "command"
           }
